@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -697,27 +693,27 @@
 
 
 <div class="viewcode-block" id="KeepaliveResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.KeepaliveResponseError">[docs]</a><span class="k">class</span> <span class="nc">KeepaliveResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error in Keepalive RPC&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Error in Keepalive RPC&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="InvalidLeaseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.InvalidLeaseError">[docs]</a><span class="k">class</span> <span class="nc">InvalidLeaseError</span><span class="p">(</span><span class="n">KeepaliveResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A policy&#39;s associated lease was not the same, super, or sub lease of the active lease.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;A policy&#39;s associated lease was not the same, super, or sub lease of the active lease.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="InvalidPolicyError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.InvalidPolicyError">[docs]</a><span class="k">class</span> <span class="nc">InvalidPolicyError</span><span class="p">(</span><span class="n">KeepaliveResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The specified policy ID was not valid.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The specified policy ID was not valid.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Policy"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.Policy">[docs]</a><span class="k">class</span> <span class="nc">Policy</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class for API Policy.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Helper class for API Policy.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;keepalive_pb2.Policy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Constructor&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">policy_proto</span> <span class="o">=</span> <span class="n">proto</span> <span class="ow">or</span> <span class="n">keepalive_pb2</span><span class="o">.</span><span class="n">Policy</span><span class="p">()</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get or set the name of the Policy&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get or set the name of the Policy&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_proto</span><span class="o">.</span><span class="n">name</span>
 
     <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
@@ -731,15 +727,15 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">policy_proto</span><span class="o">.</span><span class="n">associated_leases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Policy.add_controlled_motors_off_action"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.Policy.add_controlled_motors_off_action">[docs]</a>    <span class="k">def</span> <span class="nf">add_controlled_motors_off_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">after</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a &#39;controlled motors off&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Add a &#39;controlled motors off&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_configure_action</span><span class="p">(</span><span class="n">after</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">action</span><span class="p">:</span> <span class="n">action</span><span class="o">.</span><span class="n">controlled_motors_off</span><span class="o">.</span><span class="n">SetInParent</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="Policy.add_immediate_robot_off_action"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.Policy.add_immediate_robot_off_action">[docs]</a>    <span class="k">def</span> <span class="nf">add_immediate_robot_off_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">after</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an &#39;immediate robot off&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Add an &#39;immediate robot off&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_configure_action</span><span class="p">(</span><span class="n">after</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">action</span><span class="p">:</span> <span class="n">action</span><span class="o">.</span><span class="n">immediate_robot_off</span><span class="o">.</span><span class="n">SetInParent</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="Policy.add_record_event_action"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.Policy.add_record_event_action">[docs]</a>    <span class="k">def</span> <span class="nf">add_record_event_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">events</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;bosdyn.api.Event&#39;</span><span class="p">],</span> <span class="n">after</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a &#39;record event&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Add a &#39;record event&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">copy_events</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
@@ -749,7 +745,7 @@
 
 <div class="viewcode-block" id="Policy.add_auto_return_action"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.Policy.add_auto_return_action">[docs]</a>    <span class="k">def</span> <span class="nf">add_auto_return_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">leases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;bosdyn.client.lease.Lease&#39;</span><span class="p">],</span>
                                <span class="n">params</span><span class="p">:</span> <span class="s1">&#39;bosdyn.api.auto_return.Params&#39;</span><span class="p">,</span> <span class="n">after</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an &#39;auto return&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Add an &#39;auto return&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">copy_params_and_leases</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
             <span class="n">action</span><span class="o">.</span><span class="n">auto_return</span><span class="o">.</span><span class="n">leases</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lease</span><span class="o">.</span><span class="n">lease_proto</span> <span class="k">for</span> <span class="n">lease</span> <span class="ow">in</span> <span class="n">leases</span><span class="p">)</span>
@@ -758,7 +754,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_configure_action</span><span class="p">(</span><span class="n">after</span><span class="p">,</span> <span class="n">copy_params_and_leases</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Policy.add_lease_stale_action"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.Policy.add_lease_stale_action">[docs]</a>    <span class="k">def</span> <span class="nf">add_lease_stale_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">leases</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;bosdyn.client.lease.Lease&#39;</span><span class="p">],</span> <span class="n">after</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a &#39;mark lease stale&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Add a &#39;mark lease stale&#39; action that triggers after specified time (seconds).&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">copy_leases</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
             <span class="n">action</span><span class="o">.</span><span class="n">lease_stale</span><span class="o">.</span><span class="n">leases</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">lease</span><span class="o">.</span><span class="n">lease_proto</span> <span class="k">for</span> <span class="n">lease</span> <span class="ow">in</span> <span class="n">leases</span><span class="p">)</span>
@@ -766,7 +762,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_configure_action</span><span class="p">(</span><span class="n">after</span><span class="p">,</span> <span class="n">copy_leases</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Policy.shortest_action_delay"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.Policy.shortest_action_delay">[docs]</a>    <span class="k">def</span> <span class="nf">shortest_action_delay</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the shortest delay on an action, or None if no actions are set.</span>
+        <span class="sd">&quot;&quot;&quot;Get the shortest delay on an action, or None if no actions are set.</span>
 
 <span class="sd">        For example:</span>
 <span class="sd">        pol = Policy()</span>
@@ -783,14 +779,14 @@
 
     <span class="k">def</span> <span class="nf">_configure_action</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">after</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">set_action</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;keepalive_pb2.ActionAfter&#39;</span><span class="p">],</span>
                                                                    <span class="kc">None</span><span class="p">]):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper function to reduce boilerplate of adding an action.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Helper function to reduce boilerplate of adding an action.&quot;&quot;&quot;</span>
         <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">policy_proto</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
         <span class="n">action</span><span class="o">.</span><span class="n">after</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">after</span><span class="p">))</span>
         <span class="n">set_action</span><span class="p">(</span><span class="n">action</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="KeepaliveClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.KeepaliveClient">[docs]</a><span class="k">class</span> <span class="nc">KeepaliveClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client for the Keepalive service.</span>
+    <span class="sd">&quot;&quot;&quot;A client for the Keepalive service.</span>
 
 <span class="sd">    This client is in BETA and may undergo changes in future releases.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -804,34 +800,34 @@
 
 <div class="viewcode-block" id="KeepaliveClient.modify_policy"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.KeepaliveClient.modify_policy">[docs]</a>    <span class="k">def</span> <span class="nf">modify_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_add</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Policy&#39;</span><span class="p">,</span> <span class="s1">&#39;keepalive_pb2.Policy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                       <span class="n">policy_ids_to_remove</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add given policy and remove policies with given ids.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Add given policy and remove policies with given ids.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modify_policy_request</span><span class="p">(</span><span class="n">to_add</span><span class="p">,</span> <span class="n">policy_ids_to_remove</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ModifyPolicy</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">modify_policy_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KeepaliveClient.modify_policy_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.KeepaliveClient.modify_policy_async">[docs]</a>    <span class="k">def</span> <span class="nf">modify_policy_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_add</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s1">&#39;Policy&#39;</span><span class="p">,</span> <span class="s1">&#39;keepalive_pb2.Policy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                             <span class="n">policy_ids_to_remove</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the modify_policy() RPC.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the modify_policy() RPC.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modify_policy_request</span><span class="p">(</span><span class="n">to_add</span><span class="p">,</span> <span class="n">policy_ids_to_remove</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ModifyPolicy</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">modify_policy_error</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KeepaliveClient.check_in"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.KeepaliveClient.check_in">[docs]</a>    <span class="k">def</span> <span class="nf">check_in</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check in for given policy_id, refreshing that policy&#39;s timer.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Check in for given policy_id, refreshing that policy&#39;s timer.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_in_request</span><span class="p">(</span><span class="n">policy_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">CheckIn</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">check_in_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KeepaliveClient.check_in_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.KeepaliveClient.check_in_async">[docs]</a>    <span class="k">def</span> <span class="nf">check_in_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">policy_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the check_in() RPC.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the check_in() RPC.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_in_request</span><span class="p">(</span><span class="n">policy_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">CheckIn</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">check_in_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KeepaliveClient.get_status"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.KeepaliveClient.get_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get status on all policies.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get status on all policies.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">keepalive_pb2</span><span class="o">.</span><span class="n">GetStatusRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KeepaliveClient.get_status_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.KeepaliveClient.get_status_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the get_status() RPC.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the get_status() RPC.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">keepalive_pb2</span><span class="o">.</span><span class="n">GetStatusRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -866,7 +862,7 @@
 <div class="viewcode-block" id="modify_policy_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.modify_policy_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">modify_policy_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;ModifyPolicy response to exception.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;ModifyPolicy response to exception.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">keepalive_pb2</span><span class="o">.</span><span class="n">ModifyPolicyResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_MODIFY_POLICY_STATUS_TO_ERROR</span><span class="p">)</span></div>
@@ -875,7 +871,7 @@
 <div class="viewcode-block" id="check_in_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.check_in_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">check_in_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;CheckIn response to exception.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;CheckIn response to exception.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">keepalive_pb2</span><span class="o">.</span><span class="n">CheckInResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_CHECK_IN_STATUS_TO_ERROR</span><span class="p">)</span></div>
@@ -883,7 +879,7 @@
 
 <span class="c1">#pylint: disable=too-many-instance-attributes</span>
 <div class="viewcode-block" id="PolicyKeepalive"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.PolicyKeepalive">[docs]</a><span class="k">class</span> <span class="nc">PolicyKeepalive</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Specify a keepalive Policy that should be held to.</span>
+    <span class="sd">&quot;&quot;&quot;Specify a keepalive Policy that should be held to.</span>
 
 <span class="sd">    Meant to be used as a context manager. For example:</span>
 
@@ -918,29 +914,29 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add this instance&#39;s policy and begin checking in.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Add this instance&#39;s policy and begin checking in.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_policy_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">modify_policy</span><span class="p">(</span><span class="n">to_add</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="p">)</span><span class="o">.</span><span class="n">added_policy</span><span class="o">.</span><span class="n">policy_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_val</span><span class="p">,</span> <span class="n">exc_tb</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop checking in, and optionally remove the policy.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Stop checking in, and optionally remove the policy.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_policy_on_exit</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">remove_policy</span><span class="p">()</span>
 
 <div class="viewcode-block" id="PolicyKeepalive.remove_policy"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.PolicyKeepalive.remove_policy">[docs]</a>    <span class="k">def</span> <span class="nf">remove_policy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove this instance&#39;s policy, if it did manage to add one.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Remove this instance&#39;s policy, if it did manage to add one.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_policy_id</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">modify_policy</span><span class="p">(</span><span class="n">policy_ids_to_remove</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_policy_id</span><span class="p">])</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_policy_id</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="PolicyKeepalive.start"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.PolicyKeepalive.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start the checkin thread.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Start the checkin thread.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="PolicyKeepalive.shutdown"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.PolicyKeepalive.shutdown">[docs]</a>    <span class="k">def</span> <span class="nf">shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop the checkin thread and block until it ends.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Stop the checkin thread and block until it ends.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_periodic_check_in</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div>
 
@@ -973,7 +969,7 @@
 
 
 <div class="viewcode-block" id="remove_all_policies"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html#bosdyn.client.keepalive.remove_all_policies">[docs]</a><span class="k">def</span> <span class="nf">remove_all_policies</span><span class="p">(</span><span class="n">keepalive_client</span><span class="p">,</span> <span class="n">attempts</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove all policies on the robot.</span>
+    <span class="sd">&quot;&quot;&quot;Remove all policies on the robot.</span>
 
 <span class="sd">    Optionally do this over a few attempts, in case other things are also removing policies.</span>
 <span class="sd">    &quot;&quot;&quot;</span>

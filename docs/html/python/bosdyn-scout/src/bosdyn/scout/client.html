@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -680,8 +676,961 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="client">
-<h1>Client<a class="headerlink" href="#client" title="Permalink to this heading">¶</a></h1>
+  <section id="module-bosdyn.scout.client">
+<span id="client"></span><h1>Client<a class="headerlink" href="#module-bosdyn.scout.client" title="Permalink to this headline">¶</a></h1>
+<p>Scout Client is a client for a single Scout instance. The client uses the Scout web API
+to send HTTPs requests to a number of REStful endpoints using the Requests library.</p>
+<dl class="py class">
+<dt id="bosdyn.scout.client.ScoutClient">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.scout.client.</code><code class="sig-name descname">ScoutClient</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hostname</span></em>, <em class="sig-param"><span class="n">verify</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">cert</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Client for Scout web API</p>
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.authenticate_with_password">
+<code class="sig-name descname">authenticate_with_password</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">password</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.authenticate_with_password"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.authenticate_with_password" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authorizes the client with username and password. Must call before using other client functions.
+If username and password are not provided, the function obtains credentials from
+either environment variables or terminal inputs.
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>username(str): the username for the Scout instance</p></li>
+<li><p>password(str): the password for the Scout instance</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the login request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_resource">
+<code class="sig-name descname">get_resource</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base function for getting a resource in /api/v0/
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>path(str): the path appended to /api/v0/</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.post_resource">
+<code class="sig-name descname">post_resource</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.post_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.post_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base function for posting a resource in /api/v0/
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>path(str): the path appended to /api/v0/</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the post request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>The response associated with the the post request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.delete_resource">
+<code class="sig-name descname">delete_resource</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">path</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.delete_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.delete_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base function for deleting a resource in /api/v0/
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>path(str): the path appended to /api/v0/</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the delete request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>The response associated with the the delete request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_scout_version">
+<code class="sig-name descname">get_scout_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_scout_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_scout_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves info about a scout .
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_scout_system_time">
+<code class="sig-name descname">get_scout_system_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_scout_system_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_scout_system_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns scout’s current system time.
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_robots">
+<code class="sig-name descname">get_robots</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_robots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_robots" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns robots on the specified scout instance.
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_robot_by_hostname">
+<code class="sig-name descname">get_robot_by_hostname</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">hostname</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_robot_by_hostname"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_robot_by_hostname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a robot on given a hostname of a specific robot.
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>hostname(str): the IP address associated with the desired robot on the Scout instance</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_site_walks">
+<code class="sig-name descname">get_site_walks</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_site_walks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_site_walks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns site walks on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_site_walk_by_id">
+<code class="sig-name descname">get_site_walk_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_site_walk_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_site_walk_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a site walk uuid, returns a site walk on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uuid(str): the ID associated with the site walk</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_site_elements">
+<code class="sig-name descname">get_site_elements</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_site_elements"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_site_elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns site elements on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_site_element_by_id">
+<code class="sig-name descname">get_site_element_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_site_element_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_site_element_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a site element uuid, returns a site element on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uuid(str): the ID associated with the site element</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_site_docks">
+<code class="sig-name descname">get_site_docks</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_site_docks"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_site_docks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns site docks on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_site_dock_by_id">
+<code class="sig-name descname">get_site_dock_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_site_dock_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_site_dock_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a site dock uuid, returns a site dock on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uuid(str): the ID associated with the site dock</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_calendar">
+<code class="sig-name descname">get_calendar</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_calendar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_calendar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns calendar events on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_run_events">
+<code class="sig-name descname">get_run_events</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_run_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_run_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dictionary of query params, returns run events
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_run_event_by_id">
+<code class="sig-name descname">get_run_event_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_run_event_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_run_event_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a runEventUuid, returns a run event
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uuid(str): the ID associated with the run event</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_run_captures">
+<code class="sig-name descname">get_run_captures</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_run_captures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_run_captures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dictionary of query params, returns run captures
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_run_capture_by_id">
+<code class="sig-name descname">get_run_capture_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_run_capture_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_run_capture_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a runCaptureUuid, returns a run capture
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uuid(str): the ID associated with the run capture</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_runs">
+<code class="sig-name descname">get_runs</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_runs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dictionary of query params, returns runs
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_run_by_id">
+<code class="sig-name descname">get_run_by_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_run_by_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_run_by_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a runUuid, returns a run
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uuid(str): the ID associated with the run</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.get_image">
+<code class="sig-name descname">get_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">url</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.get_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.get_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a data capture url, returns a raw image
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>url(str): the url associated with the data capture</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response: the raw response associated with the the get request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.post_export_as_walk">
+<code class="sig-name descname">post_export_as_walk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">site_walk_uuid</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.post_export_as_walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.post_export_as_walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a site walk uuid, it exports the walks_pb2.Walk equivalent
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uuid(str): the ID associated with the site walk</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError: indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the post request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.post_import_from_walk">
+<code class="sig-name descname">post_import_from_walk</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.post_import_from_walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.post_import_from_walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a walk data, imports it to the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the post request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the post request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.post_site_element">
+<code class="sig-name descname">post_site_element</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.post_site_element"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.post_site_element" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a site element
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the post request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the post request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.post_site_walk">
+<code class="sig-name descname">post_site_walk</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.post_site_walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.post_site_walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a site walk
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the post request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the post request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.post_site_dock">
+<code class="sig-name descname">post_site_dock</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.post_site_dock"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.post_site_dock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a site element
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the post request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the post request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.post_robot">
+<code class="sig-name descname">post_robot</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.post_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.post_robot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a robot to the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the post request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the post request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.post_calendar_event">
+<code class="sig-name descname">post_calendar_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.post_calendar_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.post_calendar_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a calendar event to play a mission
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the post request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the post request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.delete_site_walk">
+<code class="sig-name descname">delete_site_walk</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">uuid</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.delete_site_walk"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.delete_site_walk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a site walk uuid, deletes the site walk associated with the uuid on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>uuid(str): the ID associated with the desired site walk</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the delete request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the delete request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.delete_robot">
+<code class="sig-name descname">delete_robot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">robotHostname</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.delete_robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.delete_robot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a robotHostname, deletes the robot associated with the hostname on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>hostname(str): the IP address associated with the robot</p></li>
+<li><p>kwargs(**): a variable number of keyword arguments for the delete request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the delete request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt id="bosdyn.scout.client.ScoutClient.delete_calendar_event">
+<code class="sig-name descname">delete_calendar_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/client.html#ScoutClient.delete_calendar_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.client.ScoutClient.delete_calendar_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the specified calendar event on the specified scout instance
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>kwargs(**): a variable number of keyword arguments for the delete request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns</dt><dd><ul>
+<li><p>requests.Response(Response object): the response associated with the the delete request</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 

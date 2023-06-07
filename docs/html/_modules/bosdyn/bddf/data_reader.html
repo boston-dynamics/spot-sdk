@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,13 +683,13 @@
 
 
 <div class="viewcode-block" id="DataReader"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html#bosdyn.bddf.data_reader.DataReader">[docs]</a><span class="k">class</span> <span class="nc">DataReader</span><span class="p">(</span><span class="n">BaseDataReader</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for reading data from a file-like object which is seekable.</span>
+    <span class="sd">&quot;&quot;&quot;Class for reading data from a file-like object which is seekable.</span>
 
 <span class="sd">    Methods raise ParseError if there is a problem with the format of the file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        At least one of the following arguments must be specified.</span>
 
 <span class="sd">        Args:</span>
@@ -706,7 +702,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_read_index</span><span class="p">()</span>
 
 <div class="viewcode-block" id="DataReader.series_descriptor"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html#bosdyn.bddf.data_reader.DataReader.series_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">series_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return SeriesDescriptor for given series index, loading it if necessary.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return SeriesDescriptor for given series index, loading it if necessary.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_series_index_to_descriptor</span><span class="p">[</span><span class="n">series_index</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -719,15 +715,15 @@
         <span class="k">return</span> <span class="n">desc</span></div>
 
 <div class="viewcode-block" id="DataReader.num_data_blocks"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html#bosdyn.bddf.data_reader.DataReader.num_data_blocks">[docs]</a>    <span class="k">def</span> <span class="nf">num_data_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the number of data blocks for a given series in the file.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the number of data blocks for a given series in the file.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">series_block_index</span><span class="p">(</span><span class="n">series_index</span><span class="p">)</span><span class="o">.</span><span class="n">block_entries</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataReader.total_bytes"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html#bosdyn.bddf.data_reader.DataReader.total_bytes">[docs]</a>    <span class="k">def</span> <span class="nf">total_bytes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the total number of bytes for data in a given series in the file.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the total number of bytes for data in a given series in the file.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">series_block_index</span><span class="p">(</span><span class="n">series_index</span><span class="p">)</span><span class="o">.</span><span class="n">total_bytes</span></div>
 
 <div class="viewcode-block" id="DataReader.read"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html#bosdyn.bddf.data_reader.DataReader.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">,</span> <span class="n">index_in_series</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves a message and related information from the file.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves a message and related information from the file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">         series_index: int selecting from which series to read the message.</span>
@@ -743,7 +739,7 @@
         <span class="k">return</span> <span class="n">desc</span><span class="p">,</span> <span class="n">msg_idx</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">ToNanoseconds</span><span class="p">(),</span> <span class="n">data</span></div>
 
 <div class="viewcode-block" id="DataReader.series_block_index"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html#bosdyn.bddf.data_reader.DataReader.series_block_index">[docs]</a>    <span class="k">def</span> <span class="nf">series_block_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the SeriesBlockIndexes for the given series_index, loading it as needed.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the SeriesBlockIndexes for the given series_index, loading it as needed.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_series_index_to_block_index</span><span class="p">[</span><span class="n">series_index</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>

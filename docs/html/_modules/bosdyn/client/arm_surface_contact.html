@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -686,7 +682,7 @@
 
 
 <div class="viewcode-block" id="ArmSurfaceContactClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html#bosdyn.client.arm_surface_contact.ArmSurfaceContactClient">[docs]</a><span class="k">class</span> <span class="nc">ArmSurfaceContactClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for the ArmSurfaceContact service.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client for the ArmSurfaceContact service.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;arm-surface-contact&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.ArmSurfaceContactService&#39;</span>
 
@@ -696,7 +692,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="ArmSurfaceContactClient.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html#bosdyn.client.arm_surface_contact.ArmSurfaceContactClient.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
+        <span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            other: The object where to copy from.</span>
@@ -712,7 +708,7 @@
             <span class="k">pass</span>  <span class="c1"># other doesn&#39;t have a time_sync accessor</span></div>
 
     <span class="k">def</span> <span class="nf">_update_command_timestamps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or convert fields of the command proto that need timestamps in the robot&#39;s clock.</span>
+        <span class="sd">&quot;&quot;&quot;Set or convert fields of the command proto that need timestamps in the robot&#39;s clock.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            command: Command message to update.</span>
@@ -723,7 +719,7 @@
         <span class="n">converter</span> <span class="o">=</span> <span class="n">_TimeConverter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_to_robot_time</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;If proto has a field named key with a timestamp, convert timestamp to robot time.&quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;If proto has a field named key with a timestamp, convert timestamp to robot time.&quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">proto</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">fields_by_name</span> <span class="ow">and</span> <span class="n">proto</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="n">key</span><span class="p">)):</span>
                 <span class="k">return</span>  <span class="c1"># No such field in proto, or field does not contain a timestamp.</span>
             <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
@@ -733,7 +729,7 @@
         <span class="n">_edit_proto</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME</span><span class="p">,</span> <span class="n">_to_robot_time</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ArmSurfaceContactClient.arm_surface_contact_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html#bosdyn.client.arm_surface_contact.ArmSurfaceContactClient.arm_surface_contact_command">[docs]</a>    <span class="k">def</span> <span class="nf">arm_surface_contact_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue an arm surface contact command to the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Issue an arm surface contact command to the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request (arm_surface_contact_pb2.ArmSurfaceContactRequest): The command request.</span>
@@ -745,7 +741,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ArmSurfaceContact</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ArmSurfaceContactClient.arm_surface_contact_command_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html#bosdyn.client.arm_surface_contact.ArmSurfaceContactClient.arm_surface_contact_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">arm_surface_contact_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of arm_surface_contact_command().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of arm_surface_contact_command().&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_command_timestamps</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ArmSurfaceContact</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 

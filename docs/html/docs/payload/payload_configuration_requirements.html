@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -683,51 +679,51 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="configuration-requirements">
-<h1>Configuration Requirements<a class="headerlink" href="#configuration-requirements" title="Permalink to this heading">¶</a></h1>
+<h1>Configuration Requirements<a class="headerlink" href="#configuration-requirements" title="Permalink to this headline">¶</a></h1>
 <p>Spot can be configured to carry up to two payloads. The following describes considerations for designing payloads. If designing a payload to be used in conjunction with other payloads, you must keep the total weight of all payloads under 14 kg. A urdf model of the robot and its geometry can be found <a class="reference external" href="../../files/spot_base_urdf.zip">here</a>.</p>
 <section id="payload-ports">
-<h2>Payload ports<a class="headerlink" href="#payload-ports" title="Permalink to this heading">¶</a></h2>
+<h2>Payload ports<a class="headerlink" href="#payload-ports" title="Permalink to this headline">¶</a></h2>
 <p>Spot comes with two payload ports that provide power, communication, time-synchronization, and safety system integration.</p>
 <p><img alt="robot ports" src="../../_images/payload1.png" /></p>
 <p>NOTE: Robot will not work without a cap or payload attached to each port.</p>
 </section>
 <section id="payload-width">
-<h2>Payload width<a class="headerlink" href="#payload-width" title="Permalink to this heading">¶</a></h2>
+<h2>Payload width<a class="headerlink" href="#payload-width" title="Permalink to this headline">¶</a></h2>
 <p>The maximum recommended width for a body-mounted payload is 190mm. Wider payloads will result in reduced overall mobility and significant interference with the legs. Payload designers should avoid interference with the robot’s legs as shown above by avoiding the areas immediately adjacent to the robot’s hips.</p>
 <p>Designers should include a scallop or elevate the payload enough to create clearance around this section, shown in pink. A 3D STEP model of Spot’s back including payload mounting area detail is available upon request. We recommend that payload developers request and study this model.</p>
 <p><img alt="payload width" src="../../_images/payload2.png" /></p>
 </section>
 <section id="payload-length">
-<h2>Payload length<a class="headerlink" href="#payload-length" title="Permalink to this heading">¶</a></h2>
+<h2>Payload length<a class="headerlink" href="#payload-length" title="Permalink to this headline">¶</a></h2>
 <p>Do not overhang the front or rear of the robot as this will reduce maneuverability. In special cases the software can be modified to support larger extents, but we recommend staying inside the given design space.</p>
 <p><img alt="payload clearance" src="../../_images/payload3.png" /></p>
 </section>
 <section id="payload-height">
-<h2>Payload height<a class="headerlink" href="#payload-height" title="Permalink to this heading">¶</a></h2>
+<h2>Payload height<a class="headerlink" href="#payload-height" title="Permalink to this headline">¶</a></h2>
 <p>The height of the payload impacts the robot’s ability to self-right and increases the height of the center of mass. Keep the center of mass low, as the robot may not self-right if top heavy.</p>
 <p><img alt="top clearance" src="../../_images/payload4.png" /></p>
 </section>
 <section id="payload-weight">
-<h2>Payload weight<a class="headerlink" href="#payload-weight" title="Permalink to this heading">¶</a></h2>
+<h2>Payload weight<a class="headerlink" href="#payload-weight" title="Permalink to this headline">¶</a></h2>
 <p>Spot can support 14 kg total combined capacity distributed over the top of the robot. This total payload capacity must include all payloads. Spot can better handle payload mass if the combined center of mass lies between the front and rear hips. Spot will be more agile and less likely to fall if the total payload mass is centered on the middle of the robot.</p>
 </section>
 <section id="payload-leg-interference">
-<h2>Payload leg Interference<a class="headerlink" href="#payload-leg-interference" title="Permalink to this heading">¶</a></h2>
+<h2>Payload leg Interference<a class="headerlink" href="#payload-leg-interference" title="Permalink to this headline">¶</a></h2>
 <p>Spot’s legs have a very wide range of motion as shown below. When the robot climbs stairs, transitions from sit to stand, and self-rights, the knees may rise above the top plane of the robot where payloads may be mounted. Even with following these guidelines, robot legs might come in contact with a payload. This is considered normal, and payloads should be designed robustly to withstand occasional contact with legs.</p>
 </section>
 <section id="isometric-and-top-views-of-robot-legs-rom">
-<h2>Isometric and top views of robot legs ROM<a class="headerlink" href="#isometric-and-top-views-of-robot-legs-rom" title="Permalink to this heading">¶</a></h2>
+<h2>Isometric and top views of robot legs ROM<a class="headerlink" href="#isometric-and-top-views-of-robot-legs-rom" title="Permalink to this headline">¶</a></h2>
 <p><img alt="leg clearance" src="../../_images/config-image5.png" /></p>
 <p><img alt="leg clearance" src="../../_images/config-image6.png" /></p>
 <p>The robot’s legs can extend above and over the robot’s back.</p>
 <p>Note: A 3D Step model of the robot’s body including typical leg swing areas is available on the Support Center at https://support.bostondynamics.com/s/article/Defeatured-Spot-CAD-Models.</p>
 </section>
 <section id="payload-clearance-with-robot-arm">
-<h2>Payload clearance with robot arm<a class="headerlink" href="#payload-clearance-with-robot-arm" title="Permalink to this heading">¶</a></h2>
+<h2>Payload clearance with robot arm<a class="headerlink" href="#payload-clearance-with-robot-arm" title="Permalink to this headline">¶</a></h2>
 <p><img alt="arm clearance" src="../../_images/payload7.png" /></p>
 </section>
 <section id="payload-under-arm-clearance">
-<h2>Payload under arm clearance<a class="headerlink" href="#payload-under-arm-clearance" title="Permalink to this heading">¶</a></h2>
+<h2>Payload under arm clearance<a class="headerlink" href="#payload-under-arm-clearance" title="Permalink to this headline">¶</a></h2>
 <p><img alt="arm clearance" src="../../_images/payload8.png" /></p>
 <p>NOTE: The Spot Arm weighs 8 kg. Total combined payload weight should be within the 14 kg maximum payload limit.</p>
 <!--- image and page reference link definitions ---></section>

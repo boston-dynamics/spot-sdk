@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -696,23 +692,23 @@
 
 
 <div class="viewcode-block" id="DataAcquisitionResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionResponseError">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error in Data Acquisition RPC&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Error in Data Acquisition RPC&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="RequestIdDoesNotExistError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.RequestIdDoesNotExistError">[docs]</a><span class="k">class</span> <span class="nc">RequestIdDoesNotExistError</span><span class="p">(</span><span class="n">DataAcquisitionResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The provided request id does not exist or is invalid.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The provided request id does not exist or is invalid.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnknownCaptureTypeError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.UnknownCaptureTypeError">[docs]</a><span class="k">class</span> <span class="nc">UnknownCaptureTypeError</span><span class="p">(</span><span class="n">DataAcquisitionResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The provided request contains unknown capture requests.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The provided request contains unknown capture requests.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="CancellationFailedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.CancellationFailedError">[docs]</a><span class="k">class</span> <span class="nc">CancellationFailedError</span><span class="p">(</span><span class="n">DataAcquisitionResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The data acquisition request was unable to be cancelled.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The data acquisition request was unable to be cancelled.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="DataAcquisitionClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client for triggering data acquisition and logging.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A client for triggering data acquisition and logging.&quot;&quot;&quot;</span>
 
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;data-acquisition&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.DataAcquisitionService&#39;</span>
@@ -733,7 +729,7 @@
 
 <div class="viewcode-block" id="DataAcquisitionClient.make_acquire_data_request"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.make_acquire_data_request">[docs]</a>    <span class="k">def</span> <span class="nf">make_acquire_data_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_requests</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">group_name</span><span class="p">,</span>
                                   <span class="n">data_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper utility to generate an AcquireDataRequest.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Helper utility to generate an AcquireDataRequest.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">data_timestamp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span><span class="p">:</span>
                 <span class="n">data_timestamp</span> <span class="o">=</span> <span class="n">now_timestamp</span><span class="p">()</span>
@@ -748,7 +744,7 @@
 
 <div class="viewcode-block" id="DataAcquisitionClient.acquire_data"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.acquire_data">[docs]</a>    <span class="k">def</span> <span class="nf">acquire_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_requests</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">data_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger a data acquisition to save data and metadata to the data buffer.</span>
+        <span class="sd">&quot;&quot;&quot;Trigger a data acquisition to save data and metadata to the data buffer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          acquisition_requests (bosdyn.api.AcquisitionRequestList): The different image sources and</span>
@@ -776,14 +772,14 @@
 
 <div class="viewcode-block" id="DataAcquisitionClient.acquire_data_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.acquire_data_async">[docs]</a>    <span class="k">def</span> <span class="nf">acquire_data_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_requests</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">group_name</span><span class="p">,</span> <span class="n">data_timestamp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the acquire_data() RPC.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the acquire_data() RPC.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">make_acquire_data_request</span><span class="p">(</span><span class="n">acquisition_requests</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">group_name</span><span class="p">,</span>
                                                  <span class="n">data_timestamp</span><span class="p">,</span> <span class="n">metadata</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">AcquireData</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">get_request_id</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">acquire_data_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionClient.acquire_data_from_request"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.acquire_data_from_request">[docs]</a>    <span class="k">def</span> <span class="nf">acquire_data_from_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alternate version of acquire_data() that takes an AcquireDataRequest directly.</span>
+        <span class="sd">&quot;&quot;&quot;Alternate version of acquire_data() that takes an AcquireDataRequest directly.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            If the RPC is successful, then it will return the AcquireDataResponse.</span>
@@ -792,12 +788,12 @@
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionClient.acquire_data_from_request_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.acquire_data_from_request_async">[docs]</a>    <span class="k">def</span> <span class="nf">acquire_data_from_request_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of acquire_data_from_request().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of acquire_data_from_request().&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">AcquireData</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">acquire_data_error</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionClient.get_status"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.get_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the status of a data acquisition based on the request id.</span>
+        <span class="sd">&quot;&quot;&quot;Check the status of a data acquisition based on the request id.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          request_id (int): The request id associated with an AcquireData request.</span>
@@ -815,13 +811,13 @@
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionClient.get_status_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.get_status_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the get_status() RPC.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the get_status() RPC.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_acquisition</span><span class="o">.</span><span class="n">GetStatusRequest</span><span class="p">(</span><span class="n">request_id</span><span class="o">=</span><span class="n">request_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="n">_get_status_error</span><span class="p">,</span>
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionClient.get_service_info"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.get_service_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_service_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get information from a Data Acquisition service to list its capabilities - which data,</span>
+        <span class="sd">&quot;&quot;&quot;Get information from a Data Acquisition service to list its capabilities - which data,</span>
 <span class="sd">        metadata,or processing the Data Acquisition service will perform.</span>
 
 <span class="sd">        Raises:</span>
@@ -836,7 +832,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionClient.get_service_info_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.get_service_info_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_service_info_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the get_service_info() RPC.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the get_service_info() RPC.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_acquisition</span><span class="o">.</span><span class="n">GetServiceInfoRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetServiceInfo</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_service_info_capabilities</span><span class="p">,</span>
@@ -844,7 +840,7 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionClient.cancel_acquisition"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.cancel_acquisition">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_acquisition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cancel a data acquisition based on the request id.</span>
+        <span class="sd">&quot;&quot;&quot;Cancel a data acquisition based on the request id.</span>
 <span class="sd">        Args:</span>
 <span class="sd">          request_id (int): The request id associated with an AcquireData request.</span>
 <span class="sd">        Raises:</span>
@@ -862,7 +858,7 @@
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionClient.cancel_acquisition_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.DataAcquisitionClient.cancel_acquisition_async">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_acquisition_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the cancel_acquisition() RPC.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the cancel_acquisition() RPC.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_acquisition</span><span class="o">.</span><span class="n">CancelAcquisitionRequest</span><span class="p">(</span><span class="n">request_id</span><span class="o">=</span><span class="n">request_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">CancelAcquisition</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">_cancel_acquisition_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -894,7 +890,7 @@
 
 
 <div class="viewcode-block" id="metadata_to_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.metadata_to_proto">[docs]</a><span class="k">def</span> <span class="nf">metadata_to_proto</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checks the type to determine if a conversion is required to create a</span>
+    <span class="sd">&quot;&quot;&quot;Checks the type to determine if a conversion is required to create a</span>
 <span class="sd">    bosdyn.api.Metadata proto message.</span>
 
 <span class="sd">    Args:</span>
@@ -925,7 +921,7 @@
 <div class="viewcode-block" id="acquire_data_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html#bosdyn.client.data_acquisition.acquire_data_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">acquire_data_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the AcquireData response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the AcquireData response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">data_acquisition</span><span class="o">.</span><span class="n">AcquireDataResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_ACQUIRE_DATA_STATUS_TO_ERROR</span><span class="p">)</span></div>
@@ -934,7 +930,7 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_get_status_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the GetStatus response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the GetStatus response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">data_acquisition</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_GET_STATUS_STATUS_TO_ERROR</span><span class="p">)</span>
@@ -943,7 +939,7 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_cancel_acquisition_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the CancelAcquisition response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the CancelAcquisition response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">data_acquisition</span><span class="o">.</span><span class="n">CancelAcquisitionResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_CANCEL_ACQUISITION_STATUS_TO_ERROR</span><span class="p">)</span>

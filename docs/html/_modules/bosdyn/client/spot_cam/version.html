@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -689,7 +685,7 @@
 
 
 <div class="viewcode-block" id="VersionClient"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html#bosdyn.client.spot_cam.version.VersionClient">[docs]</a><span class="k">class</span> <span class="nc">VersionClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client calling Spot CAM Version service.</span>
+    <span class="sd">&quot;&quot;&quot;A client calling Spot CAM Version service.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-cam-version&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot_cam.VersionService&#39;</span>
@@ -698,7 +694,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">VersionClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">VersionServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="VersionClient.get_software_version"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html#bosdyn.client.spot_cam.version.VersionClient.get_software_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_software_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves the Spot CAM&#39;s current software version.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves the Spot CAM&#39;s current software version.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            SoftwareVersion proto for the currently installed version.</span>
@@ -709,14 +705,14 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_version_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="VersionClient.get_software_version_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html#bosdyn.client.spot_cam.version.VersionClient.get_software_version_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_software_version_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_software_version()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_software_version()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">version_pb2</span><span class="o">.</span><span class="n">GetSoftwareVersionRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetSoftwareVersion</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_get_software_version_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_version_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="VersionClient.get_software_version_full"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html#bosdyn.client.spot_cam.version.VersionClient.get_software_version_full">[docs]</a>    <span class="k">def</span> <span class="nf">get_software_version_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves the Spot CAM&#39;s full version information.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves the Spot CAM&#39;s full version information.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            GetSoftwareVersionResponse proto with all version information.</span>
@@ -727,7 +723,7 @@
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="VersionClient.get_software_version_full_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html#bosdyn.client.spot_cam.version.VersionClient.get_software_version_full_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_software_version_full_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_software_version_full()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_software_version_full()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">version_pb2</span><span class="o">.</span><span class="n">GetSoftwareVersionRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetSoftwareVersion</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_version_error_from_response</span><span class="p">,</span>

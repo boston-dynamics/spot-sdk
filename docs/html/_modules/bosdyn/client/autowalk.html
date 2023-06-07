@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -692,21 +688,21 @@
 
 
 <div class="viewcode-block" id="AutowalkResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html#bosdyn.client.autowalk.AutowalkResponseError">[docs]</a><span class="k">class</span> <span class="nc">AutowalkResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors for autowalk service.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;General class of errors for autowalk service.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="CompilationError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html#bosdyn.client.autowalk.CompilationError">[docs]</a><span class="k">class</span> <span class="nc">CompilationError</span><span class="p">(</span><span class="n">AutowalkResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provided Walk could not be compiled because the Walk was malformed.</span>
+    <span class="sd">&quot;&quot;&quot;Provided Walk could not be compiled because the Walk was malformed.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ValidationError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html#bosdyn.client.autowalk.ValidationError">[docs]</a><span class="k">class</span> <span class="nc">ValidationError</span><span class="p">(</span><span class="n">AutowalkResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provided Walk could not be validated because some part of the Walk was unable to initialize.</span>
+    <span class="sd">&quot;&quot;&quot;Provided Walk could not be validated because some part of the Walk was unable to initialize.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="AutowalkClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html#bosdyn.client.autowalk.AutowalkClient">[docs]</a><span class="k">class</span> <span class="nc">AutowalkClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for the Autowalk service.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client for the Autowalk service.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;autowalk-service&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.autowalk.AutowalkService&#39;</span>
 
@@ -714,7 +710,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">AutowalkClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">autowalk_service_pb2_grpc</span><span class="o">.</span><span class="n">AutowalkServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AutowalkClient.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html#bosdyn.client.autowalk.AutowalkClient.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
+        <span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            other: The object where to copy from.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -723,7 +719,7 @@
             <span class="n">add_lease_wallet_processors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutowalkClient.compile_autowalk"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html#bosdyn.client.autowalk.AutowalkClient.compile_autowalk">[docs]</a>    <span class="k">def</span> <span class="nf">compile_autowalk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">walk</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="o">=</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send the input walk file to the autowalk service for compilation.</span>
+        <span class="sd">&quot;&quot;&quot;Send the input walk file to the autowalk service for compilation.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            walk: a walks_pb2.Walk input to be compiled by the autowalk service</span>
 <span class="sd">            data_chunk_byte_size: max size of each streamed message</span>
@@ -741,7 +737,7 @@
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AutowalkClient.load_autowalk"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html#bosdyn.client.autowalk.AutowalkClient.load_autowalk">[docs]</a>    <span class="k">def</span> <span class="nf">load_autowalk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">walk</span><span class="p">,</span> <span class="n">leases</span><span class="o">=</span><span class="p">[],</span> <span class="n">data_chunk_byte_size</span><span class="o">=</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send the input walk file to the autowalk service for compilation and</span>
+        <span class="sd">&quot;&quot;&quot;Send the input walk file to the autowalk service for compilation and</span>
 <span class="sd">        load resulting mission to the Mission Service on the robot.</span>
 <span class="sd">        Args:</span>
 <span class="sd">            walk: a walks_pb2.Walk input to be loaded onto the robot by the autowalk service</span>

@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -694,7 +690,7 @@
 
 
 <div class="viewcode-block" id="DataAcquisitionPluginClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html#bosdyn.client.data_acquisition_plugin.DataAcquisitionPluginClient">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionPluginClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client for triggering data acquisition plugin and logging. This client is not intended for</span>
+    <span class="sd">&quot;&quot;&quot;A client for triggering data acquisition plugin and logging. This client is not intended for</span>
 <span class="sd">    use directly by users or applications. All acquisition requests should go to the data</span>
 <span class="sd">    acquisition service first, which is responsible for forwarding the requests to the right data</span>
 <span class="sd">    acquisition plugin services through this client.&quot;&quot;&quot;</span>
@@ -711,7 +707,7 @@
 
 <div class="viewcode-block" id="DataAcquisitionPluginClient.acquire_plugin_data"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html#bosdyn.client.data_acquisition_plugin.DataAcquisitionPluginClient.acquire_plugin_data">[docs]</a>    <span class="k">def</span> <span class="nf">acquire_plugin_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_requests</span><span class="p">,</span> <span class="n">action_id</span><span class="p">,</span> <span class="n">data_identifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger a data acquisition to save data and metadata to the data acquisition store service.</span>
+        <span class="sd">&quot;&quot;&quot;Trigger a data acquisition to save data and metadata to the data acquisition store service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          acquisition_requests (bosdyn.api.AcquisitionRequestList): The different image sources and</span>
@@ -743,7 +739,7 @@
 
 <div class="viewcode-block" id="DataAcquisitionPluginClient.acquire_plugin_data_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html#bosdyn.client.data_acquisition_plugin.DataAcquisitionPluginClient.acquire_plugin_data_async">[docs]</a>    <span class="k">def</span> <span class="nf">acquire_plugin_data_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">acquisition_requests</span><span class="p">,</span> <span class="n">action_id</span><span class="p">,</span> <span class="n">data_identifiers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                   <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the acquire_plugin_data() RPC.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the acquire_plugin_data() RPC.&quot;&quot;&quot;</span>
 
         <span class="n">metadata_proto</span> <span class="o">=</span> <span class="n">metadata_to_proto</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_acquisition</span><span class="o">.</span><span class="n">AcquirePluginDataRequest</span><span class="p">(</span>
@@ -788,7 +784,7 @@
 <span class="nd">@handle_custom_params_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_acquire_plugin_data_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the AcquireData response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the AcquireData response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">data_acquisition</span><span class="o">.</span><span class="n">AcquireDataResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_ACQUIRE_PLUGIN_DATA_STATUS_TO_ERROR</span><span class="p">)</span>

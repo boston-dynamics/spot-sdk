@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,16 +681,16 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="arm-concepts">
-<h1>Arm Concepts<a class="headerlink" href="#arm-concepts" title="Permalink to this heading">¶</a></h1>
+<h1>Arm Concepts<a class="headerlink" href="#arm-concepts" title="Permalink to this headline">¶</a></h1>
 <section id="synchronizedcommand">
-<h2>SynchronizedCommand<a class="headerlink" href="#synchronizedcommand" title="Permalink to this heading">¶</a></h2>
+<h2>SynchronizedCommand<a class="headerlink" href="#synchronizedcommand" title="Permalink to this headline">¶</a></h2>
 <p>Arm and gripper commands have been incorporated into the SynchronizedCommand message.  This top level request allows you to specify any combination of mobility, arm, and gripper command.  By packing the individual commands into a single message, we guarantee that all commands arrive to the robot at the same time.  For robots without arms, any arm_command or gripper_command will be ignored.</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span><span class="w"> </span><span class="nc">SynchronizedCommand</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="kd">message</span><span class="w"> </span><span class="nc">Request</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ArmCommand.Request</span><span class="w"> </span><span class="na">arm_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">        </span><span class="n">MobilityCommand.Request</span><span class="w"> </span><span class="na">mobility_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">        </span><span class="n">GripperCommand.Request</span><span class="w"> </span><span class="na">gripper_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span> <span class="nc">SynchronizedCommand</span> <span class="p">{</span>
+    <span class="kd">message</span> <span class="nc">Request</span> <span class="p">{</span>
+        <span class="n">ArmCommand.Request</span> <span class="na">arm_command</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">MobilityCommand.Request</span> <span class="na">mobility_command</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="n">GripperCommand.Request</span> <span class="na">gripper_command</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -713,22 +709,22 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><a class="reference external" href="#stop">Stop</a> Stop and hold the arm in place</p></li>
 </ul>
 <section id="requests">
-<h3>Requests<a class="headerlink" href="#requests" title="Permalink to this heading">¶</a></h3>
+<h3>Requests<a class="headerlink" href="#requests" title="Permalink to this headline">¶</a></h3>
 <p>If you send a <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code> with only a subset of the messages filled out, only those commands will be overwritten.  For example, consider the following pseudo-code:</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="n">Time</span><span class="w"> </span><span class="na">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
-<span class="kd">message</span><span class="w"> </span><span class="nc">SynchronizedCommand</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="kd">message</span><span class="w"> </span><span class="nc">Request</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="n">ArmCommand.Request</span><span class="w"> </span><span class="na">arm_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stow</span><span class="p">;</span>
-<span class="w">      </span><span class="n">MobilityCommand.Request</span><span class="w"> </span><span class="na">mobility_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stand</span><span class="p">;</span>
-<span class="w">      </span><span class="n">GripperCommand.Request</span><span class="w"> </span><span class="na">gripper_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">close</span><span class="p">;</span>
-<span class="w">   </span><span class="p">}</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="n">Time</span> <span class="na">t</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="kd">message</span> <span class="nc">SynchronizedCommand</span> <span class="p">{</span>
+   <span class="kd">message</span> <span class="nc">Request</span> <span class="p">{</span>
+      <span class="n">ArmCommand.Request</span> <span class="na">arm_command</span> <span class="o">=</span> <span class="n">stow</span><span class="p">;</span>
+      <span class="n">MobilityCommand.Request</span> <span class="na">mobility_command</span> <span class="o">=</span> <span class="n">stand</span><span class="p">;</span>
+      <span class="n">GripperCommand.Request</span> <span class="na">gripper_command</span> <span class="o">=</span> <span class="n">close</span><span class="p">;</span>
+   <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">Time</span><span class="w"> </span><span class="na">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-<span class="kd">message</span><span class="w"> </span><span class="nc">SynchronizedCommand</span><span class="w"> </span><span class="p">{</span>
-<span class="w">   </span><span class="kd">message</span><span class="w"> </span><span class="nc">Request</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="n">MobilityCommand.Request</span><span class="w"> </span><span class="na">mobility_command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">se2_trajectory_request</span><span class="p">;</span>
-<span class="w">   </span><span class="p">}</span>
+<span class="n">Time</span> <span class="na">t</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="kd">message</span> <span class="nc">SynchronizedCommand</span> <span class="p">{</span>
+   <span class="kd">message</span> <span class="nc">Request</span> <span class="p">{</span>
+      <span class="n">MobilityCommand.Request</span> <span class="na">mobility_command</span> <span class="o">=</span> <span class="n">se2_trajectory_request</span><span class="p">;</span>
+   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -736,21 +732,21 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Similarly, if you sent a partially filled out <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code> after sending a <code class="docutils literal notranslate"><span class="pre">FullBodyCommand</span></code>, the empty <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code> requests will be auto filled with <code class="docutils literal notranslate"><span class="pre">safe_stop</span></code> requests.</p>
 </section>
 <section id="feedback">
-<h3>Feedback<a class="headerlink" href="#feedback" title="Permalink to this heading">¶</a></h3>
+<h3>Feedback<a class="headerlink" href="#feedback" title="Permalink to this headline">¶</a></h3>
 <p>With the introduction of <code class="docutils literal notranslate"><span class="pre">ArmCommand</span></code> and <code class="docutils literal notranslate"><span class="pre">GripperCommand</span></code> requests inside of the <code class="docutils literal notranslate"><span class="pre">SynchronizedCommand</span></code>, we have also modified feedback to return three messages, one feedback message for each request respectively.</p>
 </section>
 </section>
 <section id="armcommand-requests">
-<h2>ArmCommand Requests<a class="headerlink" href="#armcommand-requests" title="Permalink to this heading">¶</a></h2>
+<h2>ArmCommand Requests<a class="headerlink" href="#armcommand-requests" title="Permalink to this headline">¶</a></h2>
 <p>There are 7 different commands listed below that fall under the ArmCommand banner. The arm has 6 joints (+ a gripper), and can be controlled by specifying the joint angles directly, or by specifying a desired position and orientation (called a pose) where the hand should be. Joint angles are specified in radians, and Cartesian poses are specified with a 3D position in meters, and orientation is expressed with unit quaternions.</p>
 <section id="cartesian-moves">
-<h3>Cartesian Moves<a class="headerlink" href="#cartesian-moves" title="Permalink to this heading">¶</a></h3>
+<h3>Cartesian Moves<a class="headerlink" href="#cartesian-moves" title="Permalink to this headline">¶</a></h3>
 <p>When specifying a pose for the hand to move to, the user is able to specify 2 frames, and then a transform between those 2 frames. This fully defines the position and orientation the robot will move its hand to.</p>
 <p>The first frame is the “root” frame, which is the frame that the hand moves with respect to. Common choices for this frame are the “odom”, “vision” and “flat_body” frames. The second frame is a “tool” frame. If trying to grasp something or just move the arm around, this can often be left unset, and this will default to the <a class="reference external" href="#hand-frame">hand frame</a>. However, if a pointing device or sensor is attached to the end effector of the arm, setting the tool frame to be a transform to the point of interest can allow the user to directly move the sensor to a desired pose.</p>
 <p>As an example, if we wanted to have the robot touch the center of a fiducial with a 0.5m stick it is holding, we would set the following transforms:</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="n">root_frame_name</span><span class="o">:</span><span class="w"> </span><span class="n">fiducial_001</span>
-<span class="n">wrist_tform_tool</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">position</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">z</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span><span class="w"> </span><span class="n">rotation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">w</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7071</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="mf">0.7071</span><span class="w"> </span><span class="n">z</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}}</span>
-<span class="n">root_tform_task</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">position</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">z</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}</span><span class="w"> </span><span class="n">rotation</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="n">w</span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">x</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">y</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">z</span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">}}</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="n">root_frame_name</span><span class="o">:</span> <span class="n">fiducial_001</span>
+<span class="n">wrist_tform_tool</span><span class="o">:</span> <span class="p">{</span><span class="n">position</span><span class="o">:</span> <span class="p">{</span><span class="n">x</span><span class="o">:</span> <span class="mf">0.5</span> <span class="n">y</span><span class="o">:</span> <span class="mi">0</span> <span class="n">z</span><span class="o">:</span> <span class="mi">0</span><span class="p">}</span> <span class="n">rotation</span><span class="o">:</span> <span class="p">{</span><span class="n">w</span><span class="o">:</span> <span class="o">-</span><span class="mf">0.7071</span> <span class="n">x</span><span class="o">:</span> <span class="mi">0</span> <span class="n">y</span><span class="o">:</span> <span class="mf">0.7071</span> <span class="n">z</span><span class="o">:</span> <span class="mi">0</span><span class="p">}}</span>
+<span class="n">root_tform_task</span><span class="o">:</span> <span class="p">{</span><span class="n">position</span><span class="o">:</span> <span class="p">{</span><span class="n">x</span><span class="o">:</span> <span class="mi">0</span> <span class="n">y</span><span class="o">:</span> <span class="mi">0</span> <span class="n">z</span><span class="o">:</span> <span class="mi">0</span><span class="p">}</span> <span class="n">rotation</span><span class="o">:</span> <span class="p">{</span><span class="n">w</span><span class="o">:</span> <span class="mi">1</span> <span class="n">x</span><span class="o">:</span> <span class="mi">0</span> <span class="n">y</span><span class="o">:</span> <span class="mi">0</span> <span class="n">z</span><span class="o">:</span> <span class="mi">0</span><span class="p">}}</span>
 </pre></div>
 </div>
 <p>Note that users can also send sequences of poses with times, specify max velocity and acceleration, and add other options as well. See arm_command.proto for more details</p>
@@ -758,13 +754,13 @@ Development Kit License (20191101-BDSDK-SL).
 <p>See the following examples for requesting ArmCartesianCommands:<br /><a class="reference internal" href="../../../python/examples/arm_and_mobility_command/README.html"><span class="doc">Arm and Mobility Command</span></a><br /><a class="reference internal" href="../../../python/examples/arm_force_control/README.html"><span class="doc">Arm Force Control</span></a><br /><a class="reference internal" href="../../../python/examples/arm_simple/README.html"><span class="doc">Simple</span></a><br /><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html"><span class="doc">Trajectory</span></a></p>
 </section>
 <section id="joint-moves">
-<h3>Joint Moves<a class="headerlink" href="#joint-moves" title="Permalink to this heading">¶</a></h3>
+<h3>Joint Moves<a class="headerlink" href="#joint-moves" title="Permalink to this headline">¶</a></h3>
 <p>Users can specify a set of joint angles they want the arm to move to. Users can optionally set a maximum velocity and acceleration that each joint is allowed to travel at, and/or specify full trajectories with times that they want the robot to reach those joint angles.</p>
 <p>Joint moves can be especially useful when moving the arm to hard to reach places, or trying to make the arm wave through a set of predefined poses.</p>
 <p>See the <a class="reference internal" href="../../../python/examples/arm_joint_move/README.html"><span class="doc">Joint Move</span></a> example for requesting ArmJointMoveCommands.</p>
 </section>
 <section id="predefined-poses">
-<h3>Predefined Poses<a class="headerlink" href="#predefined-poses" title="Permalink to this heading">¶</a></h3>
+<h3>Predefined Poses<a class="headerlink" href="#predefined-poses" title="Permalink to this headline">¶</a></h3>
 <p>Users can command the arm to move to the following poses:
 Stow (arm tucked away, ready to walk)
 Carry (useful for carrying an object somewhere)
@@ -773,33 +769,33 @@ Ready (arm out in front, ready to manipulate)</p>
 <p>See the <a class="reference internal" href="../../../python/examples/arm_stow_unstow/README.html"><span class="doc">Stow/Unstow</span></a> example for requesting NamedArmPositions.</p>
 </section>
 <section id="arm-velocity">
-<h3>Arm Velocity<a class="headerlink" href="#arm-velocity" title="Permalink to this heading">¶</a></h3>
+<h3>Arm Velocity<a class="headerlink" href="#arm-velocity" title="Permalink to this headline">¶</a></h3>
 <p>When controlling the arm with a joystick, because of latency, it can often be better to send velocity commands rather than position commands. Users can specify the velocity in a cylindrical frame around the body, or with their own specified frame. Both linear and angular velocity can be specified.</p>
 </section>
 <section id="gaze">
-<h3>Gaze<a class="headerlink" href="#gaze" title="Permalink to this heading">¶</a></h3>
+<h3>Gaze<a class="headerlink" href="#gaze" title="Permalink to this headline">¶</a></h3>
 <p>Sometimes it is useful to have the arm continuously look at something while moving between positions. The user can specify both a position / trajectory of the target and a desired trajectory of the camera. If a different camera is attached to the end effector, <code class="docutils literal notranslate"><span class="pre">wrist_tform_tool</span></code> can be used to specify the x-axis of the camera, which is the direction we look at. Note that some of the desired trajectory’s orientation will be ignored, since we will constrain the x-axis of the camera to look at the target at all times.</p>
 <p>See the <a class="reference internal" href="../../../python/examples/arm_gaze/README.html"><span class="doc">Gaze</span></a> example for requesting GazeCommands:</p>
 </section>
 <section id="stop">
-<h3>Stop<a class="headerlink" href="#stop" title="Permalink to this heading">¶</a></h3>
+<h3>Stop<a class="headerlink" href="#stop" title="Permalink to this headline">¶</a></h3>
 <p>When something is going wrong, sending this command will bring the arm to a stop. It will also apply minimal forces to the world. For example, if the arm is in the middle of opening a heavy door and a stop command is sent, the arm will comply and let the door close.</p>
 </section>
 <section id="drag">
-<h3>Drag<a class="headerlink" href="#drag" title="Permalink to this heading">¶</a></h3>
+<h3>Drag<a class="headerlink" href="#drag" title="Permalink to this headline">¶</a></h3>
 <p>Once the gripper is holding something, calling this command will put the arm into a compliant state that will let the robot pull a heavy object around. Drag will generally try to keep the object in front of the body for maximum pulling force. By sending the appropriate locomotion commands to move the body in a backwards direction, the robot can move heavy things around in the world.</p>
 </section>
 </section>
 <section id="mobility-request">
-<h2>Mobility Request<a class="headerlink" href="#mobility-request" title="Permalink to this heading">¶</a></h2>
+<h2>Mobility Request<a class="headerlink" href="#mobility-request" title="Permalink to this headline">¶</a></h2>
 <section id="followarmcommand">
-<h3>FollowArmCommand<a class="headerlink" href="#followarmcommand" title="Permalink to this heading">¶</a></h3>
+<h3>FollowArmCommand<a class="headerlink" href="#followarmcommand" title="Permalink to this headline">¶</a></h3>
 <p>The robot’s base will move in response to the hand’s position, allowing the arm to reach beyond its current workspace.  If the hand is requested to move forward, then the base will begin walking forward.  Our chalk drawing example takes advantage of this capability, where the task is the execution of a drawing with the hand, but the entire robot is recruited to accomplish the task.</p>
 <p>See the following examples for requesting FollowArmCommands:<br /><a class="reference internal" href="../../../python/examples/arm_gcode/README.html"><span class="doc">GCode</span></a><br /><a class="reference internal" href="../../../python/examples/arm_with_body_follow/README.html"><span class="doc">Arm With Body Follow</span></a></p>
 </section>
 </section>
 <section id="hand-frame">
-<h2>Hand frame<a class="headerlink" href="#hand-frame" title="Permalink to this heading">¶</a></h2>
+<h2>Hand frame<a class="headerlink" href="#hand-frame" title="Permalink to this headline">¶</a></h2>
 <p>The hand frame is used by many of the ArmCommand requests available in the API. The hand frame has its origin slightly in front of the gripper’s palm plate and is aligned with the parent link’s (wrist) orientation. The position of the hand frame’s origin relative to the parent wrist frame is:
 x = 0.19557 m
 y = 0 m
@@ -807,18 +803,18 @@ z = 0 m
 The rotation between the hand frame and the wrist is the identity matrix. When specifying trajectories using default values, the target position of the trajectory is the origin of this hand frame.</p>
 <img src="../../../_images/hand_frame.png" alt="Hand Frame drawing" style="width:400px"></section>
 <section id="collision-avoidance">
-<h2>Collision avoidance<a class="headerlink" href="#collision-avoidance" title="Permalink to this heading">¶</a></h2>
+<h2>Collision avoidance<a class="headerlink" href="#collision-avoidance" title="Permalink to this headline">¶</a></h2>
 <p>The Arm has no proximity awareness of its own, so maintaining safe distance is essential. If obstacles or people are in the path of operation, the Arm has no collision avoidance capability to prevent contact. Safe Arm operation depends on the Operator and/or safety observers maintaining situational awareness and halting operations if the Arm is at risk of contacting objects or people.</p>
 <p><strong>WARNING</strong>: The robot Arm does not have any obstacle avoidance capability.</p>
 <p>Even if the robot’s onboard cameras can see an obstacle, the Arm cannot avoid it without the Operator’s intervention. In tight spaces, it is possible for the gripper head to inadvertently collide with something in the world. When operating around sensitive, fragile, or other objects that should not be contacted, extra care should be taken to avoid collisions with the Arm.</p>
 <p>Note: The Arm does have the ability to avoid colliding with itself, the robot’s body, and any properly configured payloads attached to the body.</p>
 </section>
 <section id="body-force-limiter">
-<h2>Body force limiter<a class="headerlink" href="#body-force-limiter" title="Permalink to this heading">¶</a></h2>
+<h2>Body force limiter<a class="headerlink" href="#body-force-limiter" title="Permalink to this headline">¶</a></h2>
 <p>In order to prevent large forces from being applied to the body when the Arm collides with something in the world, Arm torques are automatically limited to protect the body from being disturbed.</p>
 </section>
 <section id="safety-notes">
-<h2>Safety notes<a class="headerlink" href="#safety-notes" title="Permalink to this heading">¶</a></h2>
+<h2>Safety notes<a class="headerlink" href="#safety-notes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Arm torque limitations will not prevent damage to the environment and should NOT be used as a safety feature. These limitations are designed to reduce the likelihood that the robot will fall over if the Arm collides with some obstacle.</p></li>
 <li><p>If the robot walks into an object with the Arm outstretched that object can be damaged.</p></li>

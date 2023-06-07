@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -685,10 +681,10 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="thermal-raw-data">
-<h1>Thermal Raw Data<a class="headerlink" href="#thermal-raw-data" title="Permalink to this heading">¶</a></h1>
+<h1>Thermal Raw Data<a class="headerlink" href="#thermal-raw-data" title="Permalink to this headline">¶</a></h1>
 <p>The Spot CAM+IR payload allows capture of thermal data in the forms of <code class="docutils literal notranslate"><span class="pre">.raw</span></code> or <code class="docutils literal notranslate"><span class="pre">.pgm</span></code> files. Raw data files allow for more versatility when compared to a thermal <code class="docutils literal notranslate"><span class="pre">jpeg</span></code> image because they allow the thermal data to be rendered or analyzed as needed. For example, re-construction of a thermal image from the raw thermal data enables viewing with custom color palettes or to perform specific image processing in more advanced applications.</p>
 <section id="understanding-thermal-data">
-<h2>Understanding thermal data<a class="headerlink" href="#understanding-thermal-data" title="Permalink to this heading">¶</a></h2>
+<h2>Understanding thermal data<a class="headerlink" href="#understanding-thermal-data" title="Permalink to this headline">¶</a></h2>
 <p>The raw thermal data from the Spot CAM+IR contains 327,680 (640x512) 16-bit unsigned values. Each value describes a temperature in units of decikelvin. To get the value in units of kelvin, divide the value by 10.</p>
 <p>The two bytes encoding each data value are given in <strong>big endian</strong>, meaning that the most significant byte of the two is given first when reading the data from left to right. There is an exception to this for version 3.1.0 of the Spot CAM+IR software, in which the byte order of the data was reversed to <strong>little endian</strong>.</p>
 <table border="1" class="docutils">
@@ -709,25 +705,25 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 </tbody>
 </table><section id="thermal-file-types-pgm-vs-raw">
-<h3>Thermal file types (<code class="docutils literal notranslate"><span class="pre">.pgm</span></code> vs <code class="docutils literal notranslate"><span class="pre">.raw</span></code>)<a class="headerlink" href="#thermal-file-types-pgm-vs-raw" title="Permalink to this heading">¶</a></h3>
+<h3>Thermal file types (<code class="docutils literal notranslate"><span class="pre">.pgm</span></code> vs <code class="docutils literal notranslate"><span class="pre">.raw</span></code>)<a class="headerlink" href="#thermal-file-types-pgm-vs-raw" title="Permalink to this headline">¶</a></h3>
 <p>Raw data captured using the SDK is captured as <code class="docutils literal notranslate"><span class="pre">.pgm</span></code> while the same data captured using callbacks is captured as <code class="docutils literal notranslate"><span class="pre">.raw</span></code>. Both contain the same data, except that the <code class="docutils literal notranslate"><span class="pre">.pgm</span></code> file contains additional header lines. In general, <code class="docutils literal notranslate"><span class="pre">.pgm</span></code> files are downloaded when using the spot SDK while <code class="docutils literal notranslate"><span class="pre">.raw</span></code> files are downloaded when downloading through <a class="reference external" href="data_buffer_overview.html#data-acquisition-download">the data service</a>. The example script can read both file types, but it throws away any header files. The <code class="docutils literal notranslate"><span class="pre">.pgm</span></code> headers are necessary to parse the data if the width and height of the image are variable.</p>
 </section>
 </section>
 <section id="rendering-raw-thermal-data">
-<h2>Rendering raw thermal data<a class="headerlink" href="#rendering-raw-thermal-data" title="Permalink to this heading">¶</a></h2>
+<h2>Rendering raw thermal data<a class="headerlink" href="#rendering-raw-thermal-data" title="Permalink to this headline">¶</a></h2>
 <p>Some image viewers can natively open .pgm files as a grayscale image. To instead show with a particular color palette, a lookup-table can be referenced to map from temperature to a color. For example, the lookup tables used by matplotlib can be referenced at this <a class="reference external" href="https:/github.com/matplotlib/matplotlib/blob/main/lib/matplotlib/_cm_listed">link</a></p>
 <section id="scaling-the-color-mapping">
-<h3>Scaling the color mapping<a class="headerlink" href="#scaling-the-color-mapping" title="Permalink to this heading">¶</a></h3>
+<h3>Scaling the color mapping<a class="headerlink" href="#scaling-the-color-mapping" title="Permalink to this headline">¶</a></h3>
 <p>The left image is a render using the min and max temperatures mapping directly to the the min and max values in the color map. The image on the right shows the same image but with the mapping adjusted so that the lower temperature values are less prominent. This allows for more contrast and improved visibility of the hotter areas.
 <img alt="Thermal Ironbow Example" src="../../_images/thermal_example_contrast.png" /></p>
 </section>
 <section id="color-palettes">
-<h3>Color palettes:<a class="headerlink" href="#color-palettes" title="Permalink to this heading">¶</a></h3>
+<h3>Color palettes:<a class="headerlink" href="#color-palettes" title="Permalink to this headline">¶</a></h3>
 <p>The following renderings are generated from a single thermal data capture and rendered with OpenCV.
 <img alt="Thermal Custom Palettes Example" src="../../_images/thermal_example_custom_colors.png" /></p>
 </section>
 <section id="example-code">
-<h3>Example code<a class="headerlink" href="#example-code" title="Permalink to this heading">¶</a></h3>
+<h3>Example code<a class="headerlink" href="#example-code" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 

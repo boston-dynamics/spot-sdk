@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,16 +681,16 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="docking">
-<h1>Docking<a class="headerlink" href="#docking" title="Permalink to this heading">¶</a></h1>
+<h1>Docking<a class="headerlink" href="#docking" title="Permalink to this headline">¶</a></h1>
 <section id="spot-dock">
-<h2>Spot Dock<a class="headerlink" href="#spot-dock" title="Permalink to this heading">¶</a></h2>
+<h2>Spot Dock<a class="headerlink" href="#spot-dock" title="Permalink to this headline">¶</a></h2>
 <p>The Spot Dock (pictured below) is a docking station for the Spot Robot that has power and high speed ethernet connections to recharge and download data from the robot.</p>
 <p><img alt="dock_rendering" src="../../../_images/dock_transparent_white.png" /></p>
 <p>The tag on top of the robot is used by the robots vision system to locate the dock. It should be kept clean and unobstructed.</p>
 <p>There are two indexing cones on the dock which help locate the robot connector. When Spot docks, they lower, revealing the connector. The rear tower is secured by an interlock preventing the electrical connector being exposed without a robot.</p>
 </section>
 <section id="docking-service">
-<h2>Docking Service<a class="headerlink" href="#docking-service" title="Permalink to this heading">¶</a></h2>
+<h2>Docking Service<a class="headerlink" href="#docking-service" title="Permalink to this headline">¶</a></h2>
 <p>The docking service provides an interface to control Spot and use a Spot Dock.</p>
 <p>There are four RPCs to the docking service.</p>
 <table border="1" class="docutils">
@@ -724,9 +720,9 @@ Development Kit License (20191101-BDSDK-SL).
 </tbody>
 </table></section>
 <section id="typical-usage">
-<h2>Typical Usage<a class="headerlink" href="#typical-usage" title="Permalink to this heading">¶</a></h2>
+<h2>Typical Usage<a class="headerlink" href="#typical-usage" title="Permalink to this headline">¶</a></h2>
 <section id="docking-the-robot">
-<h3>Docking the Robot<a class="headerlink" href="#docking-the-robot" title="Permalink to this heading">¶</a></h3>
+<h3>Docking the Robot<a class="headerlink" href="#docking-the-robot" title="Permalink to this headline">¶</a></h3>
 <p>To dock the robot it should be powered on and standing near the dock so that the robot can detect it.</p>
 <ol class="simple">
 <li><p>Issue a <code class="docutils literal notranslate"><span class="pre">DockingCommand</span></code>, with an end time long enough to complete the docking sequence (30 seconds is a recommended value). You will be provided a docking command ID in return.</p></li>
@@ -736,7 +732,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>You do not need to issue multiple <code class="docutils literal notranslate"><span class="pre">DockingComand</span></code> RPCs unless you explicitly want to issue a new docking command.</p>
 </section>
 <section id="undocking-the-robot">
-<h3>Undocking the Robot<a class="headerlink" href="#undocking-the-robot" title="Permalink to this heading">¶</a></h3>
+<h3>Undocking the Robot<a class="headerlink" href="#undocking-the-robot" title="Permalink to this headline">¶</a></h3>
 <p>To undock the robot it should be sitting on the dock with the area in front of the dock unobstructed.</p>
 <ol class="simple">
 <li><p>Power on the robot however you like, this is not the responsibility of the docking service for safety reasons.</p></li>
@@ -748,11 +744,11 @@ Development Kit License (20191101-BDSDK-SL).
 <p>If the area in front of the robot isn’t clear it’s possible to manually undock the robot by simply powering it on, standing, and driving, just like you would if the robot wasn’t docked. Under normal circumstances it’s recommended to use the automatic undocking behavior.</p>
 </section>
 <section id="docking-config">
-<h3>Docking Config<a class="headerlink" href="#docking-config" title="Permalink to this heading">¶</a></h3>
+<h3>Docking Config<a class="headerlink" href="#docking-config" title="Permalink to this headline">¶</a></h3>
 <p>Issuing a <code class="docutils literal notranslate"><span class="pre">GetDockingConfig</span></code> command will return a list of dock IDs and their dock type. This can help determine what the robot will detect as a dock, and which type of dock.</p>
 </section>
 <section id="docking-state">
-<h3>Docking State<a class="headerlink" href="#docking-state" title="Permalink to this heading">¶</a></h3>
+<h3>Docking State<a class="headerlink" href="#docking-state" title="Permalink to this headline">¶</a></h3>
 <p>Issuing a <code class="docutils literal notranslate"><span class="pre">GetDockingState</span></code> command will return the docked status of the robot independent of any <code class="docutils literal notranslate"><span class="pre">DockingCommand</span></code>. It will indicate if the robot is already docked, currently docking, or not docked.
 If the robot is docked extra information about the dock ID, and charge status is provided.</p>
 </section>

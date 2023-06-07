@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -685,9 +681,9 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="bddf-data-format">
-<h1>BDDF data format<a class="headerlink" href="#bddf-data-format" title="Permalink to this heading">¶</a></h1>
+<h1>BDDF data format<a class="headerlink" href="#bddf-data-format" title="Permalink to this headline">¶</a></h1>
 <section id="motivation">
-<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading">¶</a></h2>
+<h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this headline">¶</a></h2>
 <p>Data stored on Spot robots is downloaded in the BDDF format. BDDF is a file format created by Boston Dynamics for storing timestamped data, along with metadata.  It supports both binary blobs and POD (”plain old data”) such as integers or floating point numbers.</p>
 <p>BDDF was created to satisfy the following set of requirements:</p>
 <ul class="simple">
@@ -704,7 +700,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="organization">
-<h2>Organization<a class="headerlink" href="#organization" title="Permalink to this heading">¶</a></h2>
+<h2>Organization<a class="headerlink" href="#organization" title="Permalink to this headline">¶</a></h2>
 <p>The structure of the file is a sequence of “blocks” with simple framing.  Some blocks store descriptive information about the file and its contents, and some blocks store data.</p>
 <p>BDDF can store both binary “blobs” and “plain old data” (POD) values such as integers or floating point numbers.</p>
 <p>Stored data is organized into “data series”.  A data series:</p>
@@ -718,7 +714,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Within a data file, a data series is addressed with a series-index.  Within a data series, a data block is addressed by an integer index-in-series.  At the end of the BDDF file, a file index lists all the data series and locations of the series indexes in the file.</p>
 </section>
 <section id="identifying-data-series">
-<h2>Identifying data series<a class="headerlink" href="#identifying-data-series" title="Permalink to this heading">¶</a></h2>
+<h2>Identifying data series<a class="headerlink" href="#identifying-data-series" title="Permalink to this headline">¶</a></h2>
 <p>Depending on the broad class of content which may be stored in a data series, the series might be described in different ways.  For this reason, instead of requiring a unique string name to identify a series, we use a slightly more flexible identifier: a unique mapping of {key -&gt; value}.</p>
 <p>A BDDF SeriesIdentifier has a <code class="docutils literal notranslate"><span class="pre">series_type</span></code>, which describes the kind of series, and a <code class="docutils literal notranslate"><span class="pre">spec</span></code> which is a mapping of {key -&gt; value} further identifying the series.  The <code class="docutils literal notranslate"><span class="pre">series_type</span></code> implies the set of keys which should be used in the <code class="docutils literal notranslate"><span class="pre">spec</span></code>.</p>
 <p>For example:</p>
@@ -730,12 +726,12 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Because BDDF SeriesIdentifier is a structure, the BDDF format provides a method to hash this structure to make it easier to index.  The hash is the first 64 bits of <code class="docutils literal notranslate"><span class="pre">SHA1(S</span> <span class="pre">K1</span> <span class="pre">V1</span> <span class="pre">K2</span> <span class="pre">V2</span> <span class="pre">...)</span></code> where <code class="docutils literal notranslate"><span class="pre">S</span></code> is series identifier text, <code class="docutils literal notranslate"><span class="pre">K1</span></code> and <code class="docutils literal notranslate"><span class="pre">V1</span></code> are the key and value of the first key and value of the <code class="docutils literal notranslate"><span class="pre">spec</span></code>, <code class="docutils literal notranslate"><span class="pre">K2</span></code> and <code class="docutils literal notranslate"><span class="pre">V2</span></code> are the second key and value of the spec, etc…  Here, all strings are encoded as utf-8, and keys are sorted least-to-greatest using this encoding.</p>
 </section>
 <section id="data-series-annotations">
-<h2>Data series annotations<a class="headerlink" href="#data-series-annotations" title="Permalink to this heading">¶</a></h2>
+<h2>Data series annotations<a class="headerlink" href="#data-series-annotations" title="Permalink to this headline">¶</a></h2>
 <p>Annotations, in the form of a set of string key -&gt; value mappings, should be used to express further information about a data series.  The format of annotation keys should be {project-or-organization}:{annotation-name}.  For example, ‘bosdyn:channel-name’, ‘bosdyn:protobuf-type’.  Annotation keys without a ‘:’ or starting with ‘:’ are reserved.  The only current key in the reserved namespace is <code class="docutils literal notranslate"><span class="pre">units</span></code>: e.g., <code class="docutils literal notranslate"><span class="pre">{'units':</span> <span class="pre">'m/s2'}</span></code>.</p>
 <p>Units should be specified using the <a class="reference external" href="https://unitsofmeasure.org/ucum.html">Unified Code for Units of Measure</a>.</p>
 </section>
 <section id="file-structure">
-<h2>File structure<a class="headerlink" href="#file-structure" title="Permalink to this heading">¶</a></h2>
+<h2>File structure<a class="headerlink" href="#file-structure" title="Permalink to this headline">¶</a></h2>
 <p>There are three basic kinds of blocks in the file:</p>
 <ul class="simple">
 <li><p><strong>DescriptorBlocks</strong>.  These describe either the file as a whole, a data series or a file index.</p></li>

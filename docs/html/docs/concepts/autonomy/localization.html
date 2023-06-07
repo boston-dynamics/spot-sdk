@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,11 +681,11 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="graphnav-localization">
-<h1>GraphNav Localization<a class="headerlink" href="#graphnav-localization" title="Permalink to this heading">¶</a></h1>
+<h1>GraphNav Localization<a class="headerlink" href="#graphnav-localization" title="Permalink to this headline">¶</a></h1>
 <p>Once the robot’s location has been initialized in GraphNav, clients can use the <code class="docutils literal notranslate"><span class="pre">GetLocalizationState</span></code> RPC. The response message will contain a localization object which reports the pose of the robot relative to a particular waypoint on the map.</p>
 <p>A map’s waypoints are combined with the cumulative point cloud data captured at each waypoint. It’s important to understand that this point cloud data does not result in global consistency.</p>
 <section id="localization-update-interval">
-<h2>Localization update interval<a class="headerlink" href="#localization-update-interval" title="Permalink to this heading">¶</a></h2>
+<h2>Localization update interval<a class="headerlink" href="#localization-update-interval" title="Permalink to this headline">¶</a></h2>
 <p>GraphNav updates localization at least twice a second. Internally, GraphNav uses the localization estimate to decide whether or not to switch the localization frame to a different waypoint on the map.</p>
 <p>Localization is computed by combining prior information from the map, the robot’s odometry, and visual and geometric features in the world around the robot. The quality of the pose estimate varies depending on the environment, the sensor payload on Spot, how far away the robot is from a waypoint and how the robot got to its current position.</p>
 <p>Situations that can have a negative effect on localization:</p>
@@ -703,35 +699,35 @@ Development Kit License (20191101-BDSDK-SL).
 <p>A robot equipped with a LIDAR payload can operate in darker environments than a robot without such a payload.</p>
 </section>
 <section id="feature-deserts">
-<h2>Feature Deserts<a class="headerlink" href="#feature-deserts" title="Permalink to this heading">¶</a></h2>
+<h2>Feature Deserts<a class="headerlink" href="#feature-deserts" title="Permalink to this headline">¶</a></h2>
 <p>GraphNav depends on features in the environment to localize. Where features are lacking, localization is more difficult or impossible.</p>
 <p>For example, every position on a snow-covered field looks the same — there isn’t enough detail for localization to succeed. Internally GraphNav estimates whether the robot’s location provides sufficient data for localization. If not, any waypoints created are annotated as feature deserts.</p>
 <p>GraphNav will not attempt to localize in feature deserts. Instead, it will rely on odometry to allow the robot to cross small feature deserts.</p>
 </section>
 <section id="lost-robots">
-<h2>Lost robots<a class="headerlink" href="#lost-robots" title="Permalink to this heading">¶</a></h2>
+<h2>Lost robots<a class="headerlink" href="#lost-robots" title="Permalink to this headline">¶</a></h2>
 <p>The GraphNav service maintains an internal assessment of whether or not it believes the robot is lost or stuck. When lost, the service will refuse to navigate autonomously.</p>
 <p>This determination is correlated with the amount of change in the environment where the map was recorded. A site that has changed significantly since recording will look very different to the robot. For example, a map of an empty parking lot will look different when cars are parked there.</p>
 <p>When site changes cause the localization status to be <code class="docutils literal notranslate"><span class="pre">STATUS_LOST</span></code>, a new map of the site should be recorded.</p>
 </section>
 <section id="stuck-robots">
-<h2>Stuck robots<a class="headerlink" href="#stuck-robots" title="Permalink to this heading">¶</a></h2>
+<h2>Stuck robots<a class="headerlink" href="#stuck-robots" title="Permalink to this headline">¶</a></h2>
 <p>The GraphNav service uses a system of constraints to keep the robot relatively close to the recorded route (roughly within a 3m corridor).</p>
 <p>If a large object is placed in the robot’s path, the robot may not be able to get around it. If the robot takes longer than expected to get to its next destination, GraphNav will declare the robot stuck. This does NOT stop the robot, which will keep trying to return to the route. However, the API client may wish to intervene or prompt the operator.</p>
 </section>
 <section id="stairs-and-other-edge-constraints">
-<h2>Stairs and other edge constraints<a class="headerlink" href="#stairs-and-other-edge-constraints" title="Permalink to this heading">¶</a></h2>
+<h2>Stairs and other edge constraints<a class="headerlink" href="#stairs-and-other-edge-constraints" title="Permalink to this headline">¶</a></h2>
 <p>When recording a map that includes stairs, annotations will be added to the relevant edges in the map. The system will orient the robot to face up the stairs (both when ascending and descending) and reduce the maximum speed. Typically this results in the robot turning in place at the top of a stairwell and carefully descending.</p>
 <p>Edges may also be annotated with related constraints to maintain direction. For example, this allows the robot to safely traverse stairs connected to a narrow hallway by turning around before entering the narrow region.</p>
 <p>The robot must have enough space to turn around in between up- and down- stairs, otherwise the robot will report a navigation status of <code class="docutils literal notranslate"><span class="pre">STATUS_CONSTRAINT_FAULT</span></code>.</p>
 </section>
 <section id="graphnav-origin">
-<h2>GraphNav Origin<a class="headerlink" href="#graphnav-origin" title="Permalink to this heading">¶</a></h2>
+<h2>GraphNav Origin<a class="headerlink" href="#graphnav-origin" title="Permalink to this headline">¶</a></h2>
 <p>The localization object includes an additional field <code class="docutils literal notranslate"><span class="pre">seed_tform_body</span></code> since the 2.1.0 release. This field returns the pose of the robot body with respect to the starting fiducial frame as an SE3Pose, which can be considered the “origin” or “seed” of the GraphNav map.</p>
 <p>Please reference this <a class="reference external" href="https://support.bostondynamics.com/s/article/Site-inspection-with-teleoperation">document</a> for how to initialize and define a custom origin using the Tablet App outside of Autowalk since the 2.1.0 release.</p>
 <p>An example of how to access this field with the Spot API is available below. Please remember to initialize the GraphNav map first or the SE3Pose will be not be populated.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_graphnav_origin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Returns seed_tform_body. &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; Returns seed_tform_body. &quot;&quot;&quot;</span>
     <span class="n">graph_nav_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bosdyn_sdk_robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">GraphNavClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
     <span class="n">state</span> <span class="o">=</span> <span class="n">graph_nav_client</span><span class="o">.</span><span class="n">get_localization_state</span><span class="p">()</span>
     <span class="n">gn_origin_tform_body</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">localization</span><span class="o">.</span><span class="n">seed_tform_body</span>

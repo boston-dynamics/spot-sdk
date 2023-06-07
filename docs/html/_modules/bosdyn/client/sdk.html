@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -739,15 +735,15 @@
 
 
 <div class="viewcode-block" id="SdkError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.SdkError">[docs]</a><span class="k">class</span> <span class="nc">SdkError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors to handle non-response non-rpc errors.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;General class of errors to handle non-response non-rpc errors.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnsetAppTokenError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.UnsetAppTokenError">[docs]</a><span class="k">class</span> <span class="nc">UnsetAppTokenError</span><span class="p">(</span><span class="n">SdkError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Path to app token not set.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Path to app token not set.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnableToLoadAppTokenError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.UnableToLoadAppTokenError">[docs]</a><span class="k">class</span> <span class="nc">UnableToLoadAppTokenError</span><span class="p">(</span><span class="n">SdkError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cannot load the provided app token path.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Cannot load the provided app token path.&quot;&quot;&quot;</span></div>
 
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -757,7 +753,7 @@
 
 
 <div class="viewcode-block" id="generate_client_name"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.generate_client_name">[docs]</a><span class="k">def</span> <span class="nf">generate_client_name</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a descriptive client name for API clients with an optional prefix.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Returns a descriptive client name for API clients with an optional prefix.&quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">bosdyn.client.__main__</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">process_info</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">-</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">__main__</span><span class="o">.</span><span class="vm">__file__</span><span class="p">),</span>
@@ -822,7 +818,7 @@
 
 
 <div class="viewcode-block" id="create_standard_sdk"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.create_standard_sdk">[docs]</a><span class="k">def</span> <span class="nf">create_standard_sdk</span><span class="p">(</span><span class="n">client_name_prefix</span><span class="p">,</span> <span class="n">service_clients</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cert_resource_glob</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an Sdk with the most common configuration.</span>
+    <span class="sd">&quot;&quot;&quot;Return an Sdk with the most common configuration.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        client_name_prefix: prefix to pass to generate_client_name()</span>
@@ -850,7 +846,7 @@
 
 
 <div class="viewcode-block" id="Sdk"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.Sdk">[docs]</a><span class="k">class</span> <span class="nc">Sdk</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Repository for settings typically common to a single developer and/or robot fleet.</span>
+    <span class="sd">&quot;&quot;&quot;Repository for settings typically common to a single developer and/or robot fleet.</span>
 <span class="sd">    See also Robot for robot-specific settings.</span>
 
 <span class="sd">    Args:</span>
@@ -880,7 +876,7 @@
             <span class="n">address</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a Robot initialized with this Sdk, creating it if it does not yet exist.</span>
+        <span class="sd">&quot;&quot;&quot;Get a Robot initialized with this Sdk, creating it if it does not yet exist.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            address: Network-resolvable address of the robot, e.g. &#39;192.168.80.3&#39;</span>
@@ -904,7 +900,7 @@
         <span class="k">return</span> <span class="n">robot</span></div>
 
 <div class="viewcode-block" id="Sdk.set_max_message_length"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.Sdk.set_max_message_length">[docs]</a>    <span class="k">def</span> <span class="nf">set_max_message_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_message_length</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the send and receive max message length values in all the clients/channels</span>
+        <span class="sd">&quot;&quot;&quot;Updates the send and receive max message length values in all the clients/channels</span>
 <span class="sd">        created from this point on.</span>
 
 <span class="sd">        Args:</span>
@@ -918,7 +914,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_receive_message_length</span> <span class="o">=</span> <span class="n">max_message_length</span></div>
 
 <div class="viewcode-block" id="Sdk.register_service_client"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.Sdk.register_service_client">[docs]</a>    <span class="k">def</span> <span class="nf">register_service_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">creation_func</span><span class="p">,</span> <span class="n">service_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">service_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tell the Sdk how to create a specific type of service client.</span>
+        <span class="sd">&quot;&quot;&quot;Tell the Sdk how to create a specific type of service client.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            creation_func: Callable that returns a client. Typically just the class.</span>
@@ -938,7 +934,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">service_client_factories_by_type</span><span class="p">[</span><span class="n">service_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">creation_func</span></div>
 
 <div class="viewcode-block" id="Sdk.load_robot_cert"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.Sdk.load_robot_cert">[docs]</a>    <span class="k">def</span> <span class="nf">load_robot_cert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_path_glob</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load the SSL certificate for the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Load the SSL certificate for the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            resource_path_glob: Optional path to certificate resource(s).</span>
@@ -961,7 +957,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">cert</span> <span class="o">+=</span> <span class="n">cert_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Sdk.clear_robots"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html#bosdyn.client.sdk.Sdk.clear_robots">[docs]</a>    <span class="k">def</span> <span class="nf">clear_robots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove all cached Robot instances.</span>
+        <span class="sd">&quot;&quot;&quot;Remove all cached Robot instances.</span>
 <span class="sd">        Subsequent calls to create_robot() will return newly created Robots.</span>
 <span class="sd">        Existing robot instances will continue to work, but their time sync and token refresh</span>
 <span class="sd">        threads will be stopped.</span>
@@ -975,7 +971,7 @@
         <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;App tokens are no longer in use. Authorization is now handled via licenses.&#39;</span><span class="p">,</span>
         <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.0.1&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">load_app_token</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Do nothing, this method is kept only to maintain backwards compatibility.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Do nothing, this method is kept only to maintain backwards compatibility.&quot;&quot;&quot;</span>
         <span class="k">return</span></div></div>
 
 
@@ -983,7 +979,7 @@
     <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Decoding tokens is no longer supported in the sdk.  Use pyjwt directly instead.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.0.1&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">decode_token</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decodes a JWT token without verification.</span>
+    <span class="sd">&quot;&quot;&quot;Decodes a JWT token without verification.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        token: A string representing a token.</span>
@@ -1006,7 +1002,7 @@
     <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Decoding tokens is no longer supported in the sdk.  Use pyjwt directly instead.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.0.1&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">log_token_time_remaining</span><span class="p">(</span><span class="n">token</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Log the time remaining until app token expires.</span>
+    <span class="sd">&quot;&quot;&quot;Log the time remaining until app token expires.</span>
 
 <span class="sd">    Arguments:</span>
 <span class="sd">        token: A jwt token</span>

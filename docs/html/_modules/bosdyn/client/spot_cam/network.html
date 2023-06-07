@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -688,7 +684,7 @@
 
 
 <div class="viewcode-block" id="NetworkClient"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html#bosdyn.client.spot_cam.network.NetworkClient">[docs]</a><span class="k">class</span> <span class="nc">NetworkClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client calling Spot CAM Network services such as ICE Candidates, SSL certs / Keys etc.</span>
+    <span class="sd">&quot;&quot;&quot;A client calling Spot CAM Network services such as ICE Candidates, SSL certs / Keys etc.</span>
 
 <span class="sd">    Note: Interactive Connectivity Establishment (ICE) is a protocol which lets two devices use</span>
 <span class="sd">    an intermediary to exchange offers and answers even if the two devices are separated</span>
@@ -701,13 +697,13 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">NetworkClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">NetworkServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="NetworkClient.get_ice_configuration"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html#bosdyn.client.spot_cam.network.NetworkClient.get_ice_configuration">[docs]</a>    <span class="k">def</span> <span class="nf">get_ice_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set ICE configuration on Spot CAM. This overrides all existing configured servers&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set ICE configuration on Spot CAM. This overrides all existing configured servers&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">network_pb2</span><span class="o">.</span><span class="n">GetICEConfigurationRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetICEConfiguration</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ice_servers_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NetworkClient.get_ice_configuration_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html#bosdyn.client.spot_cam.network.NetworkClient.get_ice_configuration_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_ice_configuration_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_ice_configuration()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_ice_configuration()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">network_pb2</span><span class="o">.</span><span class="n">GetICEConfigurationRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetICEConfiguration</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_ice_servers_from_response</span><span class="p">,</span>
@@ -715,13 +711,13 @@
 
 
 <div class="viewcode-block" id="NetworkClient.set_ice_configuration"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html#bosdyn.client.spot_cam.network.NetworkClient.set_ice_configuration">[docs]</a>    <span class="k">def</span> <span class="nf">set_ice_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ice_servers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get ICE configuration from Spot CAM&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get ICE configuration from Spot CAM&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_ice_configuration_request</span><span class="p">(</span><span class="n">ice_servers</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetICEConfiguration</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="NetworkClient.set_ice_configuration_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html#bosdyn.client.spot_cam.network.NetworkClient.set_ice_configuration_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_ice_configuration_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ice_servers</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_ice_configuration()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_ice_configuration()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_ice_configuration_request</span><span class="p">(</span><span class="n">ice_servers</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetICEConfiguration</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_ice_network_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>

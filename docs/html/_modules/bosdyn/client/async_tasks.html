@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -686,7 +682,7 @@
 
 
 <div class="viewcode-block" id="AsyncTasks"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html#bosdyn.client.async_tasks.AsyncTasks">[docs]</a><span class="k">class</span> <span class="nc">AsyncTasks</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages a set of tasks which work by periodically calling an update() method.</span>
+    <span class="sd">&quot;&quot;&quot;Manages a set of tasks which work by periodically calling an update() method.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        tasks: List of tasks to manage.</span>
@@ -696,7 +692,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tasks</span> <span class="o">=</span> <span class="n">tasks</span> <span class="k">if</span> <span class="n">tasks</span> <span class="k">else</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="AsyncTasks.add_task"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html#bosdyn.client.async_tasks.AsyncTasks.add_task">[docs]</a>    <span class="k">def</span> <span class="nf">add_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a task to be managed by this object.</span>
+        <span class="sd">&quot;&quot;&quot;Add a task to be managed by this object.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            task: Task to add.</span>
@@ -704,14 +700,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AsyncTasks.update"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html#bosdyn.client.async_tasks.AsyncTasks.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call this periodically to manage execution of tasks owned by this object.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Call this periodically to manage execution of tasks owned by this object.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tasks</span><span class="p">:</span>
             <span class="n">task</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div></div>
 
 
 <span class="c1"># pylint: disable=too-few-public-methods</span>
 <div class="viewcode-block" id="AsyncGRPCTask"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html#bosdyn.client.async_tasks.AsyncGRPCTask">[docs]</a><span class="k">class</span> <span class="nc">AsyncGRPCTask</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Task to be accomplished using asynchronous GRPC calls.</span>
+    <span class="sd">&quot;&quot;&quot;Task to be accomplished using asynchronous GRPC calls.</span>
 
 <span class="sd">    When it is time to run the task, an async GRPC call is run resulting in a FutureWrapper object.</span>
 <span class="sd">    The FutureWrapper is monitored for completion, and then an action is taken in response.</span>
@@ -723,11 +719,11 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_start_query</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override to start async grpc query and return future-wrapper for result.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Override to start async grpc query and return future-wrapper for result.&quot;&quot;&quot;</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_should_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now_sec</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called on update() when no query is running to determine whether to start a new query.</span>
+        <span class="sd">&quot;&quot;&quot;Called on update() when no query is running to determine whether to start a new query.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            now_sec: Time now in seconds.</span>
@@ -737,7 +733,7 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_handle_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override to handle result of grpc query when it is available.</span>
+        <span class="sd">&quot;&quot;&quot;Override to handle result of grpc query when it is available.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            result: Result to handle.</span>
@@ -745,14 +741,14 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_handle_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override to handle any exception raised in handling GRPC result.</span>
+        <span class="sd">&quot;&quot;&quot;Override to handle any exception raised in handling GRPC result.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            exception: Error exception to handle.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AsyncGRPCTask.update"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html#bosdyn.client.async_tasks.AsyncGRPCTask.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call this periodically to manage execution of task represented by this object.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Call this periodically to manage execution of task represented by this object.&quot;&quot;&quot;</span>
         <span class="n">now_sec</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_future</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_future</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="n">done</span><span class="p">():</span>
@@ -768,7 +764,7 @@
 
 <span class="c1"># pylint: disable=too-few-public-methods</span>
 <div class="viewcode-block" id="AsyncPeriodicGRPCTask"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html#bosdyn.client.async_tasks.AsyncPeriodicGRPCTask">[docs]</a><span class="k">class</span> <span class="nc">AsyncPeriodicGRPCTask</span><span class="p">(</span><span class="n">AsyncGRPCTask</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Periodic task to be accomplished using asynchronous GRPC calls.</span>
+    <span class="sd">&quot;&quot;&quot;Periodic task to be accomplished using asynchronous GRPC calls.</span>
 
 <span class="sd">    When it is time to run the task, an async GRPC call is run resulting in a FutureWrapper object.</span>
 <span class="sd">    The FutureWrapper is monitored for completion, and then an action is taken in response.</span>
@@ -782,7 +778,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_period_sec</span> <span class="o">=</span> <span class="n">period_sec</span>
 
     <span class="k">def</span> <span class="nf">_should_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">now_sec</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if it is time to query again.</span>
+        <span class="sd">&quot;&quot;&quot;Check if it is time to query again.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            now_sec: Time now in seconds.</span>
@@ -794,11 +790,11 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_start_query</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override to start async grpc query and return future-wrapper for result.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Override to start async grpc query and return future-wrapper for result.&quot;&quot;&quot;</span>
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_handle_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override to handle result of grpc query when it is available.</span>
+        <span class="sd">&quot;&quot;&quot;Override to handle result of grpc query when it is available.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            result: Result to handle.</span>
@@ -806,7 +802,7 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_handle_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override to handle any exception raised in handling GRPC result.</span>
+        <span class="sd">&quot;&quot;&quot;Override to handle any exception raised in handling GRPC result.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            exception: Error exception to handle.</span>
@@ -814,7 +810,7 @@
 
 
 <div class="viewcode-block" id="AsyncPeriodicQuery"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html#bosdyn.client.async_tasks.AsyncPeriodicQuery">[docs]</a><span class="k">class</span> <span class="nc">AsyncPeriodicQuery</span><span class="p">(</span><span class="n">AsyncPeriodicGRPCTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Query for robot data at some regular interval.</span>
+    <span class="sd">&quot;&quot;&quot;Query for robot data at some regular interval.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        query_name: Name of the query.</span>
@@ -832,15 +828,15 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_start_query</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override to start async grpc query and return future-wrapper for result.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Override to start async grpc query and return future-wrapper for result.&quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get latest response proto.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get latest response proto.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_proto</span>
 
     <span class="k">def</span> <span class="nf">_handle_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle result of grpc query when it is available.</span>
+        <span class="sd">&quot;&quot;&quot;Handle result of grpc query when it is available.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            result: Result to handle.</span>
@@ -848,7 +844,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_proto</span> <span class="o">=</span> <span class="n">result</span>
 
     <span class="k">def</span> <span class="nf">_handle_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log exception.</span>
+        <span class="sd">&quot;&quot;&quot;Log exception.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            exception: Error exception to log.</span>

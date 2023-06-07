@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,10 +683,10 @@
 
 
 <div class="viewcode-block" id="StreamDataReader"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html#bosdyn.bddf.stream_data_reader.StreamDataReader">[docs]</a><span class="k">class</span> <span class="nc">StreamDataReader</span><span class="p">(</span><span class="n">BaseDataReader</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Data reader which reads the file format from a stream, without seeking.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Data reader which reads the file format from a stream, without seeking.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outfile</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">         outfile:      binary file-like object for reading (e.g., from open(fname, &quot;rb&quot;)).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -706,26 +702,26 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">read_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;64-bit checksum read from the end of the file, or None if not yet read.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;64-bit checksum read from the end of the file, or None if not yet read.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_checksum</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">stream_file_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the file index as parsed from the stream.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the file index as parsed from the stream.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_indexer</span><span class="o">.</span><span class="n">file_index</span>
 
     <span class="k">def</span> <span class="nf">_computed_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hasher</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
 
 <div class="viewcode-block" id="StreamDataReader.series_descriptor"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html#bosdyn.bddf.stream_data_reader.StreamDataReader.series_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">series_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return SeriesDescriptor for given series index.</span>
+        <span class="sd">&quot;&quot;&quot;Return SeriesDescriptor for given series index.</span>
 
 <span class="sd">        Returns KeyError if no such series exists.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_indexer</span><span class="o">.</span><span class="n">series_descriptor</span><span class="p">(</span><span class="n">series_index</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="StreamDataReader.read_data_block"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html#bosdyn.bddf.stream_data_reader.StreamDataReader.read_data_block">[docs]</a>    <span class="k">def</span> <span class="nf">read_data_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read and return next data block.</span>
+        <span class="sd">&quot;&quot;&quot;Read and return next data block.</span>
 
 <span class="sd">        Returns: DataDescriptor, SeriesDescriptor, data (bytes)</span>
 
@@ -739,7 +735,7 @@
             <span class="k">return</span> <span class="n">desc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">series_descriptor</span><span class="p">(</span><span class="n">desc</span><span class="o">.</span><span class="n">series_index</span><span class="p">),</span> <span class="n">data</span></div>
 
 <div class="viewcode-block" id="StreamDataReader.read_next_block"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html#bosdyn.bddf.stream_data_reader.StreamDataReader.read_next_block">[docs]</a>    <span class="k">def</span> <span class="nf">read_next_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read and return next block.</span>
+        <span class="sd">&quot;&quot;&quot;Read and return next block.</span>
 
 <span class="sd">        Returns: True, DataDescriptor, data (bytes)   for data block</span>
 <span class="sd">        Returns: False, DescriptorBlock, None         for descriptor block</span>
@@ -775,16 +771,16 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">series_block_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current list of SeriesBlockIndexes: series_index -&gt; SeriesBlockIndex.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the current list of SeriesBlockIndexes: series_index -&gt; SeriesBlockIndex.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_indexer</span><span class="o">.</span><span class="n">series_block_indexes</span>
 
 <div class="viewcode-block" id="StreamDataReader.series_block_index"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html#bosdyn.bddf.stream_data_reader.StreamDataReader.series_block_index">[docs]</a>    <span class="k">def</span> <span class="nf">series_block_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the SeriesBlockIndexes for the given series_index.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the SeriesBlockIndexes for the given series_index.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_indexer</span><span class="o">.</span><span class="n">series_block_indexes</span><span class="p">[</span><span class="n">series_index</span><span class="p">]</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">eof</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if all blocks in the file have been read.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if all blocks in the file have been read.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_eof</span></div>
 </pre></div>
 

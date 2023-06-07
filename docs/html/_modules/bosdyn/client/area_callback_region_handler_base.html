@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -693,13 +689,13 @@
 
 
 <div class="viewcode-block" id="PathBlocked"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.PathBlocked">[docs]</a><span class="k">class</span> <span class="nc">PathBlocked</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The callback reports the that path/area it&#39;s trying to traverse is blocked and the robot</span>
+    <span class="sd">&quot;&quot;&quot;The callback reports the that path/area it&#39;s trying to traverse is blocked and the robot</span>
 <span class="sd">    should take another route or action.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="IncorrectUsage"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.IncorrectUsage">[docs]</a><span class="k">class</span> <span class="nc">IncorrectUsage</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error raised by calling a helper function incorrectly.</span>
+    <span class="sd">&quot;&quot;&quot;Error raised by calling a helper function incorrectly.</span>
 
 <span class="sd">    Raised when a call would block forever or has otherwise been used in an incorrect manner.</span>
 <span class="sd">    This exception is not intended to be caught, but indicates a programming error.</span>
@@ -707,7 +703,7 @@
 
 
 <div class="viewcode-block" id="HandlerError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.HandlerError">[docs]</a><span class="k">class</span> <span class="nc">HandlerError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error base class for errors raised from the internals of the AreaCallbackRegionHandlerBase.</span>
+    <span class="sd">&quot;&quot;&quot;Error base class for errors raised from the internals of the AreaCallbackRegionHandlerBase.</span>
 
 <span class="sd">    This error will be raised when the shutdown_event signal is set, or can be raised by the user</span>
 <span class="sd">    to signal an error. A wrapper around the run implementation will catch this exception and</span>
@@ -716,16 +712,16 @@
 
 
 <div class="viewcode-block" id="CallbackEnded"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.CallbackEnded">[docs]</a><span class="k">class</span> <span class="nc">CallbackEnded</span><span class="p">(</span><span class="n">HandlerError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The callback has already been stopped, via an EndCallback call.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The callback has already been stopped, via an EndCallback call.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="CallbackTimedOutError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.CallbackTimedOutError">[docs]</a><span class="k">class</span> <span class="nc">CallbackTimedOutError</span><span class="p">(</span><span class="n">HandlerError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The callback has already been stopped, via passing the end time. If caught, it should be</span>
+    <span class="sd">&quot;&quot;&quot;The callback has already been stopped, via passing the end time. If caught, it should be</span>
 <span class="sd">    re-raised to make sure the response is set correctly.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase">[docs]</a><span class="k">class</span> <span class="nc">AreaCallbackRegionHandlerBase</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for implementing a AreaCallbackRegionHandler.</span>
+    <span class="sd">&quot;&quot;&quot;Base class for implementing a AreaCallbackRegionHandler.</span>
 
 <span class="sd">    A AreaCallbackRegionHandler is an object responsible for running a single instance of an</span>
 <span class="sd">    AreaCallback.  The AreaCallbackServiceServicer will construct an AreaCallbackRegionHandler</span>
@@ -756,7 +752,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_begin_complete</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.begin"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.begin">[docs]</a>    <span class="k">def</span> <span class="nf">begin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">BeginCallbackRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BeginCallbackResponse</span><span class="o">.</span><span class="n">Status</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates that configuration passed to BeginCallback is valid.</span>
+        <span class="sd">&quot;&quot;&quot;Validates that configuration passed to BeginCallback is valid.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request (area_callback_pb2.BeginCallbackRequest): The BeginCallback request.</span>
@@ -767,60 +763,60 @@
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Derived class must implement this function.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.run"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is run on a worker thread after BeginCallback is called.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;This function is run on a worker thread after BeginCallback is called.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Derived class must implement this function.&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.end"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.end">[docs]</a>    <span class="k">def</span> <span class="nf">end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;This function is called after run thread has finished and client calls EndCallback.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;This function is called after run thread has finished and client calls EndCallback.&quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Derived class must implement this function.&quot;</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">area_callback_information</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">area_callback_pb2</span><span class="o">.</span><span class="n">AreaCallbackInformation</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get area_callback_pb2.AreaCallbackInformation.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get area_callback_pb2.AreaCallbackInformation.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span><span class="o">.</span><span class="n">area_callback_information</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">config</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AreaCallbackServiceConfig</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get AreaCallbackServiceConfig&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get AreaCallbackServiceConfig&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_config</span>
 
     <span class="c1"># Policy functions, which change the policy that the callback is returning to the robot.</span>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.stop_at_start"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.stop_at_start">[docs]</a>    <span class="k">def</span> <span class="nf">stop_at_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tell graph nav that it should wait at the start of the region.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tell graph nav that it should wait at the start of the region.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_response</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">at_start</span> <span class="o">=</span> <span class="n">UpdateCallbackResponse</span><span class="o">.</span><span class="n">NavPolicy</span><span class="o">.</span><span class="n">OPTION_STOP</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">UpdateCallbackRequest</span><span class="o">.</span><span class="n">STAGE_AT_START</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lease_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.continue_past_start"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.continue_past_start">[docs]</a>    <span class="k">def</span> <span class="nf">continue_past_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tell graph nav that it should continue on past the start of the region.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tell graph nav that it should continue on past the start of the region.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_response</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">at_start</span> <span class="o">=</span> <span class="n">UpdateCallbackResponse</span><span class="o">.</span><span class="n">NavPolicy</span><span class="o">.</span><span class="n">OPTION_CONTINUE</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">UpdateCallbackRequest</span><span class="o">.</span><span class="n">STAGE_AT_START</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lease_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.control_at_start"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.control_at_start">[docs]</a>    <span class="k">def</span> <span class="nf">control_at_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tell graph nav that it transfer control at the start of the region.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tell graph nav that it transfer control at the start of the region.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_response</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">at_start</span> <span class="o">=</span> <span class="n">UpdateCallbackResponse</span><span class="o">.</span><span class="n">NavPolicy</span><span class="o">.</span><span class="n">OPTION_CONTROL</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.stop_at_end"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.stop_at_end">[docs]</a>    <span class="k">def</span> <span class="nf">stop_at_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tell graph nav that it should wait at the end of the region.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tell graph nav that it should wait at the end of the region.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_response</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">at_end</span> <span class="o">=</span> <span class="n">UpdateCallbackResponse</span><span class="o">.</span><span class="n">NavPolicy</span><span class="o">.</span><span class="n">OPTION_STOP</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">UpdateCallbackRequest</span><span class="o">.</span><span class="n">STAGE_AT_END</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lease_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.continue_past_end"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.continue_past_end">[docs]</a>    <span class="k">def</span> <span class="nf">continue_past_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tell graph nav that it should continue on past the ends of the region.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tell graph nav that it should continue on past the ends of the region.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_response</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">at_end</span> <span class="o">=</span> <span class="n">UpdateCallbackResponse</span><span class="o">.</span><span class="n">NavPolicy</span><span class="o">.</span><span class="n">OPTION_CONTINUE</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">==</span> <span class="n">UpdateCallbackRequest</span><span class="o">.</span><span class="n">STAGE_AT_END</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_lease_event</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.control_at_end"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.control_at_end">[docs]</a>    <span class="k">def</span> <span class="nf">control_at_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Tell graph nav that it should transfer control at the end of the region.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Tell graph nav that it should transfer control at the end of the region.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_response</span><span class="o">.</span><span class="n">policy</span><span class="o">.</span><span class="n">at_end</span> <span class="o">=</span> <span class="n">UpdateCallbackResponse</span><span class="o">.</span><span class="n">NavPolicy</span><span class="o">.</span><span class="n">OPTION_CONTROL</span></div>
 
@@ -829,7 +825,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_response</span><span class="o">.</span><span class="n">complete</span><span class="o">.</span><span class="n">SetInParent</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.set_localization_at_end"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.set_localization_at_end">[docs]</a>    <span class="k">def</span> <span class="nf">set_localization_at_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the localization hint to the end of the callback region, indicating that graph nav </span>
+        <span class="sd">&quot;&quot;&quot;Set the localization hint to the end of the callback region, indicating that graph nav </span>
 <span class="sd">        that navigation should continue from this point.</span>
 <span class="sd">        Robot control is required to set this. It should be called after walking to the end of</span>
 <span class="sd">        the region, but before ceding control. </span>
@@ -847,7 +843,7 @@
     <span class="c1"># Blocking functions to check for a particular event.</span>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.block_until_control"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.block_until_control">[docs]</a>    <span class="k">def</span> <span class="nf">block_until_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Block waiting for the robot to pass the sublease to this callback.</span>
+        <span class="sd">&quot;&quot;&quot;Block waiting for the robot to pass the sublease to this callback.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            HandlerError: When a shutdown is requested before a lease is received.</span>
@@ -863,7 +859,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.has_control"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.has_control">[docs]</a>    <span class="k">def</span> <span class="nf">has_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check in a non-blocking way if the callback has been given a sublease.</span>
+        <span class="sd">&quot;&quot;&quot;Check in a non-blocking way if the callback has been given a sublease.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            True if the callback is now in control of the robot.</span>
@@ -871,7 +867,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lease_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.block_until_arrived_at_start"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.block_until_arrived_at_start">[docs]</a>    <span class="k">def</span> <span class="nf">block_until_arrived_at_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Block until the robot arrives at the start of the area callback.</span>
+        <span class="sd">&quot;&quot;&quot;Block until the robot arrives at the start of the area callback.</span>
 <span class="sd">        If the robot is already past the start, this will return immediately.</span>
 
 <span class="sd">        Returns:</span>
@@ -889,7 +885,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage</span> <span class="o">==</span> <span class="n">UpdateCallbackRequest</span><span class="o">.</span><span class="n">STAGE_AT_START</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.block_until_arrived_at_end"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.block_until_arrived_at_end">[docs]</a>    <span class="k">def</span> <span class="nf">block_until_arrived_at_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Block until the robot arrives at the end of the area callback.</span>
+        <span class="sd">&quot;&quot;&quot;Block until the robot arrives at the end of the area callback.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            HandlerError: When a shutdown is requested before the robot reaches the end of the</span>
@@ -903,7 +899,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">stage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the current stage of traversal in a non-blocking way.</span>
+        <span class="sd">&quot;&quot;&quot;Check the current stage of traversal in a non-blocking way.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            bosdyn.api.UpdateCallbackRequest.Stage enum of the current stage of crossing the region.</span>
@@ -911,7 +907,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage</span>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.safe_sleep"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.safe_sleep">[docs]</a>    <span class="k">def</span> <span class="nf">safe_sleep</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sleep_time_secs</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Run impl should use this sleep function to make sure thread does not hang.</span>
+        <span class="sd">&quot;&quot;&quot;Run impl should use this sleep function to make sure thread does not hang.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            sleep_time_secs (float): Time to sleep, in seconds.</span>
@@ -927,7 +923,7 @@
             <span class="k">raise</span> <span class="n">CallbackTimedOutError</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.check"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.check">[docs]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if callback shutdown has been requested via client call to EndCallback or passing</span>
+        <span class="sd">&quot;&quot;&quot;Check if callback shutdown has been requested via client call to EndCallback or passing</span>
 <span class="sd">        the end time.</span>
 
 <span class="sd">        The run thread is responsible for checking and cleanly exiting.</span>
@@ -942,12 +938,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">update_response</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current UpdateCallbackResponse.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get current UpdateCallbackResponse.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_update_response</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.will_get_control"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.will_get_control">[docs]</a>    <span class="k">def</span> <span class="nf">will_get_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine if the current policy and stage mean that the callback will eventually be</span>
+        <span class="sd">&quot;&quot;&quot;Determine if the current policy and stage mean that the callback will eventually be</span>
 <span class="sd">        given control without any further action on its part&quot;&quot;&quot;</span>
 
         <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_response</span>
@@ -967,12 +963,12 @@
     <span class="c1"># and should not be called by subclasses.</span>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.internal_begin_complete"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.internal_begin_complete">[docs]</a>    <span class="k">def</span> <span class="nf">internal_begin_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The handler finished BeginCallback and is ready to start run().</span>
+        <span class="sd">&quot;&quot;&quot;The handler finished BeginCallback and is ready to start run().</span>
 <span class="sd">        Blocking calls may now be used.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_begin_complete</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.internal_set_stage"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.internal_set_stage">[docs]</a>    <span class="k">def</span> <span class="nf">internal_set_stage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">:</span> <span class="n">UpdateCallbackRequest</span><span class="o">.</span><span class="n">Stage</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the stage via an incoming UpdateCallbackRequest.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Update the stage via an incoming UpdateCallbackRequest.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">stage</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stage</span><span class="p">:</span>
             <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Stage changed from </span><span class="si">%s</span><span class="s1"> to </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
                          <span class="n">UpdateCallbackRequest</span><span class="o">.</span><span class="n">Stage</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stage</span><span class="p">),</span>
@@ -980,16 +976,16 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_stage</span> <span class="o">=</span> <span class="n">stage</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.internal_set_end_time"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.internal_set_end_time">[docs]</a>    <span class="k">def</span> <span class="nf">internal_set_end_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end_time</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the end time from an incoming request.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Update the end time from an incoming request.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_time</span> <span class="o">=</span> <span class="n">end_time</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.internal_give_control"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.internal_give_control">[docs]</a>    <span class="k">def</span> <span class="nf">internal_give_control</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set Event indicating region handler has been given control. Lease is available in wallet.</span>
+        <span class="sd">&quot;&quot;&quot;Set Event indicating region handler has been given control. Lease is available in wallet.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_lease_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="AreaCallbackRegionHandlerBase.internal_run_wrapper"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase.internal_run_wrapper">[docs]</a>    <span class="k">def</span> <span class="nf">internal_run_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shutdown_event</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wrapper around the run function which catches exceptions and set update response.</span>
+        <span class="sd">&quot;&quot;&quot;Wrapper around the run function which catches exceptions and set update response.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            shutdown_event (Event): Event that signals the run thread to shutdown.</span>

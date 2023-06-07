@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -691,7 +687,7 @@
 
 
 <div class="viewcode-block" id="MediaLogClient"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient">[docs]</a><span class="k">class</span> <span class="nc">MediaLogClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client calling Spot CAM MediaLog service.</span>
+    <span class="sd">&quot;&quot;&quot;A client calling Spot CAM MediaLog service.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-cam-media-log&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot_cam.MediaLogService&#39;</span>
@@ -700,7 +696,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">MediaLogClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">MediaLogServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="MediaLogClient.delete"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.delete">[docs]</a>    <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes the Logpoint from the Spot CAM system.</span>
+        <span class="sd">&quot;&quot;&quot;Removes the Logpoint from the Spot CAM system.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          logpoint: spot_cam.Logpoint.name must be filled out.&quot;&quot;&quot;</span>
@@ -709,14 +705,14 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.delete_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.delete_async">[docs]</a>    <span class="k">def</span> <span class="nf">delete_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of delete()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of delete()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">DeleteRequest</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">logpoint</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">Delete</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.enable_debug"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.enable_debug">[docs]</a>    <span class="k">def</span> <span class="nf">enable_debug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">humidity</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shock</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">system_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                      <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start periodic logging of health data to the database, queryable via Health service.</span>
+        <span class="sd">&quot;&quot;&quot;Start periodic logging of health data to the database, queryable via Health service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          temp: Enable logging of temperature data.</span>
@@ -732,7 +728,7 @@
 
 <div class="viewcode-block" id="MediaLogClient.enable_debug_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.enable_debug_async">[docs]</a>    <span class="k">def</span> <span class="nf">enable_debug_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">temp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">humidity</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">bit</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">shock</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                            <span class="n">system_stats</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of enable_debug()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of enable_debug()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">DebugRequest</span><span class="p">(</span><span class="n">enable_temperature</span><span class="o">=</span><span class="n">temp</span><span class="p">,</span> <span class="n">enable_humidity</span><span class="o">=</span><span class="n">humidity</span><span class="p">,</span>
                                            <span class="n">enable_BIT</span><span class="o">=</span><span class="n">bit</span><span class="p">,</span> <span class="n">enable_shock</span><span class="o">=</span><span class="n">shock</span><span class="p">,</span>
                                            <span class="n">enable_system_stat</span><span class="o">=</span><span class="n">system_stats</span><span class="p">)</span>
@@ -740,7 +736,7 @@
                                <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.get_status"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.get_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gets the state of the specified logpoint.</span>
+        <span class="sd">&quot;&quot;&quot;Gets the state of the specified logpoint.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          logpoint: spot_cam.Logpoint.name must be filled out.</span>
@@ -751,31 +747,31 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.get_status_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.get_status_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_status()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_status()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">GetStatusRequest</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">logpoint</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_status_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.list_cameras"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.list_cameras">[docs]</a>    <span class="k">def</span> <span class="nf">list_cameras</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;List cameras on Spot CAM&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;List cameras on Spot CAM&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">ListCamerasRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListCameras</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_cameras_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.list_cameras_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.list_cameras_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_cameras_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of list_cameras()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of list_cameras()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">ListCamerasRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListCameras</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_cameras_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.list_logpoints"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.list_logpoints">[docs]</a>    <span class="k">def</span> <span class="nf">list_logpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;List Logpoints on Spot CAM&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;List Logpoints on Spot CAM&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">ListLogpointsRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListLogpoints</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_logpoints_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.retrieve"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.retrieve">[docs]</a>    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves the image associated with the Logpoint.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves the image associated with the Logpoint.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          logpoint: spot_cam.Logpoint.name must be filled out.&quot;&quot;&quot;</span>
@@ -784,7 +780,7 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.retrieve_raw_data"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.retrieve_raw_data">[docs]</a>    <span class="k">def</span> <span class="nf">retrieve_raw_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieves the image associated with the Logpoint.</span>
+        <span class="sd">&quot;&quot;&quot;Retrieves the image associated with the Logpoint.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          logpoint: spot_cam.Logpoint.name must be filled out.&quot;&quot;&quot;</span>
@@ -795,7 +791,7 @@
 <div class="viewcode-block" id="MediaLogClient.set_passphrase"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.set_passphrase">[docs]</a>    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Spot CAM encryption has been removed as a result of the switch to NTFS.&#39;</span><span class="p">,</span>
                 <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">set_passphrase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">passphrase</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set password for Spot CAM filesystem.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set password for Spot CAM filesystem.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">SetPassphraseRequest</span><span class="p">(</span><span class="n">passphrase</span><span class="o">=</span><span class="n">passphrase</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetPassphrase</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_passphrase_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -803,14 +799,14 @@
 <div class="viewcode-block" id="MediaLogClient.set_passphrase_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.set_passphrase_async">[docs]</a>    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Spot CAM encryption has been removed as a result of the switch to NTFS.&#39;</span><span class="p">,</span>
                 <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">set_passphrase_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">passphrase</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_passphrase()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_passphrase()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">SetPassphraseRequest</span><span class="p">(</span><span class="n">passphrase</span><span class="o">=</span><span class="n">passphrase</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetPassphrase</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_set_passphrase_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.store"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.store">[docs]</a>    <span class="k">def</span> <span class="nf">store</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camera</span><span class="p">,</span> <span class="n">record_type</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store media on the Spot CAM.</span>
+        <span class="sd">&quot;&quot;&quot;Store media on the Spot CAM.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          camera: spot_cam.Camera protobuf describing the camera to store media on.</span>
@@ -824,13 +820,13 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.store_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.store_async">[docs]</a>    <span class="k">def</span> <span class="nf">store_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">camera</span><span class="p">,</span> <span class="n">record_type</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of store()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of store()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">StoreRequest</span><span class="p">(</span><span class="n">camera</span><span class="o">=</span><span class="n">camera</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">record_type</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">Store</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_store_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.tag"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.tag">[docs]</a>    <span class="k">def</span> <span class="nf">tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the &#39;tag&#39; field of an existing Logpoint.</span>
+        <span class="sd">&quot;&quot;&quot;Update the &#39;tag&#39; field of an existing Logpoint.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          logpoint: &#39;tag&#39; and &#39;name&#39; in spot_cam.Logpoint must be filled out.&quot;&quot;&quot;</span>
@@ -839,7 +835,7 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MediaLogClient.tag_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html#bosdyn.client.spot_cam.media_log.MediaLogClient.tag_async">[docs]</a>    <span class="k">def</span> <span class="nf">tag_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logpoint</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of tag()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of tag()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">logging_pb2</span><span class="o">.</span><span class="n">TagRequest</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">logpoint</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">Tag</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tag_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_media_log_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>

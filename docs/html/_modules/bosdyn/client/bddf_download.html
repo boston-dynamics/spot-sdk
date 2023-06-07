@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -702,7 +698,7 @@
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
 <span class="s2">A timespan is {{timeval}} or {{timeval}}-{{timeval}}.</span>
 
-<span class="si">{}</span>
+<span class="si">{}</span><span class="s2"></span>
 
 <span class="s2">For example:</span>
 <span class="s2">  &#39;5m&#39;                    From 5 minutes ago until now.</span>
@@ -741,7 +737,7 @@
 <div class="viewcode-block" id="download_data"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html#bosdyn.client.bddf_download.download_data">[docs]</a><span class="k">def</span> <span class="nf">download_data</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments,too-many-locals</span>
         <span class="n">robot</span><span class="p">,</span> <span class="n">hostname</span><span class="p">,</span> <span class="n">start_nsec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_nsec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timespan_spec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">robot_time</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">message_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grpc_service</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">show_progress</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Download data from robot in bddf format</span>
 
 <span class="sd">    Args:</span>
@@ -807,7 +803,7 @@
 
 
 <span class="k">def</span> <span class="nf">_output_filename</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get output filename either from http response, or default value.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Get output filename either from http response, or default value.&quot;&quot;&quot;</span>
     <span class="n">content</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;Content-Disposition&#39;</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Content-Disposition not set correctly.&quot;</span><span class="p">)</span>
@@ -819,7 +815,7 @@
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html#bosdyn.client.bddf_download.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Command-line interface&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Command-line interface&quot;&quot;&quot;</span>
     <span class="c1"># pylint: disable=import-outside-toplevel</span>
     <span class="kn">import</span> <span class="nn">argparse</span>
 

@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -687,7 +683,7 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="network-compute-bridge">
-<h1>Network Compute Bridge<a class="headerlink" href="#network-compute-bridge" title="Permalink to this heading">¶</a></h1>
+<h1>Network Compute Bridge<a class="headerlink" href="#network-compute-bridge" title="Permalink to this headline">¶</a></h1>
 <p>The network compute bridge allows you to off-load computation to another computer on the network. For example, you might want to offload a deep neural-network call to a server in the cloud. This example is mostly a copy of the <a class="reference internal" href="../../network_compute_bridge/README.html"><span class="doc">Tensorflow Network Compute Bridge Example</span></a>. However in this example, clients can specify a region of interest and confidence value in the image recieved by the network compute bridge worker. The region of interest tells the model where to look for object matches. The confidence value tells the model the confidence threshold for an object match. There is no example client for the server. Please use the Spot app as the example client.</p>
 <p>Examples:</p>
 <ul class="simple">
@@ -700,11 +696,11 @@ Development Kit License (20191101-BDSDK-SL).
 </li>
 </ul>
 <section id="system-diagram">
-<h2>System Diagram<a class="headerlink" href="#system-diagram" title="Permalink to this heading">¶</a></h2>
-<p><img alt="System Diagram" src="../../../../_images/system_diagram.png" /></p>
+<h2>System Diagram<a class="headerlink" href="#system-diagram" title="Permalink to this headline">¶</a></h2>
+<p><img alt="System Diagram" src="../../../../_images/system_diagram1.png" /></p>
 </section>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>This example require the bosdyn API and client to be installed, and must be run using python3.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">tensorflow_server.py</span></code> example requires TensorFlow to be installed. You can install its
 dependencies via:</p>
@@ -721,7 +717,7 @@ dependencies via:</p>
 many tutorials available such as <a class="reference external" href="https://www.pyimagesearch.com/2019/01/30/ubuntu-18-04-install-tensorflow-and-keras-for-deep-learning/">this one</a>.</p>
 </section>
 <section id="execution">
-<h2>Execution<a class="headerlink" href="#execution" title="Permalink to this heading">¶</a></h2>
+<h2>Execution<a class="headerlink" href="#execution" title="Permalink to this headline">¶</a></h2>
 <p>To run this example, first launch the server and direct it to your Spot:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">tensorflow_server</span><span class="o">.</span><span class="n">py</span> <span class="o">-</span><span class="n">d</span> <span class="o">&lt;</span><span class="n">MODEL</span> <span class="n">DIRECTORY</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">ROBOT</span> <span class="n">ADDRESS</span><span class="o">&gt;</span>
 </pre></div>
@@ -741,7 +737,7 @@ many tutorials available such as <a class="reference external" href="https://www
 <p>An example CSV file for the Faster R-CNN model described above is included in this directory as <code class="docutils literal notranslate"><span class="pre">frozen_inference_graph.csv</span></code>.</p>
 </section>
 <section id="docker-execution">
-<h2>Docker Execution<a class="headerlink" href="#docker-execution" title="Permalink to this heading">¶</a></h2>
+<h2>Docker Execution<a class="headerlink" href="#docker-execution" title="Permalink to this headline">¶</a></h2>
 <p>This example contains the configuration files to run the python scripts described above also in Docker containers. The docker containers accept the same arguments described above. For example, to run the server docker container and the client docker container, follow the steps below with the correct values for the &lt;&gt; variables:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="n">ncb_server</span> <span class="o">-</span><span class="n">f</span> <span class="n">Dockerfile</span><span class="o">.</span><span class="n">server</span> <span class="o">.</span>
 <span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">network</span><span class="o">=</span><span class="n">host</span> <span class="o">--</span><span class="n">env</span> <span class="n">BOSDYN_CLIENT_USERNAME</span> <span class="o">--</span><span class="n">env</span> <span class="n">BOSDYN_CLIENT_PASSWORD</span> <span class="o">-</span><span class="n">v</span> <span class="o">&lt;</span><span class="n">MODEL_DIRECTORY</span><span class="o">&gt;</span><span class="p">:</span><span class="o">/</span><span class="n">model_dir</span><span class="o">/</span> <span class="n">ncb_server</span> <span class="o">--</span><span class="n">model</span><span class="o">-</span><span class="nb">dir</span> <span class="o">/</span><span class="n">model_dir</span><span class="o">/</span> <span class="o">&lt;</span><span class="n">ROBOT_IP</span><span class="o">&gt;</span>
@@ -750,7 +746,7 @@ many tutorials available such as <a class="reference external" href="https://www
 <p>When running ncb_server on CORE I/O, or another compute payload with GPU, pass the flag <code class="docutils literal notranslate"><span class="pre">--gpus</span> <span class="pre">all</span></code> to the <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> command to take advantage of the GPU.</p>
 </section>
 <section id="controling-custom-parameters-in-spot-app">
-<h2>Controling Custom Parameters in Spot App<a class="headerlink" href="#controling-custom-parameters-in-spot-app" title="Permalink to this heading">¶</a></h2>
+<h2>Controling Custom Parameters in Spot App<a class="headerlink" href="#controling-custom-parameters-in-spot-app" title="Permalink to this headline">¶</a></h2>
 <p>There is no example client for the server. It is easiest to use the Spot app as the example client. To do so:</p>
 <ol class="simple">
 <li><p>Connect the tablet to a robot that has the tensorflow server registered.</p></li>
@@ -766,7 +762,7 @@ many tutorials available such as <a class="reference external" href="https://www
 </ol>
 </section>
 <section id="troubleshooting">
-<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Ensure that your firewall is allowing traffic on the specified port (default: 50051).</p></li>
 </ul>

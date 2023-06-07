@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -683,7 +679,7 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="service-customization">
-<h1>Service Customization<a class="headerlink" href="#service-customization" title="Permalink to this heading">¶</a></h1>
+<h1>Service Customization<a class="headerlink" href="#service-customization" title="Permalink to this headline">¶</a></h1>
 <p>Spot 3.3 release features a new system for parameterizing 3rd party services.  If your service has a knob that needs wiggling by a user, your service can advertise a parameter, Boston Dynamics clients will display that knob, and users will be able to wiggle it.  Services that opt into this feature will get:</p>
 <ul class="simple">
 <li><p>UI on the Tablet application for actions containing parameters (either when recording a mission, or just performing actions in teleoperation).</p></li>
@@ -701,65 +697,65 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The parameterization system supports several different primitive types, and hierarchical containers - it’s powerful.  All first class Boston Dynamics inspections, including our 3.3 thermal inspection (shown below), are built using the same parameterization system that’s available to developers:</p>
 <p><img alt="Tablet Screenshot" src="../../_images/parameterization_thermal.jpg" /></p>
 <section id="parameterization-language">
-<h2>Parameterization Language<a class="headerlink" href="#parameterization-language" title="Permalink to this heading">¶</a></h2>
+<h2>Parameterization Language<a class="headerlink" href="#parameterization-language" title="Permalink to this headline">¶</a></h2>
 <section id="spec">
-<h3>Spec<a class="headerlink" href="#spec" title="Permalink to this heading">¶</a></h3>
+<h3>Spec<a class="headerlink" href="#spec" title="Permalink to this headline">¶</a></h3>
 <p>A specification, or spec, is what services advertises to clients so that the client can build a UI.  It’s how services encode what parameters that service expects - “I need a slider from 0 to 100” or “I need two sliders and a checkbox”.  The root level of any service spec is a dictionary so that parameters can be added in the future with ease.</p>
 </section>
 <section id="parameter">
-<h3>Parameter<a class="headerlink" href="#parameter" title="Permalink to this heading">¶</a></h3>
+<h3>Parameter<a class="headerlink" href="#parameter" title="Permalink to this headline">¶</a></h3>
 <p>Parameters are instantiations of Specs.  Where a spec says: “I need a slider from 0 to 100 titled threshold”, a parameter says “threshold: 58”.  It’s result of a spec after it’s been turned into a UI, and a user has wiggled knobs.</p>
 </section>
 </section>
 <section id="parameter-types">
-<h2>Parameter Types<a class="headerlink" href="#parameter-types" title="Permalink to this heading">¶</a></h2>
+<h2>Parameter Types<a class="headerlink" href="#parameter-types" title="Permalink to this headline">¶</a></h2>
 <section id="double">
-<h3>Double<a class="headerlink" href="#double" title="Permalink to this heading">¶</a></h3>
+<h3>Double<a class="headerlink" href="#double" title="Permalink to this headline">¶</a></h3>
 <p>The double parameter allows users to enter a floating point number.  It is defined by the <code class="docutils literal notranslate"><span class="pre">DoubleParam</span></code> and <code class="docutils literal notranslate"><span class="pre">DoubleParam.Spec</span></code>  protobuf messages.  The spec for doubles allows developers to set a <em>min value</em>, and a <em>max value</em>.  The UI element displayed will differ based on the contents of <em>min value</em> and <em>max value</em>.  If both are set, the UI will provide a slider AND a numerical textbox users can type values into, otherwise, the UI will display just a numerical textbox.  <code class="docutils literal notranslate"><span class="pre">DoubleParam.Spec</span></code> also allows developers to specify units, which we’ll talk about in a second.</p>
 </section>
 <section id="int">
-<h3>Int<a class="headerlink" href="#int" title="Permalink to this heading">¶</a></h3>
+<h3>Int<a class="headerlink" href="#int" title="Permalink to this headline">¶</a></h3>
 <p>The int parameter is identical to the double parameter, but everything is an integer.  It is defined by the <code class="docutils literal notranslate"><span class="pre">Int64Param</span></code> and <code class="docutils literal notranslate"><span class="pre">Int64Param.Spec</span></code>  protobuf messages.</p>
 </section>
 <section id="units-for-int-double">
-<h3>Units for Int &amp; Double<a class="headerlink" href="#units-for-int-double" title="Permalink to this heading">¶</a></h3>
+<h3>Units for Int &amp; Double<a class="headerlink" href="#units-for-int-double" title="Permalink to this headline">¶</a></h3>
 <p>Both int and double allow developers to specify units.  Units will show up on the UI next to the specified value; a units string of “%” will cause the UI to render “32%”.  If developers specify one of the first class unit enums, temperature or pressure, clients will automatically convert units to match the users preference, and do the conversion for the service.</p>
 <p>For example, imagine a service that wants a temperature parameter between 0°C and 100°C.  If the service specified the limits of 0 - 100, and the units as TEMPERATURE_CELSIUS, clients will either show that as 32°F to 212°F or 0°C to 100°C, depending on the users unit preferences.  Either way, the client will pack in the specified value as celsius.  <strong>The service can assume all values are in celsius, because they will be.</strong>  Also note that the units proto includes an <em>is_relative</em> flag, which allows developers to specify if they want the client to respect a zero point offset between units.  This mostly helps differentiating absolute and relative temperatures.  If ensuring an object is no hotter than a specific temperature, 0°C - 100°C should map to 32°F to 212°F (what happens when <em>is_relative</em> is set to false).  If ensuring that two objects are no more than X degrees apart, 0°C - 100°C should map to 0°F to 180°F  (what happens when <em>is_relative</em> is set to true).  Note that 0 C now maps to 0 F.</p>
 </section>
 <section id="string">
-<h3>String<a class="headerlink" href="#string" title="Permalink to this heading">¶</a></h3>
+<h3>String<a class="headerlink" href="#string" title="Permalink to this headline">¶</a></h3>
 <p>The string parameter allows users to specify a string.  It is defined by the <code class="docutils literal notranslate"><span class="pre">StringParam</span></code> and <code class="docutils literal notranslate"><span class="pre">StringParam.Spec</span></code> protobuf messages.  A string spec can be used to let a user: (1) pick from a set of predefined options, (2) type in their own free form string, or (3) both.  Predefined options are specified using the <em>options</em> field, and whether or not the user is allowed to type in their own option is controlled by the <em>editable</em> flag.  Strings will be represented in the client UI by either a switch, a set of radio buttons, or a combo box, depending on how many options are present.</p>
 </section>
 <section id="bool">
-<h3>Bool<a class="headerlink" href="#bool" title="Permalink to this heading">¶</a></h3>
+<h3>Bool<a class="headerlink" href="#bool" title="Permalink to this headline">¶</a></h3>
 <p>The bool parameter allows users to turn things on and off.  It is defined by the <code class="docutils literal notranslate"><span class="pre">BoolParam</span></code> and <code class="docutils literal notranslate"><span class="pre">BoolParam.Spec</span></code> protobuf messages.  It will be represented in the UI by a checkbox.</p>
 </section>
 <section id="region-of-interest">
-<h3>Region of Interest<a class="headerlink" href="#region-of-interest" title="Permalink to this heading">¶</a></h3>
+<h3>Region of Interest<a class="headerlink" href="#region-of-interest" title="Permalink to this headline">¶</a></h3>
 <p>Region of Interest, or ROI, allows users to specify a region of an image.  It is defined by the <code class="docutils literal notranslate"><span class="pre">RegionOfInterestParam</span></code> and <code class="docutils literal notranslate"><span class="pre">RegionOfInterestParam.Spec</span></code> protobuf messages.  As of 3.3, ROI params are limited to specifying rectangular regions, and really only work well for <code class="docutils literal notranslate"><span class="pre">Network</span> <span class="pre">Compute</span> <span class="pre">Bridge</span> <span class="pre">Worker</span></code> services.  The tablet does not allow setting ROI for <code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">Callback</span></code> services, but that will likely change in the future.  Other services have limited ROI functionality.</p>
 <p>Region of interest is helpful to narrow down a search space if there is a lot going on in an image, and the camera can’t be moved or zoomed in such a way that only the thing the user care’s about is in frame.  Users will be able to draw regions on live images using the tablet UI, and on images taken at record time when editing parameters in Scout.</p>
 </section>
 <section id="dictionary">
-<h3>Dictionary<a class="headerlink" href="#dictionary" title="Permalink to this heading">¶</a></h3>
+<h3>Dictionary<a class="headerlink" href="#dictionary" title="Permalink to this headline">¶</a></h3>
 <p>Dictionary is the first container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">DictParam</span></code> and <code class="docutils literal notranslate"><span class="pre">DictParam.Spec</span></code> protobuf messages.  Dictionaries allow users to specify many named children of various types: string, ints, dictionaries, etc.  Note: primitives themselves don’t contain a name, but their entries inside containers do.  Each child of a dictionary is required to have a <em>key</em> string, which services will use to find particular values.  Changing a <em>key</em> has consequences for backwards compatibility, so there is a second ephemeral name field embedded into <code class="docutils literal notranslate"><span class="pre">UserInterfaceInfo</span></code> called <em>display_name</em>.  <em>display_name</em> exists so it can be changed at any time, without consequence.  If no <em>display_name</em> is specified, <em>key</em> will be used.</p>
 <p>UI’s will always allow users to specify every child of a dictionary.  Each child is independent.  Dictionaries can be told to start collapsed, which is a great way to hide advanced parameters for your inspections that most users won’t wiggle.</p>
 </section>
 <section id="one-of">
-<h3>One-Of<a class="headerlink" href="#one-of" title="Permalink to this heading">¶</a></h3>
+<h3>One-Of<a class="headerlink" href="#one-of" title="Permalink to this headline">¶</a></h3>
 <p>One-Of is another container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">OneOfParam</span></code> and <code class="docutils literal notranslate"><span class="pre">OneOfParam.Spec</span></code> protobuf messages.  Unlike dictionary, One-Of will only let the users specify a single child at a time.  The UI will allow users to pick which child they want to specify, and allow users to specify that child.  Note that the child can be completely empty.  One-Of’s are a great way to encode optional parameters, or parameters that only exist under circumstances.  It is valid to have an empty One-Of child - that just means that if selected, that option has no additional parameters.</p>
 <p>Like dictionary children, one-of children also contain a <code class="docutils literal notranslate"><span class="pre">UserInterfaceInfo</span></code>, which allows developers to both order elements in a deterministic way, and override what string the UI uses to represent the child.  One-Of specs are constrained to ONLY contain dictionary children.</p>
 </section>
 <section id="list">
-<h3>List<a class="headerlink" href="#list" title="Permalink to this heading">¶</a></h3>
+<h3>List<a class="headerlink" href="#list" title="Permalink to this headline">¶</a></h3>
 <p>List is the final container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">ListParam</span></code> and <code class="docutils literal notranslate"><span class="pre">ListParam.Spec</span></code> protobuf messages.  Lists must be homogenous, meaning each child in the list must meet the same spec.</p>
 </section>
 <section id="custom-param">
-<h3>Custom Param<a class="headerlink" href="#custom-param" title="Permalink to this heading">¶</a></h3>
+<h3>Custom Param<a class="headerlink" href="#custom-param" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">CustomParam</span></code> and <code class="docutils literal notranslate"><span class="pre">CustomParam.Spec</span></code> protobuf messages are container types for the various parameter types.  A custom param can either be a double, or a bool, or an int, or a dictionary, etc.  Both dictionaries and list children contain a CustomParam.</p>
 </section>
 </section>
 <section id="example-specifications">
-<h2>Example Specifications<a class="headerlink" href="#example-specifications" title="Permalink to this heading">¶</a></h2>
+<h2>Example Specifications<a class="headerlink" href="#example-specifications" title="Permalink to this headline">¶</a></h2>
 <p>For a single specification of “param B”, which is a double representing temperature with a default value 40 and max value of 101.5, the DictParam.Spec is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">specs</span> <span class="p">{</span>
   <span class="n">key</span><span class="p">:</span> <span class="s2">&quot;param_b&quot;</span>
@@ -901,9 +897,9 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="implementing-service-customization">
-<h2>Implementing Service Customization<a class="headerlink" href="#implementing-service-customization" title="Permalink to this heading">¶</a></h2>
+<h2>Implementing Service Customization<a class="headerlink" href="#implementing-service-customization" title="Permalink to this headline">¶</a></h2>
 <section id="image-services">
-<h3><strong>Image</strong> services<a class="headerlink" href="#image-services" title="Permalink to this heading">¶</a></h3>
+<h3><strong>Image</strong> services<a class="headerlink" href="#image-services" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Specs: specs need to be returned by the <code class="docutils literal notranslate"><span class="pre">ListImageSourcesResponse</span></code> rpc, inside the <code class="docutils literal notranslate"><span class="pre">ImageSource</span></code> protobuf message.</p></li>
 <li><p>Parameters: parameters are sent to the service as part of the <code class="docutils literal notranslate"><span class="pre">GetImage</span></code> rpc, inside the <code class="docutils literal notranslate"><span class="pre">ImageRequest</span></code> protobuf message.</p></li>
@@ -911,7 +907,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="network-compute-bridge-worker-services">
-<h3><strong>Network Compute Bridge Worker</strong> services<a class="headerlink" href="#network-compute-bridge-worker-services" title="Permalink to this heading">¶</a></h3>
+<h3><strong>Network Compute Bridge Worker</strong> services<a class="headerlink" href="#network-compute-bridge-worker-services" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Specs: specs need to be returned by the <code class="docutils literal notranslate"><span class="pre">ListAvailableModels</span></code> rpc, inside the <code class="docutils literal notranslate"><span class="pre">ModelData</span></code> protobuf message.</p></li>
 <li><p>Parameters: parameters are sent to the service as part of the <code class="docutils literal notranslate"><span class="pre">WorkerCompute</span></code> rpc, inside the <code class="docutils literal notranslate"><span class="pre">ComputeParameters</span></code> protobuf message.</p></li>
@@ -919,7 +915,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="remote-mission-services">
-<h3><strong>Remote Mission</strong> services<a class="headerlink" href="#remote-mission-services" title="Permalink to this heading">¶</a></h3>
+<h3><strong>Remote Mission</strong> services<a class="headerlink" href="#remote-mission-services" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Specs: specs need to be returned by the <code class="docutils literal notranslate"><span class="pre">GetRemoteMissionServiceInfo</span></code> rpc, inside the <code class="docutils literal notranslate"><span class="pre">GetRemoteMissionServiceInfoResponse</span></code> protobuf message.</p></li>
 <li><p>Parameters: parameters are sent to the service as part of the <code class="docutils literal notranslate"><span class="pre">Tick</span></code> rpc, inside the <code class="docutils literal notranslate"><span class="pre">TickRequest</span></code> protobuf message.</p></li>
@@ -927,7 +923,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="area-callback-services">
-<h3><strong>Area Callback</strong> services<a class="headerlink" href="#area-callback-services" title="Permalink to this heading">¶</a></h3>
+<h3><strong>Area Callback</strong> services<a class="headerlink" href="#area-callback-services" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Specs: specs need to be returned by the <code class="docutils literal notranslate"><span class="pre">AreaCallbackInformation</span></code> rpc, inside the <code class="docutils literal notranslate"><span class="pre">AreaCallbackInformation</span></code> protobuf message.</p></li>
 <li><p>Parameters: parameters are sent to the service as part of the <code class="docutils literal notranslate"><span class="pre">BeginCallback</span></code> rpc, inside the <code class="docutils literal notranslate"><span class="pre">BeginCallbackRequest</span></code> protobuf message.</p></li>

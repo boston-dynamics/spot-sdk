@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -688,7 +684,7 @@
 
 
 <div class="viewcode-block" id="DoorClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/door.html#bosdyn.client.door.DoorClient">[docs]</a><span class="k">class</span> <span class="nc">DoorClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for the door service.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client for the door service.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;door&#39;</span>
 
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot.DoorService&#39;</span>
@@ -697,7 +693,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">DoorClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">door_service_pb2_grpc</span><span class="o">.</span><span class="n">DoorServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DoorClient.open_door"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/door.html#bosdyn.client.door.DoorClient.open_door">[docs]</a>    <span class="k">def</span> <span class="nf">open_door</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue an open door command to the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Issue an open door command to the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request (door_pb2.OpenDoorCommandRequest): The door command.</span>
@@ -712,12 +708,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">OpenDoor</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_open_door_error_handler</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DoorClient.open_door_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/door.html#bosdyn.client.door.DoorClient.open_door_async">[docs]</a>    <span class="k">def</span> <span class="nf">open_door_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of open_door().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of open_door().&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">OpenDoor</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_open_door_error_handler</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DoorClient.open_door_feedback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/door.html#bosdyn.client.door.DoorClient.open_door_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">open_door_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback from the robot on a specific door command.</span>
+        <span class="sd">&quot;&quot;&quot;Get feedback from the robot on a specific door command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request (door_pb2.OpenDoorFeedbackRequest): The request for feedback of</span>
@@ -733,12 +729,12 @@
                          <span class="n">_open_door_feedback_error_handler</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DoorClient.open_door_feedback_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/door.html#bosdyn.client.door.DoorClient.open_door_feedback_async">[docs]</a>    <span class="k">def</span> <span class="nf">open_door_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of open_door_feedback().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of open_door_feedback().&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">OpenDoorFeedback</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
                                <span class="n">_open_door_feedback_error_handler</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DoorClient.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/door.html#bosdyn.client.door.DoorClient.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
+        <span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            other: The object where to copy from.</span>
@@ -752,13 +748,13 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_lease_use_result_errors</span>
 <span class="k">def</span> <span class="nf">_open_door_error_handler</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="nd">@handle_common_header_errors</span>
 <span class="k">def</span> <span class="nf">_open_door_feedback_error_handler</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="kc">None</span>
 </pre></div>
 

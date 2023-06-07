@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -683,10 +679,10 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="networking">
-<h1>Networking<a class="headerlink" href="#networking" title="Permalink to this heading">¶</a></h1>
+<h1>Networking<a class="headerlink" href="#networking" title="Permalink to this headline">¶</a></h1>
 <p>All applications speak to Spot’s API over a network connection. Understanding networking protocols is critical to debugging issues and creating a robust, high-performant application.</p>
 <section id="network-choice">
-<h2>Network Choice<a class="headerlink" href="#network-choice" title="Permalink to this heading">¶</a></h2>
+<h2>Network Choice<a class="headerlink" href="#network-choice" title="Permalink to this headline">¶</a></h2>
 <p>Spot offers a variety of networking options to support a diverse set of applications and environments. Options include:</p>
 <ul class="simple">
 <li><p><strong>Spot as a connected peer</strong>. Applications can be deployed on computers that physically connect to Spot via the rear RJ-45 port, the DB-25 payload port, or the RJ-45 port on a Spot GXP payload. This provides a reliable, high-rate communications link without infrastructure requirements, but limits where the application can be run.</p></li>
@@ -697,36 +693,36 @@ Development Kit License (20191101-BDSDK-SL).
 <p>While the application-layer protocol for the Spot API works across any IP-based network connection, the examples above show that networking choice can have a significant impact on the performance and reliability of an application as well as deployment strategies.</p>
 </section>
 <section id="grpc-and-protocol-buffers">
-<h2>gRPC and Protocol Buffers<a class="headerlink" href="#grpc-and-protocol-buffers" title="Permalink to this heading">¶</a></h2>
+<h2>gRPC and Protocol Buffers<a class="headerlink" href="#grpc-and-protocol-buffers" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="https://grpc.io">gRPC</a> is the application-level protocol used by the majority of the Spot API. gRPC was chosen because it provides a secure, performant protocol with support for a broad set of programming languages and environments.</p>
 <p>gRPC specifies the service interfaces and remote procedure calls (RPCs) supported by the service. For example, the Spot API has an authentication service with the following definition:</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">service</span><span class="w"> </span><span class="n">AuthService</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">rpc</span><span class="w"> </span><span class="n">GetAuthToken</span><span class="p">(</span><span class="n">GetAuthTokenRequest</span><span class="p">)</span><span class="w"> </span><span class="k">returns</span><span class="w"> </span><span class="p">(</span><span class="n">GetAuthTokenResponse</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">service</span> <span class="n">AuthService</span> <span class="p">{</span>
+    <span class="k">rpc</span> <span class="n">GetAuthToken</span><span class="p">(</span><span class="n">GetAuthTokenRequest</span><span class="p">)</span> <span class="k">returns</span> <span class="p">(</span><span class="n">GetAuthTokenResponse</span><span class="p">)</span> <span class="p">{}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The service interface’s name is <code class="docutils literal notranslate"><span class="pre">AuthService</span></code>. It only supports a single RPC named <code class="docutils literal notranslate"><span class="pre">GetAuthToken</span></code>, which checks the passed in username and password and returns a session token if they are valid.</p>
 <p>The input (GetAuthTokenRequest) and output (GetAuthTokenResponse) messages are <a class="reference external" href="https://developers.google.com/protocol-buffers/docs/overview">Protocol Buffer</a> messages. Protocol Buffer messages have a compact wire representation, support backwards/forwards compatibility, and are implemented for a broad set of programming languages and environments.</p>
 <p>Protocol Buffer messages are defined using a language independent format, with automatically generated serialization/deserialization bindings for languages. For example, the definition for <code class="docutils literal notranslate"><span class="pre">GetAuthTokenRequest</span></code> can be seen below (or in <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#auth-proto">auth.proto</a>):</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span><span class="w"> </span><span class="nc">GetAuthTokenRequest</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">// Common request header.</span>
-<span class="w">    </span><span class="n">RequestHeader</span><span class="w"> </span><span class="na">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="c1">// Username to authenticate with. Must be set if password is set.</span>
-<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="na">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
-<span class="w">    </span><span class="c1">// Password to authenticate with. Not necessary if token is set.</span>
-<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="na">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
-<span class="w">    </span><span class="c1">// Token to authenticate with. Can be used in place of the password, to re-mint a token.</span>
-<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="na">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span> <span class="nc">GetAuthTokenRequest</span> <span class="p">{</span>
+    <span class="c1">// Common request header.</span>
+    <span class="n">RequestHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// Username to authenticate with. Must be set if password is set.</span>
+    <span class="kt">string</span> <span class="na">username</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="c1">// Password to authenticate with. Not necessary if token is set.</span>
+    <span class="kt">string</span> <span class="na">password</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="c1">// Token to authenticate with. Can be used in place of the password, to re-mint a token.</span>
+    <span class="kt">string</span> <span class="na">token</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Although the <code class="docutils literal notranslate"><span class="pre">AuthService</span></code> example shows the common RPC paradigm of single request/single response, gRPC also supports more advanced RPC paradigms such as streaming requests, streaming responses, or full bidirectional streaming.  The Spot API uses some of the more advanced paradigms in select locations. For example, gRPC limits responses to 4MB by default, which is too small for large amounts of data, such as the complete GraphNav map. The GraphNav service’s upload and download requests provides a streaming response RPC to work around this limitation.</p>
 </section>
 <section id="using-grpc-and-protocol-buffers">
-<h2>Using gRPC and Protocol Buffers<a class="headerlink" href="#using-grpc-and-protocol-buffers" title="Permalink to this heading">¶</a></h2>
+<h2>Using gRPC and Protocol Buffers<a class="headerlink" href="#using-grpc-and-protocol-buffers" title="Permalink to this headline">¶</a></h2>
 <p>The Python library included in the SDK hides the use of gRPC and Protocol Buffers and provides a simpler abstraction. For example, the <code class="docutils literal notranslate"><span class="pre">AuthClient</span></code> class, which speaks to the <code class="docutils literal notranslate"><span class="pre">AuthService</span></code> interface described above, has a method called <code class="docutils literal notranslate"><span class="pre">auth</span></code> demonstrated below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">app_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate to the robot with a username/password combo.</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to the robot with a username/password combo.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            username: username on the robot.</span>
@@ -750,7 +746,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Developers who wish to support another language or environment are also able to build client libraries using the gRPC service definitions and Protocol Buffer message definitions. The Python client library may also be used as a reference implementation.</p>
 </section>
 <section id="error-handling">
-<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading">¶</a></h2>
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this headline">¶</a></h2>
 <p>Robust applications need to handle errors when communicating with the Spot API. There are three general classes of errors:</p>
 <ul class="simple">
 <li><p><strong>Networking errors</strong>. Examples: network timeouts, inability to reach Spot, or security issues. The workaround is typically networking configuration specific.</p></li>
@@ -758,76 +754,76 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>Specific RPC errors</strong>. Examples: service specific errors based on the returned <code class="docutils literal notranslate"><span class="pre">Status</span></code> messages, such as a bad username/password combination for the <code class="docutils literal notranslate"><span class="pre">AuthService</span></code> above. Application code should handle these errors gracefully.</p></li>
 </ul>
 <p>More detail can be seen in the <code class="docutils literal notranslate"><span class="pre">GetAuthTokenResponse</span></code> Protocol Buffer message below:</p>
-<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span><span class="w"> </span><span class="nc">GetAuthTokenResponse</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">ResponseHeader</span><span class="w"> </span><span class="na">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
-<span class="w">    </span><span class="kd">enum</span><span class="w"> </span><span class="n">Status</span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// STATUS_UNKNOWN should never be used. If used, an internal error has happened.</span>
-<span class="w">        </span><span class="na">STATUS_UNKNOWN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span> <span class="nc">GetAuthTokenResponse</span> <span class="p">{</span>
+    <span class="n">ResponseHeader</span> <span class="na">header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="kd">enum</span> <span class="n">Status</span><span class="p">{</span>
+        <span class="c1">// STATUS_UNKNOWN should never be used. If used, an internal error has happened.</span>
+        <span class="na">STATUS_UNKNOWN</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-<span class="w">        </span><span class="c1">// STATUS_OK indicates that authentication has succeeded. The |token| field will</span>
-<span class="w">        </span><span class="c1">// be populated with a session token that can be used to authenticate the user.</span>
-<span class="w">        </span><span class="na">STATUS_OK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+        <span class="c1">// STATUS_OK indicates that authentication has succeeded. The |token| field will</span>
+        <span class="c1">// be populated with a session token that can be used to authenticate the user.</span>
+        <span class="na">STATUS_OK</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
-<span class="w">        </span><span class="c1">// STATUS_INVALID_LOGIN indicates that authentication has failed since an invalid</span>
-<span class="w">        </span><span class="c1">// username and/or password were provided.</span>
-<span class="w">        </span><span class="na">STATUS_INVALID_LOGIN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+        <span class="c1">// STATUS_INVALID_LOGIN indicates that authentication has failed since an invalid</span>
+        <span class="c1">// username and/or password were provided.</span>
+        <span class="na">STATUS_INVALID_LOGIN</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
 
-<span class="w">        </span><span class="c1">// STATUS_INVALID_TOKEN indicates that authentication has failed since the |token|</span>
-<span class="w">        </span><span class="c1">// provided in the request is invalid. Reasons for the token being invalid could be</span>
-<span class="w">        </span><span class="c1">// because it has expired, because it is improperly formed, for the wrong robot, the</span>
-<span class="w">        </span><span class="c1">// user that the token is for has changed a password, or many other reasons. Clients</span>
-<span class="w">        </span><span class="c1">// should use username/password-based authentication when refreshing the token fails.</span>
-<span class="w">        </span><span class="na">STATUS_INVALID_TOKEN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+        <span class="c1">// STATUS_INVALID_TOKEN indicates that authentication has failed since the |token|</span>
+        <span class="c1">// provided in the request is invalid. Reasons for the token being invalid could be</span>
+        <span class="c1">// because it has expired, because it is improperly formed, for the wrong robot, the</span>
+        <span class="c1">// user that the token is for has changed a password, or many other reasons. Clients</span>
+        <span class="c1">// should use username/password-based authentication when refreshing the token fails.</span>
+        <span class="na">STATUS_INVALID_TOKEN</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
 
-<span class="w">        </span><span class="c1">// STATUS_TEMPORARILY_LOCKED_OUT indicates that authentication has failed since</span>
-<span class="w">        </span><span class="c1">// authentication for the user is temporarily locked out because of too many unsuccessful</span>
-<span class="w">        </span><span class="c1">// attempts. Any new authentication attempts should be delayed so they may happen after</span>
-<span class="w">        </span><span class="c1">// the lock out period ends.</span>
-<span class="w">        </span><span class="na">STATUS_TEMPORARILY_LOCKED_OUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+        <span class="c1">// STATUS_TEMPORARILY_LOCKED_OUT indicates that authentication has failed since</span>
+        <span class="c1">// authentication for the user is temporarily locked out because of too many unsuccessful</span>
+        <span class="c1">// attempts. Any new authentication attempts should be delayed so they may happen after</span>
+        <span class="c1">// the lock out period ends.</span>
+        <span class="na">STATUS_TEMPORARILY_LOCKED_OUT</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
 
-<span class="w">        </span><span class="c1">// STATUS_INVALID_APPLICATION_TOKEN indicates that the |application_token| in the</span>
-<span class="w">        </span><span class="c1">// request was invalid.</span>
-<span class="w">        </span><span class="na">STATUS_INVALID_APPLICATION_TOKEN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+        <span class="c1">// STATUS_INVALID_APPLICATION_TOKEN indicates that the |application_token| in the</span>
+        <span class="c1">// request was invalid.</span>
+        <span class="na">STATUS_INVALID_APPLICATION_TOKEN</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
 
-<span class="w">        </span><span class="c1">// STATUS_EXPIRED_APPLICATION_TOKEN indicates that the |application_token| in the</span>
-<span class="w">        </span><span class="c1">// request was valid, but has expired.</span>
-<span class="w">        </span><span class="na">STATUS_EXPIRED_APPLICATION_TOKEN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">    </span><span class="n">Status</span><span class="w"> </span><span class="na">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+        <span class="c1">// STATUS_EXPIRED_APPLICATION_TOKEN indicates that the |application_token| in the</span>
+        <span class="c1">// request was valid, but has expired.</span>
+        <span class="na">STATUS_EXPIRED_APPLICATION_TOKEN</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">Status</span> <span class="na">status</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">// Token data. Only specified if status == STATUS_OK.</span>
-<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="na">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+    <span class="c1">// Token data. Only specified if status == STATUS_OK.</span>
+    <span class="kt">string</span> <span class="na">token</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The networking errors are not defined in the message and happen lower in the gRPC stack. The Specific RPC errors are handled by the <code class="docutils literal notranslate"><span class="pre">Status</span></code> enum shown above. Throughout the API, the <code class="docutils literal notranslate"><span class="pre">Status</span></code> enum follows the pattern of 0 being undefined (due to how Protocol Buffers represent unset data), 1 representing an <code class="docutils literal notranslate"><span class="pre">OK</span></code> or success response, and 2+ representing error codes specific to the RPC. For example, <code class="docutils literal notranslate"><span class="pre">STATUS_TEMPORARILY_LOCKED_OUT</span></code> is used if there have been too many password attempts for a user and the account is locked out for a short period.</p>
 <p>Common RPC errors such as invalid input are not directly shown above. A case of invalid input would be a <code class="docutils literal notranslate"><span class="pre">GetAuthTokenRequest</span></code> which includes no username or password at all, which indicates buggy client code rather than bad user input. Common RPC errors are shown in the <code class="docutils literal notranslate"><span class="pre">ResponseHeader</span></code> message below which all Spot API responses include:</p>
 <div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">/// Standard header attached to all GRPC responses from services.</span>
-<span class="kd">message</span><span class="w"> </span><span class="nc">ResponseHeader</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">/// Echo-back the RequestHeader for timing information, etc....</span>
-<span class="w">    </span><span class="n">RequestHeader</span><span class="w"> </span><span class="na">request_header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="kd">message</span> <span class="nc">ResponseHeader</span> <span class="p">{</span>
+    <span class="c1">/// Echo-back the RequestHeader for timing information, etc....</span>
+    <span class="n">RequestHeader</span> <span class="na">request_header</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">/// Time that the request was received. The server clock is the time basis.</span>
-<span class="w">    </span><span class="n">google.protobuf.Timestamp</span><span class="w"> </span><span class="na">request_received_timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+    <span class="c1">/// Time that the request was received. The server clock is the time basis.</span>
+    <span class="n">google.protobuf.Timestamp</span> <span class="na">request_received_timestamp</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">/// Time that the response was received. The server clock is the time basis.</span>
-<span class="w">    </span><span class="n">google.protobuf.Timestamp</span><span class="w"> </span><span class="na">response_timestamp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+    <span class="c1">/// Time that the response was received. The server clock is the time basis.</span>
+    <span class="n">google.protobuf.Timestamp</span> <span class="na">response_timestamp</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">/// Common errors, such as invalid input or internal server problems.</span>
-<span class="w">    </span><span class="c1">/// If there is a common error, the rest of the response message outside of the</span>
-<span class="w">    </span><span class="c1">/// ResponseHeader will be invalid.</span>
-<span class="w">    </span><span class="n">CommonError</span><span class="w"> </span><span class="na">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+    <span class="c1">/// Common errors, such as invalid input or internal server problems.</span>
+    <span class="c1">/// If there is a common error, the rest of the response message outside of the</span>
+    <span class="c1">/// ResponseHeader will be invalid.</span>
+    <span class="n">CommonError</span> <span class="na">error</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">/// Echoed request message. In some cases it may not be present, or it may be a stripped</span>
-<span class="w">    </span><span class="c1">/// down representation of the request.</span>
-<span class="w">    </span><span class="n">google.protobuf.Any</span><span class="w"> </span><span class="na">request</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+    <span class="c1">/// Echoed request message. In some cases it may not be present, or it may be a stripped</span>
+    <span class="c1">/// down representation of the request.</span>
+    <span class="n">google.protobuf.Any</span> <span class="na">request</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>The Python library handles Networking, Common RPC errors, and Specific RPC errors by raising specific Exceptions, which application developers can accept.</p>
 </section>
 <section id="http-2-tls-and-tcp">
-<h2>HTTP/2, TLS, and TCP<a class="headerlink" href="#http-2-tls-and-tcp" title="Permalink to this heading">¶</a></h2>
+<h2>HTTP/2, TLS, and TCP<a class="headerlink" href="#http-2-tls-and-tcp" title="Permalink to this headline">¶</a></h2>
 <p>gRPC is built on top of other networking protocols, as shown in the diagram below.</p>
 <img src="../../_images/network_protocol_stack.png" alt="Network protocol stack" style="width:350px"><p>This protocol stack has a few implications:</p>
 <ul class="simple">
@@ -838,7 +834,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="robot-discovery">
-<h2>Robot Discovery<a class="headerlink" href="#robot-discovery" title="Permalink to this heading">¶</a></h2>
+<h2>Robot Discovery<a class="headerlink" href="#robot-discovery" title="Permalink to this headline">¶</a></h2>
 <p>To talk to Spot, a client application needs to specify an IP address where a Spot is running. There are a number of possible options for doing this sort of robot discovery.</p>
 <ul class="simple">
 <li><p><strong>Fixed IP address</strong>. This approach can be used reliably when connecting directly to Spot as a WiFi access point, or over ethernet. No name lookup infrastructure is required.</p></li>

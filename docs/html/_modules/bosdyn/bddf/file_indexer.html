@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -693,7 +689,7 @@
 
 
 <div class="viewcode-block" id="FileIndexer"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html#bosdyn.bddf.file_indexer.FileIndexer">[docs]</a><span class="k">class</span> <span class="nc">FileIndexer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;An object which keeps an index of series and blocks within series.</span>
+    <span class="sd">&quot;&quot;&quot;An object which keeps an index of series and blocks within series.</span>
 
 <span class="sd">    It can write a block index at the end of a data file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -706,26 +702,26 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">file_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the FileIndex proto used which describes how to access data in the file.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the FileIndex proto used which describes how to access data in the file.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span><span class="o">.</span><span class="n">file_index</span>  <span class="c1"># pylint: disable=no-member</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">descriptor_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Descriptor proto containing the FileIndex.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the Descriptor proto containing the FileIndex.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_descriptor_index</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">series_block_indexes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the current list of SeriesBlockIndexes: series_index -&gt; SeriesBlockIndex.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns the current list of SeriesBlockIndexes: series_index -&gt; SeriesBlockIndex.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_series_block_indexes</span>
 
 <div class="viewcode-block" id="FileIndexer.series_descriptor"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html#bosdyn.bddf.file_indexer.FileIndexer.series_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">series_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return SeriesDescriptor for given series index.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return SeriesDescriptor for given series index.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_series_descriptors</span><span class="p">[</span><span class="n">series_index</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="FileIndexer.series_identifier_to_hash"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html#bosdyn.bddf.file_indexer.FileIndexer.series_identifier_to_hash">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">series_identifier_to_hash</span><span class="p">(</span><span class="n">series_identifier</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Given a SeriesIdentifier, return a 64-bit hash.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Given a SeriesIdentifier, return a 64-bit hash.&quot;&quot;&quot;</span>
         <span class="n">hasher</span> <span class="o">=</span> <span class="n">sha1</span><span class="p">()</span>
         <span class="n">hasher</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">series_identifier</span><span class="o">.</span><span class="n">series_type</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">series_identifier</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
@@ -734,7 +730,7 @@
         <span class="k">return</span> <span class="n">_hasher_to_uint64</span><span class="p">(</span><span class="n">hasher</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FileIndexer.add_series_descriptor"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html#bosdyn.bddf.file_indexer.FileIndexer.add_series_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">add_series_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_descriptor</span><span class="p">,</span> <span class="n">series_block_file_offset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the given series_descriptor to the index, with the given file offset.</span>
+        <span class="sd">&quot;&quot;&quot;Add the given series_descriptor to the index, with the given file offset.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">         series_descriptor         SeriesDescriptor to add to the index</span>
@@ -753,7 +749,7 @@
 <div class="viewcode-block" id="FileIndexer.add_series"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html#bosdyn.bddf.file_indexer.FileIndexer.add_series">[docs]</a>    <span class="k">def</span> <span class="nf">add_series</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">series_type</span><span class="p">,</span> <span class="n">series_spec</span><span class="p">,</span> <span class="n">message_type</span><span class="p">,</span> <span class="n">pod_type</span><span class="p">,</span> <span class="n">annotations</span><span class="p">,</span>
             <span class="n">additional_index_names</span><span class="p">,</span> <span class="n">writer</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a new series for messages for a DataWriter.</span>
+        <span class="sd">&quot;&quot;&quot;Register a new series for messages for a DataWriter.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">         series_type:   the kind of spec, corresponding to the set of keys expected in series_spec.</span>
@@ -812,7 +808,7 @@
 
 <div class="viewcode-block" id="FileIndexer.index_data_block"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html#bosdyn.bddf.file_indexer.FileIndexer.index_data_block">[docs]</a>    <span class="k">def</span> <span class="nf">index_data_block</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments</span>
             <span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">,</span> <span class="n">timestamp_nsec</span><span class="p">,</span> <span class="n">file_offset</span><span class="p">,</span> <span class="n">nbytes</span><span class="p">,</span> <span class="n">additional_indexes</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a an entry to the data block index of the series identified by series_index.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Add a an entry to the data block index of the series identified by series_index.&quot;&quot;&quot;</span>
         <span class="n">series_block_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_series_block_indexes</span><span class="p">[</span><span class="n">series_index</span><span class="p">]</span>
         <span class="n">block_entry</span> <span class="o">=</span> <span class="n">series_block_index</span><span class="o">.</span><span class="n">block_entries</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">file_offset</span><span class="o">=</span><span class="n">file_offset</span><span class="p">)</span>
         <span class="n">block_entry</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">FromNanoseconds</span><span class="p">(</span><span class="n">timestamp_nsec</span><span class="p">)</span>
@@ -822,7 +818,7 @@
                 <span class="n">block_entry</span><span class="o">.</span><span class="n">additional_indexes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx_val</span><span class="p">)</span>  <span class="c1"># pylint: disable=no-member</span></div>
 
 <div class="viewcode-block" id="FileIndexer.make_data_descriptor"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html#bosdyn.bddf.file_indexer.FileIndexer.make_data_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">make_data_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">,</span> <span class="n">timestamp_nsec</span><span class="p">,</span> <span class="n">additional_indexes</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return DataDescriptor for writing a data block, and add the block to the series index.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return DataDescriptor for writing a data block, and add the block to the series index.&quot;&quot;&quot;</span>
         <span class="n">series_descriptor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_series_descriptors</span><span class="p">[</span><span class="n">series_index</span><span class="p">]</span>
         <span class="n">data_descriptor</span> <span class="o">=</span> <span class="n">bddf</span><span class="o">.</span><span class="n">DataDescriptor</span><span class="p">(</span><span class="n">series_index</span><span class="o">=</span><span class="n">series_index</span><span class="p">)</span>
         <span class="n">data_descriptor</span><span class="o">.</span><span class="n">timestamp</span><span class="o">.</span><span class="n">FromNanoseconds</span><span class="p">(</span><span class="n">timestamp_nsec</span><span class="p">)</span>  <span class="c1"># pylint: disable=no-member</span>
@@ -837,7 +833,7 @@
         <span class="k">return</span> <span class="n">data_descriptor</span></div>
 
 <div class="viewcode-block" id="FileIndexer.write_index"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html#bosdyn.bddf.file_indexer.FileIndexer.write_index">[docs]</a>    <span class="k">def</span> <span class="nf">write_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_writer</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write all the indexes of the data file, and the file end.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Write all the indexes of the data file, and the file end.&quot;&quot;&quot;</span>
         <span class="c1"># Write all the block indexes</span>
         <span class="k">for</span> <span class="n">block_index</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">series_block_indexes</span><span class="p">:</span>
             <span class="c1"># Record the location of the block index.</span>

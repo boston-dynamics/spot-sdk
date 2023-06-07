@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -681,11 +677,11 @@
            <div itemprop="articleBody">
             
   <section id="module-bosdyn.client.server_util">
-<span id="server-util"></span><h1>Server Util<a class="headerlink" href="#module-bosdyn.client.server_util" title="Permalink to this heading">¶</a></h1>
+<span id="server-util"></span><h1>Server Util<a class="headerlink" href="#module-bosdyn.client.server_util" title="Permalink to this headline">¶</a></h1>
 <p>Helper functions and classes for creating and running a gRPC service.</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.ResponseContext">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">ResponseContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpc_logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exc_callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#ResponseContext"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.ResponseContext" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.ResponseContext">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">ResponseContext</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">rpc_logger</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">channel_prefix</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exc_callback</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#ResponseContext"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.ResponseContext" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Helper to log gRPC request and response message to the data buffer for a service.</p>
 <p>It should be called using a “with” statement each time an RPC is received such that
@@ -708,8 +704,8 @@ exception is raised in the body of the “with” statement.</p></li>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.GrpcServiceRunner">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">GrpcServiceRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_servicer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_servicer_to_server_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_send_message_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_receive_message_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_sigint_capture</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#GrpcServiceRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.GrpcServiceRunner" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.GrpcServiceRunner">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">GrpcServiceRunner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">service_servicer</span></em>, <em class="sig-param"><span class="n">add_servicer_to_server_fn</span></em>, <em class="sig-param"><span class="n">port</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">max_workers</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">max_send_message_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_receive_message_length</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">3</span></em>, <em class="sig-param"><span class="n">force_sigint_capture</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#GrpcServiceRunner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.GrpcServiceRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A runner to start a gRPC server on a background thread and allow easy cleanup.</p>
 <dl class="field-list simple">
@@ -731,22 +727,22 @@ other scripts from blocking a clean exit. Defaults to True.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.GrpcServiceRunner.stop">
-<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#GrpcServiceRunner.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.GrpcServiceRunner.stop" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.GrpcServiceRunner.stop">
+<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#GrpcServiceRunner.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.GrpcServiceRunner.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Blocks until the gRPC server shuts down.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.GrpcServiceRunner.run_until_interrupt">
-<span class="sig-name descname"><span class="pre">run_until_interrupt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#GrpcServiceRunner.run_until_interrupt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.GrpcServiceRunner.run_until_interrupt" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.GrpcServiceRunner.run_until_interrupt">
+<code class="sig-name descname">run_until_interrupt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#GrpcServiceRunner.run_until_interrupt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.GrpcServiceRunner.run_until_interrupt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Spin the thread until a SIGINT is received and then shut down cleanly.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.populate_response_header">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">populate_response_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#populate_response_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.populate_response_header" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.populate_response_header">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">populate_response_header</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">error_code</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">error_msg</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#populate_response_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.populate_response_header" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Sets the ResponseHeader header in the response.</dt><dd><dl class="simple">
 <dt>Args:</dt><dd><p>response (bosdyn.api Response message): The GRPC response message to be populated.
@@ -766,8 +762,8 @@ Please use bosdyn.client.server_util.populate_response_header.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.strip_large_bytes_fields">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">strip_large_bytes_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_large_bytes_fields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_large_bytes_fields" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.strip_large_bytes_fields">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">strip_large_bytes_fields</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto_message</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_large_bytes_fields"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_large_bytes_fields" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes any large bytes fields from a protobuf message depending on the proto type.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The strip_large_bytes_fields helper has moved to server_util.py.
@@ -776,8 +772,8 @@ Please use bosdyn.client.server_util.strip_large_bytes_fields.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.get_bytes_field_allowlist">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">get_bytes_field_allowlist</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#get_bytes_field_allowlist"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.get_bytes_field_allowlist" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.get_bytes_field_allowlist">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">get_bytes_field_allowlist</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#get_bytes_field_allowlist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.get_bytes_field_allowlist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates set of protos which will have bytes fields removed.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The get_bytes_field_whitelist helper has moved to
@@ -787,8 +783,8 @@ bosdyn.client.server_util.get_bytes_field_allowlist.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.strip_image_response">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">strip_image_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_image_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_image_response" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.strip_image_response">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">strip_image_response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto_message</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_image_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_image_response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes bytes from the image_pb2.ImageResponse proto.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The strip_image_response helper has moved to server_util.py.
@@ -797,8 +793,8 @@ Please use bosdyn.client.server_util.strip_image_response.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.strip_get_image_response">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">strip_get_image_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_get_image_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_get_image_response" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.strip_get_image_response">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">strip_get_image_response</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto_message</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_get_image_response"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_get_image_response" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes bytes from the image_pb2.GetImageResponse proto.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The strip_get_image_response helper has moved to server_util.py.
@@ -807,8 +803,8 @@ Please use bosdyn.client.server_util.strip_get_image_response.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.strip_local_grid_responses">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">strip_local_grid_responses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_local_grid_responses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_local_grid_responses" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.strip_local_grid_responses">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">strip_local_grid_responses</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto_message</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_local_grid_responses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_local_grid_responses" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes bytes from the local_grid_pb2.GetLocalGridsResponse proto.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The strip_local_grid_responses helper has moved to
@@ -818,8 +814,8 @@ bosdyn.client.server_util.strip_local_grid_responses.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.strip_store_image_request">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">strip_store_image_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_store_image_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_store_image_request" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.strip_store_image_request">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">strip_store_image_request</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto_message</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_store_image_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_store_image_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes bytes from the data_acquisition_store_pb2.StoreImageRequest proto.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The strip_store_image_request helper has moved to
@@ -829,8 +825,8 @@ bosdyn.client.server_util.strip_store_image_request.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.strip_store_data_request">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">strip_store_data_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_store_data_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_store_data_request" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.strip_store_data_request">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">strip_store_data_request</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto_message</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_store_data_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_store_data_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes bytes from the data_acquisition_store_pb2.StoreDataRequest proto.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The strip_store_data_request helper has moved to server_util.py.
@@ -839,8 +835,8 @@ Please use bosdyn.client.server_util.strip_store_data_request.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.strip_record_signal_tick">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">strip_record_signal_tick</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_record_signal_tick"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_record_signal_tick" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.strip_record_signal_tick">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">strip_record_signal_tick</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto_message</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_record_signal_tick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_record_signal_tick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes bytes from the data_buffer_pb2.RecordSignalTicksRequest proto.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The strip_record_signal_tick helper has moved to server_util.py.
@@ -849,8 +845,8 @@ Please use bosdyn.client.server_util.strip_record_signal_tick.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.strip_record_data_blob">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">strip_record_data_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_record_data_blob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_record_data_blob" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.strip_record_data_blob">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">strip_record_data_blob</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto_message</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_record_data_blob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_record_data_blob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes bytes from the data_buffer_pb2.RecordDataBlobsRequest proto.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The strip_record_data_blob helper has moved to server_util.py.
@@ -859,8 +855,8 @@ Please use bosdyn.client.server_util.strip_record_data_blob.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.server_util.strip_log_annotation">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.server_util.</span></span><span class="sig-name descname"><span class="pre">strip_log_annotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_log_annotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_log_annotation" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.server_util.strip_log_annotation">
+<code class="sig-prename descclassname">bosdyn.client.server_util.</code><code class="sig-name descname">strip_log_annotation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto_message</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/server_util.html#strip_log_annotation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.server_util.strip_log_annotation" title="Permalink to this definition">¶</a></dt>
 <dd><p>Removes bytes from the log_annotation_pb2.AddLogAnnotationRequest proto.</p>
 <div class="deprecated">
 <p><span class="versionmodified deprecated">Deprecated since version 3.0.0: </span>The strip_log_annotation helper has moved to server_util.py.

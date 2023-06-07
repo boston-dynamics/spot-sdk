@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -681,93 +677,93 @@
            <div itemprop="articleBody">
             
   <section id="module-bosdyn.client.token_cache">
-<span id="token-cache"></span><h1>Token Cache<a class="headerlink" href="#module-bosdyn.client.token_cache" title="Permalink to this heading">¶</a></h1>
+<span id="token-cache"></span><h1>Token Cache<a class="headerlink" href="#module-bosdyn.client.token_cache" title="Permalink to this headline">¶</a></h1>
 <p>For clients to delegate saving of tokens.</p>
 <p>TokenCache – Separate token storage from token management.</p>
 <dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCacheError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.token_cache.</span></span><span class="sig-name descname"><span class="pre">TokenCacheError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
+<dt id="bosdyn.client.token_cache.TokenCacheError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.token_cache.</code><code class="sig-name descname">TokenCacheError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
 <p>General class of errors to handle non-response non-grpc errors.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.ClearFailedError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.token_cache.</span></span><span class="sig-name descname"><span class="pre">ClearFailedError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#ClearFailedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.ClearFailedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.token_cache.TokenCacheError" title="bosdyn.client.token_cache.TokenCacheError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenCacheError</span></code></a></p>
+<dt id="bosdyn.client.token_cache.ClearFailedError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.token_cache.</code><code class="sig-name descname">ClearFailedError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#ClearFailedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.ClearFailedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.token_cache.TokenCacheError" title="bosdyn.client.token_cache.TokenCacheError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.token_cache.TokenCacheError</span></code></a></p>
 <p>Failed to delete the token from storage.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.NotInCacheError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.token_cache.</span></span><span class="sig-name descname"><span class="pre">NotInCacheError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#NotInCacheError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.NotInCacheError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.token_cache.TokenCacheError" title="bosdyn.client.token_cache.TokenCacheError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenCacheError</span></code></a></p>
+<dt id="bosdyn.client.token_cache.NotInCacheError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.token_cache.</code><code class="sig-name descname">NotInCacheError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#NotInCacheError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.NotInCacheError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.token_cache.TokenCacheError" title="bosdyn.client.token_cache.TokenCacheError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.token_cache.TokenCacheError</span></code></a></p>
 <p>Failed to read the token from cache.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.WriteFailedError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.token_cache.</span></span><span class="sig-name descname"><span class="pre">WriteFailedError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#WriteFailedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.WriteFailedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.token_cache.TokenCacheError" title="bosdyn.client.token_cache.TokenCacheError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TokenCacheError</span></code></a></p>
+<dt id="bosdyn.client.token_cache.WriteFailedError">
+<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.token_cache.</code><code class="sig-name descname">WriteFailedError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#WriteFailedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.WriteFailedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.token_cache.TokenCacheError" title="bosdyn.client.token_cache.TokenCacheError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.token_cache.TokenCacheError</span></code></a></p>
 <p>Failed to write the token to storage.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.atomic_file_write">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.client.token_cache.</span></span><span class="sig-name descname"><span class="pre">atomic_file_write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permissions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">384</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#atomic_file_write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.atomic_file_write" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.atomic_file_write">
+<code class="sig-prename descclassname">bosdyn.client.token_cache.</code><code class="sig-name descname">atomic_file_write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">permissions</span><span class="o">=</span><span class="default_value">384</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#atomic_file_write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.atomic_file_write" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCache">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.token_cache.</span></span><span class="sig-name descname"><span class="pre">TokenCache</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCache">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.token_cache.</code><code class="sig-name descname">TokenCache</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>No-op default cache that serves as an interface.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCache.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache.read" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCache.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache.read" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCache.clear">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache.clear" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCache.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache.clear" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCache.write">
-<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache.write" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCache.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache.write" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCache.match">
-<span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache.match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache.match" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCache.match">
+<code class="sig-name descname">match</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCache.match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCache.match" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of valid keys that contains the name.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCacheFilesystem">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.token_cache.</span></span><span class="sig-name descname"><span class="pre">TokenCacheFilesystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'~/.bosdyn/user_tokens'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCacheFilesystem">
+<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.token_cache.</code><code class="sig-name descname">TokenCacheFilesystem</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cache_directory</span><span class="o">=</span><span class="default_value">'~/.bosdyn/user_tokens'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Handles transfer from in memory tokens to arbitrary storage e.g. filesystem.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCacheFilesystem.read">
-<span class="sig-name descname"><span class="pre">read</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem.read"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem.read" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCacheFilesystem.read">
+<code class="sig-name descname">read</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem.read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem.read" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCacheFilesystem.clear">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem.clear" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCacheFilesystem.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem.clear" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCacheFilesystem.write">
-<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem.write" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCacheFilesystem.write">
+<code class="sig-name descname">write</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">token</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem.write"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem.write" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.token_cache.TokenCacheFilesystem.match">
-<span class="sig-name descname"><span class="pre">match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem.match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem.match" title="Permalink to this definition">¶</a></dt>
+<dt id="bosdyn.client.token_cache.TokenCacheFilesystem.match">
+<code class="sig-name descname">match</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/token_cache.html#TokenCacheFilesystem.match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.token_cache.TokenCacheFilesystem.match" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a set of valid keys that contains the name.</p>
 </dd></dl>
 

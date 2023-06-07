@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -718,17 +714,17 @@
 
 
 <div class="viewcode-block" id="RobotError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.RobotError">[docs]</a><span class="k">class</span> <span class="nc">RobotError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors to handle non-response non-grpc errors.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;General class of errors to handle non-response non-grpc errors.&quot;&quot;&quot;</span></div>
 
 
 
 
 <div class="viewcode-block" id="UnregisteredServiceError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.UnregisteredServiceError">[docs]</a><span class="k">class</span> <span class="nc">UnregisteredServiceError</span><span class="p">(</span><span class="n">RobotError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Full service definition has not been registered in the robot instance.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Full service definition has not been registered in the robot instance.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnregisteredServiceNameError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.UnregisteredServiceNameError">[docs]</a><span class="k">class</span> <span class="nc">UnregisteredServiceNameError</span><span class="p">(</span><span class="n">UnregisteredServiceError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service name has not been registered in the robot instance.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Service name has not been registered in the robot instance.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_name</span> <span class="o">=</span> <span class="n">service_name</span>
@@ -738,7 +734,7 @@
 
 
 <div class="viewcode-block" id="UnregisteredServiceTypeError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.UnregisteredServiceTypeError">[docs]</a><span class="k">class</span> <span class="nc">UnregisteredServiceTypeError</span><span class="p">(</span><span class="n">UnregisteredServiceError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service type has not been registered in the robot instance.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Service type has not been registered in the robot instance.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_type</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_type</span> <span class="o">=</span> <span class="n">service_type</span>
@@ -748,7 +744,7 @@
 
 
 <div class="viewcode-block" id="Robot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot">[docs]</a><span class="k">class</span> <span class="nc">Robot</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Settings common to one user&#39;s access to one robot.</span>
+    <span class="sd">&quot;&quot;&quot;Settings common to one user&#39;s access to one robot.</span>
 
 <span class="sd">    This is the main point of access to all client functionality.  The ensure_client member is used</span>
 <span class="sd">    to get any client to a service exposed on the robot.  Additionally, many helpers are exposed to</span>
@@ -810,7 +806,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">max_receive_message_length</span> <span class="o">=</span> <span class="n">DEFAULT_MAX_MESSAGE_LENGTH</span>
 
     <span class="k">def</span> <span class="nf">_shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Shut down background threads for tokens and time sync.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Shut down background threads for tokens and time sync.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span> <span class="o">=</span> <span class="kc">None</span>
@@ -835,7 +831,7 @@
         <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_update_token_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the cache with the existing user token.</span>
+        <span class="sd">&quot;&quot;&quot;Updates the cache with the existing user token.</span>
 
 <span class="sd">           This method also instantiates a token manager to refresh the</span>
 <span class="sd">           user token.  Furthermore, it should only be called after the</span>
@@ -853,14 +849,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_token</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Robot.setup_token_cache"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.setup_token_cache">[docs]</a>    <span class="k">def</span> <span class="nf">setup_token_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token_cache</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">unique_id</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Instantiates a token cache to persist the user token.</span>
+        <span class="sd">&quot;&quot;&quot;Instantiates a token cache to persist the user token.</span>
 
 <span class="sd">           If the user provides a cache, it will be saved in the robot object for convenience.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span> <span class="o">=</span> <span class="n">unique_id</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span><span class="o">.</span><span class="n">serial_number</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span> <span class="o">=</span> <span class="n">token_cache</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span></div>
 
 <div class="viewcode-block" id="Robot.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds to this object&#39;s processors, etc. based on other&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Adds to this object&#39;s processors, etc. based on other&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">service_client_factories_by_type</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">service_client_factories_by_type</span><span class="p">)</span>
@@ -874,7 +870,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="o">.</span><span class="n">set_client_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">client_name</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.ensure_client"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.ensure_client">[docs]</a>    <span class="k">def</span> <span class="nf">ensure_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">[],</span> <span class="n">service_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure a Client for a given service.</span>
+        <span class="sd">&quot;&quot;&quot;Ensure a Client for a given service.</span>
 <span class="sd">        Note: If a new service has been registered with the directory service, this may raise</span>
 <span class="sd">        UnregisteredServiceNameError when trying to connect to it until sync_with_directory() is</span>
 <span class="sd">        called.</span>
@@ -922,7 +918,7 @@
             <span class="n">channel_from_auth</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Robot.get_cached_robot_id"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.get_cached_robot_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_cached_robot_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the RobotId proto for this robot, querying it from the robot if not yet cached.</span>
+        <span class="sd">&quot;&quot;&quot;Return the RobotId proto for this robot, querying it from the robot if not yet cached.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RpcError: There as a problem communicating with the robot.</span>
@@ -933,7 +929,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_robot_id</span></div>
 
 <div class="viewcode-block" id="Robot.get_cached_hardware_hardware_configuration"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.get_cached_hardware_hardware_configuration">[docs]</a>    <span class="k">def</span> <span class="nf">get_cached_hardware_hardware_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the HardwareConfiguration proto for this robot, querying it from the robot if not</span>
+        <span class="sd">&quot;&quot;&quot;Return the HardwareConfiguration proto for this robot, querying it from the robot if not</span>
 <span class="sd">        yet cached.</span>
 <span class="sd">        </span>
 <span class="sd">        Raises:</span>
@@ -946,7 +942,7 @@
 
 
 <div class="viewcode-block" id="Robot.ensure_channel"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.ensure_channel">[docs]</a>    <span class="k">def</span> <span class="nf">ensure_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">[],</span> <span class="n">service_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify the right information exists before calling the ensure_secure_channel</span>
+        <span class="sd">&quot;&quot;&quot;Verify the right information exists before calling the ensure_secure_channel</span>
 <span class="sd">        method.</span>
 
 <span class="sd">        Args:</span>
@@ -979,7 +975,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_secure_channel</span><span class="p">(</span><span class="n">authority</span><span class="p">,</span> <span class="n">skip_app_token_check</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.ensure_secure_channel"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.ensure_secure_channel">[docs]</a>    <span class="k">def</span> <span class="nf">ensure_secure_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">skip_app_token_check</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">[]):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the channel to access the given authority, creating it if it doesn&#39;t exist.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the channel to access the given authority, creating it if it doesn&#39;t exist.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">authority</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels_by_authority</span><span class="p">[</span><span class="n">authority</span><span class="p">]</span>
 
@@ -1007,7 +1003,7 @@
             <span class="n">password</span><span class="p">,</span>
             <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate to this Robot with the username/password at the given service.</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to this Robot with the username/password at the given service.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            InvalidLoginError: The username and/or password are not valid.</span>
@@ -1025,7 +1021,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_user_token</span><span class="p">(</span><span class="n">user_token</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.authenticate_with_token"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.authenticate_with_token">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_with_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate to this Robot with the token at the given service.</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to this Robot with the token at the given service.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            InvalidTokenError: The token was incorrectly formed, for the wrong robot, or expired.</span>
@@ -1041,7 +1037,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_user_token</span><span class="p">(</span><span class="n">user_token</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.authenticate_from_cache"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.authenticate_from_cache">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_from_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate to this Robot with a cached token at the given service.</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to this Robot with a cached token at the given service.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            token_cache.NotInCacheError: No token found for this robot/username.</span>
@@ -1059,7 +1055,7 @@
 
 <div class="viewcode-block" id="Robot.authenticate_from_payload_credentials"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.authenticate_from_payload_credentials">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_from_payload_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">payload_registration_client</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                               <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate to this Robot with the guid/secret of the hosting payload.</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to this Robot with the guid/secret of the hosting payload.</span>
 
 <span class="sd">        This call is used to authenticate to a robot using payload credentials. If a payload is</span>
 <span class="sd">        not yet authorized, it will block until the payload is authorized by an operator in the</span>
@@ -1091,7 +1087,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_user_token</span><span class="p">(</span><span class="n">user_token</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.update_user_token"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.update_user_token">[docs]</a>    <span class="k">def</span> <span class="nf">update_user_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_token</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update this Robot with a user token.</span>
+        <span class="sd">&quot;&quot;&quot;Update this Robot with a user token.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            token_cache.WriteFailedError: Error saving to the cache.</span>
@@ -1100,7 +1096,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_update_token_cache</span><span class="p">(</span><span class="n">username</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.get_cached_usernames"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.get_cached_usernames">[docs]</a>    <span class="k">def</span> <span class="nf">get_cached_usernames</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return an ordered list of usernames queryable from the cache.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return an ordered list of usernames queryable from the cache.&quot;&quot;&quot;</span>
         <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">token_cache</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span><span class="p">)</span>
         <span class="n">usernames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
@@ -1110,17 +1106,17 @@
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">usernames</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.get_id"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.get_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_service_name</span><span class="o">=</span><span class="n">RobotIdClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all the information that identifies the robot.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get all the information that identifies the robot.&quot;&quot;&quot;</span>
         <span class="n">id_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">id_service_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">id_client</span><span class="o">.</span><span class="n">get_id</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Robot.list_services"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.list_services">[docs]</a>    <span class="k">def</span> <span class="nf">list_services</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all the available services on the robot.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get all the available services on the robot.&quot;&quot;&quot;</span>
         <span class="n">dir_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DirectoryClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dir_client</span><span class="o">.</span><span class="n">list</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Robot.sync_with_directory"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.sync_with_directory">[docs]</a>    <span class="k">def</span> <span class="nf">sync_with_directory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update local state with all available services on the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Update local state with all available services on the robot.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dict[string, string]: Mapping of service name to service type</span>
@@ -1129,7 +1125,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sync_with_services_list</span><span class="p">(</span><span class="n">remote_services</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.sync_with_services_list"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.sync_with_services_list">[docs]</a>    <span class="k">def</span> <span class="nf">sync_with_services_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">services_list</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alternate version of sync_with_directory() that takes the list of services</span>
+        <span class="sd">&quot;&quot;&quot;Alternate version of sync_with_directory() that takes the list of services</span>
 <span class="sd">        directly and does not perform any rpcs.</span>
 
 <span class="sd">        Returns:</span>
@@ -1142,7 +1138,7 @@
 
 
 <div class="viewcode-block" id="Robot.register_payload_and_authenticate"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.register_payload_and_authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">register_payload_and_authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a payload with the robot and request a user_token.</span>
+        <span class="sd">&quot;&quot;&quot;Register a payload with the robot and request a user_token.</span>
 
 <span class="sd">        This method will block until the payload is authorized by an operator in the robot webpage.</span>
 <span class="sd">        Raises:</span>
@@ -1163,7 +1159,7 @@
             <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.start_time_sync"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.start_time_sync">[docs]</a>    <span class="k">def</span> <span class="nf">start_time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_sync_interval_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start time sync thread if needed.</span>
+        <span class="sd">&quot;&quot;&quot;Start time sync thread if needed.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            time_sync_interval_sec (float): The interval (in seconds) that the time-sync estimate should be updated.</span>
@@ -1177,18 +1173,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Robot.stop_time_sync"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.stop_time_sync">[docs]</a>    <span class="k">def</span> <span class="nf">stop_time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop the time sync thread if needed.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Stop the time sync thread if needed.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">stopped</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for the time-sync thread.  Creates and starts thread if not already started.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Accessor for the time-sync thread.  Creates and starts thread if not already started.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start_time_sync</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_time_sync_thread</span>
 
 <div class="viewcode-block" id="Robot.time_sec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.time_sec">[docs]</a>    <span class="k">def</span> <span class="nf">time_sec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get current robot time, seconds. Kicks off background time sync thread if not started.</span>
+        <span class="sd">&quot;&quot;&quot;Get current robot time, seconds. Kicks off background time sync thread if not started.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            double: Current robot time, seconds.</span>
@@ -1197,7 +1193,7 @@
         <span class="k">return</span> <span class="n">timestamp_to_sec</span><span class="p">(</span><span class="n">robot_timestamp</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.operator_comment"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.operator_comment">[docs]</a>    <span class="k">def</span> <span class="nf">operator_comment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comment</span><span class="p">,</span> <span class="n">timestamp_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send an operator comment to the robot for the robot&#39;s log files.</span>
+        <span class="sd">&quot;&quot;&quot;Send an operator comment to the robot for the robot&#39;s log files.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">           comment (string):        Operator comment text to be added to the log.</span>
@@ -1228,7 +1224,7 @@
             <span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">start_timestamp_secs</span><span class="p">,</span> <span class="n">end_timestamp_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">id_str</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">log_preserve_hint</span><span class="o">=</span><span class="n">data_buffer_protos</span><span class="o">.</span><span class="n">Event</span><span class="o">.</span><span class="n">LOG_PRESERVE_HINT_NORMAL</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add an Event to the Data Buffer.</span>
+        <span class="sd">&quot;&quot;&quot;Add an Event to the Data Buffer.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          event_type (string):            The type of event.</span>
@@ -1245,7 +1241,7 @@
                              <span class="n">parameters</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span> <span class="n">log_preserve_hint</span><span class="o">=</span><span class="n">log_preserve_hint</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.power_on"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.power_on">[docs]</a>    <span class="k">def</span> <span class="nf">power_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Power on robot. This function blocks until robot powers on.</span>
+        <span class="sd">&quot;&quot;&quot;Power on robot. This function blocks until robot powers on.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timeout_sec (float): Max time this function will block for.</span>
@@ -1262,7 +1258,7 @@
         <span class="n">pkg_power_on</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.power_off"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.power_off">[docs]</a>    <span class="k">def</span> <span class="nf">power_off</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cut_immediately</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Power off robot. This function blocks until robot powers off. By default, this will</span>
+        <span class="sd">&quot;&quot;&quot;Power off robot. This function blocks until robot powers off. By default, this will</span>
 <span class="sd">        attempt to put the robot in a safe state before cutting power.</span>
 
 <span class="sd">        Args:</span>
@@ -1293,7 +1289,7 @@
                                <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.is_powered_on"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.is_powered_on">[docs]</a>    <span class="k">def</span> <span class="nf">is_powered_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the power state of the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Check the power state of the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timeout: Number of seconds to wait for RPC response.</span>
@@ -1308,7 +1304,7 @@
         <span class="k">return</span> <span class="n">pkg_is_powered_on</span><span class="p">(</span><span class="n">state_client</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.is_estopped"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.is_estopped">[docs]</a>    <span class="k">def</span> <span class="nf">is_estopped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the robot is estopped, usually indicating if an external application has not</span>
+        <span class="sd">&quot;&quot;&quot;Check if the robot is estopped, usually indicating if an external application has not</span>
 <span class="sd">           registered and held an estop endpoint.</span>
 
 <span class="sd">        Args:</span>
@@ -1324,7 +1320,7 @@
         <span class="k">return</span> <span class="n">pkg_is_estopped</span><span class="p">(</span><span class="n">estop_client</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.get_frame_tree_snapshot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.get_frame_tree_snapshot">[docs]</a>    <span class="k">def</span> <span class="nf">get_frame_tree_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the current frame tree snapshot from the robot state client.</span>
+        <span class="sd">&quot;&quot;&quot;Get the current frame tree snapshot from the robot state client.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timeout: Number of seconds to wait for RPC response.</span>
@@ -1341,7 +1337,7 @@
         <span class="k">return</span> <span class="n">current_state</span><span class="o">.</span><span class="n">kinematic_state</span><span class="o">.</span><span class="n">transforms_snapshot</span></div>
 
 <div class="viewcode-block" id="Robot.has_arm"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.has_arm">[docs]</a>    <span class="k">def</span> <span class="nf">has_arm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the robot has an arm attached.</span>
+        <span class="sd">&quot;&quot;&quot;Check if the robot has an arm attached.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timeout: Number of seconds to wait for RPC response.</span>
@@ -1359,7 +1355,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_has_arm</span></div>
 
 <div class="viewcode-block" id="Robot.update_secure_channel_port"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.update_secure_channel_port">[docs]</a>    <span class="k">def</span> <span class="nf">update_secure_channel_port</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secure_channel_port</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the port used for creating secure channels, instead of using the default 443.</span>
+        <span class="sd">&quot;&quot;&quot;Update the port used for creating secure channels, instead of using the default 443.</span>
 
 <span class="sd">        Calling this method does not change existing channels. It only affects secure channels</span>
 <span class="sd">        created after this method is called.</span>

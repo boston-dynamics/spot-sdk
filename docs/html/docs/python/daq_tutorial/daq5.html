@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -691,7 +687,7 @@ Development Kit License (20191101-BDSDK-SL).
 <a class="reference internal" href="daq6.html"><span class="doc">Next Page &gt;&gt;</span></a></p>
 <hr class="docutils" />
 <section id="part-5-collecting-data">
-<h1>Part 5: Collecting Data<a class="headerlink" href="#part-5-collecting-data" title="Permalink to this heading">¶</a></h1>
+<h1>Part 5: Collecting Data<a class="headerlink" href="#part-5-collecting-data" title="Permalink to this headline">¶</a></h1>
 <p>In this part of the tutorial, you will:</p>
 <ul class="simple">
 <li><p>Create an action on the tablet to capture data from the services we wrote.</p></li>
@@ -702,7 +698,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 <p>To collect data we will create an <a class="reference external" href="https://support.bostondynamics.com/s/article/Getting-Started-with-Autowalk">Autowalk mission</a> with Spot.</p>
 <section id="creating-actions">
-<h2>Creating Actions<a class="headerlink" href="#creating-actions" title="Permalink to this heading">¶</a></h2>
+<h2>Creating Actions<a class="headerlink" href="#creating-actions" title="Permalink to this headline">¶</a></h2>
 <p>For our data collection, we want to capture from <em>both</em> sources. We will create a new action “web_cam_battery” that captures both. To do that, navigate to Settings -&gt; Actions from the hamburger menu.</p>
 <p><img alt="Settings/Actions" src="../../../_images/settings_actions.jpg" /></p>
 <p>Then, click <code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">New</span> <span class="pre">Action</span></code>, which brings up the menu shown below to choose a template.</p>
@@ -711,12 +707,12 @@ Development Kit License (20191101-BDSDK-SL).
 <p><img alt="New action video selection" src="../../../_images/web_cam_action1.jpg" /></p>
 </section>
 <section id="testing-the-action">
-<h2>Testing the action<a class="headerlink" href="#testing-the-action" title="Permalink to this heading">¶</a></h2>
+<h2>Testing the action<a class="headerlink" href="#testing-the-action" title="Permalink to this headline">¶</a></h2>
 <p>You may now drive the robot around and trigger the new action.
 This will cause it to capture both the web cam image and the battery data. This data can be downloaded from the “Download Data” in the hamburger menu, where you will be able to see the images captured directly on the tablet.</p>
 </section>
 <section id="mission-recording">
-<h2>Mission Recording<a class="headerlink" href="#mission-recording" title="Permalink to this heading">¶</a></h2>
+<h2>Mission Recording<a class="headerlink" href="#mission-recording" title="Permalink to this headline">¶</a></h2>
 <p>Follow these steps to record a mission with the new captures:</p>
 <ol class="simple">
 <li><p>First select <code class="docutils literal notranslate"><span class="pre">Autowalk</span></code> from the drop-down menu in the top-left corner of the app, and then select <code class="docutils literal notranslate"><span class="pre">Record</span></code>.
@@ -739,7 +735,7 @@ This will cause it to capture both the web cam image and the battery data. This 
 <img alt="AutoWalk Finish" src="../../../_images/autowalk_finish.jpg" /></p></li>
 </ol>
 <section id="mission-playback">
-<h3>Mission playback<a class="headerlink" href="#mission-playback" title="Permalink to this heading">¶</a></h3>
+<h3>Mission playback<a class="headerlink" href="#mission-playback" title="Permalink to this headline">¶</a></h3>
 <p>Next, follow these steps to play back the mission recorded in the section above.</p>
 <ol class="simple">
 <li><p>First select <code class="docutils literal notranslate"><span class="pre">Autowalk</span></code> from the drop-down menu in the top-left corner of the app, and then select <code class="docutils literal notranslate"><span class="pre">Playback</span></code>.
@@ -751,12 +747,12 @@ This will cause it to capture both the web cam image and the battery data. This 
 </ol>
 </section>
 <section id="configure-the-robot-to-automatically-upload-its-data-to-the-cloud">
-<h3>Configure the robot to automatically upload its data to the cloud.<a class="headerlink" href="#configure-the-robot-to-automatically-upload-its-data-to-the-cloud" title="Permalink to this heading">¶</a></h3>
+<h3>Configure the robot to automatically upload its data to the cloud.<a class="headerlink" href="#configure-the-robot-to-automatically-upload-its-data-to-the-cloud" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html"><span class="doc">Post Docking Callbacks example</span></a> contains scripts to enable users to upload files saved during a data acquisition mission to various endpoints, with the target use case having the callback run when Spot docks at the end of an Autowalk mission. Please follow instructions in that example to set up a callback to upload the captured data to AWS when the robot docks.</p>
 </section>
 </section>
 <section id="head-over-to-part-6-processing-collected-data">
-<h2>Head over to <a class="reference internal" href="daq6.html"><span class="doc">Part 6: Processing Collected Data</span></a> &gt;&gt;<a class="headerlink" href="#head-over-to-part-6-processing-collected-data" title="Permalink to this heading">¶</a></h2>
+<h2>Head over to <a class="reference internal" href="daq6.html"><span class="doc">Part 6: Processing Collected Data</span></a> &gt;&gt;<a class="headerlink" href="#head-over-to-part-6-processing-collected-data" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference internal" href="daq4.html"><span class="doc">&lt;&lt; Previous Page</span></a>
 |
 <a class="reference internal" href="daq6.html"><span class="doc">Next Page &gt;&gt;</span></a></p>

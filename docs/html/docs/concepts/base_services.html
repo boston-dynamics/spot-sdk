@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -683,32 +679,32 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="base-services">
-<h1>Base Services<a class="headerlink" href="#base-services" title="Permalink to this heading">¶</a></h1>
+<h1>Base Services<a class="headerlink" href="#base-services" title="Permalink to this headline">¶</a></h1>
 <p>This document assumes knowledge of material covered in the SDK documentation on <a class="reference internal" href="networking.html"><span class="doc">networking</span></a>.</p>
 <p>Base Services provide the architectural glue used by the rest of the Spot API. These services include authentication, service discovery, and time synchronization. Many applications will use the Base Services when starting up, and before using services higher in the stack such as Robot State, Robot Commands, and Autonomy.</p>
 <section id="robot-id">
-<h2>robot-id<a class="headerlink" href="#robot-id" title="Permalink to this heading">¶</a></h2>
+<h2>robot-id<a class="headerlink" href="#robot-id" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">robot-id</span></code> service provides metadata about the Spot robot. It is usually the first service accessed when bootstrapping a connection to Spot. The metadata is encoded in a <code class="docutils literal notranslate"><span class="pre">RobotId</span></code> message, as shown below:</p>
 <div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="c1">/// Robot identity information, which should be static while robot is powered-on.</span>
-<span class="kd">message</span><span class="w"> </span><span class="nc">RobotId</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="c1">/// A unique string identifier for the particular robot.</span>
-<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="na">serial_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="kd">message</span> <span class="nc">RobotId</span> <span class="p">{</span>
+    <span class="c1">/// A unique string identifier for the particular robot.</span>
+    <span class="kt">string</span> <span class="na">serial_number</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">/// Type of robot.  E.g., &#39;spot&#39;.</span>
-<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="na">species</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+    <span class="c1">/// Type of robot.  E.g., &#39;spot&#39;.</span>
+    <span class="kt">string</span> <span class="na">species</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">/// Robot version/platform.</span>
-<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">;</span>
+    <span class="c1">/// Robot version/platform.</span>
+    <span class="kt">string</span> <span class="na">version</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">/// Version information about software running on the robot.</span>
-<span class="w">    </span><span class="n">RobotSoftwareRelease</span><span class="w"> </span><span class="na">software_release</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+    <span class="c1">/// Version information about software running on the robot.</span>
+    <span class="n">RobotSoftwareRelease</span> <span class="na">software_release</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">/// Optional, customer-supplied nickname.</span>
-<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="na">nickname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+    <span class="c1">/// Optional, customer-supplied nickname.</span>
+    <span class="kt">string</span> <span class="na">nickname</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1">/// Computer Serial Number. Unlike serial_number, which identifies a complete robot,</span>
-<span class="w">    </span><span class="c1">///  the computer_serial_number identifies the computer hardware used in the robot.</span>
-<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="na">computer_serial_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">;</span>
+    <span class="c1">/// Computer Serial Number. Unlike serial_number, which identifies a complete robot,</span>
+    <span class="c1">///  the computer_serial_number identifies the computer hardware used in the robot.</span>
+    <span class="kt">string</span> <span class="na">computer_serial_number</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -721,7 +717,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Unlike nearly all other services, the <code class="docutils literal notranslate"><span class="pre">robot-id</span></code> service does not require an authenticated user to access it. This is because the <code class="docutils literal notranslate"><span class="pre">RobotId</span></code> data includes information that can be helpful for the authentication sequence, such as the software version or a serial number that can help find user credentials.</p>
 </section>
 <section id="auth">
-<h2>auth<a class="headerlink" href="#auth" title="Permalink to this heading">¶</a></h2>
+<h2>auth<a class="headerlink" href="#auth" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">auth</span></code> service is used to authenticate a user to Spot. A successful authentication attempt returns a user token that must be included in RPCs to all services other than <code class="docutils literal notranslate"><span class="pre">robot-id</span></code> and <code class="docutils literal notranslate"><span class="pre">auth</span></code> to get access. The user token is a <a class="reference external" href="https://jwt.io">JWT</a> token that is valid for 12 hours and can only be used for accessing services on the robot that issued it. The token isn’t transferable to other robots.</p>
 <p>There are two ways to authenticate a user:</p>
 <ol class="simple">
@@ -731,7 +727,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The <code class="docutils literal notranslate"><span class="pre">auth</span></code> service rate-limits invalid authentication attempts to prevent a network attacker from trying to guess users or passwords. After six consecutive failed authentication attempts, authentication is locked out for 1 minute. <code class="docutils literal notranslate"><span class="pre">STATUS_TEMPORARILY_LOCKED_OUT</span></code> is returned in this case.</p>
 </section>
 <section id="directory">
-<h2>directory<a class="headerlink" href="#directory" title="Permalink to this heading">¶</a></h2>
+<h2>directory<a class="headerlink" href="#directory" title="Permalink to this headline">¶</a></h2>
 <p>Spot’s API consists of a variety of services. Some of these services ship with Spot. Some services are provided by payloads or applications running on CORE I/O. The <code class="docutils literal notranslate"><span class="pre">directory</span></code> service is used to discover which services are currently running on Spot.</p>
 <p>Note that if an application is built with the Python client library only uses built-in services, it may never need to access the <code class="docutils literal notranslate"><span class="pre">directory</span></code> service. However, the Python client library uses the <code class="docutils literal notranslate"><span class="pre">directory</span></code> service to set up connections to the built-in services.</p>
 <p>Services are described by the <code class="docutils literal notranslate"><span class="pre">ServiceEntry</span></code> message, and can be listed using the <code class="docutils literal notranslate"><span class="pre">ListServiceEntries</span></code> RPC. The command-line utility included in the Python library is a quick way to list these options, as shown below.</p>
@@ -752,7 +748,7 @@ graph-nav-service           bosdyn.api.graph_nav.GraphNavService      graph-nav.
 <p>Note that not all services register with the <code class="docutils literal notranslate"><span class="pre">directory</span></code> service at Spot startup. Applications may need to periodically poll the <code class="docutils literal notranslate"><span class="pre">directory</span></code> service to catch changes that have been made. Built-in services may take a few seconds to register at system startup. Payload-provided services may register significantly later.</p>
 </section>
 <section id="time-sync">
-<h2>time-sync<a class="headerlink" href="#time-sync" title="Permalink to this heading">¶</a></h2>
+<h2>time-sync<a class="headerlink" href="#time-sync" title="Permalink to this headline">¶</a></h2>
 <p>Time is critical for both interpreting when sensor data was recorded as well as for commanding Spot. The Spot API uses a single clock known as “Robot Time” as a basis for time commands.</p>
 <p>Spot’s clock may not be the same as the application’s clock. For example, at a single point in time Spot may think it is 16:01, whereas the application’s clock may be an hour behind at 15:01. If the application treated Spot’s clock as being at the same time as its own clock, problems may result. Fresh sensor data from Spot would be interpreted as being generated in the future. Commands that are issued to expire in 10 seconds would be rejected by Spot since they would appear to have expired.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">time-sync</span></code> service is used to estimate the offset between the application’s clock and Spot’s clock. Each <code class="docutils literal notranslate"><span class="pre">TimeSyncUpdate</span></code> RPC provides send and receive timestamps which form a single measurement. Initially the offset is unknown. It is initialized after several consecutive and consistent measurements are observed. Once an offset is calculated, applications can convert times recorded in Spot’s clock to the application’s clock and vice-versa. The offset is slowly updated to account for clock drift.</p>
@@ -765,7 +761,7 @@ graph-nav-service           bosdyn.api.graph_nav.GraphNavService      graph-nav.
 <p>Clients needing high precision timing, such as a payload sensor collecting data while the robot is moving, should instead use NTP to synchronize to the robot.</p>
 </section>
 <section id="lease">
-<h2>lease<a class="headerlink" href="#lease" title="Permalink to this heading">¶</a></h2>
+<h2>lease<a class="headerlink" href="#lease" title="Permalink to this headline">¶</a></h2>
 <p>The lease service provides methods to achieve ownership over controlling the robot and maintaining valid communication with that owner.</p>
 <p>The lease is required to issue commands that control the robots mobility and motion, such as powering on the robot or commanding stand. To start, the lease must be acquired (or taken) to show ownership of the robot resources. Then retain lease signals must be sent throughout the duration of the operation to preserve ownership and indicate reliable communication with the lease owner. Ultimately the lease should be returned to free the resources to be reclaimed; however, it can be revoked during operation by another user or if the communication signals are not received within a certain period of time.</p>
 <p>The <a class="reference internal" href="lease_service.html"><span class="doc">Lease documentation</span></a> provides a more in-depth description of leases, typical lease usage, and how to understand lease errors.</p>

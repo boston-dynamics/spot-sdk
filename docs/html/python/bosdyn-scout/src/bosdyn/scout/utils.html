@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
-        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -680,8 +676,309 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="utils">
-<h1>Utils<a class="headerlink" href="#utils" title="Permalink to this heading">¶</a></h1>
+  <section id="module-bosdyn.scout.utils">
+<span id="utils"></span><h1>Utils<a class="headerlink" href="#module-bosdyn.scout.utils" title="Permalink to this headline">¶</a></h1>
+<p>Utility functions for Scout web API</p>
+<dl class="py function">
+<dt id="bosdyn.scout.utils.get_credentials">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">get_credentials</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_credentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.get_credentials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains credentials from either environment variables or terminal inputs
+- Returns</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>username(str): the username for the Scout instance</p></li>
+<li><p>password(str): the password for the Scout instance</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.get_latest_created_at_for_run_events">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">get_latest_created_at_for_run_events</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scout_client</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_created_at_for_run_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_created_at_for_run_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dictionary of query params, returns the max created at time for run events
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
+<li><p>params(dict): the query params associated with the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>datetime.datetime(datetime representation): the max created at time for run events in datetime</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.get_latest_run_capture_resources">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">get_latest_run_capture_resources</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scout_client</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_run_capture_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_run_capture_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dictionary of query params, returns the latest run capture resources in json format
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
+<li><p>params(dict): the query params associated with the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>Run Capture Resources(list): a list of resources obtained from Scout’s RESTful endpoint</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.get_latest_created_at_for_run_captures">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">get_latest_created_at_for_run_captures</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scout_client</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_created_at_for_run_captures"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_created_at_for_run_captures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dictionary of query params, returns the max created at time for run captures
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
+<li><p>params(dict): the query params associated with the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>datetime.datetime(datetime representation): the max created at time for run captures in datetime</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.get_latest_run_resource">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">get_latest_run_resource</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scout_client</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_run_resource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_run_resource" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dictionary of query params, returns the latest run resource in json format
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
+<li><p>params(dict): the query params associated with the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>Run Resource(json): a resource obtained from Scout’s RESTful endpoint in json</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.get_latest_run_in_progress">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">get_latest_run_in_progress</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scout_client</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_run_in_progress"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_run_in_progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dictionary of query params, returns the latest running resource in json format
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
+<li><p>params(dict): the query params associated with the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>Run(json): a run obtained from Scout’s RESTful endpoint in json</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.get_latest_end_time_for_runs">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">get_latest_end_time_for_runs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scout_client</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{}</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_end_time_for_runs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_end_time_for_runs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a dictionary of query params, returns the max end time for runs
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
+<li><p>params(dict): the query params associated with the get request</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Raises:</dt><dd><ul>
+<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
+<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>datetime.datetime(datetime representation): the max end for runs in datetime</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.write_image">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">write_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">img_raw</span></em>, <em class="sig-param"><span class="n">image_fp</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#write_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.write_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a raw image and a desired output directory, writes the image to a file
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>img_raw(Raw image object): the input raw image</p></li>
+<li><p>image_fp(str): the output filepath for the image</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.data_capture_urls_from_run_events">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">data_capture_urls_from_run_events</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scout_client</span></em>, <em class="sig-param"><span class="n">run_events</span></em>, <em class="sig-param"><span class="n">list_of_channel_names</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#data_capture_urls_from_run_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.data_capture_urls_from_run_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given run events and list of desired channel names, returns the a list data capture urls
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>run_events(json): a json representation of run events obtained from Scout’s RESTful endpoint</p></li>
+<li><dl class="simple">
+<dt>list_of_channel_names(list): a list of channel names associated with the desired data captures.</dt><dd><p>Defaults to None which returns all the available channels.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>data_urls(list): a list of urls</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.data_capture_url_from_run_capture_resources">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">data_capture_url_from_run_capture_resources</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">scout_client</span></em>, <em class="sig-param"><span class="n">run_capture_resources</span></em>, <em class="sig-param"><span class="n">list_of_channel_names</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#data_capture_url_from_run_capture_resources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.data_capture_url_from_run_capture_resources" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given run capture resources and list of desired channel names, returns the a list data capture urls
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>run_capture_resources(list): a list of resources obtained from Scout’s RESTful endpoint</p></li>
+<li><dl class="simple">
+<dt>list_of_channel_names(list): a list of channel names associated with the desired data captures.</dt><dd><p>Defaults to None which returns all the available channels.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>data_urls(list): a list of urls</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.get_action_names_from_run_events">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">get_action_names_from_run_events</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">run_events</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_action_names_from_run_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.get_action_names_from_run_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given run events, returns a list of action names
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>run_events(json): a json representation of run events obtained from Scout’s RESTful endpoint</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>action_names(list): a list of action names</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bosdyn.scout.utils.datetime_from_isostring">
+<code class="sig-prename descclassname">bosdyn.scout.utils.</code><code class="sig-name descname">datetime_from_isostring</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">datetime_isostring</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#datetime_from_isostring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.scout.utils.datetime_from_isostring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the datetime representation of the iso string representation of time
+- Args:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>datetime_isostring(str): the iso string representation of time</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Returns:</dt><dd><ul>
+<li><p>datetime.datetime(datetime representation): the datetime representation of the iso string representation of time</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd></dl>
+
 </section>
 
 

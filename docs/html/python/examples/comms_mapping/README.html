@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,21 +683,21 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="comms-image-service">
-<h1>Comms image service<a class="headerlink" href="#comms-image-service" title="Permalink to this heading">¶</a></h1>
+<h1>Comms image service<a class="headerlink" href="#comms-image-service" title="Permalink to this headline">¶</a></h1>
 <p>This service creates a virtual camera device that can be selected on the controller and displays a map of wifi signal strength.
 This example will register itself as a payload, which will need to be authorized in the robot’s admin console. The payload dimensions, location, and weight are small values.</p>
 </section>
 <section id="how-to-use">
-<h1>How to use<a class="headerlink" href="#how-to-use" title="Permalink to this heading">¶</a></h1>
+<h1>How to use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h1>
 <section id="running-locally">
-<h2>Running locally:<a class="headerlink" href="#running-locally" title="Permalink to this heading">¶</a></h2>
+<h2>Running locally:<a class="headerlink" href="#running-locally" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">docker</span><span class="o">-</span><span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 <span class="n">python3</span> <span class="n">comms_image_service</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span> <span class="o">--</span><span class="n">host</span><span class="o">-</span><span class="n">ip</span> <span class="o">&lt;</span><span class="n">computer</span> <span class="n">IP</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">robotIP</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 </section>
 <section id="when-using-a-docker-image-on-core-i-o">
-<h2>When using a Docker image on CORE I/O:<a class="headerlink" href="#when-using-a-docker-image-on-core-i-o" title="Permalink to this heading">¶</a></h2>
+<h2>When using a Docker image on CORE I/O:<a class="headerlink" href="#when-using-a-docker-image-on-core-i-o" title="Permalink to this headline">¶</a></h2>
 <p>Follow the instructions in this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> to create a docker image and an Extension for CORE I/O. Or, the docker image can be run locally on the command-line:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">-</span><span class="n">p</span> <span class="p">{</span><span class="n">PORT_NUM</span><span class="p">}:{</span><span class="n">PORT_NUM</span><span class="p">}</span> <span class="o">--</span><span class="n">network</span> <span class="n">host</span> <span class="p">{</span><span class="n">comms_image_service</span><span class="p">}</span> <span class="o">--</span><span class="n">port</span> <span class="p">{</span><span class="n">PORT_NUM</span><span class="p">}</span>
 </pre></div>

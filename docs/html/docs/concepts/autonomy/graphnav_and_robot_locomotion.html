@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,7 +681,7 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="graphnav-and-robot-locomotion">
-<h1>GraphNav and Robot Locomotion<a class="headerlink" href="#graphnav-and-robot-locomotion" title="Permalink to this heading">¶</a></h1>
+<h1>GraphNav and Robot Locomotion<a class="headerlink" href="#graphnav-and-robot-locomotion" title="Permalink to this headline">¶</a></h1>
 <p>The GraphNav service provides two RPCs for navigating to different locations on the prior map:</p>
 <ul class="simple">
 <li><p>NavigateTo</p></li>
@@ -693,16 +689,16 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 <p>Both RPCs let the client specify maximum speed as well as the size of the goal region at the final waypoint.</p>
 <section id="navigateto">
-<h2>NavigateTo<a class="headerlink" href="#navigateto" title="Permalink to this heading">¶</a></h2>
+<h2>NavigateTo<a class="headerlink" href="#navigateto" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">NavigateTo</span></code> RPC is the simplest way to command a robot to go to a destination on the map once the robot is localized. GraphNav will decide which route to take, currently the one with the fewest number of edges.</p>
 </section>
 <section id="navigateroute">
-<h2>NavigateRoute<a class="headerlink" href="#navigateroute" title="Permalink to this heading">¶</a></h2>
+<h2>NavigateRoute<a class="headerlink" href="#navigateroute" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">NavigateRoute</span></code> RPC allows the client to directly specify the path of the robot. This lets the client command the robot to take a longer path as needed. Routes are specified as a list of waypoints and edges. For example, you could make a path that doubles back on itself, allowing the robot to go to a distant waypoint and then back to the start.</p>
 <p>Clients that maintain contact with the robot are encouraged to continuously resend the command with a deadline in the near future. This results in the robot stopping quickly if the client stops checking in. Clients that disconnect from an autonomous robot should set a longer deadline and rely on an alternate mechanism to maintain safety.</p>
 </section>
 <section id="status-and-feedback">
-<h2>Status and feedback<a class="headerlink" href="#status-and-feedback" title="Permalink to this heading">¶</a></h2>
+<h2>Status and feedback<a class="headerlink" href="#status-and-feedback" title="Permalink to this headline">¶</a></h2>
 <p>API clients should periodically query for navigation status during map replay using the <code class="docutils literal notranslate"><span class="pre">NavigationFeedback</span></code> RPC.</p>
 <ul class="simple">
 <li><p>Unless an error is returned, <code class="docutils literal notranslate"><span class="pre">NavigationFeedbackResponse</span></code> is returned with status <code class="docutils literal notranslate"><span class="pre">STATUS_FOLLOWING_ROUTE</span></code> and the remaining list of waypoints and edges in the route.</p></li>
@@ -711,7 +707,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Clients requiring high precision should check localization with <code class="docutils literal notranslate"><span class="pre">GetLocalizationState</span></code> RPC even after reaching the goal, as the robot will be close but not exactly on the goal.</p>
 </section>
 <section id="autonomous-navigation-errors">
-<h2>Autonomous navigation errors<a class="headerlink" href="#autonomous-navigation-errors" title="Permalink to this heading">¶</a></h2>
+<h2>Autonomous navigation errors<a class="headerlink" href="#autonomous-navigation-errors" title="Permalink to this headline">¶</a></h2>
 <p>The following error types can interrupt an autonomous route:</p>
 <table border="1" class="docutils">
 <thead>

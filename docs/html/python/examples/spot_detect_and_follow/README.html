@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,16 +683,16 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="spot-detect-and-follow">
-<h1>Spot Detect and Follow<a class="headerlink" href="#spot-detect-and-follow" title="Permalink to this heading">¶</a></h1>
+<h1>Spot Detect and Follow<a class="headerlink" href="#spot-detect-and-follow" title="Permalink to this headline">¶</a></h1>
 <p>The Spot Detect and Follow example collects images from the two front Spot cameras and performs object detection on a specified class. This detection uses Tensorflow via the tensorflow_object_detector from the Spot Tensorflow Detector example. It accepts any Tensorflow model, and it allows the user to specify a subset of detection classes included in the model. It performs this set of operations for a predefined number of iterations, blocking for a predefined amount of time between each iteration. The example then determines the location of the highest confidence detection of the specified class and walks towards the object. The walking has a built-in buffer of about 3 meters.</p>
 <p>IF USING THIS EXAMPLE TO FOLLOW A PERSON, FOLLOW ALL SAFETY PROTOCOLS. KEEP AWAY FROM ALL STAIRCASES.</p>
 <p>The program is organized as three sets of Python processes communicating with the Spot robot. The process diagram is shown below. The main process communicates with the Spot robot over GRPC and constantly receives images. These images are pushed into the RAW_IMAGES_QUEUE and read by the Tensorflow processes. Those processes detect objects in the images and pushes the location onto PROCESSED_BOXES_QUEUE. The main thread then determines the location of the object and issues commands to the robot to walk towards the object.</p>
 <img src="../../../_images/Detect_and_Follow.png" alt="Process Diagram" width="800"/><section id="user-guide">
-<h2>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this heading">¶</a></h2>
+<h2>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h2>
 <p>This example depends on a Tensorflow model. As an example, the <code class="docutils literal notranslate"><span class="pre">faster_rcnn_inception_v2_coco</span></code> Tensorflow model pre-trained on COCO dataset can be obtained <a class="reference external" href="http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz">here</a>. That model is not supported on Windows or MacOS.
 The pre-trained models may not be good at detecting some classes when using the robot’s cameras, as the fisheye distortion, low resolution, and black and white images affect image quality. For example, pre-trained models may not perform well at detecting “sports balls” due to the lack of color. The <a class="reference external" href="http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v2_coco_2018_03_29.tar.gz">ssd_mobilenet_v2_coco</a> and <a class="reference external" href="http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz">faster_rcnn_inception_v2_coco</a> have been tested to work well at detecting humans.</p>
 <section id="installation-only-if-you-want-to-run-without-docker">
-<h3>Installation (Only if you want to run without Docker)<a class="headerlink" href="#installation-only-if-you-want-to-run-without-docker" title="Permalink to this heading">¶</a></h3>
+<h3>Installation (Only if you want to run without Docker)<a class="headerlink" href="#installation-only-if-you-want-to-run-without-docker" title="Permalink to this headline">¶</a></h3>
 <p>To install this example on Ubuntu 18.04, follow these instructions:</p>
 <ul class="simple">
 <li><p>Install python3: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3.10</span></code></p></li>
@@ -713,7 +709,7 @@ The pre-trained models may not be good at detecting some classes when using the 
 </ul>
 </section>
 <section id="execution">
-<h3>Execution<a class="headerlink" href="#execution" title="Permalink to this heading">¶</a></h3>
+<h3>Execution<a class="headerlink" href="#execution" title="Permalink to this headline">¶</a></h3>
 <p>Prior to running the example, you will need to acquire estop access from another source such as from a connected laptop or tablet. This allows you to emergency stop the robot since this application does not have a GUI.
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:</p>
 <ul class="simple">
@@ -735,37 +731,37 @@ This example follows the common pattern for expected arguments. It needs the com
 </div>
 <p>For example, run the example with <code class="docutils literal notranslate"><span class="pre">--model-path</span></code> pointing to the <code class="docutils literal notranslate"><span class="pre">frozen_inference_graph.pb</span></code> file in the <code class="docutils literal notranslate"><span class="pre">faster_rcnn_inception_v2_coco_2018_01_28</span></code> folder created from untar-ing the model file downloaded from the instructions above, and with <code class="docutils literal notranslate"><span class="pre">--detection-classes</span></code> argument set to <code class="docutils literal notranslate"><span class="pre">1</span></code> to detect people in the camera images.</p>
 <section id="running-in-docker">
-<h4>Running in Docker<a class="headerlink" href="#running-in-docker" title="Permalink to this heading">¶</a></h4>
+<h4>Running in Docker<a class="headerlink" href="#running-in-docker" title="Permalink to this headline">¶</a></h4>
 <p>Please refer to this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on SpotCORE as docker containers.</p>
 <p>This example provides a Dockerfile for running in a container. This requires installing Nvidia Docker.
 You can follow the instructions at https://github.com/NVIDIA/nvidia-docker to install Nvidia Docker.
 Nvidia Docker is preinstalled on the CORE I/O.</p>
 <p>To build the image, you’ll need to first copy over the tensorflow detector file first:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>../spot_tensorflow_detector/tensorflow_object_detection.py<span class="w"> </span>.
-sudo<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>spot_detect_and_follow:x64<span class="w"> </span>-f<span class="w"> </span>Dockerfile.x64<span class="w"> </span>.
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>cp ../spot_tensorflow_detector/tensorflow_object_detection.py .
+sudo docker build -t spot_detect_and_follow:x64 -f Dockerfile.x64 .
 </pre></div>
 </div>
 <p>If you are building for the CORE I/O, run this instead:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># If you are building on an x64 machine</span>
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>qemu<span class="w"> </span>binfmt-support<span class="w"> </span>qemu-user-static<span class="w"> </span><span class="c1"># Install the qemu packages</span>
-sudo<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--privileged<span class="w"> </span>multiarch/qemu-user-static<span class="w"> </span>--reset<span class="w"> </span>-p<span class="w"> </span>yes<span class="w"> </span><span class="c1"># This step will execute the registering scripts</span>
+sudo apt-get install qemu binfmt-support qemu-user-static <span class="c1"># Install the qemu packages</span>
+sudo docker run --rm --privileged multiarch/qemu-user-static --reset -p yes <span class="c1"># This step will execute the registering scripts</span>
 
 <span class="c1"># Build the Docker image for L4T</span>
-cp<span class="w"> </span>../spot_tensorflow_detector/tensorflow_object_detection.py<span class="w"> </span>.
-sudo<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>spot_detect_and_follow:l4t<span class="w"> </span>-f<span class="w"> </span>Dockerfile.l4t<span class="w"> </span>.
+cp ../spot_tensorflow_detector/tensorflow_object_detection.py .
+sudo docker build -t spot_detect_and_follow:l4t -f Dockerfile.l4t .
 </pre></div>
 </div>
 <p>To run a container, replace ROBOT_HOSTNAME and &lt;absolute_path_to_pb&gt; with the full path to the pb model file in the command below:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>spot_detect_and_follow<span class="w"> </span>ROBOT_HOSTNAME
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo docker run -it --network<span class="o">=</span>host spot_detect_and_follow ROBOT_HOSTNAME
 </pre></div>
 </div>
 <p>On CORE I/O (using the GPU):</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--gpus<span class="w"> </span>all<span class="w"> </span>-it<span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>spot_detect_and_follow:l4t<span class="w"> </span>ROBOT_HOSTNAME
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo docker run --gpus all -it --network<span class="o">=</span>host spot_detect_and_follow:l4t ROBOT_HOSTNAME
 </pre></div>
 </div>
 </section>
 <section id="running-as-a-spot-extension-on-core-i-o">
-<h4>Running as a Spot Extension on CORE I/O<a class="headerlink" href="#running-as-a-spot-extension-on-core-i-o" title="Permalink to this heading">¶</a></h4>
+<h4>Running as a Spot Extension on CORE I/O<a class="headerlink" href="#running-as-a-spot-extension-on-core-i-o" title="Permalink to this headline">¶</a></h4>
 <p>This directory contains a script <code class="docutils literal notranslate"><span class="pre">create_extension.sh</span></code> that can be used to create an l4t-based Spot Extension for this example.
 This will create a file spot_detect_and_follow.spx, which can be uploaded to the CORE I/O.
 The extension requires that the payload be authorized on the robot admin console to run.</p>

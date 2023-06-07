@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -689,19 +685,19 @@
 
 
 <div class="viewcode-block" id="RayCastResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/ray_cast.html#bosdyn.client.ray_cast.RayCastResponseError">[docs]</a><span class="k">class</span> <span class="nc">RayCastResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors for ray cast service.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;General class of errors for ray cast service.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="InvalidRequestError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/ray_cast.html#bosdyn.client.ray_cast.InvalidRequestError">[docs]</a><span class="k">class</span> <span class="nc">InvalidRequestError</span><span class="p">(</span><span class="n">RayCastResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Request was invalid / malformed in some way.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Request was invalid / malformed in some way.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="InvalidIntersectionTypeError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/ray_cast.html#bosdyn.client.ray_cast.InvalidIntersectionTypeError">[docs]</a><span class="k">class</span> <span class="nc">InvalidIntersectionTypeError</span><span class="p">(</span><span class="n">RayCastResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Requested source not valid for current robot configuration.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Requested source not valid for current robot configuration.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnknownFrameError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/ray_cast.html#bosdyn.client.ray_cast.UnknownFrameError">[docs]</a><span class="k">class</span> <span class="nc">UnknownFrameError</span><span class="p">(</span><span class="n">RayCastResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The frame_name for a command was not a known frame.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The frame_name for a command was not a known frame.&quot;&quot;&quot;</span></div>
 
 
 <span class="c1"># yapf: disable</span>
@@ -720,14 +716,14 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">ray_cast_pb2</span><span class="o">.</span><span class="n">RaycastResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_STATUS_TO_ERROR</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="RayCastClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/ray_cast.html#bosdyn.client.ray_cast.RayCastClient">[docs]</a><span class="k">class</span> <span class="nc">RayCastClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client that allows arbitrary rays to be queried against the robot.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A client that allows arbitrary rays to be queried against the robot.&quot;&quot;&quot;</span>
     <span class="n">default_authority</span> <span class="o">=</span> <span class="s1">&#39;ray-cast.spot.robot&#39;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;ray-cast&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.RayCastService&#39;</span>
@@ -737,7 +733,7 @@
 
 <div class="viewcode-block" id="RayCastClient.raycast"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/ray_cast.html#bosdyn.client.ray_cast.RayCastClient.raycast">[docs]</a>    <span class="k">def</span> <span class="nf">raycast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ray_origin</span><span class="p">,</span> <span class="n">ray_direction</span><span class="p">,</span> <span class="n">raycast_types</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">frame_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Requests robot to intersect ray against the environment it built up.</span>
+        <span class="sd">&quot;&quot;&quot;Requests robot to intersect ray against the environment it built up.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            ray_origin: (x, y, z) position of the ray in the specified frame.</span>
@@ -758,7 +754,7 @@
 
 <div class="viewcode-block" id="RayCastClient.raycast_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/ray_cast.html#bosdyn.client.ray_cast.RayCastClient.raycast_async">[docs]</a>    <span class="k">def</span> <span class="nf">raycast_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ray_origin</span><span class="p">,</span> <span class="n">ray_direction</span><span class="p">,</span> <span class="n">raycast_types</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                       <span class="n">frame_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of raycast().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of raycast().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raycast_request</span><span class="p">(</span><span class="n">ray_origin</span><span class="p">,</span> <span class="n">ray_direction</span><span class="p">,</span> <span class="n">raycast_types</span><span class="p">,</span> <span class="n">min_distance</span><span class="p">,</span>
                                     <span class="n">frame_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">Raycast</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_error_from_response</span><span class="p">,</span>

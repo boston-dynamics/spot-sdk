@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -683,7 +679,7 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="e-stop-service">
-<h1>E-Stop Service<a class="headerlink" href="#e-stop-service" title="Permalink to this heading">¶</a></h1>
+<h1>E-Stop Service<a class="headerlink" href="#e-stop-service" title="Permalink to this headline">¶</a></h1>
 <p>The “estop” service uses a heartbeat-based, software-implemented service to help guarantee a communications link between one or more off-robot host machines. In 3.2 and earlier, the robot will not allow the motors to be powered without properly setting up this service. In 3.3, it’s possible to operate the robot WITHOUT involving this service.</p>
 <p>In short, one or more pre-determined clients must confirm that they can talk to the robot by sending a special message. In the parlance of the service, one or more Endpoints that have been Registered against the Configuration must send CheckIn messages.</p>
 <p>Clients can set one of the following “stop levels”:</p>
@@ -695,7 +691,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The set up happens over the course of several steps: Configuration, Registration, and CheckIn. Once all registered endpoints have checked in, actuators can be powered on.</p>
 <p>The Python library takes care of these steps for you. See the E-Stop example in <a class="reference internal" href="../../python/examples/estop/README.html"><span class="doc">estop_nogui example</span></a> and the client implementation in <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/estop.html"><span class="doc">bosdyn/client/estop.py</span></a> for an example usage and implementation.</p>
 <section id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this heading">¶</a></h2>
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
 <p>The client sending the <code class="docutils literal notranslate"><span class="pre">SetEstopConfigRequest</span></code> is saying “This is the exact number of endpoints I expect to exist, and how often they must check in.” Endpoints in the configuration have two important values they must fill out:</p>
 <ol class="simple">
 <li><p>role</p></li>
@@ -712,19 +708,19 @@ Development Kit License (20191101-BDSDK-SL).
 <p><em>By setting a configuration, any currently registered endpoints are forgotten about. This means the robot will behave as if the CUT stop level was sent by a client</em></p>
 </section>
 <section id="registration">
-<h2>Registration<a class="headerlink" href="#registration" title="Permalink to this heading">¶</a></h2>
+<h2>Registration<a class="headerlink" href="#registration" title="Permalink to this headline">¶</a></h2>
 <p>One or more clients must now send one or more <code class="docutils literal notranslate"><span class="pre">RegisterEstopEndpointRequest</span></code> messages. The request must specify <code class="docutils literal notranslate"><span class="pre">target_endpoint.role</span></code>, as well as the relevant fields in <code class="docutils literal notranslate"><span class="pre">new_endpoint</span></code>. See the protobuf’s documentation for more details.</p>
 <p>In the simplest case, the same client that sent the configuration with a single endpoint will immediately register itself as that endpoint.</p>
 </section>
 <section id="checkin">
-<h2>CheckIn<a class="headerlink" href="#checkin" title="Permalink to this heading">¶</a></h2>
+<h2>CheckIn<a class="headerlink" href="#checkin" title="Permalink to this headline">¶</a></h2>
 <p>A registered endpoint can now send an <code class="docutils literal notranslate"><span class="pre">EstopCheckInRequest</span></code>. Each such request contains a <code class="docutils literal notranslate"><span class="pre">challenge</span></code> and a <code class="docutils literal notranslate"><span class="pre">response</span></code>, to help guarantee a live communications link between the robot and a responsive client. The <code class="docutils literal notranslate"><span class="pre">response</span></code> must be the 1’s compliment of the provided <code class="docutils literal notranslate"><span class="pre">challenge</span></code>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">EstopCheckInResponse</span></code> received by the client will have a new <code class="docutils literal notranslate"><span class="pre">challenge</span></code> that should be responded to.</p>
 <p>The first check-in sent by an endpoint will not have a valid challenge/response pair, so the first response will provide a <code class="docutils literal notranslate"><span class="pre">INCORRECT_CHALLENGE_RESPONSE</span></code> status, but it can be safely ignored.</p>
 <p>If an incorrect challenge/response pair is received by the server, that check-in does not reset the timeout.</p>
 </section>
 <section id="operation">
-<h2>Operation<a class="headerlink" href="#operation" title="Permalink to this heading">¶</a></h2>
+<h2>Operation<a class="headerlink" href="#operation" title="Permalink to this headline">¶</a></h2>
 <p>The E-Stop service will allow actuators to be powered on as long as the following conditions are met:</p>
 <ol class="simple">
 <li><p>There is a valid configuration</p></li>

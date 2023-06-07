@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,17 +683,17 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="bddf-data-download">
-<h1>BDDF data download<a class="headerlink" href="#bddf-data-download" title="Permalink to this heading">¶</a></h1>
+<h1>BDDF data download<a class="headerlink" href="#bddf-data-download" title="Permalink to this headline">¶</a></h1>
 <p>This example shows how to download data from GRPC logs and/or the data-buffer service as bddf data. The bddf format is a Boston Dynamics file format added to the SDK in 2.1.</p>
 <section id="setup-dependencies">
-<h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this heading">¶</a></h2>
+<h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>These examples need to be run with python3, and have the Spot SDK installed. See the requirements.txt file for a list of dependencies which can be installed with pip.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 -m pip install -r requirements.txt
 </pre></div>
 </div>
 </section>
 <section id="running-the-examples">
-<h2>Running the Examples<a class="headerlink" href="#running-the-examples" title="Permalink to this heading">¶</a></h2>
+<h2>Running the Examples<a class="headerlink" href="#running-the-examples" title="Permalink to this headline">¶</a></h2>
 <p>There are two primary scripts in this example. The first is <code class="docutils literal notranslate"><span class="pre">bddf_download.py</span></code>, which downloads specified data from a robot and saves it as a bddf file.</p>
 <p>Another example script is <code class="docutils literal notranslate"><span class="pre">bddf_read.py</span></code>, which extracts and prints protobuf messages stored in a bddf file.</p>
 <p>To see the types of messages currently supported by the script, run</p>
@@ -725,7 +721,7 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <section id="specifying-time-spans">
-<h3>Specifying time spans<a class="headerlink" href="#specifying-time-spans" title="Permalink to this heading">¶</a></h3>
+<h3>Specifying time spans<a class="headerlink" href="#specifying-time-spans" title="Permalink to this headline">¶</a></h3>
 <p>To get a list of formats supported for specifying time spans for data selection in <code class="docutils literal notranslate"><span class="pre">bddf_download.py</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 bddf_download.py ${ROBOT_IP} --help-timespan
 A timespan is {val} or {val}-{val} where:
@@ -747,14 +743,14 @@ For example:
 </div>
 </section>
 <section id="basic-data-download">
-<h3>Basic data download<a class="headerlink" href="#basic-data-download" title="Permalink to this heading">¶</a></h3>
+<h3>Basic data download<a class="headerlink" href="#basic-data-download" title="Permalink to this headline">¶</a></h3>
 <p>Download all data from the last 5 minutes (the default time span). The data is saved to <code class="docutils literal notranslate"><span class="pre">./download.bddf</span></code> by default.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ${DOWNLOAD_BDDF}
 </pre></div>
 </div>
 </section>
 <section id="operator-comments">
-<h3>Operator comments<a class="headerlink" href="#operator-comments" title="Permalink to this heading">¶</a></h3>
+<h3>Operator comments<a class="headerlink" href="#operator-comments" title="Permalink to this headline">¶</a></h3>
 <p>Download all operator comments sent to the data-buffer in last day and save to <code class="docutils literal notranslate"><span class="pre">comments.bddf</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ${DOWNLOAD_BDDF} --timespan 1d --type bosdyn.api.OperatorComment -o comments.bddf
 </pre></div>
@@ -765,7 +761,7 @@ For example:
 </div>
 </section>
 <section id="events">
-<h3>Events<a class="headerlink" href="#events" title="Permalink to this heading">¶</a></h3>
+<h3>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h3>
 <p>Download all events from stored in the data-buffer on 2022/11/07, and save to <code class="docutils literal notranslate"><span class="pre">events.bddf</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ${DOWNLOAD_BDDF} --timespan 20201107-20201108 --type bosdyn.api.Event -o events.bddf
 </pre></div>
@@ -776,7 +772,7 @@ For example:
 </div>
 </section>
 <section id="grpc-requests-responses">
-<h3>GRPC requests/responses<a class="headerlink" href="#grpc-requests-responses" title="Permalink to this heading">¶</a></h3>
+<h3>GRPC requests/responses<a class="headerlink" href="#grpc-requests-responses" title="Permalink to this headline">¶</a></h3>
 <p>Download robot-id GRPC requests/responses from 20 minutes ago to 10 minutes ago, and store them in file <code class="docutils literal notranslate"><span class="pre">robot-id.bddf</span></code>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ${DOWNLOAD_BDDF} --timespan 20m-10m --service robot-id -o robot-id.bddf
 </pre></div>
@@ -789,7 +785,7 @@ $ python3 ./bddf_read.py show-grpc robot-id.bddf bosdyn.api.RobotIdResponse
 </section>
 </section>
 <section id="gui">
-<h2>GUI<a class="headerlink" href="#gui" title="Permalink to this heading">¶</a></h2>
+<h2>GUI<a class="headerlink" href="#gui" title="Permalink to this headline">¶</a></h2>
 <p>A graphical user interface is also available using <code class="docutils literal notranslate"><span class="pre">bddf_download_gui.py</span></code>. An additional PyQt5 dependency is required.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python3 -m pip install -r gui_requirements.txt
 </pre></div>

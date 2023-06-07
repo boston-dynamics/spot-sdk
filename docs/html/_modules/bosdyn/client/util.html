@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -704,7 +700,7 @@
 
 
 <div class="viewcode-block" id="cli_login_prompt"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.cli_login_prompt">[docs]</a><span class="k">def</span> <span class="nf">cli_login_prompt</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interactive CLI for scripting conveniences.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Interactive CLI for scripting conveniences.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">username</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Username: &#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
         <span class="n">username</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
@@ -719,7 +715,7 @@
 
 
 <div class="viewcode-block" id="cli_auth"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.cli_auth">[docs]</a><span class="k">def</span> <span class="nf">cli_auth</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interactive CLI for authenticating with the robot.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Interactive CLI for authenticating with the robot.&quot;&quot;&quot;</span>
     <span class="n">successful</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="n">successful</span><span class="p">:</span>
         <span class="n">username</span><span class="p">,</span> <span class="n">password</span> <span class="o">=</span> <span class="n">cli_login_prompt</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">)</span>
@@ -731,7 +727,7 @@
 
 
 <div class="viewcode-block" id="authenticate"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.authenticate">[docs]</a><span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">askpass</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic function for authenticating with the robot.</span>
+    <span class="sd">&quot;&quot;&quot;Generic function for authenticating with the robot.</span>
 
 <span class="sd">    Tries to authenticate using the following methods, in order:</span>
 <span class="sd">        - An existing auth token</span>
@@ -772,7 +768,7 @@
 
 
 <div class="viewcode-block" id="DedupLoggingMessages"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.DedupLoggingMessages">[docs]</a><span class="k">class</span> <span class="nc">DedupLoggingMessages</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Logger filter to prevent duplicated messages from being logged.</span>
+    <span class="sd">&quot;&quot;&quot;Logger filter to prevent duplicated messages from being logged.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        always_print_logger_levels (set[logging.Level]): A set of logging levels which</span>
@@ -802,7 +798,7 @@
 
 <div class="viewcode-block" id="setup_logging"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.setup_logging">[docs]</a><span class="k">def</span> <span class="nf">setup_logging</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_dedup_filter</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                   <span class="n">always_print_logger_levels</span><span class="o">=</span><span class="p">{</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">}):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set up a basic streaming console handler at the root logger.</span>
+    <span class="sd">&quot;&quot;&quot;Set up a basic streaming console handler at the root logger.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        verbose (boolean): if False (default) show messages at INFO level and above,</span>
@@ -853,7 +849,7 @@
 
 
 <div class="viewcode-block" id="does_dedup_filter_exist"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.does_dedup_filter_exist">[docs]</a><span class="k">def</span> <span class="nf">does_dedup_filter_exist</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">always_print_logger_levels</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the DedupLoggingMessages filter exists for a logger.</span>
+    <span class="sd">&quot;&quot;&quot;Check if the DedupLoggingMessages filter exists for a logger.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Boolean indicating if the DedupLoggingMessages filter already exists and matches the new parameters.</span>
@@ -871,7 +867,7 @@
 
 
 <div class="viewcode-block" id="add_base_arguments"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.add_base_arguments">[docs]</a><span class="k">def</span> <span class="nf">add_base_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add hostname argument to parser.</span>
+    <span class="sd">&quot;&quot;&quot;Add hostname argument to parser.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        parser: Argument parser object.</span>
@@ -882,7 +878,7 @@
 
 
 <div class="viewcode-block" id="add_credentials_arguments"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.add_credentials_arguments">[docs]</a><span class="k">def</span> <span class="nf">add_credentials_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">credentials_no_warn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add username/password flags to parser.</span>
+    <span class="sd">&quot;&quot;&quot;Add username/password flags to parser.</span>
 
 <span class="sd">    This function is marked deprecated and will be removed in a future release.</span>
 
@@ -915,7 +911,7 @@
 
 
 <div class="viewcode-block" id="add_common_arguments"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.add_common_arguments">[docs]</a><span class="k">def</span> <span class="nf">add_common_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">credentials_no_warn</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add arguments common to most applications used for authentication.</span>
+    <span class="sd">&quot;&quot;&quot;Add arguments common to most applications used for authentication.</span>
 
 <span class="sd">    This function is marked deprecated and will be removed in a future release.  Users should use</span>
 <span class="sd">    add_base_arguments instead.</span>
@@ -928,7 +924,7 @@
 
 
 <div class="viewcode-block" id="read_payload_credentials"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.read_payload_credentials">[docs]</a><span class="k">def</span> <span class="nf">read_payload_credentials</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read the guid and secret from a file.  The file should have the guid and secret</span>
+    <span class="sd">&quot;&quot;&quot;Read the guid and secret from a file.  The file should have the guid and secret</span>
 <span class="sd">    as the first and second lines in the file.</span>
 
 <span class="sd">    Args:</span>
@@ -950,7 +946,7 @@
 
 
 <div class="viewcode-block" id="get_guid_and_secret"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.get_guid_and_secret">[docs]</a><span class="k">def</span> <span class="nf">get_guid_and_secret</span><span class="p">(</span><span class="n">parsed_options</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the guid and secret for a payload, based on the options that were added</span>
+    <span class="sd">&quot;&quot;&quot;Get the guid and secret for a payload, based on the options that were added</span>
 <span class="sd">    via add_payload_credentials_arguments().</span>
 
 <span class="sd">    Args:</span>
@@ -972,7 +968,7 @@
 
 
 <div class="viewcode-block" id="add_payload_credentials_arguments"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.add_payload_credentials_arguments">[docs]</a><span class="k">def</span> <span class="nf">add_payload_credentials_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add arguments common to most payload related applications.</span>
+    <span class="sd">&quot;&quot;&quot;Add arguments common to most payload related applications.</span>
 <span class="sd">    Use get_guid_and_secret() to get the guid and secret from the resulting parse.</span>
 
 <span class="sd">    Args:</span>
@@ -987,7 +983,7 @@
 
 
 <div class="viewcode-block" id="add_service_hosting_arguments"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.add_service_hosting_arguments">[docs]</a><span class="k">def</span> <span class="nf">add_service_hosting_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add arguments common to most applications hosting a GRPC service.</span>
+    <span class="sd">&quot;&quot;&quot;Add arguments common to most applications hosting a GRPC service.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        parser: Argument parser object.</span>
@@ -999,7 +995,7 @@
 
 
 <div class="viewcode-block" id="add_service_endpoint_arguments"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.add_service_endpoint_arguments">[docs]</a><span class="k">def</span> <span class="nf">add_service_endpoint_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add arguments common to most applications defining a GRPC service endpoint.</span>
+    <span class="sd">&quot;&quot;&quot;Add arguments common to most applications defining a GRPC service endpoint.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        parser: Argument parser object.</span>
@@ -1013,14 +1009,14 @@
 <div class="viewcode-block" id="default_app_token_path"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.default_app_token_path">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;App tokens are no longer in use. Authorization is now handled via licenses.&#39;</span><span class="p">,</span>
             <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.0.1&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">default_app_token_path</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Do nothing, this method is kept only to maintain backwards compatibility.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Do nothing, this method is kept only to maintain backwards compatibility.&quot;&quot;&quot;</span>
     <span class="k">return</span></div>
 
 
 <div class="viewcode-block" id="GrpcServiceRunner"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.GrpcServiceRunner">[docs]</a><span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;The GrpcServiceRunner class helper has moved to server_util.py. Please use &#39;</span>
             <span class="s1">&#39;bosdyn.client.server_util.GrpcServiceRunner.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">class</span> <span class="nc">GrpcServiceRunner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A runner to start a gRPC server on a background thread and allow easy cleanup.</span>
+    <span class="sd">&quot;&quot;&quot;A runner to start a gRPC server on a background thread and allow easy cleanup.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        service_servicer (custom servicer class derived from ServiceServicer): Servicer that</span>
@@ -1067,7 +1063,7 @@
         <span class="n">shutdown_complete</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timeout_secs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GrpcServiceRunner.run_until_interrupt"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/util.html#bosdyn.client.util.GrpcServiceRunner.run_until_interrupt">[docs]</a>    <span class="k">def</span> <span class="nf">run_until_interrupt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Spin the thread until a SIGINT is received and then shut down cleanly.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Spin the thread until a SIGINT is received and then shut down cleanly.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_sigint_capture</span><span class="p">:</span>
             <span class="c1"># Ensure that KeyboardInterrupt is raised on a SIGINT.</span>
             <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">default_int_handler</span><span class="p">)</span>

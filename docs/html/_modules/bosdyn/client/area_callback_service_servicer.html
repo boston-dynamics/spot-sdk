@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -702,7 +698,7 @@
 
 
 <div class="viewcode-block" id="AreaCallbackServiceServicer"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer">[docs]</a><span class="k">class</span> <span class="nc">AreaCallbackServiceServicer</span><span class="p">(</span><span class="n">area_callback_service_pb2_grpc</span><span class="o">.</span><span class="n">AreaCallbackServiceServicer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of area callback service.</span>
+    <span class="sd">&quot;&quot;&quot;Implementation of area callback service.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: The Robot object used to create service clients.</span>
@@ -735,14 +731,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_lease_validator</span><span class="p">))</span>
 
 <div class="viewcode-block" id="AreaCallbackServiceServicer.AreaCallbackInformation"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.AreaCallbackInformation">[docs]</a>    <span class="k">def</span> <span class="nf">AreaCallbackInformation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the configured AreaCallbackInformation.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the configured AreaCallbackInformation.&quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">area_callback_pb2</span><span class="o">.</span><span class="n">AreaCallbackInformationResponse</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">ResponseContext</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_logger</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="n">response</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_callback_service_config</span><span class="o">.</span><span class="n">area_callback_information</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="AreaCallbackServiceServicer.BeginCallback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginCallback">[docs]</a>    <span class="k">def</span> <span class="nf">BeginCallback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Begin the callback in a new region.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Begin the callback in a new region.&quot;&quot;&quot;</span>
         <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Received BeginCallback&#39;</span><span class="p">)</span>
         <span class="n">request_to_log</span> <span class="o">=</span> <span class="n">request</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_callback_service_config</span><span class="o">.</span><span class="n">log_begin_callback_data</span><span class="p">:</span>
@@ -780,7 +776,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">area_callback_region_handler</span><span class="o">.</span><span class="n">internal_begin_complete</span><span class="p">()</span>
 
 <div class="viewcode-block" id="AreaCallbackServiceServicer.BeginControl"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginControl">[docs]</a>    <span class="k">def</span> <span class="nf">BeginControl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Receive robot control from GraphNav.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Receive robot control from GraphNav.&quot;&quot;&quot;</span>
         <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Received BeginControl for command id </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">command_id</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">area_callback_pb2</span><span class="o">.</span><span class="n">BeginControlResponse</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">ResponseContext</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_logger</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
@@ -795,7 +791,7 @@
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="AreaCallbackServiceServicer.UpdateCallback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.UpdateCallback">[docs]</a>    <span class="k">def</span> <span class="nf">UpdateCallback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Regular updates from GraphNav, with responses to update the policy.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Regular updates from GraphNav, with responses to update the policy.&quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">area_callback_pb2</span><span class="o">.</span><span class="n">UpdateCallbackResponse</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">ResponseContext</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_logger</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_callback_region_handler</span> <span class="ow">or</span>
@@ -815,7 +811,7 @@
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="AreaCallbackServiceServicer.EndCallback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.EndCallback">[docs]</a>    <span class="k">def</span> <span class="nf">EndCallback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Terminate handling of this region.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Terminate handling of this region.&quot;&quot;&quot;</span>
         <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Received EndCallback for command </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">command_id</span><span class="p">)</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">area_callback_pb2</span><span class="o">.</span><span class="n">EndCallbackResponse</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">ResponseContext</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_logger</span><span class="p">):</span>
@@ -884,7 +880,7 @@
                 <span class="k">pass</span>
 
 <div class="viewcode-block" id="AreaCallbackServiceServicer.Shutdown"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.Shutdown">[docs]</a>    <span class="k">def</span> <span class="nf">Shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Call to force run thread to terminate.</span>
+        <span class="sd">&quot;&quot;&quot;Call to force run thread to terminate.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timeout (float, optional): Time allowed to run thread to shutdown. Defaults to 5.</span>

@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,39 +683,39 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="ray-cast-example">
-<h1>Ray Cast Example<a class="headerlink" href="#ray-cast-example" title="Permalink to this heading">¶</a></h1>
+<h1>Ray Cast Example<a class="headerlink" href="#ray-cast-example" title="Permalink to this headline">¶</a></h1>
 <p>The ray cast service calculates intersection points between a ray and various data sources on the robot. This example program shows how to use this API.</p>
 <section id="understanding-spot-programming">
-<h2>Understanding Spot Programming<a class="headerlink" href="#understanding-spot-programming" title="Permalink to this heading">¶</a></h2>
+<h2>Understanding Spot Programming<a class="headerlink" href="#understanding-spot-programming" title="Permalink to this headline">¶</a></h2>
 <p>For your best learning experience, please use the <a class="reference internal" href="../../../docs/python/quickstart.html"><span class="doc">Quickstart Guide</span></a>
 found in the SDK’s docs/python directory. That will help you get your Python programming environment set up properly.</p>
 </section>
 <section id="setup-dependencies">
-<h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this heading">¶</a></h2>
+<h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>This example requires the bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>python3 -m pip install -r requirements.txt
 </pre></div>
 </div>
 </section>
 <section id="run-the-example">
-<h2>Run the Example<a class="headerlink" href="#run-the-example" title="Permalink to this heading">¶</a></h2>
+<h2>Run the Example<a class="headerlink" href="#run-the-example" title="Permalink to this headline">¶</a></h2>
 <p>Below is example output from casting a ray starting in front of the robot (positive X) forward and down toward the ground.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt;<span class="w"> </span>python3<span class="w"> </span>cast_single_ray.py<span class="w"> </span>-o<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span><span class="m">0</span>.0<span class="w"> </span><span class="m">0</span>.0<span class="w"> </span>-d<span class="w"> </span><span class="m">1</span>.0<span class="w"> </span><span class="m">0</span>.0<span class="w"> </span>-1.0<span class="w"> </span>HOSTNAME
-Raycasting<span class="w"> </span>from<span class="w"> </span>position:<span class="w"> </span>X:<span class="w"> </span><span class="m">0</span>.500<span class="w"> </span>Y:<span class="w"> </span><span class="m">0</span>.000<span class="w"> </span>Z:<span class="w"> </span><span class="m">0</span>.000
-Raycasting<span class="w"> </span><span class="k">in</span><span class="w"> </span>direction:<span class="w"> </span>X:<span class="w"> </span><span class="m">1</span>.000<span class="w"> </span>Y:<span class="w"> </span><span class="m">0</span>.000<span class="w"> </span>Z:<span class="w"> </span>-1.000
-Raycast<span class="w"> </span>returned<span class="w"> </span><span class="m">3</span><span class="w"> </span>hits.
-Hit<span class="w"> </span><span class="m">0</span>:
-<span class="w">        </span>Position:<span class="w"> </span>X:<span class="w"> </span><span class="m">1</span>.014<span class="w"> </span>Y:<span class="w"> </span><span class="m">0</span>.000<span class="w"> </span>Z:<span class="w"> </span>-0.514
-<span class="w">        </span>Type:<span class="w"> </span>TYPE_VOXEL_MAP
-<span class="w">        </span>Distance:<span class="w"> </span><span class="m">0</span>.5136719346046448
-Hit<span class="w"> </span><span class="m">1</span>:
-<span class="w">        </span>Position:<span class="w"> </span>X:<span class="w"> </span><span class="m">1</span>.014<span class="w"> </span>Y:<span class="w"> </span><span class="m">0</span>.000<span class="w"> </span>Z:<span class="w"> </span>-0.514
-<span class="w">        </span>Type:<span class="w"> </span>TYPE_GROUND_PLANE
-<span class="w">        </span>Distance:<span class="w"> </span><span class="m">0</span>.5138996896169675
-Hit<span class="w"> </span><span class="m">2</span>:
-<span class="w">        </span>Position:<span class="w"> </span>X:<span class="w"> </span><span class="m">1</span>.016<span class="w"> </span>Y:<span class="w"> </span><span class="m">0</span>.000<span class="w"> </span>Z:<span class="w"> </span>-0.516
-<span class="w">        </span>Type:<span class="w"> </span>TYPE_TERRAIN_MAP
-<span class="w">        </span>Distance:<span class="w"> </span><span class="m">0</span>.5157292485237122
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; python3 cast_single_ray.py -o <span class="m">0</span>.5 <span class="m">0</span>.0 <span class="m">0</span>.0 -d <span class="m">1</span>.0 <span class="m">0</span>.0 -1.0 HOSTNAME
+Raycasting from position: X: <span class="m">0</span>.500 Y: <span class="m">0</span>.000 Z: <span class="m">0</span>.000
+Raycasting <span class="k">in</span> direction: X: <span class="m">1</span>.000 Y: <span class="m">0</span>.000 Z: -1.000
+Raycast returned <span class="m">3</span> hits.
+Hit <span class="m">0</span>:
+        Position: X: <span class="m">1</span>.014 Y: <span class="m">0</span>.000 Z: -0.514
+        Type: TYPE_VOXEL_MAP
+        Distance: <span class="m">0</span>.5136719346046448
+Hit <span class="m">1</span>:
+        Position: X: <span class="m">1</span>.014 Y: <span class="m">0</span>.000 Z: -0.514
+        Type: TYPE_GROUND_PLANE
+        Distance: <span class="m">0</span>.5138996896169675
+Hit <span class="m">2</span>:
+        Position: X: <span class="m">1</span>.016 Y: <span class="m">0</span>.000 Z: -0.516
+        Type: TYPE_TERRAIN_MAP
+        Distance: <span class="m">0</span>.5157292485237122
 </pre></div>
 </div>
 <p>The above query is shown visually below. In this case, the ray (gray) intersects with the ground, indicated by the sphere (red).

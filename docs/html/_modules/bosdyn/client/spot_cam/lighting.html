@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -689,7 +685,7 @@
 
 
 <div class="viewcode-block" id="LightingClient"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html#bosdyn.client.spot_cam.lighting.LightingClient">[docs]</a><span class="k">class</span> <span class="nc">LightingClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client calling Spot CAM Lighting service.</span>
+    <span class="sd">&quot;&quot;&quot;A client calling Spot CAM Lighting service.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-cam-lighting&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot_cam.LightingService&#39;</span>
@@ -698,21 +694,21 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">LightingClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">LightingServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LightingClient.get_led_brightness"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html#bosdyn.client.spot_cam.lighting.LightingClient.get_led_brightness">[docs]</a>    <span class="k">def</span> <span class="nf">get_led_brightness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the brightness value [0, 1] of each LED at indices [0, max).&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the brightness value [0, 1] of each LED at indices [0, max).&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">LED_pb2</span><span class="o">.</span><span class="n">GetLEDBrightnessRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetLEDBrightness</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_get_led_brightness_from_response</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lighting_error_from_response</span><span class="p">,</span>
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LightingClient.get_led_brightness_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html#bosdyn.client.spot_cam.lighting.LightingClient.get_led_brightness_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_led_brightness_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_led_brightness()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_led_brightness()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">LED_pb2</span><span class="o">.</span><span class="n">GetLEDBrightnessRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetLEDBrightness</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_get_led_brightness_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_lighting_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LightingClient.set_led_brightness"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html#bosdyn.client.spot_cam.lighting.LightingClient.set_led_brightness">[docs]</a>    <span class="k">def</span> <span class="nf">set_led_brightness</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brightnesses</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the brightness value [0, 1] of each LED at indices [0, max).&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set the brightness value [0, 1] of each LED at indices [0, max).&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">LED_pb2</span><span class="o">.</span><span class="n">SetLEDBrightnessRequest</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">brightness</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">brightnesses</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
@@ -725,7 +721,7 @@
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LightingClient.set_led_brightness_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html#bosdyn.client.spot_cam.lighting.LightingClient.set_led_brightness_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_led_brightness_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brightnesses</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_led_brightness()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_led_brightness()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">LED_pb2</span><span class="o">.</span><span class="n">SetLEDBrightnessRequest</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">brightness</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">brightnesses</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>

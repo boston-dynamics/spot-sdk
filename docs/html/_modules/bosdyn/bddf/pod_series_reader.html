@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -686,7 +682,7 @@
 
 
 <div class="viewcode-block" id="PodSeriesReader"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_reader.html#bosdyn.bddf.pod_series_reader.PodSeriesReader">[docs]</a><span class="k">class</span> <span class="nc">PodSeriesReader</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class for reading a series of POD data from a DataFile.</span>
+    <span class="sd">&quot;&quot;&quot;A class for reading a series of POD data from a DataFile.</span>
 
 <span class="sd">    Methods raise ParseError if there is a problem with the format of the file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -709,23 +705,23 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">pod_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the PodTypeDescriptor for the series.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the PodTypeDescriptor for the series.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pod_type</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">series_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the SeriesDescriptor for the series.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the SeriesDescriptor for the series.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_series_descriptor</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">num_data_blocks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Number of data blocks in this series.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Number of data blocks in this series.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_data_blocks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_num_data_blocks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_reader</span><span class="o">.</span><span class="n">num_data_blocks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_series_index</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_num_data_blocks</span>
 
 <div class="viewcode-block" id="PodSeriesReader.read_samples"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_reader.html#bosdyn.bddf.pod_series_reader.PodSeriesReader.read_samples">[docs]</a>    <span class="k">def</span> <span class="nf">read_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_in_series</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the POD data values from the data block of the given index.</span>
+        <span class="sd">&quot;&quot;&quot;Return the POD data values from the data block of the given index.</span>
 
 <span class="sd">        Returns: timestamp_nsec (int), POD data values (array of (array ... (of POD values)))</span>
 <span class="sd">        &quot;&quot;&quot;</span>

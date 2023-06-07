@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -684,7 +680,7 @@
 
 
 <div class="viewcode-block" id="GrpcServiceReader"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_reader.html#bosdyn.bddf.grpc_service_reader.GrpcServiceReader">[docs]</a><span class="k">class</span> <span class="nc">GrpcServiceReader</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A container for the GrpcProtoReaders associated with a given service in a bddf file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A container for the GrpcProtoReaders associated with a given service in a bddf file.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grpc_reader</span><span class="p">,</span> <span class="n">service_name</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_reader</span> <span class="o">=</span> <span class="n">grpc_reader</span>
@@ -693,15 +689,15 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">data_reader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for the DataReader used by this object.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Accessor for the DataReader used by this object.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grpc_reader</span><span class="o">.</span><span class="n">data_reader</span>
 
 <div class="viewcode-block" id="GrpcServiceReader.get_proto_reader"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_reader.html#bosdyn.bddf.grpc_service_reader.GrpcServiceReader.get_proto_reader">[docs]</a>    <span class="k">def</span> <span class="nf">get_proto_reader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">type_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a GrpcProtoReader for messages with the specified protobuf type name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns a GrpcProtoReader for messages with the specified protobuf type name.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type_name_to_reader</span><span class="p">[</span><span class="n">type_name</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="GrpcServiceReader.add_proto_reader"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_reader.html#bosdyn.bddf.grpc_service_reader.GrpcServiceReader.add_proto_reader">[docs]</a>    <span class="k">def</span> <span class="nf">add_proto_reader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">,</span> <span class="n">proto_type</span><span class="p">,</span> <span class="n">series_type</span><span class="p">,</span> <span class="n">series_descriptor</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create and return a GrpcProtoReader for the given series in the bddf file.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create and return a GrpcProtoReader for the given series in the bddf file.&quot;&quot;&quot;</span>
         <span class="n">reader</span> <span class="o">=</span> <span class="n">GrpcProtoReader</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_index</span><span class="p">,</span> <span class="n">series_type</span><span class="p">,</span> <span class="n">proto_type</span><span class="p">,</span> <span class="n">series_descriptor</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_type_name_to_reader</span><span class="p">[</span><span class="n">proto_type</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">reader</span>
         <span class="k">return</span> <span class="n">reader</span></div></div>

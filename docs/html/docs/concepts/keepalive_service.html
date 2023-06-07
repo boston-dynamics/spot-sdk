@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -683,7 +679,7 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="keepalive-service-beta">
-<h1>Keepalive Service (BETA)<a class="headerlink" href="#keepalive-service-beta" title="Permalink to this heading">¶</a></h1>
+<h1>Keepalive Service (BETA)<a class="headerlink" href="#keepalive-service-beta" title="Permalink to this headline">¶</a></h1>
 <p><em>This service is currently in BETA and may undergo changes in future releases</em></p>
 <p>The Keepalive service, added in 3.3, unifies and expands the comms-loss behaviors of Spot. It lets a client specify one or more Policies, each containing one or more actions. Each action will automatically occur if a client does not send a CheckInRequest within a configurable amount of time.</p>
 <p>For example, you may send a ModifyPolicyRequest that adds the following Policy:</p>
@@ -694,10 +690,10 @@ After 25 seconds, shut off motor power.
 After 60 seconds, turn off the robot.”</p>
 <p>Clients may add or remove a Policy at any time, and the robot does not need any Policy to operate.</p>
 <section id="policy">
-<h2>Policy<a class="headerlink" href="#policy" title="Permalink to this heading">¶</a></h2>
+<h2>Policy<a class="headerlink" href="#policy" title="Permalink to this headline">¶</a></h2>
 <p>A Policy tells the robot what to do, when. Zero or more clients may have zero or more Policies on the robot at any time.</p>
 <section id="the-policy-timer">
-<h3>The Policy timer<a class="headerlink" href="#the-policy-timer" title="Permalink to this heading">¶</a></h3>
+<h3>The Policy timer<a class="headerlink" href="#the-policy-timer" title="Permalink to this headline">¶</a></h3>
 <p>When a Policy is added, the Keepalive service</p>
 <ol class="simple">
 <li><p>provides the client with an ID for that Policy.</p></li>
@@ -706,7 +702,7 @@ After 60 seconds, turn off the robot.”</p>
 <p>The Policy’s timer is reset to 0 when the Poicy is added or “checked into”. Each Policy has a separate timer. The timer increments along with the robot’s clock. When the timer increments past an action’s associated duration, the action will automatically happen.</p>
 </section>
 <section id="actions">
-<h3>Actions<a class="headerlink" href="#actions" title="Permalink to this heading">¶</a></h3>
+<h3>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h3>
 <p>The following actions are available in a Policy:</p>
 <ul class="simple">
 <li><p>Record one or more Events, as if via the DataBufferService.</p></li>
@@ -719,7 +715,7 @@ After 60 seconds, turn off the robot.”</p>
 </section>
 </section>
 <section id="removing-a-policy">
-<h2>Removing a Policy<a class="headerlink" href="#removing-a-policy" title="Permalink to this heading">¶</a></h2>
+<h2>Removing a Policy<a class="headerlink" href="#removing-a-policy" title="Permalink to this headline">¶</a></h2>
 <p>There are two main ways of removing a Policy.</p>
 <ol class="simple">
 <li><p>Explicitly, by adding the target Policy ID to the <code class="docutils literal notranslate"><span class="pre">policy_ids_to_remove</span></code> field of <code class="docutils literal notranslate"><span class="pre">ModifyPolicyRequest</span></code>.</p></li>
@@ -728,7 +724,7 @@ After 60 seconds, turn off the robot.”</p>
 <p>For example, if a client has acquired <code class="docutils literal notranslate"><span class="pre">leaseA</span> <span class="pre">=</span> <span class="pre">[6]</span></code> from the robot and adds that lease to the <code class="docutils literal notranslate"><span class="pre">associated_leases</span></code> field of Policy <code class="docutils literal notranslate"><span class="pre">1</span></code>, the next time the robot gives out <code class="docutils literal notranslate"><span class="pre">leaseB</span> <span class="pre">=</span> <span class="pre">[7]</span></code>, Policy <code class="docutils literal notranslate"><span class="pre">1</span></code> will automatically be removed.</p>
 </section>
 <section id="backwards-compatibility">
-<h2>Backwards compatibility<a class="headerlink" href="#backwards-compatibility" title="Permalink to this heading">¶</a></h2>
+<h2>Backwards compatibility<a class="headerlink" href="#backwards-compatibility" title="Permalink to this headline">¶</a></h2>
 <p>The Keepalive service shares some features with other services, namely</p>
 <ol class="simple">
 <li><p>The <a class="reference internal" href="estop_service.html"><span class="doc">E-Stop Service</span></a></p></li>

@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -690,24 +686,24 @@
 
 
 <div class="viewcode-block" id="BlockWriter"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html#bosdyn.bddf.block_writer.BlockWriter">[docs]</a><span class="k">class</span> <span class="nc">BlockWriter</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes data structures in the data file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Writes data structures in the data file.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outfile</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_outfile</span> <span class="o">=</span> <span class="n">outfile</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hasher</span> <span class="o">=</span> <span class="n">sha1</span><span class="p">()</span>
 
 <div class="viewcode-block" id="BlockWriter.tell"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html#bosdyn.bddf.block_writer.BlockWriter.tell">[docs]</a>    <span class="k">def</span> <span class="nf">tell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return location from start of file.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return location from start of file.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outfile</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="BlockWriter.write_descriptor_block"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html#bosdyn.bddf.block_writer.BlockWriter.write_descriptor_block">[docs]</a>    <span class="k">def</span> <span class="nf">write_descriptor_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write a DescriptorBlock to the file.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Write a DescriptorBlock to the file.&quot;&quot;&quot;</span>
         <span class="n">serialized</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_block_header</span><span class="p">(</span><span class="n">DESCRIPTOR_BLOCK_TYPE</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">serialized</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BlockWriter.write_data_block"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html#bosdyn.bddf.block_writer.BlockWriter.write_data_block">[docs]</a>    <span class="k">def</span> <span class="nf">write_data_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">desc_block</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write a block of data to the file.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Write a block of data to the file.&quot;&quot;&quot;</span>
         <span class="n">serialized_desc</span> <span class="o">=</span> <span class="n">desc_block</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_block_header</span><span class="p">(</span><span class="n">DATA_BLOCK_TYPE</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">serialized_desc</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&lt;I&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">serialized_desc</span><span class="p">)))</span>
@@ -719,7 +715,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BlockWriter.close"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html#bosdyn.bddf.block_writer.BlockWriter.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close the file, if not already closed.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Close the file, if not already closed.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">closed</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -727,11 +723,11 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">closed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns True if the writer has been closed.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns True if the writer has been closed.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outfile</span> <span class="ow">is</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="BlockWriter.write_header"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html#bosdyn.bddf.block_writer.BlockWriter.write_header">[docs]</a>    <span class="k">def</span> <span class="nf">write_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotations</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the header of the data file, including annotations.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Write the header of the data file, including annotations.&quot;&quot;&quot;</span>
         <span class="c1"># pylint: disable=no-member</span>
         <span class="c1"># Magic bytes at the start of the file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">MAGIC</span><span class="p">)</span>
@@ -747,7 +743,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">write_descriptor_block</span><span class="p">(</span><span class="n">header_block</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BlockWriter.write_file_end"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html#bosdyn.bddf.block_writer.BlockWriter.write_file_end">[docs]</a>    <span class="k">def</span> <span class="nf">write_file_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index_offset</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write the end of the data file.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Write the end of the data file.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_block_header</span><span class="p">(</span><span class="n">END_BLOCK_TYPE</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_write</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;&lt;Q&#39;</span><span class="p">,</span> <span class="n">index_offset</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hasher</span><span class="o">.</span><span class="n">digest</span><span class="p">())</span>

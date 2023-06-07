@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -685,10 +681,10 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="data-acquisition-output">
-<h1>Data Acquisition Output<a class="headerlink" href="#data-acquisition-output" title="Permalink to this heading">¶</a></h1>
+<h1>Data Acquisition Output<a class="headerlink" href="#data-acquisition-output" title="Permalink to this headline">¶</a></h1>
 <p>The data stored from data acquisition captures can be downloaded over a REST endpoint from the robot. When downloading the data, the result will be returned in a zip file containing all data that matches the particular query parameters sent to the endpoint.</p>
 <section id="zip-file-structure">
-<h2>Zip file structure<a class="headerlink" href="#zip-file-structure" title="Permalink to this heading">¶</a></h2>
+<h2>Zip file structure<a class="headerlink" href="#zip-file-structure" title="Permalink to this headline">¶</a></h2>
 <p>An example zip file with data from both a teleoperation session and a run of an mission named “Inspection”:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>downloaded_file.zip
 └───teleop_2020-10-29T183020Z
@@ -713,25 +709,25 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Within each group’s directory the images captured as part of that group will be saved with filenames of the form <code class="docutils literal notranslate"><span class="pre">&lt;action</span> <span class="pre">name&gt;</span> <span class="pre">&lt;image</span> <span class="pre">service</span> <span class="pre">name&gt;-&lt;image</span> <span class="pre">source</span> <span class="pre">name&gt;.jpg</span></code>. There will be a <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> file with all of the associated metadata captured during that group, and optionally CSV files for basic or detailed position data (present if the data was captured during the group’s actions).</p>
 </section>
 <section id="metadata-json-structure">
-<h2>Metadata.json structure<a class="headerlink" href="#metadata-json-structure" title="Permalink to this heading">¶</a></h2>
+<h2>Metadata.json structure<a class="headerlink" href="#metadata-json-structure" title="Permalink to this headline">¶</a></h2>
 <p>The json data is structured around actions, and the data within those actions. Metadata is included either nested with the data it is associated with, or nested inside the action it was captured during.</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;actions&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="c1">// Identifier including the action name and timestamp.</span>
-<span class="w">      </span><span class="s2">&quot;action_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">      </span><span class="c1">// data captured during this action</span>
-<span class="w">      </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">      </span><span class="c1">// metadata associated with this action, but not any particular</span>
-<span class="w">      </span><span class="c1">// piece of data.</span>
-<span class="w">      </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;action_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">      </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">      </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">  </span><span class="p">]</span>
+  <span class="s2">&quot;actions&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="c1">// Identifier including the action name and timestamp.</span>
+      <span class="s2">&quot;action_id&quot;</span><span class="o">:</span> <span class="p">{},</span>
+      <span class="c1">// data captured during this action</span>
+      <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{},</span>
+      <span class="c1">// metadata associated with this action, but not any particular</span>
+      <span class="c1">// piece of data.</span>
+      <span class="s2">&quot;metadata&quot;</span><span class="o">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="s2">&quot;action_id&quot;</span><span class="o">:</span> <span class="p">{},</span>
+      <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{},</span>
+      <span class="s2">&quot;metadata&quot;</span><span class="o">:</span> <span class="p">{}</span>
+    <span class="p">},</span>
+  <span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -739,138 +735,138 @@ Development Kit License (20191101-BDSDK-SL).
 Within the “data” or “metadata” members of an action, the individual entries will be stored in a list inside a member with the name of the channel. In general there will only be a single element inside this list, unless you separately store multiple pieces of data or metadata to the same channel during a particular capture action.
 Any json saved as part of the <code class="docutils literal notranslate"><span class="pre">metadata</span></code> field in <code class="docutils literal notranslate"><span class="pre">AcquireDataRequest</span></code> or the <code class="docutils literal notranslate"><span class="pre">metadata</span></code> argument to <code class="docutils literal notranslate"><span class="pre">DataAcquisitionClient.acquire_data()</span></code> will be saved on the “metadata” channel. Autowalk action tags are stored in this manner in a “custom_metadata” member.</p>
 <p>Note that these pieces of data or metadata can have their own set of “metadata”, with the same format as the metadata for an action, for pieces of metadata that referenced them explicitly. For example, capturing GPS coordinates would reference the entire action, but computing bounding boxes in an image would reference that particular image only.</p>
-<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"> </span><span class="c1">// beginning of an action in the &quot;actions&quot; list.</span>
-<span class="w">  </span><span class="s2">&quot;action_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">  </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;some_image_channel&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Identifier for this image capture.</span>
-<span class="w">        </span><span class="s2">&quot;data_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">        </span><span class="c1">// Relative path to the image file.</span>
-<span class="w">        </span><span class="s2">&quot;filename&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="c1">// metadata associated with this particular image</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="s2">&quot;another_channel&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;data_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">        </span><span class="s2">&quot;filename&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="p">{</span>
-<span class="w">    </span><span class="s2">&quot;basic-position-data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="c1">// Identifier for this basic-position-data capture.</span>
-<span class="w">        </span><span class="s2">&quot;data_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">        </span><span class="c1">// json representation of the data captured.</span>
-<span class="w">        </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="c1">// More metadata added later that refers to this particular metadata information.</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">],</span>
-<span class="w">    </span><span class="s2">&quot;my_metadata_channel&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;data_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
-<span class="w">        </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">}</span>
+<div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span> <span class="c1">// beginning of an action in the &quot;actions&quot; list.</span>
+  <span class="s2">&quot;action_id&quot;</span><span class="o">:</span> <span class="p">{},</span>
+  <span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="p">{</span>
+    <span class="s2">&quot;some_image_channel&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="c1">// Identifier for this image capture.</span>
+        <span class="s2">&quot;data_id&quot;</span><span class="o">:</span> <span class="p">{},</span>
+        <span class="c1">// Relative path to the image file.</span>
+        <span class="s2">&quot;filename&quot;</span><span class="o">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+        <span class="c1">// metadata associated with this particular image</span>
+        <span class="s2">&quot;metadata&quot;</span><span class="o">:</span> <span class="p">{}</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;another_channel&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="s2">&quot;data_id&quot;</span><span class="o">:</span> <span class="p">{},</span>
+        <span class="s2">&quot;filename&quot;</span><span class="o">:</span> <span class="s2">&quot;...&quot;</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="p">{</span>
+    <span class="s2">&quot;basic-position-data&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="c1">// Identifier for this basic-position-data capture.</span>
+        <span class="s2">&quot;data_id&quot;</span><span class="o">:</span> <span class="p">{},</span>
+        <span class="c1">// json representation of the data captured.</span>
+        <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+        <span class="c1">// More metadata added later that refers to this particular metadata information.</span>
+        <span class="s2">&quot;metadata&quot;</span><span class="o">:</span> <span class="p">{}</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;my_metadata_channel&quot;</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="s2">&quot;data_id&quot;</span><span class="o">:</span> <span class="p">{},</span>
+        <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;metadata&quot;</span><span class="o">:</span> <span class="p">{}</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Data from an example mission:</p>
 <div class="highlight-javascript notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="s2">&quot;actions&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="c1">// First capture action</span>
-<span class="w">      </span><span class="s2">&quot;action_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;timestamp&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;group_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T185610Z_Inspection&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="s2">&quot;action_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SpotCAM All 1&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">    </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// Two images were captured at this action</span>
-<span class="w">      </span><span class="c1">// One panoramic image on the &quot;spot-cam-pano&quot; channel</span>
-<span class="w">      </span><span class="s2">&quot;spot-cam-pano&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;data_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="s2">&quot;action_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">              </span><span class="s2">&quot;timestamp&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
-<span class="w">              </span><span class="s2">&quot;group_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T185610Z_Inspection&quot;</span><span class="p">,</span>
-<span class="w">              </span><span class="s2">&quot;action_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SpotCAM All 1&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="s2">&quot;channel&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;spot-cam-pano&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="c1">// data_name is usually left empty like this.  It is used to differentiate captures</span>
-<span class="w">            </span><span class="c1">// on the same channel at the same action, if needed.</span>
-<span class="w">            </span><span class="s2">&quot;data_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="w">          </span><span class="p">},</span>
-<span class="w">          </span><span class="c1">// filename is relative to this metadata.json file.</span>
-<span class="w">          </span><span class="s2">&quot;filename&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SpotCAM All 1 spot-cam-pano.jpg&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="c1">// One PTZ image on the &quot;spot-cam-ptz&quot; channel</span>
-<span class="w">      </span><span class="s2">&quot;spot-cam-ptz&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;data_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="s2">&quot;action_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">              </span><span class="s2">&quot;timestamp&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
-<span class="w">              </span><span class="s2">&quot;group_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T185610Z_Inspection&quot;</span><span class="p">,</span>
-<span class="w">              </span><span class="s2">&quot;action_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SpotCAM All 1&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="s2">&quot;channel&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;spot-cam-ptz&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;data_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="w">          </span><span class="p">},</span>
-<span class="w">          </span><span class="s2">&quot;filename&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SpotCAM All 1 spot-cam-ptz.jpg&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">]</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="c1">// Metadata associated with the action itself, rather than a particular image.</span>
-<span class="w">    </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="c1">// Robot localization data saved on the &quot;detailed-position-data&quot; channel.</span>
-<span class="w">      </span><span class="s2">&quot;detailed-position-data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;data_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="s2">&quot;action_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">              </span><span class="s2">&quot;timestamp&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
-<span class="w">              </span><span class="s2">&quot;group_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T185610Z_Inspection&quot;</span><span class="p">,</span>
-<span class="w">              </span><span class="s2">&quot;action_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SpotCAM All 1&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">          </span><span class="s2">&quot;channel&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;detailed-position-data&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="s2">&quot;data_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="w">        </span><span class="p">},</span>
-<span class="w">      </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="s2">&quot;robot_kinematics&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;velocity_of_body_in_vision&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="s2">&quot;angular&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">              </span><span class="s2">&quot;x&quot;</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">0.0012627621181309223</span><span class="p">,</span>
-<span class="w">      </span><span class="p">...</span>
-<span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="c1">// Autowalk tags saved on the &quot;metadata&quot; channel.</span>
-<span class="w">      </span><span class="s2">&quot;metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span>
-<span class="w">          </span><span class="s2">&quot;data_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="s2">&quot;action_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">              </span><span class="s2">&quot;timestamp&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
-<span class="w">              </span><span class="s2">&quot;group_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;2020-10-29T185610Z&quot;</span><span class="p">,</span>
-<span class="w">              </span><span class="s2">&quot;action_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;SpotCAM All 1&quot;</span>
-<span class="w">            </span><span class="p">},</span>
-<span class="w">            </span><span class="s2">&quot;channel&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;metadata&quot;</span><span class="p">,</span>
-<span class="w">            </span><span class="s2">&quot;data_name&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<span class="w">          </span><span class="p">},</span>
-<span class="w">          </span><span class="s2">&quot;data&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="s2">&quot;custom_metadata&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">              </span><span class="s2">&quot;laptop1&quot;</span>
-<span class="w">            </span><span class="p">]</span>
-<span class="w">          </span><span class="p">}</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">],</span>
-<span class="w">      </span><span class="p">...</span>
+  <span class="s2">&quot;actions&quot;</span><span class="o">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="c1">// First capture action</span>
+      <span class="s2">&quot;action_id&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;group_name&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T185610Z_Inspection&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;action_name&quot;</span><span class="o">:</span> <span class="s2">&quot;SpotCAM All 1&quot;</span>
+      <span class="p">},</span>
+    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="c1">// Two images were captured at this action</span>
+      <span class="c1">// One panoramic image on the &quot;spot-cam-pano&quot; channel</span>
+      <span class="s2">&quot;spot-cam-pano&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;data_id&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;action_id&quot;</span><span class="o">:</span> <span class="p">{</span>
+              <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;group_name&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T185610Z_Inspection&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;action_name&quot;</span><span class="o">:</span> <span class="s2">&quot;SpotCAM All 1&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;channel&quot;</span><span class="o">:</span> <span class="s2">&quot;spot-cam-pano&quot;</span><span class="p">,</span>
+            <span class="c1">// data_name is usually left empty like this.  It is used to differentiate captures</span>
+            <span class="c1">// on the same channel at the same action, if needed.</span>
+            <span class="s2">&quot;data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
+          <span class="p">},</span>
+          <span class="c1">// filename is relative to this metadata.json file.</span>
+          <span class="s2">&quot;filename&quot;</span><span class="o">:</span> <span class="s2">&quot;SpotCAM All 1 spot-cam-pano.jpg&quot;</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
+      <span class="c1">// One PTZ image on the &quot;spot-cam-ptz&quot; channel</span>
+      <span class="s2">&quot;spot-cam-ptz&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;data_id&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;action_id&quot;</span><span class="o">:</span> <span class="p">{</span>
+              <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;group_name&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T185610Z_Inspection&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;action_name&quot;</span><span class="o">:</span> <span class="s2">&quot;SpotCAM All 1&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;channel&quot;</span><span class="o">:</span> <span class="s2">&quot;spot-cam-ptz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
+          <span class="p">},</span>
+          <span class="s2">&quot;filename&quot;</span><span class="o">:</span> <span class="s2">&quot;SpotCAM All 1 spot-cam-ptz.jpg&quot;</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">},</span>
+    <span class="c1">// Metadata associated with the action itself, rather than a particular image.</span>
+    <span class="s2">&quot;metadata&quot;</span><span class="o">:</span> <span class="p">{</span>
+      <span class="c1">// Robot localization data saved on the &quot;detailed-position-data&quot; channel.</span>
+      <span class="s2">&quot;detailed-position-data&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;data_id&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;action_id&quot;</span><span class="o">:</span> <span class="p">{</span>
+              <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;group_name&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T185610Z_Inspection&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;action_name&quot;</span><span class="o">:</span> <span class="s2">&quot;SpotCAM All 1&quot;</span>
+            <span class="p">},</span>
+          <span class="s2">&quot;channel&quot;</span><span class="o">:</span> <span class="s2">&quot;detailed-position-data&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
+        <span class="p">},</span>
+      <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;robot_kinematics&quot;</span><span class="o">:</span> <span class="p">{</span>
+          <span class="s2">&quot;velocity_of_body_in_vision&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;angular&quot;</span><span class="o">:</span> <span class="p">{</span>
+              <span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="o">-</span><span class="mf">0.0012627621181309223</span><span class="p">,</span>
+      <span class="p">...</span>
+      <span class="p">],</span>
+      <span class="c1">// Autowalk tags saved on the &quot;metadata&quot; channel.</span>
+      <span class="s2">&quot;metadata&quot;</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="s2">&quot;data_id&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;action_id&quot;</span><span class="o">:</span> <span class="p">{</span>
+              <span class="s2">&quot;timestamp&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T18:56:27.786897121Z&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;group_name&quot;</span><span class="o">:</span> <span class="s2">&quot;2020-10-29T185610Z&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;action_name&quot;</span><span class="o">:</span> <span class="s2">&quot;SpotCAM All 1&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;channel&quot;</span><span class="o">:</span> <span class="s2">&quot;metadata&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;data_name&quot;</span><span class="o">:</span> <span class="s2">&quot;&quot;</span>
+          <span class="p">},</span>
+          <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;custom_metadata&quot;</span><span class="o">:</span> <span class="p">[</span>
+              <span class="s2">&quot;laptop1&quot;</span>
+            <span class="p">]</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
+      <span class="p">...</span>
 </pre></div>
 </div>
 </section>
 <section id="csv-structure">
-<h2>CSV structure<a class="headerlink" href="#csv-structure" title="Permalink to this heading">¶</a></h2>
+<h2>CSV structure<a class="headerlink" href="#csv-structure" title="Permalink to this headline">¶</a></h2>
 <p>The csv files will have one row for every file in the group. The columns of the csv file will be a flattened version of the basic-position-data or detailed-position-data metadata, as well as any custom Autowalk tags entered during recording.</p>
 <p>Entries will be left empty in a row if the data was not captured for that file.</p>
 </section>

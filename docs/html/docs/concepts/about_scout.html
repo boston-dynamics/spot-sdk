@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -683,16 +679,16 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="about-scout">
-<h1>About Scout<a class="headerlink" href="#about-scout" title="Permalink to this heading">¶</a></h1>
+<h1>About Scout<a class="headerlink" href="#about-scout" title="Permalink to this headline">¶</a></h1>
 <p>Scout is a collection of web services for fleet management and data acquisition deployed to an on-site server. Learn more about the product and deployment <a class="reference external" href="https://www.bostondynamics.com/products/spot/scout">here</a>.</p>
 <p>Scout collects, organizes, and stores data from every mission and teleoperation session executed by a Spot fleet - this information is served to Scout customers through a programmatic api called the Scout API.</p>
 <section id="scout-api">
-<h2>Scout API<a class="headerlink" href="#scout-api" title="Permalink to this heading">¶</a></h2>
+<h2>Scout API<a class="headerlink" href="#scout-api" title="Permalink to this headline">¶</a></h2>
 <p>The Scout API is a web api served by a Scout instance. The API is interacted with by sending HTTPs requests to a number of resource endpoints. Each resource endpoint is prefixed with the api route <code class="docutils literal notranslate"><span class="pre">/api/v0/</span></code>. For example, a list of <code class="docutils literal notranslate"><span class="pre">run_events</span></code> can be retrieved by sending a <code class="docutils literal notranslate"><span class="pre">GET</span></code> request to <code class="docutils literal notranslate"><span class="pre">/api/v0/run_events</span></code>. A complete url would add this to the url of the Scout instance - e.g. <code class="docutils literal notranslate"><span class="pre">https://my-scout.com/api/v0/run_events/</span></code>.</p>
 <p>The Scout API is language agnostic, and can be programmed against using any programming language which supports sending http requests.</p>
 <p>For a complete list of resources and their methods, see the <a href="../scout/docs.html">Scout API Reference</a>.</p>
 <section id="authentication">
-<h3>Authentication<a class="headerlink" href="#authentication" title="Permalink to this heading">¶</a></h3>
+<h3>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h3>
 <p>Resources can only be requested by Scout users. In order to be authorized, cookies authenticated with a Scout account must be provided in each request.</p>
 <p>To obtain the cookies, make a request to the login endpoint at <code class="docutils literal notranslate"><span class="pre">/api/v0/login</span></code>:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
@@ -734,7 +730,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 </section>
 <section id="scout-api-and-the-python-sdk">
-<h2>Scout API and the Python SDK<a class="headerlink" href="#scout-api-and-the-python-sdk" title="Permalink to this heading">¶</a></h2>
+<h2>Scout API and the Python SDK<a class="headerlink" href="#scout-api-and-the-python-sdk" title="Permalink to this headline">¶</a></h2>
 <p>The Spot Python SDK includes a <code class="docutils literal notranslate"><span class="pre">bosdyn-scout</span></code> Python package and client implementation for the Scout API. The <code class="docutils literal notranslate"><span class="pre">bosdyn-scout</span></code> package documentation is <a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/README.html"><span class="doc">here</span></a>.</p>
 <p>Once instantiated and authenticated, a <code class="docutils literal notranslate"><span class="pre">ScoutClient</span></code> provides a number of helpful methods which abstract away the details of HTTP to simplify building programs with the Scout API. Please refer to the <a class="reference internal" href="../../python/examples/scout/hello_scout/README.html"><span class="doc">Hello Scout</span></a> SDK example to get started developing with the Scout API Python client.</p>
 </section>

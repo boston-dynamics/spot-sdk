@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -698,27 +694,27 @@
 
 
 <div class="viewcode-block" id="AuthResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.AuthResponseError">[docs]</a><span class="k">class</span> <span class="nc">AuthResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors for AuthResponseError service.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;General class of errors for AuthResponseError service.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="InvalidLoginError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.InvalidLoginError">[docs]</a><span class="k">class</span> <span class="nc">InvalidLoginError</span><span class="p">(</span><span class="n">AuthResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provided username/password is invalid.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Provided username/password is invalid.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="InvalidTokenError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.InvalidTokenError">[docs]</a><span class="k">class</span> <span class="nc">InvalidTokenError</span><span class="p">(</span><span class="n">AuthResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provided user token is invalid or cannot be re-minted.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Provided user token is invalid or cannot be re-minted.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="TemporarilyLockedOutError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.TemporarilyLockedOutError">[docs]</a><span class="k">class</span> <span class="nc">TemporarilyLockedOutError</span><span class="p">(</span><span class="n">AuthResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;User is temporarily locked out of authentication.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;User is temporarily locked out of authentication.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ExpiredApplicationTokenError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.ExpiredApplicationTokenError">[docs]</a><span class="k">class</span> <span class="nc">ExpiredApplicationTokenError</span><span class="p">(</span><span class="n">AuthResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Application token has expired. Please contact support@bostondynamics.com to receive a new one.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Application token has expired. Please contact support@bostondynamics.com to receive a new one.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="InvalidApplicationTokenError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.InvalidApplicationTokenError">[docs]</a><span class="k">class</span> <span class="nc">InvalidApplicationTokenError</span><span class="p">(</span><span class="n">AuthResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The Application Token is invalid.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The Application Token is invalid.&quot;&quot;&quot;</span></div>
 
 
 <span class="n">_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
@@ -740,7 +736,7 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">auth_pb2</span><span class="o">.</span><span class="n">GetAuthTokenResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_STATUS_TO_ERROR</span><span class="p">)</span>
@@ -760,7 +756,7 @@
 
 
 <div class="viewcode-block" id="AuthClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.AuthClient">[docs]</a><span class="k">class</span> <span class="nc">AuthClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client to authenticate to the robot.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client to authenticate to the robot.&quot;&quot;&quot;</span>
 
     <span class="c1"># Typical name of the service in the robot&#39;s directory listing.</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;auth&#39;</span>
@@ -771,7 +767,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">AuthClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">auth_service_pb2_grpc</span><span class="o">.</span><span class="n">AuthServiceStub</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AuthClient.auth"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.AuthClient.auth">[docs]</a>    <span class="k">def</span> <span class="nf">auth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">app_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate to the robot with a username/password combo.</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to the robot with a username/password combo.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            username: username on the robot.</span>
@@ -790,7 +786,7 @@
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AuthClient.auth_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.AuthClient.auth_async">[docs]</a>    <span class="k">def</span> <span class="nf">auth_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">app_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asynchronously authenticate to the robot with a username/password combo.</span>
+        <span class="sd">&quot;&quot;&quot;Asynchronously authenticate to the robot with a username/password combo.</span>
 
 <span class="sd">        See auth documentation for more details.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -799,7 +795,7 @@
                                <span class="n">_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AuthClient.auth_with_token"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.AuthClient.auth_with_token">[docs]</a>    <span class="k">def</span> <span class="nf">auth_with_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">app_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate to the robot using a previously created user token.</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to the robot using a previously created user token.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            token: a user token previously issued by the robot.</span>
@@ -819,7 +815,7 @@
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AuthClient.auth_with_token_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html#bosdyn.client.auth.AuthClient.auth_with_token_async">[docs]</a>    <span class="k">def</span> <span class="nf">auth_with_token_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">app_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate to the robot using a previously created user token.</span>
+        <span class="sd">&quot;&quot;&quot;Authenticate to the robot using a previously created user token.</span>
 
 <span class="sd">        See auth_with_token documentation for more details.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

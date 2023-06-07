@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -692,7 +688,7 @@
 
 
 <div class="viewcode-block" id="AudioClient"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient">[docs]</a><span class="k">class</span> <span class="nc">AudioClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client calling Spot CAM Audio service.</span>
+    <span class="sd">&quot;&quot;&quot;A client calling Spot CAM Audio service.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-cam-audio&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot_cam.AudioService&#39;</span>
@@ -701,43 +697,43 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">AudioClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">AudioServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AudioClient.list_sounds"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.list_sounds">[docs]</a>    <span class="k">def</span> <span class="nf">list_sounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the list of available sounds&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the list of available sounds&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">ListSoundsRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListSounds</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_sounds_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.list_sounds_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.list_sounds_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_sounds_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of list_sounds()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of list_sounds()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">ListSoundsRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListSounds</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_sounds_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.set_volume"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.set_volume">[docs]</a>    <span class="k">def</span> <span class="nf">set_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percentage</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the current volume as a percentage&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set the current volume as a percentage&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">SetVolumeRequest</span><span class="p">(</span><span class="n">volume</span><span class="o">=</span><span class="n">percentage</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetVolume</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_volume_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.set_volume_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.set_volume_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_volume_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">percentage</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_volume()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_volume()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">SetVolumeRequest</span><span class="p">(</span><span class="n">volume</span><span class="o">=</span><span class="n">percentage</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetVolume</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_volume_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.get_volume"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.get_volume">[docs]</a>    <span class="k">def</span> <span class="nf">get_volume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the current volume as a percentage&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the current volume as a percentage&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">GetVolumeRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetVolume</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_volume_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.get_volume_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.get_volume_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_volume_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_volume()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_volume()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">GetVolumeRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetVolume</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_volume_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.play_sound"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.play_sound">[docs]</a>    <span class="k">def</span> <span class="nf">play_sound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Play already uploaded sound with optional volume gain multiplier&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Play already uploaded sound with optional volume gain multiplier&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">gain</span><span class="p">:</span>
             <span class="n">fv</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">()</span>
             <span class="n">fv</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">gain</span>
@@ -748,7 +744,7 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.play_sound_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.play_sound_async">[docs]</a>    <span class="k">def</span> <span class="nf">play_sound_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of play_sound()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of play_sound()&quot;&quot;&quot;</span>
         <span class="n">fv</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">()</span>
         <span class="n">fv</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">gain</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">PlaySoundRequest</span><span class="p">(</span><span class="n">sound</span><span class="o">=</span><span class="n">sound</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">fv</span><span class="p">)</span>
@@ -757,19 +753,19 @@
 
 
 <div class="viewcode-block" id="AudioClient.delete_sound"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.delete_sound">[docs]</a>    <span class="k">def</span> <span class="nf">delete_sound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete sound found in list_sounds()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Delete sound found in list_sounds()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">DeleteSoundRequest</span><span class="p">(</span><span class="n">sound</span><span class="o">=</span><span class="n">sound</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DeleteSound</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete_sound_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.delete_sound_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.delete_sound_async">[docs]</a>    <span class="k">def</span> <span class="nf">delete_sound_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of delete_sound()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of delete_sound()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">DeleteSoundRequest</span><span class="p">(</span><span class="n">sound</span><span class="o">=</span><span class="n">sound</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DeleteSound</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_delete_sound_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.load_sound"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.load_sound">[docs]</a>    <span class="k">def</span> <span class="nf">load_sound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sound</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">max_chunk_size</span><span class="o">=</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Uploads the WAV data tagged with the specified Sound&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Uploads the WAV data tagged with the specified Sound&quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">yield_requests</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
             <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">LoadSoundRequest</span><span class="p">(</span><span class="n">sound</span><span class="o">=</span><span class="n">sound</span><span class="p">)</span>
@@ -795,7 +791,7 @@
     <span class="c1">#</span>
 
 <div class="viewcode-block" id="AudioClient.set_audio_capture_channel"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.set_audio_capture_channel">[docs]</a>    <span class="k">def</span> <span class="nf">set_audio_capture_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the audio capture channel</span>
+        <span class="sd">&quot;&quot;&quot;Set the audio capture channel</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            channel (audio_pb2.AudioCaptureChannel): Microphone to use</span>
@@ -805,13 +801,13 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.set_audio_capture_channel_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.set_audio_capture_channel_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_audio_capture_channel_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_audio_capture_channel()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_audio_capture_channel()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">SetAudioCaptureChannelRequest</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetAudioCaptureChannel</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.get_audio_capture_channel"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.get_audio_capture_channel">[docs]</a>    <span class="k">def</span> <span class="nf">get_audio_capture_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the audio capture channel (microphone)</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the audio capture channel (microphone)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">GetAudioCaptureChannelRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetAudioCaptureChannel</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
@@ -819,14 +815,14 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.get_audio_capture_channel_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.get_audio_capture_channel_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_audio_capture_channel_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_audio_capture_channel()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_audio_capture_channel()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">GetAudioCaptureChannelRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetAudioCaptureChannel</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_get_audio_capture_channel_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.set_audio_capture_gain"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.set_audio_capture_gain">[docs]</a>    <span class="k">def</span> <span class="nf">set_audio_capture_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">gain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the audio capture gain</span>
+        <span class="sd">&quot;&quot;&quot;Set the audio capture gain</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            channel (audio_pb2.AudioCaptureChannel): Microphone to set gain for</span>
@@ -837,13 +833,13 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.set_audio_capture_gain_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.set_audio_capture_gain_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_audio_capture_gain_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">gain</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_audio_capture_gain()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_audio_capture_gain()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">SetAudioCaptureGainRequest</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="n">gain</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetAudioCaptureGain</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.get_audio_capture_gain"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.get_audio_capture_gain">[docs]</a>    <span class="k">def</span> <span class="nf">get_audio_capture_gain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the audio capture gain (microphone volume)</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the audio capture gain (microphone volume)</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            channel (audio_pb2.AudioCaptureChannel): Microphone to get gain for</span>
@@ -854,7 +850,7 @@
                          <span class="bp">self</span><span class="o">.</span><span class="n">_audio_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AudioClient.get_audio_capture_gain_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html#bosdyn.client.spot_cam.audio.AudioClient.get_audio_capture_gain_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_audio_capture_gain_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_audio_capture_gain()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_audio_capture_gain()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">audio_pb2</span><span class="o">.</span><span class="n">GetAudioCaptureGainRequest</span><span class="p">(</span><span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetAudioCaptureGain</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_get_audio_capture_gain_from_response</span><span class="p">,</span>

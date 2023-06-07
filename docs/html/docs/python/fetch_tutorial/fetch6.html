@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -690,7 +686,7 @@ Development Kit License (20191101-BDSDK-SL).
 <a href="fetch5.html"><< Previous Page</a>
 </p>
 <hr /><section id="fetch-part-6-running-the-model-on-core-i-o">
-<h1>Fetch Part 6: Running the model on CORE I/O<a class="headerlink" href="#fetch-part-6-running-the-model-on-core-i-o" title="Permalink to this heading">¶</a></h1>
+<h1>Fetch Part 6: Running the model on CORE I/O<a class="headerlink" href="#fetch-part-6-running-the-model-on-core-i-o" title="Permalink to this headline">¶</a></h1>
 <aside>
 <p>
     <strong>Don't have a CORE I/O?</strong>
@@ -719,17 +715,17 @@ Development Kit License (20191101-BDSDK-SL).
     Lets modify the authentication so it can work with the payload secret instead of a username and password login.
 </p>
 <ol>
-<li>Add an argument for the credentials path</li><div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>   parser = argparse.ArgumentParser()
-<span class="w"> </span>   parser.add_argument(&#39;-m&#39;, &#39;--model&#39;, help=&#39;[MODEL_DIR] [LABELS_FILE.pbtxt]: Path to a model\&#39;s directory and path to its labels .pbtxt file&#39;, action=&#39;append&#39;, nargs=2, required=True)
-<span class="w"> </span>   parser.add_argument(&#39;-p&#39;, &#39;--port&#39;, help=&#39;Server\&#39;s port number, default: &#39; + default_port,
-<span class="w"> </span>                       default=default_port)
-<span class="w"> </span>   parser.add_argument(&#39;-d&#39;, &#39;--no-debug&#39;, help=&#39;Disable writing debug images.&#39;, action=&#39;store_true&#39;)
-<span class="w"> </span>   parser.add_argument(&#39;-n&#39;, &#39;--name&#39;, help=&#39;Service name&#39;, default=&#39;fetch-server&#39;)
+<li>Add an argument for the credentials path</li><div class="highlight-diff notranslate"><div class="highlight"><pre><span></span>    parser = argparse.ArgumentParser()
+    parser.add_argument(&#39;-m&#39;, &#39;--model&#39;, help=&#39;[MODEL_DIR] [LABELS_FILE.pbtxt]: Path to a model\&#39;s directory and path to its labels .pbtxt file&#39;, action=&#39;append&#39;, nargs=2, required=True)
+    parser.add_argument(&#39;-p&#39;, &#39;--port&#39;, help=&#39;Server\&#39;s port number, default: &#39; + default_port,
+                        default=default_port)
+    parser.add_argument(&#39;-d&#39;, &#39;--no-debug&#39;, help=&#39;Disable writing debug images.&#39;, action=&#39;store_true&#39;)
+    parser.add_argument(&#39;-n&#39;, &#39;--name&#39;, help=&#39;Service name&#39;, default=&#39;fetch-server&#39;)
 <span class="gi">+   bosdyn.client.util.add_payload_credentials_arguments(parser, required=False)</span>
-<span class="w"> </span>   bosdyn.client.util.add_base_arguments(parser)
+    bosdyn.client.util.add_base_arguments(parser)
 </pre></div>
 </div>
-<li>Modify the authentication to use the credentials if available.</li><div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="w"> </span>   # Authenticate robot before being able to use it
+<li>Modify the authentication to use the credentials if available.</li><div class="highlight-diff notranslate"><div class="highlight"><pre><span></span>    # Authenticate robot before being able to use it
 <span class="gd">-   bosdyn.client.util.authenticate(robot)</span>
 <span class="gi">+   if options.payload_credentials_file:</span>
 <span class="gi">+       robot.authenticate_from_payload_credentials(</span>

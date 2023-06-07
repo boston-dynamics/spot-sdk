@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,9 +681,9 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="arm-services">
-<h1>Arm Services<a class="headerlink" href="#arm-services" title="Permalink to this heading">¶</a></h1>
+<h1>Arm Services<a class="headerlink" href="#arm-services" title="Permalink to this headline">¶</a></h1>
 <section id="manipulation-service">
-<h2>Manipulation Service<a class="headerlink" href="#manipulation-service" title="Permalink to this heading">¶</a></h2>
+<h2>Manipulation Service<a class="headerlink" href="#manipulation-service" title="Permalink to this headline">¶</a></h2>
 <p>This API provides high-level control for walking to and picking up items in the world.  The service walks the robot up to the object, not on top of it.  The idea being that you want to interact or manipulate the object. For specifying grasps, there are parameters available for</p>
 <ul class="simple">
 <li><p>Specifying the depth of the grasp</p>
@@ -710,7 +706,7 @@ Commands the robot to walk towards an object in preparation to grasp it. The exa
 Shows how to autonomously grasp an object based on the object’s image coordinates in pixel space. It opens an image view and lets a user select an object by clicking on the image.</p>
 </section>
 <section id="armsurfacecontact-service">
-<h2>ArmSurfaceContact Service<a class="headerlink" href="#armsurfacecontact-service" title="Permalink to this heading">¶</a></h2>
+<h2>ArmSurfaceContact Service<a class="headerlink" href="#armsurfacecontact-service" title="Permalink to this headline">¶</a></h2>
 <p>Control the end-effector while pushing on a surface. This mode is useful for drawing, wiping, and other similar behaviors where high accuracy position moves are required while pushing down with some force.  This service is similar to the <code class="docutils literal notranslate"><span class="pre">ArmCartesianCommand</span></code> message available in the <code class="docutils literal notranslate"><span class="pre">RobotCommand</span></code> service, but is specialized for this type of task and has higher position accuracy.</p>
 <p>See the following examples for using this service:</p>
 <p><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html"><span class="doc">Surface Contact:</span></a>
@@ -719,7 +715,7 @@ Requests an end effector trajectory move while applying some force to the ground
 A <a class="reference external" href="https://en.wikipedia.org/wiki/G-code">GCODE</a> interpreter that can be used to draw with sidewalk chalk.</p>
 </section>
 <section id="door-service">
-<h2>Door Service<a class="headerlink" href="#door-service" title="Permalink to this heading">¶</a></h2>
+<h2>Door Service<a class="headerlink" href="#door-service" title="Permalink to this headline">¶</a></h2>
 <p>The door service is a framework for opening doors.  We support three command types:</p>
 <ul class="simple">
 <li><p><strong>AutoGrasp</strong>: This message requires users to specify a location to search for a door handle along with and some door parameters. Spot autonomously grabs the handle, opens the door, and walks through.</p></li>
@@ -731,7 +727,7 @@ A <a class="reference external" href="https://en.wikipedia.org/wiki/G-code">GCOD
 This examples uses both the <code class="docutils literal notranslate"><span class="pre">ManipulationAPIService</span></code> and the <code class="docutils literal notranslate"><span class="pre">DoorService</span></code> to have Spot semi-autonomously open a door. It opens an image display and requires the user to select the door handle and the door hinge. After receiving input, it uses the <code class="docutils literal notranslate"><span class="pre">ManipulationAPIService</span></code> to estimate the handles position in 3D space and aligns the robot with the door handle. Then it uses the <code class="docutils literal notranslate"><span class="pre">DoorService</span></code> to issue an automatic door open request.</p>
 </section>
 <section id="inverse-kinematics-service">
-<h2>Inverse Kinematics Service<a class="headerlink" href="#inverse-kinematics-service" title="Permalink to this heading">¶</a></h2>
+<h2>Inverse Kinematics Service<a class="headerlink" href="#inverse-kinematics-service" title="Permalink to this headline">¶</a></h2>
 <p>The inverse kinmatics (IK) service allows users to request robot configurations that satisfy a given set of stance, tool, and task specifications:</p>
 <ul class="simple">
 <li><p><strong>Stance Specifications</strong></p>
@@ -756,7 +752,7 @@ This examples uses both the <code class="docutils literal notranslate"><span cla
 <p>The service responds with a robot configuration that meets those specifications or a status indicating that it was unable to find a solution.</p>
 <p>The IK service does not cause the robot to take any actions, but the information it returns can be used to populate <a class="reference external" href="../robot_services.html#robot-command">robot commands</a>. See the following <a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html"><span class="doc">examples</span></a> for more on how to use the service.</p>
 <section id="frames">
-<h3>Frames<a class="headerlink" href="#frames" title="Permalink to this heading">¶</a></h3>
+<h3>Frames<a class="headerlink" href="#frames" title="Permalink to this headline">¶</a></h3>
 <p>Along with the <a class="reference external" href="../geometry_and_frames.html#frames-in-the-spot-robot-world">usual frames</a>, the IK service API refers to several additional frames:</p>
 <ul class="simple">
 <li><p><strong>root frame</strong>: The frame relative to which the problem is defined. Must be either “odom” or “vision”.</p></li>

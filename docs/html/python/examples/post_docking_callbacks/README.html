@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,17 +683,17 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="post-docking-callback-examples">
-<h1>Post Docking Callback Examples<a class="headerlink" href="#post-docking-callback-examples" title="Permalink to this heading">¶</a></h1>
+<h1>Post Docking Callback Examples<a class="headerlink" href="#post-docking-callback-examples" title="Permalink to this headline">¶</a></h1>
 <p>The scripts in this folder allow you to upload files saved to the Data Acquisition Store during robot operation to various endpoints, with the target use case having the callback run when Spot docks at the end of an Autowalk mission.</p>
 <section id="install-packages">
-<h2>Install Packages<a class="headerlink" href="#install-packages" title="Permalink to this heading">¶</a></h2>
+<h2>Install Packages<a class="headerlink" href="#install-packages" title="Permalink to this headline">¶</a></h2>
 <p>Run the below to install the necessary dependencies:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
 </section>
 <section id="configuration-requirements">
-<h2>Configuration Requirements<a class="headerlink" href="#configuration-requirements" title="Permalink to this heading">¶</a></h2>
+<h2>Configuration Requirements<a class="headerlink" href="#configuration-requirements" title="Permalink to this headline">¶</a></h2>
 <p>For AWS, you must have your config file saved at <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code> with format:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">default</span><span class="p">]</span>
 <span class="n">aws_access_key_id</span><span class="o">=</span><span class="n">KEY</span>
@@ -707,7 +703,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>If running on a CORE I/O, you will need access to the internet or your local network.</p>
 </section>
 <section id="run-a-callback">
-<h2>Run a Callback<a class="headerlink" href="#run-a-callback" title="Permalink to this heading">¶</a></h2>
+<h2>Run a Callback<a class="headerlink" href="#run-a-callback" title="Permalink to this headline">¶</a></h2>
 <p>Run the scripts by the following commands:
 AWS:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">daq_upload_docking_callback</span> <span class="o">--</span><span class="n">destination</span> <span class="n">aws</span> <span class="o">--</span><span class="n">bucket</span><span class="o">-</span><span class="n">name</span> <span class="n">YOUR_BUCKET</span> <span class="o">--</span><span class="n">host</span><span class="o">-</span><span class="n">ip</span> <span class="n">HOST_COMPUTER_IP</span> <span class="n">SPOT_IP</span>
@@ -725,7 +721,7 @@ AWS:</p>
 <p>You can use the optional <code class="docutils literal notranslate"><span class="pre">--time-period</span></code> argument to adjust how far back the callback should look for files. If not specified, the callback will look for files starting from when the callback was initialized. After running once, the start time will be reset.</p>
 </section>
 <section id="run-a-callback-using-docker">
-<h2>Run a Callback using Docker<a class="headerlink" href="#run-a-callback-using-docker" title="Permalink to this heading">¶</a></h2>
+<h2>Run a Callback using Docker<a class="headerlink" href="#run-a-callback-using-docker" title="Permalink to this headline">¶</a></h2>
 <p>Please refer to this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on computation payloads as docker containers.</p>
 <p>You can find general instructions on how to build and use the docker image <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">here</a>.</p>
 <p>To build the Docker image, run:</p>

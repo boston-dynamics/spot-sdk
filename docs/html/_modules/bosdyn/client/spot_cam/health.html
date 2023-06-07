@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -689,7 +685,7 @@
 
 
 <div class="viewcode-block" id="HealthClient"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html#bosdyn.client.spot_cam.health.HealthClient">[docs]</a><span class="k">class</span> <span class="nc">HealthClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client calling Spot CAM Health service.</span>
+    <span class="sd">&quot;&quot;&quot;A client calling Spot CAM Health service.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-cam-health&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot_cam.HealthService&#39;</span>
@@ -698,51 +694,51 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">HealthClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">HealthServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="HealthClient.clear_bit_events"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html#bosdyn.client.spot_cam.health.HealthClient.clear_bit_events">[docs]</a>    <span class="k">def</span> <span class="nf">clear_bit_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear out the events list of the BITStatus structure.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Clear out the events list of the BITStatus structure.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">health_pb2</span><span class="o">.</span><span class="n">ClearBITEventsRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ClearBITEvents</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clear_bit_events_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_health_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HealthClient.clear_bit_events_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html#bosdyn.client.spot_cam.health.HealthClient.clear_bit_events_async">[docs]</a>    <span class="k">def</span> <span class="nf">clear_bit_events_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of clear_bit_events().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of clear_bit_events().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">health_pb2</span><span class="o">.</span><span class="n">ClearBITEventsRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ClearBITEvents</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_clear_bit_events_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_health_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HealthClient.get_bit_status"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html#bosdyn.client.spot_cam.health.HealthClient.get_bit_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_bit_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve (system events, degradations) as a tuple of two lists.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve (system events, degradations) as a tuple of two lists.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">health_pb2</span><span class="o">.</span><span class="n">GetBITStatusRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetBITStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bit_status_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_health_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HealthClient.get_bit_status_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html#bosdyn.client.spot_cam.health.HealthClient.get_bit_status_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_bit_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_bit_status().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_bit_status().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">health_pb2</span><span class="o">.</span><span class="n">GetBITStatusRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetBITStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_bit_status_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_health_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HealthClient.get_temperature"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html#bosdyn.client.spot_cam.health.HealthClient.get_temperature">[docs]</a>    <span class="k">def</span> <span class="nf">get_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board devices.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board devices.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">health_pb2</span><span class="o">.</span><span class="n">GetTemperatureRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetTemperature</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_temperature_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_health_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HealthClient.get_temperature_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html#bosdyn.client.spot_cam.health.HealthClient.get_temperature_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_temperature_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_temperature().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_temperature().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">health_pb2</span><span class="o">.</span><span class="n">GetTemperatureRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetTemperature</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_get_temperature_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_health_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HealthClient.get_system_log"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html#bosdyn.client.spot_cam.health.HealthClient.get_system_log">[docs]</a>    <span class="k">def</span> <span class="nf">get_system_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board devices.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve a list of thermometers measuring the temperature (mC) of corresponding on-board devices.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">health_pb2</span><span class="o">.</span><span class="n">GetSystemLogRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetSystemLog</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_system_log_from_response</span><span class="p">,</span>
                          <span class="bp">self</span><span class="o">.</span><span class="n">_health_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="HealthClient.get_system_log_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html#bosdyn.client.spot_cam.health.HealthClient.get_system_log_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_system_log_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_system_log().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_system_log().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">health_pb2</span><span class="o">.</span><span class="n">GetSystemLogRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetSystemLog</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_system_log_from_response</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_health_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>

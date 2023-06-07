@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -701,7 +697,7 @@
 
 
 <div class="viewcode-block" id="ChoreographyClient"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient">[docs]</a><span class="k">class</span> <span class="nc">ChoreographyClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for Choreography Service.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client for Choreography Service.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;choreography&#39;</span>
     <span class="n">license_name</span> <span class="o">=</span> <span class="s1">&#39;choreography&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot.ChoreographyService&#39;</span>
@@ -723,13 +719,13 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">timesync_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for timesync-endpoint that was grabbed via &#39;update_from()&#39;.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Accessor for timesync-endpoint that was grabbed via &#39;update_from()&#39;.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NoTimeSyncError</span><span class="p">(</span><span class="s2">&quot;[choreography service] No timesync endpoint set for the robot&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span>
 
 <div class="viewcode-block" id="ChoreographyClient.list_all_moves"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.list_all_moves">[docs]</a>    <span class="k">def</span> <span class="nf">list_all_moves</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of the different choreography sequence moves and associated parameters.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of the different choreography sequence moves and associated parameters.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">ListAllMovesRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListAllMoves</span><span class="p">,</span>
@@ -740,7 +736,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.list_all_moves_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.list_all_moves_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_all_moves_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_start_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of list_all_moves().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of list_all_moves().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">ListAllMovesRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListAllMoves</span><span class="p">,</span>
@@ -751,7 +747,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.list_all_sequences"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.list_all_sequences">[docs]</a>    <span class="k">def</span> <span class="nf">list_all_sequences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of all sequences currently known about by the robot.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of all sequences currently known about by the robot.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">ListAllSequencesRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListAllSequences</span><span class="p">,</span>
@@ -762,7 +758,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.list_all_sequences_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.list_all_sequences_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_all_sequences_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of list_all_sequences().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of list_all_sequences().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">ListAllSequencesRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListAllSequences</span><span class="p">,</span>
@@ -773,7 +769,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.upload_choreography"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.upload_choreography">[docs]</a>    <span class="k">def</span> <span class="nf">upload_choreography</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choreography_seq</span><span class="p">,</span> <span class="n">non_strict_parsing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload the choreography sequence to the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Upload the choreography sequence to the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            choreography_seq (choreography_sequence_pb2.ChoreographySequence proto): The</span>
@@ -798,7 +794,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.upload_choreography_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.upload_choreography_async">[docs]</a>    <span class="k">def</span> <span class="nf">upload_choreography_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choreography_seq</span><span class="p">,</span> <span class="n">non_strict_parsing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of upload_choreography().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of upload_choreography().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">UploadChoreographyRequest</span><span class="p">(</span>
             <span class="n">choreography_sequence</span><span class="o">=</span><span class="n">choreography_seq</span><span class="p">,</span> <span class="n">non_strict_parsing</span><span class="o">=</span><span class="n">non_strict_parsing</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
@@ -810,7 +806,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.upload_animated_move"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.upload_animated_move">[docs]</a>    <span class="k">def</span> <span class="nf">upload_animated_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">generated_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload the animation proto to the robot to be used as a move in choreography sequences.</span>
+        <span class="sd">&quot;&quot;&quot;Upload the animation proto to the robot to be used as a move in choreography sequences.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            animation (choreography_sequence_pb2.Animation): The animated move protobuf message. This</span>
@@ -836,7 +832,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.upload_animated_move_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.upload_animated_move_async">[docs]</a>    <span class="k">def</span> <span class="nf">upload_animated_move_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="n">generated_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of upload_animated_move().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of upload_animated_move().&quot;&quot;&quot;</span>
         <span class="n">gen_id_proto</span> <span class="o">=</span> <span class="n">StringValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">generated_id</span><span class="p">)</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">UploadAnimatedMoveRequest</span><span class="p">(</span>
             <span class="n">animated_move</span><span class="o">=</span><span class="n">animation</span><span class="p">,</span> <span class="n">animated_move_generated_id</span><span class="o">=</span><span class="n">gen_id_proto</span><span class="p">)</span>
@@ -849,7 +845,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.get_choreography_status"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_choreography_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the dance related status information for a robot and the local time for which it was valid.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the dance related status information for a robot and the local time for which it was valid.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">ChoreographyStatusRequest</span><span class="p">()</span>
         <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ChoreographyStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">error_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -858,7 +854,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">client_time</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.choreography_log_to_animation_file"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.choreography_log_to_animation_file">[docs]</a>    <span class="k">def</span> <span class="nf">choreography_log_to_animation_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fpath</span><span class="p">,</span> <span class="n">has_arm</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Turn the choreography log from the proto into an animation `cha` file type.</span>
+        <span class="sd">&quot;&quot;&quot;Turn the choreography log from the proto into an animation `cha` file type.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name (string): Name that the `cha` file will be saved as.</span>
@@ -873,7 +869,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">option_list</span><span class="p">(</span><span class="o">*</span><span class="n">argvs</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Takes a list of options or a variable number of string arguments, or a mix of the two and returns a single list</span>
+            <span class="sd">&quot;&quot;&quot;Takes a list of options or a variable number of string arguments, or a mix of the two and returns a single list</span>
 <span class="sd">                containing all of the options to be included</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">x</span> <span class="o">=</span> <span class="p">[]</span>
@@ -885,12 +881,12 @@
             <span class="k">return</span> <span class="n">x</span>
 
         <span class="k">def</span> <span class="nf">list_to_formatted_string</span><span class="p">(</span><span class="n">alist</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Helper function for formatting the `cha` file columns.&quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;Helper function for formatting the `cha` file columns.&quot;&quot;&quot;</span>
             <span class="n">format_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">space</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">alist</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">format_str</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">alist</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">timestamp_to_seconds</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Helper function to turn a seconds quantity and nanoseconds quantity into one value of unit seconds.&quot;&quot;&quot;</span>
+            <span class="sd">&quot;&quot;&quot;Helper function to turn a seconds quantity and nanoseconds quantity into one value of unit seconds.&quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">seconds</span> <span class="o">+</span> <span class="mf">1e-9</span> <span class="o">*</span> <span class="n">timestamp</span><span class="o">.</span><span class="n">nanos</span>
 
         <span class="c1">#get the choreography log for the recording</span>
@@ -1018,7 +1014,7 @@
 
 <div class="viewcode-block" id="ChoreographyClient.execute_choreography"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.execute_choreography">[docs]</a>    <span class="k">def</span> <span class="nf">execute_choreography</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choreography_name</span><span class="p">,</span> <span class="n">client_start_time</span><span class="p">,</span>
                              <span class="n">choreography_starting_slice</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the current choreography sequence loaded on the robot by name.</span>
+        <span class="sd">&quot;&quot;&quot;Execute the current choreography sequence loaded on the robot by name.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            choreography_name (string): The name of the uploaded choreography to run. The robot</span>
@@ -1048,7 +1044,7 @@
 
 <div class="viewcode-block" id="ChoreographyClient.execute_choreography_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.execute_choreography_async">[docs]</a>    <span class="k">def</span> <span class="nf">execute_choreography_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choreography_name</span><span class="p">,</span> <span class="n">client_start_time</span><span class="p">,</span>
                                    <span class="n">choreography_starting_slice</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of execute_choreography().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of execute_choreography().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_execute_choreography_request</span><span class="p">(</span><span class="n">choreography_name</span><span class="p">,</span> <span class="n">client_start_time</span><span class="p">,</span>
                                                       <span class="n">choreography_starting_slice</span><span class="p">,</span> <span class="n">lease</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
@@ -1060,7 +1056,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.choreography_command"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.choreography_command">[docs]</a>    <span class="k">def</span> <span class="nf">choreography_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_list</span><span class="p">,</span> <span class="n">client_end_time</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends commands to interact with individual choreography moves.</span>
+        <span class="sd">&quot;&quot;&quot;Sends commands to interact with individual choreography moves.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            command_list(list of choreography_sequence_pb2.MoveCommand protobuf): The commands.  Each </span>
@@ -1085,7 +1081,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.choreography_command_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.choreography_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">choreography_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_list</span><span class="p">,</span> <span class="n">client_end_time</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of choreography_command().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of choreography_command().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_choreography_command_request</span><span class="p">(</span><span class="n">command_list</span><span class="p">,</span> <span class="n">client_end_time</span><span class="p">,</span> <span class="n">lease</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
@@ -1097,7 +1093,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.start_recording_state"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.start_recording_state">[docs]</a>    <span class="k">def</span> <span class="nf">start_recording_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration_secs</span><span class="p">,</span> <span class="n">continue_session_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start (or continue) a manually recorded robot state log.</span>
+        <span class="sd">&quot;&quot;&quot;Start (or continue) a manually recorded robot state log.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            duration_secs (float): The duration of the recording request in seconds. This will</span>
@@ -1118,7 +1114,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.start_recording_state_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.start_recording_state_async">[docs]</a>    <span class="k">def</span> <span class="nf">start_recording_state_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration_secs</span><span class="p">,</span> <span class="n">continue_session_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of start_recording_state().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of start_recording_state().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_start_recording_state_request</span><span class="p">(</span><span class="n">duration_secs</span><span class="p">,</span> <span class="n">continue_session_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartRecordingState</span><span class="p">,</span>
@@ -1129,7 +1125,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.stop_recording_state"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.stop_recording_state">[docs]</a>    <span class="k">def</span> <span class="nf">stop_recording_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop recording a manual choreography log.</span>
+        <span class="sd">&quot;&quot;&quot;Stop recording a manual choreography log.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The full StopRecordingStateResponse proto.</span>
@@ -1144,7 +1140,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.stop_recording_state_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.stop_recording_state_async">[docs]</a>    <span class="k">def</span> <span class="nf">stop_recording_state_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of stop_recording_state().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of stop_recording_state().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">StopRecordingStateRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StopRecordingState</span><span class="p">,</span>
@@ -1155,7 +1151,7 @@
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.save_sequence"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.save_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">save_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save an uploaded sequence to the robot. Saved sequences are </span>
+        <span class="sd">&quot;&quot;&quot;Save an uploaded sequence to the robot. Saved sequences are </span>
 <span class="sd">        automatically uploaded to the robot when it boots. </span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
@@ -1165,14 +1161,14 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.save_sequence_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.save_sequence_async">[docs]</a>    <span class="k">def</span> <span class="nf">save_sequence_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of save_sequence().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of save_sequence().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_save_sequence_request</span><span class="p">(</span><span class="n">seq_name</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SaveSequence</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.delete_sequence"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.delete_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">delete_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete a sequence from temporary robot memory and </span>
+        <span class="sd">&quot;&quot;&quot;Delete a sequence from temporary robot memory and </span>
 <span class="sd">        delete any copies of the sequence saved to disk. </span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
@@ -1182,14 +1178,14 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.delete_sequence_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.delete_sequence_async">[docs]</a>    <span class="k">def</span> <span class="nf">delete_sequence_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of delete_sequence().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of delete_sequence().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">DeleteSequenceRequest</span><span class="p">(</span><span class="n">sequence_name</span><span class="o">=</span><span class="n">seq_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DeleteSequence</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.modify_choreography_info"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.modify_choreography_info">[docs]</a>    <span class="k">def</span> <span class="nf">modify_choreography_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="n">add_labels</span><span class="o">=</span><span class="p">[],</span> <span class="n">remove_labels</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Modifies a sequence&#39;s ChoreographyInfo field to remove or </span>
+        <span class="sd">&quot;&quot;&quot;Modifies a sequence&#39;s ChoreographyInfo field to remove or </span>
 <span class="sd">        add any labels attached to the sequence.</span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
@@ -1199,14 +1195,14 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.modify_choreography_info_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.modify_choreography_info_async">[docs]</a>    <span class="k">def</span> <span class="nf">modify_choreography_info_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="n">add_labels</span><span class="o">=</span><span class="p">[],</span> <span class="n">remove_labels</span><span class="o">=</span><span class="p">[],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of modify_choreography_info().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of modify_choreography_info().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_modify_choreography_info_request</span><span class="p">(</span><span class="n">seq_name</span><span class="p">,</span> <span class="n">add_labels</span><span class="p">,</span> <span class="n">remove_labels</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ModifyChoreographyInfo</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.clear_all_sequence_files"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.clear_all_sequence_files">[docs]</a>    <span class="k">def</span> <span class="nf">clear_all_sequence_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Completely clears all choreography files that are saved on the robot,</span>
+        <span class="sd">&quot;&quot;&quot;Completely clears all choreography files that are saved on the robot,</span>
 <span class="sd">        including animation proto files. </span>
 <span class="sd">        </span>
 <span class="sd">        Returns:</span>
@@ -1216,7 +1212,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.clear_all_sequence_files_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.clear_all_sequence_files_async">[docs]</a>    <span class="k">def</span> <span class="nf">clear_all_sequence_files_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of clear_all_sequence_files().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of clear_all_sequence_files().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">ClearAllSequenceFilesRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ClearAllSequenceFiles</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -1225,7 +1221,7 @@
 
 <div class="viewcode-block" id="ChoreographyClient.build_start_recording_state_request"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.build_start_recording_state_request">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">build_start_recording_state_request</span><span class="p">(</span><span class="n">duration_seconds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">continue_session_id</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate a StartRecordingStateRequest proto.</span>
+        <span class="sd">&quot;&quot;&quot;Generate a StartRecordingStateRequest proto.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            duration_seconds (float): The duration of the recording request in seconds. This will</span>
@@ -1243,7 +1239,7 @@
         <span class="k">return</span> <span class="n">request</span></div>
 
 <div class="viewcode-block" id="ChoreographyClient.download_robot_state_log"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.download_robot_state_log">[docs]</a>    <span class="k">def</span> <span class="nf">download_robot_state_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Download the manual or automatically collected logs for choreography robot state.</span>
+        <span class="sd">&quot;&quot;&quot;Download the manual or automatically collected logs for choreography robot state.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            log_type(choreography_sequence_pb2.LogType): Type of log, either manual or the automatically</span>
@@ -1264,7 +1260,7 @@
 
 <div class="viewcode-block" id="ChoreographyClient.build_execute_choreography_request"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.build_execute_choreography_request">[docs]</a>    <span class="k">def</span> <span class="nf">build_execute_choreography_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choreography_name</span><span class="p">,</span> <span class="n">client_start_time</span><span class="p">,</span>
                                            <span class="n">choreography_starting_slice</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the ExecuteChoreographyRequest rpc with the timestamp converted into robot time.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Generate the ExecuteChoreographyRequest rpc with the timestamp converted into robot time.&quot;&quot;&quot;</span>
         <span class="c1"># Note the client_start_time is a time expressed in the client&#39;s clock for when the choreography sequence should begin.</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">ExecuteChoreographyRequest</span><span class="p">(</span>
             <span class="n">choreography_sequence_name</span><span class="o">=</span><span class="n">choreography_name</span><span class="p">,</span>
@@ -1296,7 +1292,7 @@
         <span class="k">return</span> <span class="n">request</span></div>
 
     <span class="k">def</span> <span class="nf">_update_timestamp_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or convert fields of the proto that need timestamps in the robot&#39;s clock.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set or convert fields of the proto that need timestamps in the robot&#39;s clock.&quot;&quot;&quot;</span>
         <span class="c1"># Input timestamp is a google.protobuf.Timestamp</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">timesync_endpoint</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NoTimeSyncError</span><span class="p">(</span><span class="s2">&quot;[choreography service] No timesync endpoint set for the robot.&quot;</span><span class="p">)</span>
@@ -1305,7 +1301,7 @@
 
 
 <div class="viewcode-block" id="AnimationUploadHelper"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.AnimationUploadHelper">[docs]</a><span class="k">class</span> <span class="nc">AnimationUploadHelper</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper class to reduce re-uploading animations to a robot multiple times.</span>
+    <span class="sd">&quot;&quot;&quot;Helper class to reduce re-uploading animations to a robot multiple times.</span>
 
 <span class="sd">    This class will generate a hash (unique ID built from the animation protobuf</span>
 <span class="sd">    message&#39;s contents) for each animation proto, and include this hash when initially</span>
@@ -1338,7 +1334,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 
 <div class="viewcode-block" id="AnimationUploadHelper.initialize"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.AnimationUploadHelper.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine which animations are already uploaded on robot.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Determine which animations are already uploaded on robot.&quot;&quot;&quot;</span>
         <span class="c1"># Get a list of all the existing animations on robot.</span>
         <span class="n">initial_move_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">choreography_client</span><span class="o">.</span><span class="n">list_all_moves</span><span class="p">()</span>
 
@@ -1355,7 +1351,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">animation_name_to_generated_id</span><span class="p">[</span><span class="n">move_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">gen_id</span></div>
 
 <div class="viewcode-block" id="AnimationUploadHelper.upload_animated_move"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.AnimationUploadHelper.upload_animated_move">[docs]</a>    <span class="k">def</span> <span class="nf">upload_animated_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animation</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Uploads the animation to robot if the animation protobuf has changed.</span>
+        <span class="sd">&quot;&quot;&quot;Uploads the animation to robot if the animation protobuf has changed.</span>
 
 <span class="sd">        This will only send an UploadAnimatedMove RPC if the incoming animation</span>
 <span class="sd">        has a new hash that differs from the current hash for this animation on robot, which</span>
@@ -1382,7 +1378,7 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="AnimationUploadHelper.generate_animation_id"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.AnimationUploadHelper.generate_animation_id">[docs]</a>    <span class="k">def</span> <span class="nf">generate_animation_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">animation_proto</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Serialize an Animation protobuf message and create a hash from the binary string.</span>
+        <span class="sd">&quot;&quot;&quot;Serialize an Animation protobuf message and create a hash from the binary string.</span>
 
 <span class="sd">        NOTE: Protobuf&#39;s serialization will not be consistent across protobuf versions or</span>
 <span class="sd">        even just different languages serializing the same protobuf message. This means that for a</span>
@@ -1405,35 +1401,35 @@
 
 
 <div class="viewcode-block" id="InvalidUploadedChoreographyError"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.InvalidUploadedChoreographyError">[docs]</a><span class="k">class</span> <span class="nc">InvalidUploadedChoreographyError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The uploaded choreography is invalid and unable to be performed.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The uploaded choreography is invalid and unable to be performed.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="RobotCommandIssuesError"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.RobotCommandIssuesError">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandIssuesError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A problem occurred when issuing the robot command containing the dance.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;A problem occurred when issuing the robot command containing the dance.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="LeaseError"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.LeaseError">[docs]</a><span class="k">class</span> <span class="nc">LeaseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Incorrect or invalid leases for data acquisition. Check the lease use results.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Incorrect or invalid leases for data acquisition. Check the lease use results.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="AnimationValidationFailedError"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.AnimationValidationFailedError">[docs]</a><span class="k">class</span> <span class="nc">AnimationValidationFailedError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The uploaded animation file is invalid and cannot be used in choreography sequences.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The uploaded animation file is invalid and cannot be used in choreography sequences.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoRecordedInformation"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.NoRecordedInformation">[docs]</a><span class="k">class</span> <span class="nc">NoRecordedInformation</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The choreography service has no logged robot state data.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The choreography service has no logged robot state data.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnknownRecordingSessionId"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.UnknownRecordingSessionId">[docs]</a><span class="k">class</span> <span class="nc">UnknownRecordingSessionId</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The recording request contains an unknown recording session ID.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The recording request contains an unknown recording session ID.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="RecordingBufferFull"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.RecordingBufferFull">[docs]</a><span class="k">class</span> <span class="nc">RecordingBufferFull</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The recording buffer is full and the current manual log will be truncated.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The recording buffer is full and the current manual log will be truncated.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="IncompleteData"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.IncompleteData">[docs]</a><span class="k">class</span> <span class="nc">IncompleteData</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The recording buffer filled up, the returned log will be truncated.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The recording buffer filled up, the returned log will be truncated.&quot;&quot;&quot;</span></div>
 
 
 <span class="n">_EXECUTE_CHOREOGRAPHY_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
@@ -1452,7 +1448,7 @@
 <span class="nd">@handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_execute_choreography_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on response from ExecuteChoreography RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from ExecuteChoreography RPC, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
         <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
         <span class="n">status_to_string</span><span class="o">=</span><span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">ExecuteChoreographyResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
@@ -1470,7 +1466,7 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_upload_animated_move_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on response from UploadAnimatedMove RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from UploadAnimatedMove RPC, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
         <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
         <span class="n">status_to_string</span><span class="o">=</span><span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">UploadAnimatedMoveResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
@@ -1490,7 +1486,7 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_start_recording_state_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on response from StartRecordingState RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from StartRecordingState RPC, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
         <span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
         <span class="n">status_to_string</span><span class="o">=</span><span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">StartRecordingStateResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
@@ -1500,7 +1496,7 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_download_robot_state_log_stream_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on download robot state log streaming response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on download robot state log streaming response, None if no error.&quot;&quot;&quot;</span>
     <span class="c1"># Iterate through the response since the download request responds with a stream.</span>
     <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
         <span class="c1"># Handle error statuses from the request.</span>
@@ -1517,7 +1513,7 @@
 
 
 <span class="k">def</span> <span class="nf">_get_streamed_choreography_state_log</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads a streamed response to recreate a ChoreographyStateLog proto.</span>
+    <span class="sd">&quot;&quot;&quot;Reads a streamed response to recreate a ChoreographyStateLog proto.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        response(choreography_sequence_pb2.DownloadRobotStateLogResponse): Streamed response with the</span>
@@ -1544,7 +1540,7 @@
 
 
 <div class="viewcode-block" id="load_choreography_sequence_from_binary_file"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.load_choreography_sequence_from_binary_file">[docs]</a><span class="k">def</span> <span class="nf">load_choreography_sequence_from_binary_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Read a choreography sequence file into a protobuf ChoreographySequence message.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Read a choreography sequence file into a protobuf ChoreographySequence message.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;File not found at: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">file_path</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;File not found at: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">file_path</span><span class="p">)</span>
@@ -1571,7 +1567,7 @@
 
 
 <div class="viewcode-block" id="save_choreography_sequence_to_file"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.save_choreography_sequence_to_file">[docs]</a><span class="k">def</span> <span class="nf">save_choreography_sequence_to_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">choreography</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Saves a choreography sequence to a file.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Saves a choreography sequence to a file.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">file_name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
         <span class="n">LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Invalid file name, cannot save choreography sequence.&quot;</span><span class="p">)</span>
         <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;Invalid file name, cannot save choreography sequence.&quot;</span><span class="p">)</span>

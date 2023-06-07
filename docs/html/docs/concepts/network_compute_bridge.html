@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -685,11 +681,11 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="machine-learning-bridge-and-external-compute">
-<h1>Machine Learning Bridge and External Compute<a class="headerlink" href="#machine-learning-bridge-and-external-compute" title="Permalink to this heading">¶</a></h1>
+<h1>Machine Learning Bridge and External Compute<a class="headerlink" href="#machine-learning-bridge-and-external-compute" title="Permalink to this headline">¶</a></h1>
 <p>Spot provides capabilities to perform <strong>computation off-board</strong> and easily integrate it into your API programs.  For example, you might want to run a deep-learning-based bounding box detector to identify a ball that you want to command the robot to pick up.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">network_compute_bridge</span></code> API can help you by coordinating the networking between various components and adding pre- and post-processing to your image calls, capturing and rotating images for you as needed.  The tablet application has a built-in capability to view the output of bounding-box detectors online while driving (<code class="docutils literal notranslate"><span class="pre">Menu</span> <span class="pre">&gt;</span> <span class="pre">Utilities</span> <span class="pre">&gt;</span> <span class="pre">ML</span> <span class="pre">Model</span> <span class="pre">Viewer</span></code>).</p>
 <section id="example-concept">
-<h2>Example Concept<a class="headerlink" href="#example-concept" title="Permalink to this heading">¶</a></h2>
+<h2>Example Concept<a class="headerlink" href="#example-concept" title="Permalink to this headline">¶</a></h2>
 <p>You have trained a model to detect tennis balls.  You want to build a script to walk to every tennis ball in an area.  Because your tennis ball detector is computationally expensive, you decide to have a big server running on the same WiFi network as Spot to do the computation.</p>
 <p>Here’s how you might set that up:</p>
 <ol class="simple">
@@ -705,7 +701,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ol>
 </section>
 <section id="components-of-the-system">
-<h2>Components of the system<a class="headerlink" href="#components-of-the-system" title="Permalink to this heading">¶</a></h2>
+<h2>Components of the system<a class="headerlink" href="#components-of-the-system" title="Permalink to this headline">¶</a></h2>
 <ol class="simple">
 <li><p>Spot robot</p></li>
 <li><p>Server running computation</p>
@@ -724,7 +720,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p><img alt="Network compute bridge diagram" src="../../_images/network_compute_bridge_diagram.png" /></p>
 </section>
 <section id="discovering-servers-and-models">
-<h2>Discovering Servers and Models<a class="headerlink" href="#discovering-servers-and-models" title="Permalink to this heading">¶</a></h2>
+<h2>Discovering Servers and Models<a class="headerlink" href="#discovering-servers-and-models" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Computation servers register with Spot’s <a class="reference external" href="developing_api_services.html#robot-directory">Directory</a>.</p></li>
 <li><p>Clients can use the directory to look up available servers (see: <a class="reference external" href="../python/understanding_spot_programming.html#listing-services">listing services</a>).</p></li>
@@ -732,11 +728,11 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="example-clients-and-servers">
-<h2>Example Clients and Servers<a class="headerlink" href="#example-clients-and-servers" title="Permalink to this heading">¶</a></h2>
+<h2>Example Clients and Servers<a class="headerlink" href="#example-clients-and-servers" title="Permalink to this headline">¶</a></h2>
 <p>Examples are found in the <a class="reference internal" href="../../python/examples/network_compute_bridge/README.html"><span class="doc">network compute bridge examples</span></a> folder.</p>
 </section>
 <section id="pre-and-post-processing">
-<h2>Pre- and Post-Processing<a class="headerlink" href="#pre-and-post-processing" title="Permalink to this heading">¶</a></h2>
+<h2>Pre- and Post-Processing<a class="headerlink" href="#pre-and-post-processing" title="Permalink to this headline">¶</a></h2>
 <p>If you are working with images, you can:</p>
 <ol class="simple">
 <li><p>Ask the robot to capture an image</p></li>
@@ -752,7 +748,7 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Send you the original image with the corresponding bounding boxes.</p></li>
 </ol>
 <section id="rpc-definitions-networkcomputebridge-and-networkcomputebridgeworker">
-<h3>RPC Definitions: <code class="docutils literal notranslate"><span class="pre">NetworkComputeBridge</span></code> and <code class="docutils literal notranslate"><span class="pre">NetworkComputeBridgeWorker</span></code><a class="headerlink" href="#rpc-definitions-networkcomputebridge-and-networkcomputebridgeworker" title="Permalink to this heading">¶</a></h3>
+<h3>RPC Definitions: <code class="docutils literal notranslate"><span class="pre">NetworkComputeBridge</span></code> and <code class="docutils literal notranslate"><span class="pre">NetworkComputeBridgeWorker</span></code><a class="headerlink" href="#rpc-definitions-networkcomputebridge-and-networkcomputebridgeworker" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">NetworkComputeBridge</span></code> is the API interface between your <strong>API client</strong> and the <strong>robot</strong>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">NetworkComputeBridgeWorker</span></code> is the API interface between the <strong>robot</strong> and a <strong>compute server</strong></p></li>
@@ -760,11 +756,11 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 </section>
 <section id="other-data">
-<h2>Other Data<a class="headerlink" href="#other-data" title="Permalink to this heading">¶</a></h2>
+<h2>Other Data<a class="headerlink" href="#other-data" title="Permalink to this headline">¶</a></h2>
 <p>The API provides an <code class="docutils literal notranslate"><span class="pre">Any</span></code> field in the proto to allow you to pack arbitrary input and output data.  This field allows you to perform external computation on any data.  However, the tablet application will not be able to interpret this custom data.</p>
 </section>
 <section id="parameterization">
-<h2>Parameterization<a class="headerlink" href="#parameterization" title="Permalink to this heading">¶</a></h2>
+<h2>Parameterization<a class="headerlink" href="#parameterization" title="Permalink to this headline">¶</a></h2>
 <p>Does your service require inputs or parameters?  Do you want controls or widgets for those parameters to show up on the SpotApp android application or on Scout?  Please refer to <a class="reference internal" href="service_customization.html"><span class="doc">this document</span></a> to learn how to add parameters to a network compute bridge worker.</p>
 </section>
 </section>

@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,12 +681,12 @@
 
 
 <div class="viewcode-block" id="InvalidCustomParamSpecError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.InvalidCustomParamSpecError">[docs]</a><span class="k">class</span> <span class="nc">InvalidCustomParamSpecError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error indicating that the defined custom parameter Spec is invalid,</span>
+    <span class="sd">&quot;&quot;&quot;Error indicating that the defined custom parameter Spec is invalid,</span>
 <span class="sd">    with a list of error messages explaining why the spec is invalid&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="validate_dict_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.validate_dict_spec">[docs]</a><span class="k">def</span> <span class="nf">validate_dict_spec</span><span class="p">(</span><span class="n">dict_spec</span><span class="p">:</span> <span class="n">service_customization_pb2</span><span class="o">.</span><span class="n">DictParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks that a DictParam.Spec is valid</span>
 
 <span class="sd">    Args:</span>
@@ -709,7 +705,7 @@
     <span class="n">dict_spec</span><span class="p">:</span> <span class="n">service_customization_pb2</span><span class="o">.</span><span class="n">DictParam</span><span class="o">.</span><span class="n">Spec</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">service_customization_pb2</span><span class="o">.</span><span class="n">DictParam</span><span class="p">],</span>
               <span class="n">Optional</span><span class="p">[</span><span class="n">service_customization_pb2</span><span class="o">.</span><span class="n">CustomParamError</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if the DictParam.Spec is value and if so, returns a function that can be used to validate any DictParam value</span>
 
 <span class="sd">    Args:</span>
@@ -732,7 +728,7 @@
 
 
 <span class="k">class</span> <span class="nc">_ParamValidatorInterface</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Class providing a common structure and interface to validate parameter types.</span>
+    <span class="sd">&quot;&quot;&quot; Class providing a common structure and interface to validate parameter types.</span>
 
 <span class="sd">        Specifically, a &lt;Type&gt;ParamValidator class can be used to validate a service_customization_pb2.&lt;Type&gt;Param.Spec</span>
 <span class="sd">        via a validate_spec function with a consistent signature, and can validate a service_customization_pb2.&lt;Type&gt;Param</span>
@@ -748,7 +744,7 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">validate_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if the parameter Spec is valid for its type</span>
 
 <span class="sd">        Returns:</span>
@@ -758,7 +754,7 @@
 
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">validate_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">service_customization_pb2</span><span class="o">.</span><span class="n">CustomParamError</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a parameter value is valid for this class&#39;s self.param_spec</span>
 
 <span class="sd">        Args:</span>
@@ -771,7 +767,7 @@
 
 
 <span class="k">class</span> <span class="nc">_DictParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParamValidator class for a service_customization_pb2.DictParam.Spec</span>
 
 <span class="sd">    Args:</span>
@@ -796,7 +792,7 @@
             <span class="k">raise</span> <span class="n">InvalidCustomParamSpecError</span><span class="p">(</span><span class="n">error_list</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">validate_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a parameter value is valid for this class&#39;s self.param_spec</span>
 
 <span class="sd">        Args:</span>
@@ -811,7 +807,7 @@
             <span class="k">return</span> <span class="n">service_customization_pb2</span><span class="o">.</span><span class="n">CustomParamError</span><span class="p">(</span>
                 <span class="n">status</span><span class="o">=</span><span class="n">service_customization_pb2</span><span class="o">.</span><span class="n">CustomParamError</span><span class="o">.</span><span class="n">STATUS_UNSUPPORTED_PARAMETER</span><span class="p">,</span>
                 <span class="n">error_messages</span><span class="o">=</span><span class="p">[</span>
-                    <span class="sa">f</span><span class="s2">&quot;DictParam value contains keys </span><span class="si">{</span><span class="n">value_keys</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">spec_keys</span><span class="si">}</span><span class="s2"> not present in the spec.&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;DictParam value contains keys </span><span class="si">{</span><span class="n">value_keys</span> <span class="o">-</span> <span class="n">spec_keys</span><span class="si">}</span><span class="s2"> not present in the spec.&quot;</span>
                 <span class="p">])</span>
         <span class="n">custom_param_error</span> <span class="o">=</span> <span class="n">service_customization_pb2</span><span class="o">.</span><span class="n">CustomParamError</span><span class="p">(</span>
             <span class="n">status</span><span class="o">=</span><span class="n">service_customization_pb2</span><span class="o">.</span><span class="n">CustomParamError</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">)</span>
@@ -829,7 +825,7 @@
 
 
 <span class="k">class</span> <span class="nc">_NumericalParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generic ParamValidator class for shared logic between numerical Param Specs</span>
 
 <span class="sd">    Args:</span>
@@ -873,7 +869,7 @@
 
 
 <span class="k">class</span> <span class="nc">_Int64ParamValidator</span><span class="p">(</span><span class="n">_NumericalParamValidator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParamValidator class for a service_customization_pb2.Int64Param.Spec</span>
 
 <span class="sd">    Args:</span>
@@ -888,7 +884,7 @@
 
 
 <span class="k">class</span> <span class="nc">_DoubleParamValidator</span><span class="p">(</span><span class="n">_NumericalParamValidator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParamValidator class for a service_customization_pb2.DoubleParam.Spec</span>
 
 <span class="sd">    Args:</span>
@@ -902,7 +898,7 @@
 
 
 <span class="k">class</span> <span class="nc">_StringParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParamValidator class for a service_customization_pb2.StringParam.Spec</span>
 
 <span class="sd">    Args:</span>
@@ -933,7 +929,7 @@
 
 
 <span class="k">class</span> <span class="nc">_BoolParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParamValidator class for a service_customization_pb2.BoolParam.Spec</span>
 
 <span class="sd">    Args:</span>
@@ -953,7 +949,7 @@
 
 
 <span class="k">class</span> <span class="nc">_RegionOfInterestParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParamValidator class for a service_customization_pb2.RegionOfInterestParam.Spec</span>
 
 <span class="sd">    Args:</span>
@@ -988,7 +984,7 @@
 
 
 <span class="k">class</span> <span class="nc">_ListParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParamValidator class for a service_customization_pb2.ListParam.Spec</span>
 
 <span class="sd">    Args:</span>
@@ -1021,7 +1017,7 @@
             <span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">max_number_of_values</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">min_number_of_values</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">error_messages</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Invalid negative list size bound, with (min, max) bound of </span><span class="si">{</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">min_number_of_values</span><span class="o">.</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">max_number_of_values</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Invalid negative list size bound, with (min, max) bound of </span><span class="si">{</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">min_number_of_values</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">max_number_of_values</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
         <span class="k">if</span> <span class="n">error_messages</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">InvalidCustomParamSpecError</span><span class="p">(</span><span class="n">error_messages</span><span class="p">)</span>
@@ -1066,7 +1062,7 @@
 
 
 <span class="k">class</span> <span class="nc">_OneOfParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParamValidator class for a service_customization_pb2.OneOfInterestParam.Spec</span>
 
 <span class="sd">    Args:</span>
@@ -1113,7 +1109,7 @@
 
 
 <span class="k">class</span> <span class="nc">_CustomParamValidator</span><span class="p">(</span><span class="n">_ParamValidatorInterface</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    ParamValidator class for a service_customization_pb2.CustomParam.Spec</span>
 
 <span class="sd">    Args:</span>
@@ -1135,7 +1131,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">sub_param_helper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_param_helper</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">get_param_helper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the ParamValidator instance for the defined OneOf spec in self.param_spec (a service_customization_pb2.CustomParam.Spec)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">WhichOneof</span><span class="p">(</span><span class="s1">&#39;spec&#39;</span><span class="p">)</span>
@@ -1150,7 +1146,7 @@
 
 
 <span class="k">def</span> <span class="nf">_nested_error_message_helper</span><span class="p">(</span><span class="n">child_name</span><span class="p">,</span> <span class="n">child_error_messages</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Simple internal string helper function to take a list of errors from a child and return a list of errors</span>
 <span class="sd">    for the parent, with each error specifying which child it came from.</span>
 

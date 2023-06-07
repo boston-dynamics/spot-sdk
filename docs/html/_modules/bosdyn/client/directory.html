@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -693,11 +689,11 @@
 
 
 <div class="viewcode-block" id="DirectoryResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html#bosdyn.client.directory.DirectoryResponseError">[docs]</a><span class="k">class</span> <span class="nc">DirectoryResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors for Directory service.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;General class of errors for Directory service.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NonexistentServiceError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html#bosdyn.client.directory.NonexistentServiceError">[docs]</a><span class="k">class</span> <span class="nc">NonexistentServiceError</span><span class="p">(</span><span class="n">DirectoryResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The requested service name does not exist.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The requested service name does not exist.&quot;&quot;&quot;</span></div>
 
 
 <span class="k">def</span> <span class="nf">_list_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
@@ -709,7 +705,7 @@
 
 
 <div class="viewcode-block" id="DirectoryClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html#bosdyn.client.directory.DirectoryClient">[docs]</a><span class="k">class</span> <span class="nc">DirectoryClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;List robot services and get information on them.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;List robot services and get information on them.&quot;&quot;&quot;</span>
 
     <span class="c1"># Typical name of the service in the robot&#39;s directory listing.</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;directory&#39;</span>
@@ -720,7 +716,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">DirectoryClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">directory_service_pb2_grpc</span><span class="o">.</span><span class="n">DirectoryServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DirectoryClient.list"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html#bosdyn.client.directory.DirectoryClient.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all services present on the robot.</span>
+        <span class="sd">&quot;&quot;&quot;List all services present on the robot.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">          A list of the proto message definitions of all registered services</span>
@@ -733,7 +729,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DirectoryClient.list_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html#bosdyn.client.directory.DirectoryClient.list_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all services present on the robot.</span>
+        <span class="sd">&quot;&quot;&quot;List all services present on the robot.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">          A list of the proto message definitions of all registered services</span>
@@ -747,7 +743,7 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DirectoryClient.get_entry"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html#bosdyn.client.directory.DirectoryClient.get_entry">[docs]</a>    <span class="k">def</span> <span class="nf">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the service entry for one particular service specified by name.</span>
+        <span class="sd">&quot;&quot;&quot;Get the service entry for one particular service specified by name.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          service_name:     The name of the service to retrieve.</span>
@@ -765,7 +761,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DirectoryClient.get_entry_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html#bosdyn.client.directory.DirectoryClient.get_entry_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_entry_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the service entry for one particular service specified by name.</span>
+        <span class="sd">&quot;&quot;&quot;Get the service entry for one particular service specified by name.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          service_name:     The name of the service to retrieve.</span>
@@ -797,7 +793,7 @@
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">directory_pb2</span><span class="o">.</span><span class="n">GetServiceEntryResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_STATUS_TO_ERROR</span><span class="p">)</span>

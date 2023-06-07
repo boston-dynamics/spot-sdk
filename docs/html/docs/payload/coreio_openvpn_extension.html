@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -683,44 +679,44 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="core-i-o-openvpn-extension-documentation">
-<h1>CORE I/O OpenVPN Extension Documentation<a class="headerlink" href="#core-i-o-openvpn-extension-documentation" title="Permalink to this heading">¶</a></h1>
+<h1>CORE I/O OpenVPN Extension Documentation<a class="headerlink" href="#core-i-o-openvpn-extension-documentation" title="Permalink to this headline">¶</a></h1>
 <p>This section describes how to develop and deploy a CORE I/O extension to run an OpenVPN client.</p>
 <section id="before-starting">
-<h2>Before Starting<a class="headerlink" href="#before-starting" title="Permalink to this heading">¶</a></h2>
+<h2>Before Starting<a class="headerlink" href="#before-starting" title="Permalink to this headline">¶</a></h2>
 <p>Please read <a class="reference internal" href="coreio_documentation.html"><span class="doc">CORE I/O Documentation</span></a> and <a class="reference internal" href="docker_containers.html"><span class="doc">Running Custom Applications with Spot</span></a> before continuing.</p>
 </section>
 <section id="dockerfile">
-<h2>dockerfile<a class="headerlink" href="#dockerfile" title="Permalink to this heading">¶</a></h2>
+<h2>dockerfile<a class="headerlink" href="#dockerfile" title="Permalink to this headline">¶</a></h2>
 <p>Create the following dockerfile to build the container for our extension.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>FROM<span class="w"> </span>arm64v8/alpine
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>FROM arm64v8/alpine
 
-RUN<span class="w"> </span>apk<span class="w"> </span>update
-RUN<span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>openvpn
-RUN<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/dev/net<span class="p">;</span><span class="w"> </span>mknod<span class="w"> </span>/dev/net/tun<span class="w"> </span>c<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">200</span><span class="p">;</span><span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/dev/net/tun
+RUN apk update
+RUN apk add openvpn
+RUN mkdir -p /dev/net<span class="p">;</span> mknod /dev/net/tun c <span class="m">10</span> <span class="m">200</span><span class="p">;</span> chmod <span class="m">600</span> /dev/net/tun
 
-COPY<span class="w"> </span>kickoff.sh<span class="w"> </span>/app/
-WORKDIR<span class="w"> </span>/app
-ENTRYPOINT<span class="w"> </span><span class="o">[</span><span class="s2">&quot;/app/kickoff.sh&quot;</span><span class="o">]</span>
+COPY kickoff.sh /app/
+WORKDIR /app
+ENTRYPOINT <span class="o">[</span><span class="s2">&quot;/app/kickoff.sh&quot;</span><span class="o">]</span>
 </pre></div>
 </div>
 <p>The line <code class="docutils literal notranslate"><span class="pre">RUN</span> <span class="pre">mkdir</span> <span class="pre">-p</span> <span class="pre">/dev/net;</span> <span class="pre">mknod</span> <span class="pre">/dev/net/tun</span> <span class="pre">c</span> <span class="pre">10</span> <span class="pre">200;</span> <span class="pre">chmod</span> <span class="pre">600</span> <span class="pre">/dev/net/tun</span></code> is specific for OpenVPN and creates a device file for the network interface with the right name and permissions set.</p>
 </section>
 <section id="docker-compose-yml">
-<h2>docker-compose.yml<a class="headerlink" href="#docker-compose-yml" title="Permalink to this heading">¶</a></h2>
+<h2>docker-compose.yml<a class="headerlink" href="#docker-compose-yml" title="Permalink to this headline">¶</a></h2>
 <p>Create the following docker-compose file to start the container for our extension.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>version:<span class="w"> </span><span class="s2">&quot;3.5&quot;</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>version: <span class="s2">&quot;3.5&quot;</span>
 services:
-<span class="w">  </span>openvpn_client:
-<span class="w">    </span>image:<span class="w"> </span>openvpn_client
-<span class="w">    </span>network_mode:<span class="w"> </span>host
-<span class="w">    </span>restart:<span class="w"> </span>unless-stopped
-<span class="w">    </span>cap_add:
-<span class="w">      </span>-<span class="w"> </span>NET_ADMIN
-<span class="w">    </span>devices:
-<span class="w">      </span>-<span class="w"> </span>/dev/net/tun:/dev/net/tun
-<span class="w">    </span>volumes:
-<span class="w">      </span><span class="c1"># Mount /persist/openvpn/ for the .ovpn cred file</span>
-<span class="w">      </span>-<span class="w"> </span>/persist/openvpn/:/persist/openvpn/
+  openvpn_client:
+    image: openvpn_client
+    network_mode: host
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      <span class="c1"># Mount /persist/openvpn/ for the .ovpn cred file</span>
+      - /persist/openvpn/:/persist/openvpn/
 </pre></div>
 </div>
 <p>The important settings being configured here are</p>
@@ -734,26 +730,26 @@ services:
 <p>which will mount the OpenVPN credentials file into our container.</p>
 </section>
 <section id="kickoff-sh">
-<h2>kickoff.sh<a class="headerlink" href="#kickoff-sh" title="Permalink to this heading">¶</a></h2>
+<h2>kickoff.sh<a class="headerlink" href="#kickoff-sh" title="Permalink to this headline">¶</a></h2>
 <p>Create the following file as our entry point into the container. The primary function being performed here is to start the OpenVPN client and provide debugging to the console should something fail unexpectedly.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/sh</span>
 
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Kicking OpenVPN client extension&quot;</span>
-openvpn<span class="w"> </span>/persist/openvpn/*.ovpn
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;We&#39;ve crashed or could not locate the .ovpn file under /persist/openvpn/&quot;</span>
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Please scp the .ovpn file to /persist/openvpn/*.ovpn and try again&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;Kicking OpenVPN client extension&quot;</span>
+openvpn /persist/openvpn/*.ovpn
+<span class="nb">echo</span> <span class="s2">&quot;We&#39;ve crashed or could not locate the .ovpn file under /persist/openvpn/&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;Please scp the .ovpn file to /persist/openvpn/*.ovpn and try again&quot;</span>
 </pre></div>
 </div>
 <section id="create-or-include-the-following-files-for-our-extension">
-<h3>Create or include the following files for our extension<a class="headerlink" href="#create-or-include-the-following-files-for-our-extension" title="Permalink to this heading">¶</a></h3>
+<h3>Create or include the following files for our extension<a class="headerlink" href="#create-or-include-the-following-files-for-our-extension" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>manifest.json</p></li>
 </ul>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="o">{</span>
-<span class="w">  </span><span class="s2">&quot;description&quot;</span>:<span class="w"> </span><span class="s2">&quot;OpenVPN Client&quot;</span>,
-<span class="w">  </span><span class="s2">&quot;version&quot;</span>:<span class="w"> </span><span class="s2">&quot;3.2.0&quot;</span>,
-<span class="w">  </span><span class="s2">&quot;icon&quot;</span>:<span class="w"> </span><span class="s2">&quot;icon.png&quot;</span>,
-<span class="w">  </span><span class="s2">&quot;images&quot;</span>:<span class="w"> </span><span class="o">[</span><span class="s2">&quot;openvpn_client.tar.gz&quot;</span><span class="o">]</span>
+  <span class="s2">&quot;description&quot;</span>: <span class="s2">&quot;OpenVPN Client&quot;</span>,
+  <span class="s2">&quot;version&quot;</span>: <span class="s2">&quot;3.2.0&quot;</span>,
+  <span class="s2">&quot;icon&quot;</span>: <span class="s2">&quot;icon.png&quot;</span>,
+  <span class="s2">&quot;images&quot;</span>: <span class="o">[</span><span class="s2">&quot;openvpn_client.tar.gz&quot;</span><span class="o">]</span>
 <span class="o">}</span>
 </pre></div>
 </div>
@@ -764,48 +760,48 @@ openvpn<span class="w"> </span>/persist/openvpn/*.ovpn
 </section>
 </section>
 <section id="build-the-extension">
-<h2>Build The Extension<a class="headerlink" href="#build-the-extension" title="Permalink to this heading">¶</a></h2>
+<h2>Build The Extension<a class="headerlink" href="#build-the-extension" title="Permalink to this headline">¶</a></h2>
 <p>If building on a host system architecture that is not ARM64 based the following will need to be run before continuing.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>qemu<span class="w"> </span>binfmt-support<span class="w"> </span>qemu-user-static
-docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>--privileged<span class="w"> </span>multiarch/qemu-user-static<span class="w"> </span>--reset<span class="w"> </span>-p<span class="w"> </span>yes
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo apt-get install qemu binfmt-support qemu-user-static
+docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 </pre></div>
 </div>
 <p>Installing and running qemu will allow us to build ARM binaries on an x86 machine without needing a cross compiler.</p>
 <section id="run-the-following-from-the-folder-containing-all-of-the-above-files-to-build-and-output-the-openvpn-extension">
-<h3>Run the following from the folder containing all of the above files to build and output the OpenVPN extension<a class="headerlink" href="#run-the-following-from-the-folder-containing-all-of-the-above-files-to-build-and-output-the-openvpn-extension" title="Permalink to this heading">¶</a></h3>
+<h3>Run the following from the folder containing all of the above files to build and output the OpenVPN extension<a class="headerlink" href="#run-the-following-from-the-folder-containing-all-of-the-above-files-to-build-and-output-the-openvpn-extension" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash -e</span>
 
 <span class="nv">SCRIPT</span><span class="o">=</span><span class="si">${</span><span class="nv">BASH_SOURCE</span><span class="p">[0]</span><span class="si">}</span>
-<span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>dirname<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SCRIPT</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="nb">cd</span><span class="w"> </span><span class="nv">$SCRIPT_PATH</span>
+<span class="nv">SCRIPT_PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>dirname <span class="s2">&quot;</span><span class="nv">$SCRIPT</span><span class="s2">&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="nb">cd</span> <span class="nv">$SCRIPT_PATH</span>
 
 <span class="c1"># Builds the image</span>
-docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>openvpn_client<span class="w"> </span>-f<span class="w"> </span>Dockerfile<span class="w"> </span>.
+docker build -t openvpn_client -f Dockerfile .
 
 <span class="c1"># Exports the image, uses pigz</span>
-docker<span class="w"> </span>save<span class="w"> </span>openvpn_client<span class="w"> </span><span class="p">|</span><span class="w"> </span>pigz<span class="w"> </span>&gt;<span class="w"> </span>openvpn_client.tar.gz
+docker save openvpn_client <span class="p">|</span> pigz &gt; openvpn_client.tar.gz
 
-tar<span class="w"> </span>-cvzf<span class="w"> </span>openvpn_client.spx<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>openvpn_client.tar.gz<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>manifest.json<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>docker-compose.yml<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>icon.png
+tar -cvzf openvpn_client.spx <span class="se">\</span>
+    openvpn_client.tar.gz <span class="se">\</span>
+    manifest.json <span class="se">\</span>
+    docker-compose.yml <span class="se">\</span>
+    icon.png
 
 <span class="c1"># Cleanup intermediate image</span>
-rm<span class="w"> </span>openvpn_client.tar.gz
+rm openvpn_client.tar.gz
 </pre></div>
 </div>
 </section>
 </section>
 <section id="running-the-extension">
-<h2>Running the Extension<a class="headerlink" href="#running-the-extension" title="Permalink to this heading">¶</a></h2>
+<h2>Running the Extension<a class="headerlink" href="#running-the-extension" title="Permalink to this headline">¶</a></h2>
 <p>The output file will be called openvpn_client.spx and can be uploaded to a CORE I/O. See <a class="reference external" href="docker_containers#install-extension-using-web-portal">extension documention</a> for directions on uploading extension to the CORE I/O using the web portal.
 <strong>The cred.ovpn file must be provided by the user and placed under /persist/openvpn/*.ovpn to work.</strong></p>
 <p>To copy over the cred file to the robot over ethernet or wifi run the following.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scp<span class="w"> </span>-P<span class="w"> </span><span class="m">20022</span><span class="w"> </span><span class="si">${</span><span class="nv">your_cred_file</span><span class="p">.ovpn</span><span class="si">}</span><span class="w"> </span>spot@<span class="si">${</span><span class="nv">spots_ip</span><span class="si">}</span>:~/
-ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">20022</span><span class="w"> </span>spot@<span class="si">${</span><span class="nv">spots_ip</span><span class="si">}</span>
-sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/persist/openvpn/
-sudo<span class="w"> </span>cp<span class="w"> </span>~/<span class="si">${</span><span class="nv">your_cred_file</span><span class="p">.ovpn</span><span class="si">}</span><span class="w"> </span>/persist/openvpn/
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>scp -P <span class="m">20022</span> <span class="si">${</span><span class="nv">your_cred_file</span><span class="p">.ovpn</span><span class="si">}</span> spot@<span class="si">${</span><span class="nv">spots_ip</span><span class="si">}</span>:~/
+ssh -p <span class="m">20022</span> spot@<span class="si">${</span><span class="nv">spots_ip</span><span class="si">}</span>
+sudo mkdir -p /persist/openvpn/
+sudo cp ~/<span class="si">${</span><span class="nv">your_cred_file</span><span class="p">.ovpn</span><span class="si">}</span> /persist/openvpn/
 </pre></div>
 </div>
 </section>

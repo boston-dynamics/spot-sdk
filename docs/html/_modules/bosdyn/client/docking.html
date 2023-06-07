@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -697,7 +693,7 @@
 
 
 <div class="viewcode-block" id="DockingClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient">[docs]</a><span class="k">class</span> <span class="nc">DockingClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client for the docking service to help issue DockingCommand and get state.</span>
+    <span class="sd">&quot;&quot;&quot;A client for the docking service to help issue DockingCommand and get state.</span>
 <span class="sd">    Clients are expected to issue a single DockingCommand and then periodically</span>
 <span class="sd">    check the status of its execution.</span>
 <span class="sd">    This service requires ownership over the robot, in the form of a lease and timesync.</span>
@@ -715,7 +711,7 @@
 
 <div class="viewcode-block" id="DockingClient.docking_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.docking_command">[docs]</a>    <span class="k">def</span> <span class="nf">docking_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station_id</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">prep_pose_behavior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue a DockingCommandRequest to the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Issue a DockingCommandRequest to the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            station_id: The ID of the docking station to dock at.</span>
@@ -737,7 +733,7 @@
 
 <div class="viewcode-block" id="DockingClient.docking_command_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.docking_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">docking_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station_id</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">prep_pose_behavior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of docking_command(). &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of docking_command(). &quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docking_command_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">station_id</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span>
                                             <span class="n">prep_pose_behavior</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DockingCommand</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docking_id_from_response</span><span class="p">,</span>
@@ -745,7 +741,7 @@
 
 <div class="viewcode-block" id="DockingClient.docking_command_full"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.docking_command_full">[docs]</a>    <span class="k">def</span> <span class="nf">docking_command_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station_id</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">prep_pose_behavior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_fiducial</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identical to docking_command(), except will return the full DockingCommandResponse.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Identical to docking_command(), except will return the full DockingCommandResponse.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docking_command_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">station_id</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span>
                                             <span class="n">prep_pose_behavior</span><span class="p">,</span> <span class="n">require_fiducial</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DockingCommand</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
@@ -755,7 +751,7 @@
 <div class="viewcode-block" id="DockingClient.docking_command_full_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.docking_command_full_async">[docs]</a>    <span class="k">def</span> <span class="nf">docking_command_full_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">station_id</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span>
                                    <span class="n">prep_pose_behavior</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_fiducial</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Identical to docking_command_async(), except will return the full DockingCommandResponse.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Identical to docking_command_async(), except will return the full DockingCommandResponse.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docking_command_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">station_id</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span>
                                             <span class="n">prep_pose_behavior</span><span class="p">,</span> <span class="n">require_fiducial</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DockingCommand</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
@@ -764,7 +760,7 @@
 
 
 <div class="viewcode-block" id="DockingClient.docking_command_feedback_full"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.docking_command_feedback_full">[docs]</a>    <span class="k">def</span> <span class="nf">docking_command_feedback_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_id</span><span class="p">,</span> <span class="n">end_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the status of a previously issued docking command.</span>
+        <span class="sd">&quot;&quot;&quot;Check the status of a previously issued docking command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            command_id: The ID returned from a previous docking_command call.</span>
@@ -779,7 +775,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DockingClient.docking_command_feedback_full_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.docking_command_feedback_full_async">[docs]</a>    <span class="k">def</span> <span class="nf">docking_command_feedback_full_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_id</span><span class="p">,</span> <span class="n">end_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of docking_command_feedback_full().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of docking_command_feedback_full().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docking_command_feedback_request</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">end_time</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DockingCommandFeedback</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -789,7 +785,7 @@
         <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;This function can raise LeaseErrors when the feedback was successfully retrieved. &#39;</span>
         <span class="s1">&#39;Use docking_command_feedback_full instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;always&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">docking_command_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the status of a previously issued docking command.</span>
+        <span class="sd">&quot;&quot;&quot;Check the status of a previously issued docking command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            command_id: The ID returned from a previous docking_command call.</span>
@@ -805,14 +801,14 @@
         <span class="n">reason</span><span class="o">=</span><span class="s1">&#39;This function can raise LeaseErrors when the feedback was successfully retrieved. &#39;</span>
         <span class="s1">&#39;Use docking_command_feedback_full_async instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;always&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">docking_command_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of docking_command_feedback().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of docking_command_feedback().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docking_command_feedback_request</span><span class="p">(</span><span class="n">command_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DockingCommandFeedback</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_docking_status_from_response</span><span class="p">,</span>
                                <span class="n">_docking_feedback_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DockingClient.get_docking_config"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.get_docking_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_docking_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the docking config stored on the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Get the docking config stored on the robot.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            List of docking configs of type ConfigRange</span>
@@ -822,14 +818,14 @@
                          <span class="n">_docking_get_config_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DockingClient.get_docking_config_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.get_docking_config_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_docking_config_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_docking_config().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_docking_config().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">docking_pb2</span><span class="o">.</span><span class="n">GetDockingConfigRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetDockingConfig</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docking_config_from_response</span><span class="p">,</span>
                                <span class="n">_docking_get_config_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DockingClient.get_docking_state"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.get_docking_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_docking_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get docking state from the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Get docking state from the robot.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Robot dock state of type DockState</span>
@@ -839,7 +835,7 @@
                          <span class="n">_docking_get_state_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DockingClient.get_docking_state_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.DockingClient.get_docking_state_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_docking_state_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_docking_state().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_docking_state().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">docking_pb2</span><span class="o">.</span><span class="n">GetDockingStateRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetDockingState</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_docking_state_from_response</span><span class="p">,</span>
                                <span class="n">_docking_get_state_error_from_response</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -885,7 +881,7 @@
 <span class="nd">@handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_docking_command_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on response from DockingCommand RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from DockingCommand RPC, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">docking_pb2</span><span class="o">.</span><span class="n">DockingCommandResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_DOCKING_COMMAND_STATUS_TO_ERROR</span><span class="p">)</span>
@@ -895,24 +891,24 @@
 <span class="nd">@handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_docking_feedback_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on response from DockingCommandFeedback RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from DockingCommandFeedback RPC, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="nd">@handle_common_header_errors</span>
 <span class="k">def</span> <span class="nf">_docking_get_config_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on response from GetDockingConfig RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from GetDockingConfig RPC, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="nd">@handle_common_header_errors</span>
 <span class="k">def</span> <span class="nf">_docking_get_state_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on response from GetDockingState RPC, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return an exception based on response from GetDockingState RPC, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="kc">None</span>
 
 
 <div class="viewcode-block" id="blocking_dock_robot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.blocking_dock_robot">[docs]</a><span class="k">def</span> <span class="nf">blocking_dock_robot</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">dock_id</span><span class="p">,</span> <span class="n">num_retries</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Blocking helper that takes control of the robot and docks it.</span>
+    <span class="sd">&quot;&quot;&quot;Blocking helper that takes control of the robot and docks it.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: The instance of the robot to control.</span>
@@ -979,7 +975,7 @@
 
 
 <div class="viewcode-block" id="blocking_go_to_prep_pose"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.blocking_go_to_prep_pose">[docs]</a><span class="k">def</span> <span class="nf">blocking_go_to_prep_pose</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">dock_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Blocking helper that takes control of the robot and takes it to the prep pose only.</span>
+    <span class="sd">&quot;&quot;&quot;Blocking helper that takes control of the robot and takes it to the prep pose only.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: The instance of the robot to control.</span>
@@ -1019,7 +1015,7 @@
 
 
 <div class="viewcode-block" id="blocking_undock"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.blocking_undock">[docs]</a><span class="k">def</span> <span class="nf">blocking_undock</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Blocking helper that undocks the robot from the currently docked dock.</span>
+    <span class="sd">&quot;&quot;&quot;Blocking helper that undocks the robot from the currently docked dock.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: The instance of the robot to control.</span>
@@ -1058,7 +1054,7 @@
 
 
 <div class="viewcode-block" id="get_dock_id"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html#bosdyn.client.docking.get_dock_id">[docs]</a><span class="k">def</span> <span class="nf">get_dock_id</span><span class="p">(</span><span class="n">robot</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Blocking helper to get dock ID that robot is currently docked at, None if not docked.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Blocking helper to get dock ID that robot is currently docked at, None if not docked.&quot;&quot;&quot;</span>
     <span class="n">docking_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DockingClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
     <span class="n">dock_state</span> <span class="o">=</span> <span class="n">docking_client</span><span class="o">.</span><span class="n">get_docking_state</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">dock_state</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">docking_pb2</span><span class="o">.</span><span class="n">DockState</span><span class="o">.</span><span class="n">DOCK_STATUS_DOCKED</span><span class="p">:</span>

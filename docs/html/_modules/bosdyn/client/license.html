@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -689,7 +685,7 @@
 
 
 <div class="viewcode-block" id="LicenseClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/license.html#bosdyn.client.license.LicenseClient">[docs]</a><span class="k">class</span> <span class="nc">LicenseClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client to acquire robot license.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client to acquire robot license.&quot;&quot;&quot;</span>
     <span class="c1"># Typical name of the service in the robot&#39;s directory listing.</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;license&#39;</span>
     <span class="c1"># gRPC service proto definition implemented by this service</span>
@@ -699,13 +695,13 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">LicenseClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">license_service_pb2_grpc</span><span class="o">.</span><span class="n">LicenseServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LicenseClient.get_license_info"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/license.html#bosdyn.client.license.LicenseClient.get_license_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_license_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the robot&#39;s installed license.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the robot&#39;s installed license.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">license_pb2</span><span class="o">.</span><span class="n">GetLicenseInfoRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetLicenseInfo</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_entry_value</span><span class="p">,</span>
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LicenseClient.get_feature_enabled"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/license.html#bosdyn.client.license.LicenseClient.get_feature_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">get_feature_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_list</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the installed license allow a list of feature codes.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Check if the installed license allow a list of feature codes.&quot;&quot;&quot;</span>
         <span class="k">assert</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
 
         <span class="n">req</span> <span class="o">=</span> <span class="n">license_pb2</span><span class="o">.</span><span class="n">GetFeatureEnabledRequest</span><span class="p">()</span>

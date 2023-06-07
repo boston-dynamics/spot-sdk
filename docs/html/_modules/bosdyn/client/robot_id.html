@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -694,7 +690,7 @@
 
 
 <div class="viewcode-block" id="RobotIdClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html#bosdyn.client.robot_id.RobotIdClient">[docs]</a><span class="k">class</span> <span class="nc">RobotIdClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client to access robot info.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client to access robot info.&quot;&quot;&quot;</span>
 
     <span class="c1"># Typical name of the service in the robot&#39;s directory listing.</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot-id&#39;</span>
@@ -705,13 +701,13 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">RobotIdClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">robot_id_service_pb2_grpc</span><span class="o">.</span><span class="n">RobotIdServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="RobotIdClient.get_id"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html#bosdyn.client.robot_id.RobotIdClient.get_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the robot&#39;s robot/id.proto.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the robot&#39;s robot/id.proto.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">robot_id_pb2</span><span class="o">.</span><span class="n">RobotIdRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetRobotId</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_entry_value</span><span class="p">,</span>
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotIdClient.get_id_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html#bosdyn.client.robot_id.RobotIdClient.get_id_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a future to results of &quot;get_id&quot;. See &quot;get_id&quot; for further docs.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return a future to results of &quot;get_id&quot;. See &quot;get_id&quot; for further docs.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">robot_id_pb2</span><span class="o">.</span><span class="n">RobotIdRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetRobotId</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_entry_value</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -719,12 +715,12 @@
 
 
 <div class="viewcode-block" id="version_tuple"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html#bosdyn.client.robot_id.version_tuple">[docs]</a><span class="k">def</span> <span class="nf">version_tuple</span><span class="p">(</span><span class="n">version</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the version as a tuple for easy comparisons&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return the version as a tuple for easy comparisons&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">version</span><span class="o">.</span><span class="n">major_version</span><span class="p">,</span> <span class="n">version</span><span class="o">.</span><span class="n">minor_version</span><span class="p">,</span> <span class="n">version</span><span class="o">.</span><span class="n">patch_level</span></div>
 
 
 <div class="viewcode-block" id="create_strict_version"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html#bosdyn.client.robot_id.create_strict_version">[docs]</a><span class="k">def</span> <span class="nf">create_strict_version</span><span class="p">(</span><span class="n">robot_id</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create and return a StrictVersion object, from a robot_id, which can be compared easily.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Create and return a StrictVersion object, from a robot_id, which can be compared easily.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">robot_id</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 

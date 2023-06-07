@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -681,8 +677,8 @@
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">data_chunk_pb2</span>
 
 
-<div class="viewcode-block" id="split_serialized"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.data_chunk.split_serialized">[docs]</a><span class="k">def</span> <span class="nf">split_serialized</span><span class="p">(</span><span class="n">serialized</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Split a byte string into appropriately-sized chunks.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="split_serialized"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.common.split_serialized">[docs]</a><span class="k">def</span> <span class="nf">split_serialized</span><span class="p">(</span><span class="n">serialized</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Split a byte string into appropriately-sized chunks.&quot;&quot;&quot;</span>
     <span class="n">start_index</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">end_index</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">total_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span>
@@ -692,38 +688,38 @@
         <span class="n">start_index</span> <span class="o">=</span> <span class="n">end_index</span></div>
 
 
-<div class="viewcode-block" id="chunk_serialized"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.data_chunk.chunk_serialized">[docs]</a><span class="k">def</span> <span class="nf">chunk_serialized</span><span class="p">(</span><span class="n">serialized</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Yield DataChunks for the given bytes.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="chunk_serialized"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.common.chunk_serialized">[docs]</a><span class="k">def</span> <span class="nf">chunk_serialized</span><span class="p">(</span><span class="n">serialized</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Yield DataChunks for the given bytes.&quot;&quot;&quot;</span>
     <span class="n">total_bytes_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">split_serialized</span><span class="p">(</span><span class="n">serialized</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="p">):</span>
         <span class="k">yield</span> <span class="n">data_chunk_pb2</span><span class="o">.</span><span class="n">DataChunk</span><span class="p">(</span><span class="n">total_size</span><span class="o">=</span><span class="n">total_bytes_size</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="chunk_message"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.data_chunk.chunk_message">[docs]</a><span class="k">def</span> <span class="nf">chunk_message</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Take a message, and split it into data chunks</span>
+<div class="viewcode-block" id="chunk_message"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.common.chunk_message">[docs]</a><span class="k">def</span> <span class="nf">chunk_message</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Take a message, and split it into data chunks</span>
 <span class="sd">    Args:</span>
 <span class="sd">        data_chunk_byte_size: max size of each streamed message</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">chunk_serialized</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">(),</span> <span class="n">data_chunk_byte_size</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="parse_from_chunks"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.data_chunk.parse_from_chunks">[docs]</a><span class="k">def</span> <span class="nf">parse_from_chunks</span><span class="p">(</span><span class="n">iterable_chunks</span><span class="p">,</span> <span class="n">out_msg</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse out a message from chunks.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="parse_from_chunks"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.common.parse_from_chunks">[docs]</a><span class="k">def</span> <span class="nf">parse_from_chunks</span><span class="p">(</span><span class="n">iterable_chunks</span><span class="p">,</span> <span class="n">out_msg</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Parse out a message from chunks.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">out_msg</span><span class="o">.</span><span class="n">ParseFromString</span><span class="p">(</span><span class="n">serialized_from_chunks</span><span class="p">(</span><span class="n">iterable_chunks</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="serialized_from_messages"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.data_chunk.serialized_from_messages">[docs]</a><span class="k">def</span> <span class="nf">serialized_from_messages</span><span class="p">(</span><span class="n">iterable_messages</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assemble from messages that define a DataChunk chunk field.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="serialized_from_messages"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.common.serialized_from_messages">[docs]</a><span class="k">def</span> <span class="nf">serialized_from_messages</span><span class="p">(</span><span class="n">iterable_messages</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assemble from messages that define a DataChunk chunk field.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">serialized_from_strings</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">iterable_messages</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="serialized_from_chunks"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.data_chunk.serialized_from_chunks">[docs]</a><span class="k">def</span> <span class="nf">serialized_from_chunks</span><span class="p">(</span><span class="n">iterable_chunks</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Assemble from data chunks directly without wrapper messages.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="serialized_from_chunks"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.common.serialized_from_chunks">[docs]</a><span class="k">def</span> <span class="nf">serialized_from_chunks</span><span class="p">(</span><span class="n">iterable_chunks</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assemble from data chunks directly without wrapper messages.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">serialized_from_strings</span><span class="p">(</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">iterable_chunks</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="serialized_from_strings"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.data_chunk.serialized_from_strings">[docs]</a><span class="k">def</span> <span class="nf">serialized_from_strings</span><span class="p">(</span><span class="n">iterable_strings</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Concatenate bytes together.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="serialized_from_strings"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html#bosdyn.client.common.serialized_from_strings">[docs]</a><span class="k">def</span> <span class="nf">serialized_from_strings</span><span class="p">(</span><span class="n">iterable_strings</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Concatenate bytes together.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iterable_strings</span><span class="p">)</span></div>
 </pre></div>
 

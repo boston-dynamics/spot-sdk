@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,28 +681,28 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="custom-gait">
-<h1>Custom Gait<a class="headerlink" href="#custom-gait" title="Permalink to this heading">¶</a></h1>
+<h1>Custom Gait<a class="headerlink" href="#custom-gait" title="Permalink to this headline">¶</a></h1>
 <p>Custom Gait is Choreography Move that behaves like a gait that can be greatly customized in its appearance and can be actively steered during operation (e.g. via a joystick).  It can represent any gait pattern that has one or two steps per gait cycle for each leg.</p>
 <section id="behavior-within-a-sequence">
-<h2>Behavior Within a Sequence<a class="headerlink" href="#behavior-within-a-sequence" title="Permalink to this heading">¶</a></h2>
+<h2>Behavior Within a Sequence<a class="headerlink" href="#behavior-within-a-sequence" title="Permalink to this headline">¶</a></h2>
 <p>Custom Gait is integrated as a legs-track move within the Choreography API.  It can therefore be combined with other moves that occupy the body, arm, gripper, and lights tracks.  The Custom Gait move can be adjusted to occupy any number of slices within the timeline, however the sequence clock will not advance normally while Custom Gait is executing.  Instead, the section of the sequence occupied by Custom Gait will represent one gait cycle (duration set by the <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code> parameter).  This portion of the sequence, including moves in other tracks, will loop until Custom Gait is commanded to stop.  This behavior is denoted by the black repeat symbols in the timeline view within Choreographer and will be reflected by the red cursor during execution.</p>
 <p>This means that Body and Arm-track moves will result in a cyclic motion phase-locked to Custom Gait, providing further options for customizing the appearance of the behavior.  It is not possible for other moves to span the beginning or end of Custom Gait within the timeline.</p>
 </section>
 <section id="driving-custom-gait">
-<h2>Driving Custom Gait<a class="headerlink" href="#driving-custom-gait" title="Permalink to this heading">¶</a></h2>
+<h2>Driving Custom Gait<a class="headerlink" href="#driving-custom-gait" title="Permalink to this headline">¶</a></h2>
 <p>CustomGait responds to the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyCommand</span></a> RPC.  When operating through Choreographer with an attached XBox controller, steering commands will be sent based on joystick position (left joystick for translation, right for turning), and the d-pad down button will command Custom Gait to stop, allowing the sequence to proceed.  Steering commands will be scaled by the <code class="docutils literal notranslate"><span class="pre">CustomGaitCommandLimits</span></code> message returned as part of the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyStatus</span></a> RPC.  Those will generally be the values specified for <code class="docutils literal notranslate"><span class="pre">max_velocity</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw_rate</span></code> in the parameters, but may be limited based on a determination of what that gait pattern is capable of.</p>
 <p>The custom gait move can also be driven through the tablet’s choreograpy drive screen using the tablet’s joysticks. See <a class="reference internal" href="choreography_in_tablet.html"><span class="doc">Tablet Choreography Mode</span></a> for further details on playing choreography sequences through the tablet.</p>
 </section>
 <section id="gait-diagram">
-<h2>Gait Diagram<a class="headerlink" href="#gait-diagram" title="Permalink to this heading">¶</a></h2>
+<h2>Gait Diagram<a class="headerlink" href="#gait-diagram" title="Permalink to this headline">¶</a></h2>
 <p>A Hildebrand-style gait diagram (see <a class="reference external" href="https://en.wikipedia.org/wiki/Gait">wikipedia</a> is provided for Custom Gait as currently configured in the left panel of the Move Configuration tab in Choreographer.  For each foot in the diagram (FL, FR, HL, HR), black regions of the diagram indicate periods of time where a foot is in contact with the ground, and white regions indicate periods of time when a foot is in the air.  The phase sliders control the beginning and end of the white region.  Some types of configuration errors will be indicated in red on the diagram.</p>
 </section>
 <section id="presets">
-<h2>Presets<a class="headerlink" href="#presets" title="Permalink to this heading">¶</a></h2>
+<h2>Presets<a class="headerlink" href="#presets" title="Permalink to this headline">¶</a></h2>
 <p>Several preset gait patterns are provided in a pulldown menu where the “Reset to Default Parameters” button is for most moves.  Select the desired preset, then click the “Apply” button.  Note that presets only modify a subset of parameters.  Presets with the prefix “gait” will only impact <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code> and phase parameters.</p>
 </section>
 <section id="tips-for-configuring-custom-gait">
-<h2>Tips for Configuring Custom Gait<a class="headerlink" href="#tips-for-configuring-custom-gait" title="Permalink to this heading">¶</a></h2>
+<h2>Tips for Configuring Custom Gait<a class="headerlink" href="#tips-for-configuring-custom-gait" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Fast stepping is often easier than slow stepping, especially when fewer feet are on the ground.  Try starting with a faster <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code>, then gradually increasing that value to slow the cadence to your preferred speed.  Exact value will depend on gait pattern, especially the duty factor, but <code class="docutils literal notranslate"><span class="pre">cycle_duration</span> <span class="pre">=</span> <span class="pre">0.6</span> <span class="pre">seconds</span></code> or even faster may be required from some patterns.</p></li>
 <li><p>Swing Duration is <code class="docutils literal notranslate"><span class="pre">(touchdown_phase</span> <span class="pre">-</span> <span class="pre">liftoff_phase</span> <span class="pre">*</span> <span class="pre">cycle_duration)</span></code>.</p></li>
@@ -722,7 +718,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="parameter-reference">
-<h2>Parameter Reference<a class="headerlink" href="#parameter-reference" title="Permalink to this heading">¶</a></h2>
+<h2>Parameter Reference<a class="headerlink" href="#parameter-reference" title="Permalink to this headline">¶</a></h2>
 <p>Parameter | Effect
 –|–
 cycle_duration | The duration (s) of a full gait cycle.

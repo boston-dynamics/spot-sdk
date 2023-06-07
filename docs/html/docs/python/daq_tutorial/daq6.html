@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -689,7 +685,7 @@ Development Kit License (20191101-BDSDK-SL).
 <script src="prism.js"></script><p><a class="reference internal" href="daq5.html"><span class="doc">&lt;&lt; Previous Page</span></a></p>
 <hr class="docutils" />
 <section id="part-6-processing-collected-data">
-<h1>Part 6: Processing Collected Data<a class="headerlink" href="#part-6-processing-collected-data" title="Permalink to this heading">¶</a></h1>
+<h1>Part 6: Processing Collected Data<a class="headerlink" href="#part-6-processing-collected-data" title="Permalink to this headline">¶</a></h1>
 <p>In this part of the tutorial, you will:</p>
 <ul class="simple">
 <li><p>Read and parse the data collected from a mission.</p></li>
@@ -697,13 +693,13 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Interpret position data to map recorded images to a final report.</p></li>
 </ul>
 <section id="understanding-the-data">
-<h2>Understanding the data<a class="headerlink" href="#understanding-the-data" title="Permalink to this heading">¶</a></h2>
+<h2>Understanding the data<a class="headerlink" href="#understanding-the-data" title="Permalink to this headline">¶</a></h2>
 <p>We will be using two sources of data for our processing script: the map and the downloaded data from a mission playback.</p>
 <p>The <a class="reference internal" href="../../concepts/autonomy/graphnav_map_structure.html"><span class="doc">map data</span></a> is made up of a collection of waypoints, and the edges that connect them. The downloaded data will contain the images we recorded, and a json file that includes all other data and metadata stored during the mission.</p>
 <p>For displaying the data, we are going to use the <a class="reference external" href="../../concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">anchoring</a> defined in them map. This will define a global “seed” frame, and all of the waypoint and data locations will be provided in that “seed” frame. For the map, there is an <code class="docutils literal notranslate"><span class="pre">Anchoring</span></code> message defined in the map, which will have a list of anchors that provide the <code class="docutils literal notranslate"><span class="pre">seed_tform_waypoint</span></code> transforms. For the downloaded data, we will use the <code class="docutils literal notranslate"><span class="pre">basic-position-data</span></code> metadata, which stores a <code class="docutils literal notranslate"><span class="pre">seed_tform_body</span></code> transform for each capture action.</p>
 </section>
 <section id="writing-the-processing-script">
-<h2>Writing the processing script<a class="headerlink" href="#writing-the-processing-script" title="Permalink to this heading">¶</a></h2>
+<h2>Writing the processing script<a class="headerlink" href="#writing-the-processing-script" title="Permalink to this headline">¶</a></h2>
 <p>Copy (or <a href="files/process_data.py">download</a>)) the script below into a file called <code class="docutils literal notranslate"><span class="pre">process_data.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">~/data_capture</span></code> folder.</p>
 <p>Initial imports. We will use matplotlib to draw the data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
@@ -716,7 +712,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>To extract the data we need, we will parse the <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> file that we downloaded along with the images. This is simply a large json file, so we load it using python’s built-in json support.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the captured images and battery data (and optionally the map edges)</span>
+    <span class="sd">&quot;&quot;&quot;Display the captured images and battery data (and optionally the map edges)</span>
 <span class="sd">    onto a plot of the &quot;seed&quot; frame.&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -750,7 +746,7 @@ will skip over them. For this test we will check if the action stored anything t
 </div>
 <p>We are now going to plot this extracted data along with the map. We provide an additional argument to tweak how large the images will appear.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">action_data</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">map_pb2</span><span class="o">.</span><span class="n">Graph</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the captured images and battery data (and optionally the map edges)</span>
+    <span class="sd">&quot;&quot;&quot;Display the captured images and battery data (and optionally the map edges)</span>
 <span class="sd">    onto a plot of the &quot;seed&quot; frame.&quot;&quot;&quot;</span>
     <span class="n">plot</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>  <span class="c1"># Keep the x and y axes at the same scale.</span>
 </pre></div>
@@ -790,7 +786,7 @@ will skip over them. For this test we will check if the action stored anything t
 </div>
 <p>Below are the helper functions used in the drawing code above. First, the helper to get the x and y position for each waypoint.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">anchor_positions</span><span class="p">(</span><span class="n">anchors</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a dict of waypoint ids to seed positions for the given anchors.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Returns a dict of waypoint ids to seed positions for the given anchors.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">seed_tform_waypoint</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">seed_tform_waypoint</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">anchors</span>
     <span class="p">}</span>
@@ -799,9 +795,8 @@ will skip over them. For this test we will check if the action stored anything t
 <p>Next, a drawing helper that draws a basic battery gauge.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">BOX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
 
-
 <span class="k">def</span> <span class="nf">draw_battery</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">fraction</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw a simple battery gauge.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Draw a simple battery gauge.&quot;&quot;&quot;</span>
     <span class="n">box_x</span><span class="p">,</span> <span class="n">box_y</span> <span class="o">=</span> <span class="n">BOX</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="p">(</span><span class="n">BOX</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">fraction</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">fraction</span><span class="p">))</span> <span class="o">*</span> <span class="n">scale</span>
     <span class="n">plot</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">box_x</span> <span class="o">+</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">box_y</span> <span class="o">+</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">box_x</span><span class="p">,</span> <span class="n">box_y</span> <span class="o">=</span> <span class="n">BOX</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">BOX</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">scale</span>
@@ -837,7 +832,7 @@ will skip over them. For this test we will check if the action stored anything t
 <p><img alt="Collected data overlayed on the map" src="../../../_images/map1.png" /></p>
 </section>
 <section id="further-reading">
-<h2>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this heading">¶</a></h2>
+<h2>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="../../concepts/autonomy/graphnav_map_structure.html"><span class="doc">Graph Nav map structure</span></a></p></li>
 <li><p><a class="reference external" href="../../concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Optimizing Anchor locations</a></p></li>

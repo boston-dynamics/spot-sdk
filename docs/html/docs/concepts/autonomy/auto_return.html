@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,17 +681,17 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="autoreturn-service">
-<h1>AutoReturn Service<a class="headerlink" href="#autoreturn-service" title="Permalink to this heading">¶</a></h1>
+<h1>AutoReturn Service<a class="headerlink" href="#autoreturn-service" title="Permalink to this headline">¶</a></h1>
 <section id="what-is-autoreturn">
-<h2>What is AutoReturn?<a class="headerlink" href="#what-is-autoreturn" title="Permalink to this heading">¶</a></h2>
+<h2>What is AutoReturn?<a class="headerlink" href="#what-is-autoreturn" title="Permalink to this headline">¶</a></h2>
 <p>AutoReturn is a service that will walk Spot back along a recently traversed path. It can be configured to happen automatically when Spot stops receiving commands from a user.</p>
 </section>
 <section id="why-would-i-want-to-use-autoreturn">
-<h2>Why would I want to use AutoReturn?<a class="headerlink" href="#why-would-i-want-to-use-autoreturn" title="Permalink to this heading">¶</a></h2>
+<h2>Why would I want to use AutoReturn?<a class="headerlink" href="#why-would-i-want-to-use-autoreturn" title="Permalink to this headline">¶</a></h2>
 <p>If you are piloting Spot through an area inaccessible to people and suddenly lose the communication link to Spot, the standard behavior is for Spot to sit down and power off. It may be valuable to instead tell Spot to automatically come back along the path it walked, hopefully putting Spot back into communication range.</p>
 </section>
 <section id="why-would-i-not-want-to-use-autoreturn">
-<h2>Why would I NOT want to use AutoReturn?<a class="headerlink" href="#why-would-i-not-want-to-use-autoreturn" title="Permalink to this heading">¶</a></h2>
+<h2>Why would I NOT want to use AutoReturn?<a class="headerlink" href="#why-would-i-not-want-to-use-autoreturn" title="Permalink to this headline">¶</a></h2>
 <p>Depending on the environment Spot is in when AutoReturn activates, Spot may make things worse by trying to autonomously navigate. It’s very likely that AutoReturn will activate when there is poor or no communication to Spot, leaving it walking around unsupervised.</p>
 <p>It’s also important to note the following:</p>
 <ul class="simple">
@@ -704,10 +700,10 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="how-do-i-use-autoreturn">
-<h2>How do I use AutoReturn?<a class="headerlink" href="#how-do-i-use-autoreturn" title="Permalink to this heading">¶</a></h2>
+<h2>How do I use AutoReturn?<a class="headerlink" href="#how-do-i-use-autoreturn" title="Permalink to this headline">¶</a></h2>
 <p>AutoReturn must be explicitly enabled, and will only work for the user that is driving Spot when AutoReturn is enabled. For example, if user A enables AutoReturn and then user B takes control of Spot, AutoReturn will not automatically run. If user B wants to enable AutoReturn, they must do it themselves.</p>
 <section id="configuring-autoreturn">
-<h3>Configuring AutoReturn<a class="headerlink" href="#configuring-autoreturn" title="Permalink to this heading">¶</a></h3>
+<h3>Configuring AutoReturn<a class="headerlink" href="#configuring-autoreturn" title="Permalink to this headline">¶</a></h3>
 <p>The primary AutoReturn setting to tune is the maximum displacement parameter, which tells Spot how far away it is allowed to travel. Spot may travel a number of meters more than the maximum displacement if the path it takes contains turns.</p>
 <p>For example, the distance traveled is equal to the displacement in this path:</p>
 <p><img alt="Straight AutoReturn Path" src="../../../_images/straight_auto_return_path.png" /></p>
@@ -722,11 +718,11 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 </section>
 <section id="what-happens-when-autoreturn-finishes">
-<h2>What happens when AutoReturn finishes?<a class="headerlink" href="#what-happens-when-autoreturn-finishes" title="Permalink to this heading">¶</a></h2>
+<h2>What happens when AutoReturn finishes?<a class="headerlink" href="#what-happens-when-autoreturn-finishes" title="Permalink to this headline">¶</a></h2>
 <p>It depends on whether communication to a user has been restored. If Spot does not hear from a user by the time AutoReturn finishes, Spot’s normal comms loss behavior will begin.</p>
 </section>
 <section id="using-autoreturn-safely">
-<h2>Using AutoReturn Safely<a class="headerlink" href="#using-autoreturn-safely" title="Permalink to this heading">¶</a></h2>
+<h2>Using AutoReturn Safely<a class="headerlink" href="#using-autoreturn-safely" title="Permalink to this headline">¶</a></h2>
 <p><strong>AutoReturn can potentially cause the robot to operate autonomously for unexpected distances. This can be dangerous for anyone nearby.</strong></p>
 <p>Tips for safe use of AutoReturn:</p>
 <ul class="simple">

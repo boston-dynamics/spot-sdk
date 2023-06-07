@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,11 +683,11 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="tester-programs">
-<h1>Tester Programs<a class="headerlink" href="#tester-programs" title="Permalink to this heading">¶</a></h1>
+<h1>Tester Programs<a class="headerlink" href="#tester-programs" title="Permalink to this headline">¶</a></h1>
 <p>The following scripts are available for a developer to rapidly test and debug different components of new Boston Dynamics API services. Specifically, while writing a new service, these tests can be run to check for networking errors in the setup of the service, integration with the robot’s api, and the expected functionality of the service is complete and correct. The tester programs will display the specific test cases being run, execute the test cases, and any warnings or errors that occur.</p>
 <p>Currently, there are testing programs for DataAcquisitionPluginService and ImageService services, as well as general testing helpers that could be used for debugging other services being developed as well.</p>
 <section id="setup-dependencies">
-<h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this heading">¶</a></h2>
+<h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this headline">¶</a></h2>
 <p>This example requires the Spot SDK to be installed, and must be run using python3. Using pip, these dependencies can be installed using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
@@ -699,7 +695,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Note, these dependencies are only for running the tester programs. The specific service examples will likely have different dependencies that</p>
 </section>
 <section id="testing-an-image-service">
-<h2>Testing an Image Service<a class="headerlink" href="#testing-an-image-service" title="Permalink to this heading">¶</a></h2>
+<h2>Testing an Image Service<a class="headerlink" href="#testing-an-image-service" title="Permalink to this headline">¶</a></h2>
 <p>The image service tester script (<code class="docutils literal notranslate"><span class="pre">image_service_tester.py</span></code>) can be used while developing a new image service to help ensure that the service can be communicated with and behaves as expected.</p>
 <p>Note: check that the camera is powered on, connected, and can be communicated with before running the tester program. This program is to help debug issues with the image service, and not the physical camera hardware.</p>
 <p>The script runs through a series of tests checking:</p>
@@ -722,7 +718,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Lastly, the robot’s data acquisition should automatically integrate any directory-registered image services with the data acquisition capabilities. The command line argument <code class="docutils literal notranslate"><span class="pre">--check-data-acquisition</span></code> can be provided to run an additional test for all image sources available in the image service that will check that the source is listed in the data acquisition capabilities and can be successfully acquired from the data acquisition service.</p>
 </section>
 <section id="testing-a-data-acquisition-plugin">
-<h2>Testing a Data Acquisition Plugin<a class="headerlink" href="#testing-a-data-acquisition-plugin" title="Permalink to this heading">¶</a></h2>
+<h2>Testing a Data Acquisition Plugin<a class="headerlink" href="#testing-a-data-acquisition-plugin" title="Permalink to this headline">¶</a></h2>
 <p>The plugin tester script (<code class="docutils literal notranslate"><span class="pre">plugin_tester.py</span></code>) can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected. The script runs through a series of tests checking:</p>
 <ul class="simple">
 <li><p>The data acquisition plugin service is registered with the robot’s directory service.</p></li>

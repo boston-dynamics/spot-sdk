@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -682,7 +678,7 @@
 
 
 <div class="viewcode-block" id="ResourceHierarchy"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html#bosdyn.client.lease_resource_hierarchy.ResourceHierarchy">[docs]</a><span class="k">class</span> <span class="nc">ResourceHierarchy</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper for managing hierarchy of lease resources.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Helper for managing hierarchy of lease resources.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_tree_proto</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_resource_tree</span> <span class="o">=</span> <span class="n">resource_tree_proto</span>
@@ -710,27 +706,27 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_leaf_resources</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">leaf</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ResourceHierarchy.has_resource"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html#bosdyn.client.lease_resource_hierarchy.ResourceHierarchy.has_resource">[docs]</a>    <span class="k">def</span> <span class="nf">has_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a boolean indicating if the resource is in this hierarchy.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return a boolean indicating if the resource is in this hierarchy.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">resource</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resource_tree</span><span class="o">.</span><span class="n">resource</span> <span class="ow">or</span> <span class="n">resource</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sub_hierarchies</span></div>
 
 <div class="viewcode-block" id="ResourceHierarchy.has_sub_resources"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html#bosdyn.client.lease_resource_hierarchy.ResourceHierarchy.has_sub_resources">[docs]</a>    <span class="k">def</span> <span class="nf">has_sub_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a boolean indicating whether this hierarchy has sub-trees.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return a boolean indicating whether this hierarchy has sub-trees.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sub_hierarchies</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
 
 <div class="viewcode-block" id="ResourceHierarchy.get_resource"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html#bosdyn.client.lease_resource_hierarchy.ResourceHierarchy.get_resource">[docs]</a>    <span class="k">def</span> <span class="nf">get_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the root resource string for this hierarchy.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the root resource string for this hierarchy.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resource_tree</span><span class="o">.</span><span class="n">resource</span></div>
 
 <div class="viewcode-block" id="ResourceHierarchy.get_resource_tree"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html#bosdyn.client.lease_resource_hierarchy.ResourceHierarchy.get_resource_tree">[docs]</a>    <span class="k">def</span> <span class="nf">get_resource_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the resource tree protobuf message corresponding with this hierarchy.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the resource tree protobuf message corresponding with this hierarchy.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resource_tree</span></div>
 
 <div class="viewcode-block" id="ResourceHierarchy.leaf_resources"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html#bosdyn.client.lease_resource_hierarchy.ResourceHierarchy.leaf_resources">[docs]</a>    <span class="k">def</span> <span class="nf">leaf_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a set of all leaf resources in this tree.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get a set of all leaf resources in this tree.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_leaf_resources</span></div>
 
 <div class="viewcode-block" id="ResourceHierarchy.get_hierarchy"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html#bosdyn.client.lease_resource_hierarchy.ResourceHierarchy.get_hierarchy">[docs]</a>    <span class="k">def</span> <span class="nf">get_hierarchy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the sub-tree corresponding to the specified resource.</span>
+        <span class="sd">&quot;&quot;&quot;Get the sub-tree corresponding to the specified resource.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            resource (string): The root resource for the hierarchy.</span>

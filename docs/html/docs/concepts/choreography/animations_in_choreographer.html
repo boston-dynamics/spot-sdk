@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,18 +681,18 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="animations-in-choreography">
-<h1>Animations in Choreography<a class="headerlink" href="#animations-in-choreography" title="Permalink to this heading">¶</a></h1>
+<h1>Animations in Choreography<a class="headerlink" href="#animations-in-choreography" title="Permalink to this headline">¶</a></h1>
 <p>The Choreography service is a framework for producing scripted motion through a list of customizable, predetermined moves. The sequences can be customized through the track layering system, the parameters associated with each move, and the adjustable beats per minute of the sequences.</p>
 <p>While these knobs provide a large amount of flexibility when authoring choreographies, there are scenarios where the exact desired behavior can’t fully be expressed through the existing moves. The animation API and associated pipeline provides the ability to further customize the motion.</p>
 <section id="animation-pipeline">
-<h2>Animation pipeline<a class="headerlink" href="#animation-pipeline" title="Permalink to this heading">¶</a></h2>
+<h2>Animation pipeline<a class="headerlink" href="#animation-pipeline" title="Permalink to this headline">¶</a></h2>
 <p>The animation pipeline allows you to create custom sequences using 3D animation tools and integrate them in Choreographer scripts just like the predefined default moves.</p>
 <p>For the intro sequence of the video <a class="reference external" href="https://www.youtube.com/watch?v=7atZfX85nd4">Spot’s On It</a> we used Autodesk Maya to produce the kaleidoscoping dance moves. Autodesk Maya is a 3D animation software that gives fine-grain control for authoring and editing kinematics trajectories. A range of tool sets can be used with this API.</p>
 <iframe width="600" height="400" allow="autoplay"
 src="https://www.youtube.com/embed/7atZfX85nd4">
 </iframe></section>
 <section id="text-files-for-representing-animations">
-<h2>Text files for representing animations<a class="headerlink" href="#text-files-for-representing-animations" title="Permalink to this heading">¶</a></h2>
+<h2>Text files for representing animations<a class="headerlink" href="#text-files-for-representing-animations" title="Permalink to this headline">¶</a></h2>
 <p>The base representation for the animation is a human-readable text file. While an animated dance move can be created through 3D animation tools like Autodesk Maya, moves can also be hand-written and edited.</p>
 <p>The primary component of the animated move is a set of timestamped key frames which specify the motion of the different tracks (arms, gripper, legs, or body). The timestamped keyframes that specify the animation can be densely spaced, as they would be from a 3D animation software, or they can be very sparse and the robot will interpolate between each key frame.</p>
 <p>Additionally, components of the text file enable different animation-specific options. The text file can also specify the different parameters to be associated with the move. A complete overview of the animation file format can be found on the <a class="reference internal" href="animation_file_specification.html"><span class="doc">Animation files for Choreographer</span></a> page.</p>
@@ -711,17 +707,17 @@ src="https://www.youtube.com/embed/7atZfX85nd4">
 </div>
 </section>
 <section id="python-example-script">
-<h2>Python example script<a class="headerlink" href="#python-example-script" title="Permalink to this heading">¶</a></h2>
+<h2>Python example script<a class="headerlink" href="#python-example-script" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">animation_file_to_proto.py</span></code> python script file in the <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> package provides client access to the same functions used by Choreographer to complete the text file to protobuf animation parsing.</p>
 </section>
 <section id="automatic-animation-uploading-in-choreographer">
-<h2>Automatic animation uploading in Choreographer<a class="headerlink" href="#automatic-animation-uploading-in-choreographer" title="Permalink to this heading">¶</a></h2>
+<h2>Automatic animation uploading in Choreographer<a class="headerlink" href="#automatic-animation-uploading-in-choreographer" title="Permalink to this headline">¶</a></h2>
 <p>When Choreographer connects to a robot, it begins uploading all animations automatically to every connected robot. This includes connecting to a robot at startup from command line arguments and connecting to a robot at run time through the connection interface.  Once an animation is uploaded, it is stored on the robot until it is rebooted.</p>
 <p>A dialog indicates the status of all animations being uploaded (example below). If an animation fails to upload, check the terminal where the Choreographer executable is running. It should contain an error message describing why the animation is invalid.</p>
 <p><img alt="Animation Upload Dialog" src="../../../_images/animation_upload_dialog.png" /></p>
 </section>
 <section id="choreography-logs-for-animations">
-<h2>Choreography logs for animations<a class="headerlink" href="#choreography-logs-for-animations" title="Permalink to this heading">¶</a></h2>
+<h2>Choreography logs for animations<a class="headerlink" href="#choreography-logs-for-animations" title="Permalink to this headline">¶</a></h2>
 <p>To aid in creating animated moves without 3D animation software, we provide choreography logs. These logs can be recorded through the Choreography service at any time, including:</p>
 <ul class="simple">
 <li><p>While driving the robot with the tablet</p></li>

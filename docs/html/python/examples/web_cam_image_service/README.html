@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,11 +683,11 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="image-service-for-a-web-cam">
-<h1>Image Service for a Web Cam<a class="headerlink" href="#image-service-for-a-web-cam" title="Permalink to this heading">¶</a></h1>
+<h1>Image Service for a Web Cam<a class="headerlink" href="#image-service-for-a-web-cam" title="Permalink to this headline">¶</a></h1>
 <p>This example implements the standard Boston Dynamics API image service and communicates to common web cameras using OpenCV. The example will run the web cam image service locally and register it with the robot’s directory service using the payload service registration procedure. The web cam image service is an implementation of the GRPC image service, which has the ListImageSources RPC and the GetImage RPC. The service can encode information from the OpenCV camera connection into a protobuf message.</p>
 <p>This example will register the service from a payload, which could be the CORE I/O or a different external computer; therefore, it will require knowing the guid, secret, and IP address of the computer the service will be running off of. See the <a class="reference internal" href="../self_registration/README.html"><span class="doc">self registration payloads example</span></a> for a higher level overview of how to set up and register a payload, as well as how to register a simple announcing service.</p>
 <section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h2>
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <p>This example requires bosdyn API and client to be installed, and must be run using python3. Using pip, these dependencies can be installed using:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
@@ -699,7 +695,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>In addition to the pip-installable requirements, the web cam example requires OpenCV, which must be installed separately following instructions from OpenCV. Alternatively, the example provides a Dockerfile which can be used to run the example and has a base docker image with OpenCV already installed.</p>
 </section>
 <section id="example-execution">
-<h2>Example Execution<a class="headerlink" href="#example-execution" title="Permalink to this heading">¶</a></h2>
+<h2>Example Execution<a class="headerlink" href="#example-execution" title="Permalink to this headline">¶</a></h2>
 <p>This example will run the web cam image service locally and register it with the robot’s directory service using a directory keep alive. After running the example clients will be able to send requests to this service through the robot.</p>
 <p>(NOTE: the example may need to be run with <code class="docutils literal notranslate"><span class="pre">sudo</span></code> to enable access to the web cam.)</p>
 <p>To run the web cam image service from this directory, issue the command:</p>
@@ -724,7 +720,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Lastly, the command line argument <code class="docutils literal notranslate"><span class="pre">--show-debug-info</span></code> will allow a user to live-view the OpenCV output of the web cam video capture on their local computer. Only use this flag for debug purposes, as it will likely slow down the main example operation and reduce the performance of the image service.</p>
 </section>
 <section id="debugging-tips">
-<h2>Debugging Tips<a class="headerlink" href="#debugging-tips" title="Permalink to this heading">¶</a></h2>
+<h2>Debugging Tips<a class="headerlink" href="#debugging-tips" title="Permalink to this headline">¶</a></h2>
 <p>Here are a couple suggestions for debugging the web cam image service:</p>
 <ul class="simple">
 <li><p>Ensure the camera is powered on and plugged in.</p></li>
@@ -736,7 +732,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="run-the-web-cam-image-service-using-docker">
-<h2>Run the Web Cam Image Service using Docker<a class="headerlink" href="#run-the-web-cam-image-service-using-docker" title="Permalink to this heading">¶</a></h2>
+<h2>Run the Web Cam Image Service using Docker<a class="headerlink" href="#run-the-web-cam-image-service-using-docker" title="Permalink to this headline">¶</a></h2>
 <p>Please refer to this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on computation payloads as docker containers.</p>
 <p>Follow the instructions on how to build and use the docker image from <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">this section</a> on. The docker container with the application in this example needs the following modifications from the general instructions:</p>
 <ul class="simple">

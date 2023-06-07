@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -685,18 +681,18 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="spot-core-cockpit-system-management-tool">
-<h1>Spot CORE Cockpit - System Management Tool<a class="headerlink" href="#spot-core-cockpit-system-management-tool" title="Permalink to this heading">¶</a></h1>
+<h1>Spot CORE Cockpit - System Management Tool<a class="headerlink" href="#spot-core-cockpit-system-management-tool" title="Permalink to this headline">¶</a></h1>
 <p>Cockpit is an interactive Linux server admin interface, licensed under: GNU LGPL version 2.1. More details can be found at https://cockpit-project.org/.</p>
 <p>We have installed this tool <strong>on</strong> the Spot CORE to make system management a little bit easier for developers and end users.</p>
 <section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h2>
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Spot CORE must be powered on.</p></li>
 <li><p>Spot CORE should be connected to the robot with a working Ethernet connection.</p></li>
 </ul>
 </section>
 <section id="setup">
-<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h2>
+<h2>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h2>
 <p>This document will quickly cover the recommended features for Spot CORE users. Cockpit is readily available on forwarded port 21443. In the future, a direct link will be provided on the Admin Console Spot CORE Payloads page. To access this port through the robot, use the following address: https://INSERT_ROBOT_IP:21443/. If a PC is connected to the robot over WiFi, go to https://192.168.80.3:21443/. Click “Advanced” and “Proceed …” to reach the login page.</p>
 <p><img alt="login" src="../../_images/login.png" /></p>
 <p>Log in using your standard Spot CORE account username &amp; password credentials. Ensure you select “Reuse my password for privileged tasks”. This will be required in order to adjust network settings for example.</p>
@@ -711,11 +707,11 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="terminal">
-<h2>Terminal<a class="headerlink" href="#terminal" title="Permalink to this heading">¶</a></h2>
+<h2>Terminal<a class="headerlink" href="#terminal" title="Permalink to this headline">¶</a></h2>
 <p>Jumping down to the bottom option, take a quick look at the Cockpit Terminal page which will be used in the following examples.</p>
 <p><img alt="login" src="../../_images/terminal.png" /></p>
 <section id="check-spot-core-software-version">
-<h3>Check Spot CORE Software Version<a class="headerlink" href="#check-spot-core-software-version" title="Permalink to this heading">¶</a></h3>
+<h3>Check Spot CORE Software Version<a class="headerlink" href="#check-spot-core-software-version" title="Permalink to this headline">¶</a></h3>
 <p>Our support team may ask you what Spot CORE version you are running. This information can be found on the registered payload page of the admin console or the settings page of the tablet app. This information can also be found with more detail by running the following command on the Spot CORE. An example is included below using the Cockpit Terminal.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">spotcore</span><span class="o">-</span><span class="n">release</span>
 </pre></div>
@@ -724,11 +720,11 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 </section>
 <section id="networking">
-<h2>Networking<a class="headerlink" href="#networking" title="Permalink to this heading">¶</a></h2>
+<h2>Networking<a class="headerlink" href="#networking" title="Permalink to this headline">¶</a></h2>
 <p>The Networking page will likely be the most frequently used interface for Spot CORE users. The default base image for the release 2.1.0 or later Spot CORE now uses NetworkManager for configuring network settings which provides a clean interface with Cockpit.</p>
 <p><img alt="login" src="../../_images/networking.png" /></p>
 <section id="spot-core-wifi-network-settings">
-<h3>Spot CORE WiFi Network Settings<a class="headerlink" href="#spot-core-wifi-network-settings" title="Permalink to this heading">¶</a></h3>
+<h3>Spot CORE WiFi Network Settings<a class="headerlink" href="#spot-core-wifi-network-settings" title="Permalink to this headline">¶</a></h3>
 <p>Below is the recommended procedure for release 2.1.0 or later of how to connect Spot CORE to the internet with a WiFi adapter.</p>
 <ol class="simple">
 <li><p>Insert Ubuntu 18.04 compatible USB WiFi adapter.</p></li>
@@ -774,12 +770,12 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 </section>
 <section id="docker-containers">
-<h2>Docker Containers<a class="headerlink" href="#docker-containers" title="Permalink to this heading">¶</a></h2>
+<h2>Docker Containers<a class="headerlink" href="#docker-containers" title="Permalink to this headline">¶</a></h2>
 <p>This is a minimal interface to manage docker containers running on the Spot CORE. Boston Dynamics recommends using Portainer for docker management instead with instructions available <a class="reference internal" href="docker_containers.html"><span class="doc">here</span></a>. Unfortunately, the Cockpit Docker Containers application does not allow local docker image .tar uploads at this time.</p>
 <p><img alt="login" src="../../_images/docker.png" /></p>
 </section>
 <section id="services">
-<h2>Services<a class="headerlink" href="#services" title="Permalink to this heading">¶</a></h2>
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
 <p>The Services and Logs pages are helpful. The Boston Dynamics <code class="docutils literal notranslate"><span class="pre">velodyne_service</span></code> runs by default on all Spot COREs. This service performs two mains tasks:</p>
 <ol class="simple">
 <li><p>Communicates with the Velodyne LiDAR VLP-16 model for enhanced Spot autonomy.</p></li>
@@ -793,16 +789,16 @@ Development Kit License (20191101-BDSDK-SL).
 <p>On this page, notice the service is properly running and registered. A similar search process can be performed on the Logs page for more detailed information.</p>
 <p><img alt="login" src="../../_images/logs_velodyne.png" /></p>
 <p>Note: you can also use the terminal to access system service status and logs.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>systemctl<span class="w"> </span>status<span class="w"> </span>velodyne_service
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>systemctl status velodyne_service
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>journalctl<span class="w"> </span>-f<span class="w"> </span>-u<span class="w"> </span>velodyne_service
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>journalctl -f -u velodyne_service
 </pre></div>
 </div>
 </section>
 <section id="additional-cockpit-documentation">
-<h2>Additional Cockpit Documentation<a class="headerlink" href="#additional-cockpit-documentation" title="Permalink to this heading">¶</a></h2>
+<h2>Additional Cockpit Documentation<a class="headerlink" href="#additional-cockpit-documentation" title="Permalink to this headline">¶</a></h2>
 <p>Clicking <code class="docutils literal notranslate"><span class="pre">?</span> <span class="pre">Help</span></code> in the top right corner of the Cockpit interface will lead you to documentation about the <a class="reference external" href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_systems_using_the_rhel_8_web_console/index">Web Console</a> or the specific page itself.</p>
 </section>
 </section>

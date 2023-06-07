@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -689,11 +685,11 @@
 
 
 <div class="viewcode-block" id="InvalidArgument"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html#bosdyn.client.data_service.InvalidArgument">[docs]</a><span class="k">class</span> <span class="nc">InvalidArgument</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A given argument could not be used.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;A given argument could not be used.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="DataServiceClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html#bosdyn.client.data_service.DataServiceClient">[docs]</a><span class="k">class</span> <span class="nc">DataServiceClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client for adding to robot data buffer.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A client for adding to robot data buffer.&quot;&quot;&quot;</span>
 
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;data&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.DataService&#39;</span>
@@ -713,7 +709,7 @@
             <span class="k">pass</span>  <span class="c1"># other doesn&#39;t have a time_sync accessor</span></div>
 
 <div class="viewcode-block" id="DataServiceClient.get_data_index"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html#bosdyn.client.data_service.DataServiceClient.get_data_index">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query for data index</span>
+        <span class="sd">&quot;&quot;&quot;Query for data index</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          query:  DataQuery</span>
@@ -724,11 +720,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_get_data_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataServiceClient.get_data_index_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html#bosdyn.client.data_service.DataServiceClient.get_data_index_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_index_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_data_index.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_data_index.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_get_data_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_do_get_data_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal get_data_index RPC stub call.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Internal get_data_index RPC stub call.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_index_protos</span><span class="o">.</span><span class="n">GetDataIndexRequest</span><span class="p">(</span><span class="n">data_query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetDataIndex</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -741,7 +737,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_get_data_pages</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">,</span> <span class="n">time_range</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_do_get_data_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">time_range</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal get_data_pages RPC stub call.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Internal get_data_pages RPC stub call.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_index_protos</span><span class="o">.</span><span class="n">GetDataPagesRequest</span><span class="p">(</span><span class="n">time_range</span><span class="o">=</span><span class="n">time_range</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetDataPages</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -754,14 +750,14 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_delete_data_pages</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">,</span> <span class="n">time_range</span><span class="p">,</span> <span class="n">page_ids</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_do_delete_data_pages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">time_range</span><span class="p">,</span> <span class="n">page_ids</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal delete_data_pages RPC stub call.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Internal delete_data_pages RPC stub call.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_index_protos</span><span class="o">.</span><span class="n">DeleteDataPagesRequest</span><span class="p">(</span><span class="n">time_range</span><span class="o">=</span><span class="n">time_range</span><span class="p">,</span> <span class="n">page_ids</span><span class="o">=</span><span class="n">page_ids</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DeleteDataPages</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DataServiceClient.get_events_comments"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html#bosdyn.client.data_service.DataServiceClient.get_events_comments">[docs]</a>    <span class="k">def</span> <span class="nf">get_events_comments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query for operator comments and events</span>
+        <span class="sd">&quot;&quot;&quot;Query for operator comments and events</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          query: EventsCommentsSpec</span>
@@ -772,18 +768,18 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_get_events_comments</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataServiceClient.get_events_comments_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html#bosdyn.client.data_service.DataServiceClient.get_events_comments_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_events_comments_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_data_index.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_data_index.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_get_events_comments</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_do_get_events_comments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal get_data_index RPC stub call.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Internal get_data_index RPC stub call.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_index_protos</span><span class="o">.</span><span class="n">GetEventsCommentsRequest</span><span class="p">(</span><span class="n">event_comment_request</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetEventsComments</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DataServiceClient.get_data_buffer_status"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html#bosdyn.client.data_service.DataServiceClient.get_data_buffer_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_buffer_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_blob_specs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query for operator comments and events</span>
+        <span class="sd">&quot;&quot;&quot;Query for operator comments and events</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          get_blob_specs (bool): whether to list message series.</span>
@@ -794,11 +790,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_get_data_buffer_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">,</span> <span class="n">get_blob_specs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataServiceClient.get_data_buffer_status_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html#bosdyn.client.data_service.DataServiceClient.get_data_buffer_status_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_data_buffer_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_blob_specs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_data_index.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_data_index.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_do_get_data_buffer_status</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">,</span> <span class="n">get_blob_specs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_do_get_data_buffer_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">get_blob_specs</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Internal get_data_buffer_status RPC stub call.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Internal get_data_buffer_status RPC stub call.&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">data_index_protos</span><span class="o">.</span><span class="n">GetDataBufferStatusRequest</span><span class="p">(</span><span class="n">get_blob_specs</span><span class="o">=</span><span class="n">get_blob_specs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetDataBufferStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>

@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -691,27 +687,27 @@
 
 
 <div class="viewcode-block" id="LogStatusResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusResponseError">[docs]</a><span class="k">class</span> <span class="nc">LogStatusResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Error in Log Status RPC&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Error in Log Status RPC&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ExperimentAlreadyRunningError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.ExperimentAlreadyRunningError">[docs]</a><span class="k">class</span> <span class="nc">ExperimentAlreadyRunningError</span><span class="p">(</span><span class="n">LogStatusResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The log status request could not be started, an experiment is already running.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The log status request could not be started, an experiment is already running.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="RequestIdDoesNotExistError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.RequestIdDoesNotExistError">[docs]</a><span class="k">class</span> <span class="nc">RequestIdDoesNotExistError</span><span class="p">(</span><span class="n">LogStatusResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The provided request id does not exist or is invalid.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The provided request id does not exist or is invalid.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="InactiveLogError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.InactiveLogError">[docs]</a><span class="k">class</span> <span class="nc">InactiveLogError</span><span class="p">(</span><span class="n">LogStatusResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The log has already terminated and cannot be updated.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The log has already terminated and cannot be updated.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ConcurrencyLimitReachedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.ConcurrencyLimitReachedError">[docs]</a><span class="k">class</span> <span class="nc">ConcurrencyLimitReachedError</span><span class="p">(</span><span class="n">LogStatusResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The limit of concurrent retro logs has be reached, a new log cannot be started.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The limit of concurrent retro logs has be reached, a new log cannot be started.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="LogStatusClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient">[docs]</a><span class="k">class</span> <span class="nc">LogStatusClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client to interact with robot logs.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client to interact with robot logs.&quot;&quot;&quot;</span>
     <span class="c1"># Typical name of the service in the robot&#39;s directory listing.</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;log-status&#39;</span>
     <span class="c1"># gRPC service proto definition implemented by this service</span>
@@ -722,14 +718,14 @@
             <span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">log_status_service</span><span class="o">.</span><span class="n">LogStatusServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LogStatusClient.get_log_status"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.get_log_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_log_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Synchronously get status of a log.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Synchronously get status of a log.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">GetLogStatusRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetLogStatus</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="n">get_log_status_error</span><span class="p">,</span>
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.get_log_status_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.get_log_status_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_log_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asynchronously get status of a log.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Asynchronously get status of a log.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">GetLogStatusRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetLogStatus</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
@@ -737,21 +733,21 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.get_active_log_statuses"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.get_active_log_statuses">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_log_statuses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Synchronously retrieve status of active logs.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Synchronously retrieve status of active logs.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">GetActiveLogStatusesRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetActiveLogStatuses</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">get_active_log_statuses_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.get_active_log_statuses_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.get_active_log_statuses_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_log_statuses_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asynchronously retrieve status of active logs.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Asynchronously retrieve status of active logs.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">GetActiveLogStatusesRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetActiveLogStatuses</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">get_active_log_statuses_error</span><span class="p">,</span>
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.start_experiment_log"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_experiment_log">[docs]</a>    <span class="k">def</span> <span class="nf">start_experiment_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start an experiment log, to run for a specified duration.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Start an experiment log, to run for a specified duration.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">StartExperimentLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">keep_alive</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartExperimentLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
@@ -759,7 +755,7 @@
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.start_experiment_log_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_experiment_log_async">[docs]</a>    <span class="k">def</span> <span class="nf">start_experiment_log_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start an experiment log, to run for a specified duration.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Start an experiment log, to run for a specified duration.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">StartExperimentLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">keep_alive</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartExperimentLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
@@ -767,14 +763,14 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.start_retro_log"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_retro_log">[docs]</a>    <span class="k">def</span> <span class="nf">start_retro_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a retro log, to run for a specified duration.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Start a retro log, to run for a specified duration.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">StartRetroLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">past_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="o">-</span><span class="n">seconds</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartRetroLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="n">start_retro_log_error</span><span class="p">,</span>
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.start_retro_log_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_retro_log_async">[docs]</a>    <span class="k">def</span> <span class="nf">start_retro_log_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a retro log, to run for a specified duration.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Start a retro log, to run for a specified duration.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">StartRetroLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">past_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="o">-</span><span class="n">seconds</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartRetroLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
@@ -782,7 +778,7 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.update_experiment"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.update_experiment">[docs]</a>    <span class="k">def</span> <span class="nf">update_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update an experiment log to run for a specified duration.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Update an experiment log to run for a specified duration.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">UpdateExperimentLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="n">req</span><span class="o">.</span><span class="n">keep_alive</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>
@@ -791,7 +787,7 @@
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.update_experiment_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.update_experiment_async">[docs]</a>    <span class="k">def</span> <span class="nf">update_experiment_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update an experiment log to run for a specified duration.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Update an experiment log to run for a specified duration.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">UpdateExperimentLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="n">req</span><span class="o">.</span><span class="n">keep_alive</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>
@@ -800,14 +796,14 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.terminate_log"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.terminate_log">[docs]</a>    <span class="k">def</span> <span class="nf">terminate_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Terminate an experiment log.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Terminate an experiment log.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">TerminateLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">TerminateLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="n">terminate_log_error</span><span class="p">,</span>
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.terminate_log_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.terminate_log_async">[docs]</a>    <span class="k">def</span> <span class="nf">terminate_log_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Terminate an experiment log.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Terminate an experiment log.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">TerminateLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">TerminateLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
@@ -867,7 +863,7 @@
 <div class="viewcode-block" id="get_log_status_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.get_log_status_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_log_status_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">log_status</span><span class="o">.</span><span class="n">GetLogStatusResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_GET_LOG_STATUS_STATUS_TO_ERROR</span><span class="p">)</span></div>
@@ -876,7 +872,7 @@
 <div class="viewcode-block" id="get_active_log_statuses_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.get_active_log_statuses_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_active_log_statuses_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">log_status</span><span class="o">.</span><span class="n">GetActiveLogStatusesResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_GET_ACTIVE_LOG_STATUSES_STATUS_TO_ERROR</span><span class="p">)</span></div>
@@ -885,7 +881,7 @@
 <div class="viewcode-block" id="start_experiment_log_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.start_experiment_log_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">start_experiment_log_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">log_status</span><span class="o">.</span><span class="n">StartExperimentLogResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_START_EXPERIMENT_LOG_STATUS_TO_ERROR</span><span class="p">)</span></div>
@@ -894,7 +890,7 @@
 <div class="viewcode-block" id="start_retro_log_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.start_retro_log_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">start_retro_log_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartRetroLog response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartRetroLog response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">log_status</span><span class="o">.</span><span class="n">StartRetroLogResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_START_RETRO_LOG_STATUS_TO_ERROR</span><span class="p">)</span></div>
@@ -903,7 +899,7 @@
 <div class="viewcode-block" id="update_experiment_log_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.update_experiment_log_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">update_experiment_log_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">log_status</span><span class="o">.</span><span class="n">UpdateExperimentLogResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_UPDATE_EXPERIMENT_LOG_STATUS_TO_ERROR</span><span class="p">)</span></div>
@@ -912,7 +908,7 @@
 <div class="viewcode-block" id="terminate_log_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.terminate_log_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">terminate_log_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartExperimentLog response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">log_status</span><span class="o">.</span><span class="n">TerminateLogResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_TERMINATE_LOG_STATUS_TO_ERROR</span><span class="p">)</span></div>

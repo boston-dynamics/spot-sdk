@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -693,7 +689,7 @@
 
 
 <div class="viewcode-block" id="LeaseValidator"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html#bosdyn.client.lease_validator.LeaseValidator">[docs]</a><span class="k">class</span> <span class="nc">LeaseValidator</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Lease validator tracks lease usage in intermediate services.</span>
+    <span class="sd">&quot;&quot;&quot;Lease validator tracks lease usage in intermediate services.</span>
 
 <span class="sd">    Track the most recent leases seen for each lease resource and test incoming leases against this</span>
 <span class="sd">    state.</span>
@@ -727,7 +723,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy</span> <span class="o">=</span> <span class="n">ResourceHierarchy</span><span class="p">(</span><span class="n">list_leases_response</span><span class="o">.</span><span class="n">resource_tree</span><span class="p">)</span>
 
 <div class="viewcode-block" id="LeaseValidator.get_active_lease"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html#bosdyn.client.lease_validator.LeaseValidator.get_active_lease">[docs]</a>    <span class="k">def</span> <span class="nf">get_active_lease</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the latest active lease.</span>
+        <span class="sd">&quot;&quot;&quot;Get the latest active lease.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            resource(string): the resource for the specific lease to be returned.</span>
@@ -740,7 +736,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_active_lease_locked</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LeaseValidator.test_active_lease"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html#bosdyn.client.lease_validator.LeaseValidator.test_active_lease">[docs]</a>    <span class="k">def</span> <span class="nf">test_active_lease</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_lease</span><span class="p">,</span> <span class="n">allow_super_leases</span><span class="p">,</span> <span class="n">allow_different_epoch</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare an incoming lease to the latest active lease.</span>
+        <span class="sd">&quot;&quot;&quot;Compare an incoming lease to the latest active lease.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            incoming_lease(Lease object or lease_pb2.Lease): The incoming lease to test.</span>
@@ -762,7 +758,7 @@
 
 <div class="viewcode-block" id="LeaseValidator.test_and_set_active_lease"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html#bosdyn.client.lease_validator.LeaseValidator.test_and_set_active_lease">[docs]</a>    <span class="k">def</span> <span class="nf">test_and_set_active_lease</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_lease</span><span class="p">,</span> <span class="n">allow_super_leases</span><span class="p">,</span>
                                   <span class="n">allow_different_epoch</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compare an incoming lease to the latest active lease, and if it is ok then set it as</span>
+        <span class="sd">&quot;&quot;&quot;Compare an incoming lease to the latest active lease, and if it is ok then set it as</span>
 <span class="sd">        the latest lease.</span>
 
 <span class="sd">        Args:</span>
@@ -787,7 +783,7 @@
         <span class="k">return</span> <span class="n">lease_use_results</span></div>
 
     <span class="k">def</span> <span class="nf">_get_active_lease_locked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Locked method to get the active lease for a resource.</span>
+        <span class="sd">&quot;&quot;&quot;Locked method to get the active lease for a resource.</span>
 
 <span class="sd">        Note: The active_lease_map_lock must be locked!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -800,7 +796,7 @@
 
     <span class="k">def</span> <span class="nf">_test_active_lease_helper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_lease</span><span class="p">,</span> <span class="n">allow_super_lease</span><span class="p">,</span>
                                   <span class="n">allow_different_epoch</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-many-return-statements,too-many-branches</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper function to validate the lease and compare it to the active lease.</span>
+        <span class="sd">&quot;&quot;&quot;Helper function to validate the lease and compare it to the active lease.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A tuple with the LeaseUseResult.Status and the Lease object representing the</span>
@@ -866,12 +862,12 @@
                        <span class="n">compare_result</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_set_active_lease</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_lease</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper set the active lease tracked for the specific lease resource.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Helper set the active lease tracked for the specific lease resource.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">active_lease_map_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_set_active_lease_locked</span><span class="p">(</span><span class="n">incoming_lease</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_set_active_lease_locked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">incoming_lease</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Locked helper which updates the active lease tracked for the specific lease resource.</span>
+        <span class="sd">&quot;&quot;&quot;Locked helper which updates the active lease tracked for the specific lease resource.</span>
 
 <span class="sd">        Note: The active_lease_map_lock must be locked!</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -888,7 +884,7 @@
 
     <span class="k">def</span> <span class="nf">_populate_base_lease_use_results_locked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attempted_lease</span><span class="p">,</span> <span class="n">previous_lease</span><span class="p">,</span>
                                                 <span class="n">mutable_lease_use_results</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates a mutable copy of the LeaseUseResult to fill out the debug fields.</span>
+        <span class="sd">&quot;&quot;&quot;Updates a mutable copy of the LeaseUseResult to fill out the debug fields.</span>
 
 <span class="sd">        Note: The active_lease_map_lock must be locked!</span>
 
@@ -941,18 +937,18 @@
 
 
 <div class="viewcode-block" id="LeaseValidatorResponseProcessor"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html#bosdyn.client.lease_validator.LeaseValidatorResponseProcessor">[docs]</a><span class="k">class</span> <span class="nc">LeaseValidatorResponseProcessor</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-few-public-methods</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;LeaseValidatorResponseProcessor updates the lease validator using the</span>
+    <span class="sd">&quot;&quot;&quot;LeaseValidatorResponseProcessor updates the lease validator using the</span>
 <span class="sd">    latest_known_lease from the response&#39;s LeaseUseResult.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease_validator</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            lease_validator (LeaseValidator): validator for a specific robot to be updated.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lease_validator</span> <span class="o">=</span> <span class="n">lease_validator</span>
 
 <div class="viewcode-block" id="LeaseValidatorResponseProcessor.mutate"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html#bosdyn.client.lease_validator.LeaseValidatorResponseProcessor.mutate">[docs]</a>    <span class="k">def</span> <span class="nf">mutate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the lease validator if a response has a lease_use_result.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Update the lease validator if a response has a lease_use_result.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># AttributeError will occur if the response does not have a field named</span>
             <span class="c1"># &#39;lease_use_result&#39;</span>

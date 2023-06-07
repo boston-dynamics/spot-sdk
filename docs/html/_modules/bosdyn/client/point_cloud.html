@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -698,19 +694,19 @@
 
 
 <div class="viewcode-block" id="PointCloudResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.PointCloudResponseError">[docs]</a><span class="k">class</span> <span class="nc">PointCloudResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors for PointCloud service.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;General class of errors for PointCloud service.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnknownPointCloudSourceError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.UnknownPointCloudSourceError">[docs]</a><span class="k">class</span> <span class="nc">UnknownPointCloudSourceError</span><span class="p">(</span><span class="n">PointCloudResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;System cannot find the requested point cloud source name.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;System cannot find the requested point cloud source name.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="SourceDataError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.SourceDataError">[docs]</a><span class="k">class</span> <span class="nc">SourceDataError</span><span class="p">(</span><span class="n">PointCloudResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;System cannot generate the PointCloudSource at this time.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;System cannot generate the PointCloudSource at this time.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="PointCloudDataError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.PointCloudDataError">[docs]</a><span class="k">class</span> <span class="nc">PointCloudDataError</span><span class="p">(</span><span class="n">PointCloudResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;System cannot generate point cloud data at this time.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;System cannot generate point cloud data at this time.&quot;&quot;&quot;</span></div>
 
 
 <span class="n">_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">PointCloudResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
@@ -729,7 +725,7 @@
 
 <span class="nd">@handle_common_header_errors</span>
 <span class="k">def</span> <span class="nf">_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the first invalid point_cloud response, None if no error.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Return a custom exception based on the first invalid point_cloud response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">point_cloud_response</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">point_cloud_responses</span><span class="p">:</span>
 
         <span class="n">result</span> <span class="o">=</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">point_cloud_response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
@@ -741,7 +737,7 @@
 
 
 <div class="viewcode-block" id="PointCloudClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.PointCloudClient">[docs]</a><span class="k">class</span> <span class="nc">PointCloudClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client handling point clouds.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A client handling point clouds.&quot;&quot;&quot;</span>
 
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;point-cloud&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.PointCloudService&#39;</span>
@@ -750,7 +746,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">PointCloudClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">point_cloud_service</span><span class="o">.</span><span class="n">PointCloudServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PointCloudClient.list_point_cloud_sources"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.PointCloudClient.list_point_cloud_sources">[docs]</a>    <span class="k">def</span> <span class="nf">list_point_cloud_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Obtain the list of PointCloudSources.</span>
+        <span class="sd">&quot;&quot;&quot; Obtain the list of PointCloudSources.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            A list of the different point cloud sources as strings.</span>
@@ -763,14 +759,14 @@
                          <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PointCloudClient.list_point_cloud_sources_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.PointCloudClient.list_point_cloud_sources_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_point_cloud_sources_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of list_point_cloud_sources()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of list_point_cloud_sources()&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_list_point_cloud_source_request</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListPointCloudSources</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                                <span class="n">_list_point_cloud_sources_value</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span>
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PointCloudClient.get_point_cloud_from_sources"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.PointCloudClient.get_point_cloud_from_sources">[docs]</a>    <span class="k">def</span> <span class="nf">get_point_cloud_from_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_cloud_sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtain point clouds from sources using default parameters.</span>
+        <span class="sd">&quot;&quot;&quot;Obtain point clouds from sources using default parameters.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            point_cloud_sources (list of strings): The source names to request point clouds from.</span>
@@ -790,12 +786,12 @@
                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PointCloudClient.get_point_cloud_from_sources_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.PointCloudClient.get_point_cloud_from_sources_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_point_cloud_from_sources_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_cloud_sources</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtain point clouds from sources using default parameters.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Obtain point clouds from sources using default parameters.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_point_cloud_async</span><span class="p">([</span><span class="n">build_pc_request</span><span class="p">(</span><span class="n">src</span><span class="p">)</span> <span class="k">for</span> <span class="n">src</span> <span class="ow">in</span> <span class="n">point_cloud_sources</span><span class="p">],</span>
                                           <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PointCloudClient.get_point_cloud"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.PointCloudClient.get_point_cloud">[docs]</a>    <span class="k">def</span> <span class="nf">get_point_cloud</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_cloud_requests</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the most recent point cloud</span>
+        <span class="sd">&quot;&quot;&quot;Get the most recent point cloud</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            point_cloud_requests (list of PointCloudRequest): A list of PointCloudRequest protobuf</span>
@@ -819,7 +815,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PointCloudClient.get_point_cloud_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.PointCloudClient.get_point_cloud_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_point_cloud_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_cloud_requests</span><span class="p">,</span> <span class="o">**</span><span class="n">kw_args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the most recent point cloud</span>
+        <span class="sd">&quot;&quot;&quot;Get the most recent point cloud</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            point_cloud_requests (list of PointCloudRequest): A list of PointCloudRequest protobuf</span>
@@ -852,7 +848,7 @@
 
 
 <div class="viewcode-block" id="build_pc_request"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html#bosdyn.client.point_cloud.build_pc_request">[docs]</a><span class="k">def</span> <span class="nf">build_pc_request</span><span class="p">(</span><span class="n">point_cloud_source_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function which builds an PointCloudRequest from a point cloud source name.</span>
+    <span class="sd">&quot;&quot;&quot;Helper function which builds an PointCloudRequest from a point cloud source name.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        point_cloud_source_name (string): The point cloud source to query.</span>

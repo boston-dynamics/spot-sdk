@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -688,7 +684,7 @@
 
 
 <div class="viewcode-block" id="ManipulationApiClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html#bosdyn.client.manipulation_api_client.ManipulationApiClient">[docs]</a><span class="k">class</span> <span class="nc">ManipulationApiClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for the ManipulationAPI service.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client for the ManipulationAPI service.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;manipulation&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.ManipulationApiService&#39;</span>
 
@@ -697,7 +693,7 @@
               <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">manipulation_api_service_pb2_grpc</span><span class="o">.</span><span class="n">ManipulationApiServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ManipulationApiClient.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html#bosdyn.client.manipulation_api_client.ManipulationApiClient.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
+        <span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            other: The object where to copy from.</span>
@@ -707,7 +703,7 @@
             <span class="n">add_lease_wallet_processors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lease_wallet</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ManipulationApiClient.manipulation_api_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html#bosdyn.client.manipulation_api_client.ManipulationApiClient.manipulation_api_command">[docs]</a>    <span class="k">def</span> <span class="nf">manipulation_api_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manipulation_api_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue a manipulation api command to the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Issue a manipulation api command to the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            manipulation_api_request (manipulation_api_pb2.ManipulationApiRequest): The command request</span>
@@ -721,11 +717,11 @@
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ManipulationApiClient.manipulation_api_command_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html#bosdyn.client.manipulation_api_client.ManipulationApiClient.manipulation_api_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">manipulation_api_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manipulation_api_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the manipulation_api_command().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the manipulation_api_command().&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ManipulationApi</span><span class="p">,</span> <span class="n">manipulation_api_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ManipulationApiClient.manipulation_api_feedback_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html#bosdyn.client.manipulation_api_client.ManipulationApiClient.manipulation_api_feedback_command">[docs]</a>    <span class="k">def</span> <span class="nf">manipulation_api_feedback_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manipulation_api_feedback_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue a manipulation api feedback request to the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Issue a manipulation api feedback request to the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            manipulation_api_feedback_request (manipulation_api_pb2.ManipulationApiFeedbackRequest): The</span>
@@ -739,12 +735,12 @@
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ManipulationApiClient.manipulation_api_feedback_command_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html#bosdyn.client.manipulation_api_client.ManipulationApiClient.manipulation_api_feedback_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">manipulation_api_feedback_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">manipulation_api_feedback_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the manipulation_api_feedback_command().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the manipulation_api_feedback_command().&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ManipulationApiFeedback</span><span class="p">,</span>
                                <span class="n">manipulation_api_feedback_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ManipulationApiClient.grasp_override_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html#bosdyn.client.manipulation_api_client.ManipulationApiClient.grasp_override_command">[docs]</a>    <span class="k">def</span> <span class="nf">grasp_override_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grasp_override_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue a grasp override command to the robot.</span>
+        <span class="sd">&quot;&quot;&quot;Issue a grasp override command to the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            grasp_override_request (manipulation_api_pb2.ApiGraspOverrideRequest): The command request</span>
@@ -757,7 +753,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">_grasp_override_command_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ManipulationApiClient.grasp_override_command_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html#bosdyn.client.manipulation_api_client.ManipulationApiClient.grasp_override_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">grasp_override_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grasp_override_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the grasp_override_command().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of the grasp_override_command().&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">OverrideGrasp</span><span class="p">,</span> <span class="n">grasp_override_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 

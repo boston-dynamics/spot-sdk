@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -737,11 +733,11 @@
 
 
 <div class="viewcode-block" id="RequestCancelledError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestCancelledError">[docs]</a><span class="k">class</span> <span class="nc">RequestCancelledError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The request has been cancelled and should no longer be handled.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;The request has been cancelled and should no longer be handled.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="make_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.make_error">[docs]</a><span class="k">def</span> <span class="nf">make_error</span><span class="p">(</span><span class="n">data_id</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">,</span> <span class="n">error_data</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper to simplify creating a DataError to send to RequestState.add_errors.</span>
+    <span class="sd">&quot;&quot;&quot;Helper to simplify creating a DataError to send to RequestState.add_errors.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        data_id (DataIdentifier): The proto for the data identifier which has an error.</span>
@@ -758,7 +754,7 @@
 
 
 <div class="viewcode-block" id="RequestState"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState">[docs]</a><span class="k">class</span> <span class="nc">RequestState</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface for a data collection to update its state as it proceeds.</span>
+    <span class="sd">&quot;&quot;&quot;Interface for a data collection to update its state as it proceeds.</span>
 
 <span class="sd">    Each AcquireData RPC made to the plugin service will create an instance of RequestState</span>
 <span class="sd">    to manage the incoming acquisition request&#39;s overall state, including if it has been</span>
@@ -783,7 +779,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_completion_time</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="RequestState.set_status"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.set_status">[docs]</a>    <span class="k">def</span> <span class="nf">set_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the status of the request.</span>
+        <span class="sd">&quot;&quot;&quot;Update the status of the request.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            status (GetStatusResponse.Status): An updated status enum to be set in the</span>
@@ -794,7 +790,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">status</span></div>
 
 <div class="viewcode-block" id="RequestState.set_complete_if_no_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.set_complete_if_no_error">[docs]</a>    <span class="k">def</span> <span class="nf">set_complete_if_no_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mark that everything is complete.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Mark that everything is complete.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_check_locked</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">kNonError</span><span class="p">:</span>
@@ -807,7 +803,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="RequestState.add_saved"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.add_saved">[docs]</a>    <span class="k">def</span> <span class="nf">add_saved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_ids</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Record that some data was saved successfully.</span>
+        <span class="sd">&quot;&quot;&quot;Record that some data was saved successfully.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data_ids (Iterable[DataId]): Data IDs that have been successfully saved.</span>
@@ -817,7 +813,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">data_saved</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">data_ids</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RequestState.add_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.add_errors">[docs]</a>    <span class="k">def</span> <span class="nf">add_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_errors</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Report that some errors have occurred during the data capture.</span>
+        <span class="sd">&quot;&quot;&quot;Report that some errors have occurred during the data capture.</span>
 <span class="sd">        Use the make_error function to simplify creating data errors.</span>
 
 <span class="sd">        Args:</span>
@@ -830,18 +826,18 @@
             <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Errors occurred during acquisition:</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">data_errors</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RequestState.has_data_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.has_data_errors">[docs]</a>    <span class="k">def</span> <span class="nf">has_data_errors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return True if any data errors have been added to this status.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return True if any data errors have been added to this status.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_check_locked</span><span class="p">()</span>
             <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">data_errors</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RequestState.cancel_check"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.cancel_check">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raises RequestCancelledError if the request has already been cancelled.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Raises RequestCancelledError if the request has already been cancelled.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_cancel_check_locked</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="RequestState.is_cancelled"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestState.is_cancelled">[docs]</a>    <span class="k">def</span> <span class="nf">is_cancelled</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query if the request is already cancelled.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Query if the request is already cancelled.&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cancelled</span></div>
 
@@ -851,7 +847,7 @@
 
 
 <div class="viewcode-block" id="DataAcquisitionStoreHelper"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionStoreHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class simplifies the management of data acquisition stores for a single request.</span>
+    <span class="sd">&quot;&quot;&quot;This class simplifies the management of data acquisition stores for a single request.</span>
 
 <span class="sd">    Request state will be updated according to store progress.</span>
 
@@ -877,7 +873,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span> <span class="o">=</span> <span class="p">[]</span>
 
 <div class="viewcode-block" id="DataAcquisitionStoreHelper.store_metadata"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">store_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">data_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store metadata with the data acquisition store service.</span>
+        <span class="sd">&quot;&quot;&quot;Store metadata with the data acquisition store service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            metadata (bosdyn.api.AssociatedMetadata): Metadata message to store.</span>
@@ -890,7 +886,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data_id</span><span class="p">,</span> <span class="n">future</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionStoreHelper.store_image"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_image">[docs]</a>    <span class="k">def</span> <span class="nf">store_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_capture</span><span class="p">,</span> <span class="n">data_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store an image with the data acquisition store service.</span>
+        <span class="sd">&quot;&quot;&quot;Store an image with the data acquisition store service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            image_capture (bosdyn.api.ImageCapture): Image to store.</span>
@@ -903,7 +899,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data_id</span><span class="p">,</span> <span class="n">future</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionStoreHelper.store_data"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_data">[docs]</a>    <span class="k">def</span> <span class="nf">store_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a data message with the data acquisition store service.</span>
+        <span class="sd">&quot;&quot;&quot;Store a data message with the data acquisition store service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            message (bytes): Data to store.</span>
@@ -917,11 +913,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_id_future_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">data_id</span><span class="p">,</span> <span class="n">future</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionStoreHelper.cancel_check"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_check">[docs]</a>    <span class="k">def</span> <span class="nf">cancel_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Raises RequestCancelledError if the request has already been cancelled.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Raises RequestCancelledError if the request has already been cancelled.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">cancel_check</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionStoreHelper.wait_for_stores_complete"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.wait_for_stores_complete">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_stores_complete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Block and wait for all stores to complete. Update state with store success/failures.</span>
+        <span class="sd">&quot;&quot;&quot;Block and wait for all stores to complete. Update state with store success/failures.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RequestCancelledError: The data acquisition request was cancelled.</span>
@@ -946,7 +942,7 @@
 
 <div class="viewcode-block" id="DataAcquisitionPluginService"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionPluginService</span><span class="p">(</span>
         <span class="n">data_acquisition_plugin_service_pb2_grpc</span><span class="o">.</span><span class="n">DataAcquisitionPluginServiceServicer</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of a data acquisition plugin. It relies on the provided data_collect_fn</span>
+    <span class="sd">&quot;&quot;&quot;Implementation of a data acquisition plugin. It relies on the provided data_collect_fn</span>
 <span class="sd">    to implement the heart of the data collection and storage.</span>
 
 <span class="sd">    Args:</span>
@@ -994,7 +990,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DataBufferClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DataAcquisitionPluginService.validate_params"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.validate_params">[docs]</a>    <span class="k">def</span> <span class="nf">validate_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate that any parameters set in the request are valid according the the spec.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Validate that any parameters set in the request are valid according the the spec.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">capture</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">acquisition_requests</span><span class="o">.</span><span class="n">data_captures</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_validators</span><span class="p">[</span><span class="n">capture</span><span class="o">.</span><span class="n">name</span><span class="p">](</span><span class="n">capture</span><span class="o">.</span><span class="n">custom_params</span><span class="p">)</span>
@@ -1008,7 +1004,7 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
     <span class="k">def</span> <span class="nf">_data_collection_wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper function which initiates the data collection and storage in sequence.</span>
+        <span class="sd">&quot;&quot;&quot;Helper function which initiates the data collection and storage in sequence.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request_id (int): The request_id for the acquisition request being inspected.</span>
@@ -1036,7 +1032,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Finished request </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">request_id</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DataAcquisitionPluginService.AcquirePluginData"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.AcquirePluginData">[docs]</a>    <span class="k">def</span> <span class="nf">AcquirePluginData</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Trigger a data acquisition and store results in the data acquisition store service.</span>
+        <span class="sd">&quot;&quot;&quot;Trigger a data acquisition and store results in the data acquisition store service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request (data_acquisition_pb2.AcquirePluginDataRequest): The data acquisition request.</span>
@@ -1051,7 +1047,7 @@
         <span class="k">return</span> <span class="n">response</span></div>
 
     <span class="k">def</span> <span class="nf">_start_plugin_acquire</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initiates the data collection function and mutates the AcquirePluginDataResponse rpc.</span>
+        <span class="sd">&quot;&quot;&quot;Initiates the data collection function and mutates the AcquirePluginDataResponse rpc.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request (data_acquisition_pb2.AcquirePluginDataRequest): The data acquisition request.</span>
@@ -1083,7 +1079,7 @@
         <span class="k">return</span> <span class="n">response</span>
 
 <div class="viewcode-block" id="DataAcquisitionPluginService.GetStatus"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetStatus">[docs]</a>    <span class="k">def</span> <span class="nf">GetStatus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Query the status of a data acquisition by ID.</span>
+        <span class="sd">&quot;&quot;&quot;Query the status of a data acquisition by ID.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request (data_acquisition_pb2.GetStatusRequest): The get status request.</span>
@@ -1104,7 +1100,7 @@
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionPluginService.GetServiceInfo"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetServiceInfo">[docs]</a>    <span class="k">def</span> <span class="nf">GetServiceInfo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of data acquisition capabilities.</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of data acquisition capabilities.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request (data_acquisition_pb2.GetServiceInfoRequest): The get service info request.</span>
@@ -1120,7 +1116,7 @@
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionPluginService.CancelAcquisition"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.CancelAcquisition">[docs]</a>    <span class="k">def</span> <span class="nf">CancelAcquisition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cancel a data acquisition by ID.</span>
+        <span class="sd">&quot;&quot;&quot;Cancel a data acquisition by ID.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request (data_acquisition_pb2.CancelAcquisitionRequest): The cancel acquisition request.</span>
@@ -1145,7 +1141,7 @@
 
 <span class="c1"># pylint: disable=protected-access</span>
 <div class="viewcode-block" id="RequestManager"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager">[docs]</a><span class="k">class</span> <span class="nc">RequestManager</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manage request lifecycles and status.</span>
+    <span class="sd">&quot;&quot;&quot;Manage request lifecycles and status.</span>
 
 <span class="sd">    The RequestManager manages some internals of the RequestState class, so it will access its</span>
 <span class="sd">    protected variables.  We leave those variables protected so that users of the RequestState</span>
@@ -1159,7 +1155,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">=</span> <span class="mi">0</span>
 
 <div class="viewcode-block" id="RequestManager.add_request"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.add_request">[docs]</a>    <span class="k">def</span> <span class="nf">add_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new request to manage&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Create a new request to manage&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_lock</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="n">state</span> <span class="o">=</span> <span class="n">RequestState</span><span class="p">()</span>
@@ -1167,7 +1163,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_counter</span><span class="p">,</span> <span class="n">state</span></div>
 
 <div class="viewcode-block" id="RequestManager.get_request_state"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.get_request_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_request_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the RequestState object for managing a request.</span>
+        <span class="sd">&quot;&quot;&quot;Get the RequestState object for managing a request.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request_id (int): The request_id for the acquisition request being inspected.</span>
@@ -1176,7 +1172,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_requests</span><span class="p">[</span><span class="n">request_id</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="RequestManager.get_status_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.get_status_proto">[docs]</a>    <span class="k">def</span> <span class="nf">get_status_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a copy of the current status for the specified request.</span>
+        <span class="sd">&quot;&quot;&quot;Get a copy of the current status for the specified request.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request_id (int): The request_id for the acquisition request being inspected.</span>
@@ -1188,7 +1184,7 @@
         <span class="k">return</span> <span class="n">status</span></div>
 
 <div class="viewcode-block" id="RequestManager.mark_request_cancelled"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_cancelled">[docs]</a>    <span class="k">def</span> <span class="nf">mark_request_cancelled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mark a request as cancelled, and no longer able to be updated.</span>
+        <span class="sd">&quot;&quot;&quot;Mark a request as cancelled, and no longer able to be updated.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request_id (int): The request_id for the acquisition request being cancelled.</span>
@@ -1199,7 +1195,7 @@
             <span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">_status_proto</span><span class="o">.</span><span class="n">STATUS_CANCEL_IN_PROGRESS</span></div>
 
 <div class="viewcode-block" id="RequestManager.mark_request_finished"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_finished">[docs]</a>    <span class="k">def</span> <span class="nf">mark_request_finished</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mark a request as finished, and able to be removed later.</span>
+        <span class="sd">&quot;&quot;&quot;Mark a request as finished, and able to be removed later.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            request_id (int): The request_id for the acquisition request being completed.</span>
@@ -1209,7 +1205,7 @@
             <span class="n">state</span><span class="o">.</span><span class="n">_completion_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="RequestManager.cleanup_requests"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html#bosdyn.client.data_acquisition_plugin_service.RequestManager.cleanup_requests">[docs]</a>    <span class="k">def</span> <span class="nf">cleanup_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">older_than_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove all requests that were completed farther in the past than older_than_time.</span>
+        <span class="sd">&quot;&quot;&quot;Remove all requests that were completed farther in the past than older_than_time.</span>
 
 <span class="sd">        Defaults to removing anything older than 30 seconds.</span>
 

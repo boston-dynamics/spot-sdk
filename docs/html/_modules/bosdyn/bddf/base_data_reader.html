@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -689,10 +685,10 @@
 
 
 <div class="viewcode-block" id="BaseDataReader"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/base_data_reader.html#bosdyn.bddf.base_data_reader.BaseDataReader">[docs]</a><span class="k">class</span> <span class="nc">BaseDataReader</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shared parent class for DataReader and StreamedDataReader.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Shared parent class for DataReader and StreamedDataReader.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">infile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        At least one of the following arguments must be specified.</span>
 
 <span class="sd">        Args:</span>
@@ -716,45 +712,45 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return input file name, if specified, or None if not.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return input file name, if specified, or None if not.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filename</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">file_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the file descriptor from the start of the file/stream.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return the file descriptor from the start of the file/stream.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_descriptor</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return file version as a bosdyn.api.FileFormatVersion proto.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return file version as a bosdyn.api.FileFormatVersion proto.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_descriptor</span><span class="o">.</span><span class="n">version</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return {key -&gt; value} dict for file annotations.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Return {key -&gt; value} dict for file annotations.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_descriptor</span><span class="o">.</span><span class="n">annotations</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">file_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the FileIndex proto used which describes how to access data in the file.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Get the FileIndex proto used which describes how to access data in the file.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_index</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;160-bit checksum read from the end of the file, or None if not yet read.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;160-bit checksum read from the end of the file, or None if not yet read.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_checksum</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">read_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override to compute checksum on reading, in stream-readers.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Override to compute checksum on reading, in stream-readers.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_read_checksum</span>
 
     <span class="k">def</span> <span class="nf">_computed_checksum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=no-self-use</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override to compute checksum on reading, in stream-readers.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Override to compute checksum on reading, in stream-readers.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="BaseDataReader.series_spec_to_index"><a class="viewcode-back" href="../../../python/bosdyn-core/src/bosdyn/bddf/base_data_reader.html#bosdyn.bddf.base_data_reader.BaseDataReader.series_spec_to_index">[docs]</a>    <span class="k">def</span> <span class="nf">series_spec_to_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">series_spec</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Given a series spec (map {key -&gt; value}), return the series index for that series.</span>
+        <span class="sd">&quot;&quot;&quot;Given a series spec (map {key -&gt; value}), return the series index for that series.</span>
 
 <span class="sd">        Raises ValueError if no such series exists.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

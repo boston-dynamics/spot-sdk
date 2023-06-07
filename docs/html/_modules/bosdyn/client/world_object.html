@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -690,7 +686,7 @@
 
 
 <div class="viewcode-block" id="WorldObjectClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient">[docs]</a><span class="k">class</span> <span class="nc">WorldObjectClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for World Object service.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Client for World Object service.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;world-objects&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.WorldObjectService&#39;</span>
 
@@ -708,7 +704,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">timesync_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for timesync-endpoint that is grabbed via &#39;update_from()&#39;.</span>
+        <span class="sd">&quot;&quot;&quot;Accessor for timesync-endpoint that is grabbed via &#39;update_from()&#39;.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            bosdyn.client.robot_command.NoTimeSyncError: Could not find the timesync endpoint for</span>
@@ -719,7 +715,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span>
 
 <div class="viewcode-block" id="WorldObjectClient.list_world_objects"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.list_world_objects">[docs]</a>    <span class="k">def</span> <span class="nf">list_world_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_start_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a list of World Objects.</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of World Objects.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            object_type (list of bosdyn.api.WorldObjectType): Specific types to include in the</span>
@@ -745,7 +741,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="WorldObjectClient.list_world_objects_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.list_world_objects_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_world_objects_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_start_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of list_world_objects().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of list_world_objects().&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">time_start_point</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">time_start_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_time_filter</span><span class="p">(</span><span class="n">time_start_point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="p">)</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">ListWorldObjectRequest</span><span class="p">(</span><span class="n">object_type</span><span class="o">=</span><span class="n">object_type</span><span class="p">,</span>
@@ -756,7 +752,7 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="WorldObjectClient.mutate_world_objects"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.mutate_world_objects">[docs]</a>    <span class="k">def</span> <span class="nf">mutate_world_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mutation_req</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mutate (add, change, delete) world objects.</span>
+        <span class="sd">&quot;&quot;&quot;Mutate (add, change, delete) world objects.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            mutation_req (world_object_pb2.MutateWorldObjectRequest): The request including</span>
@@ -780,7 +776,7 @@
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="WorldObjectClient.mutate_world_objects_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.mutate_world_objects_async">[docs]</a>    <span class="k">def</span> <span class="nf">mutate_world_objects_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mutation_req</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of mutate_world_objects().&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of mutate_world_objects().&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">mutation_req</span><span class="o">.</span><span class="n">mutation</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;acquisition_time&quot;</span><span class="p">):</span>
             <span class="c1"># Ensure the mutation request&#39;s object&#39;s time of detection is in robot time.</span>
             <span class="n">client_timestamp</span> <span class="o">=</span> <span class="n">mutation_req</span><span class="o">.</span><span class="n">mutation</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">acquisition_time</span>
@@ -792,7 +788,7 @@
 
 
     <span class="k">def</span> <span class="nf">_update_time_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or convert fields of the proto that need timestamps in the robot&#39;s clock.</span>
+        <span class="sd">&quot;&quot;&quot;Set or convert fields of the proto that need timestamps in the robot&#39;s clock.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timestamp (float): Client time, such as from time.time().</span>
@@ -809,7 +805,7 @@
         <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_update_timestamp_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or convert fields of the proto that need timestamps in the robot&#39;s clock.</span>
+        <span class="sd">&quot;&quot;&quot;Set or convert fields of the proto that need timestamps in the robot&#39;s clock.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timestamp (google.protobuf.Timestamp): Client time.</span>
@@ -827,7 +823,7 @@
 
 <div class="viewcode-block" id="WorldObjectClient.draw_sphere"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.draw_sphere">[docs]</a>    <span class="k">def</span> <span class="nf">draw_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">x_rt_frame_name</span><span class="p">,</span> <span class="n">y_rt_frame_name</span><span class="p">,</span> <span class="n">z_rt_frame_name</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span>
                     <span class="n">radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">rgba</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">list_objects_now</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a drawable sphere world object that will be sent to the world object service</span>
+        <span class="sd">&quot;&quot;&quot;Create a drawable sphere world object that will be sent to the world object service</span>
 <span class="sd">        with a mutation request.</span>
 
 <span class="sd">        Args:</span>
@@ -881,7 +877,7 @@
 <div class="viewcode-block" id="WorldObjectClient.draw_oriented_bounding_box"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.draw_oriented_bounding_box">[docs]</a>    <span class="k">def</span> <span class="nf">draw_oriented_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">drawable_box_frame_name</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span>
                                    <span class="n">frame_name_tform_drawable_box</span><span class="p">,</span> <span class="n">size_ewrt_box_vec3</span><span class="p">,</span>
                                    <span class="n">rgba</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">wireframe</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">list_objects_now</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a drawable 3D box world object that will be sent to the world object service</span>
+        <span class="sd">&quot;&quot;&quot;Create a drawable 3D box world object that will be sent to the world object service</span>
 <span class="sd">        with a mutation request.</span>
 
 <span class="sd">        Args:</span>
@@ -955,7 +951,7 @@
 
 
 <div class="viewcode-block" id="make_add_world_object_req"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.make_add_world_object_req">[docs]</a><span class="k">def</span> <span class="nf">make_add_world_object_req</span><span class="p">(</span><span class="n">world_obj</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add a world object to the scene.</span>
+    <span class="sd">&quot;&quot;&quot;Add a world object to the scene.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        world_obj (WorldObject): The world object to be added into the robot&#39;s perception scene.</span>
@@ -970,7 +966,7 @@
 
 
 <div class="viewcode-block" id="make_delete_world_object_req"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.make_delete_world_object_req">[docs]</a><span class="k">def</span> <span class="nf">make_delete_world_object_req</span><span class="p">(</span><span class="n">world_obj</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Delete a world object from the scene.</span>
+    <span class="sd">&quot;&quot;&quot;Delete a world object from the scene.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        world_obj (WorldObject): The world object to be deleted in the robot&#39;s perception scene. The</span>
@@ -987,7 +983,7 @@
 
 
 <div class="viewcode-block" id="make_change_world_object_req"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.make_change_world_object_req">[docs]</a><span class="k">def</span> <span class="nf">make_change_world_object_req</span><span class="p">(</span><span class="n">world_obj</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Change/update an existing world object in the scene.</span>
+    <span class="sd">&quot;&quot;&quot;Change/update an existing world object in the scene.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        world_obj (WorldObject): The world object to be changed/updated in the robot&#39;s perception scene.</span>
@@ -1004,7 +1000,7 @@
 
 
 <div class="viewcode-block" id="send_add_mutation_requests"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.send_add_mutation_requests">[docs]</a><span class="k">def</span> <span class="nf">send_add_mutation_requests</span><span class="p">(</span><span class="n">world_object_client</span><span class="p">,</span> <span class="n">world_object_array</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create and send an &quot;add&quot; mutation request for each world object in an array.  Return a matching</span>
 <span class="sd">    array of the object id&#39;s that are assigned when the object is created, so that each object we add</span>
 <span class="sd">    can be identified and removed individually (if desired) later.</span>
@@ -1025,7 +1021,7 @@
 
 
 <div class="viewcode-block" id="send_delete_mutation_requests"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.send_delete_mutation_requests">[docs]</a><span class="k">def</span> <span class="nf">send_delete_mutation_requests</span><span class="p">(</span><span class="n">world_object_client</span><span class="p">,</span> <span class="n">delete_object_id_array</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create and send a &quot;delete&quot; mutation request for each world object successfully identified from a</span>
 <span class="sd">    given list of object id&#39;s.</span>
 <span class="sd">        </span>

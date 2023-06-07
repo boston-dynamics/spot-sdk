@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -685,12 +681,12 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="graphnav-service">
-<h1>GraphNav Service<a class="headerlink" href="#graphnav-service" title="Permalink to this heading">¶</a></h1>
+<h1>GraphNav Service<a class="headerlink" href="#graphnav-service" title="Permalink to this headline">¶</a></h1>
 <p>The GraphNav service is a place-based localization and locomotion service. You access the GraphNavService on the robot by making RPC calls to localize the robot, navigate a route, or download snapshot data.</p>
 <p>Maps are recorded using the GraphNavRecording service or by operating the robot using the tablet controller and using the Autowalk feature to record a map.</p>
 <p>Maps contain waypoints and edges. Together, these are known as graphs. The recorded map is used by the robot to follow a sequence of waypoints and edges. During playback, the robot compares its real-time sensor data with sensor data stored during the recording process. This helps the robot determine its location or pose during playback so it can make adjustments.</p>
 <section id="navigation">
-<h2>Navigation<a class="headerlink" href="#navigation" title="Permalink to this heading">¶</a></h2>
+<h2>Navigation<a class="headerlink" href="#navigation" title="Permalink to this headline">¶</a></h2>
 <p>The GraphNav service is used to navigate between waypoints that are connected by edges in a recorded map. In general, the service tries to stay as close as possible to the recorded routes. The robot has the ability to adapt its route if obstacles are encountered along the way, unless the deviation takes the robot too far away from the recorded route, in which case the robot declares itself stuck.</p>
 <p>This place-based navigation scheme allows the robot to traverse building scale maps. Practical limits are dictated by site conditions. Successful map navigation relies on the ability to avoid drastic changes in the environment between recording and replay operations.</p>
 <p>Implementing the GraphNav service APIs requires four phases:</p>
@@ -702,7 +698,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ol>
 </section>
 <section id="graphnavservice-rpcs">
-<h2>GraphNavService RPCs<a class="headerlink" href="#graphnavservice-rpcs" title="Permalink to this heading">¶</a></h2>
+<h2>GraphNavService RPCs<a class="headerlink" href="#graphnavservice-rpcs" title="Permalink to this headline">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -762,7 +758,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tbody>
 </table></section>
 <section id="graphnavrecordingservice-rpcs">
-<h2>GraphNavRecordingService RPCs<a class="headerlink" href="#graphnavrecordingservice-rpcs" title="Permalink to this heading">¶</a></h2>
+<h2>GraphNavRecordingService RPCs<a class="headerlink" href="#graphnavrecordingservice-rpcs" title="Permalink to this headline">¶</a></h2>
 <p>Map recording is provided by the GraphNavRecordingService RPC.</p>
 <table border="1" class="docutils">
 <thead>

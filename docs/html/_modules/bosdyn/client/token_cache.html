@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -692,19 +688,19 @@
 
 
 <div class="viewcode-block" id="TokenCacheError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html#bosdyn.client.token_cache.TokenCacheError">[docs]</a><span class="k">class</span> <span class="nc">TokenCacheError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors to handle non-response non-grpc errors.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;General class of errors to handle non-response non-grpc errors.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ClearFailedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html#bosdyn.client.token_cache.ClearFailedError">[docs]</a><span class="k">class</span> <span class="nc">ClearFailedError</span><span class="p">(</span><span class="n">TokenCacheError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Failed to delete the token from storage.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Failed to delete the token from storage.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NotInCacheError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html#bosdyn.client.token_cache.NotInCacheError">[docs]</a><span class="k">class</span> <span class="nc">NotInCacheError</span><span class="p">(</span><span class="n">TokenCacheError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Failed to read the token from cache.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Failed to read the token from cache.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="WriteFailedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html#bosdyn.client.token_cache.WriteFailedError">[docs]</a><span class="k">class</span> <span class="nc">WriteFailedError</span><span class="p">(</span><span class="n">TokenCacheError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Failed to write the token to storage.&quot;&quot;&quot;</span></div>
+    <span class="sd">&quot;&quot;&quot;Failed to write the token to storage.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="atomic_file_write"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html#bosdyn.client.token_cache.atomic_file_write">[docs]</a><span class="k">def</span> <span class="nf">atomic_file_write</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="mo">0o600</span><span class="p">):</span>
@@ -737,7 +733,7 @@
 
 
 <div class="viewcode-block" id="TokenCache"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html#bosdyn.client.token_cache.TokenCache">[docs]</a><span class="k">class</span> <span class="nc">TokenCache</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;No-op default cache that serves as an interface.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;No-op default cache that serves as an interface.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
@@ -752,12 +748,12 @@
         <span class="k">pass</span></div>
 
 <div class="viewcode-block" id="TokenCache.match"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html#bosdyn.client.token_cache.TokenCache.match">[docs]</a>    <span class="k">def</span> <span class="nf">match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a set of valid keys that contains the name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns a set of valid keys that contains the name.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="TokenCacheFilesystem"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html#bosdyn.client.token_cache.TokenCacheFilesystem">[docs]</a><span class="k">class</span> <span class="nc">TokenCacheFilesystem</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Handles transfer from in memory tokens to arbitrary storage e.g. filesystem.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Handles transfer from in memory tokens to arbitrary storage e.g. filesystem.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cache_directory</span><span class="o">=</span><span class="s1">&#39;~/.bosdyn/user_tokens&#39;</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">cache_directory</span><span class="p">))</span>
@@ -785,7 +781,7 @@
             <span class="k">raise</span> <span class="n">WriteFailedError</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TokenCacheFilesystem.match"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html#bosdyn.client.token_cache.TokenCacheFilesystem.match">[docs]</a>    <span class="k">def</span> <span class="nf">match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a set of valid keys that contains the name.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Returns a set of valid keys that contains the name.&quot;&quot;&quot;</span>
         <span class="n">matching_tokens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">directory</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>

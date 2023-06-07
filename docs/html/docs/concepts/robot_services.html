@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -683,7 +679,7 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="robot-services">
-<h1>Robot Services<a class="headerlink" href="#robot-services" title="Permalink to this heading">¶</a></h1>
+<h1>Robot Services<a class="headerlink" href="#robot-services" title="Permalink to this headline">¶</a></h1>
 <p>Spot tracks knowledge about multiple sources of state, including the robot’s current physical state, the images captured by its cameras, and the terrain and objects around it.  This state information can be used to make decisions about how to control the robot or how to command the robot from a higher level application. The different state services available on Spot are:</p>
 <ul class="simple">
 <li><p>Robot State Service</p></li>
@@ -698,7 +694,7 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Robot Command Service</p></li>
 </ul>
 <section id="estop">
-<h2>estop<a class="headerlink" href="#estop" title="Permalink to this heading">¶</a></h2>
+<h2>estop<a class="headerlink" href="#estop" title="Permalink to this headline">¶</a></h2>
 <p>The E-Stop service provides a secondary keep-alive mechanism by acting as a software stop.</p>
 <p>First the E-Stop configuration is set; this specifies the expected endpoints (at least one) and their timeout.  Before enabling motor power all endpoints must be registered and checking in.</p>
 <p>During operation all endpoints will be periodically checking in.  If an endpoint fails to check in (or does check in but denies the authority to operate) then the robot will turn off motor power.</p>
@@ -710,19 +706,19 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The <a class="reference internal" href="estop_service.html"><span class="doc">E-Stop documentation</span></a> provides a more in-depth description of E-stop configurations, registration and check-ins.</p>
 </section>
 <section id="power">
-<h2>power<a class="headerlink" href="#power" title="Permalink to this heading">¶</a></h2>
+<h2>power<a class="headerlink" href="#power" title="Permalink to this headline">¶</a></h2>
 <p>The power service allows a client to power the motors on and off.</p>
 <p>To turn on, the client should send a <code class="docutils literal notranslate"><span class="pre">PowerCommandRequest</span></code> RPC with <code class="docutils literal notranslate"><span class="pre">REQUEST_ON</span></code>.  This may take a few seconds.</p>
 <p>To turn off, clients are encouraged to use the <code class="docutils literal notranslate"><span class="pre">SafePowerOffCommand</span></code> RPC from the robot-command service in nominal operation.  This RPC part of the robot-command service because it coordinates gently sitting the robot down prior to turning off motor power.  To turn off quickly, the client should send a <code class="docutils literal notranslate"><span class="pre">PowerCommandRequest</span></code> RPC with <code class="docutils literal notranslate"><span class="pre">REQUEST_OFF</span></code>.</p>
 </section>
 <section id="robot-command">
-<h2>robot-command<a class="headerlink" href="#robot-command" title="Permalink to this heading">¶</a></h2>
+<h2>robot-command<a class="headerlink" href="#robot-command" title="Permalink to this headline">¶</a></h2>
 <p>The robot command service allows a client to move the robot.</p>
 <p>There are many commands exposed to clients to make the robot self-right, sit, stand, move to a position, move with a velocity, stop and power off.  Most commands have associated parameters, for example the stand command contains an optional offset allowing the client to orient the robot’s body.</p>
 <p>Clients are encouraged to send short-lived commands and continuously resend them so that the robot stops in the even of a client-side issue.  For longer commands, client should cache the id returned by the CommandResponse and poll the associated CommandFeedbackRequest to monitor the command.</p>
 </section>
 <section id="robot-state">
-<h2>robot-state<a class="headerlink" href="#robot-state" title="Permalink to this heading">¶</a></h2>
+<h2>robot-state<a class="headerlink" href="#robot-state" title="Permalink to this headline">¶</a></h2>
 <p>The robot state service tracks all information about the measured and computed states of the robot at the current time.</p>
 <p>The hardware configuration of the robot is described through a urdf and skeleton model, which represents each joint and link of the robot, and can be accessed using the <code class="docutils literal notranslate"><span class="pre">GetRobotHardwareConfiguration</span></code> RPC. This configuration representation is fully expressive of the robot’s joint states relative to each other and can be used to visualize the robot model. A urdf model of the base robot and its geometry can also be found <a class="reference external" href="../../files/spot_base_urdf.zip">here</a>.</p>
 <p>The full robot state includes information about the batteries and power status, the status of network communication, known E-Stop states, the foot states, system and behavior faults, and the kinematic state of the robot. The <code class="docutils literal notranslate"><span class="pre">GetRobotState</span></code> RPC can provide this state information for the current timestamp.</p>
@@ -738,7 +734,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The robot state service also tracks different parameters for the robot and this information can be accessed with the <code class="docutils literal notranslate"><span class="pre">GetRobotMetrics</span></code> RPC. These metrics can be useful for monitoring the system status and health of the robot.</p>
 </section>
 <section id="image">
-<h2>image<a class="headerlink" href="#image" title="Permalink to this heading">¶</a></h2>
+<h2>image<a class="headerlink" href="#image" title="Permalink to this headline">¶</a></h2>
 <p>Spot can have many different image sources, including the cameras on the base platform or any other payloads which implement the image service proto definitions, like Spot CAM. The image service provides a way to list all these different sources using the <code class="docutils literal notranslate"><span class="pre">ListImageSources</span></code> RPC and then query the sources for their images with the <code class="docutils literal notranslate"><span class="pre">GetImage</span></code> RPC.</p>
 <p>Images can be regular pixel-based visual images where the data value corresponds to the greyscale (or color) intensity. They can also be depth images where the data value corresponds to the depth measured from the camera sensor. To align depth data with visual image data, use the <code class="docutils literal notranslate"><span class="pre">depth_in_visual_frame</span></code> sources (<a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html"><span class="doc">example code</span></a>), which reprojects the depth onto the same projection as the visual image.</p>
 <p>Since an image can be a lot of data, there are also different types of encodings and compression schemes that the image can be transmitted as to reduce the size of the data sent over the wire. The image service offers a <code class="docutils literal notranslate"><span class="pre">Format</span></code> field to describe the encoding of the image:</p>
@@ -749,7 +745,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="local-grid">
-<h2>local-grid<a class="headerlink" href="#local-grid" title="Permalink to this heading">¶</a></h2>
+<h2>local-grid<a class="headerlink" href="#local-grid" title="Permalink to this headline">¶</a></h2>
 <p>Spot uses its sensors and information about its body to develop an idea about nearby terrain and obstacles. This information is stored as a grid-based map where each cell of the grid has a parameterized dimension and relates to a specific location in the world specified in the frame tree snapshot.</p>
 <p>The grid cells contain information about the surrounding environment and terrain local to Spot. The local grid service does not store or compose the grids over time, but rather creates a grid for each instance of time based on Spot’s current location and surroundings.</p>
 <p>The different types of grids available in the local grid service are “terrain,” “terrain_valid,” “intensity,” “no_step,” and “obstacle_distance” grids. Similar to the image service, these grid sources can be listed using the <code class="docutils literal notranslate"><span class="pre">GetLocalGridTypes</span></code> RPC, and then the grid data can be requested with the <code class="docutils literal notranslate"><span class="pre">GetLocalGrids</span></code> RPC.</p>
@@ -760,7 +756,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>In addition to detecting obstacles, Spot can use information about its body and the nearby terrain and obstacles to determine whether or not it is capable of stepping in a certain location. The “no_step” grid stores this information within each grid cell as a boolean value.</p>
 </section>
 <section id="world-object">
-<h2>world-object<a class="headerlink" href="#world-object" title="Permalink to this heading">¶</a></h2>
+<h2>world-object<a class="headerlink" href="#world-object" title="Permalink to this headline">¶</a></h2>
 <p>The world object service provides a way to track and store objects detected in the world around Spot. A world object is considered a higher-level item in the scene that has some amount of semantic information associated with it. For example, a world object could be an AprilTag fiducial, a door handle, the stairs, or a virtual object drawn for debugging purposes.</p>
 <p>While these objects all have different properties associated with them, they also share common properties of a human-readable name, an id assigned by the world object service, an acquisition timestamp representing the time at which the object was most recently detected, and a transform snapshot (described in the <a class="reference internal" href="geometry_and_frames.html"><span class="doc">Geometry and Frames</span></a> section) with transform information for the given acquisition timestamp. The service assigns a guaranteed unique id to the object when it is first detected. The service will re-associate this id with the object across detections.</p>
 <p>Currently, the most common use case for the world object service is to expose Spot’s internal detection of AprilTag fiducials from the robot’s base cameras. Fiducials are commonly used as ground truth reference objects, notably in the GraphNav system to initialize the robot’s localization. Any fiducials detected within the robot’s base cameras will be returned as world objects through the service. The <code class="docutils literal notranslate"><span class="pre">ListWorldObjects</span></code> RPC will return all world objects detected by Spot within the last 15 seconds, and can be filtered to return only certain types of objects or objects after a specific timestamp.</p>

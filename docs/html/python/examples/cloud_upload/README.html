@@ -4,7 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -14,8 +14,6 @@
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -33,12 +31,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -687,7 +683,7 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="cloud-upload-example">
-<h1>Cloud Upload Example<a class="headerlink" href="#cloud-upload-example" title="Permalink to this heading">¶</a></h1>
+<h1>Cloud Upload Example<a class="headerlink" href="#cloud-upload-example" title="Permalink to this headline">¶</a></h1>
 <p>The cloud_upload.py script shows how to upload a file to a Google Cloud Platform (GCP) bucket or an Amazon Web Services (AWS) S3 bucket.</p>
 <p>The two functions below are defined in the cloud_upload.py script:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">upload_to_gcp</span><span class="p">(</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">source_file</span><span class="p">,</span> <span class="n">destination_file</span><span class="p">):</span>
@@ -702,7 +698,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>Credentials are stored in a file. For GCP, the user needs to set an environment variable; for AWS, the credentials are hard coded. See below for details.</p>
 <section id="install-packages">
-<h2>Install Packages<a class="headerlink" href="#install-packages" title="Permalink to this heading">¶</a></h2>
+<h2>Install Packages<a class="headerlink" href="#install-packages" title="Permalink to this headline">¶</a></h2>
 <p>Two python packages will need to be installed:</p>
 <ul class="simple">
 <li><p>google-cloud-storage</p></li>
@@ -713,10 +709,10 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 </section>
 <section id="credentials">
-<h2>Credentials<a class="headerlink" href="#credentials" title="Permalink to this heading">¶</a></h2>
+<h2>Credentials<a class="headerlink" href="#credentials" title="Permalink to this headline">¶</a></h2>
 <p>Each cloud service requires credentials to be properly setup.</p>
 <section id="gcp">
-<h3>GCP<a class="headerlink" href="#gcp" title="Permalink to this heading">¶</a></h3>
+<h3>GCP<a class="headerlink" href="#gcp" title="Permalink to this headline">¶</a></h3>
 <p>For the GCP, the user needs to point to the service account .json file with an environmental variable. Here is an example of how to do that with linux:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">export</span> <span class="n">GOOGLE_APPLICATION_CREDENTIALS</span><span class="o">=&lt;</span><span class="n">path</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">file</span><span class="o">&gt;/&lt;</span><span class="n">filename</span><span class="o">&gt;.</span><span class="n">json</span>
 </pre></div>
@@ -724,12 +720,12 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Add the above line to your .bashrc file to make permanent. More information (including a Windows example) can be found <a class="reference external" href="https://cloud.google.com/docs/authentication/production#linux-or-macos">here</a>.</p>
 </section>
 <section id="aws">
-<h3>AWS<a class="headerlink" href="#aws" title="Permalink to this heading">¶</a></h3>
+<h3>AWS<a class="headerlink" href="#aws" title="Permalink to this headline">¶</a></h3>
 <p>For AWS, the user must have the default user credentials file stored in ~/.aws/credentials. More information can be found <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html">here</a>.</p>
 </section>
 </section>
 <section id="running-the-example">
-<h2>Running the Example<a class="headerlink" href="#running-the-example" title="Permalink to this heading">¶</a></h2>
+<h2>Running the Example<a class="headerlink" href="#running-the-example" title="Permalink to this headline">¶</a></h2>
 <p>If the cloud credentials have been properly setup, the <code class="docutils literal notranslate"><span class="pre">main()</span></code> function in cloud_upload.py is currently configured to upload <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> to an AWS S3 bucket (simply change <code class="docutils literal notranslate"><span class="pre">upload_to_aws</span></code> to <code class="docutils literal notranslate"><span class="pre">upload_to_gcp</span></code> to use a GCP bucket instead). A snippet of cloud_upload.py is included below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aws_bucket_name</span> <span class="o">=</span> <span class="s1">&#39;aws-imagedemo&#39;</span> <span class="c1"># s3 bucket name</span>
 <span class="n">source_file</span> <span class="o">=</span> <span class="s1">&#39;requirements.txt&#39;</span> <span class="c1"># sample file to upload</span>
@@ -752,7 +748,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 </section>
 <section id="autowalk-example">
-<h2>Autowalk Example<a class="headerlink" href="#autowalk-example" title="Permalink to this heading">¶</a></h2>
+<h2>Autowalk Example<a class="headerlink" href="#autowalk-example" title="Permalink to this headline">¶</a></h2>
 <p>An example of how to utilize these functions in a remote_mission_service application can be found in the <a class="reference internal" href="../ricoh_theta/README.html"><span class="doc">ricoh_theta</span></a> example.</p>
 </section>
 </section>

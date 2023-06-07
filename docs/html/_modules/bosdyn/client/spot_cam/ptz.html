@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
 
   
   
@@ -32,12 +30,10 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/language_data.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
 
@@ -692,7 +688,7 @@
 
 
 <div class="viewcode-block" id="PtzClient"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient">[docs]</a><span class="k">class</span> <span class="nc">PtzClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A client calling Spot CAM Ptz service.</span>
+    <span class="sd">&quot;&quot;&quot;A client calling Spot CAM Ptz service.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;spot-cam-ptz&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.spot_cam.PtzService&#39;</span>
@@ -701,45 +697,45 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">PtzClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">service_pb2_grpc</span><span class="o">.</span><span class="n">PtzServiceStub</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PtzClient.list_ptz"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.list_ptz">[docs]</a>    <span class="k">def</span> <span class="nf">list_ptz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all the available ptzs&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;List all the available ptzs&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">ListPtzRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListPtz</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_ptz_from_response</span><span class="p">,</span>
                          <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.list_ptz_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.list_ptz_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_ptz_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of list_ptz()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of list_ptz()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">ListPtzRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListPtz</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_list_ptz_from_response</span><span class="p">,</span>
                                <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.get_ptz_position"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Position of the specified ptz&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Position of the specified ptz&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">GetPtzPositionRequest</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPtzPosition</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ptz_position_from_response</span><span class="p">,</span>
                          <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.get_ptz_position_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_position_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_position_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_ptz_position()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_ptz_position()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">GetPtzPositionRequest</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPtzPosition</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_get_ptz_position_from_response</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span>
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.get_ptz_velocity"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Velocity of the specified ptz&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Velocity of the specified ptz&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">GetPtzVelocityRequest</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPtzVelocity</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ptz_velocity_from_response</span><span class="p">,</span>
                          <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.get_ptz_velocity_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_velocity_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_velocity_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_ptz_velocity()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_ptz_velocity()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">GetPtzVelocityRequest</span><span class="p">(</span><span class="n">ptz</span><span class="o">=</span><span class="n">ptz_desc</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPtzVelocity</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_get_ptz_velocity_from_response</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span>
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.set_ptz_position"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_position">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="p">,</span> <span class="n">tilt</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set position of the specified ptz in PTZ-space&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set position of the specified ptz in PTZ-space&quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">pan</span><span class="p">)</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">tilt</span><span class="p">)</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
@@ -749,7 +745,7 @@
                          <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.set_ptz_position_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_position_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_position_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="p">,</span> <span class="n">tilt</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_ptz_position()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_ptz_position()&quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">pan</span><span class="p">)</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">tilt</span><span class="p">)</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
@@ -760,7 +756,7 @@
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.set_ptz_velocity"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_velocity">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="p">,</span> <span class="n">tilt</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set velocity of the specified ptz in PTZ-space&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Set velocity of the specified ptz in PTZ-space&quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">pan</span><span class="p">)</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">tilt</span><span class="p">)</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
@@ -770,7 +766,7 @@
                          <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.set_ptz_velocity_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_velocity_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_velocity_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ptz_desc</span><span class="p">,</span> <span class="n">pan</span><span class="p">,</span> <span class="n">tilt</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_ptz_velocity()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_ptz_velocity()&quot;&quot;&quot;</span>
         <span class="n">p</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">pan</span><span class="p">)</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">tilt</span><span class="p">)</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">FloatValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">zoom</span><span class="p">)</span>
@@ -781,13 +777,13 @@
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.initialize_lens"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.initialize_lens">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_lens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the PTZ autofocus or resets it if already initialized&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Initializes the PTZ autofocus or resets it if already initialized&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">InitializeLensRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">InitializeLens</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_lens_from_response</span><span class="p">,</span>
                          <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.initialize_lens_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.initialize_lens_async">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_lens_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of initialize_lens()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of initialize_lens()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">InitializeLensRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">InitializeLens</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_lens_from_response</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span>
@@ -796,7 +792,7 @@
     <span class="c1"># Manual Focus RPCs</span>
 
 <div class="viewcode-block" id="PtzClient.get_ptz_focus_state"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_focus_state">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_focus_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve focus of the mechanical ptz</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve focus of the mechanical ptz</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            focus_mode (PtzFocusMode): Enum indicating whether to autofocus or manually focus</span>
@@ -814,14 +810,14 @@
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.get_ptz_focus_state_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.get_ptz_focus_state_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_ptz_focus_state_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_ptz_focus_state()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of get_ptz_focus_state()&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">ptz_pb2</span><span class="o">.</span><span class="n">GetPtzFocusStateRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetPtzFocusState</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="bp">self</span><span class="o">.</span><span class="n">_get_ptz_focus_state_from_response</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span>
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.set_ptz_focus_state"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_focus_state">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_focus_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">focus_mode</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">focus_position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set focus of the mechanical ptz</span>
+        <span class="sd">&quot;&quot;&quot;Set focus of the mechanical ptz</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            focus_mode (PtzFocusMode): Enum indicating whether to autofocus or manually focus</span>
@@ -841,7 +837,7 @@
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="PtzClient.set_ptz_focus_state_async"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.PtzClient.set_ptz_focus_state_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_ptz_focus_state_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">focus_mode</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">focus_position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_ptz_focus_state()&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Async version of set_ptz_focus_state()&quot;&quot;&quot;</span>
 
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_set_ptz_focus_state_request</span><span class="p">(</span><span class="n">focus_mode</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">focus_position</span><span class="p">)</span>
 
@@ -894,7 +890,7 @@
 
 
 <div class="viewcode-block" id="shift_pan_angle"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html#bosdyn.client.spot_cam.ptz.shift_pan_angle">[docs]</a><span class="k">def</span> <span class="nf">shift_pan_angle</span><span class="p">(</span><span class="n">pan</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shift the pan angle (degrees) so that it is in the [0,360] range.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Shift the pan angle (degrees) so that it is in the [0,360] range.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">recenter_value_mod</span><span class="p">(</span><span class="n">pan</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">360</span><span class="p">)</span></div>
 </pre></div>
 
