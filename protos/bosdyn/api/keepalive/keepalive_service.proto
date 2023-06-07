@@ -1,0 +1,30 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.keepalive;
+
+option java_outer_classname = "KeepaliveServiceProto";
+
+import "bosdyn/api/keepalive/keepalive.proto";
+
+// The Keepalive service allows users to specify what the system should do when one or more clients
+// stop communicating with the robot. The actions, and when those actions happen, are specified in a
+// Policy. Clients will periodically check in with the Keepalive service to prevent the actions from
+// happening.
+//
+// This service is in BETA and may undergo changes in future releases.
+service KeepaliveService {
+    // Add and/or remove policies of the session.
+    // Adding or removing only happens if all parts of the request are valid. For example, if the
+    // policy to be added is valid, but policies to be removed are not valid, no policy is added.
+    rpc ModifyPolicy(ModifyPolicyRequest) returns (ModifyPolicyResponse) {}
+    // Refresh the timer on a specific policy.
+    rpc CheckIn(CheckInRequest) returns (CheckInResponse) {}
+    // Get the status of the current session.
+    rpc GetStatus(GetStatusRequest) returns (GetStatusResponse) {}
+}

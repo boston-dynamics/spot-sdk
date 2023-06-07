@@ -1,0 +1,14 @@
+version: "3.5"
+services:
+  spot_detect_and_follow:
+    image: spot_detect_and_follow
+    restart: unless-stopped
+    volumes:
+      # Mount payload credentials.
+      - /opt/payload_credentials/payload_guid_and_secret:/opt/payload_credentials/payload_guid_and_secret
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]

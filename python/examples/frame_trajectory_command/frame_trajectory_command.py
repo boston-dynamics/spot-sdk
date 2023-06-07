@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -49,8 +49,8 @@ def main():
     bosdyn.client.util.authenticate(robot)
 
     # Check that an estop is connected with the robot so that the robot commands can be executed.
-    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
-                                    "such as the estop SDK example, to configure E-Stop."
+    assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client, ' \
+                                    'such as the estop SDK example, to configure E-Stop.'
 
     # Create the lease client.
     lease_client = robot.ensure_client(LeaseClient.default_service_name)
@@ -97,18 +97,18 @@ def relative_move(dx, dy, dyaw, frame_name, robot_command_client, robot_state_cl
         feedback = robot_command_client.robot_command_feedback(cmd_id)
         mobility_feedback = feedback.feedback.synchronized_feedback.mobility_command_feedback
         if mobility_feedback.status != RobotCommandFeedbackStatus.STATUS_PROCESSING:
-            print("Failed to reach the goal")
+            print('Failed to reach the goal')
             return False
         traj_feedback = mobility_feedback.se2_trajectory_feedback
         if (traj_feedback.status == traj_feedback.STATUS_AT_GOAL and
                 traj_feedback.body_movement_status == traj_feedback.BODY_STATUS_SETTLED):
-            print("Arrived at the goal.")
+            print('Arrived at the goal.')
             return True
         time.sleep(1)
 
     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main():
         sys.exit(1)

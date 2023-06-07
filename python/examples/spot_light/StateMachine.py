@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -65,7 +65,7 @@ class StateMachine(object):
         """
         Initial state
         """
-        print('See Spot {}.'.format(self._name))
+        print(f'See Spot {self._name}.')
         self._state_idx = self._state_idx + 1
 
     def _state_look_for_light(self):
@@ -86,7 +86,7 @@ class StateMachine(object):
             if light_found and self._light_count > 50:
                 self._state_idx = self._state_idx + 1
                 self._light_count = 0
-                cv2.imwrite('test_{}.png'.format(self._name.lower()), img)
+                cv2.imwrite(f'test_{self._name.lower()}.png', img)
 
             self._light_count = self._light_count + 1
             cv2.imshow('', roi_with_keypoints)
@@ -188,11 +188,11 @@ class StateMachineSit(StateMachine):
         """
         Command the robot to sit
         """
-        print('Spot is going to {}.'.format(self._name.lower()))
+        print(f'Spot is going to {self._name.lower()}.')
         self._robot.sit_down()
         self._state_idx = self._state_idx + 1
 
-        print("\n Shine a light in Spot's front left camera for Spot to stand.\n")
+        print('\n Shine a light in Spot\'s front left camera for Spot to stand.\n')
 
 
 #===================================================================================================
@@ -218,12 +218,12 @@ class StateMachineStand(StateMachine):
         """
         Command the robot to stand
         """
-        print('Spot is going to {}.'.format(self._name.lower()))
+        print(f'Spot is going to {self._name.lower()}.')
         self._robot.stand_up()
         self._state_idx = self._state_idx + 1
 
         print(
-            "\n Shine a light in Spot's front left camera, and Spot will tilt to follow the light.\n"
+            '\n Shine a light in Spot\'s front left camera, and Spot will tilt to follow the light.\n'
         )
 
 
@@ -320,7 +320,7 @@ class StateMachineFollow(StateMachine):
             scale = 0.5
             color = (0, 255, 0)
             lineType = 1
-            disp_text = 'Yaw: {}     Pitch: {}'.format(adj[0], pitch_cmd)
+            disp_text = f'Yaw: {adj[0]}     Pitch: {pitch_cmd}'
             cv2.putText(img_with_keypoints, disp_text, bottom_left, font, scale, color, lineType)
 
             cv2.imshow('', img_with_keypoints)

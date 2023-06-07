@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -7,6 +7,8 @@
 syntax = "proto3";
 
 package bosdyn.api.graph_nav;
+
+import "google/protobuf/timestamp.proto";
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
@@ -46,7 +48,7 @@ message SetRecordingEnvironmentRequest {
 }
 
 // The SetRecordingEnvironment response message includes the result and status of the request.
-message SetRecordingEnvironmentResponse{
+message SetRecordingEnvironmentResponse {
     // Common response header.
     ResponseHeader header = 1;
     // The results/status of the lease provided.
@@ -70,10 +72,15 @@ message StartRecordingRequest {
     // are presently visible before starting to record. This is useful for verifying
     // that the robot is where the user thinks it is in an area with known fiducials.
     repeated int32 require_fiducials = 4;
+    // If provided, this timestamp will be used in every waypoint snapshot as the
+    // "started_recording_on" timestamp. Otherwise, a new timestmap will be generated
+    // after "StartRecording" is called. This is to allow association between waypoint
+    // snapshots based on recording session time.
+    google.protobuf.Timestamp session_start_time = 5;
 }
 
-// The StartRecording response messge returns the first created waypoint, which is made at the location
-// the robot was standing when the request was made, in addition to any status information.
+// The StartRecording response messge returns the first created waypoint, which is made at the
+// location the robot was standing when the request was made, in addition to any status information.
 message StartRecordingResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -130,6 +137,14 @@ message StartRecordingResponse {
 
     // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
     RobotImpairedState impaired_state = 8;
+
+    // This is the robot local timestamp that graph_nav began recording on. If the Start Recording
+    // Request's session start time is provided, this should be the same as the request's session
+    // start time.
+    google.protobuf.Timestamp session_start_time = 9;
+
+    // General statistics of the map loaded in GraphNav.
+    MapStats map_stats = 10;
 }
 
 // The StopRecording request message tells the robot to no longer continue adding waypoints and
@@ -167,6 +182,12 @@ message StopRecordingResponse {
     string error_waypoint_localized_id = 3;
     // The results/status of the lease provided.
     LeaseUseResult lease_use_result = 4;
+    // This is the robot local timestamp that graph_nav began recording on. If the
+    // StartRecordingRequest's session start time is provided, this should be the same as the
+    // request's session start time.
+    google.protobuf.Timestamp session_start_time = 5;
+    // General statistics of the map loaded in GraphNav.
+    MapStats map_stats = 6;
 }
 
 
@@ -221,7 +242,6 @@ message CreateWaypointResponse {
         STATUS_REMOTE_CLOUD_FAILURE_NO_DATA = 7;
         // All fiducials are visible but their pose could not be determined accurately.
         STATUS_FIDUCIAL_POSE_NOT_OK = 8;
-
     }
     // Return status for the request.
     Status status = 5;
@@ -241,6 +261,9 @@ message CreateWaypointResponse {
     // is requested after the graph gets too large, it will fail, and license
     // status will be filled out.
     LicenseInfo.Status license_status = 7;
+
+    // General statistics of the map loaded in GraphNav.
+    MapStats map_stats = 9;
 }
 
 // The CreateEdge request message specifies an edge to create between two existing waypoints.
@@ -282,6 +305,8 @@ message CreateEdgeResponse {
     Edge error_existing_edge = 3;
     // The results/status of the lease provided.
     LeaseUseResult lease_use_result = 4;
+    // General statistics of the map loaded in GraphNav.
+    MapStats map_stats = 5;
 }
 
 // The GetRecordStatus request message asks for the current state of the recording service.
@@ -290,8 +315,8 @@ message GetRecordStatusRequest {
     RequestHeader header = 1;
 }
 
-// The GetRecordStatus response message returns whether the service is currently recording and what the
-// persistent recording environment is at the time the request was recieved.
+// The GetRecordStatus response message returns whether the service is currently recording and what
+// the persistent recording environment is at the time the request was recieved.
 message GetRecordStatusResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -319,4 +344,10 @@ message GetRecordStatusResponse {
     Status status = 5;
     // If the status is ROBOT_IMPAIRED, this is why the robot is impaired.
     RobotImpairedState impaired_state = 6;
+    // This is the robot local timestamp that graph_nav began recording on.
+    // If the Start Recording Request's session start time is provided, this should
+    // be the same as the request's session start time.
+    google.protobuf.Timestamp session_start_time = 7;
+    // General statistics of the map loaded in GraphNav.
+    MapStats map_stats = 8;
 }

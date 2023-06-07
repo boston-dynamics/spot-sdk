@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,7 +8,6 @@
 
 This includes building wheels, and installing them in editable mode.
 """
-from __future__ import print_function
 import abc
 import argparse
 from functools import partial
@@ -20,8 +19,6 @@ import shutil
 import subprocess
 import stat
 import sys
-
-import six
 
 LOGGER = logging.getLogger()
 
@@ -53,15 +50,15 @@ IS_GIT_REPO = os.path.exists(os.path.join(ROOT_DIR, '.git'))
 # ---- Utility functions
 
 
-def is_pip_dumb():
+def does_pip_require_uninstall():
     """Returns True if packages should be first uninstalled before they are installed."""
     # We know 19 works, and 9 doesn't, but have no data on versions in between.
-    everything_is_dumb_before = 19
+    pip_requires_uninstalls_before = 19
     try:
         import pip
-        return int(pip.__version__.split('.')[0]) < everything_is_dumb_before
+        return int(pip.__version__.split('.')[0]) < pip_requires_uninstalls_before
     except Exception:
-        return True  # Default to 'dumb'
+        return True  # Default to requiring uninstalls
 
 
 def _is_venv():
@@ -107,7 +104,7 @@ def install_package(package_name, package_dir, yes=False, index_url=None, find_l
     Raises:
        subprocess.CalledProcessError    if pip returns non-zero exit status
     """
-    if is_pip_dumb():
+    if does_pip_require_uninstall():
         uninstall_if_installed(package_name, yes=yes)
 
     args = ["install", package_name, "-f", package_dir, "--force-reinstall"]
@@ -137,7 +134,7 @@ def install_package_editable(source_dir, no_deps=False, index_url=None, find_lin
     Raises:
        subprocess.CalledProcessError    if pip returns non-zero exit status
     """
-    if is_pip_dumb():
+    if does_pip_require_uninstall():
         # Assuming directory name is package name here.
         uninstall_if_installed(os.path.basename(source_dir))
 
@@ -168,9 +165,9 @@ def install_requirements(requirements_file, index_url=None, find_links=None, qui
     Raises:
        subprocess.CalledProcessError    if pip returns non-zero exit status
     """
-    # If the version of pip is a dumb one, uninstall things first.
+    # If the version of pip requires uninstalls prior to install, uninstall things first.
     # Earlier versions of pip will install the right package, but leave the incorrect version info.
-    if is_pip_dumb():
+    if does_pip_require_uninstall():
         try:
             run_pip(["uninstall", "-r", requirements_file], quiet=quiet, verbose=verbose)
         except subprocess.CalledProcessError:
@@ -301,7 +298,7 @@ def setup_logging_from_options(options):
 
 
 # pylint: disable=too-few-public-methods
-class Command(object, six.with_metaclass(abc.ABCMeta)):
+class Command(object, metaclass=abc.ABCMeta):
     """Command-line command"""
 
     # The name of the command the user should enter on the command line to select this command.
@@ -407,10 +404,10 @@ def build_wheel(wheel, srcdir=None, dry_run=False, verbose=False, skip_git=False
     return True
 
 
-def build_proto_wheel(wheel_name="bosdyn-api", proto_dir=PROTO_DIR, latest_requirements=False, dry_run=False, verbose=False, skip_git=False):
+def build_proto_wheel(wheel_name="bosdyn-api", proto_dir=PROTO_DIR, latest_requirements=False,
+                      dry_run=False, verbose=False, skip_git=False, install_deps=False):
     """Build the API protobuf wheel."""
-
-    print('building_proto_wheel')
+    print('building proto wheel', wheel_name)
     req_file = "requirements-setup-linux-pinned.txt"
 
     pkg_name = wheel_name
@@ -424,17 +421,17 @@ def build_proto_wheel(wheel_name="bosdyn-api", proto_dir=PROTO_DIR, latest_requi
     _run_or_log("clean '{}'".format(BUILD_DIR), dry_run,
                 lambda: shutil.rmtree(BUILD_DIR, ignore_errors=True))
 
-    print("Installing build dependencies: you may need to type 'y' a few times")
+    # print("Installing build dependencies: you may need to type 'y' a few times")
     # Install the build dependencies.
-    if not _try_run(
-            'install build dependencies',
-            dry_run,
-            lambda: install_requirements(os.path.join(proto_dir, req_file), quiet=not verbose)):
+    if install_deps and not _try_run(
+        'install build dependencies',
+        dry_run,
+        lambda: install_requirements(os.path.join(proto_dir, req_file), quiet=not verbose)):
         return False
 
     # Build the wheel.
-    build_wheel(pkg_name, srcdir=proto_dir, dry_run=dry_run, verbose=verbose)
-
+    if not build_wheel(pkg_name, srcdir=proto_dir, dry_run=dry_run, verbose=verbose):
+        return False
     # Cleanup.
     _run_or_log('cleanup downloads', dry_run,
                 lambda: shutil.rmtree(os.path.join(proto_dir, ".eggs"), ignore_errors=True))
@@ -456,6 +453,10 @@ class BuildWheelsCommand(Command):
             'Install the latest supported versions of python dependencies for building bosdyn-api.')
         self.parser.add_argument('--skip-git-check', action='store_true',
                                  help="Do not check git status before building wheel")
+        self.parser.add_argument(
+            '--install-deps', action='store_true', help=
+            'Install build dependencies.  If not set, the python environment should already be set '
+            'up for building.')
         self._parser.add_argument('wheels', nargs='*', help="Names of wheels to build.")
 
     def run(self, options):
@@ -464,12 +465,12 @@ class BuildWheelsCommand(Command):
             if wheel == 'bosdyn-api':
                 ret_ = build_proto_wheel(wheel_name=wheel, latest_requirements=options.latest_build_requirements,
                                          dry_run=options.dry_run, verbose=options.verbose,
-                                         skip_git=options.skip_git_check)
+                                         skip_git=options.skip_git_check, install_deps=options.install_deps)
             elif wheel == 'bosdyn-choreography-protos':
                 ret_ = build_proto_wheel(wheel_name=wheel, proto_dir=CHOREOGRAPHY_PROTO_DIR,
                                          latest_requirements=options.latest_build_requirements,
                                          dry_run=options.dry_run, verbose=options.verbose,
-                                         skip_git=options.skip_git_check)
+                                         skip_git=options.skip_git_check, install_deps=options.install_deps)
             else:
                 ret_ = build_wheel(wheel, dry_run=options.dry_run, verbose=options.verbose,
                                    skip_git=options.skip_git_check)

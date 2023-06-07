@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -101,22 +101,21 @@ def load_graph_and_snapshots(filepath):
     :param filepath: The full file path to the directory.
     :return: a tuple containing the graph, waypoint snapshots and edge snapshots.
     """
-    print("Loading the graph from disk into local storage at {}".format(filepath))
+    print(f'Loading the graph from disk into local storage at {filepath}')
     graph = map_pb2.Graph()
     waypoint_snapshots = {}
     edge_snapshots = {}
-    with open(os.path.join(filepath, "graph"), "rb") as graph_file:
+    with open(os.path.join(filepath, 'graph'), 'rb') as graph_file:
         # Load the graph from disk.
         data = graph_file.read()
         graph.ParseFromString(data)
-        print("Loaded graph has {} waypoints and {} edges".format(len(graph.waypoints),
-                                                                  len(graph.edges)))
+        print(f'Loaded graph has {len(graph.waypoints)} waypoints and {len(graph.edges)} edges')
     for waypoint in graph.waypoints:
         if len(waypoint.snapshot_id) == 0:
             continue
         # Load the waypoint snapshots from disk.
-        with open(os.path.join(filepath, "waypoint_snapshots", waypoint.snapshot_id),
-                  "rb") as snapshot_file:
+        with open(os.path.join(filepath, 'waypoint_snapshots', waypoint.snapshot_id),
+                  'rb') as snapshot_file:
             waypoint_snapshot = map_pb2.WaypointSnapshot()
             waypoint_snapshot.ParseFromString(snapshot_file.read())
             waypoint_snapshots[waypoint_snapshot.id] = waypoint_snapshot
@@ -124,8 +123,8 @@ def load_graph_and_snapshots(filepath):
         if len(edge.snapshot_id) == 0:
             continue
         # Load the edge snapshots from disk.
-        with open(os.path.join(filepath, "edge_snapshots", edge.snapshot_id),
-                  "rb") as snapshot_file:
+        with open(os.path.join(filepath, 'edge_snapshots', edge.snapshot_id),
+                  'rb') as snapshot_file:
             edge_snapshot = map_pb2.EdgeSnapshot()
             edge_snapshot.ParseFromString(snapshot_file.read())
             edge_snapshots[edge_snapshot.id] = edge_snapshot
@@ -141,19 +140,19 @@ def save_graph_and_snapshots(filepath, graph, waypoint_snapshots, edge_snapshots
     :param waypoint_snapshots: Large data associated with waypoints.
     :param edge_snapshots: Large data associated with edges.
     """
-    print("Saving the graph to local storage at {}".format(filepath))
+    print(f'Saving the graph to local storage at {filepath}')
     os.makedirs(filepath, exist_ok=True)
-    os.makedirs(os.path.join(filepath, "waypoint_snapshots"), exist_ok=True)
-    os.makedirs(os.path.join(filepath, "edge_snapshots"), exist_ok=True)
-    with open(os.path.join(filepath, "graph"), "wb") as graph_file:
+    os.makedirs(os.path.join(filepath, 'waypoint_snapshots'), exist_ok=True)
+    os.makedirs(os.path.join(filepath, 'edge_snapshots'), exist_ok=True)
+    with open(os.path.join(filepath, 'graph'), 'wb') as graph_file:
         graph_file.write(graph.SerializeToString())
     for snapshot_id, waypoint_snapshot in waypoint_snapshots.items():
         # Save the waypoint snapshots to disk.
-        with open(os.path.join(filepath, "waypoint_snapshots", snapshot_id), "wb") as snapshot_file:
+        with open(os.path.join(filepath, 'waypoint_snapshots', snapshot_id), 'wb') as snapshot_file:
             snapshot_file.write(waypoint_snapshot.SerializeToString())
     for snapshot_id, edge_snapshot in edge_snapshots.items():
         # Save the edge snapshots to disk.
-        with open(os.path.join(filepath, "edge_snapshots", snapshot_id), "wb") as snapshot_file:
+        with open(os.path.join(filepath, 'edge_snapshots', snapshot_id), 'wb') as snapshot_file:
             snapshot_file.write(edge_snapshot.SerializeToString())
 
 
@@ -164,7 +163,7 @@ def show_fiducial_origin(opt_info):
     """
     VEC_LENGTH = 30.0
     world_T_fiducial = opt_info.get_fiducial_origin()
-    world_T_fiducial_mat = SE3Pose.from_obj(world_T_fiducial).rotation.to_matrix()
+    world_T_fiducial_mat = SE3Pose.from_proto(world_T_fiducial).rotation.to_matrix()
     plt.plot([
         world_T_fiducial.position.x * opt_info.pixels_per_meter,
         world_T_fiducial.position.x * opt_info.pixels_per_meter +
@@ -217,7 +216,7 @@ def upload_graph_and_snapshots(client, graph, waypoint_snapshots, edge_snapshots
     :param edge_snapshots: large data associated with edges.
     """
     # Upload the graph to the robot.
-    print("Uploading the graph and snapshots to the robot...")
+    print('Uploading the graph and snapshots to the robot...')
     response = client.upload_graph(lease=None, graph=graph, generate_new_anchoring=False)
     # Upload the snapshots to the robot.
     for snapshot_id in response.unknown_waypoint_snapshot_ids:
@@ -225,13 +224,13 @@ def upload_graph_and_snapshots(client, graph, waypoint_snapshots, edge_snapshots
             continue
         waypoint_snapshot = waypoint_snapshots[snapshot_id]
         client.upload_waypoint_snapshot(waypoint_snapshot)
-        print("Uploaded {}".format(waypoint_snapshot.id))
+        print(f'Uploaded {waypoint_snapshot.id}')
     for snapshot_id in response.unknown_edge_snapshot_ids:
         if snapshot_id not in edge_snapshots:
             continue
         edge_snapshot = edge_snapshots[snapshot_id]
         client.upload_edge_snapshot(edge_snapshot)
-        print("Uploaded {}".format(edge_snapshot.id))
+        print(f'Uploaded {edge_snapshot.id}')
 
 
 def optimize_anchoring(opt_info, client):
@@ -306,11 +305,11 @@ def main(argv):
         map_processing_client = robot.ensure_client(MapProcessingServiceClient.default_service_name)
         upload_graph_and_snapshots(graph_nav_client, graph, waypoint_snapshots, edge_snapshots)
 
-        print("Optimizing...")
+        print('Optimizing...')
         anchoring_response = optimize_anchoring(opt_info, map_processing_client)
-        print("Status: {}, Iterations: {}, Cost: {}".format(anchoring_response.status,
-                                                            anchoring_response.iteration,
-                                                            anchoring_response.cost))
+        print(
+            f'Status: {anchoring_response.status}, Iterations: {anchoring_response.iteration}, Cost: {anchoring_response.cost}'
+        )
 
     # Extract the anchoring from the RPC response.
     optimized_anchoring = map_pb2.Anchoring()

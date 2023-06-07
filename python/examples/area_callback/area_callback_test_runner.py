@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -23,7 +23,7 @@ def run_callback(robot, area_callback_client, area_callback_info, control_needed
     begin_callback_request = area_callback_pb2.BeginCallbackRequest(end_time=end_time)
     begin_callback_response = area_callback_client.begin_callback(begin_callback_request)
     command_id = begin_callback_response.command_id
-    robot.logger.info("Callback has started.")
+    robot.logger.info('Callback has started.')
 
     callback_is_running = True
     stage = UpdateCallbackRequest.STAGE_TO_START
@@ -45,7 +45,7 @@ def run_callback(robot, area_callback_client, area_callback_info, control_needed
                                                             command_id=command_id)
             update_callback_response = area_callback_client.update_callback(update_callback_request)
 
-            if update_callback_response.HasField("policy"):
+            if update_callback_response.HasField('policy'):
                 policy = update_callback_response.policy
                 assert policy.at_start != UpdateCallbackResponse.NavPolicy.OPTION_UNKNOWN
                 assert policy.at_end != UpdateCallbackResponse.NavPolicy.OPTION_UNKNOWN
@@ -64,13 +64,13 @@ def run_callback(robot, area_callback_client, area_callback_info, control_needed
                         begin_control_request = area_callback_pb2.BeginControlRequest(
                             leases=leases_proto_list, command_id=command_id)
                         area_callback_client.begin_control(begin_control_request)
-                        robot.logger.info("Gave control to callback.")
+                        robot.logger.info('Gave control to callback.')
                         given_control = True
                     elif policy.at_start == UpdateCallbackResponse.NavPolicy.OPTION_CONTINUE:
                         set_stage(UpdateCallbackRequest.STAGE_TO_END)
                         given_control = False
                         if reached_end_time is None:
-                            robot.logger.info("Continuing to the end of the region.")
+                            robot.logger.info('Continuing to the end of the region.')
                             reached_end_time = time.time() + walk_duration
 
                 elif stage == UpdateCallbackRequest.STAGE_TO_END:
@@ -88,18 +88,18 @@ def run_callback(robot, area_callback_client, area_callback_info, control_needed
                         begin_control_request = area_callback_pb2.BeginControlRequest(
                             leases=leases_proto_list, command_id=command_id)
                         area_callback_client.begin_control(begin_control_request)
-                        robot.logger.info("Gave control to callback.")
+                        robot.logger.info('Gave control to callback.')
                         given_control = True
                     elif policy.at_end == UpdateCallbackResponse.NavPolicy.OPTION_CONTINUE:
-                        robot.logger.info("Passed end waypoint.")
+                        robot.logger.info('Passed end waypoint.')
                         callback_is_running = False
 
-            elif update_callback_response.HasField("error"):
-                robot.logger.error("Error occurred while running callback.")
+            elif update_callback_response.HasField('error'):
+                robot.logger.error('Error occurred while running callback.')
                 robot.logger.error(update_callback_response)
                 callback_is_running = False
-            elif update_callback_response.HasField("complete"):
-                robot.logger.info("Callback completed successfully.")
+            elif update_callback_response.HasField('complete'):
+                robot.logger.info('Callback completed successfully.')
                 callback_is_running = False
 
             time.sleep(0.1)
@@ -108,7 +108,7 @@ def run_callback(robot, area_callback_client, area_callback_info, control_needed
         # End the callback.
         end_callback_request = area_callback_pb2.EndCallbackRequest(command_id=command_id)
         area_callback_client.end_callback(end_callback_request)
-        robot.logger.info("Callback has ended.")
+        robot.logger.info('Callback has ended.')
 
 
 def main():
@@ -127,7 +127,7 @@ def main():
     sdk = bosdyn.client.create_standard_sdk('AreaCallbackTester', [AreaCallbackClient])
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
-    robot.start_time_sync(time_sync_interval_sec=0.01)
+    robot.start_time_sync()
     robot.time_sync.wait_for_sync()
 
     area_callback_client = robot.ensure_client(options.service_name)
@@ -136,10 +136,11 @@ def main():
 
     try:
         if control_needed:
-            assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, "\
-                                            "such as the estop SDK example, to configure E-Stop."
+            assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client, '\
+                                            'such as the estop SDK example, to configure E-Stop.'
 
             lease_client = robot.ensure_client(LeaseClient.default_service_name)
+            lease_client.take()
             with LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
                 robot.power_on(timeout_sec=20)
                 command_client = robot.ensure_client(RobotCommandClient.default_service_name)
@@ -153,5 +154,5 @@ def main():
         robot.logger.error('%s', exc)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

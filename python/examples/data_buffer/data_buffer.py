@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -34,7 +34,7 @@ def add_blob(robot, options):
     typename = msg.DESCRIPTOR.full_name
     client.add_blob(msg.SerializeToString(), type_id=typename, channel=typename,
                     robot_timestamp=robot_timestamp, write_sync=options.write_sync)
-    print("Added message blob.")
+    print('Added message blob.')
 
 
 def add_protobuf(robot, options):
@@ -53,7 +53,7 @@ def add_protobuf(robot, options):
         tag='test')
 
     client.add_protobuf(msg, robot_timestamp=robot_timestamp, write_sync=options.write_sync)
-    print("Added protobuf message.")
+    print('Added protobuf message.')
 
 
 def add_event(robot):
@@ -68,7 +68,7 @@ def add_event(robot):
             Parameter(label='test:length', units='m', float_value=3.141),
             Parameter(label='test:boolean', bool_value=True)
         ])
-    print("Added event.")
+    print('Added event.')
 
 
 def main():
@@ -101,7 +101,7 @@ def main():
     if options.command == 'operator':
         # If timestamp is not given, robot uses current time on message receipt.
         robot.operator_comment(options.message)
-        print("Added operator comment")
+        print('Added operator comment')
     elif options.command == 'event':
         add_event(robot)
     elif options.command == 'blob':

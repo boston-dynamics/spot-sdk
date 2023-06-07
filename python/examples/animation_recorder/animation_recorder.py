@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -61,7 +61,7 @@ class RecorderInterface(object):
         self._download_filepath = download_filepath
 
         # name of the sub directory where animation files are saved and read
-        self._animation_directory = ""
+        self._animation_directory = ''
 
         # variables for tracking when an animated sequence finishes so the lease can be returned when it finishes,
         # with _start_time being when the animation started and _length_of_current_choreo being the duration of the
@@ -99,8 +99,8 @@ class RecorderInterface(object):
 
         # Check that an estop is connected with the robot so that the robot commands can be executed.
         # The E-Stop while using Animation Recorder should be the tablet.
-        assert not robot.is_estopped(), "Robot is estopped. Please connect the robot to the tablet or use " \
-                                        "the estop SDK example, to configure E-Stop."
+        assert not robot.is_estopped(), 'Robot is estopped. Please connect the robot to the tablet or use ' \
+                                        'the estop SDK example, to configure E-Stop.'
 
         self._command_dictionary = {
             # list of viable key commands for the main screen
@@ -144,8 +144,8 @@ class RecorderInterface(object):
         the user whether the program is currently recording animation.
         """
         if (self._recording):
-            return "Recording"
-        return "Not Recording"
+            return 'Recording'
+        return 'Not Recording'
 
     def _stop_recording(self):
         """Stop recording the robot."""
@@ -161,14 +161,14 @@ class RecorderInterface(object):
 
         # create a unique name for the new animated recording
         now = datetime.now()
-        dtime = now.strftime("%H%M%S")
-        dday = now.strftime("%d%m%Y")
+        dtime = now.strftime('%H%M%S')
+        dday = now.strftime('%d%m%Y')
         name = dday + dtime
 
         # create the animation *.cha file from the choreography log and save it to the animation directory
         cha_path = os.path.join(self._download_filepath, self._animation_directory)
         cha_filename = self._choreo_client.choreography_log_to_animation_file(
-            name, cha_path, self._robot.has_arm(), "truncatable")
+            name, cha_path, self._robot.has_arm(), 'truncatable')
 
         # upload the animation to the robot as a choreography sequence from the *.cha file and list
         # the animation for playback
@@ -215,26 +215,20 @@ class RecorderInterface(object):
                 # The upload animation RPC may not be issued at all if the animation hasn't changed
                 # and doesn't need to be sent to the robot. In that case, the response is None but we
                 # still return true to indicate the move is successfully placed on robot.
-                LOGGER.info(
-                    "Success: %s (Animation is already uploaded to the robot)." % animation.name)
+                LOGGER.info('Success: %s (Animation is already uploaded to the robot).',
+                            animation.name)
                 return True
-            LOGGER.info("Success: %s (Uploaded new/changed animation)." % animation.name)
+            LOGGER.info('Success: %s (Uploaded new/changed animation).', animation.name)
         except AnimationValidationFailedError as validation_failed:
             upload_response = validation_failed.response
         except Exception as err:
-            error_msg = "Failed to upload animation %s: [%s] %s" % (animation.name, str(
-                type(err)), str(err))
-            LOGGER.warning(error_msg)
+            LOGGER.warning('Failed to upload animation %s: [%s] %s',
+                           (animation.name, str(type(err)), str(err)))
             return False
 
-        if upload_response is not None:
-            if len(upload_response.warnings) > 0:
-                error_msg = "Animation '" + str(
-                    animation.name) + "' upload failed. The following warnings were produced: \n"
-                for warn in upload_response.warnings:
-                    error_msg += "\t"
-                    error_msg += warn
-                    LOGGER.warning(error_msg)
+        if upload_response is not None and len(upload_response.warnings) > 0:
+            error_msg = 'Animation \'%s\' upload failed. The following warnings were produced: \n%s'
+            LOGGER.warning(error_msg, animation.name, '\t'.join(upload_response.warnings))
 
         LOGGER.info(upload_response.status)
         return upload_response.status == choreography_sequence_pb2.UploadAnimatedMoveResponse.STATUS_OK
@@ -276,7 +270,7 @@ class RecorderInterface(object):
         MoveParamsList = []
 
         move_param = choreography_sequence_pb2.MoveParams()
-        move_param.type = "animation"
+        move_param.type = 'animation'
 
         # start the move immediately with no delay
         move_param.start_slice = 0
@@ -331,8 +325,8 @@ class RecorderInterface(object):
     def _time_in_secs(self):
         """Helper function for getting real time in seconds. Used to measure when a choreography has ended."""
         now = datetime.now()
-        dtime_s, dtime_m, dtime_h = int(now.strftime("%S")), int(now.strftime("%M")), int(
-            now.strftime("%H"))
+        dtime_s, dtime_m, dtime_h = int(now.strftime('%S')), int(now.strftime('%M')), int(
+            now.strftime('%H'))
         t = dtime_s + 60 * dtime_m + 60 * 60 * dtime_h
         return t
 
@@ -408,8 +402,8 @@ class RecorderInterface(object):
 
         except KeyError:
             if key and key != -1 and key < 256:
-                # self.add_message("Unrecognized keyboard command: '{}'".format(chr(key)))
-                print("Unrecognized keyboard command.")
+                # self.add_message(f'Unrecognized keyboard command: \'{chr(key)}\'')
+                print('Unrecognized keyboard command.')
                 time.sleep(2.0)
 
     def _main(self, stdscr):
@@ -420,10 +414,10 @@ class RecorderInterface(object):
         recording_state = self._is_recording()
         stdscr.addstr(11, 15, recording_state)
 
-        stdscr.addstr(3, 5, "Commands: [TAB]: Quit")
-        stdscr.addstr(4, 5, "          [f]: Record Choreography")
-        stdscr.addstr(5, 5, "          [g]: Stop Recording Choreography")
-        stdscr.addstr(6, 5, "          [o]: Playback")
+        stdscr.addstr(3, 5, 'Commands: [TAB]: Quit')
+        stdscr.addstr(4, 5, '          [f]: Record Choreography')
+        stdscr.addstr(5, 5, '          [g]: Stop Recording Choreography')
+        stdscr.addstr(6, 5, '          [o]: Playback')
 
         stdscr.refresh()
 
@@ -432,9 +426,9 @@ class RecorderInterface(object):
         stdscr.clear()  # clear screen
         stdscr.resize(26, 50)
 
-        stdscr.addstr(4, 5, "save choreography?")
-        stdscr.addstr(5, 5, "          [y]: Save Choreography")
-        stdscr.addstr(6, 5, "          [n]: Discard Recording")
+        stdscr.addstr(4, 5, 'save choreography?')
+        stdscr.addstr(5, 5, '          [y]: Save Choreography')
+        stdscr.addstr(6, 5, '          [n]: Discard Recording')
 
         stdscr.refresh()
 
@@ -443,21 +437,20 @@ class RecorderInterface(object):
         stdscr.clear()  # clear screen
         stdscr.resize(26, 50)
 
-        stdscr.addstr(20, 5, "                                       " + str(self._page))
-        stdscr.addstr(4, 5, "Choose a file:")
+        stdscr.addstr(20, 5, f'                                       {self._page}')
+        stdscr.addstr(4, 5, 'Choose a file:')
 
         # write the animation options for the current page from the animation files list
         for i in range(0, 5):
             if len(self._proto_names) > (i + (self._page * 5)):
-                stdscr.addstr(
-                    5 + i, 5,
-                    "          [" + str(i + 1) + "]: " + self._proto_names[i + (self._page * 5)])
+                stdscr.addstr(5 + i, 5,
+                              f'          [{i + 1}]: {self._proto_names[i + (self._page * 5)]}')
             else:
-                stdscr.addstr(5 + i, 5, "          [" + str(i + 1) + "]: ")
+                stdscr.addstr(5 + i, 5, f'          [{i + 1}]: ')
 
-        stdscr.addstr(10, 5, "          [>]: Increment Page +")
-        stdscr.addstr(11, 5, "          [<]: Increment Page -")
-        stdscr.addstr(12, 5, "          [TAB]: Return to Main")
+        stdscr.addstr(10, 5, '          [>]: Increment Page +')
+        stdscr.addstr(11, 5, '          [<]: Increment Page -')
+        stdscr.addstr(12, 5, '          [TAB]: Return to Main')
 
         stdscr.refresh()
 
@@ -512,7 +505,7 @@ def main():
     license_client = robot.ensure_client(LicenseClient.default_service_name)
     if not license_client.get_feature_enabled([ChoreographyClient.license_name
                                               ])[ChoreographyClient.license_name]:
-        LOGGER.error("This robot is not licensed for choreography.")
+        LOGGER.error('This robot is not licensed for choreography.')
         sys.exit(1)
 
     recorder_interface = RecorderInterface(robot, default_filepath)
@@ -520,7 +513,7 @@ def main():
     # create the subdirectory for recorded animation files, with a default directory name of 'recorded_animations [DATE: DAY-MONTH-YEAR]'
     if len(options.download_filepath) == 0:
         now = datetime.now()
-        options.download_filepath = "recorded_animations_" + now.strftime("%d-%m-%Y")
+        options.download_filepath = f'recorded_animations_{now.strftime("%d-%m-%Y")}'
 
     recorder_interface._animation_directory = options.download_filepath
     fpath = os.path.join(recorder_interface._download_filepath,
@@ -529,10 +522,10 @@ def main():
     if not os.path.isdir(fpath):
         # create the new subdirectory with the chosen name
         os.mkdir(fpath)
-        print("recorded animations directory created : " + options.download_filepath)
+        print(f'recorded animations directory created : {options.download_filepath}')
     else:
         # if the folder already existed save files in the existing subdirectory
-        print("recorded animations will be saved to directory : " + options.download_filepath)
+        print(f'recorded animations will be saved to directory : {options.download_filepath}')
 
     # Run the program with curses user interface
     try:
@@ -542,7 +535,7 @@ def main():
         curses.wrapper(recorder_interface.drive)
 
     except Exception as e:
-        LOGGER.error("Animation Recorder has thrown an error: [%r] %s", e, e)
+        LOGGER.error('Animation Recorder has thrown an error: [%r] %s', e, e)
 
     finally:
         # Do any final cleanup steps.
@@ -551,7 +544,7 @@ def main():
     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main():
         os._exit(1)
     os._exit(0)

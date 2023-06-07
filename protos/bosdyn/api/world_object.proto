@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -15,21 +15,23 @@ import "bosdyn/api/geometry.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/sparse_features.proto";
+import "bosdyn/api/stairs.proto";
+import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
 
-// The world object message is used to describe different objects seen by a robot. It contains information
-// about the properties of the object in addition to a unique id and the transform snapshot.
-// The world object uses "properties" to describe different traits about the object, such as image coordinates
-// associated with the camera the object was detected in. A world object can have multiple different properties
-// that are all associated with the single object.
+// The world object message is used to describe different objects seen by a robot. It contains
+// information about the properties of the object in addition to a unique id and the transform
+// snapshot. The world object uses "properties" to describe different traits about the object, such
+// as image coordinates associated with the camera the object was detected in. A world object can
+// have multiple different properties that are all associated with the single object.
 message WorldObject {
     // Unique integer identifier that will be consistent for the duration of a robot's battery life
     // The id is set internally by the world object service.
     int32 id = 1;
 
-    // A human readable name for the world object. Note that this differs from any frame_name's associated
-    // with the object (since there can be multiple frames describing a single object).
+    // A human readable name for the world object. Note that this differs from any frame_name's
+    // associated with the object (since there can be multiple frames describing a single object).
     string name = 2;
 
     // Time in robot time clock at which this object was most recently detected and valid.
@@ -37,15 +39,24 @@ message WorldObject {
 
     // A tree-based collection of transformations, which will include the transformations to each
     // of the returned world objects in addition to transformations to the common frames ("vision",
-    // "body", "odom"). All transforms within the snapshot are at the acquisition time of the world object.
-    // Note that each object's frame names are defined within the properties submessage. For example,
-    // the apriltag frame name is defined in the AprilTagProperties message as "frame_name_fiducial"
+    // "body", "odom"). All transforms within the snapshot are at the acquisition time of the world
+    // object. Note that each object's frame names are defined within the properties submessage. For
+    // example, the apriltag frame name is defined in the AprilTagProperties message as
+    // "frame_name_fiducial"
     FrameTreeSnapshot transforms_snapshot = 31;
+
+    // Duration of time after which the obstacle expires.  If this field is left blank, the object
+    // will expire according to a default time set in the world object service.  The duration is
+    // relative to the acquisition_time if filled out, or relative to the time the object is
+    // added to the world object service if acquisition_time is left blank.
+    google.protobuf.Duration object_lifetime = 32;
 
     // The drawable properties describe geometric shapes associated with an object.
     repeated DrawableProperties drawable_properties = 5;
     // The apriltag properties describe any fiducial identifying an object.
     AprilTagProperties apriltag_properties = 6;
+    // Property for a user no-go
+    NoGoRegionProperties nogo_region_properties = 14;
     // The image properties describe any camera and image coordinates associated with an object.
     ImageProperties image_properties = 9;
     // Properties describing a dock
@@ -55,106 +66,139 @@ message WorldObject {
     RayProperties ray_properties = 11;
     // Bounding box in the world, oriented at the location provided in the transforms_snapshot.
     BoundingBoxProperties bounding_box_properties = 12;
+    // The staircase properties provide information that helps the robot traverse or see a staircase.
+    StaircaseProperties staircase_properties = 15;
     // An extra field for application-specific object properties.
     google.protobuf.Any additional_properties = 100;
 }
 
-// A type for the world object, which is associated with whatever properties the world object includes. This can
-// be used to request specific kinds of objects; for example, a request for only fiducials.
+// A type for the world object, which is associated with whatever properties the world object
+// includes. This can be used to request specific kinds of objects; for example, a request for only
+// fiducials.
 enum WorldObjectType {
   WORLD_OBJECT_UNKNOWN = 0;
   WORLD_OBJECT_DRAWABLE = 1;
   WORLD_OBJECT_APRILTAG = 2;
   WORLD_OBJECT_IMAGE_COORDINATES = 5;
   WORLD_OBJECT_DOCK = 6;
+  WORLD_OBJECT_USER_NOGO = 8;
+  WORLD_OBJECT_STAIRCASE = 9;
 }
 
-// The ListWorldObject request message, which can optionally include filters for the object type or timestamp.
+// The ListWorldObject request message, which can optionally include filters for the object type or
+// timestamp.
 message ListWorldObjectRequest {
-  // Common request header
-  RequestHeader header = 1;
+    // Common request header
+    RequestHeader header = 1;
 
-  // Optional filters to apply to the world object request
-  // Specific type of object; can request multiple different properties
-  repeated WorldObjectType object_type = 2;
+    // Optional filters to apply to the world object request
+    // Specific type of object; can request multiple different properties
+    repeated WorldObjectType object_type = 2;
 
-  // Timestamp to filter objects based on. The time should be in robot time
-  // All objects with header timestamps after (>) timestamp_filter will be returned
-  google.protobuf.Timestamp timestamp_filter = 3;
+    // Timestamp to filter objects based on. The time should be in robot time
+    // All objects with header timestamps after (>) timestamp_filter will be returned
+    google.protobuf.Timestamp timestamp_filter = 3;
 }
 
 // The ListWorldObject response message, which contains all of the current world objects in the
 // robot's perception scene.
 message ListWorldObjectResponse {
-  // Common response header
-  ResponseHeader header = 1;
+    // Common response header
+    ResponseHeader header = 1;
 
-  // The currently perceived world objects.
-  repeated WorldObject world_objects = 2;
+    // The currently perceived world objects.
+    repeated WorldObject world_objects = 2;
 }
 
 // The MutateWorldObject request message, which specifies the type of mutation and which object
 // the mutation should be applied to.
 message MutateWorldObjectRequest {
-  // Common request header
-  RequestHeader header = 1;
+    // Common request header
+    RequestHeader header = 1;
 
-  enum Action {
-      // Invalid action.
-      ACTION_UNKNOWN = 0;
-      // Add a new object.
-      ACTION_ADD = 1;
-      // Change an existing objected (ID'd by integer ID number). This is
-      // only allowed to change objects added by the API-user, and not
-      // objects detected by Spot's perception system.
-      ACTION_CHANGE = 2;
-      // Delete the object, ID'd by integer ID number. This is
-      // only allowed to change objects added by the API-user, and not
-      // objects detected by Spot's perception system.
-      ACTION_DELETE = 3;
-  }
+    enum Action {
+        // Invalid action.
+        ACTION_UNKNOWN = 0;
+        // Add a new object.
+        ACTION_ADD = 1;
+        // Change an existing objected (ID'd by integer ID number). This is
+        // only allowed to change objects added by the API-user, and not
+        // objects detected by Spot's perception system.
+        ACTION_CHANGE = 2;
+        // Delete the object, ID'd by integer ID number. This is
+        // only allowed to change objects added by the API-user, and not
+        // objects detected by Spot's perception system.
+        ACTION_DELETE = 3;
+    }
 
-  message Mutation {
-      // The action (add, change, or delete) to be applied to a world object.
-      Action action = 1;
+    message Mutation {
+        // The action (add, change, or delete) to be applied to a world object.
+        Action action = 1;
 
-      // World object to be mutated.
-      // If an object is being changed/deleted, then the world object id must match a world
-      // object id known by the service.
-      WorldObject object = 2;
-  }
-  // The mutation for this request.
-  Mutation mutation = 2;
+        // World object to be mutated.
+        // If an object is being changed/deleted, then the world object id must match a world
+        // object id known by the service.
+        WorldObject object = 2;
+    }
+    // The mutation for this request.
+    Mutation mutation = 2;
 }
 
 // The MutateWorldObject response message, which includes the world object id for the object that
 // the mutation was applied to if the request succeeds.
 message MutateWorldObjectResponse {
-  // Common response header
-  ResponseHeader header = 1;
+    // Common response header
+    ResponseHeader header = 1;
 
-  enum Status {
-      // Status of request is unknown. Check the status code of the response header.
-      STATUS_UNKNOWN = 0;
+    enum Status {
+        // Status of request is unknown. Check the status code of the response header.
+        STATUS_UNKNOWN = 0;
 
-      // Request was accepted; GetObjectListResponse must still be checked to verify the changes.
-      STATUS_OK = 1;
+        // Request was accepted; GetObjectListResponse must still be checked to verify the changes.
+        STATUS_OK = 1;
 
-      // The mutation object's ID is unknown such that the service could not recognize this object.
-      // This error applies to the CHANGE and DELETE actions, since it must identify the object by
-      // it's id number given by the service.
-      STATUS_INVALID_MUTATION_ID = 2;
+        // The mutation object's ID is unknown such that the service could not recognize this
+        // object. This error applies to the CHANGE and DELETE actions, since it must identify the
+        // object by it's id number given by the service.
+        STATUS_INVALID_MUTATION_ID = 2;
 
-      // The mutation request is not allowed because it is attempting to change or delete an object
-      // detected by Spot's perception system.
-      STATUS_NO_PERMISSION = 3;
-  }
-  // Return status for the request.
-  Status status = 2;
+        // The mutation request is not allowed because it is attempting to change or delete an
+        // object detected by Spot's perception system.
+        STATUS_NO_PERMISSION = 3;
 
-  // ID set by the world object service for the mutated object
-  int32 mutated_object_id = 4;
+        // The mutation request is not allowed because some aspect of the world object is invalid.
+        // For example, something could be defined in an unallowed reference frame.
+        STATUS_INVALID_WORLD_OBJECT = 4;
+    }
+    // Return status for the request.
+    Status status = 2;
+
+    // ID set by the world object service for the mutated object
+    int32 mutated_object_id = 4;
 }
+
+// A box no-go region
+message NoGoRegionProperties {
+    // Define the geometry of the region.  Note that currently, these regions may only be defined in
+    // the Vision world frame, or Odometry world frame.
+    oneof region {
+        Box2WithFrame box = 1;
+    }
+
+    // Nominally, setting a NoGoRegion will create both a body obstacle of the specified size, as
+    // well as foot obstacle with a slightly inflated size by about the width of the robot's foot,
+    // to prevent the robot from stepping right on the edge of the body obstacle.  If this is not
+    // the desired behavior, change the parameters below:
+
+    // If set true, will NOT create a foot obstacle for this region.
+    bool disable_foot_obstacle_generation = 2;
+    // If set true, will NOT create a body obstacle for this region.
+    bool disable_body_obstacle_generation = 3;
+    // If set true, and a foot obstacle is being generated, will make the foot obstacle the exact
+    // size specified in the "region" field and NOT inflate by approx. robot foot width.
+    bool disable_foot_obstacle_inflation = 4;
+}
+
 
 //  World object properties describing image coordinates associated with an object or scene.
 message ImageProperties {
@@ -181,28 +225,29 @@ message ImageProperties {
 
 // World object properties describing a dock
 message DockProperties {
-  // Consistent id associated with a given dock.
-  uint32 dock_id = 1;
-  // Type of dock.
-  docking.DockType type = 2;
-  // The frame name for the location of dock origin. This will be included in the transform snapshot.
-  string frame_name_dock = 3;
-  // Availability if the dock can be used
-  bool unavailable = 4;
-  // The dock is an unconfirmed prior detection
-  bool from_prior = 5;
+    // Consistent id associated with a given dock.
+    uint32 dock_id = 1;
+    // Type of dock.
+    docking.DockType type = 2;
+    // The frame name for the location of dock origin. This will be included in the transform
+    // snapshot.
+    string frame_name_dock = 3;
+    // Availability if the dock can be used
+    bool unavailable = 4;
+    // The dock is an unconfirmed prior detection
+    bool from_prior = 5;
 }
 
 //  World object properties describing a fiducial object.
 message AprilTagProperties {
     enum AprilTagPoseStatus {
-       STATUS_UNKNOWN = 0;
-       // No known issues with the pose estimate.
-       STATUS_OK = 1;
-       // The orientation of the tag is ambiguous.
-       STATUS_AMBIGUOUS = 2;
-       // The pose may be unreliable due to high reprojection error.
-       STATUS_HIGH_ERROR = 3;
+        STATUS_UNKNOWN = 0;
+        // No known issues with the pose estimate.
+        STATUS_OK = 1;
+        // The orientation of the tag is ambiguous.
+        STATUS_AMBIGUOUS = 2;
+        // The pose may be unreliable due to high reprojection error.
+        STATUS_HIGH_ERROR = 3;
     }
 
     // Consistent integer id associated with a given apriltag. April Tag detections will be from the
@@ -213,13 +258,15 @@ message AprilTagProperties {
     // height/col length of the tag
     Vec2 dimensions = 2;
 
-    // The frame name for the raw version of this fiducial. This will be included in the transform snapshot.
+    // The frame name for the raw version of this fiducial. This will be included in the transform
+    // snapshot.
     string frame_name_fiducial = 3;
 
     // Status of the pose estimation of the unfiltered fiducial frame.
     AprilTagPoseStatus fiducial_pose_status = 8;
 
-    // The frame name for the filtered version of this fiducial. This will be included in the transform snapshot.
+    // The frame name for the filtered version of this fiducial. This will be included in the
+    // transform snapshot.
     string frame_name_fiducial_filtered = 4;
 
     // Status of the pose estimation of the filtered fiducial frame.
@@ -237,7 +284,6 @@ message AprilTagProperties {
     SE3Covariance detection_covariance = 5;
     // The frame that the detection covariance is expressed in.
     string detection_covariance_reference_frame = 6;
-
 }
 
 message RayProperties {
@@ -284,14 +330,14 @@ message DrawableProperties {
 
     // The object to draw, e.g. a Sphere.
     oneof drawable {
-        DrawableFrame frame = 4;          // A drawable frame (oneof drawable field).
-        DrawableSphere sphere = 5;        // A drawable sphere (oneof drawable field).
-        DrawableBox box = 6;              // A drawable box (oneof drawable field).
-        DrawableArrow arrow = 7;          // A drawable arrow (oneof drawable field).
-        DrawableCapsule capsule = 8;      // A drawable capsule (oneof drawable field).
-        DrawableCylinder cylinder = 9;    // A drawable cylinder (oneof drawable field).
-        DrawableLineStrip linestrip = 10; // A drawable linestrip (oneof drawable field).
-        DrawablePoints points = 11;       // A drawable set of points (oneof drawable field).
+        DrawableFrame frame = 4;           // A drawable frame (oneof drawable field).
+        DrawableSphere sphere = 5;         // A drawable sphere (oneof drawable field).
+        DrawableBox box = 6;               // A drawable box (oneof drawable field).
+        DrawableArrow arrow = 7;           // A drawable arrow (oneof drawable field).
+        DrawableCapsule capsule = 8;       // A drawable capsule (oneof drawable field).
+        DrawableCylinder cylinder = 9;     // A drawable cylinder (oneof drawable field).
+        DrawableLineStrip linestrip = 10;  // A drawable linestrip (oneof drawable field).
+        DrawablePoints points = 11;        // A drawable set of points (oneof drawable field).
     }
 
     // The frame name for the drawable object. This will optionally be
@@ -299,46 +345,50 @@ message DrawableProperties {
     string frame_name_drawable = 12;
 }
 
+message StaircaseProperties {
+    Staircase staircase = 1;
+}
+
 // A coordinate frame drawing object, describing how large to render the arrows.
 message DrawableFrame {
-  double arrow_length = 1;
-  double arrow_radius = 2;
+    double arrow_length = 1;
+    double arrow_radius = 2;
 }
 
 // A sphere drawing object.
 message DrawableSphere {
-  double radius = 1;
+    double radius = 1;
 }
 
 // A three dimensional box drawing object.
 message DrawableBox {
-  Vec3 size = 1;
+    Vec3 size = 1;
 }
 
 // A directed arrow drawing object.
 message DrawableArrow {
-  Vec3 direction = 1;
-  double radius = 2;
+    Vec3 direction = 1;
+    double radius = 2;
 }
 
 // A oval-like capsule drawing object.
 message DrawableCapsule {
-  Vec3 direction = 1;
-  double radius = 2;
+    Vec3 direction = 1;
+    double radius = 2;
 }
 
 // A cylinder drawing object.
 message DrawableCylinder {
-  Vec3 direction = 1;
-  double radius = 2;
+    Vec3 direction = 1;
+    double radius = 2;
 }
 
 // A line strip drawing object.
 message DrawableLineStrip {
-  Vec3 points = 1;
+    Vec3 points = 1;
 }
 
 // A set of points drawing object.
 message DrawablePoints {
-  repeated Vec3 points = 1;
+    repeated Vec3 points = 1;
 }

@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Payload &amp; Service Initialization &mdash; Spot 3.2.3 documentation</title>
+  <title>Payload &amp; Service Initialization &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="reference internal" href="../docs/payloads_examples.html">Payloads and Registration Examples</a><ul class="current">
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -639,43 +681,43 @@
            <div itemprop="articleBody">
             
   <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="payload-service-initialization">
-<h1>Payload &amp; Service Initialization<a class="headerlink" href="#payload-service-initialization" title="Permalink to this headline">¶</a></h1>
+<h1>Payload &amp; Service Initialization<a class="headerlink" href="#payload-service-initialization" title="Permalink to this heading">¶</a></h1>
 <p>The files in this directory serve as an example of how a payload could register itself, register a service, and communicate to the service through the robot.</p>
 <section id="payload-registration">
-<h2>Payload Registration<a class="headerlink" href="#payload-registration" title="Permalink to this headline">¶</a></h2>
+<h2>Payload Registration<a class="headerlink" href="#payload-registration" title="Permalink to this heading">¶</a></h2>
 <p>Payloads are able to register themselves without the need for user credentials to be stored on the payload. A payload registration client can be used to communicate the details of the payload to the robot without need for authorization or authentication. All payloads registered this way <strong>must</strong> later be manually authorized by an admin via the Spot web UI. If the payload is attached to the robot, it should also be enabled on the webpage.</p>
 <p>Once a payload has been authorized, its <em>unique</em> GUID &amp; secret combination can be used as credentials to request a limited-access user token that wil grant permission to the auth, directory, and directory-registration services. The granted user token will be valid for 12 hours.</p>
 <p>Payload registration &amp; authorization needs to be done only once, as payload definitions will be kept on robot across reboots.</p>
 </section>
 <section id="service-registration">
-<h2>Service Registration<a class="headerlink" href="#service-registration" title="Permalink to this headline">¶</a></h2>
+<h2>Service Registration<a class="headerlink" href="#service-registration" title="Permalink to this heading">¶</a></h2>
 <p>A new service can be registered in the robot directory, which requires a user token containing directory permissions. A user token can be requested by using the GUID &amp; secret of an authorized payload. A directory registration client can be used to communicate the implementation and routing details of a service to the robot.</p>
 <p>Service registration needs to be done after each power cycle, as the robot directory is reset when the robot is powered down.</p>
 </section>
 <section id="communication-between-client-service">
-<h2>Communication Between Client &amp; Service<a class="headerlink" href="#communication-between-client-service" title="Permalink to this headline">¶</a></h2>
+<h2>Communication Between Client &amp; Service<a class="headerlink" href="#communication-between-client-service" title="Permalink to this heading">¶</a></h2>
 <p>All endpoint details for routing requests to a service should have been provided at service registration time. When any client makes a request to the robot with an authority &amp; service type matching a registered service, the request will be forwarded to the associated endpoint. It is assumed that a service will be running and available at the given endpoint to handle the request. Responses will be automatically routed back to the calling client. If no service is available, the request will time out.</p>
 </section>
 <section id="core-i-o">
-<h2>CORE I/O<a class="headerlink" href="#core-i-o" title="Permalink to this headline">¶</a></h2>
+<h2>CORE I/O<a class="headerlink" href="#core-i-o" title="Permalink to this heading">¶</a></h2>
 <p>If you are working with a CORE I/O, this example demonstrates how you can set up a simple service on your CORE I/O and communicate to it through a client. Copy these example files onto the CORE I/O and set up the payload registration, service creation, and service registration there. Then, run the client on a laptop connected to the robot.</p>
 </section>
 <section id="set-up">
-<h2>Set up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
+<h2>Set up<a class="headerlink" href="#set-up" title="Permalink to this heading">¶</a></h2>
 <p>The proto definition files need to be compiled into python files before they can be used for this system. Following the <a class="reference external" href="https://www.grpc.io/docs/tutorials/basic/python/">gRPC documentation</a>, these files can be generated by installing grpcio tools via <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">grpcio-tools</span></code> and then running <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">grpc_tools.protoc</span> <span class="pre">-I.</span> <span class="pre">--python_out=.</span> <span class="pre">--grpc_python_out=.</span> <span class="pre">announce.proto</span> <span class="pre">announce_service.proto</span></code>.</p>
 </section>
 <section id="demo">
-<h2>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h2>
+<h2>Demo<a class="headerlink" href="#demo" title="Permalink to this heading">¶</a></h2>
 <p>The files in this directory can be used to set up the current computer as a payload, start up an announce service, register the announce service, and run a client to access the announce service through the robot. This section will walk the user through that process.</p>
 <p>The explanation will follow the process laid out programmatically in the initialize_payload script, which automates this process. It is recommended that you go through the process manually first to gain an understanding of the process.</p>
 <section id="select-values">
-<h3>Select values<a class="headerlink" href="#select-values" title="Permalink to this headline">¶</a></h3>
+<h3>Select values<a class="headerlink" href="#select-values" title="Permalink to this heading">¶</a></h3>
 <p>Setting up a payload and onboard services requires defining at least one payload, service, and endpoint. These definitions require multiple pieces of information properly represent the concept. Before beginning, select and record what values you want to use to populate these objects. Examples of valid values can be seen in the initialize_payload script.</p>
 <p><strong>Robot</strong></p>
 <ul class="simple">
@@ -708,14 +750,14 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="register-the-payload">
-<h3>Register the payload<a class="headerlink" href="#register-the-payload" title="Permalink to this headline">¶</a></h3>
+<h3>Register the payload<a class="headerlink" href="#register-the-payload" title="Permalink to this heading">¶</a></h3>
 <p>self<em>register_payload.py can be used to register a single payload. The registered payload will be automatically set to unauthorized and disabled, until an admin updates it in the web console. The Python script will wait to exit until the registered payload is authorized. If the payload GUID has already been registered, it will _not</em> be overwritten by additional registration requests. The payload added by the self_registered_payload.py script adds a payload with a preset configuration. When authorizing the payload in the admin page, the admin user can select the default configuration, or the preset configuration. See documentation on <a class="reference internal" href="../../../docs/payload/configuring_payload_software.html"><span class="doc">configuration of payload software</span></a> for more information.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">self_register_payload</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">guid</span> <span class="o">&lt;</span><span class="n">payload_guid</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">secret</span> <span class="o">&lt;</span><span class="n">payload_secret</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">name</span> <span class="o">&lt;</span><span class="n">payload_name</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">description</span> <span class="o">&lt;</span><span class="n">payload_description</span><span class="o">&gt;</span> <span class="n">ROBOT_IP</span>
 </pre></div>
 </div>
 </section>
 <section id="start-the-announce-service">
-<h3>Start the announce service<a class="headerlink" href="#start-the-announce-service" title="Permalink to this headline">¶</a></h3>
+<h3>Start the announce service<a class="headerlink" href="#start-the-announce-service" title="Permalink to this heading">¶</a></h3>
 <p>announce_service.py can be used to start (and maintain) a very simple Python gRPC service. The service will accept announce requests with a message and return the message, in all caps, through an announce response. The service will continue to run until the user issues a keyboard interrupt or kills the PID.
 WARNING: The configured port must not be blocked by a firewall on the service hosting device.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">announce_service</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">port</span> <span class="o">&lt;</span><span class="n">endpoint_port</span><span class="o">&gt;</span>
@@ -723,21 +765,21 @@ WARNING: The configured port must not be blocked by a firewall on the service ho
 </div>
 </section>
 <section id="register-the-announce-service">
-<h3>Register the announce service<a class="headerlink" href="#register-the-announce-service" title="Permalink to this headline">¶</a></h3>
+<h3>Register the announce service<a class="headerlink" href="#register-the-announce-service" title="Permalink to this heading">¶</a></h3>
 <p>self_register_service.py can be used to register the announce service with the robot. Registering the service will tell the robot where to route Announce requests. In this case, we want these requests to be routed to the payload.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">self_register_service</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">guid</span> <span class="o">&lt;</span><span class="n">payload_guid</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">secret</span> <span class="o">&lt;</span><span class="n">payload_secret</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">host</span><span class="o">-</span><span class="n">ip</span> <span class="o">&lt;</span><span class="n">endpoint_ip</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">port</span> <span class="o">&lt;</span><span class="n">endpoint_port</span><span class="o">&gt;</span> <span class="n">ROBOT_IP</span>
 </pre></div>
 </div>
 </section>
 <section id="access-the-announce-service-with-a-client">
-<h3>Access the announce service with a client<a class="headerlink" href="#access-the-announce-service-with-a-client" title="Permalink to this headline">¶</a></h3>
+<h3>Access the announce service with a client<a class="headerlink" href="#access-the-announce-service-with-a-client" title="Permalink to this heading">¶</a></h3>
 <p>announce_client.py can be used to create an announce client and send a simple request to the announce service. If everything is set up correctly, the message sent to the service should be returned fully capitalized. The request will be routed through the robot, which will use the registered service description to forward the request to the payload. If the service name, type, or authority are incorrect, the request will fail to be routed.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">announce_client</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">guid</span> <span class="o">&lt;</span><span class="n">payload_guid</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">secret</span> <span class="o">&lt;</span><span class="n">payload_secret</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">message</span> <span class="o">&lt;</span><span class="n">string_message</span><span class="o">&gt;</span> <span class="n">ROBOT_IP</span>
 </pre></div>
 </div>
 </section>
 <section id="demo-script">
-<h3>Demo Script<a class="headerlink" href="#demo-script" title="Permalink to this headline">¶</a></h3>
+<h3>Demo Script<a class="headerlink" href="#demo-script" title="Permalink to this heading">¶</a></h3>
 <p>The initialize_payload.sh script will automatically attempt to perform all steps listed above, as well as the compilation of the protobuf files. For the ease of getting started, most of the fields have been filled with adequate default values inside of the demo script. However, running the demo will still require manually setting the robot ip, endpoint ip, endpoint host, and a payload secret.</p>
 <p>To use the demo, run <code class="docutils literal notranslate"><span class="pre">initialize_payload.sh</span> <span class="pre">&lt;robot_ip&gt;</span> <span class="pre">&lt;endpoint_ip&gt;</span> <span class="pre">&lt;endpoint_port&gt;</span> <span class="pre">&lt;payload_secret&gt;</span></code></p>
 <ul class="simple">

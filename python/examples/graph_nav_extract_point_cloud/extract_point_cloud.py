@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -38,12 +38,11 @@ def get_point_cloud_data_in_seed_frame(waypoints, snapshots, anchorings, waypoin
     cloud = snapshot.point_cloud
     odom_tform_cloud = get_a_tform_b(cloud.source.transforms_snapshot, ODOM_FRAME_NAME,
                                      cloud.source.frame_name_sensor)
-    waypoint_tform_odom = SE3Pose.from_obj(wp.waypoint_tform_ko)
+    waypoint_tform_odom = SE3Pose.from_proto(wp.waypoint_tform_ko)
     waypoint_tform_cloud = waypoint_tform_odom * odom_tform_cloud
     if waypoint_id not in anchorings:
-        raise Exception(
-            "{} not found in anchorings. Does the map have anchoring data?".format(waypoint_id))
-    seed_tform_cloud = SE3Pose.from_obj(
+        raise Exception(f'{waypoint_id} not found in anchorings. Does the map have anchoring data?')
+    seed_tform_cloud = SE3Pose.from_proto(
         anchorings[waypoint_id].seed_tform_waypoint) * waypoint_tform_cloud
     point_cloud_data = np.frombuffer(cloud.data, dtype=np.float32).reshape(int(cloud.num_points), 3)
     return seed_tform_cloud.transform_cloud(point_cloud_data)
@@ -55,7 +54,7 @@ def load_map(path):
     :param path: Path to the root directory of the map.
     :return: the graph, waypoints, waypoint snapshots, edge snapshots, and anchorings.
     """
-    with open(os.path.join(path, "graph"), "rb") as graph_file:
+    with open(os.path.join(path, 'graph'), 'rb') as graph_file:
         # Load the graph file and deserialize it. The graph file is a protobuf containing only the waypoints and the
         # edges between them.
         data = graph_file.read()
@@ -79,16 +78,16 @@ def load_map(path):
             if len(waypoint.snapshot_id) == 0:
                 continue
             # Load the snapshot. Note that snapshots contain all of the raw data in a waypoint and may be large.
-            file_name = os.path.join(path, "waypoint_snapshots", waypoint.snapshot_id)
+            file_name = os.path.join(path, 'waypoint_snapshots', waypoint.snapshot_id)
             if not os.path.exists(file_name):
                 continue
-            with open(file_name, "rb") as snapshot_file:
+            with open(file_name, 'rb') as snapshot_file:
                 waypoint_snapshot = map_pb2.WaypointSnapshot()
                 waypoint_snapshot.ParseFromString(snapshot_file.read())
                 current_waypoint_snapshots[waypoint_snapshot.id] = waypoint_snapshot
 
                 for fiducial in waypoint_snapshot.objects:
-                    if not fiducial.HasField("apriltag_properties"):
+                    if not fiducial.HasField('apriltag_properties'):
                         continue
 
                     str_id = str(fiducial.apriltag_properties.tag_id)
@@ -103,18 +102,19 @@ def load_map(path):
         for edge in current_graph.edges:
             if len(edge.snapshot_id) == 0:
                 continue
-            file_name = os.path.join(path, "edge_snapshots", edge.snapshot_id)
+            file_name = os.path.join(path, 'edge_snapshots', edge.snapshot_id)
             if not os.path.exists(file_name):
                 continue
-            with open(file_name, "rb") as snapshot_file:
+            with open(file_name, 'rb') as snapshot_file:
                 edge_snapshot = map_pb2.EdgeSnapshot()
                 edge_snapshot.ParseFromString(snapshot_file.read())
                 current_edge_snapshots[edge_snapshot.id] = edge_snapshot
         for anchor in current_graph.anchoring.anchors:
             current_anchors[anchor.id] = anchor
-        print("Loaded graph with {} waypoints, {} edges, {} anchors, and {} anchored world objects".
-              format(len(current_graph.waypoints), len(current_graph.edges),
-                     len(current_graph.anchoring.anchors), len(current_graph.anchoring.objects)))
+        print(
+            f'Loaded graph with {len(current_graph.waypoints)} waypoints, {len(current_graph.edges)} edges, '
+            f'{len(current_graph.anchoring.anchors)} anchors, and {len(current_graph.anchoring.objects)} '
+            f'anchored world objects')
         return (current_graph, current_waypoints, current_waypoint_snapshots,
                 current_edge_snapshots, current_anchors, current_anchored_world_objects)
 
@@ -123,16 +123,15 @@ def write_ply(data, output):
     """
     Writes an ASCII PLY file to the output file path.
     """
-    print('Saving to {}'.format(output))
+    print(f'Saving to {output}')
     with open(output, 'w') as f:
         num_points = data.shape[0]
-        f.write(
-            'ply\nformat ascii 1.0\nelement vertex {}\nproperty float x\nproperty float y\nproperty float z\nend_header\n'
-            .format(num_points))
+        f.write(f'ply\nformat ascii 1.0\nelement vertex {num_points}\n'
+                f'property float x\nproperty float y\nproperty float z\nend_header\n')
 
         for i in range(0, num_points):
             (x, y, z) = data[i, :]
-            f.write('{} {} {}\n'.format(x, y, z))
+            f.write(f'{x} {y} {z}\n')
 
 
 def main(argv):

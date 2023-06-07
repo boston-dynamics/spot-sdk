@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,7 +10,7 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-from google.protobuf.wrappers_pb2 import FloatValue
+from google.protobuf.wrappers_pb2 import FloatValue, Int32Value
 
 from bosdyn.api.spot_cam import ptz_pb2, service_pb2_grpc
 from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
@@ -119,6 +119,72 @@ class PtzClient(BaseClient):
                                self._initialize_lens_from_response, common_header_errors,
                                copy_request=False, **kwargs)
 
+    # Manual Focus RPCs
+
+    def get_ptz_focus_state(self, **kwargs):
+        """Retrieve focus of the mechanical ptz
+
+        Args:
+            focus_mode (PtzFocusMode): Enum indicating whether to autofocus or manually focus
+            distance (float): Approximate distance to focus on, most accurate between 1.2m and 20m,
+                only settable in PTZ_FOCUS_MANUAL mode
+            focus_position (int32): Precise lens position for the camera for repeatable operations,
+                overrides distance if specified, only settable in PTZ_FOCUS_MANUAL mode
+
+        Returns:
+            PtzFocusState containing the current focus mode and position
+        """
+        request = ptz_pb2.GetPtzFocusStateRequest()
+        return self.call(self._stub.GetPtzFocusState, request,
+                         self._get_ptz_focus_state_from_response, common_header_errors,
+                         copy_request=False, **kwargs)
+
+    def get_ptz_focus_state_async(self, **kwargs):
+        """Async version of get_ptz_focus_state()"""
+        request = ptz_pb2.GetPtzFocusStateRequest()
+        return self.call_async(self._stub.GetPtzFocusState, request,
+                               self._get_ptz_focus_state_from_response, common_header_errors,
+                               copy_request=False, **kwargs)
+
+    def set_ptz_focus_state(self, focus_mode, distance=None, focus_position=None, **kwargs):
+        """Set focus of the mechanical ptz
+
+        Args:
+            focus_mode (PtzFocusMode): Enum indicating whether to autofocus or manually focus
+            distance (float): Approximate distance to focus on, most accurate between 1.2m and 20m,
+                only settable in PTZ_FOCUS_MANUAL mode
+            focus_position (int32): Precise lens position for the camera for repeatable operations,
+                overrides distance if specified, only settable in PTZ_FOCUS_MANUAL mode
+
+        Returns:
+            SetPtzFocusStateResponse indicating whether the call was successful
+        """
+
+        request = self._make_set_ptz_focus_state_request(focus_mode, distance, focus_position)
+
+        return self.call(self._stub.SetPtzFocusState, request,
+                         self._set_ptz_focus_state_from_response, common_header_errors,
+                         copy_request=False, **kwargs)
+
+    def set_ptz_focus_state_async(self, focus_mode, distance=None, focus_position=None, **kwargs):
+        """Async version of set_ptz_focus_state()"""
+
+        request = self._make_set_ptz_focus_state_request(focus_mode, distance, focus_position)
+
+        return self.call_async(self._stub.SetPtzFocusState, request,
+                               self._set_ptz_focus_state_from_response, common_header_errors,
+                               copy_request=False, **kwargs)
+
+    @staticmethod
+    def _make_set_ptz_focus_state_request(focus_mode, distance, focus_position):
+        request = ptz_pb2.SetPtzFocusStateRequest()
+        request.focus_state.mode = focus_mode
+        if focus_position is not None:
+            request.focus_state.focus_position.value = focus_position
+        elif distance is not None:
+            request.focus_state.approx_distance.value = distance
+        return request
+
     @staticmethod
     def _list_ptz_from_response(response):
         return response.ptzs
@@ -145,12 +211,12 @@ class PtzClient(BaseClient):
 
     # Focus methods
     @staticmethod
-    def _get_ptz_focus_from_response(response):
-        return response.ptz_focus
+    def _get_ptz_focus_state_from_response(response):
+        return response.focus_state
 
     @staticmethod
-    def _set_ptz_focus_from_response(response):
-        return response.ptz_focus
+    def _set_ptz_focus_state_from_response(response):
+        return response
 
 
 def shift_pan_angle(pan):

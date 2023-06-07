@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -91,8 +91,8 @@ Specifically, to test the image service and the data acquisition plugin docker i
 export DEVICE_PATH=/dev/video0
 export WEBCAM_PORT=5000
 export BATTERY_PORT=5050
-docker run --device=$DEVICE_PATH --network=host web_cam_image_service $ROBOT_IP --payload-credentials-file $CRED_FILE --host-ip $SELF_IP --port $WEBCAM_PORT --device-name $DEVICE_PATH
-docker run --network=host battery_service $ROBOT_IP --payload-credentials-file $CRED_FILE --host-ip $SELF_IP --port $BATTERY_PORT
+docker run --device=$DEVICE_PATH --network=host --volume $CRED_FILE:/cred_file web_cam_image_service $ROBOT_IP --payload-credentials-file /cred_file --host-ip $SELF_IP --port $WEBCAM_PORT --device-name $DEVICE_PATH
+docker run --network=host --volume $CRED_FILE:/cred_file  battery_service $ROBOT_IP --payload-credentials-file /cred_file --host-ip $SELF_IP --port $BATTERY_PORT
 ```
 
 You will need to ensure that `$WEBCAM_PORT` and `$BATTERY_PORT` are accessible on your computer and not blocked by any firewall or networking rules.

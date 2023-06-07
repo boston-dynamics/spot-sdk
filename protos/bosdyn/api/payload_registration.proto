@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -35,7 +35,8 @@ message RegisterPayloadResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened
+        // if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The new service record is available.
@@ -59,22 +60,26 @@ message UpdatePayloadVersionRequest {
     PayloadCredentials payload_credentials = 5;
 
     // The GUID of the payload to be updated.
+    // DEPRECATED as of 3.0.0. Please use payload_credentials instead.
     string payload_guid = 2 [deprecated = true];
 
     // The payload secret for the specified payload.
+    // DEPRECATED as of 3.0.0. Please use payload_credentials instead.
     string payload_secret = 3 [deprecated = true];
 
     // The new software version that the payload is being updated to.
     SoftwareVersion updated_version = 4;
 }
 
-// The UpdatePayloadVersion response message contains the status of whether the update was successful.
+// The UpdatePayloadVersion response message contains the status of whether the update was
+// successful.
 message UpdatePayloadVersionResponse {
     // Common response header.
     ResponseHeader header = 1;
 
     enum Status {
-        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened
+        // if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The payload version has been updated.
@@ -83,7 +88,8 @@ message UpdatePayloadVersionResponse {
         // UpdatePayload failed because a payload with this GUID does not yet exist.
         STATUS_DOES_NOT_EXIST = 2;
 
-        // UpdatePayload failed because the paylod guid & secret do not match any registered payloads.
+        // UpdatePayload failed because the paylod guid & secret do not match any registered
+        // payloads.
         STATUS_INVALID_CREDENTIALS = 3;
     }
     // Return status for the request.
@@ -101,9 +107,11 @@ message GetPayloadAuthTokenRequest {
     PayloadCredentials payload_credentials = 4;
 
     // The GUID to identify which payload to get the auth token for.
+    // DEPRECATED as of 3.0.0. Please use payload_credentials instead.
     string payload_guid = 2 [deprecated = true];
 
     // The payload secret for the specified payload.
+    // DEPRECATED as of 3.0.0. Please use payload_credentials instead.
     string payload_secret = 3 [deprecated = true];
 }
 
@@ -113,18 +121,19 @@ message GetPayloadAuthTokenResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened
+        // if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The token is available.
         STATUS_OK = 1;
 
-        // GetPayloadAuthToken failed because the paylod guid & secret do not match any registered payloads.
+        // GetPayloadAuthToken failed because the paylod guid & secret do not match any registered
+        // payloads.
         STATUS_INVALID_CREDENTIALS = 2;
 
         // GetPayloadAuthToken failed because the paylod has not been authorized by an admin.
         STATUS_PAYLOAD_NOT_AUTHORIZED = 3;
-
     }
     // Return status for the request.
     Status status = 2;
@@ -140,7 +149,7 @@ message UpdatePayloadAttachedRequest {
     // Common request header.
     RequestHeader header = 1;
 
-    // Payload credentials, used to identify the payload and authorize the changes. 
+    // Payload credentials, used to identify the payload and authorize the changes.
     PayloadCredentials payload_credentials = 2;
 
     enum Request {
@@ -152,13 +161,15 @@ message UpdatePayloadAttachedRequest {
     Request request = 3;
 }
 
-// The UpdatePayloadAttached response message contains the status of whether the update was successful.
+// The UpdatePayloadAttached response message contains the status of whether the update was
+// successful.
 message UpdatePayloadAttachedResponse {
     // Common response header.
     ResponseHeader header = 1;
 
     enum Status {
-        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal PayloadRegistrationService issue has happened
+        // if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The payload version has been updated.
@@ -167,7 +178,8 @@ message UpdatePayloadAttachedResponse {
         // UpdatePayloadAttached failed because a payload with this GUID does not yet exist.
         STATUS_DOES_NOT_EXIST = 2;
 
-        // UpdatePayloadAttached failed because the paylod guid & secret do not match any registered payloads.
+        // UpdatePayloadAttached failed because the paylod guid & secret do not match any registered
+        // payloads.
         STATUS_INVALID_CREDENTIALS = 3;
 
         // UpdatePayloadAttached failed because the requested payload has not yet been authorized.
@@ -178,7 +190,7 @@ message UpdatePayloadAttachedResponse {
     Status status = 2;
 }
 
-// PayloadCredentials are used to authorize a payload. 
+// PayloadCredentials are used to authorize a payload.
 message PayloadCredentials {
     // The GUID of the payload.
     string guid = 1;

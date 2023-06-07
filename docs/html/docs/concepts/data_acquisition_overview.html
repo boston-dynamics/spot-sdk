@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data Acquisition Overview &mdash; Spot 3.2.3 documentation</title>
+  <title>Data Acquisition Overview &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -637,13 +679,13 @@
            <div itemprop="articleBody">
             
   <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="data-acquisition-overview">
-<h1>Data Acquisition Overview<a class="headerlink" href="#data-acquisition-overview" title="Permalink to this headline">¶</a></h1>
+<h1>Data Acquisition Overview<a class="headerlink" href="#data-acquisition-overview" title="Permalink to this heading">¶</a></h1>
 <p>Spot 2.1 release features a new system for acquiring, storing, and retrieving sensor data. These features are available in teleop mode, where users are controlling the robot from a client, such as the tablet, and in <code class="docutils literal notranslate"><span class="pre">Autowalk</span></code> mode, where the tablet is controlling the robot by replaying a recorded mission. This data acquisition functionality comprises of several new services and their associated clients.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service: The coordinating service that will capture images, robot metadata, and delegate to plugins to capture custom sensor data.</p></li>
@@ -652,20 +694,20 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><code class="docutils literal notranslate"><span class="pre">Image</span></code> services: Existing interface used in a new way. User-implemented image services will now be displayed in the tablet for driving, and be automatically capturable by the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service.</p></li>
 </ul>
 <section id="high-level-concepts">
-<h2>High-level concepts<a class="headerlink" href="#high-level-concepts" title="Permalink to this headline">¶</a></h2>
+<h2>High-level concepts<a class="headerlink" href="#high-level-concepts" title="Permalink to this heading">¶</a></h2>
 <section id="capture-capabilities">
-<h3>Capture capabilities<a class="headerlink" href="#capture-capabilities" title="Permalink to this headline">¶</a></h3>
+<h3>Capture capabilities<a class="headerlink" href="#capture-capabilities" title="Permalink to this heading">¶</a></h3>
 <p>Capture capabilities are human-readable identifiers for the type of data captured by <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services or <code class="docutils literal notranslate"><span class="pre">Image</span></code> services. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service compiles this list of capture capabilities from all the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services and <code class="docutils literal notranslate"><span class="pre">Image</span></code> services registered in the system.
 Each <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> service reports the capture capabilities it provides. For example, a plugin that captures <code class="docutils literal notranslate"><span class="pre">GPS</span></code> data can report a capture capability named “GPS”. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service requests this information from a plugin when the plugin registers with the directory service. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service also reports all image sources listed by the <code class="docutils literal notranslate"><span class="pre">Image</span></code> services registered in the system as capture capabilities.
 The tablet requests this complete list of capture capabilities from the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services and the <code class="docutils literal notranslate"><span class="pre">Image</span></code> services from the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service.</p>
 </section>
 <section id="actions">
-<h3>Actions<a class="headerlink" href="#actions" title="Permalink to this headline">¶</a></h3>
+<h3>Actions<a class="headerlink" href="#actions" title="Permalink to this heading">¶</a></h3>
 <p>To simplify the data acquisition process, the tablet contains functionality to combine the capture capabilities described above into actions with unique names. So, actions are combinations of capture capabilities, configured with a specific timeout to wait for the capture completion. These capture actions can then be triggered programmatically through the SDK or by the tablet during teleop of the robot or mission recording using the Red Plus button on the tablet, shown in the screenshot below.</p>
 <p><img alt="Tablet Screenshot" src="../../_images/tablet_screenshot.png" /></p>
 </section>
 <section id="acquisition-request">
-<h3>Acquisition request:<a class="headerlink" href="#acquisition-request" title="Permalink to this headline">¶</a></h3>
+<h3>Acquisition request:<a class="headerlink" href="#acquisition-request" title="Permalink to this heading">¶</a></h3>
 <p>During teleop or <code class="docutils literal notranslate"><span class="pre">Autowalk</span></code>, a triggered action sends an acquisition request, which is an <code class="docutils literal notranslate"><span class="pre">AcquireDataRequest</span></code> message, to the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service. An acquisition request contains four parts:</p>
 <ol class="simple">
 <li><p>Action identifier: The action identifier in each acquisition request is created automatically by the tablet. It contains three fields:</p>
@@ -682,21 +724,21 @@ The tablet requests this complete list of capture capabilities from the <code cl
 <p>The outcome of an acquisition request is <code class="docutils literal notranslate"><span class="pre">Image</span></code> services and <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services collecting the requested data and storing it in the robot for downloading at a later time.</p>
 </section>
 <section id="groups">
-<h3>Groups<a class="headerlink" href="#groups" title="Permalink to this headline">¶</a></h3>
+<h3>Groups<a class="headerlink" href="#groups" title="Permalink to this heading">¶</a></h3>
 <p>Groups are a set of acquisition requests, such as a mission or a teleop capture session. They simplify the organization of the captured data. For example, all the captured data for a specific group is stored in the same folder in the downloaded data. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Store</span></code> client interface also provides methods for listing actions for a specific group.</p>
 </section>
 <section id="data-channels">
-<h3>Data Channels<a class="headerlink" href="#data-channels" title="Permalink to this headline">¶</a></h3>
+<h3>Data Channels<a class="headerlink" href="#data-channels" title="Permalink to this heading">¶</a></h3>
 <p>Each type of data is stored in different channels in the system. In the case of <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services, the plugin determines what the channel name is when storing the data in the system. In the case of <code class="docutils literal notranslate"><span class="pre">Image</span></code> services, the channel used to store an image is specified as {image service name}_{camera source name}. The system uses the channel name together with the action and group name to organize the data as shown in the diagram below.
 <img alt="Data Organization" src="../../_images/data_acquisition_data_organization.png" /></p>
 </section>
 <section id="downloaded-data">
-<h3>Downloaded Data<a class="headerlink" href="#downloaded-data" title="Permalink to this headline">¶</a></h3>
+<h3>Downloaded Data<a class="headerlink" href="#downloaded-data" title="Permalink to this heading">¶</a></h3>
 <p>Users can download acquired data using the tablet or any other client through a <code class="docutils literal notranslate"><span class="pre">REST</span></code> endpoint on the robot. The <code class="docutils literal notranslate"><span class="pre">REST</span></code> endpoint takes a start and end time for the data to download, as well as a set of channel names, in case the user is interested in downloading only a specific set of data types. The data is downloaded as a zip file with separate folders for each group. Each group folder contains all metadata combined in a file called <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> and a set of files for images and non-image data.</p>
 </section>
 </section>
 <section id="system-architecture">
-<h2>System architecture<a class="headerlink" href="#system-architecture" title="Permalink to this headline">¶</a></h2>
+<h2>System architecture<a class="headerlink" href="#system-architecture" title="Permalink to this heading">¶</a></h2>
 <p>The functionality described above is architected in the system as shown in the diagram below. During system initialization, the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service aggregates the list of capture capabilities from <code class="docutils literal notranslate"><span class="pre">Image</span></code> services and <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> services, and the users configure actions in the tablet. The tablet or the mission service sends acquisition requests to the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service to acquire data. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span></code> service farms out the acquisition requests to the right <code class="docutils literal notranslate"><span class="pre">Image</span></code> service and <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Acquisition</span> <span class="pre">Plugin</span></code> service to collect the data. The collected data is then sent to the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Buffer</span></code> service through the <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Store</span></code> service. The <code class="docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Buffer</span></code> service writes the collected data to files so they are available for download from the <code class="docutils literal notranslate"><span class="pre">REST</span></code> interface.</p>
 <p><img alt="Data Acquisition Architecture" src="../../_images/data_acquisition_architecture.png" /></p>
 <p>The Data Acquisition service provides the following RPCs:</p>
@@ -708,7 +750,7 @@ The tablet requests this complete list of capture capabilities from the <code cl
 </ol>
 </section>
 <section id="implementing-data-acquisition-services">
-<h2>Implementing Data Acquisition services<a class="headerlink" href="#implementing-data-acquisition-services" title="Permalink to this headline">¶</a></h2>
+<h2>Implementing Data Acquisition services<a class="headerlink" href="#implementing-data-acquisition-services" title="Permalink to this heading">¶</a></h2>
 <p>Please refer to <a class="reference internal" href="developing_api_services.html"><span class="doc">this document</span></a> on how to implement services in general and <a class="reference internal" href="writing_services_for_data_acquisition.html"><span class="doc">this document</span></a> on how to implement <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> or <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> to integrate a payload with the data acquisition capabilities of the robot.</p>
 </section>
 </section>

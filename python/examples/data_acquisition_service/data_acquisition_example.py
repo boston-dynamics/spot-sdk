@@ -1,11 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Tutorial to show how to use the data acquisition client"""
-from __future__ import print_function
 
 import argparse
 import sys
@@ -37,10 +36,10 @@ def data_acquisition(config):
     data_acq_client = robot.ensure_client(DataAcquisitionClient.default_service_name)
 
     now = robot.time_sync.robot_timestamp_from_local_secs(time.time())
-    group_name = "DataAcquisitionExample_{}".format(now.ToJsonString().replace(':', '-'))
+    group_name = f'DataAcquisitionExample_{now.ToJsonString().replace(":", "-")}'
 
     service_info = data_acq_client.get_service_info()
-    print("Available capabilities are:\n" + str(service_info))
+    print(f'Available capabilities are:\n{str(service_info)}')
 
     # Get the start time so we can download all data from this example.
     start_time_secs = time.time()
@@ -49,78 +48,78 @@ def data_acquisition(config):
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
     acquisition_requests.image_captures.extend([
         data_acquisition_pb2.ImageSourceCapture(
-            image_service="image", image_request=build_image_request("back_fisheye_image"))
+            image_service='image', image_request=build_image_request('back_fisheye_image'))
     ])
     acquisition_requests.data_captures.extend([
-        data_acquisition_pb2.DataCapture(name="robot-state"),
-        data_acquisition_pb2.DataCapture(name="detailed-position-data"),
-        data_acquisition_pb2.DataCapture(name="detected-objects")
+        data_acquisition_pb2.DataCapture(name='robot-state'),
+        data_acquisition_pb2.DataCapture(name='detailed-position-data'),
+        data_acquisition_pb2.DataCapture(name='detected-objects')
     ])
 
     acquire_and_process_request(data_acq_client, acquisition_requests, group_name,
-                                "InternalAcquisitions")
+                                'InternalAcquisitions')
 
     # Request 2 contains capture requests for all the capabilities and a user-generated metadata
     # struct.
     json_struct = Struct()
-    json_struct.update({"user_comment": "it is raining"})
+    json_struct.update({'user_comment': 'it is raining'})
     metadata = data_acquisition_pb2.Metadata(data=json_struct)
 
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
     acquisition_requests.image_captures.extend([
         data_acquisition_pb2.ImageSourceCapture(
-            image_service="image", image_request=build_image_request("left_fisheye_image")),
+            image_service='image', image_request=build_image_request('left_fisheye_image')),
         data_acquisition_pb2.ImageSourceCapture(
-            image_service="image", image_request=build_image_request("right_fisheye_image"))
+            image_service='image', image_request=build_image_request('right_fisheye_image'))
     ])
     acquisition_requests.data_captures.extend([
-        data_acquisition_pb2.DataCapture(name="robot-state"),
-        data_acquisition_pb2.DataCapture(name="detailed-position-data"),
-        data_acquisition_pb2.DataCapture(name="basic-position-data"),
-        data_acquisition_pb2.DataCapture(name="detected-objects"),
-        data_acquisition_pb2.DataCapture(name="GPS"),
-        data_acquisition_pb2.DataCapture(name="velodyne-point-cloud")
+        data_acquisition_pb2.DataCapture(name='robot-state'),
+        data_acquisition_pb2.DataCapture(name='detailed-position-data'),
+        data_acquisition_pb2.DataCapture(name='basic-position-data'),
+        data_acquisition_pb2.DataCapture(name='detected-objects'),
+        data_acquisition_pb2.DataCapture(name='GPS'),
+        data_acquisition_pb2.DataCapture(name='velodyne-point-cloud')
     ])
 
     acquire_and_process_request(data_acq_client, acquisition_requests, group_name,
-                                "AllAcquisitions", metadata)
+                                'AllAcquisitions', metadata)
 
-    # Request 3 contains capture requests for only one capability from main DAQ and one capability
-    # from DAQ plugin.
+    # Request 3 contains capture requests for only one capability from main Data Acquisition service
+    # and one capability from a Data Acquisition plugin.
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
     acquisition_requests.data_captures.extend([
-        data_acquisition_pb2.DataCapture(name="robot-state"),
-        data_acquisition_pb2.DataCapture(name="GPS"),
-        data_acquisition_pb2.DataCapture(name="velodyne-point-cloud"),
+        data_acquisition_pb2.DataCapture(name='robot-state'),
+        data_acquisition_pb2.DataCapture(name='GPS'),
+        data_acquisition_pb2.DataCapture(name='velodyne-point-cloud'),
     ])
 
     acquire_and_process_request(data_acq_client, acquisition_requests, group_name,
-                                "PartialAcquisitions")
+                                'PartialAcquisitions')
 
     # Request #4 shows how to issue and then cancel different data acquisition requests (one on-robot
     # data source and one off-robot plugin data source).
-    print("\n-----------------------------------")
+    print('\n-----------------------------------')
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
     acquisition_requests.data_captures.extend([
-        data_acquisition_pb2.DataCapture(name="robot-state"),
-        data_acquisition_pb2.DataCapture(name="slow-gps"),
+        data_acquisition_pb2.DataCapture(name='robot-state'),
+        data_acquisition_pb2.DataCapture(name='slow-gps'),
     ])
     request_id, action_id = issue_acquire_data_request(data_acq_client, acquisition_requests,
-                                                       group_name, "AcquisitionsToCancel")
+                                                       group_name, 'AcquisitionsToCancel')
     time.sleep(2)
     cancel_acquisition_request(data_acq_client, request_id)
 
     # Request 5 contains a SpotCAM capture request.
     acquisition_requests = data_acquisition_pb2.AcquisitionRequestList()
     acquisition_requests.data_captures.extend([
-        data_acquisition_pb2.DataCapture(name="spot-cam-pano"),
-        data_acquisition_pb2.DataCapture(name="spot-cam-ptz"),
-        data_acquisition_pb2.DataCapture(name="spot-cam-ir"),
-        data_acquisition_pb2.DataCapture(name="robot-state")
+        data_acquisition_pb2.DataCapture(name='spot-cam-pano'),
+        data_acquisition_pb2.DataCapture(name='spot-cam-ptz'),
+        data_acquisition_pb2.DataCapture(name='spot-cam-ir'),
+        data_acquisition_pb2.DataCapture(name='robot-state')
     ])
 
     acquire_and_process_request(data_acq_client, acquisition_requests, group_name,
-                                "SpotCAMAcquisitions")
+                                'SpotCAMAcquisitions')
 
     # Get the end time, and download all the data from the example.
     end_time_secs = time.time()

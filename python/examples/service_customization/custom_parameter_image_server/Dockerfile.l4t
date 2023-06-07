@@ -1,0 +1,17 @@
+FROM nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf2.7-py3
+
+# Requirements for opencv to work.
+RUN apt-get update && apt-get install -y --no-install-recommends python3-opencv
+
+COPY docker-requirements-l4t.txt prebuilt/*.whl ./
+
+# Install the python requirements
+RUN python3 -m pip install pip==21.3.1 setuptools==59.6.0 wheel==0.37.1 && \
+    python3 -m pip install -r docker-requirements-l4t.txt --find-links .
+
+COPY custom_parameter_image_server.py /app/
+WORKDIR /app
+
+ENTRYPOINT ["python3", "/app/custom_parameter_image_server.py"]
+# Default arguments for running on the CORE I/O
+CMD [ "payload", "192.168.50.3", "--host-ip=192.168.50.5", "--payload-credentials-file=/creds/payload_guid_and_secret" ]

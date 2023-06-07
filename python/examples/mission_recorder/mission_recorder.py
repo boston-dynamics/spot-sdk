@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -7,8 +7,6 @@
 """
 Interactive command-line mission recorder
 """
-
-from __future__ import print_function
 
 import curses
 import logging
@@ -67,7 +65,7 @@ def _grpc_or_log(desc, thunk):
     try:
         return thunk()
     except (ResponseError, RpcError) as err:
-        LOGGER.error("Failed %s: %s" % (desc, err))
+        LOGGER.error('Failed %s: %s', desc, err)
 
 
 class ExitCheck(object):
@@ -107,14 +105,14 @@ class CursesHandler(logging.Handler):
     def emit(self, record):
         msg = record.getMessage()
         msg = msg.replace('\n', ' ').replace('\r', '')
-        self._wasd_interface.add_message('{:s} {:s}'.format(record.levelname, msg))
+        self._wasd_interface.add_message(f'{record.levelname:s} {msg:s}')
 
 
 class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
 
     def __init__(self, robot_state_client):
-        super(AsyncRobotState, self).__init__("robot_state", robot_state_client, LOGGER,
+        super(AsyncRobotState, self).__init__('robot_state', robot_state_client, LOGGER,
                                               period_sec=0.2)
 
     def _start_query(self):
@@ -219,7 +217,7 @@ class RecorderInterface(object):
 
     def shutdown(self):
         """Release control of robot as gracefully as possible."""
-        LOGGER.info("Shutting down WasdInterface.")
+        LOGGER.info('Shutting down WasdInterface.')
         if self._estop_keepalive:
             # This stops the check-in thread but does not stop the robot.
             self._estop_keepalive.shutdown()
@@ -296,8 +294,7 @@ class RecorderInterface(object):
         """Draw the interface screen at each update."""
         stdscr.clear()  # clear screen
         stdscr.resize(26, 96)
-        stdscr.addstr(0, 0, '{:20s} {}'.format(self._robot_id.nickname,
-                                               self._robot_id.serial_number))
+        stdscr.addstr(0, 0, f'{self._robot_id.nickname:20s} {self._robot_id.serial_number}')
         stdscr.addstr(1, 0, self._lease_str(lease_keep_alive))
         stdscr.addstr(2, 0, self._battery_str())
         stdscr.addstr(3, 0, self._estop_str())
@@ -308,16 +305,16 @@ class RecorderInterface(object):
         stdscr.addstr(8, 0, self._desert_str())
         for i in range(3):
             stdscr.addstr(10 + i, 2, self.message(i))
-        stdscr.addstr(14, 0, "Commands: [TAB]: quit                               ")
-        stdscr.addstr(15, 0, "          [T]: Time-sync, [SPACE]: Estop, [P]: Power")
-        stdscr.addstr(16, 0, "          [v]: Sit, [f]: Stand, [r]: Self-right     ")
-        stdscr.addstr(17, 0, "          [wasd]: Directional strafing              ")
-        stdscr.addstr(18, 0, "          [qe]: Turning, [ESC]: Stop                ")
-        stdscr.addstr(19, 0, "          [m]: Start recording mission              ")
-        stdscr.addstr(20, 0, "          [l]: Add fiducial localization to mission ")
-        stdscr.addstr(21, 0, "          [z]: Enter desert mode                    ")
-        stdscr.addstr(22, 0, "          [x]: Exit desert mode                     ")
-        stdscr.addstr(23, 0, "          [g]: Stop recording and generate mission  ")
+        stdscr.addstr(14, 0, 'Commands: [TAB]: quit                               ')
+        stdscr.addstr(15, 0, '          [T]: Time-sync, [SPACE]: Estop, [P]: Power')
+        stdscr.addstr(16, 0, '          [v]: Sit, [f]: Stand, [r]: Self-right     ')
+        stdscr.addstr(17, 0, '          [wasd]: Directional strafing              ')
+        stdscr.addstr(18, 0, '          [qe]: Turning, [ESC]: Stop                ')
+        stdscr.addstr(19, 0, '          [m]: Start recording mission              ')
+        stdscr.addstr(20, 0, '          [l]: Add fiducial localization to mission ')
+        stdscr.addstr(21, 0, '          [z]: Enter desert mode                    ')
+        stdscr.addstr(22, 0, '          [x]: Exit desert mode                     ')
+        stdscr.addstr(23, 0, '          [g]: Stop recording and generate mission  ')
 
         stdscr.refresh()
 
@@ -329,13 +326,13 @@ class RecorderInterface(object):
 
         except KeyError:
             if key and key != -1 and key < 256:
-                self.add_message("Unrecognized keyboard command: '{}'".format(chr(key)))
+                self.add_message(f'Unrecognized keyboard command: \'{chr(key)}\'')
 
     def _try_grpc(self, desc, thunk):
         try:
             return thunk()
         except (ResponseError, RpcError) as err:
-            self.add_message("Failed {}: {}".format(desc, err))
+            self.add_message(f'Failed {desc}: {err}')
             return None
 
     def _quit_program(self):
@@ -358,7 +355,7 @@ class RecorderInterface(object):
             if not self._estop_keepalive:
                 self._estop_keepalive = EstopKeepAlive(self._estop_endpoint)
             else:
-                self._try_grpc("stopping estop", self._estop_keepalive.stop)
+                self._try_grpc('stopping estop', self._estop_keepalive.stop)
                 self._estop_keepalive.shutdown()
                 self._estop_keepalive = None
 
@@ -420,12 +417,12 @@ class RecorderInterface(object):
             return
 
         if power_state == robot_state_proto.PowerState.STATE_OFF:
-            self._try_grpc("powering-on", self._request_power_on)
+            self._try_grpc('powering-on', self._request_power_on)
         else:
-            self._try_grpc("powering-off", self._safe_power_off)
+            self._try_grpc('powering-off', self._safe_power_off)
 
     def _request_power_on(self):
-        bosdyn.client.power.power_on(self._power_client)
+        bosdyn.client.power.power_on_motors(self._power_client)
 
     def _safe_power_off(self):
         self._start_robot_command('safe_power_off', RobotCommandBuilder.safe_power_off_command())
@@ -439,15 +436,15 @@ class RecorderInterface(object):
     def _lease_str(self, lease_keep_alive):
         alive = 'RUNNING' if lease_keep_alive.is_alive() else 'STOPPED'
         lease_proto = lease_keep_alive.lease_wallet.get_lease_state().lease_original.lease_proto
-        lease = '{}:{}'.format(lease_proto.resource, lease_proto.sequence)
-        return 'Lease {} THREAD:{}'.format(lease, alive)
+        lease = f'{lease_proto.resource}:{lease_proto.sequence}'
+        return f'Lease {lease} THREAD:{alive}'
 
     def _power_state_str(self):
         power_state = self._power_state()
         if power_state is None:
             return ''
         state_str = robot_state_proto.PowerState.MotorPowerState.Name(power_state)
-        return 'Power: {}'.format(state_str[6:])  # get rid of STATE_ prefix
+        return f'Power: {state_str[6:]}'  # get rid of STATE_ prefix
 
     def _estop_str(self):
         if not self._estop_client:
@@ -461,7 +458,7 @@ class RecorderInterface(object):
                 if estop_state.type == estop_state.TYPE_SOFTWARE:
                     estop_status = estop_state.State.Name(estop_state.state)[6:]  # s/STATE_//
                     break
-        return 'Estop {} (thread: {})'.format(estop_status, thread_status)
+        return f'Estop {estop_status} (thread: {thread_status})'
 
     def _time_sync_str(self):
         if not self._robot.time_sync:
@@ -470,18 +467,18 @@ class RecorderInterface(object):
             status = 'STOPPED'
             exception = self._robot.time_sync.thread_exception
             if exception:
-                status = '{} Exception: {}'.format(status, exception)
+                status = f'{status} Exception: {exception}'
         else:
             status = 'RUNNING'
         try:
             skew = self._robot.time_sync.get_robot_clock_skew()
             if skew:
-                skew_str = 'offset={}'.format(duration_str(skew))
+                skew_str = f'offset={duration_str(skew)}'
             else:
-                skew_str = "(Skew undetermined)"
+                skew_str = '(Skew undetermined)'
         except (TimeSyncError, RpcError) as err:
-            skew_str = '({})'.format(err)
-        return 'Time sync: {} {}'.format(status, skew_str)
+            skew_str = f'({err})'
+        return f'Time sync: {status} {skew_str}'
 
     def _waypoint_str(self):
         state = self._graph_nav_client.get_localization_state()
@@ -496,12 +493,12 @@ class RecorderInterface(object):
         if self._recording and self._waypoint_id != 'NONE' and self._waypoint_id != 'ERROR':
             if self._waypoint_id not in self._desert_flag:
                 self._desert_flag[self._waypoint_id] = self._desert_mode
-            return 'Current waypoint: {} [ RECORDING ]'.format(self._waypoint_id)
+            return f'Current waypoint: {self._waypoint_id} [ RECORDING ]'
 
-        return 'Current waypoint: {}'.format(self._waypoint_id)
+        return f'Current waypoint: {self._waypoint_id}'
 
     def _fiducial_str(self):
-        return 'Visible fiducials: {}'.format(str(self._count_visible_fiducials()))
+        return f'Visible fiducials: {str(self._count_visible_fiducials())}'
 
     def _desert_str(self):
         if self._desert_mode:
@@ -517,20 +514,20 @@ class RecorderInterface(object):
         status = status[7:]  # get rid of STATUS_ prefix
         if battery_state.charge_percentage.value:
             bar_len = int(battery_state.charge_percentage.value) // 10
-            bat_bar = '|{}{}|'.format('=' * bar_len, ' ' * (10 - bar_len))
+            bat_bar = f'|{"=" * bar_len}{" " * (10 - bar_len)}|'
         else:
             bat_bar = ''
         time_left = ''
         if battery_state.estimated_runtime:
-            time_left = ' ({})'.format(secs_to_hms(battery_state.estimated_runtime.seconds))
-        return 'Battery: {}{}{}'.format(status, bat_bar, time_left)
+            time_left = f'({secs_to_hms(battery_state.estimated_runtime.seconds)})'
+        return f'Battery: {status}{bat_bar} {time_left}'
 
     def _fiducial_visible(self):
         """Return True if robot can see fiducial."""
         request_fiducials = [world_object_pb2.WORLD_OBJECT_APRILTAG]
         fiducial_objects = self._world_object_client.list_world_objects(
             object_type=request_fiducials).world_objects
-        self.add_message("Fiducial objects: " + str(fiducial_objects))
+        self.add_message(f'Fiducial objects: {fiducial_objects}')
 
         if len(fiducial_objects) > 0:
             return True
@@ -540,11 +537,11 @@ class RecorderInterface(object):
     def _start_recording(self):
         """Start recording a map."""
         if self._count_visible_fiducials() == 0:
-            self.add_message("ERROR: Can't start recording -- No fiducials in view.")
+            self.add_message('ERROR: Can\'t start recording -- No fiducials in view.')
             return
 
         if self._waypoint_id is None:
-            self.add_message("ERROR: Not localized to waypoint.")
+            self.add_message('ERROR: Not localized to waypoint.')
             return
         session_name = os.path.basename(self._download_filepath)
         # Create metadata for the recording session.
@@ -557,15 +554,15 @@ class RecorderInterface(object):
         # Tell graph nav to start recording map
         status = self._recording_client.start_recording(recording_environment=environment)
         if status != recording_pb2.StartRecordingResponse.STATUS_OK:
-            self.add_message("Start recording failed.")
+            self.add_message('Start recording failed.')
             return
 
-        self.add_message("Started recording map.")
+        self.add_message('Started recording map.')
         self._graph = None
         self._all_graph_wps_in_order = []
         state = self._graph_nav_client.get_localization_state()
         if '' == state.localization.waypoint_id:
-            self.add_message("No localization after start recording.")
+            self.add_message('No localization after start recording.')
             self._recording_client.stop_recording()
             return
         self._waypoint_commands = []
@@ -598,18 +595,18 @@ class RecorderInterface(object):
                 except NotReadyYetError:
                     # The recording service always takes some time to complete. stop_recording
                     # must be called multiple times to ensure recording has finished.
-                    self.add_message("Stopping...")
+                    self.add_message('Stopping...')
                     time.sleep(1.0)
                     continue
                 break
 
-            self.add_message("Successfully stopped recording a map.")
+            self.add_message('Successfully stopped recording a map.')
             return True
 
         except NotLocalizedToEndError:
             # This should never happen unless there's an internal error on the robot.
             self.add_message(
-                "There was a problem while trying to stop recording. Please try again.")
+                'There was a problem while trying to stop recording. Please try again.')
             return False
 
     def _relocalize(self):
@@ -618,7 +615,7 @@ class RecorderInterface(object):
             print('Not recording mission.')
             return False
 
-        self.add_message("Adding fiducial localization to mission.")
+        self.add_message('Adding fiducial localization to mission.')
         self._waypoint_commands += [self._waypoint_id]
         self._waypoint_commands += ['LOCALIZE']
 
@@ -643,31 +640,31 @@ class RecorderInterface(object):
 
         # Check whether mission has been recorded
         if not self._recording:
-            self.add_message("ERROR: No mission recorded.")
+            self.add_message('ERROR: No mission recorded.')
             return
 
         # Check for empty mission
         if len(self._waypoint_commands) == 0:
-            self.add_message("ERROR: No waypoints in mission.")
+            self.add_message('ERROR: No waypoints in mission.')
             return
 
         # Stop recording mission
         if not self._stop_recording():
-            self.add_message("ERROR: Error while stopping recording.")
+            self.add_message('ERROR: Error while stopping recording.')
             return
 
         # Save graph map
         os.mkdir(self._download_filepath)
         if not self._download_full_graph():
-            self.add_message("ERROR: Error downloading graph.")
+            self.add_message('ERROR: Error downloading graph.')
             return
 
         # Generate mission
         mission = self._make_mission()
 
         # Save mission file
-        os.mkdir(os.path.join(self._download_filepath, "missions"))
-        mission_filepath = os.path.join(self._download_filepath, "missions", "autogenerated")
+        os.mkdir(os.path.join(self._download_filepath, 'missions'))
+        mission_filepath = os.path.join(self._download_filepath, 'missions', 'autogenerated')
         write_mission(mission, mission_filepath)
 
         # Quit program
@@ -681,7 +678,7 @@ class RecorderInterface(object):
         """Download the graph and snapshots from the robot."""
         graph = self._graph_nav_client.download_graph()
         if graph is None:
-            self.add_message("Failed to download the graph.")
+            self.add_message('Failed to download the graph.')
             return False
 
         if overwrite_desert_flag is not None:
@@ -699,8 +696,8 @@ class RecorderInterface(object):
 
         # Write graph map
         self._write_full_graph(graph)
-        self.add_message("Graph downloaded with {} waypoints and {} edges".format(
-            len(graph.waypoints), len(graph.edges)))
+        self.add_message(
+            f'Graph downloaded with {len(graph.waypoints)} waypoints and {len(graph.edges)} edges')
 
         # Download the waypoint and edge snapshots.
         self._download_and_write_waypoint_snapshots(graph.waypoints)
@@ -733,13 +730,14 @@ class RecorderInterface(object):
                     waypoint.snapshot_id)
             except Exception:
                 # Failure in downloading waypoint snapshot. Continue to next snapshot.
-                self.add_message("Failed to download waypoint snapshot: " + waypoint.snapshot_id)
+                self.add_message(f'Failed to download waypoint snapshot: {waypoint.snapshot_id}')
                 continue
             write_bytes(os.path.join(self._download_filepath, 'waypoint_snapshots'),
                         waypoint.snapshot_id, waypoint_snapshot.SerializeToString())
             num_waypoint_snapshots_downloaded += 1
-            self.add_message("Downloaded {} of the total {} waypoint snapshots.".format(
-                num_waypoint_snapshots_downloaded, len(waypoints)))
+            self.add_message(
+                f'Downloaded {num_waypoint_snapshots_downloaded} of the total {len(waypoints)} waypoint snapshots.'
+            )
 
     def _download_and_write_edge_snapshots(self, edges):
         """Download the edge snapshots from robot to the specified, local filepath location."""
@@ -753,13 +751,14 @@ class RecorderInterface(object):
                 edge_snapshot = self._graph_nav_client.download_edge_snapshot(edge.snapshot_id)
             except Exception:
                 # Failure in downloading edge snapshot. Continue to next snapshot.
-                self.add_message("Failed to download edge snapshot: " + edge.snapshot_id)
+                self.add_message(f'Failed to download edge snapshot: {edge.snapshot_id}')
                 continue
             write_bytes(os.path.join(self._download_filepath, 'edge_snapshots'), edge.snapshot_id,
                         edge_snapshot.SerializeToString())
             num_edge_snapshots_downloaded += 1
-            self.add_message("Downloaded {} of the total {} edge snapshots.".format(
-                num_edge_snapshots_downloaded, num_to_download))
+            self.add_message(
+                f'Downloaded {num_edge_snapshots_downloaded} of the total {num_to_download} edge snapshots.'
+            )
 
     def _auto_close_loops(self):
         """Automatically find and close all loops in the graph."""
@@ -770,12 +769,12 @@ class RecorderInterface(object):
                 do_fiducial_loop_closure=wrappers.BoolValue(value=close_fiducial_loops),
                 do_odometry_loop_closure=wrappers.BoolValue(value=close_odometry_loops)),
             modify_map_on_server=True)
-        self.add_message("Created {} new edge(s).".format(len(response.new_subgraph.edges)))
+        self.add_message(f'Created {len(response.new_subgraph.edges)} new edge(s).')
 
     def _make_mission(self):
         """ Create a mission that visits each waypoint on stored path."""
 
-        self.add_message("Mission: " + str(self._waypoint_commands))
+        self.add_message(f'Mission: {self._waypoint_commands}')
 
         # Create a Sequence that visits all the waypoints.
         sequence = nodes_pb2.Sequence()
@@ -785,7 +784,7 @@ class RecorderInterface(object):
         for waypoint_command in self._waypoint_commands:
             if waypoint_command == 'LOCALIZE':
                 if prev_waypoint_command is None:
-                    raise RuntimeError(f'No prev waypoint; LOCALIZE')
+                    raise RuntimeError('No prev waypoint; LOCALIZE')
                 sequence.children.add().CopyFrom(self._make_localize_node(prev_waypoint_command))
             elif waypoint_command == 'INITIALIZE':
                 # Initialize to any fiducial.
@@ -804,14 +803,14 @@ class RecorderInterface(object):
 
         # Return a Node with the Sequence.
         ret = nodes_pb2.Node()
-        ret.name = "Visit %d goals" % len(self._waypoint_commands)
+        ret.name = f'Visit {len(self._waypoint_commands):d} goals'
         ret.impl.Pack(sequence)
         return ret
 
     def _make_goto_node(self, waypoint_id):
         """ Create a leaf node that will go to the waypoint. """
         ret = nodes_pb2.Node()
-        ret.name = "goto %s" % waypoint_id
+        ret.name = f'goto {waypoint_id}'
         vel_limit = NAV_VELOCITY_LIMITS
 
         # We don't actually know which path we will plan. It could have many feature deserts.
@@ -828,7 +827,7 @@ class RecorderInterface(object):
     def _make_go_route_node(self, prev_waypoint_id, waypoint_id):
         """ Create a leaf node that will go to the waypoint along a route. """
         ret = nodes_pb2.Node()
-        ret.name = "go route %s -> %s" % (prev_waypoint_id, waypoint_id)
+        ret.name = f'go route {prev_waypoint_id} -> {waypoint_id}'
         vel_limit = NAV_VELOCITY_LIMITS
 
         if prev_waypoint_id not in self._all_graph_wps_in_order:
@@ -878,7 +877,7 @@ class RecorderInterface(object):
     def _make_localize_node(self, waypoint_id):
         """Make localization node."""
         loc = nodes_pb2.Node()
-        loc.name = "localize robot"
+        loc.name = 'localize robot'
 
         impl = nodes_pb2.BosdynGraphNavLocalize()
         impl.localization_request.fiducial_init = graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST_AT_TARGET
@@ -890,7 +889,7 @@ class RecorderInterface(object):
     def _make_initialize_node(self):
         """Make initialization node."""
         loc = nodes_pb2.Node()
-        loc.name = "initialize robot"
+        loc.name = 'initialize robot'
 
         impl = nodes_pb2.BosdynGraphNavLocalize()
         impl.localization_request.fiducial_init = graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST
@@ -955,7 +954,7 @@ def main():
     options = parser.parse_args()
 
     if os.path.exists(options.directory):
-        LOGGER.error("ERROR: Directory %s already exists." % options.directory)
+        LOGGER.error('ERROR: Directory %s already exists.', options.directory)
         return False
 
     stream_handler = setup_logging(options.verbose)
@@ -967,7 +966,7 @@ def main():
         bosdyn.client.util.authenticate(robot)
         robot.start_time_sync(options.time_sync_interval_sec)
     except RpcError as err:
-        LOGGER.error("Failed to communicate with robot: %s" % err)
+        LOGGER.error('Failed to communicate with robot: %s', err)
         return False
 
     recorder_interface = RecorderInterface(robot, options.directory)
@@ -977,7 +976,7 @@ def main():
         # Save graph map
         os.mkdir(recorder_interface._download_filepath)
         if not recorder_interface._download_full_graph(overwrite_desert_flag=[]):
-            recorder_interface.add_message("ERROR: Error downloading graph.")
+            recorder_interface.add_message('ERROR: Error downloading graph.')
             return
 
         LOGGER.info(recorder_interface._all_graph_wps_in_order)
@@ -985,8 +984,8 @@ def main():
         mission = recorder_interface._make_mission()
 
         # Save mission file
-        os.mkdir(recorder_interface._download_filepath + "/missions")
-        mission_filepath = recorder_interface._download_filepath + "/missions/autogenerated"
+        os.mkdir(recorder_interface._download_filepath + '/missions')
+        mission_filepath = recorder_interface._download_filepath + '/missions/autogenerated'
         write_mission(mission, mission_filepath)
         return True
 
@@ -995,7 +994,7 @@ def main():
         try:
             recorder_interface.start(lease_keep_alive)
         except (ResponseError, RpcError) as err:
-            LOGGER.error("Failed to initialize robot communication: %s" % err)
+            LOGGER.error('Failed to initialize robot communication: %s', err)
             return False
 
         try:
@@ -1004,7 +1003,7 @@ def main():
             # Run recorder interface in curses mode, then restore terminal config.
             curses.wrapper(recorder_interface.drive)
         except Exception as e:
-            LOGGER.error("Mission recorder has thrown an error: %s" % repr(e))
+            LOGGER.error('Mission recorder has thrown an error: %r', e)
             LOGGER.error(traceback.format_exc())
         finally:
             # Restore stream handler after curses mode.
@@ -1013,7 +1012,7 @@ def main():
     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main():
         os._exit(1)
     os._exit(0)

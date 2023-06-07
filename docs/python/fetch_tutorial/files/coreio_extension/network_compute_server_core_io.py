@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -66,7 +66,7 @@ def process_thread(args, request_queue, response_queue):
         if isinstance(request, network_compute_bridge_pb2.ListAvailableModelsRequest):
             out_proto = network_compute_bridge_pb2.ListAvailableModelsResponse()
             for model_name in models:
-                out_proto.available_models.append(model_name)
+                out_proto.models.data.append(network_compute_bridge_pb2.ModelData(model_name=model_name))
             response_queue.put(out_proto)
             continue
         else:

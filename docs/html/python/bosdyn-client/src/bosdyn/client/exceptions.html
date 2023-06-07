@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Exceptions &mdash; Spot 3.2.3 documentation</title>
+  <title>Exceptions &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/language_data.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -639,215 +681,222 @@
            <div itemprop="articleBody">
             
   <section id="module-bosdyn.client.exceptions">
-<span id="exceptions"></span><h1>Exceptions<a class="headerlink" href="#module-bosdyn.client.exceptions" title="Permalink to this headline">¶</a></h1>
+<span id="exceptions"></span><h1>Exceptions<a class="headerlink" href="#module-bosdyn.client.exceptions" title="Permalink to this heading">¶</a></h1>
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.Error">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">Error</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.Error" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.Error">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">Error</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#Error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.Error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Base exception that all public api exceptions are derived from.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.ResponseError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">ResponseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ResponseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.ResponseError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.ResponseError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">ResponseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ResponseError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.ResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>Exception triggered by a server response whose rpc succeeded.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.InvalidRequestError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">InvalidRequestError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#InvalidRequestError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.InvalidRequestError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.InvalidRequestError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidRequestError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#InvalidRequestError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.InvalidRequestError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResponseError</span></code></a></p>
 <p>The provided request arguments are ill-formed or invalid, independent of the system state.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.LeaseUseError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">LeaseUseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#LeaseUseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.LeaseUseError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.LeaseUseError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">LeaseUseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lease_use_result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#LeaseUseError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.LeaseUseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResponseError</span></code></a></p>
 <p>Request was rejected due to using an invalid lease.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.LicenseError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">LicenseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#LicenseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.LicenseError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.LicenseError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">LicenseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#LicenseError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.LicenseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResponseError</span></code></a></p>
 <p>Request was rejected due to using an invalid license.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.ServerError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">ServerError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ServerError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.ServerError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.ServerError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">ServerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ServerError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.ServerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResponseError</span></code></a></p>
 <p>Service encountered an unrecoverable error.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.InternalServerError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">InternalServerError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#InternalServerError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.InternalServerError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ServerError" title="bosdyn.client.exceptions.ServerError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ServerError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.InternalServerError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">InternalServerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#InternalServerError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.InternalServerError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ServerError" title="bosdyn.client.exceptions.ServerError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerError</span></code></a></p>
 <p>Service experienced an unexpected error state.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.UnsetStatusError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">UnsetStatusError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnsetStatusError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnsetStatusError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ServerError" title="bosdyn.client.exceptions.ServerError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ServerError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.UnsetStatusError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">UnsetStatusError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnsetStatusError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnsetStatusError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ServerError" title="bosdyn.client.exceptions.ServerError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ServerError</span></code></a></p>
 <p>Response’s status field (in either message or common header) was UNKNOWN value.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.RpcError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">RpcError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#RpcError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.RpcError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.RpcError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">RpcError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#RpcError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.RpcError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>An error occurred trying to reach a service on the robot.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.RetryableRpcError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">RetryableRpcError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#RetryableRpcError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.RetryableRpcError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.RetryableRpcError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">RetryableRpcError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#RetryableRpcError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.RetryableRpcError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RpcError</span></code></a></p>
 <p>An RpcError that denotes the same request may succeed if retried.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.PersistentRpcError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">PersistentRpcError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#PersistentRpcError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.PersistentRpcError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.PersistentRpcError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">PersistentRpcError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#PersistentRpcError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.PersistentRpcError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RpcError</span></code></a></p>
 <p>An RpcError that will almost certainly continue to keep failing if retried</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.ClientCancelledOperationError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">ClientCancelledOperationError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ClientCancelledOperationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.ClientCancelledOperationError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.PersistentRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.ClientCancelledOperationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">ClientCancelledOperationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ClientCancelledOperationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.ClientCancelledOperationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentRpcError</span></code></a></p>
 <p>The user cancelled the rpc request.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.InvalidAppTokenError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">InvalidAppTokenError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#InvalidAppTokenError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.InvalidAppTokenError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.PersistentRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.InvalidAppTokenError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidAppTokenError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#InvalidAppTokenError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.InvalidAppTokenError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentRpcError</span></code></a></p>
 <p>The provided app token is invalid.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.InvalidClientCertificateError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">InvalidClientCertificateError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#InvalidClientCertificateError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.InvalidClientCertificateError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.PersistentRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.InvalidClientCertificateError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidClientCertificateError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#InvalidClientCertificateError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.InvalidClientCertificateError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentRpcError</span></code></a></p>
 <p>The provided client certificate is invalid.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.NonexistentAuthorityError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">NonexistentAuthorityError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#NonexistentAuthorityError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.NonexistentAuthorityError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.PersistentRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.NonexistentAuthorityError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">NonexistentAuthorityError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#NonexistentAuthorityError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.NonexistentAuthorityError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentRpcError</span></code></a></p>
 <p>The app token’s authority field names a nonexistent service.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.PermissionDeniedError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">PermissionDeniedError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#PermissionDeniedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.PermissionDeniedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.PersistentRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.PermissionDeniedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">PermissionDeniedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#PermissionDeniedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.PermissionDeniedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentRpcError</span></code></a></p>
 <p>The rpc request was denied access.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.ProxyConnectionError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">ProxyConnectionError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ProxyConnectionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.ProxyConnectionError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RetryableRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.ProxyConnectionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">ProxyConnectionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ProxyConnectionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.ProxyConnectionError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RetryableRpcError</span></code></a></p>
 <p>The proxy on the robot could not be reached.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.ResponseTooLargeError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">ResponseTooLargeError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ResponseTooLargeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.ResponseTooLargeError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RetryableRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.ResponseTooLargeError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">ResponseTooLargeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ResponseTooLargeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.ResponseTooLargeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RetryableRpcError</span></code></a></p>
 <p>The rpc response was larger than allowed max size.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.ServiceUnavailableError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">ServiceUnavailableError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ServiceUnavailableError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.ServiceUnavailableError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RetryableRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.ServiceUnavailableError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">ServiceUnavailableError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ServiceUnavailableError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.ServiceUnavailableError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RetryableRpcError</span></code></a></p>
 <p>The proxy could not find the (possibly unregistered) service.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.TooManyRequestsError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">TooManyRequestsError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#TooManyRequestsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.TooManyRequestsError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RetryableRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.TooManyRequestsError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">TooManyRequestsError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#TooManyRequestsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.TooManyRequestsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RetryableRpcError</span></code></a></p>
 <p>The remote procedure call did not go through the proxy due to rate limiting.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.ServiceFailedDuringExecutionError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">ServiceFailedDuringExecutionError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ServiceFailedDuringExecutionError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.ServiceFailedDuringExecutionError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RetryableRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.ServiceFailedDuringExecutionError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">ServiceFailedDuringExecutionError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#ServiceFailedDuringExecutionError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.ServiceFailedDuringExecutionError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RetryableRpcError</span></code></a></p>
 <p>The service encountered an unexpected failure.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.TimedOutError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">TimedOutError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#TimedOutError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.TimedOutError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RetryableRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.TimedOutError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">TimedOutError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#TimedOutError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.TimedOutError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RetryableRpcError</span></code></a></p>
 <p>The remote procedure call did not terminate within the allotted time.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.UnableToConnectToRobotError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">UnableToConnectToRobotError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnableToConnectToRobotError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnableToConnectToRobotError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RetryableRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.UnableToConnectToRobotError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">UnableToConnectToRobotError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnableToConnectToRobotError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnableToConnectToRobotError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RetryableRpcError</span></code></a></p>
 <p>The robot may be offline or otherwise unreachable.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.RetryableUnavailableError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">RetryableUnavailableError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#RetryableUnavailableError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.RetryableUnavailableError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.UnableToConnectToRobotError" title="bosdyn.client.exceptions.UnableToConnectToRobotError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.UnableToConnectToRobotError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.RetryableUnavailableError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">RetryableUnavailableError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#RetryableUnavailableError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.RetryableUnavailableError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.UnableToConnectToRobotError" title="bosdyn.client.exceptions.UnableToConnectToRobotError"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnableToConnectToRobotError</span></code></a></p>
 <p>Service unavailable or channel reset. Likely transient and can be resolved by retrying.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.UnauthenticatedError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">UnauthenticatedError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnauthenticatedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnauthenticatedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.PersistentRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.UnauthenticatedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">UnauthenticatedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnauthenticatedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnauthenticatedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentRpcError</span></code></a></p>
 <p>The user needs to authenticate or does not have permission to access requested service.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.UnknownDnsNameError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">UnknownDnsNameError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnknownDnsNameError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnknownDnsNameError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.PersistentRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.UnknownDnsNameError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">UnknownDnsNameError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnknownDnsNameError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnknownDnsNameError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentRpcError</span></code></a></p>
 <p>The system is unable to translate the domain name.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.NotFoundError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">NotFoundError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#NotFoundError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.NotFoundError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.PersistentRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.NotFoundError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">NotFoundError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#NotFoundError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.NotFoundError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentRpcError</span></code></a></p>
 <p>The backend system could not be found.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.UnimplementedError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">UnimplementedError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnimplementedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnimplementedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.PersistentRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.UnimplementedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">UnimplementedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#UnimplementedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.UnimplementedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.PersistentRpcError" title="bosdyn.client.exceptions.PersistentRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PersistentRpcError</span></code></a></p>
 <p>The API does not recognize the request and is unable to complete the request.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.TransientFailureError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">TransientFailureError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">original_error</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#TransientFailureError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.TransientFailureError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.RetryableRpcError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.TransientFailureError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">TransientFailureError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#TransientFailureError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.TransientFailureError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.RetryableRpcError" title="bosdyn.client.exceptions.RetryableRpcError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RetryableRpcError</span></code></a></p>
 <p>The channel is in state TRANSIENT_FAILURE, often caused by a connection failure.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.exceptions.TimeSyncRequired">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.exceptions.</code><code class="sig-name descname">TimeSyncRequired</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#TimeSyncRequired"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.exceptions.TimeSyncRequired" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.TimeSyncRequired">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">TimeSyncRequired</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#TimeSyncRequired"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.TimeSyncRequired" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>Time synchronization is required but none seems to be established.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="bosdyn.client.exceptions.CustomParamError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.exceptions.</span></span><span class="sig-name descname"><span class="pre">CustomParamError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_param_error</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/exceptions.html#CustomParamError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.exceptions.CustomParamError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResponseError</span></code></a></p>
+<p>A custom parameter that was provided did not match the specification</p>
 </dd></dl>
 
 </section>

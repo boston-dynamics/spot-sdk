@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -69,20 +69,20 @@ def main():
     ray_frame_name = options.frame_name
     min_distance = options.min_distance
 
-    print("Raycasting from position: {}".format(ray_origin))
-    print("Raycasting in direction: {}".format(ray_direction))
+    print(f'Raycasting from position: {ray_origin}')
+    print(f'Raycasting in direction: {ray_direction}')
 
     response = rc_client.raycast(ray_origin, ray_direction, raycast_types,
                                  min_distance=min_distance, frame_name=ray_frame_name)
 
-    print('Raycast returned {} hits.'.format(len(response.hits)))
+    print(f'Raycast returned {len(response.hits)} hits.')
     for idx, hit in enumerate(response.hits):
-        print('Hit {}:'.format(idx))
+        print(f'Hit {idx}:')
         hit_position = Vec3.from_proto(hit.hit_position_in_hit_frame)
-        print('\tPosition: {}'.format(hit_position))
+        print(f'\tPosition: {hit_position}')
         hit_type_str = ray_cast_pb2.RayIntersection.Type.keys()[hit.type]
-        print('\tType: {}'.format(hit_type_str))
-        print('\tDistance: {}'.format(hit.distance_meters))
+        print(f'\tType: {hit_type_str}')
+        print(f'\tDistance: {hit.distance_meters}')
 
 
 if __name__ == '__main__':

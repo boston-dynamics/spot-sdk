@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -54,41 +54,41 @@ def main():
     print('*   https://docs.python.org/3/library/concurrent.futures.html#future-objects *')
     print('******************************************************************************')
 
-    print("\n\tMethod One: Check future until done.")
+    print('\n\tMethod One: Check future until done.')
     # Here we wait till the future is done (Method: Check-until-done).
     check_until_done_future = robot_state_client.get_robot_state_async()
     while not check_until_done_future.done():
-        print("Check_until_done_future: not finished yet.")
+        print('Check_until_done_future: not finished yet.')
         time.sleep(0.01)
-    print("Check_until_done succeeded.")
+    print('Check_until_done succeeded.')
     if print_results:
         print(check_until_done_future.result())
 
     # Here we block until the future is done (Method: Block-until-done).
-    print("\n\tMethod Two: Block until done.")
+    print('\n\tMethod Two: Block until done.')
     block_until_done_future = robot_state_client.get_robot_state_async()
     try:
         block_until_done_future.result(timeout=1.0)
     except TimeoutError:
-        print("ERROR: blocking_until_done method timed out.")
-    print("Blocking_until_done succeeded.")
+        print('ERROR: blocking_until_done method timed out.')
+    print('Blocking_until_done succeeded.')
 
     # And here we verify that the callback got called (Method: Callback-when-done).
     # Note that the anonymous lambda function here is called when the future is cancelled or
     # finished running.
-    print("\n\tMethod Three: Callback when done.")
+    print('\n\tMethod Three: Callback when done.')
     callback_is_done = False
     callback_future = robot_state_client.get_robot_state_async()
     callback_future.add_done_callback(async_callback)
     while not callback_is_done:
-        print("Callback_when_done: not finished yet.")
+        print('Callback_when_done: not finished yet.')
         time.sleep(0.01)
-    print("Callback_when_done succeeded.")
-    print("\nSUCCESS!")
+    print('Callback_when_done succeeded.')
+    print('\nSUCCESS!')
 
     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main():
         sys.exit(1)

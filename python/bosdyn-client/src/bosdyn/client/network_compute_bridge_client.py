@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,8 +11,8 @@ import collections
 from bosdyn.api import (network_compute_bridge_pb2, network_compute_bridge_service_pb2,
                         network_compute_bridge_service_pb2_grpc)
 from bosdyn.client.common import (BaseClient, error_factory, error_pair,
-                                  handle_common_header_errors, handle_lease_use_result_errors,
-                                  handle_unset_status_error)
+                                  handle_common_header_errors, handle_custom_params_errors,
+                                  handle_lease_use_result_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import Error, InternalServerError, ResponseError, UnsetStatusError
 
 
@@ -120,6 +120,8 @@ class NetworkComputeBridgeClient(BaseClient):
 
 
 @handle_common_header_errors
+@handle_custom_params_errors(
+    status_value=network_compute_bridge_pb2.NETWORK_COMPUTE_STATUS_CUSTOM_PARAMS_ERROR)
 def _network_compute_error(response):
     """Return a custom exception based on response, None if no error."""
     error_type, message = _NETWORK_COMPUTE_STATUS_TO_ERROR[response.status]
@@ -136,11 +138,11 @@ _NETWORK_COMPUTE_STATUS_TO_ERROR.update({
         error_pair(UnsetStatusError),
     network_compute_bridge_pb2.NETWORK_COMPUTE_STATUS_SUCCESS: (None, None),
     network_compute_bridge_pb2.NETWORK_COMPUTE_STATUS_EXTERNAL_SERVICE_NOT_FOUND:
-        (ExternalServiceNotFoundError, ExternalServiceNotFoundError.__doc__),
+        error_pair(ExternalServiceNotFoundError),
     network_compute_bridge_pb2.NETWORK_COMPUTE_STATUS_EXTERNAL_SERVER_ERROR:
-        (ExternalServerError, None),
+        error_pair(ExternalServerError),
     network_compute_bridge_pb2.NETWORK_COMPUTE_STATUS_ROTATION_ERROR:
-        (NetworkComputeRotationError, None),
+        error_pair(NetworkComputeRotationError),
 })
 
 

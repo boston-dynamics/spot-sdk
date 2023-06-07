@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -113,14 +113,15 @@ message FreezeCommand {
 // steps to move to a safe position. The robot will not power down until it is in a sitting state.
 message SafePowerOffCommand {
     message Request {
-        // Robot action in response to a command received while in an unsafe position. If not 
+        // Robot action in response to a command received while in an unsafe position. If not
         // specified, UNSAFE_MOVE_TO_SAFE_POSITION will be used
         enum UnsafeAction {
             UNSAFE_UNKNOWN = 0;
             // Robot may attempt to move to a safe position (i.e. descends stairs) before sitting
             // and powering off.
-            UNSAFE_MOVE_TO_SAFE_POSITION = 1; 
-            // Force sit and power off regardless of positioning. Robot will not take additional steps
+            UNSAFE_MOVE_TO_SAFE_POSITION = 1;
+            // Force sit and power off regardless of positioning. Robot will not take additional
+            // steps
             UNSAFE_FORCE_COMMAND = 2;
         }
         UnsafeAction unsafe_action = 1;
@@ -162,8 +163,8 @@ message SE2TrajectoryCommand {
     }
 
     message Feedback {
-        // The SE2TrajectoryCommand will provide feedback on whether or not the robot has reached the
-        // final point of the trajectory.
+        // The SE2TrajectoryCommand will provide feedback on whether or not the robot has reached
+        // the final point of the trajectory.
 
         enum Status {
             // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
@@ -174,7 +175,7 @@ message SE2TrajectoryCommand {
 
             // The robot has arrived at the goal and is doing final positioning.
             STATUS_NEAR_GOAL = 3;
-            
+
             // The robot is attempting to go to a goal.
             STATUS_GOING_TO_GOAL = 2;
         }
@@ -188,11 +189,9 @@ message SE2TrajectoryCommand {
             BODY_STATUS_MOVING = 1;
             // The robot is at the goal and the body has stopped moving.
             BODY_STATUS_SETTLED = 2;
-
         }
         // Current status of how the body is moving
         BodyMovementStatus body_movement_status = 2;
-
     }
 }
 
@@ -250,7 +249,6 @@ message SitCommand {
 message StandCommand {
     message Request {
         // Stand command request takes no additional arguments.
-
     }
 
     message Feedback {
@@ -352,8 +350,7 @@ message FollowArmCommand {
 }
 
 message ArmDragCommand {
-    message Request {
-    }
+    message Request {}
 
     message Feedback {
         enum Status {
@@ -362,27 +359,25 @@ message ArmDragCommand {
             // Robot is dragging.
             STATUS_DRAGGING = 1;
             // Robot is not dragging because grasp failed.
-            // This could be due to a lost grasp during a drag, or because the gripper isn't in a good
-            // position at the time of request. You'll have to reposition or regrasp and then send a
-            // new drag request to overcome this type of error.
-            // Note: When requesting drag, make sure the gripper is positioned in front of the robot (not to the side of or
+            // This could be due to a lost grasp during a drag, or because the gripper isn't in a
+            // good position at the time of request. You'll have to reposition or regrasp and then
+            // send a new drag request to overcome this type of error. Note: When requesting drag,
+            // make sure the gripper is positioned in front of the robot (not to the side of or
             // above the robot body).
             STATUS_GRASP_FAILED = 2;
             // Robot is not dragging for another reason.
             // This might be because the gripper isn't holding an item.
-            // You can continue dragging once you resolve this type of error (i.e. by sending an ApiGraspOverride request).
-            // Note: When requesting drag, be sure to that the robot knows it's holding something (or use APIGraspOverride to
-            // OVERRIDE_HOLDING).
+            // You can continue dragging once you resolve this type of error (i.e. by sending an
+            // ApiGraspOverride request). Note: When requesting drag, be sure to that the robot
+            // knows it's holding something (or use APIGraspOverride to OVERRIDE_HOLDING).
             STATUS_OTHER_FAILURE = 3;
         }
         Status status = 1;
     }
 }
 
-
 message ConstrainedManipulationCommand {
     message Request {
-
         // Frame that the initial wrench will be expressed in
         string frame_name = 1;
         // Direction of the initial wrench to be applied
@@ -470,12 +465,12 @@ message ConstrainedManipulationCommand {
             TASK_TYPE_R3_LINEAR_FORCE = 5;
             // This option simply holds the hand in place with stiff impedance control.
             // You can use this mode at the beginning of a constrained manipulation task or to
-            // hold position while transitioning between two different constrained manipulation tasks.
-            // The target pose to hold will be the measured hand pose upon transitioning to constrained
-            // manipulation or upon switching to this task type. 
-            // This mode should only be used during constrained manipulation tasks,
-            // since it uses impedance control to hold the hand in place.
-            // This is not intended to stop the arm during position control moves.
+            // hold position while transitioning between two different constrained manipulation
+            // tasks. The target pose to hold will be the measured hand pose upon transitioning to
+            // constrained manipulation or upon switching to this task type. This mode should only
+            // be used during constrained manipulation tasks, since it uses impedance control to
+            // hold the hand in place. This is not intended to stop the arm during position control
+            // moves.
             TASK_TYPE_HOLD_POSE = 6;
         }
         TaskType task_type = 7;
@@ -484,8 +479,44 @@ message ConstrainedManipulationCommand {
         // This is a required field and used to prevent runaway commands.
         google.protobuf.Timestamp end_time = 8;
 
-        // Whether to enable the robot to take steps during constrained manip to keep the hand in the workspace.
+        // Whether to enable the robot to take steps during constrained manip to keep the hand in
+        // the workspace.
         google.protobuf.BoolValue enable_robot_locomotion = 9;
+
+        enum ControlMode {
+            CONTROL_MODE_UNKNOWN = 0;
+            // Position control mode, either a linear or angular position is specified
+            // and constrained manipulation moves to that position with a trapezoidal
+            // trajectory that has the max velocity specified in task_speed
+            CONTROL_MODE_POSITION = 1;
+            // Velocity control mode where constrained manipulation applies forces to 
+            // maintain the velocity specified in task_speed
+            CONTROL_MODE_VELOCITY = 2;
+        }
+        ControlMode control_mode = 10;
+
+        // Desired final task position to achieve
+        // The position is computed relative to the starting position.
+        oneof task_target_position {
+            // Desired linear position to travel for task type
+            // TASK_TYPE_R3_LINEAR_FORCE
+            double target_linear_position = 11;
+            // Desired rotation in task space for all tasks other than
+            // TASK_TYPE_R3_LINEAR_FORCE
+            // This angle is about the estimated axis of rotation.
+            double target_angle = 12;
+        }
+
+        // Acceleration limit for the planned trajectory in the free task DOF.
+        // Note that the units of this variable will be m/(s^2) or rad/(s^2) depending
+        // on the choice of target_linear_position vs. target_angle above.
+        google.protobuf.DoubleValue accel_limit = 13;
+
+        // Constrained manipulation estimates the task frame given the observed initial motion.
+        // Setting this to false saves and uses the estimation state from the previous
+        // constrained manipulation move. This is true by default.
+        google.protobuf.BoolValue  reset_estimator = 14;
+
     }
 
     message Feedback {
@@ -506,7 +537,9 @@ message ConstrainedManipulationCommand {
         // Desired wrench in odom world frame, applied at hand frame origin
         bosdyn.api.Wrench desired_wrench_odom_frame = 2;
 
-        // Add a signal indicating that constrained manipulation is using
-        // its estimated direction for applying wrench.
+        // A boolean signal indicating constrained manipulation has seen
+        // enough motion to estimate the constraint and that the wrench
+        // is being applied along the estimated directions.
+        google.protobuf.BoolValue  estimation_activated = 3;
     }
 }

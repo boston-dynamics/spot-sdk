@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -28,6 +28,7 @@ class CompositorCommands(Subcommands):
             CompositorGetVisibleCamerasCommand,
             CompositorGetIrColorMapCommand,
             CompositorSetIrColorMapCommand,
+            CompositorGetIrMeterOverlayCommand,
             CompositorSetIrMeterOverlayCommand,
         ])
 
@@ -138,6 +139,20 @@ class CompositorSetIrColorMapCommand(Command):
         return result
 
 
+class CompositorGetIrMeterOverlayCommand(Command):
+    """Get current IR reticle positions"""
+
+    NAME = 'get_reticle'
+
+    def __init__(self, subparsers, command_dict):
+        super(CompositorGetIrMeterOverlayCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        result = robot.ensure_client(CompositorClient.default_service_name).get_ir_meter_overlay()
+
+        return result
+
+
 class CompositorSetIrMeterOverlayCommand(Command):
     """Set IR reticle to use on Spot CAM+IR"""
 
@@ -145,20 +160,30 @@ class CompositorSetIrMeterOverlayCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(CompositorSetIrMeterOverlayCommand, self).__init__(subparsers, command_dict)
-        self._parser.add_argument('color', default='jet', const='jet', nargs='?',
-                                  choices=['jet', 'greyscale', 'grayscale'])
         self._parser.add_argument(
-            '-x', type=float, default=0.5,
-            help='horizontal coordinate of reticle as a ratio of the display, \
-                range from 0 to 1 with 0 being the leftmost edge and 1 being the rightmost')
+            '--xs', nargs='+', type=float, default=[0.5], help=
+            'horizontal coordinates of reticles, range from 0 to 1 with 0 being the leftmost edge and 1 being the rightmost'
+        )
         self._parser.add_argument(
-            '-y', type=float, default=0.5,
-            help='vertical coordinate of reticle as a ratio of the display, \
-                range from 0 to 1 with 0 being the top and 1 being the bottom')
+            '--ys', nargs='+', type=float, default=[0.5], help=
+            'vertical coordinates of reticles, range from 0 to 1 with 0 being the top and 1 being the bottom'
+        )
         add_bool_arg(self._parser, 'enable', default=True)
+        self._parser.add_argument('--unit', default='c', const='c', nargs='?',
+                                  choices=['c', 'f', 'k'])
 
     def _run(self, robot, options):
-        result = robot.ensure_client(CompositorClient.default_service_name).set_ir_meter_overlay(
-            options.x, options.y, options.enable)
+        string_to_unit_enum = {
+            'c': compositor_pb2.IrMeterOverlay.TempUnit.TempUnitType.TEMPUNIT_CELSIUS,
+            'f': compositor_pb2.IrMeterOverlay.TempUnit.TempUnitType.TEMPUNIT_FAHRENHEIT,
+            'k': compositor_pb2.IrMeterOverlay.TempUnit.TempUnitType.TEMPUNIT_KELVIN,
+        }
+        if len(options.xs) != len(options.ys):
+            raise ValueError('X and Y coordinate lists are not of the same length.')
+        coords = list(zip(options.xs, options.ys))
+        unit = compositor_pb2.IrMeterOverlay.TempUnit(value=string_to_unit_enum[options.unit])
+        result = robot.ensure_client(
+            CompositorClient.default_service_name).set_multi_ir_meter_overlay(
+                coords, options.enable, unit)
 
         return result

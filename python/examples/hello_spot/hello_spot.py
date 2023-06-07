@@ -1,11 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Tutorial to show how to use the Boston Dynamics API"""
-from __future__ import print_function
 
 import argparse
 import os
@@ -16,8 +15,14 @@ import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
 import bosdyn.geometry
+from bosdyn.api import trajectory_pb2
+from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
+from bosdyn.client import math_helpers
+from bosdyn.client.frame_helpers import GRAV_ALIGNED_BODY_FRAME_NAME, ODOM_FRAME_NAME, get_a_tform_b
 from bosdyn.client.image import ImageClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
+from bosdyn.client.robot_state import RobotStateClient
+from bosdyn.util import seconds_to_duration
 
 
 def hello_spot(config):
@@ -50,8 +55,12 @@ def hello_spot(config):
 
     # Verify the robot is not estopped and that an external application has registered and holds
     # an estop endpoint.
-    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
-                                    "such as the estop SDK example, to configure E-Stop."
+    assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client, ' \
+                                    'such as the estop SDK example, to configure E-Stop.'
+
+    # The robot state client will allow us to get the robot's state information, and construct
+    # a command using frame information published by the robot.
+    robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
 
     # Only one client at a time can operate a robot. Clients acquire a lease to
     # indicate that they want to control a robot. Acquiring may fail if another
@@ -64,20 +73,24 @@ def hello_spot(config):
         # Now, we are ready to power on the robot. This call will block until the power
         # is on. Commands would fail if this did not happen. We can also check that the robot is
         # powered at any point.
-        robot.logger.info("Powering on robot... This may take several seconds.")
+        robot.logger.info('Powering on robot... This may take several seconds.')
         robot.power_on(timeout_sec=20)
-        assert robot.is_powered_on(), "Robot power on failed."
-        robot.logger.info("Robot powered on.")
+        assert robot.is_powered_on(), 'Robot power on failed.'
+        robot.logger.info('Robot powered on.')
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
         # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
-        robot.logger.info("Commanding robot to stand...")
+        robot.logger.info('Commanding robot to stand...')
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         blocking_stand(command_client, timeout_sec=10)
-        robot.logger.info("Robot standing.")
+        robot.logger.info('Robot standing.')
         time.sleep(3)
+
+        # Query the robot for its current state before issuing the stand with yaw command.
+        # This state provides a reference pose for issuing a frame based body offset command.
+        robot_state = robot_state_client.get_robot_state()
 
         # Tell the robot to stand in a twisted position.
         #
@@ -93,16 +106,52 @@ def hello_spot(config):
         footprint_R_body = bosdyn.geometry.EulerZXY(yaw=0.4, roll=0.0, pitch=0.0)
         cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=footprint_R_body)
         command_client.robot_command(cmd)
-        robot.logger.info("Robot standing twisted.")
+        robot.logger.info('Robot standing twisted.')
         time.sleep(3)
 
-        # Now tell the robot to stand taller, using the same approach of constructing
-        # a command message with the RobotCommandBuilder and issuing it with
-        # robot_command.
-        cmd = RobotCommandBuilder.synchro_stand_command(body_height=0.1)
-        command_client.robot_command(cmd)
-        robot.logger.info("Robot standing tall.")
-        time.sleep(3)
+        # Now compute an absolute desired position and orientation of the robot body origin.
+        # Use the frame helper class to compute the world to gravity aligned body frame transformation.
+        # Note, the robot_state used here was cached from before the above yaw stand command,
+        # so it contains the nominal stand pose.
+        odom_T_flat_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
+                                         ODOM_FRAME_NAME, GRAV_ALIGNED_BODY_FRAME_NAME)
+
+        # Specify a trajectory to shift the body forward followed by looking down, then return to nominal.
+        # Define times (in seconds) for each point in the trajectory.
+        t1 = 2.5
+        t2 = 5.0
+        t3 = 7.5
+
+        # Specify the poses as transformations to the cached flat_body pose.
+        flat_body_T_pose1 = math_helpers.SE3Pose(x=0.075, y=0, z=0, rot=math_helpers.Quat())
+        flat_body_T_pose2 = math_helpers.SE3Pose(
+            x=0.0, y=0, z=0, rot=math_helpers.Quat(w=0.9848, x=0, y=0.1736, z=0))
+        flat_body_T_pose3 = math_helpers.SE3Pose(x=0.0, y=0, z=0, rot=math_helpers.Quat())
+
+        # Build the points in the trajectory.
+        traj_point1 = trajectory_pb2.SE3TrajectoryPoint(
+            pose=(odom_T_flat_body * flat_body_T_pose1).to_proto(),
+            time_since_reference=seconds_to_duration(t1))
+        traj_point2 = trajectory_pb2.SE3TrajectoryPoint(
+            pose=(odom_T_flat_body * flat_body_T_pose2).to_proto(),
+            time_since_reference=seconds_to_duration(t2))
+        traj_point3 = trajectory_pb2.SE3TrajectoryPoint(
+            pose=(odom_T_flat_body * flat_body_T_pose3).to_proto(),
+            time_since_reference=seconds_to_duration(t3))
+
+        # Build the trajectory proto by combining the points.
+        traj = trajectory_pb2.SE3Trajectory(points=[traj_point1, traj_point2, traj_point3])
+
+        # Build a custom mobility params to specify absolute body control.
+        body_control = spot_command_pb2.BodyControlParams(
+            body_pose=spot_command_pb2.BodyControlParams.BodyPose(root_frame_name=ODOM_FRAME_NAME,
+                                                                  base_offset_rt_root=traj))
+
+        # Issue the command via the RobotCommandClient
+        robot.logger.info('Beginning absolute body control while standing.')
+        blocking_stand(command_client, timeout_sec=10,
+                       params=spot_command_pb2.MobilityParams(body_control=body_control))
+        robot.logger.info('Finished absolute body control while standing.')
 
         # Capture an image.
         # Spot has five sensors around the body. Each sensor consists of a stereo pair and a
@@ -120,15 +169,15 @@ def hello_spot(config):
         # Comments logged via this API are written to the robots test log. This is the best way
         # to mark a log as "interesting". These comments will be available to Boston Dynamics
         # devs when diagnosing customer issues.
-        log_comment = "HelloSpot tutorial user comment."
+        log_comment = 'HelloSpot tutorial user comment.'
         robot.operator_comment(log_comment)
         robot.logger.info('Added comment "%s" to robot log.', log_comment)
 
         # Power the robot off. By specifying "cut_immediately=False", a safe power off command
         # is issued to the robot. This will attempt to sit the robot before powering off.
         robot.power_off(cut_immediately=False, timeout_sec=20)
-        assert not robot.is_powered_on(), "Robot power off failed."
-        robot.logger.info("Robot safely powered off.")
+        assert not robot.is_powered_on(), 'Robot power off failed.'
+        robot.logger.info('Robot safely powered off.')
 
 
 def _maybe_display_image(image, display_time=3.0):
@@ -139,7 +188,7 @@ def _maybe_display_image(image, display_time=3.0):
         from PIL import Image
     except ImportError:
         logger = bosdyn.client.util.get_logger()
-        logger.warning("Missing dependencies. Can't display image.")
+        logger.warning('Missing dependencies. Can\'t display image.')
         return
     try:
         image = Image.open(io.BytesIO(image.data))
@@ -147,7 +196,7 @@ def _maybe_display_image(image, display_time=3.0):
         time.sleep(display_time)
     except Exception as exc:
         logger = bosdyn.client.util.get_logger()
-        logger.warning("Exception thrown displaying image. %r", exc)
+        logger.warning('Exception thrown displaying image. %r', exc)
 
 
 def _maybe_save_image(image, path):
@@ -158,21 +207,21 @@ def _maybe_save_image(image, path):
 
         from PIL import Image
     except ImportError:
-        logger.warning("Missing dependencies. Can't save image.")
+        logger.warning('Missing dependencies. Can\'t save image.')
         return
-    name = "hello-spot-img.jpg"
+    name = 'hello-spot-img.jpg'
     if path is not None and os.path.exists(path):
         path = os.path.join(os.getcwd(), path)
         name = os.path.join(path, name)
-        logger.info("Saving image to: {}".format(name))
+        logger.info('Saving image to: %s', name)
     else:
-        logger.info("Saving image to working directory as {}".format(name))
+        logger.info('Saving image to working directory as %s', name)
     try:
         image = Image.open(io.BytesIO(image.data))
         image.save(name)
     except Exception as exc:
         logger = bosdyn.client.util.get_logger()
-        logger.warning("Exception thrown saving image. %r", exc)
+        logger.warning('Exception thrown saving image. %r', exc)
 
 
 def main(argv):
@@ -193,7 +242,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.error("Hello, Spot! threw an exception: %r", exc)
+        logger.error('Hello, Spot! threw an exception: %r', exc)
         return False
 
 

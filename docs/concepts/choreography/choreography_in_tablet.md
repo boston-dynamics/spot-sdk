@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -73,14 +73,7 @@ Spot comes with a small library of sequences. Some of these are intended for per
 ## Managing your uploaded Choreography sequences
 ### **Deleting Saved Choreography Sequences**
 
-The original choreography sequences you save to Spot will be retained indefinitely until you actively choose to delete them. There are two methods for deleting these sequences.
-
-Method 1: In the Choreography settings screen select the edit button next to sequence you wish to delete. In that screen, find the trash icon next to the sequence name and press it.
-
-Method 2: You can delete every custom sequence in a label by deleting the selected label. Select the edit button next to the label you wish to delete. In that screen, find the trash icon next to the label name and press it. This will delete every sequence under the label.
-
-*Deleting a sequence deletes it from every label it is connected to. If you want to save it again, you will need to repeat the steps to upload it and save it from the unsaved state. If you just wish to remove a sequence from a certain label, but don't want to delete it, see the steps for adding and removing labels below.*
-
+The original choreography sequences you save to Spot will be retained indefinitely until you actively choose to delete them. To delete a sequence go to the Choreography settings screen and select the edit button next to sequence you wish to delete. In that screen, find the trash icon next to the sequence name and press it.
 ### **Adding and Removing Labels**
 
 **Add a Label**<br/>
@@ -93,7 +86,7 @@ To add a new label go to the Choreography settings screen and press the button t
 
 <img src="images/delete_label.png" width="420"/>
 
-Select the edit icon next to the label you want to delete. Find the trash icon next to the label's name in the edit screen and press it. This will delete the label and all the sequences that label has been added to.
+Select the edit icon next to the label you want to delete. Find the trash icon next to the label's name in the edit screen and press it.
 
 **Remove a label from a Sequence**<br/>
 

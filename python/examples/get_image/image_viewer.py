@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,6 +9,7 @@
 import argparse
 import logging
 import sys
+import time
 
 import cv2
 import numpy as np
@@ -39,7 +40,7 @@ def image_to_opencv(image, auto_rotate=True):
     num_channels = 1  # Assume a default of 1 byte encodings.
     if image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
         dtype = np.uint16
-        extension = ".png"
+        extension = '.png'
     else:
         dtype = np.uint8
         if image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_RGB_U8:
@@ -51,7 +52,7 @@ def image_to_opencv(image, auto_rotate=True):
         elif image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16:
             num_channels = 1
             dtype = np.uint16
-        extension = ".jpg"
+        extension = '.jpg'
 
     img = np.frombuffer(image.shot.image.data, dtype=dtype)
     if image.shot.image.format == image_pb2.Image.FORMAT_RAW:
@@ -84,13 +85,15 @@ def main(argv):
     parser.add_argument('--image-sources', help='Get image from source(s)', action='append')
     parser.add_argument('--image-service', help='Name of the image service to query.',
                         default=ImageClient.default_service_name)
-    parser.add_argument('-j', '--jpeg-quality-percent', help="JPEG quality percentage (0-100)",
+    parser.add_argument('-j', '--jpeg-quality-percent', help='JPEG quality percentage (0-100)',
                         type=int, default=50)
-    parser.add_argument('-c', '--capture-delay', help="Time [ms] to wait before the next capture",
+    parser.add_argument('-c', '--capture-delay', help='Time [ms] to wait before the next capture',
                         type=int, default=100)
+    parser.add_argument('-r', '--resize-ratio', help='Fraction to resize the image', type=float,
+                        default=1)
     parser.add_argument(
         '--disable-full-screen',
-        help="A single image source gets displayed full screen by default. This flag disables that.",
+        help='A single image source gets displayed full screen by default. This flag disables that.',
         action='store_true')
     parser.add_argument('--auto-rotate', help='rotate right and front images to be upright',
                         action='store_true')
@@ -105,8 +108,8 @@ def main(argv):
 
     image_client = robot.ensure_client(options.image_service)
     requests = [
-        build_image_request(source, quality_percent=options.jpeg_quality_percent)
-        for source in options.image_sources
+        build_image_request(source, quality_percent=options.jpeg_quality_percent,
+                            resize_ratio=options.resize_ratio) for source in options.image_sources
     ]
 
     for image_source in options.image_sources:
@@ -118,6 +121,8 @@ def main(argv):
 
     keystroke = None
     timeout_count_before_reset = 0
+    t1 = time.time()
+    image_count = 0
     while keystroke != VALUE_FOR_Q_KEYSTROKE and keystroke != VALUE_FOR_ESC_KEYSTROKE:
         try:
             images_future = image_client.get_image_async(requests, timeout=0.5)
@@ -131,7 +136,7 @@ def main(argv):
             if timeout_count_before_reset == 5:
                 # To attempt to handle bad comms and continue the live image stream, try recreating the
                 # image client after having an RPC timeout 5 times.
-                _LOGGER.info("Resetting image client after 5+ timeout errors.")
+                _LOGGER.info('Resetting image client after 5+ timeout errors.')
                 image_client = reset_image_client(robot)
                 timeout_count_before_reset = 0
             else:
@@ -143,8 +148,10 @@ def main(argv):
             image, _ = image_to_opencv(images[i], options.auto_rotate)
             cv2.imshow(images[i].source.name, image)
         keystroke = cv2.waitKey(options.capture_delay)
+        image_count += 1
+        print(f'Mean image retrieval rate: {image_count/(time.time() - t1)}Hz')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main(sys.argv[1:]):
         sys.exit(1)

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,8 +8,6 @@
 This is a test application for communicating with the velodyne over the API.
 It should only be used to test the API connection.
 """
-
-from __future__ import absolute_import, print_function
 
 import argparse
 import collections
@@ -47,18 +45,18 @@ class AsyncPointCloud(AsyncPeriodicQuery):
     """Grab robot state."""
 
     def __init__(self, robot_state_client):
-        super(AsyncPointCloud, self).__init__("point_clouds", robot_state_client, LOGGER,
+        super(AsyncPointCloud, self).__init__('point_clouds', robot_state_client, LOGGER,
                                               period_sec=0.2)
 
     def _start_query(self):
-        return self._client.get_point_cloud_from_sources_async(["velodyne-point-cloud"])
+        return self._client.get_point_cloud_from_sources_async(['velodyne-point-cloud'])
 
 
 class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
 
     def __init__(self, robot_state_client):
-        super(AsyncRobotState, self).__init__("robot_state", robot_state_client, LOGGER,
+        super(AsyncRobotState, self).__init__('robot_state', robot_state_client, LOGGER,
                                               period_sec=0.2)
 
     def _start_query(self):
@@ -149,7 +147,7 @@ def main(argv):
             if _robot_state_task.proto:
                 odom_tform_body = get_odom_tform_body(
                     _robot_state_task.proto.kinematic_state.transforms_snapshot).to_proto()
-                helper_se3 = SE3Pose.from_obj(odom_tform_body)
+                helper_se3 = SE3Pose.from_proto(odom_tform_body)
                 odom_tform_butt = helper_se3.mult(body_tform_butt)
                 odom_tform_head = helper_se3.mult(body_tform_head)
                 ax.plot([odom_tform_butt.x], [odom_tform_butt.y], [odom_tform_butt.z], 'o',

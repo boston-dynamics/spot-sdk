@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,19 +10,14 @@ import struct
 import sys
 import time
 import types
+from unittest import mock
 
 import pytest
 from google.protobuf import timestamp_pb2
 
+from bosdyn.api import header_pb2
 from bosdyn.api.data_buffer_pb2 import Event, SignalSchema, TextMessage
 from bosdyn.client.data_buffer import DataBufferClient, InvalidArgument, LoggingHandler
-
-if sys.version_info[0:2] >= (3, 3):
-    # Python version 3.3 added unittest.mock
-    from unittest import mock
-else:
-    # The backport is on PyPi as just "mock"
-    import mock
 
 
 @pytest.fixture(scope='function')
@@ -41,15 +36,23 @@ def client(constant_log_timestamp):
     client_._stub = mock.Mock()
     future = mock.Mock()
     future.exception.return_value = None
+    # Make sure we're setting a valid common error code on responses.
+    future.result.return_value = mock.Mock()
+    future.result.return_value.header.error.code = header_pb2.CommonError.CODE_OK
     client_._stub.RecordTextMessages.future.return_value = future
     client_._stub.RecordDataBlobs.future.return_value = future
     client_._stub.RecordEvents.future.return_value = future
+    client_._stub.RecordTextMessages.return_value = future.result.return_value
+    client_._stub.RecordDataBlobs.return_value = future.result.return_value
+    client_._stub.RecordEvents.return_value = future.result.return_value
     # Set up the endpoint such that its conversions will return the constant_log_timestamp.
     client_._timesync_endpoint = mock.Mock()
     client_._timesync_endpoint.get_robot_time_converter.return_value = converter
     # Stub the schema id generation
     client_._stub.RegisterSignalSchema.future.return_value = future
     client_._stub.RecordSignalTicks.future.return_value = future
+    client_._stub.RegisterSignalSchema.return_value = future.result.return_value
+    client_._stub.RecordSignalTicks.return_value = future.result.return_value
 
     def _save_schema_id(schema, response):
         client_.log_tick_schemas[1] = schema
@@ -211,7 +214,7 @@ def test_handler_simple(mock_log_client, handler, logger, record_and_proto_level
     assert text_log_proto_list[0].timestamp == mock_now_ts.return_value
 
 
-@pytest.mark.timeout(1)
+@pytest.mark.timeout(10)
 def test_handler_autoflush(mock_log_client, handler, logger):
     """The handler should automatically flush messages to the log client."""
     # Build the handler with a specific record level and our mock client.
@@ -231,7 +234,7 @@ def test_handler_autoflush(mock_log_client, handler, logger):
     mock_log_client.add_text_messages.assert_called_once()
 
 
-@pytest.mark.timeout(1)
+@pytest.mark.timeout(10)
 @pytest.mark.parametrize('num_msgs', (100, 10, 50, 2))
 def test_handler_multi_message(logger, handler, mock_log_client, num_msgs):
     """Ensure proper behavior with a large number of sequential messages."""
@@ -257,7 +260,7 @@ def test_handler_multi_message(logger, handler, mock_log_client, num_msgs):
     assert num_msgs_sent == num_msgs
 
 
-@pytest.mark.timeout(1)
+@pytest.mark.timeout(10)
 def test_handler_failure(logger, handler, mock_log_client):
     """When log client fails, we should get error messages and the failed log message."""
     msg = 'This should fail'

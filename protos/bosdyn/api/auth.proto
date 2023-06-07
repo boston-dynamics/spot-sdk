@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -22,8 +22,9 @@ message GetAuthTokenRequest {
     string password = 3;
     // Token to authenticate with. Can be used in place of the password, to re-mint a token.
     string token = 4;
-    // Deprecated as of 2.0.1. Application Token for authenticating with robots on older releases.
-    string application_token = 5 [deprecated=true];
+    // Application Token for authenticating with robots on older releases.
+    // DEPRECATED as of 2.0.1. Will be removed in 4.0.
+    string application_token = 5 [deprecated = true];
 }
 
 // The GetAuthToken response message includes an authentication token if the login information
@@ -31,7 +32,7 @@ message GetAuthTokenRequest {
 message GetAuthTokenResponse {
     ResponseHeader header = 1;
 
-    enum Status{
+    enum Status {
         // STATUS_UNKNOWN should never be used. If used, an internal error has happend.
         STATUS_UNKNOWN = 0;
 

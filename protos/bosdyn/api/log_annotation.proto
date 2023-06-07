@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,19 +12,26 @@ option java_outer_classname = "LogAnnotationProto";
 import "bosdyn/api/header.proto";
 import "google/protobuf/timestamp.proto";
 
-// DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
 // The AddLogAnnotation request sends the information that should be added into the log.
 message AddLogAnnotationRequest {
-     // Common request/response header.
+    // DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
+    // Will be removed in 4.0.
+    option deprecated = true;
+
+    // Common request/response header.
     RequestHeader header = 1;
 
-    // The annotations to be aded into the log (can be text messages, blobs or robot operator messages).
+    // The annotations to be aded into the log (can be text messages, blobs or robot operator
+    // messages).
     LogAnnotations annotations = 2;
 }
 
-// DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
 // A container for elements to be added to the robot's logs.
 message LogAnnotations {
+    // DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
+    // Will be removed in 4.0.
+    option deprecated = true;
+
     // Text messages to be added to the log.
     repeated LogAnnotationTextMessage text_messages = 1;
 
@@ -36,11 +43,14 @@ message LogAnnotations {
 
 }
 
-// DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
 // A text message to add to the robot's logs.
 // These could be internal text-log messages from a client for use in debugging, for
 // example.
 message LogAnnotationTextMessage {
+    // DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
+    // Will be removed in 4.0.
+    option deprecated = true;
+
     // String annotation message to add to the log.
     string message = 1;
 
@@ -82,11 +92,14 @@ message LogAnnotationTextMessage {
     google.protobuf.Timestamp timestamp_client = 8;
 }
 
-// DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
 // An operator message to be added to the robot's logs.
 // These are notes especially intended to mark when logs should be preserved and reviewed
 // to ensure that robot hardware and/or software is working as intended.
 message LogAnnotationOperatorMessage {
+    // DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
+    // Will be removed in 4.0.
+    option deprecated = true;
+
     // String annotation message to add to the log.
     string message = 1;
 
@@ -97,10 +110,12 @@ message LogAnnotationOperatorMessage {
     google.protobuf.Timestamp timestamp_client = 3;
 }
 
-
-// DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
 // A unit of binary data to be entered in a log.
 message LogAnnotationLogBlob {
+    // DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
+    // Will be removed in 4.0.
+    option deprecated = true;
+
     // Required timestamp of data in robot clock time.
     google.protobuf.Timestamp timestamp = 1;
 
@@ -121,13 +136,16 @@ message LogAnnotationLogBlob {
 }
 
 
-
-// DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
-// The AddLogAnnotation response message, which is empty except for any potential header errors/warnings.
+// The AddLogAnnotation response message, which is empty except for any potential header
+// errors/warnings.
 message AddLogAnnotationResponse {
+    // DEPRECATED as of 2.1.0: Please use the DataBufferService instead of the LogAnnotationService.
+    // Will be removed in 4.0.
+    option deprecated = true;
+
     // Common request/response header.
     ResponseHeader header = 1;
 
-    // The status field from before version 2.0 is deprecated.
+    // Reserved field numbers from removed fields.
     reserved 2;
 }

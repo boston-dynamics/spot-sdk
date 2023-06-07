@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -22,3 +22,4 @@ The following examples show how to command the robot to complete different behav
 - [Animation Recorder](../animation_recorder/README.md)
 - [Auto Return](../auto_return/README.md)
 - [Fan Commands](../fan_command/README.md)
+- [ARM WASD](../arm_wasd/README.md)

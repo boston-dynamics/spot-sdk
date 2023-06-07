@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -7,8 +7,6 @@
 """
 Example usage of the data-buffer features
 """
-from __future__ import print_function
-
 import argparse
 import logging
 import struct
@@ -44,14 +42,14 @@ def log_spot_data(config):
     data_buffer_client = robot.ensure_client(DataBufferClient.default_service_name)
 
     # Log a text message.
-    text_message = "This is a text message."
+    text_message = 'This is a text message.'
     txt_msg_proto = data_buffer_protos.TextMessage(message=text_message, timestamp=None)
     data_buffer_client.add_text_messages([txt_msg_proto])
     robot.logger.info('Added comment "%s" to robot log.', text_message)
     time.sleep(0.1)
 
     # Log an operator comment.
-    op_comment = "This is an operator comment."
+    op_comment = 'This is an operator comment.'
     data_buffer_client.add_operator_comment(op_comment)
     robot.logger.info('Added comment "%s" to robot log.', op_comment)
     time.sleep(0.1)
@@ -66,7 +64,7 @@ def log_spot_data(config):
                                      start_time=event_time, end_time=event_time,
                                      level=data_buffer_protos.Event.LEVEL_LOW)
     data_buffer_client.add_events([event])
-    robot.logger.info("Added event")
+    robot.logger.info('Added event')
     time.sleep(0.1)
 
     # Log two blobs of data (serialized protobuf messages)

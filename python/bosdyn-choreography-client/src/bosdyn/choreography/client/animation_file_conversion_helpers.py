@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -83,22 +83,22 @@ def gripper_handler(val, animation_frame):
 
 
 def fl_contact_handler(val, animation_frame):
-    animation_frame.legs.fl.stance.value = val
+    animation_frame.legs.fl.stance.value = int(val)
     return animation_frame
 
 
 def fr_contact_handler(val, animation_frame):
-    animation_frame.legs.fr.stance.value = val
+    animation_frame.legs.fr.stance.value = int(val)
     return animation_frame
 
 
 def hl_contact_handler(val, animation_frame):
-    animation_frame.legs.hl.stance.value = val
+    animation_frame.legs.hl.stance.value = int(val)
     return animation_frame
 
 
 def hr_contact_handler(val, animation_frame):
-    animation_frame.legs.hr.stance.value = val
+    animation_frame.legs.hr.stance.value = int(val)
     return animation_frame
 
 
@@ -387,10 +387,10 @@ def foot_pos_handler(vals, animation_frame):
 
 
 def contact_handler(vals, animation_frame):
-    animation_frame.legs.fl.stance.value = vals[0]
-    animation_frame.legs.fr.stance.value = vals[1]
-    animation_frame.legs.hl.stance.value = vals[2]
-    animation_frame.legs.hr.stance.value = vals[3]
+    animation_frame.legs.fl.stance.value = int(vals[0])
+    animation_frame.legs.fr.stance.value = int(vals[1])
+    animation_frame.legs.hl.stance.value = int(vals[2])
+    animation_frame.legs.hr.stance.value = int(vals[3])
     return animation_frame
 
 
@@ -527,7 +527,12 @@ def precise_steps_option(file_line_split, animation):
 
 
 def precise_timing_option(file_line_split, animation):
-    animation.proto.precise_timing = True
+    # Deprecated
+    animation.proto.timing_adjustability = -1
+
+
+def timing_adjustability_option(file_line_split, animation):
+    animation.proto.timing_adjustability = float(file_line_split[1])
 
 
 def no_looping_option(file_line_split, animation):
@@ -540,6 +545,10 @@ def arm_required_option(file_line_split, animation):
 
 def arm_prohibited_option(file_line_split, animation):
     animation.proto.arm_prohibited = True
+
+
+def starts_sitting_option(file_line_split, animation):
+    animation.proto.starts_sitting = True
 
 
 def track_swing_trajectories_option(file_line_split, animation):
@@ -597,4 +606,9 @@ def description_option(file_line_split, animation):
     description = " ".join(file_line_split[1:])
     description = description.replace('"', '')  # remove any quotation marks
     animation.description = description
+    return animation
+
+
+def custom_gait_cycle_option(file_line_split, animation):
+    animation.proto.custom_gait_cycle = True
     return animation

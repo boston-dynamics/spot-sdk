@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -20,6 +20,7 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/license.proto";
 import "bosdyn/api/robot_state.proto";
+import "bosdyn/api/service_fault.proto";
 
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
@@ -175,6 +176,30 @@ message SetLocalizationResponse {
     // map that was recorded. Note that if sensors aren't working, STATUS_IMPARIED
     // will be returned, rather than STATUS_INCOMPATIBLE_SENSORS.
     SensorCompatibilityStatus sensor_status = 9;
+
+    enum QualityCheckResult {
+        // Unset. Note that the quality check is only performed if the overall Status
+        // enum returns STATUS_SUCCESS, and will be unset otherwise.
+        QUALITY_CHECK_UNKNOWN = 0;
+        // The quality check passed.
+        QUALITY_CHECK_SUCCESS = 1;
+        // After applying the localization, a poor point cloud match to the map was detected.
+        // This can happen if, for example, the map has changed, or the starting location
+        // of the robot is now very different than it was at recording time.
+        QUALITY_CHECK_POOR_POINT_CLOUD_MATCH = 2;
+        // After applying the localization, Graph Nav checked the localization, and found that
+        // the robot's gravity vector does not align with the map's. This can happen if a fiducial
+        // being used to align to the map was detected wrongly during recording, or if the robot's
+        // IMU is miscalibrated. It can also occur when the inital guess passed in to the SetLocalization
+        // RPC is in the incorrect reference frame.
+        QUALITY_CHECK_POOR_GRAVITY_ALIGNMENT = 3;
+        // There wasn't enough data to make a determination about quality.
+        QUALITY_CHECK_SKIPPED = 4;
+    }
+    // Graph Nav will check the quality of the resulting localization and report the status
+    // here. Note that to preserve backwards compatability with 3.2 and earlier, a poor quality check
+    // does not result in this RPC failing.
+    QualityCheckResult quality_check_result = 10;
 }
 
 message RouteGenParams {
@@ -225,6 +250,21 @@ message TravelParams {
 
 }
 
+
+message ModifyNavigationResponse {
+    ResponseHeader header = 1;
+    // Results of using the various leases.
+    repeated LeaseUseResult lease_use_results = 2;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1; // Modify request was accepted.
+        STATUS_UNRECOGNIZED_COMMAND = 2; // The command ID wasn't the ID of the last command.
+    }
+    // Status code specific to the ModifyNavigationResponse.
+    Status status = 3;
+}
+
 // The NavigateToRequest can be used to command GraphNav to drive the robot to a specific waypoint.
 // GraphNav will plan a path through the map which most efficiently gets the robot to the specified goal waypoint.
 // Parameters are provided which influence how GraphNav will generate and follow the path.
@@ -262,6 +302,9 @@ message NavigateToRequest {
     // of an existing command. If this is a continuation of an existing command, all parameters will be
     // ignored, and the old parameters will be preserved.
     uint32 command_id = 9;
+
+    // Defines robot behavior when route is blocked. Defaults to reroute when route is blocked.
+    RouteFollowingParams.RouteBlockedBehavior route_blocked_behavior = 10;
 }
 
 // Response to a NavigateToRequest. This is returned immediately after the request is processed. A command_id
@@ -376,11 +419,13 @@ message RouteFollowingParams {
     enum RouteBlockedBehavior {
         // The mode is unset.
         ROUTE_BLOCKED_UNKNOWN = 0;
-        // The robot will find the shortest path to any point after the furthest-along blockage,
-        // and after the furthest-along traversed edge, and go to the point that gives that
-        // shortest path. Then, the robot will follow the rest of the route from that point.
-        // If multiple points on the route are similarly close to the robot, the robot will
-        // prefer the earliest on the route.
+        // For NavigateToRequests, the robot will find the shortest path to the desination
+        // that avoids the blockage.
+        // For NavigateRouteRequests, the robot will find the shortest path to any point
+        // after the furthest-along blockage, and after the furthest-along traversed edge,
+        // and go to the point that gives that shortest path. Then, the robot will follow
+        // the rest of the route from that point. If multiple points on the route are
+        // similarly close to the robot, the robot will prefer the earliest on the route.
         // This is the default.
         ROUTE_BLOCKED_REROUTE = 1;
         // The robot will fail the command with status STATUS_STUCK;
@@ -622,7 +667,7 @@ message NavigateToAnchorResponse {
 
     // Errors about Area Callbacks in the map.
     AreaCallbackServiceError area_callback_error = 7;
-   
+
 }
 
 // The NavigationFeedback request message uses the command_id of a navigation request to get
@@ -659,7 +704,8 @@ message NavigationFeedbackResponse {
         STATUS_NO_LOCALIZATION = 4;
         // Robot appears to be lost.
         STATUS_LOST = 5;
-        // Robot appears stuck against an obstacle.
+        // Robot appears stuck and unable to make progress, but can still navigate to other destinations.
+        // stuck_reason provides more details on the reason that caused the robot to become stuck.
         STATUS_STUCK = 6;
         // The command expired.
         STATUS_COMMAND_TIMED_OUT = 7;
@@ -674,7 +720,9 @@ message NavigationFeedbackResponse {
         STATUS_NOT_LOCALIZED_TO_ROUTE = 13;
         // The lease is no longer valid.
         STATUS_LEASE_ERROR = 14;
-        // An error occurred with an Area Callback. Lease errors will be reported via STATUS_LEASE_ERROR instead.
+        // An error occurred with an Area Callback in a way that graph nav was unable to recover
+        // from. Navigating to another location may also fail.
+        // Lease errors will be reported via STATUS_LEASE_ERROR instead.
         STATUS_AREA_CALLBACK_ERROR = 15;
     }
     // Return status for the request.
@@ -762,6 +810,26 @@ message NavigationFeedbackResponse {
     };
     // Additional information about whether or not the robot believes the current route to be blocked.
     BlockageStatus blockage_status = 1001;
+
+
+    // If status is STATUS_STUCK, this enum provides reasons differentiating various cases that
+    // can cause the robot to re
+    enum StuckReason {
+        STUCK_REASON_UNKNOWN = 0;
+        // The robot failed to find a way past an obstacle.
+        STUCK_REASON_OBSTACLE = 1;
+        // An area callback reported that it is blocked.
+        STUCK_REASON_AREA_CALLBACK_BLOCKED = 2;
+        // An area callback failed, but in a way that the robot is still able to navigate to
+        // other locations.
+        STUCK_REASON_AREA_CALLBACK_FAILED = 3;
+        // The robot has seen the goal and perceived that there is no pose it can navigate to to
+        // reach the goal. There is no value in rerouting.
+        STUCK_REASON_GOAL_BLOCKED = 4;
+    }
+    // Only filled out if status is STATUS_STUCK to provide additional context.
+    StuckReason stuck_reason = 11;
+
 }
 
 // The GetLocalizationState request message requests the current localization state and any other
@@ -803,6 +871,7 @@ message RemotePointCloudStatus {
     bool has_data = 3;
 }
 
+
 // Message describing whether or not graph nav is lost, and if it is lost, how lost it is.
 // If robot is lost, this state can be reset by either:
 //    * Driving to an area where the robot's localization improves.
@@ -841,7 +910,6 @@ message GetLocalizationStateResponse {
     LostDetectorState lost_detector_state = 7;
 
 }
-
 
 // Clears the graph on the server. Also clears GraphNav's localization to the graph.
 // Note that waypoint and edge snapshots may still be cached on the server after this
@@ -883,6 +951,10 @@ message UploadGraphRequest {
 
     // If this is true, generate an (overwrite the) anchoring on upload.
     bool generate_new_anchoring = 4;
+
+    // If true, validation warnings will be treated as errors, and STATUS_INVALID_GRAPH will be returned. This is false by
+    // default.
+    bool treat_validation_warnings_as_errors = 5;
 }
 
 // Response to the UploadGraphRequest. After uploading a graph, the user is expected
@@ -897,9 +969,13 @@ message UploadGraphResponse {
         STATUS_OK = 1;
         // Can't upload the graph because it was too large for the license.
         STATUS_MAP_TOO_LARGE_LICENSE = 3;
-        // The graph is invalid topologically, for example containing missing waypoints referenced by edges.
+        // The graph or its anchoring are invalid. See the ValidationStatus for more details.
         STATUS_INVALID_GRAPH = 4;
+        // The sensor data associated with this graph is incompatible with the current robot. A common example
+        // would be trying to upload a map recorded on a robot that had LIDAR to a robot that did not, or vice
+        // versa.
         STATUS_INCOMPATIBLE_SENSORS = 5;
+        // There is an error associated with one of the area callbacks in this graph.
         STATUS_AREA_CALLBACK_ERROR = 6;
     };
     // Status for an upload request.
@@ -920,6 +996,63 @@ message UploadGraphResponse {
 
     // Errors about Area Callbacks in the map.
     AreaCallbackServiceError area_callback_error = 10;
+
+    // General map statistics.
+    MapStats map_stats = 11;
+    // Detailed information about why STATUS_INVALID_GRAPH was returned. This will only
+    // contain information if the UploadGraph request could not be validated.
+    message ValidationStatus {
+        // One or more edges references a waypoint that doesn't exist. There are the waypoint IDs
+        // referenced by edges that do not exist. This is an error. Fix the graph and re-upload.
+        repeated string missing_waypoint_ids_in_edges = 1;
+        // The anchoring uploaded referenced waypoint IDs that do not exist. These
+        // are the missing IDs. This is a warning. The anchorings will be ignored.
+        repeated string missing_waypoint_ids_in_anchors = 2;
+        // One or more edges had an invalid from_tform_to transform. These are the edge IDs uploaded
+        // that have an invalid transform. Valid transforms have quaternion rotations that are normalized.
+        // This is a warning. Edges with invalid transforms will be fixed on upload.
+        repeated Edge.Id edge_ids_invalid_transform = 3;
+        // One or more waypoint anchors in the anchoring have an invalid transform. These are the waypoint IDs
+        // that have an invalid transform. Valid transforms have quaternion rotations that are normalized.
+        // This is a warning. Anchors with invalid transforms will be fixed on upload.
+        repeated string waypoint_anchors_invalid_transform = 4;
+        // One or more of the object achors in the anchoring have an invalid transform. These are the object IDs
+        // that have an invalid transform. Valid transforms have quaternion rotations that are normalized.
+        // This is a warning. Anchors with invalid transforms will be fixed on upload.
+        repeated string object_anchors_invalid_transform = 5;
+        // The Graph in the UploadGraph request contained more than one waypoint with the same ID. These are the
+        // waypoint IDs which occur in the UploadGraph request more than once. Note that IDs are duplicated in this list
+        // the same number of times they are duplicated in the request.
+        // This is an error. Fix the graph and re-upload.
+        repeated string duplicate_waypoint_ids = 6;
+        // The anchoring contains one or more anchor IDs that are duplicated.  Note that IDs are duplicated in this list
+        // the same number of times they are duplicated in the request. This is a warning. Only the first anchor will be used.
+        repeated string duplicate_waypoint_anchor_ids = 7;
+        // The anchoring contains one or more object anchor IDs that are duplicated.  Note that IDs are duplicated in this list
+        // the same number of times they are duplicated in the request.  This is a warning. Only the first anchor will be used.
+        repeated string duplicate_object_anchor_ids = 8;
+        // The Graph in the UploadGraph request contained more than one edge with the equivalent ID. These are the edge IDs
+        // which occur in the UploadGraph request more than once. Note that IDs are duplicated in this list the same number
+        // of times that they are duplicated in the request. Note that edges are *not* directional, and it is impossible
+        // to have both a->b *and* b->a in the same map. This is an error. Fix the graph and re-upload.
+        repeated Edge.Id duplicate_edge_ids = 9;
+        // Edges are not allowed to have the same "from" and "to" waypoint. These are the waypoint IDs which have self
+        // edges in the UploadGraph request. This is an error. Fix the graph and re-upload.
+        repeated string invalid_waypoint_ids_self_edges = 10;
+        // At least one waypoint in the graph has an empty ID. This is an error. Fix the graph and re-upload.
+        bool has_empty_waypoint_ids = 11;
+        // At least one edge in the graph references a waypoint with an empty ID.
+        // This is an error. Fix the graph and re-upload.
+        bool has_empty_edge_ids = 12;
+        // At least one waypoint anchor in the anchoring has an empty ID. This is a warning. Empty anchors will be ignored.
+        bool has_empty_waypoint_anchor_ids = 13;
+        // At least one object anchor in the anchoring has an empty ID. This is a warning. Empty anchors will be ignored.
+        bool has_empty_object_anchor_ids = 14;
+    }
+    // If the returned status is STATUS_INVALID_GRAPH, this contains the detailed information about why the
+    // graph was invalid. Note that some graph validation errors are warnings and the robot will be able to navigate
+    // on the graph even when they are present.
+    ValidationStatus validation_status = 12;
 }
 
 // The DownloadGraphRequest requests that the server send the graph (waypoints and edges)
@@ -976,6 +1109,8 @@ message UploadWaypointSnapshotResponse {
     }
     Status status = 3;
     SensorCompatibilityStatus sensor_status = 4;
+    // General map statistics after upload.
+    MapStats map_stats = 5;
 }
 
 // Used to upload edge data in chunks for a specific edge snapshot. Edge snapshots contain
@@ -1000,6 +1135,8 @@ message UploadEdgeSnapshotResponse {
     ResponseHeader header = 1;
     // Details about how the lease was used.
     LeaseUseResult lease_use_result = 2;
+    // General map statistics after upload.
+    MapStats map_stats = 3;
 }
 
 // The DownloadWaypointSnapshot request asks for a specific waypoint snapshot id to
@@ -1089,7 +1226,10 @@ message AreaCallbackServiceError{
     // A service is considered missing if it is either not registered, or if it is registered
     // but does not respond to a AreaCallbackInformation request.
     repeated string missing_services = 1;
-    
+
+    // Area Callback services that were requested but are reporting critical faults.
+    repeated ServiceFault faulted_services = 2;
+
 }
 
 

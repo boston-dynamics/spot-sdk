@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -31,11 +31,21 @@ Multiple Spot SDK examples support dockerization and running as docker container
 - [Spot Detect and Follow](../../python/examples/spot_detect_and_follow/README.md)
 - [Web Cam Image Service](../../python/examples/web_cam_image_service/README.md)
 
+## Installing Docker Engine
+
+See the [Docker Engine installation instructions](https://docs.docker.com/engine/install/) for instructions on how to install Docker Engine on your development environment.
+
+Note: if you have previously installed Docker Engine using a package manager, you may need to remove the old version before installing the new version. Please follow the instructions in the [Docker Engine installation instructions](https://docs.docker.com/engine/install/) for instructions on how to remove the old version. If you find that `docker buildx` does not function properly, you may need to remove the old version of Docker Engine.
+
 ## Create Docker Images
 
 After implementing and testing the application on the development environment, the first step is to create a docker image with the software application and its dependencies. Docker containers are dependent on images and use them to construct a run-time environment and run an application. The instructions to create a docker image are specified in a file, usually named `Dockerfile`. The `Dockerfile` specifies what base docker image to start from, what additional software and libraries to install on top of the base image, and what software needs to be run when the container starts. A variety of Spot SDK examples contain a `Dockerfile`.
 
 The `Dockerfile` files in the SDK examples contain instructions to create x86/AMD-based Ubuntu docker images. On top of `Dockerfile` files, SDK examples also contain `Dockerfile.l4t` for creating ARM-based Ubuntu docker images for the CORE I/O payloads.
+
+When writing Dockerfiles for images targeted for the CORE I/O, if using [Nvidia Docker images](https://catalog.ngc.nvidia.com/containers?filters=&orderBy=scoreDESC&query=l4t) as a base, ensure that the tag matches the version of Jetpack running on the CORE I/O. As of 3.3.0, the CORE I/O is running JetPack 4.6.1 (L4T R32.7.1).
+
+**Note:** OpenCV is commonly used for processing image data on the CORE I/O. By Default, most installations of OpenCV do not have CUDA support. Nvidia's [l4t-ml](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-ml) container provides a version of OpenCV with CUDA support built-in, but is also fairly large. To build a more lightweight container with CUDA support in OpenCV, follow the instructions provided [here](https://github.com/dusty-nv/jetson-containers/blob/master/Dockerfile.opencv), replacing `BASE_IMAGE` and `OPENCV_VERSION` with the desired versions (see above).
 
 **Note:** Most of the Dockerfiles in the SDK examples use the default user provided by the base image. This user is usually the `root` user and is not recommended to be used for running applications on CORE I/O. In most cases, it is good practice to change this to a non-root user with limited privileges.
 Running as the `root` user bypasses certain limitations imposed on non-root users around resource utilization. This means that unintentional memory or thread leaks in a program running as the `root` user can crash the entire system or cause other undefined behavior.
@@ -210,6 +220,8 @@ For Extensions without udev rules, this is the only step needed for installation
 ##### Install Extension Using a USB Drive
 
 For cases when the Extension has a very large size, users can also install the Extension from a USB drive attached to the CORE I/O. On the command-line, simply `untar` the `spx` Extension file in the folder `/data/.extensions/` using the command `tar xzfm {PATH_TO_SPX_FILE} -C /data/.extensions/{EXTENSION_NAME}`. Then, go to Extensions tab in the web portal and start the Extension manually by pressing the "Start" button.
+
+If the extension contains udev rules, those will need to be copied to `/persist/udev/rules.d/` and reloaded manually with `sudo udevadm control --reload-rules` and triggered with `sudo udevadm trigger`
 
 ##### Monitoring
 

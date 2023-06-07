@@ -1,10 +1,8 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
-
-from __future__ import print_function
 
 import itertools
 import threading
@@ -14,7 +12,8 @@ from unittest import mock
 
 import pytest
 
-from bosdyn.api import data_acquisition_pb2, data_acquisition_store_pb2, image_pb2
+from bosdyn.api import (data_acquisition_pb2, data_acquisition_store_pb2, image_pb2,
+                        service_customization_pb2)
 from bosdyn.client.common import FutureWrapper
 #from .util import make_async
 from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcquisitionPluginService,
@@ -22,6 +21,7 @@ from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcqui
                                                            RequestCancelledError, RequestManager,
                                                            RequestState, make_error)
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
+from bosdyn.client.service_customization_helpers import InvalidCustomParamSpecError
 
 from .helpers import make_async
 
@@ -61,7 +61,8 @@ def success_plugin_impl(request, store_helper: DataAcquisitionStoreHelper):
     store_helper.wait_for_stores_complete()
 
 
-single_capability = [Capability(name='test', channel_name='test_channel')]
+TEST_CAPABILITY = Capability(name='test', channel_name='test_channel')
+single_capability = [TEST_CAPABILITY]
 
 
 def make_single_request(action_name):
@@ -308,3 +309,48 @@ def test_request_removal(daq_robot):
             data_acquisition_pb2.GetStatusRequest(request_id=response1.request_id), context)
         print(feedback_response)
         assert feedback_response.status == feedback_response.STATUS_REQUEST_ID_DOES_NOT_EXIST
+
+
+def test_bad_param_spec(daq_robot):
+    BROKEN_SPEC = service_customization_pb2.DictParam.Spec()
+    BROKEN_SPEC.specs['some_int'].spec.int_spec.max_value.value = 1
+    BROKEN_SPEC.specs['some_int'].spec.int_spec.min_value.value = 5
+
+    capability = Capability()
+    capability.CopyFrom(TEST_CAPABILITY)
+    capability.custom_params.CopyFrom(BROKEN_SPEC)
+    with pytest.raises(InvalidCustomParamSpecError):
+        DataAcquisitionPluginService(daq_robot, [capability], success_plugin_impl)
+
+
+def test_bad_param_values(daq_robot):
+    """Receiving a bad param value fails"""
+    service = DataAcquisitionPluginService(daq_robot, single_capability, success_plugin_impl)
+    context = None
+    req = make_single_request('action 1')
+    req.acquisition_requests.data_captures[0].custom_params.values['key'].int_value.value = 1
+
+    response = service.AcquirePluginData(req, context)
+    assert response.status == response.STATUS_CUSTOM_PARAMS_ERROR
+    assert response.request_id == 0
+    # Wait until the thread has run to completion
+    service.executor.shutdown()
+
+
+def test_good_param_values(daq_robot):
+    """Receiving good param value succeeds"""
+    capability = Capability()
+    capability.CopyFrom(TEST_CAPABILITY)
+    capability.custom_params.specs['key'].spec.int_spec.default_value.value = 0
+
+    service = DataAcquisitionPluginService(daq_robot, [capability], success_plugin_impl)
+    context = None
+    req = make_single_request('action 1')
+    req.acquisition_requests.data_captures[0].custom_params.values['key'].int_value.value = 1
+    response = service.AcquirePluginData(req, context)
+    assert response.request_id > 0
+    # Wait until the thread has run to completion
+    service.executor.shutdown()
+    feedback = service.GetStatus(
+        data_acquisition_pb2.GetStatusRequest(request_id=response.request_id), context)
+    assert feedback.status == feedback.STATUS_COMPLETE

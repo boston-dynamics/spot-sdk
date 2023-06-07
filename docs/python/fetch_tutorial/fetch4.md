@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -92,8 +92,12 @@ kImageSources = [
         process_img_req = network_compute_bridge_pb2.NetworkComputeRequest(
             input_data=input_data, server_config=server_data)
 
-        resp = network_compute_client.network_compute_bridge_command(
-            process_img_req)
+        try:
+            resp = network_compute_client.network_compute_bridge_command(process_img_req)
+        except ExternalServerError:
+            # This sometimes happens if the NCB is unreachable due to intermittent wifi failures.
+            print('Error connecting to network compute bridge. This may be temporary.')
+            return None, None, None
 
 </code></pre>
 
@@ -626,7 +630,7 @@ if __name__ == '__main__':
 
 <h4>Start (or keep running) your <code>network_compute_server.py</code></h4>
 
-<pre><code class="language-text wrap">python network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model -l dogtoy/annotations/label_map.pbtxt 192.168.80.3
+<pre><code class="language-text wrap">python3 network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model -l dogtoy/annotations/label_map.pbtxt 192.168.80.3
 </code></pre>
 
 <h4>Run <code>fetch.py</code></h4>
@@ -652,7 +656,7 @@ if __name__ == '__main__':
 </aside>
 <br />
 
-<pre><code class="language-text wrap">python fetch.py -s fetch-server -m dogtoy-model 192.168.80.3
+<pre><code class="language-text wrap">python3 fetch.py -s fetch-server -m dogtoy-model 192.168.80.3
 </code></pre>
 <p>
     Upon success, your robot should autonomously find and pick up the dog-toy!

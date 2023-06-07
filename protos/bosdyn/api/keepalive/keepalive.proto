@@ -1,0 +1,162 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.keepalive;
+
+option java_outer_classname = "KeepaliveProto";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+import "bosdyn/api/data_buffer.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/lease.proto";
+import "bosdyn/api/auto_return/auto_return.proto";
+
+message Policy {
+    // Human-friendly name of this policy.
+    string name = 1;
+    // What to do, when.
+    repeated ActionAfter actions = 2;
+    // If provided, this field ties this policy to lease ownership.
+    // When any one associated lease is no longer an owner, this policy is automatically removed.
+    repeated Lease associated_leases = 3;
+    // Optionally provide a unique identifier for this policy.
+    // Uniqueness is not enforced by the service; this is entirely for client use.
+    string user_id = 4;
+}
+
+message ActionAfter {
+    // Record an event.
+    message RecordEvent {
+        // The events to be logged.
+        repeated bosdyn.api.Event events = 2;
+    }
+
+    // Robot triggers AutoReturn.
+    message AutoReturn {
+        // Leases that AutoReturn may use to accomplish its goals when it triggers.
+        // This field is required.
+        // This should be a newer lease than the last one used to control the robot.
+        // For example, if you have acquired lease [6] from the robot, you should begin controlling
+        // the robot with [6, 0, 1] and pass [6, 1] here.
+        // If you have added an associated lease, it should be the [6] lease.
+        repeated Lease leases = 2;
+
+        // Parameters to AutoReturn. See that message's documentation for details.
+        bosdyn.api.auto_return.Params params = 3;
+    }
+
+    // After coming to a halt, robot sits and powers off its motors.
+    // Takes priority over AutoReturn and HaltRobot actions.
+    message ControlledMotorsOff {}
+
+    // Robot powers off its computer immediately.
+    // WARNING: This will cause loss of recent data, and may damage the robot or its payloads if
+    // done while the robot is not sitting.
+    message ImmediateRobotOff {}
+
+    // The leases are marked as stale, making the resource available for other clients.
+    // See the LeaseResource message for details.
+    message LeaseStale {
+        repeated bosdyn.api.Lease leases = 1;
+    }
+
+    oneof action {
+        RecordEvent record_event = 2;
+        AutoReturn auto_return = 3;
+        ControlledMotorsOff controlled_motors_off = 4;
+        ImmediateRobotOff immediate_robot_off = 5;
+        LeaseStale lease_stale = 6;
+    }
+
+    // Take the specified action after not hearing from the associated policy_id in this long.
+    google.protobuf.Duration after = 1;
+}
+
+message ModifyPolicyRequest {
+    RequestHeader header = 1;
+    Policy to_add = 2;
+    repeated uint64 policy_ids_to_remove = 3;
+}
+
+message ModifyPolicyResponse {
+    // If the Policy in the request was invalid, CODE_INVALID_REQUEST will be set in this header.
+    // In that case, no policies will have been removed.
+    // CODE_INVALID_REQUEST can also happen if the Policy contains unknown fields. This may happen
+    // if there is a version mismatch between client and server.
+    ResponseHeader header = 1;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // Policy was added successfully, and/or policies were removed successfully.
+        STATUS_OK = 1;
+        // Set if any given policy ID was not valid on the system.
+        // No policy will have been added.
+        STATUS_INVALID_POLICY_ID = 2;
+        // Set if given policy's associated_lease was not the same, super, or sub lease of the
+        // active lease.
+        // No policy will have been removed.
+        STATUS_INVALID_LEASE = 3;
+    }
+    Status status = 2;
+
+    // The policy added to the session, if any.
+    LivePolicy added_policy = 3;
+    // The policies removed from the session, if any.
+    repeated LivePolicy removed_policies = 4;
+}
+
+message CheckInRequest {
+    RequestHeader header = 1;
+    // Specify the policy whose timer should be refreshed.
+    uint64 policy_id = 2;
+}
+
+message CheckInResponse {
+    ResponseHeader header = 1;
+    // Time the robot recorded the check in. Specified in robot's clock.
+    google.protobuf.Timestamp last_checkin = 2;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        // Set if the given policy ID was not valid on the system.
+        STATUS_INVALID_POLICY_ID = 2;
+    }
+    Status status = 3;
+}
+
+message GetStatusRequest {
+    RequestHeader header = 1;
+}
+
+message LivePolicy {
+    uint64 policy_id = 1;
+    Policy policy = 2;
+    // What time the policy was last refreshed with a check-in. Specified in robot's clock.
+    google.protobuf.Timestamp last_checkin = 3;
+    // client_name from the RequestHeader of the most recent CheckInRequest for this policy.
+    string client_name = 4;
+}
+
+message GetStatusResponse {
+    ResponseHeader header = 1;
+
+    // Per-policy status.
+    repeated LivePolicy status = 2;
+
+    enum PolicyControlAction {
+        POLICY_CONTROL_ACTION_UNKNOWN = 0;
+        POLICY_CONTROL_ACTION_AUTO_RETURN = 1;
+        POLICY_CONTROL_ACTION_MOTORS_OFF = 2;
+        POLICY_CONTROL_ACTION_ROBOT_OFF = 3;
+    }
+    // Is a Policy controlling the robot?
+    // An empty field means that no Policy is actively controlling the robot, though other actions
+    // may have triggered. For details, clients must parse the "status" field above.
+    repeated PolicyControlAction active_control_actions = 3;
+}

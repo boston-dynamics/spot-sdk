@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -35,11 +35,10 @@ message TimeRangeQuery {
 
 // The message containing the different query parameters which can be applied to
 // the ListData requests.
-message DataQueryParams{
-    oneof query{
+message DataQueryParams {
+    oneof query {
         // Time range to query.
         TimeRangeQuery time_range = 1;
-
 
         // List of action ids to query.
         ActionIdQuery action_ids = 2;
@@ -48,7 +47,7 @@ message DataQueryParams{
 }
 
 
-message StoreImageRequest{
+message StoreImageRequest {
     // Common request header.
     RequestHeader header = 1;
 
@@ -59,9 +58,11 @@ message StoreImageRequest{
     DataIdentifier data_id = 3;
 }
 
-message StoreImageResponse{
+message StoreImageResponse {
     // Common response header.
     ResponseHeader header = 1;
+
+    uint64 id = 2;
 }
 
 message StoreMetadataRequest {
@@ -78,6 +79,8 @@ message StoreMetadataRequest {
 message StoreMetadataResponse {
     // Common response header.
     ResponseHeader header = 1;
+
+    uint64 id = 2;
 }
 
 message StoreAlertDataRequest {
@@ -94,9 +97,11 @@ message StoreAlertDataRequest {
 message StoreAlertDataResponse {
     // Common response header.
     ResponseHeader header = 1;
+
+    uint64 id = 2;
 }
 
-message StoreDataRequest{
+message StoreDataRequest {
     // Common request header.
     RequestHeader header = 1;
 
@@ -113,9 +118,11 @@ message StoreDataRequest{
 message StoreDataResponse {
     // Common response header.
     ResponseHeader header = 1;
+
+    uint64 id = 2;
 }
 
-message ListCaptureActionsRequest{
+message ListCaptureActionsRequest {
     // Common request header.
     RequestHeader header = 1;
 
@@ -123,7 +130,7 @@ message ListCaptureActionsRequest{
     DataQueryParams query = 2;
 }
 
-message ListCaptureActionsResponse{
+message ListCaptureActionsResponse {
     // Common response header.
     ResponseHeader header = 1;
 
@@ -193,3 +200,4 @@ message ListStoredDataResponse {
     // List of data identifiers that satisfied the query parameters.
     repeated DataIdentifier data_ids = 2;
 }
+

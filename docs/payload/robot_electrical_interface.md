@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,9 +8,9 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Electrical Interface
 
-The Spot robot’s two payload ports provide power and communication to the robot through a DB25 connection. The robot presents a female DB25 connector at each payload port, pictured below. Note that pin 1 is on the right looking down at the robot. The payload must include a mating DB25 male connection in the proper orientation.
+The Spot robot’s two payload ports provide power and communication to the robot through a DB25 connection. The robot presents a socket DB25 connector at each payload port, pictured below. Note that pin 1 is on the right looking down at the robot. The payload must include a mating DB25 male connection in the proper orientation.
 
-Robot presents db25 female
+Robot presents DB25 socket
 
 ![db25 connector][elec-image1]
 
@@ -22,7 +22,7 @@ Robot presents db25 female
 | -------- | ---- | -------------- |
 | Power |	12, 13, 24, 25 |	Voltage supply range: 35-59V<br>Absolute Maximum Voltage: 72V<br>Max current: 3A/pin<br>Max power: 150W/port<br>Bulk capacitance: 150uF/port
 | Communication |	1-4, 7, 14-17 |	Ethernet: 1000Base-T<br>PPS Accuracy: 5ppm<br>PPS Frequency: 1Hz
-| Safety |	5, 6, 18, 19 | Payload power interlock<br>Motor power interlock
+| Safety Loops |	5 to 18, 6 to 19, 8 to 20, 11 to 23 | Payload power interlock<br>Motor power interlock<br>Extra interlock loop (do not remove)<br>Extra interlock loop (do not remove)
 
 
 
@@ -41,10 +41,10 @@ Robot presents db25 female
 | 5 |	PL_SAFETY_O |	Payload power enabled when continuity is established between this pin and pin 18
 | 6 |	MP_SAFETY_O |	Robot motor power enabled when continuity is established between this pin and pin 19
 | 7 |	PPS |	Pulse-Per-Second signal referenced to payload ground
-| 8 |	N/C |	Not Connected
+| 8 |	EXTRA_SAFETY_A |	Extra loop back. When designing a payload make sure to jumper to pin 20
 | 9 |	P_GND |	Ground Reference for the payload. Each pin supports 3A of return current.
 | 10 |	P_GND |	Ground Reference for the payload. Each pin supports 3A of return current.
-| 11 |	N/C |	Not Connected
+| 11 |	EXTRA_SAFETY_B |	Extra loop back. When designing a payload make sure to jumper to pin 23
 | 12 |	PWR |	Unregulated payload power from robot battery. Each pin supports 3A of supply current.
 | 13 |	PWR |	Unregulated payload power from robot battery. Each pin supports 3A of supply current.
 | 14 | 	ETH0_C_N |	Ethernet Pair C negative
@@ -53,10 +53,10 @@ Robot presents db25 female
 | 17 |	ETH0_A_P |	Ethernet Pair A Positive
 | 18 |	PL_SAFETY_IN |	Payload power enabled when continuity is established between this pin and pin 5
 | 19 |	MP_SAFETY_IN |	Robot motor power enabled when continuity is established between this pin and pin 6
-| 20 |	N/C |	Not Connected
+| 20 |	EXTRA_SAFETY_A |	Extra loop back. When designing a payload make sure to jumper to pin 8
 | 21 | 	P_GND |	Ground Reference for the payload. Each pin supports 3A of return current.
 | 22 |	P_GND |	Ground Reference for the payload. Each pin supports 3A of return current.
-| 23 |	N/C |	Not Connected
+| 23 |	EXTRA_SAFETY_B |	Extra loop back. When designing a payload make sure to jumper to pin 11
 | 24 |	PWR |	Unregulated payload power from robot battery. Each pin supports 3A of supply current.
 | 25 |	PWR |	Unregulated payload power from robot battery. Each pin supports 3A of supply current.
 MH1, MH2 |	P_GND |	Connector Shell and Mounting Hardware is connected to payload ground
@@ -80,7 +80,7 @@ The robot includes a current limiting circuit that will disable power to the pay
 
 ## Motor power safety
 
-The payload interface contains a safety interlock connection that allows the payload to disable motor power to all motors in the robot. All payloads must therefore ensure continuity between pins 6 (MP_SAFETY_O) and 19 (MP_SAFETY_IN) at all times for the robot to operate. If electrical continuity between these pins is interrupted, the robot will immediately disable power to all actuation systems. If the robot is standing, this will cause the robot to fall to the ground.
+The payload interface contains a safety interlock connection that allows the payload to disable motor power to all motors in the robot. All payloads must therefore ensure continuity between pins 6 (MP_SAFETY_O) and 19 (MP_SAFETY_IN); pins 5 (PL_SAFETY_IN) and 18 (PL_SAFETY_O); pins 8 (EXTRA_SAFETY_A) and 20 (EXTRA_SAFETY_A); as well as pins 11 (EXTRA_SAFETY_B) and 23 (EXTRA_SAFETY_B) at all times for the robot to operate. If electrical continuity between these pins is interrupted, the robot will immediately disable power specific systems. If the robot is standing, this will cause the robot to fall to the ground, or cause payloads to power off.
 
 
 ![payload electrical][elec-image2]

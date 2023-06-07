@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -20,20 +20,19 @@ import "google/protobuf/timestamp.proto";
 // A representation of a stored data acquisition.
 message Logpoint {
     // Possible types of media that can be stored.
-    enum RecordType {
-        STILLIMAGE = 0;
-    }
+    enum RecordType { STILLIMAGE = 0; }
     // Possible stages of data acquisition.
     enum LogStatus {
         FAILED = 0;
-        QUEUED = 1; //the logpoint has been queued to be downloaded from the renderer
-        COMPLETE = 2; // the logpoint is written to the disk
+        QUEUED = 1;    // the logpoint has been queued to be downloaded from the renderer
+        COMPLETE = 2;  // the logpoint is written to the disk
         UNKNOWN = -1;
     }
-    enum QueueStatus{
+    enum QueueStatus {
         QUEUED_UNKNOWN = 0;
-        QUEUED_RENDER = 1; // The logpoint has been queued to be downloaded from the renderer
-        QUEUED_DISK = 2;   // The logpoint is in general ram, and will be written to the disk when resources allow
+        QUEUED_RENDER = 1;  // The logpoint has been queued to be downloaded from the renderer
+        QUEUED_DISK = 2;    // The logpoint is in general ram, and will be written to the disk when
+                            // resources allow
     }
     // Unique identifier for a data acquisition event.
     string name = 1;
@@ -46,7 +45,7 @@ message Logpoint {
     // An arbitrary string to be stored with the log data.
     string tag = 4;
     // Time of acquisition.
-    google.protobuf.Timestamp timestamp=5;
+    google.protobuf.Timestamp timestamp = 5;
     // Description of image format.
     message ImageParams {
         int32 width = 1;
@@ -54,24 +53,25 @@ message Logpoint {
         bosdyn.api.Image.PixelFormat format = 3;
     }
     // Image format of the stored data.
-    ImageParams image_params=6;
+    ImageParams image_params = 6;
     // Data describing the camera intrinsics and extrinsics for a window of the image.
     message Calibration {
-        int32 xoffset=1;
-        int32 yoffset=2;
-        int32 width=3;
-        int32 height=4;
+        int32 xoffset = 1;
+        int32 yoffset = 2;
+        int32 width = 3;
+        int32 height = 4;
         string base_frame_name = 7;
-        // 'base_tfrom_sensor' defines the transform from the specific camera to the named base from.
-        // This is deprecated in favor of 'base_tform_sensor' which follows the intended naming convention
-        // and FrameTree directionality convention of the Spot system as defined in geometry.proto.
-        SE3Pose base_tfrom_sensor = 5[deprecated=true];
+        // 'base_tfrom_sensor' defines the transform from the specific camera to the named base
+        // from. DEPRECATED as of 3.0.1 in favor of 'base_tform_sensor' which follows the intended
+        // naming convention and FrameTree directionality convention of the Spot system as defined
+        // in geometry.proto.
+        SE3Pose base_tfrom_sensor = 5 [deprecated = true];
         // The transform from the named base frame to this specific camera
         SE3Pose base_tform_sensor = 8;
-        bosdyn.api.spot_cam.Camera.PinholeIntrinsics intrinsics=6;
+        bosdyn.api.spot_cam.Camera.PinholeIntrinsics intrinsics = 6;
     }
     // Camera data for all sub-images contained within the image data.
-    repeated Calibration calibration=7;
+    repeated Calibration calibration = 7;
 }
 
 // Delete a log point from the store.
@@ -125,7 +125,6 @@ message RetrieveResponse {
     // Data chunk bytes field should be concatenated together to recover the binary data.
     DataChunk data = 3;
 }
-
 
 // Retrieve the binary data associated with a log point, with no processing applied.
 // Storing a panorama will retrieve tiled individual images.
@@ -220,7 +219,8 @@ message SetPassphraseRequest {
     // A passphrase is a human-readable string used to generate
     // an encryption key. An empty passphrase disables encryption.
 
-    // If the encryption key is set, everything new written to the drive gets encrypted. this includes
+    // If the encryption key is set, everything new written to the drive gets encrypted. this
+    // includes
 
     // 1) the sql database
     // 2) logged data

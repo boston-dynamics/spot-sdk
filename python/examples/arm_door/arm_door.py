@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -39,10 +39,10 @@ def power_on(robot):
     Args:
         robot: (Robot) Interface to Spot robot.
     """
-    robot.logger.info("Powering on robot...")
+    robot.logger.info('Powering on robot...')
     robot.power_on(timeout_sec=20)
-    assert robot.is_powered_on(), "Robot power on failed."
-    robot.logger.info("Robot powered on.")
+    assert robot.is_powered_on(), 'Robot power on failed.'
+    robot.logger.info('Robot powered on.')
 
 
 def safe_power_off(robot):
@@ -51,10 +51,10 @@ def safe_power_off(robot):
     Args:
         robot: (Robot) Interface to Spot robot.
     """
-    robot.logger.info("Powering off robot...")
+    robot.logger.info('Powering off robot...')
     robot.power_off(cut_immediately=False, timeout_sec=20)
-    assert not robot.is_powered_on(), "Robot power off failed."
-    robot.logger.info("Robot safely powered off.")
+    assert not robot.is_powered_on(), 'Robot power off failed.'
+    robot.logger.info('Robot safely powered off.')
 
 
 def stand(robot):
@@ -63,10 +63,10 @@ def stand(robot):
     Args:
         robot: (Robot) Interface to Spot robot.
     """
-    robot.logger.info("Commanding robot to stand...")
+    robot.logger.info('Commanding robot to stand...')
     command_client = robot.ensure_client(RobotCommandClient.default_service_name)
     blocking_stand(command_client, timeout_sec=10)
-    robot.logger.info("Robot standing.")
+    robot.logger.info('Robot standing.')
 
 
 def pitch_up(robot):
@@ -75,7 +75,7 @@ def pitch_up(robot):
     Args:
         robot: (Robot) Interface to Spot robot.
     """
-    robot.logger.info("Pitching robot up...")
+    robot.logger.info('Pitching robot up...')
     command_client = robot.ensure_client(RobotCommandClient.default_service_name)
     footprint_R_body = geometry.EulerZXY(0.0, 0.0, -1 * math.pi / 6.0)
     cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=footprint_R_body)
@@ -87,10 +87,10 @@ def pitch_up(robot):
         synchronized_feedback = response.feedback.synchronized_feedback
         status = synchronized_feedback.mobility_command_feedback.stand_feedback.status
         if (status == basic_command_pb2.StandCommand.Feedback.STATUS_IS_STANDING):
-            robot.logger.info("Robot pitched.")
+            robot.logger.info('Robot pitched.')
             return
         time.sleep(1.0)
-    raise Exception("Failed to pitch robot.")
+    raise Exception('Failed to pitch robot.')
 
 
 def check_estop(robot):
@@ -99,8 +99,8 @@ def check_estop(robot):
     Args:
         robot: (Robot) Interface to Spot robot.
     """
-    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
-                                    "such as the estop SDK example, to configure E-Stop."
+    assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client, ' \
+                                    'such as the estop SDK example, to configure E-Stop.'
 
 
 def walk_to_object_in_image(robot, request_manager, debug):
@@ -120,7 +120,7 @@ def walk_to_object_in_image(robot, request_manager, debug):
 
     # Send a manipulation API request. Using the points selected by the user, the robot will
     # walk toward the door handle.
-    robot.logger.info("Walking toward door...")
+    robot.logger.info('Walking toward door...')
     response = manip_client.manipulation_api_command(manipulation_api_request)
 
     # Check feedback to verify the robot walks to the handle. The service will also return a
@@ -131,11 +131,11 @@ def walk_to_object_in_image(robot, request_manager, debug):
     end_time = time.time() + timeout_sec
     while time.time() < end_time:
         response = manip_client.manipulation_api_feedback_command(feedback_request)
-        assert response.manipulation_cmd_id == command_id, "Got feedback for wrong command."
+        assert response.manipulation_cmd_id == command_id, 'Got feedback for wrong command.'
         if (response.current_state == manipulation_api_pb2.MANIP_STATE_DONE):
             return response
-    raise Exception("Manip command timed out. Try repositioning the robot.")
-    robot.logger.info("Walked to door.")
+    raise Exception('Manip command timed out. Try repositioning the robot.')
+    robot.logger.info('Walked to door.')
     return response
 
 
@@ -184,7 +184,7 @@ class RequestManager:
         if self._side_by_side is not None:
             return self._side_by_side
 
-        # Convert PIL images to numpy for processing.
+        # Convert CV2 images to numpy for processing.
         fr_fisheye_image = self.image_dict['frontright_fisheye_image'][1]
         fl_fisheye_image = self.image_dict['frontleft_fisheye_image'][1]
 
@@ -204,7 +204,7 @@ class RequestManager:
         if event == cv2.EVENT_LBUTTONDOWN:
             if not self.handle_position_side_by_side:
                 cv2.circle(self.side_by_side, (x, y), 30, (255, 0, 0), 5)
-                _draw_text_on_image(self.side_by_side, "Click hinge.")
+                _draw_text_on_image(self.side_by_side, 'Click hinge.')
                 cv2.imshow(self.window_name, self.side_by_side)
                 self.handle_position_side_by_side = (x, y)
             elif not self.hinge_position_side_by_side:
@@ -212,7 +212,7 @@ class RequestManager:
 
     def get_user_input_handle_and_hinge(self):
         """Open window showing the side by side fisheye images with on-screen prompts for user."""
-        _draw_text_on_image(self.side_by_side, "Click handle.")
+        _draw_text_on_image(self.side_by_side, 'Click handle.')
         cv2.imshow(self.window_name, self.side_by_side)
         cv2.setMouseCallback(self.window_name, self._on_mouse)
         while not self.user_input_set():
@@ -233,11 +233,11 @@ class RequestManager:
         # Figure out which source the user actually clicked.
         height, width = self.side_by_side.shape
         if self.handle_position_side_by_side[0] > width / 2:
-            self.clicked_source = "frontleft_fisheye_image"
+            self.clicked_source = 'frontleft_fisheye_image'
             rotated_pixel = self.handle_position_side_by_side
             rotated_pixel = (rotated_pixel[0] - width / 2, rotated_pixel[1])
         else:
-            self.clicked_source = "frontright_fisheye_image"
+            self.clicked_source = 'frontright_fisheye_image'
             rotated_pixel = self.handle_position_side_by_side
 
         # Undo pixel rotation by rotation 90 deg CCW.
@@ -257,7 +257,7 @@ class RequestManager:
             cv2.circle(clicked_cv2,
                        (int(manipulation_cmd.pixel_xy.x), int(manipulation_cmd.pixel_xy.y)), 30, c,
                        5)
-            cv2.imshow("Debug", clicked_cv2)
+            cv2.imshow('Debug', clicked_cv2)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
 
@@ -330,7 +330,7 @@ def open_door(robot, request_manager, snapshot):
             the 3D location reported from a raycast based on the user hinge touch point.
     """
 
-    robot.logger.info("Opening door...")
+    robot.logger.info('Opening door...')
 
     # Using the raycast intersection point and the
     vision_tform_raycast = frame_helpers.get_a_tform_b(snapshot, frame_helpers.VISION_FRAME_NAME,
@@ -374,12 +374,12 @@ def open_door(robot, request_manager, snapshot):
         feedback_response = door_client.open_door_feedback(feedback_request)
         if (feedback_response.status !=
                 basic_command_pb2.RobotCommandFeedbackStatus.STATUS_PROCESSING):
-            raise Exception("Door command reported status ")
+            raise Exception('Door command reported status ')
         if (feedback_response.feedback.status == door_pb2.DoorCommand.Feedback.STATUS_COMPLETED):
-            robot.logger.info("Opened door.")
+            robot.logger.info('Opened door.')
             return
         time.sleep(0.5)
-    raise Exception("Door command timed out. Try repositioning the robot.")
+    raise Exception('Door command timed out. Try repositioning the robot.')
 
 
 def execute_open_door(robot, options):
@@ -400,10 +400,10 @@ def execute_open_door(robot, options):
     image_dict = get_images_as_cv2(robot, sources)
 
     # Get handle and hinge locations from user input.
-    window_name = "Open Door Example"
+    window_name = 'Open Door Example'
     request_manager = RequestManager(image_dict, window_name)
     request_manager.get_user_input_handle_and_hinge()
-    assert request_manager.user_input_set(), "Failed to get user input for handle and hinge."
+    assert request_manager.user_input_set(), 'Failed to get user input for handle and hinge.'
 
     # Tell the robot to walk toward the door.
     manipulation_feedback = walk_to_object_in_image(robot, request_manager, options.debug)
@@ -439,7 +439,7 @@ def open_door_main(options):
     setup_logging(options.verbose)
 
     robot = initialize_robot(options)
-    assert robot.has_arm(), "Robot requires an arm to open door."
+    assert robot.has_arm(), 'Robot requires an arm to open door.'
 
     # Verify the robot is not estopped.
     check_estop(robot)
@@ -454,11 +454,11 @@ def open_door_main(options):
         with LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
             # Execute open door command sequence.
             execute_open_door(robot, options)
-            comment = "Opened door successfully."
+            comment = 'Opened door successfully.'
             robot.operator_comment(comment)
             robot.logger.info(comment)
     except Exception:
-        comment = "Failed to open door."
+        comment = 'Failed to open door.'
         robot.operator_comment(comment)
         robot.logger.info(comment)
         raise

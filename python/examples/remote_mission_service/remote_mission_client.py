@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -53,7 +53,7 @@ def main():
         # Build a client that can talk directly to the RemoteMissionService implementation.
         client = bosdyn.mission.remote_client.RemoteClient()
         # Point the client at the service. We're assuming there is no encryption to set up.
-        client.channel = grpc.insecure_channel('{}:{}'.format(options.host_ip, options.port))
+        client.channel = grpc.insecure_channel(f'{options.host_ip}:{options.port}')
     # Else if attempting to communicate through the robot.
     else:
         # Register the remote mission client with the SDK instance.
@@ -103,10 +103,10 @@ def main():
         while response.status == remote_pb2.TickResponse.STATUS_RUNNING:
             time.sleep(0.1)
             response = client.tick(session_id, inputs=input_values, lease_resources=lease_resources)
-        print('Servicer stopped with status {}'.format(
-            remote_pb2.TickResponse.Status.Name(response.status)))
+        print(
+            f'Servicer stopped with status {remote_pb2.TickResponse.Status.Name(response.status)}')
         if response.error_message:
-            print('\tError message: {}'.format(response.error_message))
+            print(f'\tError message: {response.error_message}')
 
         try:
             # We're done ticking for now -- stop this session.

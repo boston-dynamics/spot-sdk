@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -16,6 +16,7 @@ The DataAcquisitionPluginService base class (defined in `data_acquisition_plugin
 - **pointcloud_plugin**: Reads from a point cloud service (such as a Velodyne) and saves the point cloud data as a binary protobuf.
 - **network_compute_bridge_plugin**: Used to call a Network Compute Bridge model to process data, and save the results. Customize this example for when the built-in network compute support in the Data Acquisition Service is not expressive enough for your case.
 - **gps_metadata_plugin** and **piksi_gps_plugin**: Used to store GPS coordinates as json-formatted metadata. gps_metadata_plugin just inserts random data and is meant to be customized for individual hardware. piksi_gps_plugin reads from a Piksi unit.
+- **save_file_plugin**: Loads an file from disk and saves the file as binary. For example, this plugin can save an mp4 video file to the robot.
 
 ## Setup Dependencies
 
@@ -81,6 +82,16 @@ The command to start the network compute bridge plugin would be:
 
 ```
 python3 {PLUGIN_FILE_NAME} --guid {GUID} --secret {SECRET} --host-ip {IP_WHERE_PLUGIN_WILL_RUN} --port {PORT_THE_PLUGIN_WILL_MONITOR} --worker-name fire-extinguisher-server {ROBOT_IP}
+```
+
+### Save File Plugin
+
+To run the plugin that saves a file to the robot:
+
+```
+export BOSDYN_CLIENT_USERNAME={ROBOT_USERNAME}
+export BOSDYN_CLIENT_PASSWORD={ROBOT_PASSWORD}
+python3 save_file_plugin_service.py --host-ip {IP_WHERE_PLUGIN_WILL_RUN} --port {PORT_THE_PLUGIN_WILL_MONITOR} --file-path {FULL_PATH_TO_A_FILE} {ROBOT_IP}
 ```
 
 ## Testing the Data Acquisition Plugin

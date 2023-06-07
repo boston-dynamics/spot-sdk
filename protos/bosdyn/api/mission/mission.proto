@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -70,6 +70,11 @@ message State {
             string error = 2;
             // ID from NodeInfo.
             int64 id = 3;
+            message BlackboardState {
+                repeated KeyValue variables = 1;
+            }
+            // Nodes can write and read from the blackboard. Every node has a scoped blackboard.
+            BlackboardState blackboard = 5;
         }
         // The tick counter when this state was produced.
         int64 tick_counter = 1;
@@ -116,6 +121,7 @@ message State {
     // The mission's ID.
     // -1 indicates no mission has been loaded.
     int64 mission_id = 7;
+    
 }
 
 // A question posed by a Prompt node, or by the internal operation of another node.
@@ -174,6 +180,7 @@ message AnswerQuestionResponse {
     Status status = 2;
 }
 
+
 // Static information about the mission. Used to interpret the mission state.
 message MissionInfo {
     // Mission ID assigned by the server.
@@ -181,6 +188,7 @@ message MissionInfo {
 
     // The root node of the mission.
     NodeInfo root = 2;
+
 }
 
 // Provides children and metadata of a single node within the mission.
@@ -225,6 +233,7 @@ message PlayMissionRequest {
 
     // Settings active until the next PlayMission or RestartMission request.
     PlaySettings settings = 5;
+
 }
 
 
@@ -288,6 +297,7 @@ message RestartMissionRequest {
 
     // Settings active until the next PlayMission or RestartMission request.
     PlaySettings settings = 4;
+
 }
 
 // The RestartMission response includes the status and any failed nodes for the request.

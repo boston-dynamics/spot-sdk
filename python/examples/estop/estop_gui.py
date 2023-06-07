@@ -1,23 +1,20 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Provides a very visible button to click to stop the robot."""
-from __future__ import print_function
 
 import argparse
 import logging
 import os
+import queue
 import signal
 import sys
 import threading
 import traceback
 from datetime import datetime
-
-import grpc
-from six.moves import queue
 
 try:
     import PyQt5.QtCore as QtCore
@@ -38,10 +35,10 @@ from bosdyn.client.estop import EstopClient, EstopEndpoint, EstopKeepAlive
 if sys.platform == 'win32':
     import ctypes
 
-STOP_BUTTON_STYLESHEET = ("background-color: red; font: bold 60px; border-width: 5px; "
-                          "border-radius:20px; padding: 60px")
-RELEASE_BUTTON_STYLESHEET = ("background-color: green; border-width: 5px; border-radius:20px; "
-                             "padding: 10px")
+STOP_BUTTON_STYLESHEET = ('background-color: red; font: bold 60px; border-width: 5px; '
+                          'border-radius:20px; padding: 60px')
+RELEASE_BUTTON_STYLESHEET = ('background-color: green; border-width: 5px; border-radius:20px; '
+                             'padding: 10px')
 ERROR_LABEL_STYLESHEET = 'font: bold 15px'
 
 
@@ -55,7 +52,7 @@ class EstopGui(QtWidgets.QMainWindow):
     def __init__(self, hostname, client, timeout_sec, name=None, unique_id=None):
         QtWidgets.QMainWindow.__init__(self)
 
-        self.logger = logging.getLogger("Estop GUI")
+        self.logger = logging.getLogger('Estop GUI')
 
         self.disable_signal.connect(self.disable_buttons)
         self.checkin_status_signal.connect(self.set_status_label)
@@ -69,6 +66,7 @@ class EstopGui(QtWidgets.QMainWindow):
 
         # Begin periodic check-in between keep-alive and robot
         self.estop_keep_alive = EstopKeepAlive(ep)
+        self._status_msg = ''
 
         # Configure UI.
         self.setCentralWidget(QtWidgets.QWidget())
@@ -79,7 +77,7 @@ class EstopGui(QtWidgets.QMainWindow):
 
         self.stop_button = QtWidgets.QPushButton(self)
         self.stop_button.setText('STOP')
-        self.stop_button.clicked.connect(self.estop_keep_alive.stop)
+        self.stop_button.clicked.connect(self._stop)
         self.stop_button.setStyleSheet(STOP_BUTTON_STYLESHEET)
         self.stop_button.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                        QtWidgets.QSizePolicy.Expanding)
@@ -92,11 +90,11 @@ class EstopGui(QtWidgets.QMainWindow):
 
         self.release_button = QtWidgets.QPushButton(self)
         self.release_button.setText('Release')
-        self.release_button.clicked.connect(self.estop_keep_alive.allow)
+        self.release_button.clicked.connect(self._allow)
         self.release_button.setStyleSheet(RELEASE_BUTTON_STYLESHEET)
         self.center_layout.addWidget(self.release_button)
 
-        self.setWindowTitle("E-Stop ({} {}sec)".format(hostname, timeout_sec))
+        self.setWindowTitle(f'E-Stop ({hostname} {timeout_sec}sec)')
 
         # Begin monitoring the keep-alive status
         thread = threading.Thread(target=self._check_keep_alive_status)
@@ -135,13 +133,13 @@ class EstopGui(QtWidgets.QMainWindow):
                 continue
 
             if status == EstopKeepAlive.KeepAliveStatus.OK:
-                self.checkin_status_signal.emit('OK! {:%H:%M:%S}'.format(datetime.now()))
+                self.checkin_status_signal.emit(f'OK! {datetime.now():%H:%M:%S}')
             elif status == EstopKeepAlive.KeepAliveStatus.ERROR:
                 self.checkin_status_signal.emit(msg)
             elif status == EstopKeepAlive.KeepAliveStatus.DISABLED:
                 self.disable_signal.emit()
             else:
-                raise Exception("Unknown estop keep alive status seen: {}.".format(status))
+                raise Exception(f'Unknown estop keep alive status seen: {status}.')
 
     def disable_buttons(self):
         """Disable the estop buttons."""
@@ -151,7 +149,12 @@ class EstopGui(QtWidgets.QMainWindow):
         self.release_button.setText('(disabled)')
 
     def set_status_label(self, status_msg):
-        self.status_label.setText(status_msg)
+        self._status_msg = status_msg
+        self._update_status_label()
+
+    def _update_status_label(self):
+        self.status_label.setText(
+            f'{_level_string(self.estop_keep_alive.last_set_level)} {self._status_msg}')
 
     def _launch_estop_status_dialog(self, markup):
         self.status_extant = False
@@ -164,6 +167,23 @@ class EstopGui(QtWidgets.QMainWindow):
         """Shutdown estop keep-alive and all GUI threads."""
         self.estop_keep_alive.shutdown()
         self.quitting = True
+
+    def _allow(self):
+        self.estop_keep_alive.allow()
+        self._update_status_label()
+
+    def _stop(self):
+        self.estop_keep_alive.stop()
+        self._update_status_label()
+
+
+def _level_string(level):
+    """Convert a stop level into a string for the UI"""
+    if level == estop_protos.ESTOP_LEVEL_NONE:
+        return 'Allowed'
+    elif level in (estop_protos.ESTOP_LEVEL_CUT, estop_protos.ESTOP_LEVEL_SETTLE_THEN_CUT):
+        return 'Stopped'
+    return ''
 
 
 def status_response_to_markup(status, my_id=None):
@@ -184,10 +204,10 @@ def status_response_to_markup(status, my_id=None):
                     for e in status.endpoints]
     msg = ''
     for data in endpoints_data:
-        msg += '<b>{} {}</b>  {} (sent {:.2f} ago)<br>'.format(*data)
+        msg += f'<b>{data[0]} {data[1]}</b>  {data[2]} (sent {data[3]:.2f} ago)<br>'
     net_level = estop_protos.EstopStopLevel.Name(status.stop_level)
     reason = status.stop_level_details
-    markup = '<b>' + net_level + '</b>  (' + reason + ')<br><br>Endpoints:<br>' + msg
+    markup = f'<b>{net_level}</b>  ({reason})<br><br>Endpoints:<br>{msg}'
 
     return markup
 
@@ -209,7 +229,7 @@ def build_app(hostname, estop_client, timeout_sec):
         myappid = 'bostondynamics.estop_button.1'  # arbitrary string
         ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
 
-    gui = EstopGui(hostname, estop_client, timeout_sec, name="EStop")
+    gui = EstopGui(hostname, estop_client, timeout_sec, name='EStop')
     return (qt_app, gui)
 
 

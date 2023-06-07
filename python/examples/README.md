@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -45,3 +45,4 @@ Developers getting acquainted with the SDK may find it easier to start with cert
 - [Logging Examples](docs/logging_examples.md)
 - [Data Acquisition Examples](docs/data_acquisition_examples.md)
 - [Autonomy and Missions Examples](docs/autonomy_and_missions_examples.md)
+- [Scout](docs/scout.md)

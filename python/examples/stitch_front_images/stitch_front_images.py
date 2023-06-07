@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -36,11 +36,11 @@ class ImagePreppedForOpenGL():
         image_format = image_response.shot.image.format
 
         if image_format == image_pb2.Image.FORMAT_RAW:
-            raise Exception("Won't work.  Yet.")
+            raise Exception('Won\'t work.  Yet.')
         elif image_format == image_pb2.Image.FORMAT_JPEG:
             numpy_array = numpy.asarray(Image.open(io.BytesIO(image_response.shot.image.data)))
         else:
-            raise Exception("Won't work.")
+            raise Exception('Won\'t work.')
 
         return numpy_array
 
@@ -50,7 +50,7 @@ class ImagePreppedForOpenGL():
              BODY_FRAME_NAME, image_response.shot.frame_name_image_sensor)
         self.vision_T_body = get_vision_tform_body(image_response.shot.transforms_snapshot)
         if not self.body_T_image_sensor:
-            raise Exception("Won't work.")
+            raise Exception('Won\'t work.')
 
         if image_response.source.pinhole:
             resolution = numpy.asarray([ \
@@ -65,7 +65,7 @@ class ImagePreppedForOpenGL():
                 image_response.source.pinhole.intrinsics.principal_point.x, \
                 image_response.source.pinhole.intrinsics.principal_point.y])
         else:
-            raise Exception("Won't work.")
+            raise Exception('Won\'t work.')
 
         sensor_T_vo = (self.vision_T_body * self.body_T_image_sensor).inverse()
 
@@ -109,7 +109,7 @@ class StitchingCamera(object):
     """Camera to render from in OpenGL."""
 
     def __init__(self, image_1, image_2):
-        """We assume the two images passed in are Front Right and Front Left, 
+        """We assume the two images passed in are Front Right and Front Left,
         we put our fake OpenGl rendering camera smack dab in the middle of the
         two"""
         super(StitchingCamera, self).__init__()
@@ -178,10 +178,10 @@ class CompiledShader():
 def load_get_image_response_from_binary_file(file_path):
     """Read in image from image response"""
     if not os.path.exists(file_path):
-        raise IOError("File not found at: %s" % file_path)
+        raise IOError(f'File not found at: {file_path}')
 
     _images = image_pb2.GetImageResponse()
-    with open(file_path, "rb") as f:
+    with open(file_path, 'rb') as f:
         data = f.read()
         _images.ParseFromString(data)
 
@@ -200,7 +200,7 @@ def mat4mul3(mat, vec, vec4=1):
 def normalize(vec):
     norm = numpy.linalg.norm(vec)
     if norm == 0:
-        raise ValueError("norm function returned 0.")
+        raise ValueError('norm function returned 0.')
     return vec / norm
 
 
@@ -239,10 +239,10 @@ def draw_routine(display, program, stitching_camera):
     gluPerspective(110, (display[0] / display[1]), 0.1, 50.0)
 
     if not program.initialized:
-        print("Gl is not ready yet.")
+        print('Gl is not ready yet.')
         return
     if stitching_camera is None:
-        print("No stitching camera yet.")
+        print('No stitching camera yet.')
         return
 
     glUseProgram(program.program)
@@ -291,7 +291,7 @@ def stitch(robot, options):
 
     image_client = robot.ensure_client(ImageClient.default_service_name)
 
-    image_sources = ["frontright_fisheye_image", "frontleft_fisheye_image"]
+    image_sources = ['frontright_fisheye_image', 'frontleft_fisheye_image']
 
     requests = [
         build_image_request(source, quality_percent=options.jpeg_quality_percent)
@@ -315,20 +315,20 @@ def stitch(robot, options):
         if images_future is not None and images_future.done():
             try:
                 images = images_future.result()
-            except exc:
-                print("Couldn't get images:", exc)
+            except Exception as exc:
+                print('Could not get images:', exc)
             else:
                 for image in images:
-                    if image.source.name == "frontright_fisheye_image":
+                    if image.source.name == 'frontright_fisheye_image':
                         front_right = ImagePreppedForOpenGL(image)
-                    elif image.source.name == "frontleft_fisheye_image":
+                    elif image.source.name == 'frontleft_fisheye_image':
                         front_left = ImagePreppedForOpenGL(image)
 
                 if front_right is not None and front_left is not None:
                     program.update_images(front_right, front_left)
                     stitching_camera = StitchingCamera(front_right, front_left)
                 else:
-                    print("Got image response, but not with both images!")
+                    print('Got image response, but not with both images!')
 
             # Reset variable so we re-send next image request
             images_future = None
@@ -348,14 +348,14 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)
-    bosdyn.client.util.add_common_arguments(parser)
-    parser.add_argument('-j', '--jpeg-quality-percent', help="JPEG quality percentage (0-100)",
+    bosdyn.client.util.add_base_arguments(parser)
+    parser.add_argument('-j', '--jpeg-quality-percent', help='JPEG quality percentage (0-100)',
                         type=int, default=50)
     options = parser.parse_args()
 
     sdk = bosdyn.client.create_standard_sdk('front_cam_stitch')
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate(options.username, options.password)
+    bosdyn.client.util.authenticate(robot)
     robot.sync_with_directory()
     robot.time_sync.wait_for_sync()
 

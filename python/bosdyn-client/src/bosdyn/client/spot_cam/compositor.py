@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -108,27 +108,68 @@ class CompositorClient(BaseClient):
         return self.call_async(self._stub.GetIrColormap, request, self._colormap_from_response,
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
-    def set_ir_meter_overlay(self, x, y, enable, **kwargs):
+    def set_ir_meter_overlay(self, x, y, enable, unit, **kwargs):
         """Set IR reticle position to use on Spot CAM IR
 
         Args:
             x (Float): (0,1) horizontal coordinate of reticle
             y (Float): (0,1) vertical coordinate of reticle
             enable (Boolean): Enable the reticle on the display
+            unit (TempUnit): Temperature unit to display
             kwargs: extra arguments for controlling RPC details.
         """
         coords = compositor_pb2.IrMeterOverlay.NormalizedCoordinates(x=x, y=y)
-        overlay = compositor_pb2.IrMeterOverlay(enable=enable, coords=coords)
+        overlay = compositor_pb2.IrMeterOverlay(enable=enable, meter=[coords], unit=unit)
         request = compositor_pb2.SetIrMeterOverlayRequest(overlay=overlay)
         return self.call(self._stub.SetIrMeterOverlay, request, self._return_response,
                          self._compositor_error_from_response, copy_request=False, **kwargs)
 
-    def set_ir_meter_overlay_async(self, x, y, enable, **kwargs):
+    def set_ir_meter_overlay_async(self, x, y, enable, unit, **kwargs):
         """Async version of set_ir_meter_overlay()"""
         coords = compositor_pb2.IrMeterOverlay.NormalizedCoordinates(x=x, y=y)
-        overlay = compositor_pb2.IrMeterOverlay(enable=enable, coords=coords)
+        overlay = compositor_pb2.IrMeterOverlay(enable=enable, meter=[coords], unit=unit)
         request = compositor_pb2.SetIrMeterOverlayRequest(overlay=overlay)
         return self.call_async(self._stub.SetIrMeterOverlay, request, self._return_response,
+                               self._compositor_error_from_response, copy_request=False, **kwargs)
+
+    def set_multi_ir_meter_overlay(self, coords, enable, unit, **kwargs):
+        """Set multiple IR reticle positions to use on Spot CAM IR
+
+        Args:
+            coords (List[Tuple(Float, Float)]): List of (x, y) reticle coordinates in range (0,1)
+                e.g. [(0.1, 0.2), (0.2, 0.4), (0.7, 0.7)]
+            enable (Boolean): Enable the reticles on the display
+            unit (TempUnit): Temperature unit to display
+            kwargs: extra arguments for controlling RPC details.
+        """
+        coords_proto = [
+            compositor_pb2.IrMeterOverlay.NormalizedCoordinates(x=x, y=y) for x, y in coords
+        ]
+        overlay = compositor_pb2.IrMeterOverlay(enable=enable, meter=coords_proto, unit=unit)
+        request = compositor_pb2.SetIrMeterOverlayRequest(overlay=overlay)
+        return self.call(self._stub.SetIrMeterOverlay, request, self._return_response,
+                         self._compositor_error_from_response, copy_request=False, **kwargs)
+
+    def set_multi_ir_meter_overlay_async(self, coords, enable, unit, **kwargs):
+        """Async version of set_multi_ir_meter_overlay()"""
+        coords_proto = [
+            compositor_pb2.IrMeterOverlay.NormalizedCoordinates(x=x, y=y) for x, y in coords
+        ]
+        overlay = compositor_pb2.IrMeterOverlay(enable=enable, meter=coords_proto, unit=unit)
+        request = compositor_pb2.SetIrMeterOverlayRequest(overlay=overlay)
+        return self.call_async(self._stub.SetIrMeterOverlay, request, self._return_response,
+                               self._compositor_error_from_response, copy_request=False, **kwargs)
+
+    def get_ir_meter_overlay(self, **kwargs):
+        """Get current IR reticle positions"""
+        request = compositor_pb2.GetIrMeterOverlayRequest()
+        return self.call(self._stub.GetIrMeterOverlay, request, self._return_response,
+                         self._compositor_error_from_response, copy_request=False, **kwargs)
+
+    def get_ir_meter_overlay_async(self, **kwargs):
+        """Async version of get_ir_meter_overlay()"""
+        request = compositor_pb2.GetIrMeterOverlayRequest()
+        return self.call_async(self._stub.GetIrMeterOverlay, request, self._return_response,
                                self._compositor_error_from_response, copy_request=False, **kwargs)
 
     @staticmethod

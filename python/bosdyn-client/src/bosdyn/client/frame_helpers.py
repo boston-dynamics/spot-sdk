@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -18,6 +18,20 @@ GROUND_PLANE_FRAME_NAME = "gpe"
 HAND_FRAME_NAME = "hand"
 UNKNOWN_FRAME_NAME = "unknown"
 RAYCAST_FRAME_NAME = "walkto_raycast_intersection"
+TOOL_FRAME_NAME = "tool"
+DESIRED_TOOL_FRAME_NAME = "desired_tool"
+TASK_FRAME_NAME = "task"
+DESIRED_TOOL_AT_END_FRAME_NAME = "desired_tool_at_end"
+MEASURED_TOOL_AT_START_FRAME_NAME = "measured_tool_at_start"
+GAZE_TARGET_FRAME_NAME = "gaze_target"
+FRONT_LEFT_FOOT_FRAME_NAME = "fl_foot"
+FRONT_RIGHT_FOOT_FRAME_NAME = "fr_foot"
+HIND_LEFT_FOOT_FRAME_NAME = "hl_foot"
+HIND_RIGHT_FOOT_FRAME_NAME = "hr_foot"
+FOOT_FRAME_NAMES = [
+    FRONT_LEFT_FOOT_FRAME_NAME, FRONT_RIGHT_FOOT_FRAME_NAME, HIND_LEFT_FOOT_FRAME_NAME,
+    HIND_RIGHT_FOOT_FRAME_NAME
+]
 
 
 class Error(Exception):

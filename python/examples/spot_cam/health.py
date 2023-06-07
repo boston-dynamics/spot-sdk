@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,6 +11,8 @@ import tempfile
 from bosdyn.api.spot_cam import health_pb2
 from bosdyn.client.command_line import Command, Subcommands
 from bosdyn.client.spot_cam.health import HealthClient
+
+GET_SYSTEM_LOG_TIMEOUT = 500
 
 
 class HealthCommands(Subcommands):
@@ -75,8 +77,13 @@ class HealthGetSystemLogCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         super(HealthGetSystemLogCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--dst', default="encrypted_system_log.gpg",
+                                  help='Filename of saved encrypted log')
 
     def _run(self, robot, options):
-        logs = robot.ensure_client(HealthClient.default_service_name).get_system_log()
+        logs = robot.ensure_client(
+            HealthClient.default_service_name).get_system_log(timeout=GET_SYSTEM_LOG_TIMEOUT)
+        with open(options.dst, "w") as f:
+            f.write(logs.decode())
 
-        return logs
+        return f"Encrypted log written to {options.dst}"

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -47,7 +47,7 @@ class AreaCallbackDummy(AreaCallbackRegionHandlerBase):
         self.safe_sleep(1)
 
     def end(self):
-        logging.info("End() called")
+        logging.info('End() called')
 
 
 def main():
@@ -62,11 +62,11 @@ def main():
     sdk = bosdyn.client.create_standard_sdk('AreaCallbackDummy')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
-    robot.start_time_sync(time_sync_interval_sec=0.01)
+    robot.start_time_sync()
     robot.time_sync.wait_for_sync()
 
     # Configure the area callback service.
-    service_name = "area-callback-dummy"
+    service_name = 'area-callback-dummy'
     config = AreaCallbackServiceConfig(service_name)
     servicer = AreaCallbackServiceServicer(robot, config, AreaCallbackDummy)
 
@@ -76,5 +76,5 @@ def main():
         service_runner.run_until_interrupt()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

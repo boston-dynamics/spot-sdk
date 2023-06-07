@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Animation files for Choreographer &mdash; Spot 3.2.3 documentation</title>
+  <title>Animation files for Choreographer &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="README.html">Choreography</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -637,13 +679,13 @@
            <div itemprop="articleBody">
             
   <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="animation-files-for-choreographer">
-<h1>Animation files for Choreographer<a class="headerlink" href="#animation-files-for-choreographer" title="Permalink to this headline">¶</a></h1>
+<h1>Animation files for Choreographer<a class="headerlink" href="#animation-files-for-choreographer" title="Permalink to this heading">¶</a></h1>
 <p>Choreographer supports animations that are parsed from a specific file format into an <code class="docutils literal notranslate"><span class="pre">Animation</span></code> protobuf message and uploaded to the robot using the <code class="docutils literal notranslate"><span class="pre">UploadAnimation</span></code> RPC.</p>
 <p>Animation files are human readable/editable text files with a <code class="docutils literal notranslate"><span class="pre">*.cha</span></code> extension. The animation file consists of three sections separated by a single empty line:</p>
 <ul class="simple">
@@ -668,13 +710,13 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>The python script <code class="docutils literal notranslate"><span class="pre">animation_file_to_proto.py</span></code> in the bosdyn-choreography-client package parses the text file and can be used to output a protobuf message, which can be uploaded to the robot using the UploadAnimation RPC without using Choreographer.</p></li>
 </ol>
 <section id="file-specification">
-<h2>File specification<a class="headerlink" href="#file-specification" title="Permalink to this headline">¶</a></h2>
+<h2>File specification<a class="headerlink" href="#file-specification" title="Permalink to this heading">¶</a></h2>
 <section id="file-name-and-extension">
-<h3>File name and extension<a class="headerlink" href="#file-name-and-extension" title="Permalink to this headline">¶</a></h3>
+<h3>File name and extension<a class="headerlink" href="#file-name-and-extension" title="Permalink to this heading">¶</a></h3>
 <p>The animation text file uses the <code class="docutils literal notranslate"><span class="pre">*.cha</span></code> extension. The filename becomes the move’s name, which can be referenced in choreography sequences. Choreographer displays the animated move name with underscores converted to spaces and each word capitalized.</p>
 </section>
 <section id="structure">
-<h3>Structure<a class="headerlink" href="#structure" title="Permalink to this headline">¶</a></h3>
+<h3>Structure<a class="headerlink" href="#structure" title="Permalink to this heading">¶</a></h3>
 <p>The animation cha file consists of three sections. Each section must be present and separated by a blank line. In all three sections, values within the same line can be separated by any combination of spaces and tabs.</p>
 <p>The file sections are:</p>
 <ul class="simple">
@@ -684,7 +726,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="units">
-<h3>Units<a class="headerlink" href="#units" title="Permalink to this headline">¶</a></h3>
+<h3>Units<a class="headerlink" href="#units" title="Permalink to this heading">¶</a></h3>
 <p>All units are in:</p>
 <ul class="simple">
 <li><p>Distance: meters</p></li>
@@ -693,12 +735,12 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="commenting">
-<h3>Commenting<a class="headerlink" href="#commenting" title="Permalink to this headline">¶</a></h3>
+<h3>Commenting<a class="headerlink" href="#commenting" title="Permalink to this heading">¶</a></h3>
 <p>Comments are supported within the animation files using either <code class="docutils literal notranslate"><span class="pre">#</span></code> or <code class="docutils literal notranslate"><span class="pre">//</span></code> and can take up an entire line in the file or be at the end of an existing line. Comments must be within one of the three main sections of the file and cannot create a new section.</p>
 </section>
 </section>
 <section id="options-file-section">
-<h2>Options file section<a class="headerlink" href="#options-file-section" title="Permalink to this headline">¶</a></h2>
+<h2>Options file section<a class="headerlink" href="#options-file-section" title="Permalink to this heading">¶</a></h2>
 <p>The Options section defines how the animated move is controlled and interpreted by both Choreographer and the robot. The section consists of lines with a keyword at the beginning of the line and a fixed number of values separated by spaces following the keyword.</p>
 <p>The number of values is specific to the keyword used as defined below. Some keywords, such as “neutral_start” have no values following the keyword.</p>
 <p>The Options section must contain a definition for which tracks the animation controls. This is specified by the <code class="docutils literal notranslate"><span class="pre">controls</span></code> keyword and a line structured as follows:</p>
@@ -707,31 +749,34 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>Following the keyword <code class="docutils literal notranslate"><span class="pre">controls</span></code>, the fields <code class="docutils literal notranslate"><span class="pre">TRACK1</span> <span class="pre">…</span> <span class="pre">TRACK_N</span></code> are one or more of [legs, body, arm, gripper]. Example: <code class="docutils literal notranslate"><span class="pre">controls</span> <span class="pre">legs</span> <span class="pre">body</span></code> controls the legs and body but not the arm or gripper.</p>
 <section id="supported-keywords-for-the-options-section">
-<h3>Supported keywords for the Options section<a class="headerlink" href="#supported-keywords-for-the-options-section" title="Permalink to this headline">¶</a></h3>
+<h3>Supported keywords for the Options section<a class="headerlink" href="#supported-keywords-for-the-options-section" title="Permalink to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">controls</span></code> tracks keyword is mandatory; all other keywords in the Options section are optional. Descriptions of the available keywords and associated values follows:</p>
-<p><code class="docutils literal notranslate"><span class="pre">bpm</span> <span class="pre">VALUE</span></code>: Where <code class="docutils literal notranslate"><span class="pre">VALUE</span></code> is the nominal beats per minute of the animation.  If the script is at a different BPM, the animation will be time-scaled so it takes the same number of beats.  If not specified, the animation will play at the nominal speed regardless of script BPM, taking a variable number of beats.</p>
-<p><code class="docutils literal notranslate"><span class="pre">extendable</span></code>: Indicates the move can be stretched in Choreographer.  Doing so will cause the animation to loop.</p>
-<p><code class="docutils literal notranslate"><span class="pre">truncatable</span></code>: Indicates that the move can be shortened in Choreographer.  Doing so will cause the animation to end early.</p>
-<p><code class="docutils literal notranslate"><span class="pre">display_rgb</span> <span class="pre">RED</span> <span class="pre">GREEN</span> <span class="pre">BLUE</span></code>: Where <code class="docutils literal notranslate"><span class="pre">RED</span></code>, <code class="docutils literal notranslate"><span class="pre">GREEN</span></code>, <code class="docutils literal notranslate"><span class="pre">BLUE</span></code> are integer numbers between 0 and 255.  This defines the color the move block will display as within Choreographer.  If not present, a default color will be generated based on the hash of the file name.</p>
-<p><code class="docutils literal notranslate"><span class="pre">frequency</span> <span class="pre">HZ</span></code>: Where <code class="docutils literal notranslate"><span class="pre">HZ</span></code> is the number of frames per second in the animation body.  If unspecified, the time column must be present in the body.</p>
-<p><code class="docutils literal notranslate"><span class="pre">retime_to_integer_slices</span></code>: Rescales time slightly so that the move takes an integer number of slices.  If absent, the animation will be padded or truncated slightly to take an integer number of slices.</p>
+<p><code class="docutils literal notranslate"><span class="pre">bpm</span> <span class="pre">VALUE</span></code>: Where <code class="docutils literal notranslate"><span class="pre">VALUE</span></code> is the nominal beats per minute of the animation. If the script is at a different BPM, the animation will be time-scaled so it takes the same number of beats. If not specified, the animation will play at the nominal speed regardless of script BPM, taking a variable number of beats.</p>
+<p><code class="docutils literal notranslate"><span class="pre">extendable</span></code>: Indicates the move can be stretched in Choreographer. Doing so will cause the animation to loop.</p>
+<p><code class="docutils literal notranslate"><span class="pre">truncatable</span></code>: Indicates that the move can be shortened in Choreographer. Doing so will cause the animation to end early.</p>
+<p><code class="docutils literal notranslate"><span class="pre">display_rgb</span> <span class="pre">RED</span> <span class="pre">GREEN</span> <span class="pre">BLUE</span></code>: Where <code class="docutils literal notranslate"><span class="pre">RED</span></code>, <code class="docutils literal notranslate"><span class="pre">GREEN</span></code>, <code class="docutils literal notranslate"><span class="pre">BLUE</span></code> are integer numbers between 0 and 255. This defines the color the move block will display as within Choreographer. If not present, a default color will be generated based on the hash of the file name.</p>
+<p><code class="docutils literal notranslate"><span class="pre">frequency</span> <span class="pre">HZ</span></code>: Where <code class="docutils literal notranslate"><span class="pre">HZ</span></code> is the number of frames per second in the animation body. If unspecified, the time column must be present in the body.</p>
+<p><code class="docutils literal notranslate"><span class="pre">retime_to_integer_slices</span></code>: Rescales time slightly so that the move takes an integer number of slices. If absent, the animation will be padded or truncated slightly to take an integer number of slices.</p>
 <p><code class="docutils literal notranslate"><span class="pre">description</span> <span class="pre">TEXT</span></code>: Where <code class="docutils literal notranslate"><span class="pre">TEXT</span></code> to be displayed within Choreographer as a description of the animation.</p>
-<p><code class="docutils literal notranslate"><span class="pre">neutral_start</span></code>: Applies only to moves that control the body but do not contain leg information.  Indicates the move can be assumed to start in a neutral stand.  If not specified, it is instead assumed that the center of footprint is at the origin of the animation frame.</p>
+<p><code class="docutils literal notranslate"><span class="pre">neutral_start</span></code>: Applies only to moves that control the body but do not contain leg information. Indicates the move can be assumed to start in a neutral stand. If not specified, it is instead assumed that the center of footprint is at the origin of the animation frame.</p>
 <p><code class="docutils literal notranslate"><span class="pre">precise_steps</span></code>: Step exactly at the animated locations, even at the expense of balance.</p>
-<p><code class="docutils literal notranslate"><span class="pre">precise_timing</span></code>: Step exactly at the animated times, even at the expense of balance.</p>
-<p><code class="docutils literal notranslate"><span class="pre">track_swing_trajectories</span></code>: Track animated swing trajectories.  Otherwise, takes standard swings between animated liftoff and touchdown locations.</p>
+<p><code class="docutils literal notranslate"><span class="pre">timing_adjustability</span> <span class="pre">VALUE</span></code>: Where <code class="docutils literal notranslate"><span class="pre">VALUE</span></code> is on the range <code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">1]</span></code>, defines how much the controller is allowed to adjust the timing from how it was specified in the animation. 1: Drastic adjustment allowed. 0: Default value, some adjustment allowed. -1: No adjustment allowed even at the expense of balance.</p>
+<p><code class="docutils literal notranslate"><span class="pre">track_swing_trajectories</span></code>: Track animated swing trajectories. Otherwise, takes standard swings between animated liftoff and touchdown locations.</p>
 <p><code class="docutils literal notranslate"><span class="pre">arm_playback</span> <span class="pre">OPTION</span></code>: Where <code class="docutils literal notranslate"><span class="pre">OPTION</span></code> is one of the following. If <code class="docutils literal notranslate"><span class="pre">OPTION</span></code> is not included the default behavior is for arm animations specified as joint angles to playback as joint space and animations specified as hand poses to default to workspace.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">jointspace</span></code>: Arm animation playback is with respect to the body.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">workspace</span></code>: Arm animation playback is with respect to the current footprint.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">workspace_dance_frame</span></code>: Arm animation playback is with respect to a dance frame in workspace. Parameter arm_dance_frame_id can be used to specify which dance frame if multiple exist.</p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">requires_arm</span></code>: If set true, can not be loaded on a robot without an arm.</p>
-<p><code class="docutils literal notranslate"><span class="pre">no_looping</span></code>: If the animation completes before the move’s duration, freeze rather than looping.  Without this option, the animation might loop because either the move duration was extended or because the <code class="docutils literal notranslate"><span class="pre">speed</span></code> parameter was set to a value greater than 1.</p>
+<p><code class="docutils literal notranslate"><span class="pre">arm_required</span></code>: Prevents a robot without an arm from loading the animation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">arm_prohibited</span></code>: Prevents a robot with an arm from loading the animation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">no_looping</span></code>: If the animation completes before the move’s duration, freeze rather than looping. Without this option, the animation might loop because either the move duration was extended or because the <code class="docutils literal notranslate"><span class="pre">speed</span></code> parameter was set to a value greater than 1.</p>
+<p><code class="docutils literal notranslate"><span class="pre">starts_sitting</span></code>: Specified that this cha is assumed to start from a sitting pose. Otherwise default is to starts from stand.</p>
+<p><code class="docutils literal notranslate"><span class="pre">custom_gait_cycle</span></code>: Enables custom gait to use this animation as a direct style input rather than defining the gait style through parameters. For Custom Gait to use an animation as input there are some requirements to the animation: 1) It should be a cycle meaning that first and last frame should be the same. 2) Spot should have all 4 feet on the ground at the start and end. 3) All feet should have at least 1 swing phase. 4) No feet should have more than 2 swing phases.</p>
 </section>
 </section>
 <section id="parameters-file-section">
-<h2>Parameters file section<a class="headerlink" href="#parameters-file-section" title="Permalink to this headline">¶</a></h2>
+<h2>Parameters file section<a class="headerlink" href="#parameters-file-section" title="Permalink to this heading">¶</a></h2>
 <p>The parameters section defines adjustable values for the animated move. Each parameter value specified will show in the parameters panel in Choreographer when the animation is selected to be edited/added. The parameter names coincide with the values present in the <code class="docutils literal notranslate"><span class="pre">AnimateParams</span></code> protobuf message (in choreography_params.proto). The animation parameters may only apply for moves which control specific tracks (arm, gripper, body,legs). Each parameter is described on a single line and can be specified two different ways:</p>
 <ol class="simple">
 <li><p>The parameter name, followed by the minimum, default, and maximum value (in that order).</p></li>
@@ -747,24 +792,24 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>Note: If no parameters are needed, put the keywords “no parameters” as the parameter section such that the file will still be parsed correctly.</p>
 <section id="supported-parameters-pertaining-to-all-tracks">
-<h3>Supported parameters pertaining to all tracks<a class="headerlink" href="#supported-parameters-pertaining-to-all-tracks" title="Permalink to this headline">¶</a></h3>
+<h3>Supported parameters pertaining to all tracks<a class="headerlink" href="#supported-parameters-pertaining-to-all-tracks" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">speed</span></code>: Play the animation at this time multiplier.</p>
 <p><code class="docutils literal notranslate"><span class="pre">offset_slices</span></code>: Start the move with the script at this slice.</p>
 </section>
 <section id="supported-parameters-when-controlling-the-body-track">
-<h3>Supported parameters when controlling the body track<a class="headerlink" href="#supported-parameters-when-controlling-the-body-track" title="Permalink to this headline">¶</a></h3>
+<h3>Supported parameters when controlling the body track<a class="headerlink" href="#supported-parameters-when-controlling-the-body-track" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">body_entry_slices</span></code>: How many slices to spend transitioning smoothly from the previous pose to the animated pose trajectory for body motion.</p>
-<p><code class="docutils literal notranslate"><span class="pre">body_exit_slices</span></code>: How many slices to spend transitioning from the animated trajectory back to the nominal pose.  If set to 0, will not transition back.</p>
+<p><code class="docutils literal notranslate"><span class="pre">body_exit_slices</span></code>: How many slices to spend transitioning from the animated trajectory back to the nominal pose. If set to 0, will not transition back.</p>
 <p><code class="docutils literal notranslate"><span class="pre">translation_multiplier.x</span></code>: Multiply the body motion in the x direction.</p>
 <p><code class="docutils literal notranslate"><span class="pre">translation_multiplier.y</span></code>: Multiply the body motion in the y direction.</p>
 <p><code class="docutils literal notranslate"><span class="pre">translation_multiplier.z</span></code>: Multiply the body motion in the z direction.</p>
 <p><code class="docutils literal notranslate"><span class="pre">rotation_multiplier.roll</span></code>: Multiply the body motion in the roll direction.</p>
 <p><code class="docutils literal notranslate"><span class="pre">rotation_multiplier.pitch</span></code>: Multiply the body motion in the pitch direction.</p>
 <p><code class="docutils literal notranslate"><span class="pre">rotation_multiplier.yaw</span></code>: Multiply the body motion in the yaw direction.</p>
-<p><code class="docutils literal notranslate"><span class="pre">body_tracking_stiffness</span></code>: How hard to try to track the animated body motion.  Only applicable to animations that control both the body and the legs.  On a scale of 1 to 10 (11 for a bit extra).  Higher will result in more closely tracking the animated body motion, but possibly at the expense of balance for more difficult animations.</p>
+<p><code class="docutils literal notranslate"><span class="pre">body_tracking_stiffness</span></code>: How hard to try to track the animated body motion. Only applicable to animations that control both the body and the legs. On a scale of 1 to 10 (11 for a bit extra). Higher will result in more closely tracking the animated body motion, but possibly at the expense of balance for more difficult animations.</p>
 </section>
 <section id="supported-parameters-when-controlling-the-arm-track">
-<h3>Supported parameters when controlling the arm track<a class="headerlink" href="#supported-parameters-when-controlling-the-arm-track" title="Permalink to this headline">¶</a></h3>
+<h3>Supported parameters when controlling the arm track<a class="headerlink" href="#supported-parameters-when-controlling-the-arm-track" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">arm_entry_slices</span></code>: How many slices to spend transitioning smoothly from the previous pose to the animated pose trajectory for arm and gripper motion.</p>
 <p><code class="docutils literal notranslate"><span class="pre">shoulder_0_offset</span></code>: Offset to add to the SH0 angle in all animation keyframes.</p>
 <p><code class="docutils literal notranslate"><span class="pre">shoulder_1_offset</span></code>: Offset to add to the SH1 angle in all animation keyframes.</p>
@@ -772,57 +817,55 @@ Development Kit License (20191101-BDSDK-SL).
 <p><code class="docutils literal notranslate"><span class="pre">elbow_1_offset</span></code>: Offset to add to the EL1 angle in all animation keyframes.</p>
 <p><code class="docutils literal notranslate"><span class="pre">wrist_0_offset</span></code>: Offset to add to the WR0 angle in all animation keyframes.</p>
 <p><code class="docutils literal notranslate"><span class="pre">wrist_1_offset</span></code>: Offset to add to the WR1 angle in all animation keyframes.</p>
-<p><code class="docutils literal notranslate"><span class="pre">arm_required</span></code>: Prevents a robot without an arm from loading the animation.</p>
-<p><code class="docutils literal notranslate"><span class="pre">arm_prohibited</span></code>: Prevents a robot with an arm from loading the animation.</p>
 </section>
 <section id="supported-parameters-when-controlling-the-gripper-track">
-<h3>Supported parameters when controlling the gripper track<a class="headerlink" href="#supported-parameters-when-controlling-the-gripper-track" title="Permalink to this headline">¶</a></h3>
+<h3>Supported parameters when controlling the gripper track<a class="headerlink" href="#supported-parameters-when-controlling-the-gripper-track" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">gripper_offset</span></code>: Offset to add to the gripper angle in all animation keyframes.</p>
 <p><code class="docutils literal notranslate"><span class="pre">gripper_multiplier</span></code>: Multiply all gripper angles by this value.</p>
-<p><code class="docutils literal notranslate"><span class="pre">gripper_strength_fraction</span></code>: How hard the gripper can squeeze.  Fraction of full strength.</p>
+<p><code class="docutils literal notranslate"><span class="pre">gripper_strength_fraction</span></code>: How hard the gripper can squeeze. Fraction of full strength.</p>
 </section>
 <section id="supported-parameters-when-controlling-arm-and-gripper-tracks">
-<h3>Supported parameters when controlling arm and gripper tracks<a class="headerlink" href="#supported-parameters-when-controlling-arm-and-gripper-tracks" title="Permalink to this headline">¶</a></h3>
+<h3>Supported parameters when controlling arm and gripper tracks<a class="headerlink" href="#supported-parameters-when-controlling-arm-and-gripper-tracks" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">arm_dance_frame_id</span></code>: Dance frame to reference for workspace arm moves. Only valid in combination with the option <code class="docutils literal notranslate"><span class="pre">arm_playback</span> <span class="pre">workspace_dance_frame</span></code> (specified in the options section of the file).</p>
 </section>
 </section>
 <section id="body-keyframe-file-section">
-<h2>Body keyframe file section<a class="headerlink" href="#body-keyframe-file-section" title="Permalink to this headline">¶</a></h2>
+<h2>Body keyframe file section<a class="headerlink" href="#body-keyframe-file-section" title="Permalink to this heading">¶</a></h2>
 <p>The body keyframe section defines the actual animated move through keyframes describing either the pose or joint angles at each keyframe timestamp. Each keyframe is a single line consisting of a number of fields determined by the number of columns specified. The first line will specify what value is in each column and how many columns there will be; it is written as a series of key words (space separated) where each keyword has an fixed number of columns that the parser expects.</p>
 <p>Columns defined by keywords can either be an individual definition, or a group definition describing a fixed number of values. For example, “body_pos” describes a group of three columns, and “body_x body_y body_z” describes those same three columns using the individual column keywords.</p>
 <p>The same column value cannot be specified multiple times. Column values are only defined in the first line of the body keyframe section. Some columns are multiple ways of specifying the same body control (for example, “leg_joints” and “foot_pos”) and will be mutually exclusive when defining an animated move.</p>
 <p>Column definitions are required for each track that is being controlled (as specified in the options section). If additional columns controlled unspecified tracks are included, they will be ignored when the animated move is executed.</p>
 <section id="supported-columns-not-pertaining-to-a-particular-track">
-<h3>Supported columns not pertaining to a particular track<a class="headerlink" href="#supported-columns-not-pertaining-to-a-particular-track" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">time</span></code>: The timestamp of each frame. The start of the animation is 0.  This column and the “frequency” option are mutually exclusive, but one is required.</p>
+<h3>Supported columns not pertaining to a particular track<a class="headerlink" href="#supported-columns-not-pertaining-to-a-particular-track" title="Permalink to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">time</span></code>: The timestamp of each frame. The start of the animation is 0. This column and the “frequency” option are mutually exclusive, but one is required.</p>
 </section>
 <section id="supported-columns-pertaining-to-gripper-track">
-<h3>Supported columns pertaining to gripper track<a class="headerlink" href="#supported-columns-pertaining-to-gripper-track" title="Permalink to this headline">¶</a></h3>
+<h3>Supported columns pertaining to gripper track<a class="headerlink" href="#supported-columns-pertaining-to-gripper-track" title="Permalink to this heading">¶</a></h3>
 <p><code class="docutils literal notranslate"><span class="pre">gripper</span></code>: Gripper joint angle. Required.</p>
 <p>The field gripper is required.</p>
 </section>
 <section id="supported-columns-pertaining-to-arm-track">
-<h3>Supported columns pertaining to arm track<a class="headerlink" href="#supported-columns-pertaining-to-arm-track" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">arm_joints</span></code>: Grouping of 6 columns [shoulder0 shoulder1 elbow0 elbow1 wrist0 wrist1]. Represents the arm joint angles.  Any columns not included will be held constant at the previous joint angle. Mutually exclusive with hand_pos and hand orientation specifications.</p>
+<h3>Supported columns pertaining to arm track<a class="headerlink" href="#supported-columns-pertaining-to-arm-track" title="Permalink to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">arm_joints</span></code>: Grouping of 6 columns [shoulder0 shoulder1 elbow0 elbow1 wrist0 wrist1]. Represents the arm joint angles. Any columns not included will be held constant at the previous joint angle. Mutually exclusive with hand_pos and hand orientation specifications.</p>
 <p><code class="docutils literal notranslate"><span class="pre">hand_pos</span></code>: Grouping of [hand_x hand_y hand_z]. Hand position in the animation frame.</p>
-<p><code class="docutils literal notranslate"><span class="pre">hand_quat_wxyz</span></code>: Grouping of [hand_quat_w hand_quat_x hand_quat_y hand_quat_z].  Mutually exclusive with other orientation specifications.</p>
-<p><code class="docutils literal notranslate"><span class="pre">hand_quat_xyzw</span></code>: Grouping of hand_quat_x hand_quat_y hand_quat_z hand_quat_w].  Mutually exclusive with other orientation specifications.</p>
+<p><code class="docutils literal notranslate"><span class="pre">hand_quat_wxyz</span></code>: Grouping of [hand_quat_w hand_quat_x hand_quat_y hand_quat_z]. Mutually exclusive with other orientation specifications.</p>
+<p><code class="docutils literal notranslate"><span class="pre">hand_quat_xyzw</span></code>: Grouping of hand_quat_x hand_quat_y hand_quat_z hand_quat_w]. Mutually exclusive with other orientation specifications.</p>
 <p><code class="docutils literal notranslate"><span class="pre">hand_euler_rpy</span></code>: Grouping of [hand_roll hand_pitch hand_yaw] Mutually exclusive with other orientation specifications.</p>
 </section>
 <section id="supported-columns-pertaining-to-body-track">
-<h3>Supported columns pertaining to body track<a class="headerlink" href="#supported-columns-pertaining-to-body-track" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">body_pos</span></code>: Grouping of [body_x body_y body_z]. Body position in the animation frame.  Mutually exclusive with com_pos.</p>
-<p><code class="docutils literal notranslate"><span class="pre">com_pos</span></code>: Grouping of [com_x com_y com_z].  Center of Mass position in the animation frame.  Mutually exclusive with body_pos.</p>
-<p><code class="docutils literal notranslate"><span class="pre">body_quat_wxyz</span></code>: Grouping of [body_quat_w body_quat_x body_quat_y body_quat_z].  Mutually exclusive with other orientation specifications.</p>
-<p><code class="docutils literal notranslate"><span class="pre">body_quat_xyzw</span></code>: Grouping of [body_quat_x body_quat_y body_quat_z body_quat_w].  Mutually exclusive with other orientation specifications.</p>
+<h3>Supported columns pertaining to body track<a class="headerlink" href="#supported-columns-pertaining-to-body-track" title="Permalink to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">body_pos</span></code>: Grouping of [body_x body_y body_z]. Body position in the animation frame. Mutually exclusive with com_pos.</p>
+<p><code class="docutils literal notranslate"><span class="pre">com_pos</span></code>: Grouping of [com_x com_y com_z]. Center of Mass position in the animation frame. Mutually exclusive with body_pos.</p>
+<p><code class="docutils literal notranslate"><span class="pre">body_quat_wxyz</span></code>: Grouping of [body_quat_w body_quat_x body_quat_y body_quat_z]. Mutually exclusive with other orientation specifications.</p>
+<p><code class="docutils literal notranslate"><span class="pre">body_quat_xyzw</span></code>: Grouping of [body_quat_x body_quat_y body_quat_z body_quat_w]. Mutually exclusive with other orientation specifications.</p>
 <p><code class="docutils literal notranslate"><span class="pre">body_euler_rpy</span></code>: Grouping of [body_roll body_pitch body_yaw] Mutually exclusive with other orientation specifications.</p>
 <p>At least one dimension of the body must be specified.</p>
 </section>
 <section id="supported-columns-pertaining-to-legs-track">
-<h3>Supported columns pertaining to legs track<a class="headerlink" href="#supported-columns-pertaining-to-legs-track" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">leg_joints</span></code>: Grouping of [fl_hx fl_hy fl_kn fr_hx fr_hy fr_kn hl_hx hl_hy hl_kn hr_hx hr_hy hr_kn].  Can also be grouped by leg as [fl_angles fr_angles hl_angles hr_angles]  Mutually exclusive (by leg) with foot_pos.</p>
-<p><code class="docutils literal notranslate"><span class="pre">foot_pos</span></code>: Grouping of [fl_x fl_y fl_z fr_x fr_y fr_z hl_x hl_y hl_z hr_x hr_y hr_z].  Can also be grouped by leg as [fl_pos fr_pos hl_pos hr_pos].  Mutually exclusive (by leg) with leg_joints.</p>
-<p><code class="docutils literal notranslate"><span class="pre">contact</span></code>: Grouping of [fl_contact fr_contact hl_contact hr_contact].  1 if in stance.  0 if in swing.  If absent, contact will be inferred from either leg_joints or foot_pos.</p>
+<h3>Supported columns pertaining to legs track<a class="headerlink" href="#supported-columns-pertaining-to-legs-track" title="Permalink to this heading">¶</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">leg_joints</span></code>: Grouping of [fl_hx fl_hy fl_kn fr_hx fr_hy fr_kn hl_hx hl_hy hl_kn hr_hx hr_hy hr_kn]. Can also be grouped by leg as [fl_angles fr_angles hl_angles hr_angles] Mutually exclusive (by leg) with foot_pos.</p>
+<p><code class="docutils literal notranslate"><span class="pre">foot_pos</span></code>: Grouping of [fl_x fl_y fl_z fr_x fr_y fr_z hl_x hl_y hl_z hr_x hr_y hr_z]. Can also be grouped by leg as [fl_pos fr_pos hl_pos hr_pos]. Mutually exclusive (by leg) with leg_joints.</p>
+<p><code class="docutils literal notranslate"><span class="pre">contact</span></code>: Grouping of [fl_contact fr_contact hl_contact hr_contact]. 1 if in stance. 0 if in swing. If absent, contact will be inferred from either leg_joints or foot_pos.</p>
 <p>Either leg_joints or foot_pos are required for each leg.</p>
 </section>
 </section>

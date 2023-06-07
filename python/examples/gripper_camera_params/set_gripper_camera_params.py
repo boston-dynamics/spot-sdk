@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -44,8 +44,13 @@ def main(argv):
     parser.add_argument('--led-mode', choices=['off', 'torch'],
                         help='LED mode. "torch": On all the time.')
     parser.add_argument('--led-torch-brightness', type=float,
-                        help='LED brightness value when on all the time, 0.0 - 1.0')
-
+                        help='LED torch brightness value when on all the time, 0.0 - 1.0')
+    parser.add_argument('--gamma', type=float, help='Gamma value, 0.0 - 1.0')
+    parser.add_argument('--sharpness', type=float, help='Sharpness value, 0.0 - 1.0')
+    parser.add_argument('--white-balance-temperature-auto', choices=['on', 'off'],
+                        help='Enable/disable white-balance-temperature-auto')
+    parser.add_argument('--white-balance-temperature', type=float,
+                        help='Manual white-balance-temperature value , 0.0 - 1.0')
     options = parser.parse_args(argv)
 
     sdk = bosdyn.client.create_standard_sdk('gripper_camera_params')
@@ -57,17 +62,17 @@ def main(argv):
     camera_mode = None
     if options.resolution is not None:
         if options.resolution == '640x480':
-            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_640_480_120FPS_UYVY
+            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_640_480
         elif options.resolution == '1280x720':
-            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_1280_720_60FPS_UYVY
+            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_1280_720
         elif options.resolution == '1920x1080':
-            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_1920_1080_60FPS_MJPG
+            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_1920_1080
         elif options.resolution == '3840x2160':
-            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_3840_2160_30FPS_MJPG
+            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_3840_2160
         elif options.resolution == '4096x2160':
-            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_4096_2160_30FPS_MJPG
+            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_4096_2160
         elif options.resolution == '4208x3120':
-            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_4208_3120_20FPS_MJPG
+            camera_mode = gripper_camera_param_pb2.GripperCameraParams.MODE_4208_3120
 
     # Other settings
     brightness = None
@@ -140,17 +145,46 @@ def main(argv):
     if options.led_torch_brightness is not None:
         led_torch_brightness = wrappers_pb2.FloatValue(value=options.led_torch_brightness)
 
+
+    gamma = None
+    if options.gamma is not None:
+        gamma = wrappers_pb2.FloatValue(value=options.gamma)
+
+    sharpness = None
+    if options.sharpness is not None:
+        sharpness = wrappers_pb2.FloatValue(value=options.sharpness)
+
+    if options.white_balance_temperature is not None and options.white_balance_temperature_auto and options.white_balance_temperature_auto == 'on':
+        print(
+            'Error: cannot specify both a manual white_balance_temperature value and enable white_balance_temperature_auto.'
+        )
+        sys.exit(1)
+
+    white_balance_temperature = None
+    white_balance_temperature_auto = None
+    if options.white_balance_temperature is not None:
+        white_balance_temperature = wrappers_pb2.FloatValue(value=options.white_balance_temperature)
+        white_balance_temperature_auto = wrappers_pb2.BoolValue(value=False)
+
+    if options.white_balance_temperature_auto:
+        white_balance_temperature_auto_enabled = options.white_balance_temperature_auto == 'on'
+        white_balance_temperature_auto = wrappers_pb2.BoolValue(
+            value=white_balance_temperature_auto_enabled)
+
+    # Construct the GripperCameraParams
     params = gripper_camera_param_pb2.GripperCameraParams(
         camera_mode=camera_mode, brightness=brightness, contrast=contrast, gain=gain,
         saturation=saturation, focus_absolute=manual_focus, focus_auto=auto_focus,
         exposure_absolute=exposure, exposure_auto=auto_exposure, hdr=hdr, led_mode=led_mode,
-        led_torch_brightness=led_torch_brightness)
+        led_torch_brightness=led_torch_brightness, gamma=gamma, sharpness=sharpness,
+        white_balance_temperature=white_balance_temperature,
+        white_balance_temperature_auto=white_balance_temperature_auto)
+
 
     request = gripper_camera_param_pb2.GripperCameraParamRequest(params=params)
-
     # Send the request
     response = gripper_camera_param_client.set_camera_params(request)
-    print('Sent request.')
+    print('Sent request')
 
     if response.header.error and response.header.error.code != header_pb2.CommonError.CODE_OK:
         print('Got an error:')
@@ -165,6 +199,6 @@ def main(argv):
     return get_gripper_camera_params.print_response_from_robot(response)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main(sys.argv[1:]):
         sys.exit(1)

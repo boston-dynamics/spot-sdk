@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.common &mdash; Spot 3.2.3 documentation</title>
+  <title>bosdyn.client.common &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -30,10 +32,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -66,7 +70,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -94,13 +98,16 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -129,6 +136,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -183,6 +191,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -195,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -202,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -227,9 +238,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -244,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -266,6 +280,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -293,6 +314,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -306,13 +328,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -330,6 +355,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -391,6 +417,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -469,6 +501,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -483,9 +516,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -494,6 +530,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -524,10 +562,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -549,6 +591,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -565,7 +608,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -630,7 +672,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.common</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -645,11 +687,14 @@
 <span class="kn">import</span> <span class="nn">types</span>
 
 <span class="kn">import</span> <span class="nn">grpc</span>
-<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn.api.header_pb2</span> <span class="kn">import</span> <span class="n">CommonError</span>
 
 <span class="kn">from</span> <span class="nn">.channel</span> <span class="kn">import</span> <span class="n">TransportError</span><span class="p">,</span> <span class="n">translate_exception</span>
-<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Error</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">LeaseUseError</span><span class="p">,</span>
-                         <span class="n">LicenseError</span><span class="p">,</span> <span class="n">UnsetStatusError</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.data_chunk</span> <span class="kn">import</span> <span class="n">chunk_message</span><span class="p">,</span> <span class="n">parse_from_chunks</span>
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">CustomParamError</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InternalServerError</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span>
+                         <span class="n">LeaseUseError</span><span class="p">,</span> <span class="n">LicenseError</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">UnsetStatusError</span><span class="p">)</span>
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -659,18 +704,20 @@
 
 
 <div class="viewcode-block" id="common_header_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.common_header_errors">[docs]</a><span class="k">def</span> <span class="nf">common_header_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return an exception based on common response header. None if no error.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">CODE_UNSPECIFIED</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on common response header. None if no error.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">CommonError</span><span class="o">.</span><span class="n">CODE_OK</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">CommonError</span><span class="o">.</span><span class="n">CODE_UNSPECIFIED</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">UnsetStatusError</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">CODE_INTERNAL_SERVER_ERROR</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">CommonError</span><span class="o">.</span><span class="n">CODE_INTERNAL_SERVER_ERROR</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">InternalServerError</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">CODE_INVALID_REQUEST</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">code</span> <span class="o">==</span> <span class="n">CommonError</span><span class="o">.</span><span class="n">CODE_INVALID_REQUEST</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">InvalidRequestError</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-    <span class="k">return</span> <span class="kc">None</span></div>
+    <span class="k">return</span> <span class="n">ResponseError</span><span class="p">(</span><span class="n">response</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="streaming_common_header_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.streaming_common_header_errors">[docs]</a><span class="k">def</span> <span class="nf">streaming_common_header_errors</span><span class="p">(</span><span class="n">response_iterator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return an exception based on common response header for a streaming</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on common response header for a streaming</span>
 <span class="sd">       response iterator. None if no error.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">response_iterator</span><span class="p">:</span>
         <span class="n">error</span> <span class="o">=</span> <span class="n">common_header_errors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
@@ -681,7 +728,7 @@
 
 
 <div class="viewcode-block" id="common_lease_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.common_lease_errors">[docs]</a><span class="k">def</span> <span class="nf">common_lease_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return an exception based on lease use result. None if no error.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on lease use result. None if no error.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s1">&#39;lease_use_result&#39;</span><span class="p">):</span>
         <span class="c1"># On the off chance the protobuf message has a lease_use_result field but the instance does</span>
         <span class="c1"># not have it filled out...</span>
@@ -697,12 +744,12 @@
 
     <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">lease_use_results</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">status</span> <span class="o">!=</span> <span class="n">result</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">LeaseUseError</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">LeaseUseError</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="streaming_common_lease_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.streaming_common_lease_errors">[docs]</a><span class="k">def</span> <span class="nf">streaming_common_lease_errors</span><span class="p">(</span><span class="n">response_iterator</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return an exception based on lease use result for a streaming</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on lease use result for a streaming</span>
 <span class="sd">       response iterator. None if no error.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">response_iterator</span><span class="p">:</span>
         <span class="n">error</span> <span class="o">=</span> <span class="n">common_lease_errors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
@@ -712,8 +759,19 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="custom_params_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.custom_params_error">[docs]</a><span class="k">def</span> <span class="nf">custom_params_error</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">status_field_name</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span>
+                        <span class="n">error_field_name</span><span class="o">=</span><span class="s1">&#39;custom_param_error&#39;</span><span class="p">,</span> <span class="n">total_response</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an exception based on having a custom parameter status and message.</span>
+<span class="sd">    None if no error.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">status_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">status_value</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">STATUS_CUSTOM_PARAMS_ERROR</span>
+    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status_field_name</span><span class="p">)</span> <span class="o">==</span> <span class="n">status_value</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">CustomParamError</span><span class="p">(</span><span class="n">total_response</span> <span class="ow">or</span> <span class="n">response</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">error_field_name</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
 <div class="viewcode-block" id="error_pair"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.error_pair">[docs]</a><span class="k">def</span> <span class="nf">error_pair</span><span class="p">(</span><span class="n">error_message</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Creates a pair of an error class and the associated docstring as the error message</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a pair of an error class and the associated docstring as the error message</span>
 <span class="sd">       which can be used by the error_factory.</span>
 
 <span class="sd">    Args:</span>
@@ -726,7 +784,7 @@
 
 
 <div class="viewcode-block" id="error_factory"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.error_factory">[docs]</a><span class="k">def</span> <span class="nf">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">status_to_string</span><span class="p">,</span> <span class="n">status_to_error</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return an error based on the status field of the given response.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return an error based on the status field of the given response.</span>
 
 <span class="sd">    Since most callers of this function are &quot;response to error&quot; callbacks, any exceptions</span>
 <span class="sd">    raised by this function are a considered a serious problem. Strongly consider using</span>
@@ -773,7 +831,7 @@
 
 
 <div class="viewcode-block" id="handle_unset_status_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.handle_unset_status_error">[docs]</a><span class="k">def</span> <span class="nf">handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span> <span class="n">statustype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to handle unset status field errors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to handle unset status field errors.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
 
@@ -797,7 +855,7 @@
 
 
 <div class="viewcode-block" id="handle_common_header_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.handle_common_header_errors">[docs]</a><span class="k">def</span> <span class="nf">handle_common_header_errors</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to handle typical header errors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to handle typical header errors.&quot;&quot;&quot;</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -812,7 +870,7 @@
 
 
 <div class="viewcode-block" id="handle_lease_use_result_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.handle_lease_use_result_errors">[docs]</a><span class="k">def</span> <span class="nf">handle_lease_use_result_errors</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to handle typical lease errors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to handle typical lease errors.&quot;&quot;&quot;</span>
 
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -825,14 +883,36 @@
     <span class="k">return</span> <span class="n">wrapper</span></div>
 
 
+<div class="viewcode-block" id="handle_custom_params_errors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.handle_custom_params_errors">[docs]</a><span class="k">def</span> <span class="nf">handle_custom_params_errors</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">status_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">status_field_name</span><span class="o">=</span><span class="s1">&#39;status&#39;</span><span class="p">,</span>
+                                <span class="n">error_field_name</span><span class="o">=</span><span class="s1">&#39;custom_param_error&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to handle custom param errors.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="c1"># pylint: disable=no-value-for-parameter</span>
+            <span class="k">return</span> <span class="n">custom_params_error</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">status_value</span><span class="o">=</span><span class="n">status_value</span><span class="p">,</span>
+                                       <span class="n">status_field_name</span><span class="o">=</span><span class="n">status_field_name</span><span class="p">,</span>
+                                       <span class="n">error_field_name</span><span class="o">=</span><span class="n">error_field_name</span><span class="p">)</span> <span class="ow">or</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="c1"># No arguments, this is the decorator</span>
+        <span class="k">return</span> <span class="n">decorator</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
 <div class="viewcode-block" id="maybe_raise"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.maybe_raise">[docs]</a><span class="k">def</span> <span class="nf">maybe_raise</span><span class="p">(</span><span class="n">exc</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;raise the provided exception if it is not None&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;raise the provided exception if it is not None&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">exc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">exc</span></div>
 
 
 <div class="viewcode-block" id="print_response"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.print_response">[docs]</a><span class="k">def</span> <span class="nf">print_response</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to print for debugging specific messages.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorate &quot;error from response&quot; functions to print for debugging specific messages.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">print_message</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
@@ -873,7 +953,7 @@
 
 
 <div class="viewcode-block" id="BaseClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.BaseClient">[docs]</a><span class="k">class</span> <span class="nc">BaseClient</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper base class for all clients to Boston Dynamics services.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper base class for all clients to Boston Dynamics services.&quot;&quot;&quot;</span>
 
     <span class="n">_SPLIT_SERVICE</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
     <span class="n">_SPLIT_METHOD</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
@@ -895,10 +975,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">client_name</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="BaseClient.request_trim_for_log"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.BaseClient.request_trim_for_log">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Forces serialization even if the logging is not happening.  Do not use.&#39;</span><span class="p">,</span>
+                <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.3.0&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">request_trim_for_log</span><span class="p">(</span><span class="n">req</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">req</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseClient.response_trim_for_log"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.BaseClient.response_trim_for_log">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Forces serialization even if the logging is not happening.  Do not use.&#39;</span><span class="p">,</span>
+                <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.3.0&#39;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">response_trim_for_log</span><span class="p">(</span><span class="n">resp</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span></div>
 
@@ -914,7 +998,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stub_creation_func</span><span class="p">(</span><span class="n">channel</span><span class="p">)</span>
 
 <div class="viewcode-block" id="BaseClient.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.BaseClient.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adopt key objects like processors, logger, and wallet from other.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adopt key objects like processors, logger, and wallet from other.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">request_processors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_processors</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">response_processors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">response_processors</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_service_type_short</span><span class="p">)</span>
@@ -926,11 +1010,9 @@
         <span class="k">for</span> <span class="n">request</span> <span class="ow">in</span> <span class="n">request_iterator</span><span class="p">:</span>
             <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="n">copy_request</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">is_blocking</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking request: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking request: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async request: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
-                             <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async request: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">request</span></div>
 
 <div class="viewcode-block" id="BaseClient.update_response_iterator"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.BaseClient.update_response_iterator">[docs]</a>    <span class="k">def</span> <span class="nf">update_response_iterator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response_iterator</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">is_blocking</span><span class="p">):</span>
@@ -938,11 +1020,9 @@
             <span class="k">for</span> <span class="n">response</span> <span class="ow">in</span> <span class="n">response_iterator</span><span class="p">:</span>
                 <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_response_processors</span><span class="p">(</span><span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
                 <span class="k">if</span> <span class="n">is_blocking</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking response: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking response: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async response: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async response: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
                 <span class="k">yield</span> <span class="n">response</span>
         <span class="k">except</span> <span class="n">TransportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Iterating through the response_iterator is the point that transport exceptions will</span>
@@ -951,12 +1031,12 @@
             <span class="c1"># Any ResponseErrors or other exception types can be let through untranslated.</span>
             <span class="c1"># Use the &quot;raise from None&quot; pattern to reset the exception&#39;s context, which produces</span>
             <span class="c1"># confusing stack traces.</span>
-            <span class="n">six</span><span class="o">.</span><span class="n">raise_from</span><span class="p">(</span><span class="n">translate_exception</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="n">translate_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span></div>
 
 <div class="viewcode-block" id="BaseClient.call"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.BaseClient.call">[docs]</a>    <span class="nd">@process_kwargs</span>
     <span class="k">def</span> <span class="nf">call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-             <span class="n">copy_request</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns result of calling rpc_method(request, kwargs) after running processors.</span>
+             <span class="n">assemble_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns result of calling rpc_method(request, kwargs) after running processors.</span>
 
 <span class="sd">        value_from_response and error_from_response should not raise their own exceptions!</span>
 <span class="sd">        Additionally, value_from_response and error_from_response that are not common handlers</span>
@@ -970,8 +1050,7 @@
                                                    <span class="n">copy_request</span><span class="o">=</span><span class="n">copy_request</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="n">copy_request</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking request: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
-                         <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;blocking request: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">timeout</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="n">DEFAULT_RPC_TIMEOUT</span><span class="p">)</span>
@@ -979,18 +1058,34 @@
         <span class="k">except</span> <span class="n">TransportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Use the &quot;raise from None&quot; pattern to reset the exception&#39;s context, which produces</span>
             <span class="c1"># confusing stack traces.</span>
-            <span class="n">six</span><span class="o">.</span><span class="n">raise_from</span><span class="p">(</span><span class="n">translate_exception</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">translate_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rpc_method</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">UnaryStreamMultiCallable</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
                 <span class="n">rpc_method</span><span class="p">,</span> <span class="n">grpc</span><span class="o">.</span><span class="n">StreamStreamMultiCallable</span><span class="p">):</span>
             <span class="c1"># The outgoing response is a streaming response.</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_response_iterator</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">is_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_response_streaming</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">response</span><span class="p">),</span> <span class="n">error_from_response</span><span class="p">,</span>
-                                                  <span class="n">value_from_response</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">assemble_type</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Assemble the data chunks into a message before passing to non-streaming handlers.</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">assemble_type</span><span class="p">()</span>
+
+                <span class="c1"># For server streaming response RPCs, transport errors are not raised during the rpc call.</span>
+                <span class="c1"># We cannot explicitly check for them until the RPC deadline has been exceeded.</span>
+                <span class="c1"># To make due, we attempt to parse the response and catch transport errors raised while iterating through the responses.</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">parse_from_chunks</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">TransportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">translate_exception</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="kn">from</span> <span class="bp">None</span>
+
+                <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_response_processors</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;response: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">responses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">update_response_iterator</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span>
+                                                          <span class="n">is_blocking</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_response_streaming</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">responses</span><span class="p">),</span> <span class="n">error_from_response</span><span class="p">,</span>
+                                                      <span class="n">value_from_response</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_response_processors</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;response: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
-                         <span class="bp">self</span><span class="o">.</span><span class="n">response_trim_for_log</span><span class="p">(</span><span class="n">response</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;response: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseClient.handle_response"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.BaseClient.handle_response">[docs]</a>    <span class="k">def</span> <span class="nf">handle_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">):</span>
@@ -1018,7 +1113,7 @@
 <div class="viewcode-block" id="BaseClient.call_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.BaseClient.call_async">[docs]</a>    <span class="nd">@process_kwargs</span>
     <span class="k">def</span> <span class="nf">call_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rpc_method</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">copy_request</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a Future for rpc_method(request, kwargs) after running processors.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a Future for rpc_method(request, kwargs) after running processors.</span>
 
 <span class="sd">        value_from_response and error_from_response should not raise their own exceptions!</span>
 
@@ -1026,7 +1121,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="n">copy_request</span><span class="p">)</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_logger</span><span class="p">(</span><span class="n">rpc_method</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async request: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">request_trim_for_log</span><span class="p">(</span><span class="n">request</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async request: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
         <span class="n">timeout</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span> <span class="n">DEFAULT_RPC_TIMEOUT</span><span class="p">)</span>
         <span class="n">response_future</span> <span class="o">=</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">future</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
@@ -1041,8 +1136,7 @@
                 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error applying response processors.&quot;</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async response: </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="n">response_trim_for_log</span><span class="p">(</span><span class="n">result</span><span class="p">))</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;async response: </span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">rpc_method</span><span class="o">.</span><span class="n">_method</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 
         <span class="n">response_future</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="n">on_finish</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">FutureWrapper</span><span class="p">(</span><span class="n">response_future</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">)</span></div>
@@ -1071,25 +1165,12 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">getChild</span><span class="p">(</span><span class="n">method_name_short</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-<div class="viewcode-block" id="BaseClient.chunk_message"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.BaseClient.chunk_message">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">chunk_message</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Take a message, and split it into data chunks</span>
-<span class="sd">        Args:</span>
-<span class="sd">            data_chunk_byte_size: max size of each streamed message</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">serialized</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
-        <span class="n">total_bytes_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">serialized</span><span class="p">)</span>
-        <span class="n">num_chunks</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">total_bytes_size</span> <span class="o">/</span> <span class="n">data_chunk_byte_size</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_chunks</span><span class="p">):</span>
-            <span class="n">start_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">data_chunk_byte_size</span>
-            <span class="n">end_index</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">total_bytes_size</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">data_chunk_byte_size</span><span class="p">)</span>
-            <span class="n">chunk</span> <span class="o">=</span> <span class="n">data_chunk_pb2</span><span class="o">.</span><span class="n">DataChunk</span><span class="p">(</span><span class="n">total_size</span><span class="o">=</span><span class="n">total_bytes_size</span><span class="p">)</span>
-            <span class="n">chunk</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">serialized</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
-            <span class="k">yield</span> <span class="n">chunk</span></div></div>
+    <span class="n">chunk_message</span> <span class="o">=</span> <span class="n">deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Use bosdyn.client.data_chunk.chunk_message() instead.&#39;</span><span class="p">,</span>
+                               <span class="n">version</span><span class="o">=</span><span class="s1">&#39;3.3.0&#39;</span><span class="p">)(</span><span class="n">chunk_message</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FutureWrapper"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.FutureWrapper">[docs]</a><span class="k">class</span> <span class="nc">FutureWrapper</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Wraps a Future to aid more complicated clients&#39; async calls.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wraps a Future to aid more complicated clients&#39; async calls.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">future</span><span class="p">,</span> <span class="n">value_from_response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">original_future</span> <span class="o">=</span> <span class="n">future</span>
@@ -1115,11 +1196,11 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="n">traceback</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FutureWrapper.add_done_callback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.FutureWrapper.add_done_callback">[docs]</a>    <span class="k">def</span> <span class="nf">add_done_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cb</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Add callback executed on FutureWrapper when future is done.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add callback executed on FutureWrapper when future is done.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">not_used_original_future</span><span class="p">:</span> <span class="n">cb</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="FutureWrapper.result"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.FutureWrapper.result">[docs]</a>    <span class="k">def</span> <span class="nf">result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the result of the value_from_response(future.result()).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the result of the value_from_response(future.result()).&quot;&quot;&quot;</span>
         <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exception</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">error</span>
@@ -1132,7 +1213,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_from_response</span><span class="p">(</span><span class="n">base_result</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="FutureWrapper.exception"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.FutureWrapper.exception">[docs]</a>    <span class="k">def</span> <span class="nf">exception</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get exceptions from the Future, or from custom response processing.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get exceptions from the Future, or from custom response processing.&quot;&quot;&quot;</span>
         <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_future</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">error</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1144,7 +1225,7 @@
 
 
 <div class="viewcode-block" id="get_self_ip"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/common.html#bosdyn.client.common.get_self_ip">[docs]</a><span class="k">def</span> <span class="nf">get_self_ip</span><span class="p">(</span><span class="n">robot_hostname</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Get the IP address of the ethernet or WiFi interface used to talk to the robot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Get the IP address of the ethernet or WiFi interface used to talk to the robot.&quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># doesn&#39;t even have to be reachable</span>

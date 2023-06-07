@@ -1,0 +1,37 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option go_package = "bosdyn/api";
+option java_outer_classname = "ImageGeometryProto";
+
+// geometry.proto is standarized to use double fields.  There are some primatives already specified
+// in geometry.proto that want int fields, for example a rectangle that represents the area on an
+// image.  This file is for primatives that have int fields.
+
+// Represents a rectangle, with integer indices.
+message RectangleI {
+    // Distance from the left
+    int32 x = 5;
+    // Distance from the top
+    int32 y = 6;
+    // Width of the rectangle in pixels
+    int32 cols = 7;
+    // Height of the rectangle in pixels
+    int32 rows = 8;
+
+    reserved 1, 2, 3, 4;
+}
+
+// Represents an area in the XY plane, with integer indices
+message AreaI {
+    oneof geometry {
+        RectangleI rectangle = 1;
+    }
+}

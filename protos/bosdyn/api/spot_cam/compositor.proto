@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -25,7 +25,6 @@ message ScreenDescription {
 message GetScreenRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-
 }
 
 // Specify which screen is currently being displayed in the video stream.
@@ -40,7 +39,6 @@ message GetScreenResponse {
 message GetVisibleCamerasRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-
 }
 
 // Description of the parameters and locations of each camera in the
@@ -53,31 +51,30 @@ message GetVisibleCamerasResponse {
     message Stream {
         // The location of a sub-image within a larger image.
         message Window {
-            int32 xoffset=1;
-            int32 yoffset=2;
-            //The image should be cropped out of the stream at this
-            //resolution, and then scaled to the resolution described
-            //in the 'camera' member, below.  once that scaling takes
-            //place, the intrinsics will be valid.
-            int32 width=3;
-            int32 height=4;
+            int32 xoffset = 1;
+            int32 yoffset = 2;
+            // The image should be cropped out of the stream at this
+            // resolution, and then scaled to the resolution described
+            // in the 'camera' member, below.  once that scaling takes
+            // place, the intrinsics will be valid.
+            int32 width = 3;
+            int32 height = 4;
         }
         // The location of this camera stream within the larger stream.
-        Window window=1;
+        Window window = 1;
         // The name field in this camera member is of the form 'c:w',
         // where c is the name of the camera and w is the name of the
         // window that's projecting it.
-        bosdyn.api.spot_cam.Camera camera=2;
+        bosdyn.api.spot_cam.Camera camera = 2;
     }
     // List of all camera streams visible in the current video stream.
-    repeated Stream streams=2;
+    repeated Stream streams = 2;
 }
 
 // Request the different screen layouts available.
 message ListScreensRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-
 }
 
 // Response with all screen layouts available.
@@ -105,33 +102,37 @@ message SetScreenResponse {
     string name = 2;
 }
 
-//the colormap is a mapping of radiometric data to color, to make the images easier for people to look at in real time.
+// the colormap is a mapping of radiometric data to color, to make the images easier for people to
+// look at in real time.
 message IrColorMap {
     enum ColorMap {
         COLORMAP_UNKNOWN = 0;
-        //the greyscale colormap maps the minimum value (defined below) to black and the maximum value (defined below) to white
+        // the greyscale colormap maps the minimum value (defined below) to black and the maximum
+        // value (defined below) to white
         COLORMAP_GREYSCALE = 1;
-        //the jet colormap uses blues for values closer to the minimum, and red values for values closer to the maximum.
+        // the jet colormap uses blues for values closer to the minimum, and red values for values
+        // closer to the maximum.
         COLORMAP_JET = 2;
-        //the inferno colormap maps the minimum value to black and the maximum value to light yellow RGB(252, 252, 164). It is also
-        //easier to view by those with color blindness
+        // the inferno colormap maps the minimum value to black and the maximum value to light
+        // yellow RGB(252, 252, 164). It is also easier to view by those with color blindness
         COLORMAP_INFERNO = 3;
-        //the turbo colormap uses blues for values closer to the minumum, red values for values closer to the maximum,
-        //and addresses some short comings of the jet color map such as false detail, banding and color blindness
+        // the turbo colormap uses blues for values closer to the minumum, red values for values
+        // closer to the maximum, and addresses some short comings of the jet color map such as
+        // false detail, banding and color blindness
         COLORMAP_TURBO = 4;
     }
     ColorMap colormap = 1;
 
     message ScalingPair {
-        //the minimum value to do color mapping, in degrees Celsius
+        // the minimum value to do color mapping, in degrees Celsius
         double min = 1;
-        //the maximum value to do color mapping, in degrees Celsius
+        // the maximum value to do color mapping, in degrees Celsius
         double max = 2;
     }
     ScalingPair scale = 2;
 
-    //if auto_scale is true, then the min and max values are derived from the data itself, and the settings
-    //above are ignored
+    // if auto_scale is true, then the min and max values are derived from the data itself, and the
+    // settings above are ignored
     google.protobuf.BoolValue auto_scale = 3;
 }
 
@@ -153,19 +154,40 @@ message GetIrColormapResponse {
     IrColorMap map = 2;
 }
 
-//the ir meter overlay allows for pixel-accurate measurements to be taken and displayed to the user
+// the ir meter overlay allows for pixel-accurate measurements to be taken and displayed to the user
 message IrMeterOverlay {
-    //If enable isn't true, don't overlay any IR meter
+    // If enable isn't true, don't overlay any IR meter
     bool enable = 1;
 
-    //these coordinates, normalized from 0-1, are within the ir camera 'window'
-    //note: if the coordinates lie within an 'invalid' region of the window, then
-    //the meter will be disabled.
+    // these coordinates, normalized from 0-1, are within the ir camera 'window'
+    // note: if the coordinates lie within an 'invalid' region of the window, then
+    // the meter will be disabled.
     message NormalizedCoordinates {
         double x = 1;
         double y = 2;
     }
-    NormalizedCoordinates coords = 2;
+    // DEPRECATED as of 3.3.0.
+    NormalizedCoordinates coords = 2 [deprecated = true];
+    repeated NormalizedCoordinates meter = 3;
+
+    message TempUnit {
+        enum TempUnitType {
+            TEMPUNIT_UNKNOWN = 0;
+            TEMPUNIT_CELSIUS = 1;
+            TEMPUNIT_FAHRENHEIT = 2;
+            TEMPUNIT_KELVIN = 3;
+        }
+        TempUnitType value = 1;
+    }
+    TempUnit unit = 4;
+
+    // each delta pair should be a pair of indices in the above
+    // 'meter' list that need to have deltas generated
+    message DeltaPair {
+        int32 a = 1;
+        int32 b = 2;
+    }
+    repeated DeltaPair delta = 5;
 }
 
 message SetIrMeterOverlayRequest {
@@ -175,4 +197,13 @@ message SetIrMeterOverlayRequest {
 
 message SetIrMeterOverlayResponse {
     bosdyn.api.ResponseHeader header = 1;
+}
+
+message GetIrMeterOverlayRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetIrMeterOverlayResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    IrMeterOverlay overlay = 2;
 }

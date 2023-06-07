@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,12 +14,11 @@ import time
 import bosdyn.client
 import bosdyn.client.lease
 import bosdyn.client.util
-from bosdyn.api import (arm_command_pb2, geometry_pb2, robot_command_pb2, synchronized_command_pb2,
-                        trajectory_pb2)
+from bosdyn.api import geometry_pb2, robot_command_pb2
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 from bosdyn.client import math_helpers
-from bosdyn.client.frame_helpers import (BODY_FRAME_NAME, GRAV_ALIGNED_BODY_FRAME_NAME,
-                                         GROUND_PLANE_FRAME_NAME, ODOM_FRAME_NAME, get_a_tform_b)
+from bosdyn.client.frame_helpers import (GRAV_ALIGNED_BODY_FRAME_NAME, GROUND_PLANE_FRAME_NAME,
+                                         ODOM_FRAME_NAME, get_a_tform_b)
 from bosdyn.client.math_helpers import Quat, SE3Pose
 from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient,
                                          block_until_arm_arrives, blocking_stand)
@@ -38,12 +37,12 @@ def impedance_command(config):
     bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
-    assert robot.has_arm(), "Robot requires an arm to run this example."
+    assert robot.has_arm(), 'Robot requires an arm to run this example.'
 
     # Verify the robot is not estopped and that an external application has registered and holds
     # an estop endpoint.
-    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
-                                    "such as the estop SDK example, to configure E-Stop."
+    assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client, ' \
+                                    'such as the estop SDK example, to configure E-Stop.'
 
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
 
@@ -52,10 +51,10 @@ def impedance_command(config):
         # Now, we are ready to power on the robot. This call will block until the power
         # is on. Commands would fail if this did not happen. We can also check that the robot is
         # powered at any point.
-        robot.logger.info("Powering on robot... This may take a several seconds.")
+        robot.logger.info('Powering on robot... This may take a several seconds.')
         robot.power_on(timeout_sec=20)
-        assert robot.is_powered_on(), "Robot power on failed."
-        robot.logger.info("Robot powered on.")
+        assert robot.is_powered_on(), 'Robot power on failed.'
+        robot.logger.info('Robot powered on.')
 
         # Tell the robot to stand up, parameterized to enable the body to adjust its height to
         # assist manipulation. For this demo, that means the robot's base will descend, enabling
@@ -64,7 +63,7 @@ def impedance_command(config):
         # The set of valid commands for a robot depends on hardware configuration. See
         # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
-        robot.logger.info("Commanding robot to stand...")
+        robot.logger.info('Commanding robot to stand...')
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
 
         body_control = spot_command_pb2.BodyControlParams(
@@ -72,7 +71,7 @@ def impedance_command(config):
             BodyAssistForManipulation(enable_hip_height_assist=True, enable_body_yaw_assist=False))
         blocking_stand(command_client, timeout_sec=10,
                        params=spot_command_pb2.MobilityParams(body_control=body_control))
-        robot.logger.info("Robot standing.")
+        robot.logger.info('Robot standing.')
 
         # Define a stand command that we'll send with the rest of our arm commands so we keep
         # adjusting the body for the arm
@@ -104,7 +103,7 @@ def impedance_command(config):
 
         # Issue the command via the RobotCommandClient
         unstow_command_id = command_client.robot_command(unstow)
-        robot.logger.info("Unstow command issued.")
+        robot.logger.info('Unstow command issued.')
         block_until_arm_arrives(command_client, unstow_command_id, 3.0)
 
         # Now, do a Cartesian move with the hand pointed downward a little above the task frame.
@@ -157,7 +156,20 @@ def impedance_command(config):
 
         # Execute the impedance command.
         cmd_id = command_client.robot_command(robot_cmd)
-        time.sleep(5.0)
+        robot.logger.info('Impedance command issued')
+        # This might report STATUS_TRAJECTORY_COMPLETE or STATUS_TRAJECTORY_STALLED, depending on
+        # the floor. STATUS_TRAJECTORY_STALLED is reported if the arm has stopped making progress to
+        # the goal and the measured tool frame is far from the `desired_tool` along directions where
+        # we expect good tracking (directions where we've set high stiffness). In this case, we've
+        # set high stiffness in all directions, and since the robot can't push past the floor, it's
+        # possible we'll have bad tracking in z. This means the robot might never reach the goal
+        # desired_tool pose, and once the arm motion settles, we might report
+        # STATUS_TRAJECTORY_STALLED.
+        success = block_until_arm_arrives(command_client, cmd_id, 10.0)
+        if success:
+            robot.logger.info('Impedance move succeeded.')
+        else:
+            robot.logger.info('Impedance move didn\'t complete because it stalled or timed out.')
 
         # Now, let's move along the surface of the ground, exerting a downward force while
         # dragging the arm sideways.
@@ -198,12 +210,26 @@ def impedance_command(config):
 
         # Execute the impedance command
         cmd_id = command_client.robot_command(robot_cmd)
-        time.sleep(5.0)
+        robot.logger.info('Impedance command issued')
+        # This might report STATUS_TRAJECTORY_COMPLETE or STATUS_TRAJECTORY_STALLED, depending on
+        # the floor. STATUS_TRAJECTORY_STALLED is reported if the arm has stopped making progress to
+        # the goal and the measured tool frame is far from the `desired_tool` along directions where
+        # we expect good tracking. Since the robot can't push past the floor, the trajectory might
+        # stop making progress, even though we will still be pushing against the floor. Unless the
+        # floor has high friction (like carpet) we'd expect to have good tracking in all directions
+        # except z. Because we have requested a feedforward force in z, we don't expect good
+        # tracking in that direction. So we would expect the robot to report
+        # STATUS_TRAJECTORY_COMPLETE in this case once arm motion settles.
+        success = block_until_arm_arrives(command_client, cmd_id, 10.0)
+        if success:
+            robot.logger.info('Impedance move succeeded.')
+        else:
+            robot.logger.info('Impedance move didn\'t complete because it stalled or timed out.')
 
         # Stow the arm
         stow_cmd = RobotCommandBuilder.arm_stow_command()
         stow_command_id = command_client.robot_command(stow_cmd)
-        robot.logger.info("Stow command issued.")
+        robot.logger.info('Stow command issued.')
         block_until_arm_arrives(command_client, stow_command_id, 3.0)
 
         # Done! When we leave this function, we'll return the lease, and the robot
@@ -220,7 +246,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.exception("Threw an exception")
+        logger.exception('Threw an exception')
         return False
 
 

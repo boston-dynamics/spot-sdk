@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -75,8 +75,6 @@ Note: A 3D Step model of the robot’s body including typical leg swing areas is
 
 
 ### Payload clearance with robot arm
-
-Note: The Spot arm is currently in development. Availability is planned for the second half of 2020.
 
 
 

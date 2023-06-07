@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # E-Stop Service
 
-The "estop" service uses a heartbeat-based, software-implemented service to help guarantee a communications link between one or more off-robot host machines. The robot will not allow the motors to be powered without properly setting up this service.
+The "estop" service uses a heartbeat-based, software-implemented service to help guarantee a communications link between one or more off-robot host machines. In 3.2 and earlier, the robot will not allow the motors to be powered without properly setting up this service. In 3.3, it's possible to operate the robot WITHOUT involving this service.
 
 In short, one or more pre-determined clients must confirm that they can talk to the robot by sending a special message. In the parlance of the service, one or more Endpoints that have been Registered against the Configuration must send CheckIn messages.
 
@@ -32,7 +32,7 @@ See the protobuf's documentation for more details.
 
 There are some limitations on the configuration:
 
-1) There must be exactly one Endpoint with a role set to `PDB_rooted`.
+1) In 3.2 and earlier, there must be exactly one Endpoint with a role set to `PDB_rooted`. In 3.3 and later, it is also acceptable to have a configuration without any Endpoints.
 2) The `PDB_rooted` Endpoint must have a `timeout` of 65530 seconds or less.
 
 The `PDB_rooted` endpoint has its communications verified in the firmware, which is why it has special requirements on its configuration.

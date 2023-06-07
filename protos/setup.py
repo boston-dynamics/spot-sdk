@@ -1,10 +1,8 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
-
-from __future__ import print_function
 
 import setuptools.command.build_py
 import distutils.cmd
@@ -82,7 +80,7 @@ class proto_build(distutils.cmd.Command, object):
         for cwd, dirs, files in os.walk(protos_root):
             cwd_relative_to_root = cwd[len(root) + 1:]
             for d in dirs:
-                make_init(os.path.join(root, output_dir, cwd_relative_to_root, d))
+                make_init(os.path.join(root, output_dir, cwd_relative_to_root, d), do_pkg_extension=True)
 
             for f in files:
                 if not f.endswith('.proto'):
@@ -115,7 +113,7 @@ setuptools.setup(
     author="Boston Dynamics",
     author_email="support@bostondynamics.com",
     description="Boston Dynamics API definition of protobuf messages",
-    install_requires=["protobuf>=3.6.1"],
+    install_requires=["protobuf>=3.19.4"],
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://dev.bostondynamics.com/",
@@ -130,6 +128,10 @@ setuptools.setup(
     setup_requires=add_pathlib_version(['grpcio-tools', 'wheel']),
     classifiers=[
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "License :: Other/Proprietary License",
         "Operating System :: OS Independent",
     ],

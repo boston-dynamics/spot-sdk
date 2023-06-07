@@ -1,0 +1,212 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.log_status;
+
+import "bosdyn/api/header.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+message LogStatus {
+
+    // Status of a previous request for log bundler generation. Terminal statuses start at 100, such
+    // that if a status >= DONE, it can be concluded that the request is no longer active.
+    enum Status {
+        STATUS_UNKNOWN = 0; // The status was not set, so something went wrong.
+        STATUS_RECEIVED = 1; // Request received, thread is not created for bundling the logs.
+        STATUS_IN_PROGRESS = 2; // Request in progress, thread is actively creating the bundle.
+        STATUS_SYNCING = 3; // Log end_time has passed, server post processing taking place.
+        STATUS_DONE = 100; // Bundling process is complete with no failures and was terminated by API.
+        STATUS_FAILED = 101; // Failure encountered while generating bundle.
+        STATUS_TERMINATED = 102; // Bundle creation was terminated by API prior to completion.
+    }
+
+    // Types of logs
+    enum Type {
+        TYPE_UNKNOWN = 0;
+        TYPE_EXPERIMENT = 1; // A log into the future.
+        TYPE_RETRO = 2; // A retroactive log.
+    }
+
+    // Id of the response log.
+    string id = 1;
+
+    // Status of the response log.
+    Status status = 2;
+
+    // Type of log.
+    Type type = 3;
+}
+
+message GetLogStatusRequest {
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+
+    // Id of the log to retrieve.
+    string id = 2;
+}
+
+message GetLogStatusResponse {
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_ID_NOT_FOUND = 2; // This log is not available on the robot.
+    }
+
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+
+    // Response status.
+    Status status = 2;
+
+    // Status of the retrieved log.
+    LogStatus log_status = 3;
+}
+
+message GetActiveLogStatusesRequest {
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetActiveLogStatusesResponse {
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+    }
+
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+
+    // Response status.
+    Status status = 2;
+
+    // A collection of the statuses of logs that are not in a terminal state (logStatus < 100)
+    repeated LogStatus log_statuses = 3;
+}
+
+message StartRetroLogRequest {
+
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+
+    // How long into the past should this log start?
+    google.protobuf.Duration past_duration = 2;
+}
+
+message StartRetroLogResponse {
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_EXPERIMENT_LOG_RUNNING = 2; // An experiment log is already running.
+        STATUS_CONCURRENCY_LIMIT_REACHED = 3; // Maximum retro logs running concurrently.
+    }
+
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+
+    // Response status.
+    Status status = 2;
+
+    // Status of the created log.
+    LogStatus log_status = 3;
+
+    // Timestamp of the end of the log, in robot time.
+    google.protobuf.Timestamp end_time = 4;
+}
+
+message StartExperimentLogRequest {
+
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+
+    // How long into the future should this log end?
+    google.protobuf.Duration keep_alive = 2;
+}
+
+message StartExperimentLogResponse {
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_EXPERIMENT_LOG_RUNNING = 2; // Cannot start another experiment log, one is already running.
+    }
+
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+
+    // Response status.
+    Status status = 2;
+
+    // Status of the created log.
+    LogStatus log_status = 3;
+
+    // Timestamp of the end of the log, in robot time.
+    google.protobuf.Timestamp end_time = 4;
+}
+
+message UpdateExperimentLogRequest {
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+
+    // How long into the future should this log continue?
+    google.protobuf.Duration keep_alive = 2;
+
+    // Id of log to be extended.
+    string id = 3;
+}
+
+message UpdateExperimentLogResponse {
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_ID_NOT_FOUND = 2; // This log is not available on the robot
+        STATUS_LOG_TERMINATED = 3; // Log has already terminated
+    }
+
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+
+    // Response status.
+    Status status = 2;
+
+    // Status of the updated log.
+    LogStatus log_status = 3;
+
+    // Timestamp of the end of the log, in robot time.
+    google.protobuf.Timestamp end_time = 4;
+}
+
+message TerminateLogRequest {
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+
+    // Id of log to terminate.
+    string id = 2;
+}
+
+message TerminateLogResponse {
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_ID_NOT_FOUND = 2; // This log is not available on the robot.
+    }
+
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+
+    // Response status.
+    Status status = 2;
+
+    // Status of terminated log.
+    LogStatus log_status = 3;
+}

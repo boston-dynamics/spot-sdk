@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -89,8 +89,8 @@ class TensorflowModel:
             self.labels = None
         else:
             # Load the class label mappings
-            self.labels = open(labels_path).read().strip().split("\n")
-            self.labels = {int(L.split(",")[1]): L.split(",")[0] for L in self.labels}
+            self.labels = open(labels_path).read().strip().split('\n')
+            self.labels = {int(L.split(',')[1]): L.split(',')[0] for L in self.labels}
 
     def predict(self, image):
         """ Predict with this model. """
@@ -134,7 +134,7 @@ def process_images(options, model_extension):
     models = {}
     for f in os.listdir(options.model_dir):
         if f in models:
-            print('Warning: duplicate model name of "' + f + '", ignoring second model.')
+            print(f'Warning: duplicate model name of "{f}", ignoring second model.')
             continue
 
         path = os.path.join(options.model_dir, f)
@@ -151,14 +151,14 @@ def process_images(options, model_extension):
 
     # Tensorflow prints out a bunch of stuff, so print out useful data here after a space.
     print('')
-    print('Running on port: ' + str(options.port))
+    print(f'Running on port: {options.port}')
     print('Loaded models:')
     for model_name in models:
         if models[model_name].labels is not None:
             labels_str = 'yes'
         else:
             labels_str = 'no'
-        print('    ' + model_name + ' (loaded labels: ' + labels_str + ')')
+        print(f'    {model_name} (loaded labels: {labels_str})')
 
     while True:
         request = REQUEST_QUEUE.get()
@@ -166,7 +166,7 @@ def process_images(options, model_extension):
         if isinstance(request, network_compute_bridge_pb2.ListAvailableModelsRequest):
             out_proto = network_compute_bridge_pb2.ListAvailableModelsResponse()
             for f in models:
-                out_proto.available_models.append(f)
+                out_proto.models.data.append(network_compute_bridge_pb2.ModelData(model_name=f))
             RESPONSE_QUEUE.put(out_proto)
             continue
         else:
@@ -174,7 +174,7 @@ def process_images(options, model_extension):
 
         # Find the model
         if request.input_data.model_name not in models:
-            err_str = 'Cannot find model "' + request.input_data.model_name + '" in loaded models.'
+            err_str = f'Cannot find model "{request.input_data.model_name}" in loaded models.'
             print(err_str)
 
             # Set the error in the header.
@@ -195,7 +195,7 @@ def process_images(options, model_extension):
                 # Already in the correct format
                 image = pil_image
             else:
-                err_str = 'Error: image input in unsupported pixel format: ', request.input_data.image.pixel_format
+                err_str = f'Error: image input in unsupported pixel format: {request.input_data.image.pixel_format}'
                 print(err_str)
 
                 # Set the error in the header.
@@ -229,7 +229,7 @@ def process_images(options, model_extension):
             num_objects += 1
 
             #draw_box(draw, b, color=color)
-            print('Found object with label: "' + label + '" and score: ' + str(score))
+            print(f'Found object with label: "{label}" and score: {score}')
 
             point1 = np.array([box[1], box[0]])
             point2 = np.array([box[3], box[0]])
@@ -238,7 +238,7 @@ def process_images(options, model_extension):
 
             # Add data to the output proto.
             out_obj = out_proto.object_in_image.add()
-            out_obj.name = "obj" + str(num_objects) + "_label_" + label
+            out_obj.name = f'obj {num_objects}_label_{label}'
 
             vertex1 = out_obj.image_properties.coordinates.vertexes.add()
             vertex1.x = point1[0]
@@ -266,18 +266,18 @@ def process_images(options, model_extension):
                 polygon = polygon.reshape((-1, 1, 2))
                 cv2.polylines(image, [polygon], True, (0, 255, 0), 2)
 
-                caption = "{}: {:.3f}".format(label, score)
+                caption = f'{label}: {score:.3f}'
                 left_x = min(point1[0], min(point2[0], min(point3[0], point4[0])))
                 top_y = min(point1[1], min(point2[1], min(point3[1], point4[1])))
                 cv2.putText(image, caption, (int(left_x), int(top_y)), cv2.FONT_HERSHEY_SIMPLEX,
                             0.5, (0, 255, 0), 2)
 
-        print('Found ' + str(num_objects) + ' object(s)')
+        print(f'Found {num_objects} object(s)')
 
         if not options.no_debug:
             debug_image_filename = 'tensorflow_server_output.jpg'
             cv2.imwrite(debug_image_filename, image)
-            print('Wrote debug image output to: "' + debug_image_filename + '"')
+            print(f'Wrote debug image output to: "{debug_image_filename}"')
 
         RESPONSE_QUEUE.put(out_proto)
 
@@ -305,11 +305,11 @@ class NetworkComputeBridgeWorkerServicer(
 def register_with_robot(options):
     """ Registers this worker with the robot's Directory."""
     ip = bosdyn.client.common.get_self_ip(options.hostname)
-    print('Detected IP address as: ' + ip)
-    kServiceName = "tensorflow-server"
-    kServiceAuthority = "tensorflow-worker.spot.robot"
+    print(f'Detected IP address as: {ip}')
+    kServiceName = 'tensorflow-server'
+    kServiceAuthority = 'tensorflow-worker.spot.robot'
 
-    sdk = bosdyn.client.create_standard_sdk("tensorflow_server")
+    sdk = bosdyn.client.create_standard_sdk('tensorflow_server')
 
     robot = sdk.create_robot(options.hostname)
 
@@ -325,14 +325,13 @@ def register_with_robot(options):
     services = directory_client.list()
     for s in services:
         if s.name == kServiceName:
-            print("WARNING: existing service with name, \"" + kServiceName + "\", removing it.")
+            print(f'WARNING: existing service with name, "{kServiceName}", removing it.')
             directory_registration_client.unregister(kServiceName)
             break
 
     # Register service
-    print('Attempting to register ' + ip + ':' + options.port + ' onto ' + options.hostname +
-          ' directory...')
-    directory_registration_client.register(kServiceName, "bosdyn.api.NetworkComputeBridgeWorker",
+    print(f'Attempting to register {ip}:{options.port} onto {options.hostname} directory...')
+    directory_registration_client.register(kServiceName, 'bosdyn.api.NetworkComputeBridgeWorker',
                                            kServiceAuthority, ip, int(options.port))
 
 
@@ -351,7 +350,7 @@ def main(argv):
         '-d', '--model-dir', help=
         'Directory of pre-trained models and (optionally) associated label files.\nExample directory contents: my_model.pb, my_classes.csv, my_model2.pb, my_classes2.csv.  CSV label format is: object,1<new line>thing,2',
         required=True)
-    parser.add_argument('-p', '--port', help='Server\'s port number, default: ' + default_port,
+    parser.add_argument('-p', '--port', help=f'Server\'s port number, default: {default_port}',
                         default=default_port)
     parser.add_argument('-n', '--no-debug', help='Disable writing debug images.',
                         action='store_true')
@@ -377,7 +376,7 @@ def main(argv):
         sys.exit(1)
 
     if not os.path.isdir(options.model_dir):
-        print('Error: model directory (' + options.model_dir + ') not found or is not a directory.')
+        print(f'Error: model directory ({options.model_dir}) not found or is not a directory.')
         sys.exit(1)
 
     # Make sure there is at least one file ending in .pb in the directory.
@@ -389,10 +388,11 @@ def main(argv):
             break
 
     if not found_model:
-        print('Error: model directory must contain at least one model file with extension ' +
-              model_extension + '.  Found:')
+        print(
+            f'Error: model directory must contain at least one model file with extension {model_extension}.  Found:'
+        )
         for f in os.listdir(options.model_dir):
-            print('    ' + f)
+            print(f'    {f}')
         sys.exit(1)
 
     if not options.no_registration:
@@ -404,12 +404,12 @@ def main(argv):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     network_compute_bridge_service_pb2_grpc.add_NetworkComputeBridgeWorkerServicer_to_server(
         NetworkComputeBridgeWorkerServicer(REQUEST_QUEUE, RESPONSE_QUEUE), server)
-    server.add_insecure_port('[::]:' + options.port)
+    server.add_insecure_port(f'[::]:{options.port}')
     server.start()
 
     print('Running...')
     while True:
-        print('.', end="")
+        print('.', end='')
         sys.stdout.flush()
         time.sleep(2)
 

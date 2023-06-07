@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,11 +14,88 @@ import "bosdyn/api/geometry.proto";
 
 message StairTransform {
     // The staircase origin is the bottom-center of the first rise.
+    // X-axis is oriented pointing up the stairs.
+    // Y-axis is oriented to the left when facing up the stairs.
+    // Z-axis is oriented facing up (opposite gravity).
     bosdyn.api.SE3Pose frame_tform_stairs = 1;
     string frame_name = 2;
 }
 
+message Staircase {
+    enum KnowledgeType {
+        KNOWLEDGE_TYPE_UNKNOWN = 0;
+        // A staircase that was in a map (e.g. an AutoWalk edge annotation).
+        // Dimensions are expected to be accurate, but location is subject to localization accuracy.
+        KNOWLEDGE_TYPE_MAPPED = 1;
+        // A staircase that we are currently tracking.
+        // Location should be accurate, but the farther-away portions may be inaccurate.
+        KNOWLEDGE_TYPE_TRACKED_ONGOING = 2;
+        // A recently-traversed staircase that we tracked during the traversal.
+        // This should be accurate in both dimensions and location, but behind us.
+        KNOWLEDGE_TYPE_TRACKED_COMPLETED = 3;
+        // Something else?
+        KNOWLEDGE_TYPE_OTHER = 4;
+    }
+
+    // How do we know about this staircase.
+    KnowledgeType knowledge_type = 1;
+
+    // Location of the stairs origin relative to some named frame.
+    // Origin defined as the center of the bottom of the lowest riser.
+    StairTransform stair_tform = 2;
+
+    message Width {
+        // The distance in meters between the left and right side of the staircase.
+        double width = 1;
+
+        // It may be that we do not know the location of one or both walls/railings.
+        // For any sides that are not considered bounded, the stairs extend at least as far as the
+        // specified width, but may extend farther.
+
+        // The two sides of a staircase are designated "east" and "west" as if north is up.
+        // The "west" side is the left when facing up the stairs and the right when facing down.
+        // The "east" side is the right when facing up the stairs and the left when facing down.
+        enum BoundedWidth {
+            BOUNDED_WIDTH_UNKNOWN = 0;
+            BOUNDED_WIDTH_NEITHER = 1;
+            BOUNDED_WIDTH_WEST = 2;
+            BOUNDED_WIDTH_EAST = 3;
+            BOUNDED_WIDTH_BOTH = 4;
+        }
+
+        BoundedWidth bounded_width = 2;
+    }
+
+    // Simple definition of staircase.
+    // Redundant with individual step information below.
+    // Provided for convenience.
+
+    // Number of vertical risers.
+    int32 number_of_steps = 3;
+    // Average vertical height of each step in meters.
+    double average_rise = 4;
+    // Average horizontal distance between risers in meters.
+    double average_run = 5;
+    // Average width.
+    Width average_width = 6;
+
+    message Step {
+        // Center of edge in stairs frame.
+        Vec3 point = 1;
+        // Unit vector pointing up the stairs in stairs frame, perpendicular to edge.
+        Vec2 north = 2;
+        // Width of stairs at this step.
+        Width width = 3;
+    }
+
+    // The individual steps ordered from lowest to highest.
+    repeated Step steps = 7;
+}
+
 message StraightStaircase {
+    // DEPRECATED as of 3.3.  Please use StaircaseWithLandings.
+    option deprecated = true;
+
     // The staircase origin is the bottom-center of the first rise.
     oneof location {
         // It is expressed in ko frame of the from_waypoint.
@@ -54,4 +131,21 @@ message StraightStaircase {
     Landing bottom_landing = 3;
     // The uppermost landing of the stairs.
     Landing top_landing = 4;
+}
+
+// Landing associated with a staircase
+message StaircaseLanding {
+    // Pose of the landing's center relative to the stairs frame.
+    bosdyn.api.SE3Pose stairs_tform_landing_center = 1;
+    // The half-size of the box representing the landing in the x axis.
+    double landing_extent_x = 2;
+    // The half-size of the box representing the landing in the y axis.
+    double landing_extent_y = 3;
+}
+
+// Stairs and their associated landings.
+message StaircaseWithLandings {
+    StaircaseLanding bottom_landing = 1;
+    Staircase staircase = 2;
+    StaircaseLanding top_landing = 3;
 }

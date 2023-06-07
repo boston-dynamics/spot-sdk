@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -79,19 +79,19 @@ def main(argv):
     out = cv2.addWeighted(visual_rgb, 0.5, depth_color, 0.5, 0)
 
     if options.auto_rotate:
-        if image_responses[0].source.name[0:5] == "front":
+        if image_responses[0].source.name[0:5] == 'front':
             out = cv2.rotate(out, cv2.ROTATE_90_CLOCKWISE)
 
-        elif image_responses[0].source.name[0:5] == "right":
+        elif image_responses[0].source.name[0:5] == 'right':
             out = cv2.rotate(out, cv2.ROTATE_180)
 
     # Write the image out.
-    filename = options.camera + ".jpg"
+    filename = f'{options.camera}.jpg'
     cv2.imwrite(filename, out)
 
     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main(sys.argv[1:]):
         sys.exit(1)

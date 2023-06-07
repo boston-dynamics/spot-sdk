@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -51,12 +51,12 @@ class BatteryAdapter:
         message = data_acquisition_pb2.AssociatedMetadata()
         message.reference_id.action_id.CopyFrom(request.action_id)
         message.metadata.data.update({
-            "battery_percentage":
+            'battery_percentage':
                 state.power_state.locomotion_charge_percentage.value,
-            "battery_runtime":
+            'battery_runtime':
                 json_format.MessageToJson(state.power_state.locomotion_estimated_runtime)
         })
-        _LOGGER.info("Retrieving battery data: {}".format(message.metadata.data))
+        _LOGGER.info('Retrieving battery data: %s', message.metadata.data)
 
         # Store the data and manage store state.
         store_helper.store_metadata(message, data_id)
@@ -92,7 +92,7 @@ if __name__ == '__main__':
     setup_logging(options.verbose)
 
     # Create and authenticate a bosdyn robot object.
-    sdk = bosdyn.client.create_standard_sdk("BatteryPlugin")
+    sdk = bosdyn.client.create_standard_sdk('BatteryPlugin')
     robot = sdk.create_robot(options.hostname)
     robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(options))
 

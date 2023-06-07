@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -28,6 +28,13 @@ We may want the robot to do different things for each of the following cases:
 
 The Area Callback service that is called can specify a _policy_ as to what should GraphNav should do at the start and and of the region.  Options include continuing on, stopping and waiting for the callback to allow it to continue, or delegating control to the callback to perform an action with the robot.
 
+## Area Callback Policies
+Policies specify what should happen at the beginning and end of an Area Callback region.  Setting the policy for the start of a region after it has already passed will have no effect.  
+
+ - **Stop.**  Navigation will pause at the target position indefinitely until the policy is changed.
+ - **Control.** When the target position is reached, control will be transferred to the Area Callback service. The service will retain control until the service changes its policy.
+ - **Continue On.** Navigation may continue past the target position. If this policy is set before the position is reached, the robot will continue past without stopping.  Setting this policy at the start of a region will continue to update the callback service throughout the region.  In contrast, reporting that the callback is complete will stop updating a callback altogether.
+
 ### Example: Crosswalk SpotCAM Light
 
 ![Area Callback Lights Figure](./images/area_callback_lights_figure.png)
@@ -37,8 +44,8 @@ The Area Callback service that is called can specify a _policy_ as to what shoul
 - once the robot confirms that the crosswalk is clear of forklifts, it starts _crossing_ the region, during which it flashes the lights quickly and brighter.
 - the robot reaches the _end_ to turn off the spotcam light and proceed to complete the rest of the mission
 
-For this example, the callback would set a policy to tell the robot to **stop** at the start of the region.  After the callback verified that it is safe to cross, it would change the policy to **continue on** past the start and **continue on** past the end.
-The callback would still continue to be updated by graph nav for the duration of the region traversal.
+For this example, the callback will set a policy to tell the robot to **stop** at the start of the region.  After the callback verified that it is safe to cross, it would change the policy to **continue on** past the start and **continue on** past the end.
+The callback will still continue to be updated by graph nav for the duration of the region traversal, so that it can continue flashing the lights throughout the region.
 
 Code implementing this callback can be found in the [python example](../../../python/examples/area_callback/README.md).
 
@@ -66,9 +73,9 @@ When reaching an Area Callback region, GraphNav will begin calling out to the ca
 3. **BeginControl**: This call transfers control of the robot to the callback with a Lease.  The callback remains in control until it either changes its policy (via `UpdateCallback`) to no longer request control, or it receives a LeaseUseResult through its lease usage that indicates that some other system is now in control of the robot.
 4. **EndCallback**: Called either when leaving the region, or when the response to `UpdateCallback` indicates that the callback is complete.  `UpdateCallback` will no longer be called.  `EndCallback` may also be called early if GraphNav is interrupted and is no longer executing the route.
 
-### Shutdown
+### Service Shutdown
 
-When shutting down an Area Callback service, the service should unregister itself from the directory.  This will be handled automatically when using the python `DirectoryRegistrationKeepAlive` helper.
+If shutting down an Area Callback service, the service should unregister itself from the directory.  This will be handled automatically when using the python `DirectoryRegistrationKeepAlive` helper.
 
 ## Creating an Area Callback
 
@@ -85,9 +92,9 @@ The majority of work for an `AreaCallbackRegionHandlerBase` subclass will be don
  - `block_until_control()`
  - `safe_sleep()`
 
-These methods will return when their particular condition is met.  If the navigation is aborted, they will raise an exception of a subclass of `bosdyn.client.area_callback_region_handler_base.HandlerError`.  These exceptions do not need to be caught, and can be used to exit from `run()`.  If you _do_ catch these exceptions for performing cleanup work, be sure to re-raise them after cleaning up, rather than continuing on in the `run()` method.  It is expected that `run()` will complete quickly once navigation has stopped.  If your use-case requires more time for cleanup operations you should create a thread to do that work and still return from `run()` quickly. Note that `safe_sleep()` works very similar to python's `time.sleep()` except that it will raise one of the above exceptions if the navigation through the region aborts during the sleep.  In addition to these blocking methods, implementations can directly call `check()` which will immediately raise a `HandlerError` if the callback should abort.
+These methods will return when their particular condition is met.  If the navigation is aborted, they will raise an exception of a subclass of `bosdyn.client.area_callback_region_handler_base.HandlerError`.  These exceptions do not need to be caught, and can be used to exit from `run()`.  If you _do_ catch these exceptions for performing cleanup work, be sure to re-raise them after cleaning up, rather than continuing on in the `run()` method.  It is expected that `run()` will complete quickly once navigation has stopped.  If your use-case requires more time for cleanup operations you should create a thread to do that work and still return from `run()` quickly. Note that `safe_sleep()` works very similar to python's `time.sleep()` except that it will raise one of the above exceptions if the navigation through the region aborts during the sleep. 
 
-In addition to these blocking calls, the `stage()` and `has_control()` helpers can be used to check this information in a non-blocking manner. `stage()` will return the [`bosdyn.api.UpdateCallbackRequest.Stage`](../../../protos/bosdyn/api/proto_reference.html#updatecallbackrequest-stage) enum describing the stage of crossing the region.
+ In addition to these blocking methods, implementations can directly call `check()` which will immediately raise a `HandlerError` if the callback should abort.  Also, the `stage()` and `has_control()` helpers can be used to check this information about current stage and control state in a non-blocking manner. `stage()` will return the [`bosdyn.api.UpdateCallbackRequest.Stage`](../../../protos/bosdyn/api/proto_reference.html#updatecallbackrequest-stage) enum describing the stage of crossing the region.
 
 Aside from the task-specific work that the callback does, its other responsibility is to communicate a two-part _policy_ to GraphNav as to what actions GraphNav should perform at the start and end of the region.
 The recommended way to set and update this policy is to use the helper methods:
@@ -112,12 +119,45 @@ Inside `run()`, after the callback has verified that it is safe to cross, the ca
 ```
 After this call, the policy for the callback will be updated to specify that GraphNav does not need to stop at the start, and it also continues the second part of the policy that it does not need to stop at the end of the region.
 
+Returning from the `run()` method will signal to GraphNav that the callback is complete, and no longer needs to be updated.  GraphNav will continue on past the start and end of the region if it has not already.
+
+### Controlling the Robot
+
+Control can be given to the robot to perform an action at the start or end of the region.  The common use case for this are to position the robot precisely and perform an action before giving control back to graph nav to cross the region, or to manage the traversal of the entire region itself.  Control is acquired by setting the policy to **control**, and waiting for GraphNav to delegate control.  After GraphNav delegates control, the `Robot` object for the callback will have its lease wallet updated and commands can be sent.
+
+```python
+        self.control_at_start()     # Set region policy
+        self.block_until_control()  # Wait for GraphNav to delegate control
+
+        # Can send robot commands here
+```
+
+#### Updating the localization
+
+If the area callback is traversing the region itself, when it reaches the end of the region it should update the localization of the robot within the map before returning control.  The GraphNav considers the callback to still be "at" the start of the region (`STAGE_AT_START`) until either it drives the robot past the start, or the callback explicitly updates the localization.  If the callback drives the robot and tells GraphNav to continue on without updating the localization, then GraphNav will attempt to navigate from the start of the region.
+
+```python
+        # Commands here driving the robot to the end of the region.
+
+        # Update the localization so that GraphNav knows we have traversed the region.
+        self.set_localization_at_end()
+        # Change the policy to continue.  GraphNav will immediately begin the end policy.
+        self.continue_past_start()
+```
+
+### Reporting Errors
+If an unrecoverable error occurs, the `run()` method should raise an exception.  This will get translated into a response to GraphNav that the callback has failed.  There are a few special errors that can re-raised with special meaning.
+ - **LeaseError** - This will be raised when the callback has control if some other system takes over control of the robot.  This will generally be raised by robot command RPCs sent by the callback service, and it is recommended to not catch the error, but to instead let raise out of `run()`.  If a callback needs to catch it to perform some cleanup, it should re-raise it.
+ - **PathBlocked** - This error should be raised if the callback determines that the region is blocked, and GraphNav should attempt to re-route around it.  This should only be raised at the start of the region.  If the callback service has been in control of the robot, it should attempt to return to the start of the region before raising this error, or GraphNav may not be able to successfully resume navigation.  It should not be raised if the localization has already been updated to the end of the region.
+ - **HandlerError** - This error will be raised from helper functions if the area callback has already been aborted or exited, and `run()` should exit.  Handlers should only catch this exception if there is some cleanup to perform before exiting `run()`.
+
+
 ## Testing an Area Callback
 
 
 ### Test runner script
 
-Once a callback is written, it can be tested using the [area_callback_test_runner](../../../python/examples/area_callback/README.md#running-the-example-without-graph-nav-recording) script.  This script will call the callback directly, without involving GraphNav.  Because GraphNav is not running the callback, certain features may not be available. For example, route and region information will not be filled out in the BeginCallbackRequest, and requesting localization data from GraphNav may not provide meaningful responses.  But for many types of Area Callbacks, this test script provides a simple way to make sure that they are operating as expected and debug failures.
+Once a callback is written, it can be tested using the [area_callback_test_runner](../../../python/examples/area_callback/README.md#running-the-example-without-graph-nav-recording) script.  This script will call the callback directly, without involving GraphNav.  Because GraphNav is not running the callback, certain features may not be available. For example, route and region information will not be filled out in the BeginCallbackRequest, and requesting localization data from GraphNav may not provide meaningful responses.  But for many types of Area Callbacks, this test script provides a simple way to make sure that they are operating as expected and to debug failures.
 
 Example usage:
 ```sh

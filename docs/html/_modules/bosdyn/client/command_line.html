@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.command_line &mdash; Spot 3.2.3 documentation</title>
+  <title>bosdyn.client.command_line &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -30,10 +32,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -66,7 +70,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -94,13 +98,16 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -129,6 +136,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -183,6 +191,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -195,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -202,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -227,9 +238,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -244,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -266,6 +280,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -293,6 +314,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -306,13 +328,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -330,6 +355,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -391,6 +417,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -469,6 +501,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -483,9 +516,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -494,6 +530,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -524,10 +562,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -549,6 +591,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -565,7 +608,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -630,7 +672,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.command_line</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -638,7 +680,7 @@
 
 <span class="sd">&quot;&quot;&quot;Command-line utility code for interacting with robot services.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -649,13 +691,13 @@
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">json_format</span>
 
 <span class="kn">import</span> <span class="nn">bosdyn.client</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">data_acquisition_pb2</span><span class="p">,</span> <span class="n">image_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.data_buffer_pb2</span> <span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">TextMessage</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.data_index_pb2</span> <span class="kn">import</span> <span class="n">EventsCommentsSpec</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.robot_state_pb2</span> <span class="kn">import</span> <span class="n">BehaviorFault</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">duration_str</span><span class="p">,</span> <span class="n">timestamp_to_datetime</span>
 
 <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">InvalidLoginError</span><span class="p">,</span> <span class="n">InvalidTokenError</span>
@@ -672,6 +714,7 @@
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">LeaseClient</span>
 <span class="kn">from</span> <span class="nn">.license</span> <span class="kn">import</span> <span class="n">LicenseClient</span>
 <span class="kn">from</span> <span class="nn">.local_grid</span> <span class="kn">import</span> <span class="n">LocalGridClient</span>
+<span class="kn">from</span> <span class="nn">.log_status</span> <span class="kn">import</span> <span class="n">InactiveLogError</span><span class="p">,</span> <span class="n">LogStatusClient</span>
 <span class="kn">from</span> <span class="nn">.payload</span> <span class="kn">import</span> <span class="n">PayloadClient</span>
 <span class="kn">from</span> <span class="nn">.payload_registration</span> <span class="kn">import</span> <span class="n">PayloadAlreadyExistsError</span><span class="p">,</span> <span class="n">PayloadRegistrationClient</span>
 <span class="kn">from</span> <span class="nn">.power</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PowerClient</span><span class="p">,</span> <span class="n">power_cycle_robot</span><span class="p">,</span> <span class="n">power_off_payload_ports</span><span class="p">,</span> <span class="n">power_off_robot</span><span class="p">,</span>
@@ -684,8 +727,8 @@
 
 
 <span class="c1"># pylint: disable=too-few-public-methods</span>
-<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">)):</span>
-    <span class="sd">&quot;&quot;&quot;Command-line command.</span>
+<div class="viewcode-block" id="Command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.Command">[docs]</a><span class="k">class</span> <span class="nc">Command</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Command-line command.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        subparsers: List of argument parsers.</span>
@@ -704,7 +747,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NAME</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Command.run"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.Command.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Invoke the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Invoke the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -713,7 +756,8 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">NEED_AUTHENTICATION</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">username</span> <span class="ow">or</span> <span class="n">options</span><span class="o">.</span><span class="n">password</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">options</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span>
+                        <span class="n">options</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">username</span> <span class="ow">or</span> <span class="n">options</span><span class="o">.</span><span class="n">password</span><span class="p">):</span>
                     <span class="n">robot</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">authenticate</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
@@ -734,7 +778,7 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -743,7 +787,7 @@
 
 
 <div class="viewcode-block" id="Subcommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.Subcommands">[docs]</a><span class="k">class</span> <span class="nc">Subcommands</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Run subcommands.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run subcommands.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        subparsers: List of argument parsers.</span>
@@ -761,7 +805,7 @@
             <span class="n">subcommand</span><span class="p">(</span><span class="n">cmd_subparsers</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_subcommands</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -777,12 +821,12 @@
 
 
 <div class="viewcode-block" id="DirectoryCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DirectoryCommands">[docs]</a><span class="k">class</span> <span class="nc">DirectoryCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commands related to the directory service.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Commands related to the directory service.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;dir&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commands related to the directory service.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commands related to the directory service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -796,7 +840,7 @@
 
 <span class="k">def</span> <span class="nf">_format_dir_entry</span><span class="p">(</span>  <span class="c1"># pylint: disable=too-many-arguments</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">service_type</span><span class="p">,</span> <span class="n">authority</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">name_width</span><span class="o">=</span><span class="mi">23</span><span class="p">,</span> <span class="n">type_width</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="n">authority_width</span><span class="o">=</span><span class="mi">27</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Prints the passed values as &quot;name service_type authority tokens&quot;, with the first three using</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prints the passed values as &quot;name service_type authority tokens&quot;, with the first three using</span>
 <span class="sd">    the specified width.</span>
 
 <span class="sd">    Args:</span>
@@ -814,7 +858,7 @@
 
 
 <span class="k">def</span> <span class="nf">_token_req_str</span><span class="p">(</span><span class="n">entry</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns a string representing tokens required for using the service.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a string representing tokens required for using the service.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        entry: Service entry being checked.</span>
@@ -832,7 +876,7 @@
 
 
 <span class="k">def</span> <span class="nf">_show_directory_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print service directory list for robot.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print service directory list for robot.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: Robot object used to get the list of services.</span>
@@ -868,7 +912,7 @@
 
 
 <span class="k">def</span> <span class="nf">_show_directory_entry</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">service</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print a service directory entry.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print a service directory entry.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: Robot object used to get the list of services.</span>
@@ -891,12 +935,12 @@
 
 
 <div class="viewcode-block" id="DirectoryListCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DirectoryListCommand">[docs]</a><span class="k">class</span> <span class="nc">DirectoryListCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;List all services in the directory.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List all services in the directory.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;List all services in the directory.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all services in the directory.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -907,7 +951,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -921,12 +965,12 @@
 
 
 <div class="viewcode-block" id="DirectoryGetCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DirectoryGetCommand">[docs]</a><span class="k">class</span> <span class="nc">DirectoryGetCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get entry for a given service in the directory.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get entry for a given service in the directory.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;get&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get entry for a given service in the directory.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get entry for a given service in the directory.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -938,7 +982,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;service&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;service name to get entry for&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -958,12 +1002,12 @@
 
 
 <div class="viewcode-block" id="DirectoryRegisterCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DirectoryRegisterCommand">[docs]</a><span class="k">class</span> <span class="nc">DirectoryRegisterCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Register entry for a service in the directory.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register entry for a service in the directory.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;register&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Register entry for a service in the directory.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register entry for a service in the directory.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -984,7 +1028,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;disable requirement for user token&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1014,12 +1058,12 @@
 
 
 <div class="viewcode-block" id="DirectoryUnregisterCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DirectoryUnregisterCommand">[docs]</a><span class="k">class</span> <span class="nc">DirectoryUnregisterCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Unregister entry for a service in the directory.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Unregister entry for a service in the directory.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;unregister&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Unregister entry for a service in the directory.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unregister entry for a service in the directory.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1030,7 +1074,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;unique name of the service&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1056,12 +1100,12 @@
 
 
 <div class="viewcode-block" id="PayloadCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PayloadCommands">[docs]</a><span class="k">class</span> <span class="nc">PayloadCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commands related to the payload and payload registration services.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Commands related to the payload and payload registration services.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;payload&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commands related to the payload and payload registration services.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commands related to the payload and payload registration services.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1072,7 +1116,7 @@
 
 
 <span class="k">def</span> <span class="nf">_show_payload_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print payload list for robot.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print payload list for robot.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: Robot object used to get the list of services.</span>
@@ -1107,12 +1151,12 @@
 
 
 <div class="viewcode-block" id="PayloadListCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PayloadListCommand">[docs]</a><span class="k">class</span> <span class="nc">PayloadListCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;List all payloads registered with the robot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List all payloads registered with the robot.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;List all payloads registered with the robot.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all payloads registered with the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1123,7 +1167,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1137,7 +1181,7 @@
 
 
 <span class="k">def</span> <span class="nf">_register_payload</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">secret</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Register a payload with the robot.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a payload with the robot.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: Robot object used to register the payload.</span>
@@ -1161,12 +1205,12 @@
 
 
 <div class="viewcode-block" id="PayloadRegisterCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PayloadRegisterCommand">[docs]</a><span class="k">class</span> <span class="nc">PayloadRegisterCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Register a payload with the robot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a payload with the robot.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;register&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Register a payload with the robot.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a payload with the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1178,7 +1222,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--payload-secret&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;secret for the payload&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1191,12 +1235,12 @@
 
 
 <div class="viewcode-block" id="FaultCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.FaultCommands">[docs]</a><span class="k">class</span> <span class="nc">FaultCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commands related to the fault service and robot state service (for fault reading).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Commands related to the fault service and robot state service (for fault reading).&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;fault&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commands related to the fault service and robot state service (for fault reading).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commands related to the fault service and robot state service (for fault reading).</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1206,39 +1250,63 @@
                                             <span class="p">[</span><span class="n">FaultShowCommand</span><span class="p">,</span> <span class="n">FaultWatchCommand</span><span class="p">])</span></div>
 
 
-<span class="k">def</span> <span class="nf">_show_service_faults</span><span class="p">(</span><span class="n">robot</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print service faults for the robot.</span>
+<span class="k">def</span> <span class="nf">_show_all_faults</span><span class="p">(</span><span class="n">robot</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print faults for the robot.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: Robot object used to get the list of services.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">robot_state_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">RobotStateClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
-    <span class="n">service_fault_state</span> <span class="o">=</span> <span class="n">robot_state_client</span><span class="o">.</span><span class="n">get_robot_state</span><span class="p">()</span><span class="o">.</span><span class="n">service_fault_state</span>
+    <span class="n">robot_state</span> <span class="o">=</span> <span class="n">robot_state_client</span><span class="o">.</span><span class="n">get_robot_state</span><span class="p">()</span>
+    <span class="n">system_fault_state</span> <span class="o">=</span> <span class="n">robot_state</span><span class="o">.</span><span class="n">system_fault_state</span>
+    <span class="n">behavior_fault_state</span> <span class="o">=</span> <span class="n">robot_state</span><span class="o">.</span><span class="n">behavior_fault_state</span>
+    <span class="n">service_fault_state</span> <span class="o">=</span> <span class="n">robot_state</span><span class="o">.</span><span class="n">service_fault_state</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">system_fault_state</span><span class="o">.</span><span class="n">faults</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No active system faults.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">fault</span> <span class="ow">in</span> <span class="n">system_fault_state</span><span class="o">.</span><span class="n">faults</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="si">{fault.name}</span>
+<span class="s1">    Error Message: </span><span class="si">{fault.error_message}</span>
+<span class="s1">    Onset Time: </span><span class="si">{timestamp}</span><span class="s1">&#39;&#39;&#39;</span> \
+              <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fault</span><span class="o">=</span><span class="n">fault</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp_to_datetime</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">onset_timestamp</span><span class="p">)))</span>
+
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">behavior_fault_state</span><span class="o">.</span><span class="n">faults</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No active behavior faults.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">fault</span> <span class="ow">in</span> <span class="n">behavior_fault_state</span><span class="o">.</span><span class="n">faults</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="si">{cause}</span>
+<span class="s1">    Onset Time: </span><span class="si">{timestamp}</span>
+<span class="s1">    Clearable: </span><span class="si">{clearable}</span><span class="s1">&#39;&#39;&#39;</span> \
+                  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cause</span><span class="o">=</span><span class="n">BehaviorFault</span><span class="o">.</span><span class="n">Cause</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">cause</span><span class="p">),</span>
+                          <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp_to_datetime</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">onset_timestamp</span><span class="p">),</span>
+                          <span class="n">clearable</span><span class="o">=</span><span class="n">BehaviorFault</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">status</span><span class="p">)))</span>
+
+    <span class="nb">print</span><span class="p">()</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">service_fault_state</span><span class="o">.</span><span class="n">faults</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No active service faults.&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
-
-    <span class="k">for</span> <span class="n">fault</span> <span class="ow">in</span> <span class="n">service_fault_state</span><span class="o">.</span><span class="n">faults</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="si">{fault.fault_id.fault_name}</span><span class="s1"></span>
-<span class="s1">    Service Name: </span><span class="si">{fault.fault_id.service_name}</span><span class="s1"></span>
-<span class="s1">    Payload GUID: </span><span class="si">{fault.fault_id.payload_guid}</span><span class="s1"></span>
-<span class="s1">    Error Message: </span><span class="si">{fault.error_message}</span><span class="s1"></span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">fault</span> <span class="ow">in</span> <span class="n">service_fault_state</span><span class="o">.</span><span class="n">faults</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="si">{fault.fault_id.fault_name}</span>
+<span class="s1">    Service Name: </span><span class="si">{fault.fault_id.service_name}</span>
+<span class="s1">    Payload GUID: </span><span class="si">{fault.fault_id.payload_guid}</span>
+<span class="s1">    Error Message: </span><span class="si">{fault.error_message}</span>
 <span class="s1">    Onset Time: </span><span class="si">{timestamp}</span><span class="s1">&#39;&#39;&#39;</span>\
     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fault</span><span class="o">=</span><span class="n">fault</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="n">timestamp_to_datetime</span><span class="p">(</span><span class="n">fault</span><span class="o">.</span><span class="n">onset_timestamp</span><span class="p">)))</span>
-    <span class="k">return</span>
 
 
 <div class="viewcode-block" id="FaultShowCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.FaultShowCommand">[docs]</a><span class="k">class</span> <span class="nc">FaultShowCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show all service faults currently active in robot state.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show all faults currently active in robot state.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;show&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Show all service faults currently active in robot state.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show all faults currently active in robot state.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1247,7 +1315,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">FaultShowCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1256,17 +1324,17 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">_show_service_faults</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
+        <span class="n">_show_all_faults</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="FaultWatchCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.FaultWatchCommand">[docs]</a><span class="k">class</span> <span class="nc">FaultWatchCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Watch all service faults in robot state and print them out.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Watch all faults in robot state and print them out.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;watch&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Watch all service faults in robot state and print them out.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Watch all service faults in robot state and print them out.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1275,7 +1343,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">FaultWatchCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1285,21 +1353,270 @@
 <span class="sd">            True</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Press Ctrl-C or send SIGINT to exit</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">_show_service_faults</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">_show_all_faults</span><span class="p">(</span><span class="n">robot</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="k">pass</span>
 
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
+<div class="viewcode-block" id="LogStatusCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.LogStatusCommands">[docs]</a><span class="k">class</span> <span class="nc">LogStatusCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Interact with start, update and terminate experiment logs, start and update retro logs and check status of active logs for robot.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;log-status&#39;</span>
+    <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Interact with logs for robot</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">LogStatusCommands</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span> <span class="p">[</span>
+            <span class="n">GetLogCommand</span><span class="p">,</span>
+            <span class="n">GetActiveLogStatusesCommand</span><span class="p">,</span>
+            <span class="n">ExperimentLogCommand</span><span class="p">,</span>
+            <span class="n">StartRetroLogCommand</span><span class="p">,</span>
+            <span class="n">TerminateLogCommand</span><span class="p">,</span>
+        <span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="GetLogCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.GetLogCommand">[docs]</a><span class="k">class</span> <span class="nc">GetLogCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get log status but log id.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;get&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get log status from robot</span>
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GetLogCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;id of log bundle to display&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LogStatusClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_log_status</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">log_status</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="GetActiveLogStatusesCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.GetActiveLogStatusesCommand">[docs]</a><span class="k">class</span> <span class="nc">GetActiveLogStatusesCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get active log bundles for robot.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;active&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve active log statuses for robot.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GetActiveLogStatusesCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LogStatusClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_active_log_statuses</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">log_statuses</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="ExperimentLogCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.ExperimentLogCommand">[docs]</a><span class="k">class</span> <span class="nc">ExperimentLogCommand</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Give experiment log commands to robot.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;experiment&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List log bundles with status for robot.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ExperimentLogCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">,</span> <span class="p">[</span>
+            <span class="n">StartTimedExperimentLogCommand</span><span class="p">,</span>
+            <span class="n">StartContinuousExperimentLogCommand</span><span class="p">,</span>
+        <span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="StartTimedExperimentLogCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.StartTimedExperimentLogCommand">[docs]</a><span class="k">class</span> <span class="nc">StartTimedExperimentLogCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start a timed experiment log.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;timed&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start timed experiment log</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StartTimedExperimentLogCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;seconds&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;how long should the experiment run?&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LogStatusClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">start_experiment_log</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">seconds</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">log_status</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="StartContinuousExperimentLogCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.StartContinuousExperimentLogCommand">[docs]</a><span class="k">class</span> <span class="nc">StartContinuousExperimentLogCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start a continuous experiment log.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;continuous&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start continuous experiment log, defaulted to update keep alive time by 10 seconds every 5 seconds.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StartContinuousExperimentLogCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sleep&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;how long should thread sleep before extending&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="StartContinuousExperimentLogCommand.handle_keyboard_interruption"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.StartContinuousExperimentLogCommand.handle_keyboard_interruption">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">handle_keyboard_interruption</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">log_id</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; Received keyboard interruption</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">terminate_log</span><span class="p">(</span><span class="n">log_id</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">log_status</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">terminate_log_async</span><span class="p">(</span><span class="n">log_id</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Log will terminate shortly&quot;</span><span class="p">)</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_log_status</span><span class="p">(</span><span class="n">log_id</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">log_status</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LogStatusClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">start_experiment_log</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">sleep</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">log_id</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">log_status</span><span class="o">.</span><span class="n">id</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Experiment log id: &quot;</span><span class="p">,</span> <span class="n">log_id</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Use terminate command, press Ctrl-C or send SIGINT to complete log</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">sleep</span><span class="p">)</span>
+                <span class="n">client</span><span class="o">.</span><span class="n">update_experiment</span><span class="p">(</span><span class="n">log_id</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">sleep</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">InactiveLogError</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_log_status</span><span class="p">(</span><span class="n">log_id</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">log_status</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">handle_keyboard_interruption</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">log_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="StartRetroLogCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.StartRetroLogCommand">[docs]</a><span class="k">class</span> <span class="nc">StartRetroLogCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start a retro log.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;retro&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start a retroactive log</span>
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StartRetroLogCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;seconds&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;how long should the retro log run?&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LogStatusClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">start_retro_log</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">seconds</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">log_status</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="TerminateLogCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.TerminateLogCommand">[docs]</a><span class="k">class</span> <span class="nc">TerminateLogCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Terminate log gathering process.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;terminate&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Terminate log on robot</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TerminateLogCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;id of log to terminate&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LogStatusClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">terminate_log</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">log_status</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
 <div class="viewcode-block" id="RobotIdCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.RobotIdCommand">[docs]</a><span class="k">class</span> <span class="nc">RobotIdCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show robot-id.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show robot-id.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span>
     <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Show robot-id.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show robot-id.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1310,7 +1627,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1338,12 +1655,12 @@
 
 
 <div class="viewcode-block" id="DataBufferCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DataBufferCommands">[docs]</a><span class="k">class</span> <span class="nc">DataBufferCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commands related to the data-buffer service.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Commands related to the data-buffer service.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;log&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commands related to the data-buffer service.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commands related to the data-buffer service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1354,12 +1671,12 @@
 
 
 <div class="viewcode-block" id="TextMsgCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.TextMsgCommand">[docs]</a><span class="k">class</span> <span class="nc">TextMsgCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Send a text-message to the data buffer to be logged.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send a text-message to the data buffer to be logged.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;textmsg&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Send a text-message to the data buffer to be logged.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send a text-message to the data buffer to be logged.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1379,7 +1696,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Message to log&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1417,12 +1734,12 @@
 
 
 <div class="viewcode-block" id="OperatorCommentCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.OperatorCommentCommand">[docs]</a><span class="k">class</span> <span class="nc">OperatorCommentCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Send an operator comment to the robot to be logged.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send an operator comment to the robot to be logged.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;comment&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Send an operator comment to the robot to be logged.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send an operator comment to the robot to be logged.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1434,7 +1751,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;operator comment text&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1456,12 +1773,12 @@
 
 
 <div class="viewcode-block" id="DataServiceCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DataServiceCommands">[docs]</a><span class="k">class</span> <span class="nc">DataServiceCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commands for querying the data-service.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Commands for querying the data-service.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;data&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commands for querying the data-service</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commands for querying the data-service</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1473,10 +1790,10 @@
 
 
 <div class="viewcode-block" id="GetDataBufferEventsCommentsCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.GetDataBufferEventsCommentsCommand">[docs]</a><span class="k">class</span> <span class="nc">GetDataBufferEventsCommentsCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Parent class for commands grabbing operator comment and events.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parent class for commands grabbing operator comment and events.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get operator comments from the robot.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get operator comments from the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1496,7 +1813,7 @@
 
 <div class="viewcode-block" id="GetDataBufferEventsCommentsCommand.pretty_print"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.GetDataBufferEventsCommentsCommand.pretty_print">[docs]</a>    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">pretty_print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print output of request in a human-friendly way.&quot;&quot;&quot;</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print output of request in a human-friendly way.&quot;&quot;&quot;</span></div>
 
     <span class="k">def</span> <span class="nf">_get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_spec</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">get_values_fn</span><span class="p">):</span>
         <span class="n">client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DataServiceClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
@@ -1521,12 +1838,12 @@
 
 
 <div class="viewcode-block" id="GetDataBufferCommentsCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.GetDataBufferCommentsCommand">[docs]</a><span class="k">class</span> <span class="nc">GetDataBufferCommentsCommand</span><span class="p">(</span><span class="n">GetDataBufferEventsCommentsCommand</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get operator comments from the robot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get operator comments from the robot.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;comments&#39;</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1554,12 +1871,12 @@
 
 
 <div class="viewcode-block" id="GetDataBufferEventsCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.GetDataBufferEventsCommand">[docs]</a><span class="k">class</span> <span class="nc">GetDataBufferEventsCommand</span><span class="p">(</span><span class="n">GetDataBufferEventsCommentsCommand</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get events from the robot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get events from the robot.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;events&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get operator comments from the robot.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get operator comments from the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1574,7 +1891,7 @@
             <span class="n">help</span><span class="o">=</span><span class="s1">&#39;limit level to this and above&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1628,12 +1945,12 @@
 
 
 <div class="viewcode-block" id="GetDataBufferStatusCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.GetDataBufferStatusCommand">[docs]</a><span class="k">class</span> <span class="nc">GetDataBufferStatusCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get status of data-buffer on robot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get status of data-buffer on robot.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;status&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get status of data-buffer on robot</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get status of data-buffer on robot</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1644,7 +1961,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;get list of channel/msgtype/source combinations&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1659,12 +1976,12 @@
 
 
 <div class="viewcode-block" id="RobotStateCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.RobotStateCommands">[docs]</a><span class="k">class</span> <span class="nc">RobotStateCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commands for querying robot state.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Commands for querying robot state.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;state&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commands for querying robot state.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commands for querying robot state.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1676,12 +1993,12 @@
 
 
 <div class="viewcode-block" id="FullStateCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.FullStateCommand">[docs]</a><span class="k">class</span> <span class="nc">FullStateCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show robot state.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show robot state.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;full&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Show robot state.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show robot state.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1690,7 +2007,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">FullStateCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command; prints RobotState proto.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command; prints RobotState proto.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1702,12 +2019,12 @@
 
 
 <div class="viewcode-block" id="HardwareConfigurationCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.HardwareConfigurationCommand">[docs]</a><span class="k">class</span> <span class="nc">HardwareConfigurationCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show robot hardware configuration.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show robot hardware configuration.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;hardware&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Show robot hardware configuration.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show robot hardware configuration.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1716,7 +2033,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">HardwareConfigurationCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command; prints HardwareConfiguration proto.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command; prints HardwareConfiguration proto.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1729,13 +2046,13 @@
 
 
 <div class="viewcode-block" id="RobotModel"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.RobotModel">[docs]</a><span class="k">class</span> <span class="nc">RobotModel</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Write robot URDF and mesh to local files.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Write robot URDF and mesh to local files.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;model&#39;</span>
     <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Write robot URDF and mesh to local files.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Write robot URDF and mesh to local files.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1746,7 +2063,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;directory into which to save the files&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1803,12 +2120,12 @@
 
 
 <div class="viewcode-block" id="MetricsCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.MetricsCommand">[docs]</a><span class="k">class</span> <span class="nc">MetricsCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show metrics (runtime, etc...).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show metrics (runtime, etc...).&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;metrics&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Show metrics (runtime, etc...).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Show metrics (runtime, etc...).</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1819,7 +2136,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print metrics in proto format&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1838,7 +2155,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_secs_to_hms</span><span class="p">(</span><span class="n">seconds</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts seconds to hours:minutes:seconds string.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts seconds to hours:minutes:seconds string.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            seconds: Seconds to convert.</span>
@@ -1854,7 +2171,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_distance_str</span><span class="p">(</span><span class="n">meters</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts distance to human-readable string.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts distance to human-readable string.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            meters: Distance in meters to convert.</span>
@@ -1869,7 +2186,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_timestamp_str</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts a timestamp to a human-readable string.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a timestamp to a human-readable string.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timestamp: Protobuf timestamp to convert</span>
@@ -1884,7 +2201,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_format_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-many-return-statements</span>
-        <span class="sd">&quot;&quot;&quot;Convert metric input to human-readable string.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert metric input to human-readable string.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            metric: Input metric object to convert.</span>
@@ -1912,12 +2229,12 @@
 
 
 <div class="viewcode-block" id="TimeSyncCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.TimeSyncCommand">[docs]</a><span class="k">class</span> <span class="nc">TimeSyncCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Find clock difference between this and the robot clock.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find clock difference between this and the robot clock.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;time-sync&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Find clock difference between this and the robot clock.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find clock difference between this and the robot clock.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -1928,7 +2245,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1953,7 +2270,7 @@
 
 
 <div class="viewcode-block" id="LicenseCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.LicenseCommand">[docs]</a><span class="k">class</span> <span class="nc">LicenseCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Show installed license.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Show installed license.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s2">&quot;license&quot;</span>
 
@@ -1965,7 +2282,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Optional feature list for GetFeatureEnabled API.&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -1999,12 +2316,12 @@
 
 
 <div class="viewcode-block" id="LeaseCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.LeaseCommands">[docs]</a><span class="k">class</span> <span class="nc">LeaseCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commands related to the lease service.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Commands related to the lease service.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;lease&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commands related to the lease service.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commands related to the lease service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2014,12 +2331,12 @@
 
 
 <div class="viewcode-block" id="LeaseListCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.LeaseListCommand">[docs]</a><span class="k">class</span> <span class="nc">LeaseListCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;List all leases.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List all leases.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;List all leases.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List all leases.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2030,7 +2347,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2054,14 +2371,14 @@
 
 
 <div class="viewcode-block" id="BecomeEstopCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.BecomeEstopCommand">[docs]</a><span class="k">class</span> <span class="nc">BecomeEstopCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Grab and hold estop until Ctl-C.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Grab and hold estop until Ctl-C.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;become-estop&#39;</span>
 
     <span class="n">_RPC_PRINT_CHOICES</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">,</span> <span class="s1">&#39;full&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Grab and hold estop until Ctl-C.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Grab and hold estop until Ctl-C.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2075,7 +2392,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;How much of the request/response messages to print&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2112,7 +2429,7 @@
 
         <span class="c1"># Define a function to call on SIGINT that asserts an estop and cleanly shuts down.</span>
         <span class="k">def</span> <span class="nf">sigint_handler</span><span class="p">(</span><span class="n">sig</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Cleanly shut down the application on interrupt.&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;Cleanly shut down the application on interrupt.&quot;&quot;&quot;</span>
             <span class="c1">#pylint: disable=unused-argument</span>
             <span class="c1"># Signal that we want to exit the program.</span>
             <span class="n">exit_signal</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
@@ -2138,12 +2455,12 @@
 
 
 <div class="viewcode-block" id="ImageCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.ImageCommands">[docs]</a><span class="k">class</span> <span class="nc">ImageCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commands for querying images.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Commands for querying images.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;image&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commands for querying images.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commands for querying images.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2154,7 +2471,7 @@
 
 
 <span class="k">def</span> <span class="nf">_show_image_sources_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">service_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print available image sources.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print available image sources.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: Robot object on which to run the command.</span>
@@ -2182,12 +2499,12 @@
 
 
 <div class="viewcode-block" id="ListImageSourcesCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.ListImageSourcesCommand">[docs]</a><span class="k">class</span> <span class="nc">ListImageSourcesCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;List image sources.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List image sources.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;list-sources&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;List image sources.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List image sources.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2200,7 +2517,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Image service to query&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2214,12 +2531,12 @@
 
 
 <div class="viewcode-block" id="GetImageCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.GetImageCommand">[docs]</a><span class="k">class</span> <span class="nc">GetImageCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get an image from the robot and write it to an image file.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an image from the robot and write it to an image file.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;get-image&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get an image from the robot and write it to an image file.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an image from the robot and write it to an image file.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2235,7 +2552,7 @@
                                   <span class="n">default</span><span class="o">=</span><span class="n">ImageClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2267,12 +2584,12 @@
 
 
 <div class="viewcode-block" id="LocalGridCommands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.LocalGridCommands">[docs]</a><span class="k">class</span> <span class="nc">LocalGridCommands</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Commands for querying local grid maps.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Commands for querying local grid maps.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;local_grid&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Commands for querying local grid maps.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Commands for querying local grid maps.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2283,7 +2600,7 @@
 
 
 <span class="k">def</span> <span class="nf">_show_local_grid_sources_list</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">as_proto</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Print available local grid sources.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print available local grid sources.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        robot: Robot object on which to run the command.</span>
@@ -2303,12 +2620,12 @@
 
 
 <div class="viewcode-block" id="ListLocalGridTypesCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.ListLocalGridTypesCommand">[docs]</a><span class="k">class</span> <span class="nc">ListLocalGridTypesCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;List local grid sources.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List local grid sources.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;types&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;List local grid sources.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List local grid sources.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2319,7 +2636,7 @@
                                   <span class="n">help</span><span class="o">=</span><span class="s1">&#39;print listing in proto format&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2333,12 +2650,12 @@
 
 
 <div class="viewcode-block" id="GetLocalGridsCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.GetLocalGridsCommand">[docs]</a><span class="k">class</span> <span class="nc">GetLocalGridsCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get local grids from the robot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get local grids from the robot.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;get&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get local grids from the robot.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get local grids from the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2350,7 +2667,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;types&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;SRC&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;image types&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2368,13 +2685,13 @@
 
 
 <div class="viewcode-block" id="DataAcquisitionCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DataAcquisitionCommand">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionCommand</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Acquire data from the robot and add it in the data buffer with the metadata, or request</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Acquire data from the robot and add it in the data buffer with the metadata, or request</span>
 <span class="sd">    status.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;acquire&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Acquire data from the robot and add it in the data buffer with the metadata, or request</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Acquire data from the robot and add it in the data buffer with the metadata, or request</span>
 <span class="sd">        status.</span>
 
 <span class="sd">        Args:</span>
@@ -2388,12 +2705,12 @@
 
 
 <div class="viewcode-block" id="DataAcquisitionRequestCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DataAcquisitionRequestCommand">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionRequestCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Capture and save images or metadata specified in the command line arguments.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Capture and save images or metadata specified in the command line arguments.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;request&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Capture and save images or metadata specified in the command line arguments.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Capture and save images or metadata specified in the command line arguments.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2416,7 +2733,7 @@
                                   <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the &#39;request&#39; command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the &#39;request&#39; command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2450,12 +2767,12 @@
 
 
 <div class="viewcode-block" id="DataAcquisitionServiceCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DataAcquisitionServiceCommand">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionServiceCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get list of different data acquisition capabilities.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get list of different data acquisition capabilities.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;info&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get list of different data acquisition capabilities.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get list of different data acquisition capabilities.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2469,7 +2786,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_service_name_width</span> <span class="o">=</span> <span class="mi">30</span>
 
     <span class="k">def</span> <span class="nf">_format_and_print_capability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">data_name</span><span class="p">,</span> <span class="n">service_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Print the data acquisition capability.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print the data acquisition capability.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            data_type (string): Either image or data capabilities.</span>
@@ -2480,7 +2797,7 @@
                <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_service_name_width</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data_type</span><span class="p">,</span> <span class="n">data_name</span><span class="p">,</span> <span class="n">service_name</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the &#39;info&#39; command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the &#39;info&#39; command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2497,19 +2814,19 @@
             <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">img_service</span><span class="o">.</span><span class="n">image_source_names</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_format_and_print_capability</span><span class="p">(</span><span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">img_service</span><span class="o">.</span><span class="n">service_name</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">ncb_worker</span> <span class="ow">in</span> <span class="n">capabilities</span><span class="o">.</span><span class="n">network_compute_sources</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">ncb_worker</span><span class="o">.</span><span class="n">available_models</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_format_and_print_capability</span><span class="p">(</span><span class="s2">&quot;models&quot;</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span>
+            <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">ncb_worker</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_format_and_print_capability</span><span class="p">(</span><span class="s2">&quot;models&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
                                                   <span class="n">ncb_worker</span><span class="o">.</span><span class="n">server_config</span><span class="o">.</span><span class="n">service_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
 <div class="viewcode-block" id="DataAcquisitionStatusCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.DataAcquisitionStatusCommand">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionStatusCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get status of an acquisition request based on the request id.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get status of an acquisition request based on the request id.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;status&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get status of an acquisition request based on the request id.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get status of an acquisition request based on the request id.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2519,7 +2836,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Response id to get the status for&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the &#39;status&#39; command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the &#39;status&#39; command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2535,13 +2852,13 @@
 
 
 <div class="viewcode-block" id="HostComputerIPCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.HostComputerIPCommand">[docs]</a><span class="k">class</span> <span class="nc">HostComputerIPCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Determine a computer&#39;s IP address.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine a computer&#39;s IP address.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;self-ip&#39;</span>
     <span class="n">NEED_AUTHENTICATION</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Determine the IP address of the current computer used to talk to the robot.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine the IP address of the current computer used to talk to the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2550,7 +2867,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">HostComputerIPCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
@@ -2564,12 +2881,12 @@
 
 
 <div class="viewcode-block" id="PowerCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PowerCommand">[docs]</a><span class="k">class</span> <span class="nc">PowerCommand</span><span class="p">(</span><span class="n">Subcommands</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Send power commands to the robot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Send power commands to the robot.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;power&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Send power commands to the robot.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send power commands to the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            subparsers: List of argument parsers.</span>
@@ -2586,12 +2903,12 @@
 
 
 <div class="viewcode-block" id="PowerRobotCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PowerRobotCommand">[docs]</a><span class="k">class</span> <span class="nc">PowerRobotCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Control the power of the entire robot.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control the power of the entire robot.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;robot&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Power cycle or power off robot computers.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Power cycle or power off robot computers.</span>
 
 <span class="sd">        Note that this is only compatible with certain robots. Check HardwareConfiguration for details.</span>
 
@@ -2603,7 +2920,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;cmd&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cycle&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
 <span class="sd">            options: Parsed command-line arguments.</span>
@@ -2620,12 +2937,12 @@
 
 
 <div class="viewcode-block" id="PowerPayloadsCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PowerPayloadsCommand">[docs]</a><span class="k">class</span> <span class="nc">PowerPayloadsCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Control the power of robot payloads.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control the power of robot payloads.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;payload&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Power on or off robot payloads.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Power on or off robot payloads.</span>
 
 <span class="sd">        Note that this is only compatible with certain robots. Check HardwareConfiguration for details.</span>
 
@@ -2637,7 +2954,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;on_off&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
 <span class="sd">            options: Parsed command-line arguments.</span>
@@ -2655,12 +2972,12 @@
 
 
 <div class="viewcode-block" id="PowerWifiRadioCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.PowerWifiRadioCommand">[docs]</a><span class="k">class</span> <span class="nc">PowerWifiRadioCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Control the power of robot wifi radio.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control the power of robot wifi radio.&quot;&quot;&quot;</span>
 
     <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;wifi&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Power on or off robot LTE radio.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Power on or off robot LTE radio.</span>
 
 <span class="sd">        Note that this is only compatible with certain robots. Check HardwareConfiguration for details.</span>
 
@@ -2672,7 +2989,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;on_off&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Args:</span>
 <span class="sd">            robot: Robot object on which to run the command.</span>
 <span class="sd">            options: Parsed command-line arguments.</span>
@@ -2692,7 +3009,7 @@
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Command-line interface for interacting with robot services.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Command-line interface for interacting with robot services.&quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;bosdyn.client&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">main</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
     <span class="n">add_common_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">credentials_no_warn</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -2705,6 +3022,7 @@
     <span class="n">FaultCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">RobotIdCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">LicenseCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">LogStatusCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">RobotStateCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">DataBufferCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">DataServiceCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>

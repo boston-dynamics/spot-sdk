@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -26,6 +26,8 @@ The following examples show how to use Spot's perception system, through image s
 - [Fiducial Follow](../fiducial_follow/README.md)
 - [Spot Detect and Follow](../spot_detect_and_follow/README.md)
 - [Tensorflow Detector](../spot_tensorflow_detector/README.md)
+- [Custom Parameter Tensorflow Detector](../service_customization/custom_parameter_ncb_worker/README.md)
 - [Machine Learning with the Network Compute Bridge](../network_compute_bridge/README.md)
 - [Fire Extinguisher Detector with the Network Compute Bridge](../network_compute_bridge/fire_extinguisher_server/README.md)
 - [Ray Cast](../ray_cast/README.md)
+- [No-Go Regions](../user_nogo_regions/README.md)

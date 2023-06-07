@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -57,8 +57,8 @@ class Resnet50Model:
             self.labels = None
         else:
             # Load the class label mappings
-            self.labels = open(labels_path).read().strip().split("\n")
-            self.labels = {int(L.split(",")[1]): L.split(",")[0] for L in self.labels}
+            self.labels = open(labels_path).read().strip().split('\n')
+            self.labels = {int(L.split(',')[1]): L.split(',')[0] for L in self.labels}
 
     def predict(self, X):
         """ Predict with this model. """
@@ -84,7 +84,7 @@ class KerasExec():
         run_models = {}
         for f in os.listdir(self.options.model_dir):
             if f in run_models:
-                print('Warning: duplicate model name of "' + f + '", ignoring second model.')
+                print(f'Warning: duplicate model name of "{f}", ignoring second model.')
                 continue
 
             path = os.path.join(self.options.model_dir, f)
@@ -101,14 +101,14 @@ class KerasExec():
 
         # Tensorflow prints out a bunch of stuff, so print out useful data here after a space.
         print('')
-        print('Running on port: ' + str(self.options.port))
+        print(f'Running on port: {self.options.port}')
         print('Loaded run_models:')
         for model_name in run_models:
             if run_models[model_name].labels is not None:
                 labels_str = 'yes'
             else:
                 labels_str = 'no'
-            print('    ' + model_name + ' (loaded labels: ' + labels_str + ')')
+            print(f'    {model_name} (loaded labels: {labels_str})')
 
         while True:
             request = self.in_queue.get()
@@ -116,7 +116,8 @@ class KerasExec():
             if isinstance(request, network_compute_bridge_pb2.ListAvailableModelsRequest):
                 out_proto = network_compute_bridge_pb2.ListAvailableModelsResponse()
                 for model_name in run_models:
-                    out_proto.available_models.append(model_name)
+                    out_proto.models.data.append(
+                        network_compute_bridge_pb2.ModelData(model_name=model_name))
                     # To show available labels
                     #if run_models[model_name].labels is not None:
                     #    labels_msg = out_proto.labels.add()
@@ -130,8 +131,7 @@ class KerasExec():
 
             # Find the model
             if request.input_data.model_name not in run_models:
-                print('Cannot find model "' + request.input_data.model_name +
-                      '" in loaded run_models.')
+                print(f'Cannot find model "{request.input_data.model_name}" in loaded run_models.')
                 self.out_queue.put(out_proto)
                 continue
 
@@ -153,8 +153,9 @@ class KerasExec():
                 # Already in the correct format
                 image = pil_image
             else:
-                print('Error: image input in unsupported pixel format: ',
-                      request.input_data.image.pixel_format)
+                print(
+                    f'Error: image input in unsupported pixel format: {request.input_data.image.pixel_format}'
+                )
                 self.out_queue.put(out_proto)
                 return
         elif request.input_data.image.format == image_pb2.Image.FORMAT_JPEG:
@@ -176,7 +177,7 @@ class KerasExec():
         start = timer()
         boxes, scores, classes = this_model.predict(keras_image)
         end = timer()
-        print("Model eval took " + str(end - start) + ' seconds')
+        print(f'Model eval took {end - start} seconds')
 
         boxes /= scale
 
@@ -202,9 +203,9 @@ class KerasExec():
             num_objects += 1
 
             #draw_box(draw, b, color=color)
-            print('Found object with label: "' + label + '" and score: ' + str(score))
+            print(f'Found object with label: "{label}" and score: {score}')
 
-            print(f"Box is {box}")
+            print(f'Box is {box}')
 
             point1 = np.array([box[0], box[1]])
             point2 = np.array([box[0], box[3]])
@@ -241,18 +242,18 @@ class KerasExec():
                 polygon = polygon.reshape((-1, 1, 2))
                 cv2.polylines(image, [polygon], True, (0, 255, 0), 2)
 
-                caption = "{}: {:.3f}".format(label, score)
+                caption = f'{label}: {score:.3f}'
                 left_x = min(point1[0], min(point2[0], min(point3[0], point4[0])))
                 top_y = min(point1[1], min(point2[1], min(point3[1], point4[1])))
                 cv2.putText(image, caption, (int(left_x), int(top_y)), cv2.FONT_HERSHEY_SIMPLEX,
                             0.5, (0, 255, 0), 2)
 
-        print('Found ' + str(num_objects) + ' object(s)')
+        print(f'Found {num_objects} object(s)')
 
         if not self.options.no_debug:
             debug_image_filename = 'retinanet_server_output.jpg'
             cv2.imwrite(debug_image_filename, cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
-            print('Wrote debug image output to: "' + debug_image_filename + '"')
+            print(f'Wrote debug image output to: "{debug_image_filename}"')
 
         # Pack all the outputs up and send them back.
         self.out_queue.put(out_proto)
@@ -286,21 +287,21 @@ class NetworkComputeBridgeWorkerServicer(
 def register_with_robot(options):
     """ Registers this worker with the robot's Directory."""
     ip = bosdyn.client.common.get_self_ip(options.hostname)
-    print('Detected IP address as: ' + ip)
-    kServiceName = "fire-extinguisher-server"
-    kServiceTypeName = "bosdyn.api.NetworkComputeBridgeWorker"
-    kServiceAuthority = "fire-extinguisher-worker.spot.robot"
+    print(f'Detected IP address as: {ip}')
+    kServiceName = 'fire-extinguisher-server'
+    kServiceTypeName = 'bosdyn.api.NetworkComputeBridgeWorker'
+    kServiceAuthority = 'fire-extinguisher-worker.spot.robot'
 
-    sdk = bosdyn.client.create_standard_sdk("retinanet-server")
+    sdk = bosdyn.client.create_standard_sdk('retinanet-server')
 
     robot = sdk.create_robot(options.hostname)
 
     # Authenticate robot before being able to use it
-    if options.username or options.password:
-        bosdyn.client.util.authenticate(robot)
-    else:
+    if options.guid or options.secret or options.payload_credentials_file:
         robot.authenticate_from_payload_credentials(
             *bosdyn.client.util.get_guid_and_secret(options))
+    else:
+        bosdyn.client.util.authenticate(robot)
 
     directory_client = robot.ensure_client(DirectoryClient.default_service_name)
     directory_registration_client = robot.ensure_client(
@@ -339,7 +340,7 @@ def main(argv):
         '-d', '--model-dir', help=
         'Directory of pre-trained models and (optionally) associated label files.\nExample directory contents: my_model.pb, my_classes.csv, my_model2.pb, my_classes2.csv.  CSV label format is: object,1<new line>thing,2',
         required=True)
-    parser.add_argument('-p', '--port', help='Server\'s port number, default: ' + default_port,
+    parser.add_argument('-p', '--port', help=f'Server\'s port number, default: {default_port}',
                         default=default_port)
     parser.add_argument('-n', '--no-debug', help='Disable writing debug images.',
                         action='store_true')
@@ -347,8 +348,6 @@ def main(argv):
         '-r', '--no-registration', help=
         'Don\'t register with the robot\'s directory. This is useful for cloud applications where we can\'t reach into every robot directly. Instead use another program to register this server.',
         action='store_true')
-    parser.add_argument('--username', help='User name of account to get credentials for.')
-    parser.add_argument('--password', help='Password to get credentials for.')
     bosdyn.client.util.add_payload_credentials_arguments(parser, required=False)
     parser.add_argument('hostname', nargs='?', help='Hostname or address of robot,'
                         ' e.g. "beta25-p" or "192.168.80.3"')
@@ -364,7 +363,7 @@ def main(argv):
         sys.exit(1)
 
     if not os.path.isdir(options.model_dir):
-        print('Error: model directory (' + options.model_dir + ') not found or is not a directory.')
+        print(f'Error: model directory ({options.model_dir}) not found or is not a directory.')
         sys.exit(1)
 
     # Make sure there is at least one file ending in .pb in the directory.
@@ -376,31 +375,37 @@ def main(argv):
             break
 
     if not found_model:
-        print('Error: model directory must contain at least one model file with extension ' +
-              model_extension + '.  Found:')
+        print(
+            f'Error: model directory must contain at least one model file with extension {model_extension}.  Found:'
+        )
         for f in os.listdir(options.model_dir):
-            print('    ' + f)
+            print(f'    {f}')
         sys.exit(1)
 
     if not options.no_registration:
         register_with_robot(options)
 
+    # Limit memory allocation so this program does not allocate 7GB of memory on CORE I/O.
+    gpu_options = tf.compat.v1.GPUOptions(allow_growth=True)
+    sess = tf.compat.v1.Session(config=tf.compat.v1.ConfigProto(gpu_options=gpu_options))
+    tf.compat.v1.keras.backend.set_session(sess)
+
     # Start the model eval thread.
     keras_exec = KerasExec(options, model_extension)
     model_thread = threading.Thread(target=keras_exec.run)
-    print("Starting Model Thread")
+    print('Starting Model Thread')
     model_thread.start()
 
     # Start the GRPC server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     network_compute_bridge_service_pb2_grpc.add_NetworkComputeBridgeWorkerServicer_to_server(
         NetworkComputeBridgeWorkerServicer(keras_exec.in_queue, keras_exec.out_queue), server)
-    server.add_insecure_port('[::]:' + options.port)
+    server.add_insecure_port(f'[::]:{options.port}')
     server.start()
 
     print('Running...')
     while True:
-        print('.', end="")
+        print('.', end='')
         sys.stdout.flush()
         time.sleep(2)
 

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -164,10 +164,10 @@ $ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreogra
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 3.2.3, use the following command.
+example 3.3.0, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==3.2.3 bosdyn-mission==3.2.3 bosdyn-choreography-client==3.2.3
+$ python3 -m pip install bosdyn-client==3.3.0 bosdyn-mission==3.3.0 bosdyn-choreography-client==3.3.0
 ```
 
 **Version incompatibility:**
@@ -176,7 +176,7 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 3.2.3 which is incompatible.
+have bosdyn-api 3.3.0 which is incompatible.
 ```
 
 Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:
@@ -191,12 +191,12 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    3.2.3
-bosdyn-choreography-client    3.2.3
-bosdyn-choreography-protos    3.2.3
-bosdyn-client                 3.2.3
-bosdyn-core                   3.2.3
-bosdyn-mission                3.2.3
+bosdyn-api                    3.3.0
+bosdyn-choreography-client    3.3.0
+bosdyn-choreography-protos    3.3.0
+bosdyn-client                 3.3.0
+bosdyn-core                   3.3.0
+bosdyn-mission                3.3.0
 ```
 **Windows users:**
 ```shell

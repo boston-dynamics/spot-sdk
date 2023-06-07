@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,12 +13,12 @@ PWM_DEFAULT_PERIOD = 250000000
 
 class GpioOutput:
     """ Class for managing CORE IO GPIO pins.
-    
+
     Programs using this must either be run as root or in the gpio group
     """
 
     # voltage to line name
-    volt_to_chip_line = {5: ("gpiochip0", 133), 12: ("gpiochip1", 19), 24: ("gpiochip0", 148)}
+    volt_to_chip_line = {5: ('gpiochip0', 133), 12: ('gpiochip1', 19), 24: ('gpiochip0', 148)}
 
     def __init__(self, voltage) -> None:
         """ Create the GPIO helper
@@ -27,14 +27,14 @@ class GpioOutput:
             voltage: select the pin to return a helper for based on voltage
         """
         if voltage not in [5, 12, 24]:
-            raise Exception("Voltage must be one of 5, 12, or 24")
+            raise Exception('Voltage must be one of 5, 12, or 24')
         self.voltage = voltage
         chip_name, line_num = self.volt_to_chip_line[voltage]
         self.chip = gpiod.chip(chip_name)
         self.line = self.chip.get_line(line_num)
 
         config = gpiod.line_request()
-        config.consumer = "spot"
+        config.consumer = 'spot'
         config.request_type = gpiod.line_request.DIRECTION_OUTPUT
 
         self.line.request(config)
@@ -62,16 +62,16 @@ class GpioOutput:
 
 class PwmOutput:
     """ Class for managing CORE IO PWM pins.
-    
+
     Programs using this must either be run as root or in the gpio group
     """
 
     # PWM number to chip name
-    num_to_chip = {1: "pwmchip4", 2: "pwmchip0", 3: "pwmchip1"}
+    num_to_chip = {1: 'pwmchip4', 2: 'pwmchip0', 3: 'pwmchip1'}
 
     def __init__(self, pwm_num) -> None:
         if pwm_num not in [1, 2, 3]:
-            raise Exception("PWM number must be between 1 and 3")
+            raise Exception('PWM number must be between 1 and 3')
         self.pwm_num = pwm_num
         self.pwmchip = self.num_to_chip[pwm_num]
         # create the interface
@@ -87,7 +87,7 @@ class PwmOutput:
         """ Export the pwm chip for use
         """
         with open(f'/sys/class/pwm/{self.pwmchip}/export', 'w') as f:
-            f.write("0")
+            f.write('0')
 
     def get_period(self):
         """ Get the PWM’s output period in nanoseconds
@@ -141,9 +141,9 @@ class PwmOutput:
         """
         with open(f'/sys/class/pwm/{self.pwmchip}/pwm0/enable', 'r') as f:
             text = f.read()
-            if "1" in text:
+            if '1' in text:
                 return True
-            elif "0" in text:
+            elif '0' in text:
                 return False
             else:
                 return None

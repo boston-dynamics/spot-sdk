@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,7 +6,6 @@
 
 """Tutorial to show how to use Spot's arm.
 """
-from __future__ import print_function
 
 import argparse
 import sys
@@ -35,12 +34,12 @@ def hello_arm(config):
     bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
-    assert robot.has_arm(), "Robot requires an arm to run this example."
+    assert robot.has_arm(), 'Robot requires an arm to run this example.'
 
     # Verify the robot is not estopped and that an external application has registered and holds
     # an estop endpoint.
-    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
-                                    "such as the estop SDK example, to configure E-Stop."
+    assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client, ' \
+                                    'such as the estop SDK example, to configure E-Stop.'
 
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
 
@@ -49,19 +48,19 @@ def hello_arm(config):
         # Now, we are ready to power on the robot. This call will block until the power
         # is on. Commands would fail if this did not happen. We can also check that the robot is
         # powered at any point.
-        robot.logger.info("Powering on robot... This may take a several seconds.")
+        robot.logger.info('Powering on robot... This may take a several seconds.')
         robot.power_on(timeout_sec=20)
-        assert robot.is_powered_on(), "Robot power on failed."
-        robot.logger.info("Robot powered on.")
+        assert robot.is_powered_on(), 'Robot power on failed.'
+        robot.logger.info('Robot powered on.')
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
         # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
-        robot.logger.info("Commanding robot to stand...")
+        robot.logger.info('Commanding robot to stand...')
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         blocking_stand(command_client, timeout_sec=10)
-        robot.logger.info("Robot standing.")
+        robot.logger.info('Robot standing.')
 
         # Move the arm to a spot in front of the robot, and open the gripper.
 
@@ -86,7 +85,7 @@ def hello_arm(config):
         odom_T_flat_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
                                          ODOM_FRAME_NAME, GRAV_ALIGNED_BODY_FRAME_NAME)
 
-        odom_T_hand = odom_T_flat_body * math_helpers.SE3Pose.from_obj(flat_body_T_hand)
+        odom_T_hand = odom_T_flat_body * math_helpers.SE3Pose.from_proto(flat_body_T_hand)
 
         # duration in seconds
         seconds = 2
@@ -118,7 +117,7 @@ def hello_arm(config):
 
         flat_body_T_hand2 = geometry_pb2.SE3Pose(position=hand_ewrt_flat_body,
                                                  rotation=flat_body_Q_hand)
-        odom_T_hand = odom_T_flat_body * math_helpers.SE3Pose.from_obj(flat_body_T_hand2)
+        odom_T_hand = odom_T_flat_body * math_helpers.SE3Pose.from_proto(flat_body_T_hand2)
 
         arm_command = RobotCommandBuilder.arm_pose_command(
             odom_T_hand.x, odom_T_hand.y, odom_T_hand.z, odom_T_hand.rot.w, odom_T_hand.rot.x,
@@ -143,8 +142,8 @@ def hello_arm(config):
         # Power the robot off. By specifying "cut_immediately=False", a safe power off command
         # is issued to the robot. This will attempt to sit the robot before powering off.
         robot.power_off(cut_immediately=False, timeout_sec=20)
-        assert not robot.is_powered_on(), "Robot power off failed."
-        robot.logger.info("Robot safely powered off.")
+        assert not robot.is_powered_on(), 'Robot power off failed.'
+        robot.logger.info('Robot safely powered off.')
 
 
 def block_until_arm_arrives_with_prints(robot, command_client, cmd_id):
@@ -154,13 +153,10 @@ def block_until_arm_arrives_with_prints(robot, command_client, cmd_id):
     """
     while True:
         feedback_resp = command_client.robot_command_feedback(cmd_id)
-        robot.logger.info(
-            'Distance to go: ' +
-            '{:.2f} meters'.format(feedback_resp.feedback.synchronized_feedback.arm_command_feedback
-                                   .arm_cartesian_feedback.measured_pos_distance_to_goal) +
-            ', {:.2f} radians'.format(
-                feedback_resp.feedback.synchronized_feedback.arm_command_feedback.
-                arm_cartesian_feedback.measured_rot_distance_to_goal))
+        measured_pos_distance_to_goal = feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.measured_pos_distance_to_goal
+        measured_rot_distance_to_goal = feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.measured_rot_distance_to_goal
+        robot.logger.info('Distance to go: %.2f meters, %.2f radians',
+                          measured_pos_distance_to_goal, measured_rot_distance_to_goal)
 
         if feedback_resp.feedback.synchronized_feedback.arm_command_feedback.arm_cartesian_feedback.status == arm_command_pb2.ArmCartesianCommand.Feedback.STATUS_TRAJECTORY_COMPLETE:
             robot.logger.info('Move complete.')
@@ -178,7 +174,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.exception("Threw an exception")
+        logger.exception('Threw an exception')
         return False
 
 

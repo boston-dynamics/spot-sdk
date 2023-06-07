@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Robot &mdash; Spot 3.2.3 documentation</title>
+  <title>Robot &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/language_data.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -639,39 +681,39 @@
            <div itemprop="articleBody">
             
   <section id="module-bosdyn.client.robot">
-<span id="robot"></span><h1>Robot<a class="headerlink" href="#module-bosdyn.client.robot" title="Permalink to this headline">¶</a></h1>
+<span id="robot"></span><h1>Robot<a class="headerlink" href="#module-bosdyn.client.robot" title="Permalink to this heading">¶</a></h1>
 <p>Settings common to a user’s access to one robot.</p>
 <dl class="py exception">
-<dt id="bosdyn.client.robot.RobotError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot.</code><code class="sig-name descname">RobotError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#RobotError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.RobotError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.robot.RobotError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.robot.</span></span><span class="sig-name descname"><span class="pre">RobotError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#RobotError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.RobotError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>General class of errors to handle non-response non-grpc errors.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.robot.UnregisteredServiceError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot.</code><code class="sig-name descname">UnregisteredServiceError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#UnregisteredServiceError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.UnregisteredServiceError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot.RobotError" title="bosdyn.client.robot.RobotError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot.RobotError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.robot.UnregisteredServiceError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.robot.</span></span><span class="sig-name descname"><span class="pre">UnregisteredServiceError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#UnregisteredServiceError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.UnregisteredServiceError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot.RobotError" title="bosdyn.client.robot.RobotError"><code class="xref py py-class docutils literal notranslate"><span class="pre">RobotError</span></code></a></p>
 <p>Full service definition has not been registered in the robot instance.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.robot.UnregisteredServiceNameError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot.</code><code class="sig-name descname">UnregisteredServiceNameError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">service_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#UnregisteredServiceNameError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.UnregisteredServiceNameError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot.UnregisteredServiceError" title="bosdyn.client.robot.UnregisteredServiceError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot.UnregisteredServiceError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.robot.UnregisteredServiceNameError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.robot.</span></span><span class="sig-name descname"><span class="pre">UnregisteredServiceNameError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#UnregisteredServiceNameError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.UnregisteredServiceNameError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot.UnregisteredServiceError" title="bosdyn.client.robot.UnregisteredServiceError"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnregisteredServiceError</span></code></a></p>
 <p>Service name has not been registered in the robot instance.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.robot.UnregisteredServiceTypeError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.robot.</code><code class="sig-name descname">UnregisteredServiceTypeError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">service_type</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#UnregisteredServiceTypeError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.UnregisteredServiceTypeError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot.UnregisteredServiceError" title="bosdyn.client.robot.UnregisteredServiceError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.robot.UnregisteredServiceError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.robot.UnregisteredServiceTypeError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.robot.</span></span><span class="sig-name descname"><span class="pre">UnregisteredServiceTypeError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#UnregisteredServiceTypeError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.UnregisteredServiceTypeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.robot.UnregisteredServiceError" title="bosdyn.client.robot.UnregisteredServiceError"><code class="xref py py-class docutils literal notranslate"><span class="pre">UnregisteredServiceError</span></code></a></p>
 <p>Service type has not been registered in the robot instance.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.robot.Robot">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.robot.</code><code class="sig-name descname">Robot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.robot.</span></span><span class="sig-name descname"><span class="pre">Robot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Settings common to one user’s access to one robot.</p>
 <p>This is the main point of access to all client functionality.  The ensure_client member is used
@@ -683,27 +725,27 @@ acting on the request itself.  An InvalidRequestError indicates a programming er
 request was malformed in some way.  InvalidRequestErrors will never be thrown except in the
 case of client bugs.</p>
 <p>See also Sdk and BaseClient</p>
-<dl class="py method">
-<dt id="bosdyn.client.robot.Robot.host">
-<em class="property">property </em><code class="sig-name descname">host</code><a class="headerlink" href="#bosdyn.client.robot.Robot.host" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.host">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">host</span></span><a class="headerlink" href="#bosdyn.client.robot.Robot.host" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.setup_token_cache">
-<code class="sig-name descname">setup_token_cache</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token_cache</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">unique_id</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.setup_token_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.setup_token_cache" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.setup_token_cache">
+<span class="sig-name descname"><span class="pre">setup_token_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token_cache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.setup_token_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.setup_token_cache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Instantiates a token cache to persist the user token.</p>
 <p>If the user provides a cache, it will be saved in the robot object for convenience.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.update_from">
-<code class="sig-name descname">update_from</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.update_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.update_from" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.update_from">
+<span class="sig-name descname"><span class="pre">update_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.update_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.update_from" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds to this object’s processors, etc. based on other</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.ensure_client">
-<code class="sig-name descname">ensure_client</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">service_name</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.ensure_client"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_client" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.ensure_client">
+<span class="sig-name descname"><span class="pre">ensure_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_endpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.ensure_client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensure a Client for a given service.
 Note: If a new service has been registered with the directory service, this may raise
 UnregisteredServiceNameError when trying to connect to it until sync_with_directory() is
@@ -728,8 +770,13 @@ the client.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.get_cached_robot_id">
-<code class="sig-name descname">get_cached_robot_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.get_cached_robot_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_cached_robot_id" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.shutdown">
+<span class="sig-name descname"><span class="pre">shutdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.shutdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.shutdown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.get_cached_robot_id">
+<span class="sig-name descname"><span class="pre">get_cached_robot_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.get_cached_robot_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_cached_robot_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the RobotId proto for this robot, querying it from the robot if not yet cached.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -739,8 +786,20 @@ the client.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.ensure_channel">
-<code class="sig-name descname">ensure_channel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">service_name</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.ensure_channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_channel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.get_cached_hardware_hardware_configuration">
+<span class="sig-name descname"><span class="pre">get_cached_hardware_hardware_configuration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.get_cached_hardware_hardware_configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_cached_hardware_hardware_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the HardwareConfiguration proto for this robot, querying it from the robot if not
+yet cached.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.RpcError" title="bosdyn.client.exceptions.RpcError"><strong>RpcError</strong></a> – There as a problem communicating with the robot.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.ensure_channel">
+<span class="sig-name descname"><span class="pre">ensure_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_endpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.ensure_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_channel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Verify the right information exists before calling the ensure_secure_channel
 method.</p>
 <dl class="field-list simple">
@@ -760,14 +819,14 @@ method.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.ensure_secure_channel">
-<code class="sig-name descname">ensure_secure_channel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">authority</span></em>, <em class="sig-param"><span class="n">skip_app_token_check</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">[]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.ensure_secure_channel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_secure_channel" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.ensure_secure_channel">
+<span class="sig-name descname"><span class="pre">ensure_secure_channel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">authority</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_app_token_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.ensure_secure_channel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.ensure_secure_channel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the channel to access the given authority, creating it if it doesn’t exist.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.authenticate">
-<code class="sig-name descname">authenticate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">password</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.authenticate">
+<span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.authenticate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Authenticate to this Robot with the username/password at the given service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -782,8 +841,8 @@ method.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.authenticate_with_token">
-<code class="sig-name descname">authenticate_with_token</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">token</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.authenticate_with_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_with_token" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.authenticate_with_token">
+<span class="sig-name descname"><span class="pre">authenticate_with_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.authenticate_with_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_with_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Authenticate to this Robot with the token at the given service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -798,8 +857,8 @@ method.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.authenticate_from_cache">
-<code class="sig-name descname">authenticate_from_cache</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.authenticate_from_cache"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_from_cache" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.authenticate_from_cache">
+<span class="sig-name descname"><span class="pre">authenticate_from_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.authenticate_from_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_from_cache" title="Permalink to this definition">¶</a></dt>
 <dd><p>Authenticate to this Robot with a cached token at the given service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -813,8 +872,8 @@ method.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.authenticate_from_payload_credentials">
-<code class="sig-name descname">authenticate_from_payload_credentials</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="n">payload_registration_client</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.authenticate_from_payload_credentials"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_from_payload_credentials" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.authenticate_from_payload_credentials">
+<span class="sig-name descname"><span class="pre">authenticate_from_payload_credentials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload_registration_client</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.authenticate_from_payload_credentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.authenticate_from_payload_credentials" title="Permalink to this definition">¶</a></dt>
 <dd><p>Authenticate to this Robot with the guid/secret of the hosting payload.</p>
 <p>This call is used to authenticate to a robot using payload credentials. If a payload is
 not yet authorized, it will block until the payload is authorized by an operator in the
@@ -832,8 +891,8 @@ robot web page.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.update_user_token">
-<code class="sig-name descname">update_user_token</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">user_token</span></em>, <em class="sig-param"><span class="n">username</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.update_user_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.update_user_token" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.update_user_token">
+<span class="sig-name descname"><span class="pre">update_user_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_token</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.update_user_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.update_user_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update this Robot with a user token.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -843,26 +902,26 @@ robot web page.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.get_cached_usernames">
-<code class="sig-name descname">get_cached_usernames</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.get_cached_usernames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_cached_usernames" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.get_cached_usernames">
+<span class="sig-name descname"><span class="pre">get_cached_usernames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.get_cached_usernames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_cached_usernames" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return an ordered list of usernames queryable from the cache.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.get_id">
-<code class="sig-name descname">get_id</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id_service_name</span><span class="o">=</span><span class="default_value">'robot-id'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.get_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_id" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.get_id">
+<span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_service_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'robot-id'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.get_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_id" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the information that identifies the robot.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.list_services">
-<code class="sig-name descname">list_services</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.list_services"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.list_services" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.list_services">
+<span class="sig-name descname"><span class="pre">list_services</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.list_services"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.list_services" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the available services on the robot.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.sync_with_directory">
-<code class="sig-name descname">sync_with_directory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.sync_with_directory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.sync_with_directory" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.sync_with_directory">
+<span class="sig-name descname"><span class="pre">sync_with_directory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.sync_with_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.sync_with_directory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update local state with all available services on the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -875,8 +934,8 @@ robot web page.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.sync_with_services_list">
-<code class="sig-name descname">sync_with_services_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">services_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.sync_with_services_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.sync_with_services_list" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.sync_with_services_list">
+<span class="sig-name descname"><span class="pre">sync_with_services_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">services_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.sync_with_services_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.sync_with_services_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alternate version of sync_with_directory() that takes the list of services
 directly and does not perform any rpcs.</p>
 <dl class="field-list simple">
@@ -890,8 +949,8 @@ directly and does not perform any rpcs.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.register_payload_and_authenticate">
-<code class="sig-name descname">register_payload_and_authenticate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">payload</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.register_payload_and_authenticate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.register_payload_and_authenticate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.register_payload_and_authenticate">
+<span class="sig-name descname"><span class="pre">register_payload_and_authenticate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.register_payload_and_authenticate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.register_payload_and_authenticate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register a payload with the robot and request a user_token.</p>
 <p>This method will block until the payload is authorized by an operator in the robot webpage.
 :raises InvalidPayloadCredentialsError: The guid and/or secret are not valid.
@@ -902,8 +961,8 @@ directly and does not perform any rpcs.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.start_time_sync">
-<code class="sig-name descname">start_time_sync</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_sync_interval_sec</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.start_time_sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.start_time_sync" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.start_time_sync">
+<span class="sig-name descname"><span class="pre">start_time_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_sync_interval_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.start_time_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.start_time_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start time sync thread if needed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -913,20 +972,20 @@ directly and does not perform any rpcs.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.stop_time_sync">
-<code class="sig-name descname">stop_time_sync</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.stop_time_sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.stop_time_sync" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.stop_time_sync">
+<span class="sig-name descname"><span class="pre">stop_time_sync</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.stop_time_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.stop_time_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop the time sync thread if needed.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.robot.Robot.time_sync">
-<em class="property">property </em><code class="sig-name descname">time_sync</code><a class="headerlink" href="#bosdyn.client.robot.Robot.time_sync" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.time_sync">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">time_sync</span></span><a class="headerlink" href="#bosdyn.client.robot.Robot.time_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Accessor for the time-sync thread.  Creates and starts thread if not already started.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.time_sec">
-<code class="sig-name descname">time_sec</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.time_sec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.time_sec" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.time_sec">
+<span class="sig-name descname"><span class="pre">time_sec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.time_sec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.time_sec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get current robot time, seconds. Kicks off background time sync thread if not started.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -939,8 +998,8 @@ directly and does not perform any rpcs.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.operator_comment">
-<code class="sig-name descname">operator_comment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">comment</span></em>, <em class="sig-param"><span class="n">timestamp_secs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.operator_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.operator_comment" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.operator_comment">
+<span class="sig-name descname"><span class="pre">operator_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.operator_comment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.operator_comment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send an operator comment to the robot for the robot’s log files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -965,8 +1024,8 @@ be the time the robot receives this message.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.log_event">
-<code class="sig-name descname">log_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">event_type</span></em>, <em class="sig-param"><span class="n">level</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">start_timestamp_secs</span></em>, <em class="sig-param"><span class="n">end_timestamp_secs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">id_str</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">log_preserve_hint</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.log_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.log_event" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.log_event">
+<span class="sig-name descname"><span class="pre">log_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_timestamp_secs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_timestamp_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_preserve_hint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.log_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.log_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an Event to the Data Buffer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -984,8 +1043,8 @@ be the time the robot receives this message.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.power_on">
-<code class="sig-name descname">power_on</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.power_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.power_on" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.power_on">
+<span class="sig-name descname"><span class="pre">power_on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.power_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.power_on" title="Permalink to this definition">¶</a></dt>
 <dd><p>Power on robot. This function blocks until robot powers on.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1006,8 +1065,8 @@ be the time the robot receives this message.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.power_off">
-<code class="sig-name descname">power_off</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cut_immediately</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">20</span></em>, <em class="sig-param"><span class="n">update_frequency</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.power_off"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.power_off" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.power_off">
+<span class="sig-name descname"><span class="pre">power_off</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cut_immediately</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_frequency</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.power_off"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.power_off" title="Permalink to this definition">¶</a></dt>
 <dd><p>Power off robot. This function blocks until robot powers off. By default, this will
 attempt to put the robot in a safe state before cutting power.</p>
 <dl class="field-list simple">
@@ -1034,8 +1093,8 @@ safe power off command to the robot.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.is_powered_on">
-<code class="sig-name descname">is_powered_on</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.is_powered_on"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.is_powered_on" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.is_powered_on">
+<span class="sig-name descname"><span class="pre">is_powered_on</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.is_powered_on"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.is_powered_on" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check the power state of the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1054,8 +1113,8 @@ safe power off command to the robot.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.is_estopped">
-<code class="sig-name descname">is_estopped</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.is_estopped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.is_estopped" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.is_estopped">
+<span class="sig-name descname"><span class="pre">is_estopped</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.is_estopped"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.is_estopped" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Check if the robot is estopped, usually indicating if an external application has not</dt><dd><p>registered and held an estop endpoint.</p>
 </dd>
@@ -1077,8 +1136,8 @@ safe power off command to the robot.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.get_frame_tree_snapshot">
-<code class="sig-name descname">get_frame_tree_snapshot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.get_frame_tree_snapshot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_frame_tree_snapshot" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.get_frame_tree_snapshot">
+<span class="sig-name descname"><span class="pre">get_frame_tree_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.get_frame_tree_snapshot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.get_frame_tree_snapshot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the current frame tree snapshot from the robot state client.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1095,8 +1154,8 @@ from the latest robot state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.has_arm">
-<code class="sig-name descname">has_arm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.has_arm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.has_arm" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.has_arm">
+<span class="sig-name descname"><span class="pre">has_arm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.has_arm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.has_arm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the robot has an arm attached.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1115,8 +1174,8 @@ from the latest robot state.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.robot.Robot.update_secure_channel_port">
-<code class="sig-name descname">update_secure_channel_port</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">secure_channel_port</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.update_secure_channel_port"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.update_secure_channel_port" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.robot.Robot.update_secure_channel_port">
+<span class="sig-name descname"><span class="pre">update_secure_channel_port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secure_channel_port</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/robot.html#Robot.update_secure_channel_port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.robot.Robot.update_secure_channel_port" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the port used for creating secure channels, instead of using the default 443.</p>
 <p>Calling this method does not change existing channels. It only affects secure channels
 created after this method is called.</p>

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,11 +11,11 @@ import ctypes
 import enum
 import logging
 import os
+import queue
 import threading
 import time
 
 from google.protobuf.duration_pb2 import Duration
-from six.moves import queue
 
 from bosdyn.api import estop_pb2, estop_service_pb2_grpc
 
@@ -237,6 +237,7 @@ class EstopEndpoint(object):
         self.role = role
         self.estop_timeout = estop_timeout
         self.estop_cut_power_timeout = estop_cut_power_timeout
+        self._last_set_level = None
         self._challenge = None
         self._name = name
         self._unique_id = None
@@ -252,6 +253,10 @@ class EstopEndpoint(object):
         else:
             return '{} (timeout {:.3}s, cut_power_timeout {:.3}s)'.format(
                 self._name, self.estop_timeout, self.estop_cut_power_timeout)
+
+    @property
+    def last_set_level(self):
+        return self._last_set_level
 
     def _first_checkin(self):
         with self._lock:
@@ -345,6 +350,8 @@ class EstopEndpoint(object):
         except EstopResponseError as exc:
             self.set_challenge(_challenge_from_check_in_response(exc.response))
             raise
+        else:
+            self._last_set_level = level
         self._set_first_checkin(False)
 
     def deregister(self, **kwargs):
@@ -488,6 +495,10 @@ class EstopKeepAlive(object):
         self.logger.debug('Shutting down')
         self._end_periodic_check_in()
         self._thread.join()
+
+    @property
+    def last_set_level(self):
+        return self._endpoint.last_set_level
 
     @property
     def logger(self):

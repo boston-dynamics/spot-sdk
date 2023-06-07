@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -80,6 +80,7 @@ class AudioClient(BaseClient):
         request = audio_pb2.PlaySoundRequest(sound=sound, gain=fv)
         return self.call_async(self._stub.PlaySound, request, self._play_sound_from_response,
                                self._audio_error_from_response, copy_request=False, **kwargs)
+
 
     def delete_sound(self, sound, **kwargs):
         """Delete sound found in list_sounds()"""
@@ -200,6 +201,7 @@ class AudioClient(BaseClient):
     @staticmethod
     def _play_sound_from_response(response):
         pass
+
 
     @staticmethod
     def _delete_sound_from_response(response):

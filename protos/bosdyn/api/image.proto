@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,6 +11,7 @@ option java_outer_classname = "ImageProto";
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/geometry.proto";
+import "bosdyn/api/service_customization.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -47,7 +48,7 @@ message Image {
         // Little-endian uint16 z-distance from camera (mm).
         PIXEL_FORMAT_DEPTH_U16 = 5;
 
-        // Two bytes per pixel.
+        // Big-endian uint16
         PIXEL_FORMAT_GREYSCALE_U16 = 6;
     }
 
@@ -74,6 +75,9 @@ message CaptureParameters {
 
     // Sensor gain in dB.
     double gain = 2;
+
+    // Any other custom parameters used in the image capture.
+    DictParam custom_params = 3;
 }
 
 // Rectangular color/greyscale images.
@@ -159,6 +163,9 @@ message ImageSource {
 
     // The image formats a specific image source supports.
     repeated Image.Format image_formats = 11;
+
+    // ImageRequest parameters unique to this source that do not match any of the above fields.
+    DictParam.Spec custom_params = 12;
 }
 
 // The ListImageSources request message for the robot image service.
@@ -199,6 +206,10 @@ message ImageRequest {
     // Specify the desired pixel format (e.g. GREYSCALE_U8, RGB_U8). If no format is specified
     // (e.g. PIXEL_FORMAT_UNKNOWN), the image service will choose the best format for the data.
     Image.PixelFormat pixel_format = 5;
+
+    // Parameters unique to the servicer that do not match any of the above fields.
+    // Whether or not these are valid may depend on the values of the above fields.
+    DictParam custom_params = 6;
 }
 
 // The GetImage request message which can send multiple different image source requests at once.
@@ -249,12 +260,34 @@ message ImageResponse {
 
         // The requested ratio is out of bounds [0,1] or unsupported by the image service
         STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED = 7;
+
+        // One or more keys or values in custom_params are unsupported by the image service.
+        // See the custom_param_error for details.
+        STATUS_CUSTOM_PARAMS_ERROR = 8;
     }
     // Return status of the request.
     Status status = 4;
 
     // Previous fields in the protobuf that are now reserved.
     reserved 3, 5;
+
+    // Filled out if status is STATUS_CUSTOM_PARAMS_ERROR.
+    CustomParamError custom_param_error = 6;
+}
+
+// This message is a subset of the ImageResponse message with only the information needed
+// to pass captured images to other services.
+message ImageCaptureAndSource {
+    // The image capture contains the image data and information about the state of the camera and
+    // robot at the time the image was collected.
+    ImageCapture shot = 1;
+
+    // The source describes general information about the camera source the image data was collected
+    // from.
+    ImageSource source = 2;
+
+    // Image service.  If blank, it is assumed to be the robot's default image service.
+    string image_service = 3;
 }
 
 // The GetImage response message which includes image data for all requested sources.

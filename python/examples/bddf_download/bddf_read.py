@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -24,7 +24,7 @@ def get_data(proto_type, filename, channel=None):
             channel_reader = ProtobufChannelReader(protobuf_reader, proto_type,
                                                    channel_name=channel)
         except KeyError:
-            LOGGER.error("No messages of type '%s' found", proto_type.DESCRIPTOR.full_name)
+            LOGGER.error('No messages of type "%s" found', proto_type.DESCRIPTOR.full_name)
             sys.exit(1)
         for i in range(channel_reader.num_messages):
             yield channel_reader.get_message(i)
@@ -60,7 +60,7 @@ class MessageLister:
         """Print the given message from the pair (timestamp, message) returned by get_data()"""
         timestamp = datetime.datetime.fromtimestamp(timestamp_msg[0] * 1e-9)
         msg = timestamp_msg[1]
-        print('== {} -- {}\n{}'.format(timestamp, msg.DESCRIPTOR.full_name, msg))
+        print(f'== {timestamp} -- {msg.DESCRIPTOR.full_name}\n{msg}')
 
 
 class OperatorCommentLister(MessageLister):
@@ -73,7 +73,7 @@ class OperatorCommentLister(MessageLister):
         msg = timestamp_msg[1]
         timestamp = datetime.datetime.fromtimestamp(msg.timestamp.seconds +
                                                     1e-9 * msg.timestamp.nanos)
-        print('{}   {}'.format(timestamp, msg.message.strip()))
+        print(f'{timestamp}   {msg.message.strip()}')
 
 
 class EventLister(MessageLister):
@@ -92,13 +92,14 @@ class EventLister(MessageLister):
             else:
                 end_sec = msg.end_time.seconds + 1e-9 * msg.end_time.nanos
                 dur = end_sec - start_sec
-                dur_str = '{:.09f} sec'.format(dur)
+                dur_str = f'{dur:.09f} sec'
         else:
             dur_str = '(start)        '
-        print('{} ({}) {} {} {}'.format(msg.type, msg.Level.Name(msg.level), start_timestamp,
-                                        dur_str, msg.description))
+        print(
+            f'{msg.type} ({msg.Level.Name(msg.level)}) {start_timestamp} {dur_str} {msg.description}'
+        )
         for param in msg.parameters:
-            print("  {}".format(param))
+            print(f'  {param}')
 
 
 class GrpcProtoReader:
@@ -153,7 +154,8 @@ def setup():
 
 def show_supported_types():
     """Show the protobuf types supported by this utility."""
-    print("Supported types:\n  {}".format('\n  '.join(sorted(MessageLister.INSTANCES.keys()))))
+    types = '\n  '.join(sorted(MessageLister.INSTANCES.keys()))
+    print(f'Supported types:\n  {types}')
 
 
 def list_series(options):
@@ -161,9 +163,9 @@ def list_series(options):
     with open(options.filename, 'rb') as infile:
         data_reader = DataReader(infile)
         series_identifiers = data_reader.file_index.series_identifiers
-        print("Series in '{}' ({}):".format(options.filename, len(series_identifiers)))
+        print(f'Series in \'{options.filename}\' ({len(series_identifiers)}):')
         for i, sid in enumerate(series_identifiers):
-            print("- [{}] {}: {}".format(i, sid.series_type, {k: v for k, v in sid.spec.items()}))
+            print(f'- [{i}] {sid.series_type}: { {k: v for k, v in sid.spec.items()} }')
 
 
 def show_messages(options):
@@ -171,7 +173,7 @@ def show_messages(options):
     try:
         lister = MessageLister.INSTANCES[options.message_type]
     except KeyError:
-        print("No support for printing messages of type '{}'".format(options.message_type))
+        print(f'No support for printing messages of type "{options.message_type}"')
         sys.exit(1)
 
     for msg in get_data(lister.proto_type, options.filename, channel=options.channel):
@@ -183,13 +185,13 @@ def show_grpc_messages(options):
     try:
         lister = MessageLister.INSTANCES[options.message_type]
     except KeyError:
-        print("No support for printing messages of type '{}'".format(options.message_type))
+        print(f'No support for printing messages of type "{options.message_type}"')
         sys.exit(1)
     try:
         for msg in get_grpc_data(options.message_type, options.filename):
             lister.show(msg)
     except KeyError:
-        LOGGER.error("Could not find GRPC messages of type '%s'.", options.message_type)
+        LOGGER.error('Could not find GRPC messages of type "%s".', options.message_type)
         sys.exit(1)
 
 
@@ -235,6 +237,6 @@ def main():  # pylint: disable=too-many-locals
     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main():
         sys.exit(1)

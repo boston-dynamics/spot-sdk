@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>spot/choreography_params.proto &mdash; Spot 3.2.3 documentation</title>
+  <title>spot/choreography_params.proto &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -639,10 +681,10 @@
   <p><a name="top"></a></p>
 <p><a name="bosdyn/api/spot/choreography_params.proto"></a></p>
 <section id="spot-choreography-params-proto">
-<h1>spot/choreography_params.proto<a class="headerlink" href="#spot-choreography-params-proto" title="Permalink to this headline">¶</a></h1>
+<h1>spot/choreography_params.proto<a class="headerlink" href="#spot-choreography-params-proto" title="Permalink to this heading">¶</a></h1>
 <p><a name="bosdyn.api.spot.AnimateParams"></a></p>
 <section id="animateparams">
-<h2>AnimateParams<a class="headerlink" href="#animateparams" title="Permalink to this headline">¶</a></h2>
+<h2>AnimateParams<a class="headerlink" href="#animateparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -748,10 +790,44 @@
 <td>How hard to try to track the animated body motion. Only applicable to animations that control both the body and the legs. On a scale of 1 to 10 (11 for a bit extra). Higher will result in more closely tracking the animated body motion, but possibly at the expense of balance for more difficult animations.</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.AnimatedCycleParams"></a></p>
+</section>
+<section id="animatedcycleparams">
+<h2>AnimatedCycleParams<a class="headerlink" href="#animatedcycleparams" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>animation_name</td>
+<td><a href="#google.protobuf.StringValue">google.protobuf.StringValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>enable_animation_duration</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>enable_leg_timing</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>enable_stance_shape</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.ArmMoveParams"></a></p>
 </section>
 <section id="armmoveparams">
-<h2>ArmMoveParams<a class="headerlink" href="#armmoveparams" title="Permalink to this headline">¶</a></h2>
+<h2>ArmMoveParams<a class="headerlink" href="#armmoveparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to ArmMove move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -806,7 +882,7 @@
 </table><p><a name="bosdyn.api.spot.BodyHoldParams"></a></p>
 </section>
 <section id="bodyholdparams">
-<h2>BodyHoldParams<a class="headerlink" href="#bodyholdparams" title="Permalink to this headline">¶</a></h2>
+<h2>BodyHoldParams<a class="headerlink" href="#bodyholdparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to the BodyHold move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -841,7 +917,7 @@
 </table><p><a name="bosdyn.api.spot.BourreeParams"></a></p>
 </section>
 <section id="bourreeparams">
-<h2>BourreeParams<a class="headerlink" href="#bourreeparams" title="Permalink to this headline">¶</a></h2>
+<h2>BourreeParams<a class="headerlink" href="#bourreeparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters for the Bourree move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -871,7 +947,7 @@
 </table><p><a name="bosdyn.api.spot.ButtCircleParams"></a></p>
 </section>
 <section id="buttcircleparams">
-<h2>ButtCircleParams<a class="headerlink" href="#buttcircleparams" title="Permalink to this headline">¶</a></h2>
+<h2>ButtCircleParams<a class="headerlink" href="#buttcircleparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to the ButtCircle DanceMove.</p>
 <table border="1" class="docutils">
 <thead>
@@ -916,7 +992,7 @@
 </table><p><a name="bosdyn.api.spot.ChickenHeadParams"></a></p>
 </section>
 <section id="chickenheadparams">
-<h2>ChickenHeadParams<a class="headerlink" href="#chickenheadparams" title="Permalink to this headline">¶</a></h2>
+<h2>ChickenHeadParams<a class="headerlink" href="#chickenheadparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to the chicken head move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -946,7 +1022,7 @@
 </table><p><a name="bosdyn.api.spot.ClapParams"></a></p>
 </section>
 <section id="clapparams">
-<h2>ClapParams<a class="headerlink" href="#clapparams" title="Permalink to this headline">¶</a></h2>
+<h2>ClapParams<a class="headerlink" href="#clapparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to clapping.</p>
 <table border="1" class="docutils">
 <thead>
@@ -981,7 +1057,7 @@
 </table><p><a name="bosdyn.api.spot.Color"></a></p>
 </section>
 <section id="color">
-<h2>Color<a class="headerlink" href="#color" title="Permalink to this headline">¶</a></h2>
+<h2>Color<a class="headerlink" href="#color" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1010,7 +1086,7 @@
 </table><p><a name="bosdyn.api.spot.CrawlParams"></a></p>
 </section>
 <section id="crawlparams">
-<h2>CrawlParams<a class="headerlink" href="#crawlparams" title="Permalink to this headline">¶</a></h2>
+<h2>CrawlParams<a class="headerlink" href="#crawlparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters for the robot’s crawling gait.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1042,11 +1118,303 @@
 <td>The distance between the robot's front and back feet [m].</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.CustomGaitCommand"></a></p>
+</section>
+<section id="customgaitcommand">
+<h2>CustomGaitCommand<a class="headerlink" href="#customgaitcommand" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>drive_velocity_body</td>
+<td><a href="#bosdyn.api.SE2Velocity">bosdyn.api.SE2Velocity</a></td>
+<td>Locomotion velocity in the horizontal plane in robot body frame. (m/s, m/s, rad/s)</td>
+</tr>
+<tr>
+<td>finished</td>
+<td><a href="#bool">bool</a></td>
+<td>When true, robot will transition to a stand, then continue the sequence. Until then, the sequence will keep looping through this move.</td>
+</tr>
+<tr>
+<td>body_translation_offset</td>
+<td><a href="#bosdyn.api.Vec3">bosdyn.api.Vec3</a></td>
+<td>How much to offset the body pose. Additive with other offsets.</td>
+</tr>
+</tbody>
+</table><p>Meters. |
+| body_orientation_offset | <a class="reference external" href="#bosdyn.api.spot.EulerZYX">EulerZYX</a> | Radians. |</p>
+<p><a name="bosdyn.api.spot.CustomGaitCommandLimits"></a></p>
+</section>
+<section id="customgaitcommandlimits">
+<h2>CustomGaitCommandLimits<a class="headerlink" href="#customgaitcommandlimits" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>maximum_drive_velocity_body</td>
+<td><a href="#bosdyn.api.SE2Velocity">bosdyn.api.SE2Velocity</a></td>
+<td>Maximum absolute value of locomotion velocity in the horizontal plane in robot body frame. (m/s, m/s, rad/s)</td>
+</tr>
+<tr>
+<td>maximum_body_translation_offset</td>
+<td><a href="#bosdyn.api.Vec3">bosdyn.api.Vec3</a></td>
+<td>Maximum absolute value of the body offsets.</td>
+</tr>
+</tbody>
+</table><p>Meters. |
+| maximum_body_orientation_offset | <a class="reference external" href="#bosdyn.api.spot.EulerZYX">EulerZYX</a> | Radians. |</p>
+<p><a name="bosdyn.api.spot.CustomGaitParams"></a></p>
+</section>
+<section id="customgaitparams">
+<h2>CustomGaitParams<a class="headerlink" href="#customgaitparams" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>max_velocity</td>
+<td><a href="#bosdyn.api.Vec2Value">bosdyn.api.Vec2Value</a></td>
+<td>Maximum steering commands that will be accepted.</td>
+</tr>
+<tr>
+<td>max_yaw_rate</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>acceleration_scaling</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td>How much to limit steering acceleration. 1 is normal. Smaller is less acceleration.</td>
+</tr>
+<tr>
+<td>cycle_duration</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td>Gait pattern. When to liftoff and touchdown each leg.</td>
+</tr>
+<tr>
+<td>fl_swing</td>
+<td><a href="#bosdyn.api.spot.SwingPhases">SwingPhases</a></td>
+<td></td>
+</tr>
+<tr>
+<td>two_fl_swings</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>second_fl_swing</td>
+<td><a href="#bosdyn.api.spot.SwingPhases">SwingPhases</a></td>
+<td></td>
+</tr>
+<tr>
+<td>fr_swing</td>
+<td><a href="#bosdyn.api.spot.SwingPhases">SwingPhases</a></td>
+<td></td>
+</tr>
+<tr>
+<td>two_fr_swings</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>second_fr_swing</td>
+<td><a href="#bosdyn.api.spot.SwingPhases">SwingPhases</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hl_swing</td>
+<td><a href="#bosdyn.api.spot.SwingPhases">SwingPhases</a></td>
+<td></td>
+</tr>
+<tr>
+<td>two_hl_swings</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>second_hl_swing</td>
+<td><a href="#bosdyn.api.spot.SwingPhases">SwingPhases</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hr_swing</td>
+<td><a href="#bosdyn.api.spot.SwingPhases">SwingPhases</a></td>
+<td></td>
+</tr>
+<tr>
+<td>two_hr_swings</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>second_hr_swing</td>
+<td><a href="#bosdyn.api.spot.SwingPhases">SwingPhases</a></td>
+<td></td>
+</tr>
+<tr>
+<td>show_stance_shape</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td>Relative positions of feet.</td>
+</tr>
+<tr>
+<td>stance_shape</td>
+<td><a href="#bosdyn.api.spot.StanceShape">StanceShape</a></td>
+<td></td>
+</tr>
+<tr>
+<td>com_height</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td>Constant posture. For a phase-dependent posture, combine with a Body move.</td>
+</tr>
+<tr>
+<td>body_translation_offset</td>
+<td><a href="#bosdyn.api.Vec3Value">bosdyn.api.Vec3Value</a></td>
+<td></td>
+</tr>
+<tr>
+<td>body_rotation_offset</td>
+<td><a href="#bosdyn.api.spot.EulerZYXValue">EulerZYXValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>low_speed_body_fraction</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>general_swing_params</td>
+<td><a href="#bosdyn.api.spot.SwingParams">SwingParams</a></td>
+<td>Modify the path the foot takes between liftoff and touchdown. General swing parameters apply to legs that are not configured to have their own parameter set.</td>
+</tr>
+<tr>
+<td>use_fl_swing_params</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td>Individual legs can have their own parameters or use the general swing parameters.</td>
+</tr>
+<tr>
+<td>fl_swing_params</td>
+<td><a href="#bosdyn.api.spot.SwingParams">SwingParams</a></td>
+<td></td>
+</tr>
+<tr>
+<td>use_fr_swing_params</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>fr_swing_params</td>
+<td><a href="#bosdyn.api.spot.SwingParams">SwingParams</a></td>
+<td></td>
+</tr>
+<tr>
+<td>use_hl_swing_params</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hl_swing_params</td>
+<td><a href="#bosdyn.api.spot.SwingParams">SwingParams</a></td>
+<td></td>
+</tr>
+<tr>
+<td>use_hr_swing_params</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hr_swing_params</td>
+<td><a href="#bosdyn.api.spot.SwingParams">SwingParams</a></td>
+<td></td>
+</tr>
+<tr>
+<td>stand_in_place</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td>Stand rather than stepping in place when not moving.</td>
+</tr>
+<tr>
+<td>standard_final_stance</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td>Go back to a standard rectangular stance when ending the gait. Otherwise maintains the customized stance shape.</td>
+</tr>
+<tr>
+<td>show_stability_params</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td>Parameters that impact the stability of the gait rather than its appearance.</td>
+</tr>
+<tr>
+<td>mu</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td>Friction coefficient between the feet and the ground.</td>
+</tr>
+<tr>
+<td>timing_stiffness</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td>How much the robot is allowed to deviate from the specified timing. 0 means no deviation. Otherwise: large values mean less deviation and small values mean more is acceptable. Too much timing adjustment (low, non-zero values) may make the gait unstable. At least a little timing adjustment is recommended for gaits with flight phases (periods with 0 feet on the ground).</td>
+</tr>
+<tr>
+<td>step_position_stiffness</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td>How much the robot is allowed to deviate from the specified stance shape. 0 means no deviation. Otherwise: large values mean less deviation and small values mean more is acceptable. Too much position adjustment (low, non-zero values) may make the gait unstable.</td>
+</tr>
+<tr>
+<td>enable_perception_obstacle_avoidance</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td>Enable/disable various aspects of perception.</td>
+</tr>
+<tr>
+<td>obstacle_avoidance_padding</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>enable_perception_terrain_height</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>enable_perception_step_placement</td>
+<td><a href="#google.protobuf.BoolValue">google.protobuf.BoolValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>maximum_stumble_distance</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td>How far the robot should stumble before giving up and freezing.</td>
+</tr>
+<tr>
+<td>trip_sensitivity</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td>How sensitive we should be to trip detection. On the range [0, 1], where 1 is normal sensitivity and 0 is ignoring all trips. Useful for very aggressive gaits or when a costume is restricting leg motion.</td>
+</tr>
+<tr>
+<td>animated_cycle_params</td>
+<td><a href="#bosdyn.api.spot.AnimatedCycleParams">AnimatedCycleParams</a></td>
+<td>Using an animated cycle to define the gait style</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.EulerRateZYXValue"></a></p>
 </section>
 <section id="eulerratezyxvalue">
-<h2>EulerRateZYXValue<a class="headerlink" href="#eulerratezyxvalue" title="Permalink to this headline">¶</a></h2>
-<p>Euler Angle rates (yaw-&gt;pitch-&gt;roll) vector that uses wrapped values so we can tell which elements are set.</p>
+<h2>EulerRateZYXValue<a class="headerlink" href="#eulerratezyxvalue" title="Permalink to this heading">¶</a></h2>
+<p>Euler Angle rates (yaw-&gt;pitch-&gt;roll) vector that uses wrapped values so we can tell which
+elements are set.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1072,11 +1440,42 @@
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.EulerZYX"></a></p>
+</section>
+<section id="eulerzyx">
+<h2>EulerZYX<a class="headerlink" href="#eulerzyx" title="Permalink to this heading">¶</a></h2>
+<p>Euler Angle (yaw-&gt;pitch-&gt;roll) vector.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>roll</td>
+<td><a href="#double">double</a></td>
+<td></td>
+</tr>
+<tr>
+<td>pitch</td>
+<td><a href="#double">double</a></td>
+<td></td>
+</tr>
+<tr>
+<td>yaw</td>
+<td><a href="#double">double</a></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.EulerZYXValue"></a></p>
 </section>
 <section id="eulerzyxvalue">
-<h2>EulerZYXValue<a class="headerlink" href="#eulerzyxvalue" title="Permalink to this headline">¶</a></h2>
-<p>Euler Angle (yaw-&gt;pitch-&gt;roll) vector that uses wrapped values so we can tell which elements are set.</p>
+<h2>EulerZYXValue<a class="headerlink" href="#eulerzyxvalue" title="Permalink to this heading">¶</a></h2>
+<p>Euler Angle (yaw-&gt;pitch-&gt;roll) vector that uses wrapped values so we can tell which elements are
+set.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1105,7 +1504,7 @@
 </table><p><a name="bosdyn.api.spot.FadeColorParams"></a></p>
 </section>
 <section id="fadecolorparams">
-<h2>FadeColorParams<a class="headerlink" href="#fadecolorparams" title="Permalink to this headline">¶</a></h2>
+<h2>FadeColorParams<a class="headerlink" href="#fadecolorparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1139,7 +1538,7 @@
 </table><p><a name="bosdyn.api.spot.FidgetStandParams"></a></p>
 </section>
 <section id="fidgetstandparams">
-<h2>FidgetStandParams<a class="headerlink" href="#fidgetstandparams" title="Permalink to this headline">¶</a></h2>
+<h2>FidgetStandParams<a class="headerlink" href="#fidgetstandparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1223,7 +1622,7 @@
 </table><p><a name="bosdyn.api.spot.Figure8Params"></a></p>
 </section>
 <section id="figure8params">
-<h2>Figure8Params<a class="headerlink" href="#figure8params" title="Permalink to this headline">¶</a></h2>
+<h2>Figure8Params<a class="headerlink" href="#figure8params" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1252,7 +1651,7 @@
 </table><p><a name="bosdyn.api.spot.FrameSnapshotParams"></a></p>
 </section>
 <section id="framesnapshotparams">
-<h2>FrameSnapshotParams<a class="headerlink" href="#framesnapshotparams" title="Permalink to this headline">¶</a></h2>
+<h2>FrameSnapshotParams<a class="headerlink" href="#framesnapshotparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1301,7 +1700,7 @@
 </table><p><a name="bosdyn.api.spot.FrontUpParams"></a></p>
 </section>
 <section id="frontupparams">
-<h2>FrontUpParams<a class="headerlink" href="#frontupparams" title="Permalink to this headline">¶</a></h2>
+<h2>FrontUpParams<a class="headerlink" href="#frontupparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to FrontUp move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1321,7 +1720,7 @@
 </table><p><a name="bosdyn.api.spot.GotoParams"></a></p>
 </section>
 <section id="gotoparams">
-<h2>GotoParams<a class="headerlink" href="#gotoparams" title="Permalink to this headline">¶</a></h2>
+<h2>GotoParams<a class="headerlink" href="#gotoparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1360,7 +1759,7 @@
 </table><p><a name="bosdyn.api.spot.GripperParams"></a></p>
 </section>
 <section id="gripperparams">
-<h2>GripperParams<a class="headerlink" href="#gripperparams" title="Permalink to this headline">¶</a></h2>
+<h2>GripperParams<a class="headerlink" href="#gripperparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters for open/close of gripper.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1385,7 +1784,7 @@
 </table><p><a name="bosdyn.api.spot.HopParams"></a></p>
 </section>
 <section id="hopparams">
-<h2>HopParams<a class="headerlink" href="#hopparams" title="Permalink to this headline">¶</a></h2>
+<h2>HopParams<a class="headerlink" href="#hopparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to Hop move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1415,7 +1814,7 @@
 </table><p><a name="bosdyn.api.spot.IndependentColorParams"></a></p>
 </section>
 <section id="independentcolorparams">
-<h2>IndependentColorParams<a class="headerlink" href="#independentcolorparams" title="Permalink to this headline">¶</a></h2>
+<h2>IndependentColorParams<a class="headerlink" href="#independentcolorparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1479,7 +1878,7 @@
 </table><p><a name="bosdyn.api.spot.JumpParams"></a></p>
 </section>
 <section id="jumpparams">
-<h2>JumpParams<a class="headerlink" href="#jumpparams" title="Permalink to this headline">¶</a></h2>
+<h2>JumpParams<a class="headerlink" href="#jumpparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters for the robot making a jump.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1559,7 +1958,7 @@
 </table><p><a name="bosdyn.api.spot.KneelCircleParams"></a></p>
 </section>
 <section id="kneelcircleparams">
-<h2>KneelCircleParams<a class="headerlink" href="#kneelcircleparams" title="Permalink to this headline">¶</a></h2>
+<h2>KneelCircleParams<a class="headerlink" href="#kneelcircleparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to the kneel_circles move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1604,7 +2003,7 @@
 </table><p><a name="bosdyn.api.spot.KneelLegMove2Params"></a></p>
 </section>
 <section id="kneellegmove2params">
-<h2>KneelLegMove2Params<a class="headerlink" href="#kneellegmove2params" title="Permalink to this headline">¶</a></h2>
+<h2>KneelLegMove2Params<a class="headerlink" href="#kneellegmove2params" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to KneelLegMove2 move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1659,7 +2058,7 @@
 </table><p><a name="bosdyn.api.spot.KneelLegMoveParams"></a></p>
 </section>
 <section id="kneellegmoveparams">
-<h2>KneelLegMoveParams<a class="headerlink" href="#kneellegmoveparams" title="Permalink to this headline">¶</a></h2>
+<h2>KneelLegMoveParams<a class="headerlink" href="#kneellegmoveparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to KneelLegMove move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1696,10 +2095,84 @@
 <td>How the motion should be paced.</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.LegJointParams"></a></p>
+</section>
+<section id="legjointparams">
+<h2>LegJointParams<a class="headerlink" href="#legjointparams" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fl_hx</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>fl_hy</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>fl_kn</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>fr_hx</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>fr_hy</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>fr_kn</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hl_hx</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hl_hy</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hl_kn</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hr_hx</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hr_hy</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>hr_kn</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.Pace2StepParams"></a></p>
 </section>
 <section id="pace2stepparams">
-<h2>Pace2StepParams<a class="headerlink" href="#pace2stepparams" title="Permalink to this headline">¶</a></h2>
+<h2>Pace2StepParams<a class="headerlink" href="#pace2stepparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to pace translation.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1759,7 +2232,7 @@
 </table><p><a name="bosdyn.api.spot.RandomRotateParams"></a></p>
 </section>
 <section id="randomrotateparams">
-<h2>RandomRotateParams<a class="headerlink" href="#randomrotateparams" title="Permalink to this headline">¶</a></h2>
+<h2>RandomRotateParams<a class="headerlink" href="#randomrotateparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to the RandomRotate move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1799,7 +2272,7 @@
 </table><p><a name="bosdyn.api.spot.RippleColorParams"></a></p>
 </section>
 <section id="ripplecolorparams">
-<h2>RippleColorParams<a class="headerlink" href="#ripplecolorparams" title="Permalink to this headline">¶</a></h2>
+<h2>RippleColorParams<a class="headerlink" href="#ripplecolorparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1838,7 +2311,7 @@
 </table><p><a name="bosdyn.api.spot.RotateBodyParams"></a></p>
 </section>
 <section id="rotatebodyparams">
-<h2>RotateBodyParams<a class="headerlink" href="#rotatebodyparams" title="Permalink to this headline">¶</a></h2>
+<h2>RotateBodyParams<a class="headerlink" href="#rotatebodyparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters for the robot rotating the body.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1863,7 +2336,7 @@
 </table><p><a name="bosdyn.api.spot.RunningManParams"></a></p>
 </section>
 <section id="runningmanparams">
-<h2>RunningManParams<a class="headerlink" href="#runningmanparams" title="Permalink to this headline">¶</a></h2>
+<h2>RunningManParams<a class="headerlink" href="#runningmanparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to RunningMan move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1918,7 +2391,7 @@
 </table><p><a name="bosdyn.api.spot.SetColorParams"></a></p>
 </section>
 <section id="setcolorparams">
-<h2>SetColorParams<a class="headerlink" href="#setcolorparams" title="Permalink to this headline">¶</a></h2>
+<h2>SetColorParams<a class="headerlink" href="#setcolorparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1957,7 +2430,7 @@
 </table><p><a name="bosdyn.api.spot.SideParams"></a></p>
 </section>
 <section id="sideparams">
-<h2>SideParams<a class="headerlink" href="#sideparams" title="Permalink to this headline">¶</a></h2>
+<h2>SideParams<a class="headerlink" href="#sideparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters for moves that can go to either side.</p>
 <table border="1" class="docutils">
 <thead>
@@ -1974,10 +2447,49 @@
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.StanceShape"></a></p>
+</section>
+<section id="stanceshape">
+<h2>StanceShape<a class="headerlink" href="#stanceshape" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>length</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>width</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>front_wider_than_hind</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>left_longer_than_right</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>left_forward_of_right</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.StepParams"></a></p>
 </section>
 <section id="stepparams">
-<h2>StepParams<a class="headerlink" href="#stepparams" title="Permalink to this headline">¶</a></h2>
+<h2>StepParams<a class="headerlink" href="#stepparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2025,7 +2537,7 @@
 <p><a name="bosdyn.api.spot.SwayParams"></a></p>
 </section>
 <section id="swayparams">
-<h2>SwayParams<a class="headerlink" href="#swayparams" title="Permalink to this headline">¶</a></h2>
+<h2>SwayParams<a class="headerlink" href="#swayparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to Sway move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -2072,10 +2584,83 @@
 <td>Should the robot hold previous values for the vertical, horizontal, and roll axes if the value is left unspecified (value of zero).</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.SwingParams"></a></p>
+</section>
+<section id="swingparams">
+<h2>SwingParams<a class="headerlink" href="#swingparams" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>height</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>liftoff_speed</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>vertical_speed</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>vertical_acceleration</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>overlay_outside</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>overlay_forward</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>low_speed_fraction</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.SwingPhases"></a></p>
+</section>
+<section id="swingphases">
+<h2>SwingPhases<a class="headerlink" href="#swingphases" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>liftoff_phase</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+<tr>
+<td>touchdown_phase</td>
+<td><a href="#google.protobuf.DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.TurnParams"></a></p>
 </section>
 <section id="turnparams">
-<h2>TurnParams<a class="headerlink" href="#turnparams" title="Permalink to this headline">¶</a></h2>
+<h2>TurnParams<a class="headerlink" href="#turnparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to turning.</p>
 <table border="1" class="docutils">
 <thead>
@@ -2135,7 +2720,7 @@
 </table><p><a name="bosdyn.api.spot.TwerkParams"></a></p>
 </section>
 <section id="twerkparams">
-<h2>TwerkParams<a class="headerlink" href="#twerkparams" title="Permalink to this headline">¶</a></h2>
+<h2>TwerkParams<a class="headerlink" href="#twerkparams" title="Permalink to this heading">¶</a></h2>
 <p>Parameters specific to twerking</p>
 <table border="1" class="docutils">
 <thead>
@@ -2155,7 +2740,7 @@
 </table><p><a name="bosdyn.api.spot.WorkspaceArmMoveParams"></a></p>
 </section>
 <section id="workspacearmmoveparams">
-<h2>WorkspaceArmMoveParams<a class="headerlink" href="#workspacearmmoveparams" title="Permalink to this headline">¶</a></h2>
+<h2>WorkspaceArmMoveParams<a class="headerlink" href="#workspacearmmoveparams" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2199,7 +2784,7 @@
 </table> <!-- end messages --><p><a name="bosdyn.api.spot.ArmMoveFrame"></a></p>
 </section>
 <section id="armmoveframe">
-<h2>ArmMoveFrame<a class="headerlink" href="#armmoveframe" title="Permalink to this headline">¶</a></h2>
+<h2>ArmMoveFrame<a class="headerlink" href="#armmoveframe" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2248,7 +2833,7 @@
 </table><p><a name="bosdyn.api.spot.Easing"></a></p>
 </section>
 <section id="easing">
-<h2>Easing<a class="headerlink" href="#easing" title="Permalink to this headline">¶</a></h2>
+<h2>Easing<a class="headerlink" href="#easing" title="Permalink to this heading">¶</a></h2>
 <p>Enum to describe the type of easing to perform for the slices at either (or both) the
 beginning and end of a move.</p>
 <table border="1" class="docutils">
@@ -2319,7 +2904,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.FidgetStandParams.FidgetPreset"></a></p>
 </section>
 <section id="fidgetstandparams-fidgetpreset">
-<h2>FidgetStandParams.FidgetPreset<a class="headerlink" href="#fidgetstandparams-fidgetpreset" title="Permalink to this headline">¶</a></h2>
+<h2>FidgetStandParams.FidgetPreset<a class="headerlink" href="#fidgetstandparams-fidgetpreset" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2368,7 +2953,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.FrameSnapshotParams.Inclusion"></a></p>
 </section>
 <section id="framesnapshotparams-inclusion">
-<h2>FrameSnapshotParams.Inclusion<a class="headerlink" href="#framesnapshotparams-inclusion" title="Permalink to this headline">¶</a></h2>
+<h2>FrameSnapshotParams.Inclusion<a class="headerlink" href="#framesnapshotparams-inclusion" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2402,7 +2987,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.JumpParams.Lead"></a></p>
 </section>
 <section id="jumpparams-lead">
-<h2>JumpParams.Lead<a class="headerlink" href="#jumpparams-lead" title="Permalink to this headline">¶</a></h2>
+<h2>JumpParams.Lead<a class="headerlink" href="#jumpparams-lead" title="Permalink to this heading">¶</a></h2>
 <p>If split_fraction is non-zero, which legs to lift first.</p>
 <table border="1" class="docutils">
 <thead>
@@ -2447,7 +3032,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.LedLight"></a></p>
 </section>
 <section id="ledlight">
-<h2>LedLight<a class="headerlink" href="#ledlight" title="Permalink to this headline">¶</a></h2>
+<h2>LedLight<a class="headerlink" href="#ledlight" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2506,7 +3091,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.Leg"></a></p>
 </section>
 <section id="leg">
-<h2>Leg<a class="headerlink" href="#leg" title="Permalink to this headline">¶</a></h2>
+<h2>Leg<a class="headerlink" href="#leg" title="Permalink to this heading">¶</a></h2>
 <p>Enum to describe which leg is being referenced in specific choreography sequence moves.</p>
 <table border="1" class="docutils">
 <thead>
@@ -2551,7 +3136,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.Pivot"></a></p>
 </section>
 <section id="pivot">
-<h2>Pivot<a class="headerlink" href="#pivot" title="Permalink to this headline">¶</a></h2>
+<h2>Pivot<a class="headerlink" href="#pivot" title="Permalink to this heading">¶</a></h2>
 <p>Enum for the pivot point for certain choreography sequence moves.</p>
 <table border="1" class="docutils">
 <thead>
@@ -2586,7 +3171,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.RippleColorParams.LightSide"></a></p>
 </section>
 <section id="ripplecolorparams-lightside">
-<h2>RippleColorParams.LightSide<a class="headerlink" href="#ripplecolorparams-lightside" title="Permalink to this headline">¶</a></h2>
+<h2>RippleColorParams.LightSide<a class="headerlink" href="#ripplecolorparams-lightside" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2625,7 +3210,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.RippleColorParams.Pattern"></a></p>
 </section>
 <section id="ripplecolorparams-pattern">
-<h2>RippleColorParams.Pattern<a class="headerlink" href="#ripplecolorparams-pattern" title="Permalink to this headline">¶</a></h2>
+<h2>RippleColorParams.Pattern<a class="headerlink" href="#ripplecolorparams-pattern" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2664,7 +3249,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.SideParams.Side"></a></p>
 </section>
 <section id="sideparams-side">
-<h2>SideParams.Side<a class="headerlink" href="#sideparams-side" title="Permalink to this headline">¶</a></h2>
+<h2>SideParams.Side<a class="headerlink" href="#sideparams-side" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2693,7 +3278,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.SwayParams.SwayStyle"></a></p>
 </section>
 <section id="swayparams-swaystyle">
-<h2>SwayParams.SwayStyle<a class="headerlink" href="#swayparams-swaystyle" title="Permalink to this headline">¶</a></h2>
+<h2>SwayParams.SwayStyle<a class="headerlink" href="#swayparams-swaystyle" title="Permalink to this heading">¶</a></h2>
 <p>The type of motion used by the Sway sequence move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -2744,10 +3329,34 @@ beginning and end of a move.</p>
 </section>
 </section>
 <section id="spot-choreography-sequence-proto">
-<h1>spot/choreography_sequence.proto<a class="headerlink" href="#spot-choreography-sequence-proto" title="Permalink to this headline">¶</a></h1>
-<p><a name="bosdyn.api.spot.AnimateArm"></a></p>
+<h1>spot/choreography_sequence.proto<a class="headerlink" href="#spot-choreography-sequence-proto" title="Permalink to this heading">¶</a></h1>
+<p><a name="bosdyn.api.spot.ActiveMove"></a></p>
+<section id="activemove">
+<h2>ActiveMove<a class="headerlink" href="#activemove" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>move</td>
+<td><a href="#bosdyn.api.spot.MoveParams">MoveParams</a></td>
+<td>Any parameters that had to be adjusted into the legal range will have their adjusted values.</td>
+</tr>
+<tr>
+<td>custom_gait_command_limits</td>
+<td><a href="#bosdyn.api.spot.CustomGaitCommandLimits">CustomGaitCommandLimits</a></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.AnimateArm"></a></p>
+</section>
 <section id="animatearm">
-<h2>AnimateArm<a class="headerlink" href="#animatearm" title="Permalink to this headline">¶</a></h2>
+<h2>AnimateArm<a class="headerlink" href="#animatearm" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2771,7 +3380,7 @@ beginning and end of a move.</p>
 </table><p><a name="bosdyn.api.spot.AnimateArm.HandPose"></a></p>
 </section>
 <section id="animatearm-handpose">
-<h2>AnimateArm.HandPose<a class="headerlink" href="#animatearm-handpose" title="Permalink to this headline">¶</a></h2>
+<h2>AnimateArm.HandPose<a class="headerlink" href="#animatearm-handpose" title="Permalink to this heading">¶</a></h2>
 <p>An SE3 Pose for the hand where orientation is specified using either a quaternion or
 euler angles</p>
 <table border="1" class="docutils">
@@ -2802,7 +3411,7 @@ euler angles</p>
 </table><p><a name="bosdyn.api.spot.AnimateBody"></a></p>
 </section>
 <section id="animatebody">
-<h2>AnimateBody<a class="headerlink" href="#animatebody" title="Permalink to this headline">¶</a></h2>
+<h2>AnimateBody<a class="headerlink" href="#animatebody" title="Permalink to this heading">¶</a></h2>
 <p>The AnimateBody keyframe describes the body’s position and orientation. At least
 one dimension of the body must be specified.</p>
 <table border="1" class="docutils">
@@ -2838,7 +3447,7 @@ one dimension of the body must be specified.</p>
 </table><p><a name="bosdyn.api.spot.AnimateGripper"></a></p>
 </section>
 <section id="animategripper">
-<h2>AnimateGripper<a class="headerlink" href="#animategripper" title="Permalink to this headline">¶</a></h2>
+<h2>AnimateGripper<a class="headerlink" href="#animategripper" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -2857,7 +3466,7 @@ one dimension of the body must be specified.</p>
 </table><p><a name="bosdyn.api.spot.AnimateLegs"></a></p>
 </section>
 <section id="animatelegs">
-<h2>AnimateLegs<a class="headerlink" href="#animatelegs" title="Permalink to this headline">¶</a></h2>
+<h2>AnimateLegs<a class="headerlink" href="#animatelegs" title="Permalink to this heading">¶</a></h2>
 <p>The AnimateLegs keyframe describes each leg using either joint angles or the foot position.</p>
 <table border="1" class="docutils">
 <thead>
@@ -2892,7 +3501,7 @@ one dimension of the body must be specified.</p>
 </table><p><a name="bosdyn.api.spot.AnimateSingleLeg"></a></p>
 </section>
 <section id="animatesingleleg">
-<h2>AnimateSingleLeg<a class="headerlink" href="#animatesingleleg" title="Permalink to this headline">¶</a></h2>
+<h2>AnimateSingleLeg<a class="headerlink" href="#animatesingleleg" title="Permalink to this heading">¶</a></h2>
 <p>A single leg keyframe to describe the leg motion.</p>
 <table border="1" class="docutils">
 <thead>
@@ -2922,7 +3531,7 @@ one dimension of the body must be specified.</p>
 </table><p><a name="bosdyn.api.spot.Animation"></a></p>
 </section>
 <section id="animation">
-<h2>Animation<a class="headerlink" href="#animation" title="Permalink to this headline">¶</a></h2>
+<h2>Animation<a class="headerlink" href="#animation" title="Permalink to this heading">¶</a></h2>
 <p>Represents an animated dance move that can be used whithin choreographies after uploading.</p>
 <table border="1" class="docutils">
 <thead>
@@ -3026,7 +3635,12 @@ one dimension of the body must be specified.</p>
 <tr>
 <td>precise_timing</td>
 <td><a href="#bool">bool</a></td>
-<td>Time everything exactly as animated, even at the expense of balance. By default, the optimizer may adjust timing slightly.</td>
+<td>DEPRECATED as of 3.3.0: The boolean field has been replaced by the more fine-grained control of timing_adjustability. The following field will be deprecated and moved to 'reserved' in a future release.</td>
+</tr>
+<tr>
+<td>timing_adjustability</td>
+<td><a href="#double">double</a></td>
+<td>How much the optimizer is allowed to adjust the timing. On the range [-1, 1]. -1: Everything will be timed exactly as animated, even at the expense of balance. 0: Default value: some timing adjust allowed. 1: Timing can be adjusted drastically.</td>
 </tr>
 <tr>
 <td>arm_required</td>
@@ -3043,11 +3657,21 @@ one dimension of the body must be specified.</p>
 <td><a href="#bool">bool</a></td>
 <td>If the animation completes before the move's duration, freeze rather than looping.</td>
 </tr>
+<tr>
+<td>starts_sitting</td>
+<td><a href="#bool">bool</a></td>
+<td>If the animation starts from a sit pose. Default starting pose is stand.</td>
+</tr>
+<tr>
+<td>custom_gait_cycle</td>
+<td><a href="#bool">bool</a></td>
+<td>If true, this animation can be used as direct input to custom gait to define the gait style</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot.AnimationKeyframe"></a></p>
 </section>
 <section id="animationkeyframe">
-<h2>AnimationKeyframe<a class="headerlink" href="#animationkeyframe" title="Permalink to this headline">¶</a></h2>
+<h2>AnimationKeyframe<a class="headerlink" href="#animationkeyframe" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3086,7 +3710,7 @@ one dimension of the body must be specified.</p>
 </table><p><a name="bosdyn.api.spot.ArmJointAngles"></a></p>
 </section>
 <section id="armjointangles">
-<h2>ArmJointAngles<a class="headerlink" href="#armjointangles" title="Permalink to this headline">¶</a></h2>
+<h2>ArmJointAngles<a class="headerlink" href="#armjointangles" title="Permalink to this heading">¶</a></h2>
 <p>The AnimateArm keyframe describes the joint angles of the arm joints in radians.
 Any joint not specified, will hold the previous angle it was at when the keyframe
 begins. At least one arm joint must be specified.</p>
@@ -3133,7 +3757,7 @@ begins. At least one arm joint must be specified.</p>
 </table><p><a name="bosdyn.api.spot.ChoreographerDisplayInfo"></a></p>
 </section>
 <section id="choreographerdisplayinfo">
-<h2>ChoreographerDisplayInfo<a class="headerlink" href="#choreographerdisplayinfo" title="Permalink to this headline">¶</a></h2>
+<h2>ChoreographerDisplayInfo<a class="headerlink" href="#choreographerdisplayinfo" title="Permalink to this heading">¶</a></h2>
 <p>Information for the Choreographer to display.</p>
 <table border="1" class="docutils">
 <thead>
@@ -3173,7 +3797,7 @@ begins. At least one arm joint must be specified.</p>
 </table><p><a name="bosdyn.api.spot.ChoreographerDisplayInfo.Color"></a></p>
 </section>
 <section id="choreographerdisplayinfo-color">
-<h2>ChoreographerDisplayInfo.Color<a class="headerlink" href="#choreographerdisplayinfo-color" title="Permalink to this headline">¶</a></h2>
+<h2>ChoreographerDisplayInfo.Color<a class="headerlink" href="#choreographerdisplayinfo-color" title="Permalink to this heading">¶</a></h2>
 <p>Color of the object. Set it to override the default category color.</p>
 <table border="1" class="docutils">
 <thead>
@@ -3208,7 +3832,7 @@ begins. At least one arm joint must be specified.</p>
 </table><p><a name="bosdyn.api.spot.ChoreographerSave"></a></p>
 </section>
 <section id="choreographersave">
-<h2>ChoreographerSave<a class="headerlink" href="#choreographersave" title="Permalink to this headline">¶</a></h2>
+<h2>ChoreographerSave<a class="headerlink" href="#choreographersave" title="Permalink to this heading">¶</a></h2>
 <p>Describes the metadata and information only used by the Choreographer GUI, which isn’t used in
 the API</p>
 <table border="1" class="docutils">
@@ -3241,10 +3865,73 @@ the API</p>
 <td>The start slice for the choreographer save.</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.ChoreographyCommandRequest"></a></p>
+</section>
+<section id="choreographycommandrequest">
+<h2>ChoreographyCommandRequest<a class="headerlink" href="#choreographycommandrequest" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td>Common request header</td>
+</tr>
+<tr>
+<td>commands</td>
+<td><a href="#bosdyn.api.spot.MoveCommand">MoveCommand</a></td>
+<td>Commands intended for individual moves. Repeated because multiple moves may be playing simultaneously and we may want to command multiple of them.</td>
+</tr>
+<tr>
+<td>lease</td>
+<td><a href="#bosdyn.api.Lease">bosdyn.api.Lease</a></td>
+<td>The Lease to show ownership of the robot body.</td>
+</tr>
+<tr>
+<td>command_end_time</td>
+<td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
+<td>When the commands expire. In the robot's clock.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.ChoreographyCommandResponse"></a></p>
+</section>
+<section id="choreographycommandresponse">
+<h2>ChoreographyCommandResponse<a class="headerlink" href="#choreographycommandresponse" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td>Common response header</td>
+</tr>
+<tr>
+<td>lease_use_result</td>
+<td><a href="#bosdyn.api.LeaseUseResult">bosdyn.api.LeaseUseResult</a></td>
+<td></td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn.api.spot.ChoreographyCommandResponse.Status">ChoreographyCommandResponse.Status</a></td>
+<td>One status for each command sent.</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.ChoreographyInfo"></a></p>
 </section>
 <section id="choreographyinfo">
-<h2>ChoreographyInfo<a class="headerlink" href="#choreographyinfo" title="Permalink to this headline">¶</a></h2>
+<h2>ChoreographyInfo<a class="headerlink" href="#choreographyinfo" title="Permalink to this heading">¶</a></h2>
 <p>Describes metadata for the Choreography sequence that can be used for a number of different UIs</p>
 <table border="1" class="docutils">
 <thead>
@@ -3264,7 +3951,7 @@ the API</p>
 </table><p><a name="bosdyn.api.spot.ChoreographySequence"></a></p>
 </section>
 <section id="choreographysequence">
-<h2>ChoreographySequence<a class="headerlink" href="#choreographysequence" title="Permalink to this headline">¶</a></h2>
+<h2>ChoreographySequence<a class="headerlink" href="#choreographysequence" title="Permalink to this heading">¶</a></h2>
 <p>Represents a particular choreography sequence, made up of MoveParams.</p>
 <table border="1" class="docutils">
 <thead>
@@ -3293,13 +3980,18 @@ the API</p>
 <tr>
 <td>choreography_info</td>
 <td><a href="#bosdyn.api.spot.ChoreographyInfo">ChoreographyInfo</a></td>
-<td></td>
+<td>Metadata associated with the sequence.</td>
+</tr>
+<tr>
+<td>entrance_state</td>
+<td><a href="#bosdyn.api.spot.MoveInfo.TransitionState">MoveInfo.TransitionState</a></td>
+<td>Can be used to specify an explicit entrance_state in the case where the first legs-track move accepts multiple entrace_states. Will also be used if the sequence contains no legs-track moves. Can otherwise be left unset. If set and not within the set of acceptable entrance_states for the first legs-track move, the Sequence will be considered invalid.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot.ChoreographyStateLog"></a></p>
 </section>
 <section id="choreographystatelog">
-<h2>ChoreographyStateLog<a class="headerlink" href="#choreographystatelog" title="Permalink to this headline">¶</a></h2>
+<h2>ChoreographyStateLog<a class="headerlink" href="#choreographystatelog" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3315,10 +4007,83 @@ the API</p>
 <td>A set of key frames recorded at a high rate. The key frames can be for the duration of an executing choreography or for the duration of a manual recorded log (triggered by the StartRecordingState and StopRecordingState RPCs). The specific set of keyframes is specified by the LogType when requesting to download the data.</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.ChoreographyStatusRequest"></a></p>
+</section>
+<section id="choreographystatusrequest">
+<h2>ChoreographyStatusRequest<a class="headerlink" href="#choreographystatusrequest" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td>Common request header</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.ChoreographyStatusResponse"></a></p>
+</section>
+<section id="choreographystatusresponse">
+<h2>ChoreographyStatusResponse<a class="headerlink" href="#choreographystatusresponse" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn.api.ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td>Common response header</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn.api.spot.ChoreographyStatusResponse.Status">ChoreographyStatusResponse.Status</a></td>
+<td></td>
+</tr>
+<tr>
+<td>execution_id</td>
+<td><a href="#int32">int32</a></td>
+<td>If dancing (or preparing to dance), the unique execution_id matching the one from ExecuteChoreographyResponse. If not dancing, 0.</td>
+</tr>
+<tr>
+<td>current_slice</td>
+<td><a href="#double">double</a></td>
+<td>Where we are in the script. (slice = 1/4 beat; standard unit of "time" within Choreography)</td>
+</tr>
+<tr>
+<td>active_moves</td>
+<td><a href="#bosdyn.api.spot.ActiveMove">ActiveMove</a></td>
+<td>All of the moves currently executing.</td>
+</tr>
+<tr>
+<td>sequence_slices</td>
+<td><a href="#int32">int32</a></td>
+<td>Length of the current sequence.</td>
+</tr>
+<tr>
+<td>sequence_slices_per_minute</td>
+<td><a href="#double">double</a></td>
+<td>Cadence of the current sequence.</td>
+</tr>
+<tr>
+<td>validity_time</td>
+<td><a href="#google.protobuf.Timestamp">google.protobuf.Timestamp</a></td>
+<td>When this was true in robot time.</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.ClearAllSequenceFilesRequest"></a></p>
 </section>
 <section id="clearallsequencefilesrequest">
-<h2>ClearAllSequenceFilesRequest<a class="headerlink" href="#clearallsequencefilesrequest" title="Permalink to this headline">¶</a></h2>
+<h2>ClearAllSequenceFilesRequest<a class="headerlink" href="#clearallsequencefilesrequest" title="Permalink to this heading">¶</a></h2>
 <p>Reset to a clean slate with no retained files by deleting all non-permanent
 choreography related files</p>
 <table border="1" class="docutils">
@@ -3339,7 +4104,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.ClearAllSequenceFilesResponse"></a></p>
 </section>
 <section id="clearallsequencefilesresponse">
-<h2>ClearAllSequenceFilesResponse<a class="headerlink" href="#clearallsequencefilesresponse" title="Permalink to this headline">¶</a></h2>
+<h2>ClearAllSequenceFilesResponse<a class="headerlink" href="#clearallsequencefilesresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3363,7 +4128,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.DeleteSequenceRequest"></a></p>
 </section>
 <section id="deletesequencerequest">
-<h2>DeleteSequenceRequest<a class="headerlink" href="#deletesequencerequest" title="Permalink to this headline">¶</a></h2>
+<h2>DeleteSequenceRequest<a class="headerlink" href="#deletesequencerequest" title="Permalink to this heading">¶</a></h2>
 <p>Delete the retained file for a choreography sequence so the sequence will be forgotten on reboot</p>
 <table border="1" class="docutils">
 <thead>
@@ -3388,7 +4153,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.DeleteSequenceResponse"></a></p>
 </section>
 <section id="deletesequenceresponse">
-<h2>DeleteSequenceResponse<a class="headerlink" href="#deletesequenceresponse" title="Permalink to this headline">¶</a></h2>
+<h2>DeleteSequenceResponse<a class="headerlink" href="#deletesequenceresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3412,7 +4177,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.DownloadRobotStateLogRequest"></a></p>
 </section>
 <section id="downloadrobotstatelogrequest">
-<h2>DownloadRobotStateLogRequest<a class="headerlink" href="#downloadrobotstatelogrequest" title="Permalink to this headline">¶</a></h2>
+<h2>DownloadRobotStateLogRequest<a class="headerlink" href="#downloadrobotstatelogrequest" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3436,7 +4201,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.DownloadRobotStateLogResponse"></a></p>
 </section>
 <section id="downloadrobotstatelogresponse">
-<h2>DownloadRobotStateLogResponse<a class="headerlink" href="#downloadrobotstatelogresponse" title="Permalink to this headline">¶</a></h2>
+<h2>DownloadRobotStateLogResponse<a class="headerlink" href="#downloadrobotstatelogresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3465,7 +4230,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.ExecuteChoreographyRequest"></a></p>
 </section>
 <section id="executechoreographyrequest">
-<h2>ExecuteChoreographyRequest<a class="headerlink" href="#executechoreographyrequest" title="Permalink to this headline">¶</a></h2>
+<h2>ExecuteChoreographyRequest<a class="headerlink" href="#executechoreographyrequest" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3504,7 +4269,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.ExecuteChoreographyResponse"></a></p>
 </section>
 <section id="executechoreographyresponse">
-<h2>ExecuteChoreographyResponse<a class="headerlink" href="#executechoreographyresponse" title="Permalink to this headline">¶</a></h2>
+<h2>ExecuteChoreographyResponse<a class="headerlink" href="#executechoreographyresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3529,11 +4294,16 @@ choreography related files</p>
 <td><a href="#bosdyn.api.spot.ExecuteChoreographyResponse.Status">ExecuteChoreographyResponse.Status</a></td>
 <td></td>
 </tr>
+<tr>
+<td>execution_id</td>
+<td><a href="#int32">int32</a></td>
+<td>Unique ID for the execution. Will increment whenever an ExecuteChoreographRequest is received. Will reset upon robot boot.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot.LegJointAngles"></a></p>
 </section>
 <section id="legjointangles">
-<h2>LegJointAngles<a class="headerlink" href="#legjointangles" title="Permalink to this headline">¶</a></h2>
+<h2>LegJointAngles<a class="headerlink" href="#legjointangles" title="Permalink to this heading">¶</a></h2>
 <p>Descprition of each leg joint angle (hip x/y and knee) in radians.</p>
 <table border="1" class="docutils">
 <thead>
@@ -3563,7 +4333,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.ListAllMovesRequest"></a></p>
 </section>
 <section id="listallmovesrequest">
-<h2>ListAllMovesRequest<a class="headerlink" href="#listallmovesrequest" title="Permalink to this headline">¶</a></h2>
+<h2>ListAllMovesRequest<a class="headerlink" href="#listallmovesrequest" title="Permalink to this heading">¶</a></h2>
 <p>Request a list of all possible moves and the associated parameters (min/max values).</p>
 <table border="1" class="docutils">
 <thead>
@@ -3583,7 +4353,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.ListAllMovesResponse"></a></p>
 </section>
 <section id="listallmovesresponse">
-<h2>ListAllMovesResponse<a class="headerlink" href="#listallmovesresponse" title="Permalink to this headline">¶</a></h2>
+<h2>ListAllMovesResponse<a class="headerlink" href="#listallmovesresponse" title="Permalink to this heading">¶</a></h2>
 <p>Response for ListAllMoves that defines the list of available moves and their parameter types.</p>
 <table border="1" class="docutils">
 <thead>
@@ -3613,7 +4383,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.ListAllSequencesRequest"></a></p>
 </section>
 <section id="listallsequencesrequest">
-<h2>ListAllSequencesRequest<a class="headerlink" href="#listallsequencesrequest" title="Permalink to this headline">¶</a></h2>
+<h2>ListAllSequencesRequest<a class="headerlink" href="#listallsequencesrequest" title="Permalink to this heading">¶</a></h2>
 <p>Request a list of all playable choreography sequences that the robot knows about</p>
 <table border="1" class="docutils">
 <thead>
@@ -3633,7 +4403,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.ListAllSequencesResponse"></a></p>
 </section>
 <section id="listallsequencesresponse">
-<h2>ListAllSequencesResponse<a class="headerlink" href="#listallsequencesresponse" title="Permalink to this headline">¶</a></h2>
+<h2>ListAllSequencesResponse<a class="headerlink" href="#listallsequencesresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3662,7 +4432,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.LoggedFootContacts"></a></p>
 </section>
 <section id="loggedfootcontacts">
-<h2>LoggedFootContacts<a class="headerlink" href="#loggedfootcontacts" title="Permalink to this headline">¶</a></h2>
+<h2>LoggedFootContacts<a class="headerlink" href="#loggedfootcontacts" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3696,7 +4466,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.LoggedJoints"></a></p>
 </section>
 <section id="loggedjoints">
-<h2>LoggedJoints<a class="headerlink" href="#loggedjoints" title="Permalink to this headline">¶</a></h2>
+<h2>LoggedJoints<a class="headerlink" href="#loggedjoints" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3740,7 +4510,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.LoggedStateKeyFrame"></a></p>
 </section>
 <section id="loggedstatekeyframe">
-<h2>LoggedStateKeyFrame<a class="headerlink" href="#loggedstatekeyframe" title="Permalink to this headline">¶</a></h2>
+<h2>LoggedStateKeyFrame<a class="headerlink" href="#loggedstatekeyframe" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3774,7 +4544,7 @@ choreography related files</p>
 </table><p><a name="bosdyn.api.spot.ModifyChoreographyInfoRequest"></a></p>
 </section>
 <section id="modifychoreographyinforequest">
-<h2>ModifyChoreographyInfoRequest<a class="headerlink" href="#modifychoreographyinforequest" title="Permalink to this headline">¶</a></h2>
+<h2>ModifyChoreographyInfoRequest<a class="headerlink" href="#modifychoreographyinforequest" title="Permalink to this heading">¶</a></h2>
 <p>Edit the metadata of a choreography sequence and update any retained files for
 that sequence with the new metadata</p>
 <table border="1" class="docutils">
@@ -3810,7 +4580,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.ModifyChoreographyInfoResponse"></a></p>
 </section>
 <section id="modifychoreographyinforesponse">
-<h2>ModifyChoreographyInfoResponse<a class="headerlink" href="#modifychoreographyinforesponse" title="Permalink to this headline">¶</a></h2>
+<h2>ModifyChoreographyInfoResponse<a class="headerlink" href="#modifychoreographyinforesponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -3831,10 +4601,41 @@ that sequence with the new metadata</p>
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.MoveCommand"></a></p>
+</section>
+<section id="movecommand">
+<h2>MoveCommand<a class="headerlink" href="#movecommand" title="Permalink to this heading">¶</a></h2>
+<p>Either, both, or neither of move_type and move_id can be used to specify which move this
+command is intended for.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>move_type</td>
+<td><a href="#string">string</a></td>
+<td>Name of the move type this command is intended for.</td>
+</tr>
+<tr>
+<td>move_id</td>
+<td><a href="#int32">int32</a></td>
+<td>ID of the move this command is intended for.</td>
+</tr>
+<tr>
+<td>custom_gait_command</td>
+<td><a href="#bosdyn.api.spot.CustomGaitCommand">CustomGaitCommand</a></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.MoveInfo"></a></p>
 </section>
 <section id="moveinfo">
-<h2>MoveInfo<a class="headerlink" href="#moveinfo" title="Permalink to this headline">¶</a></h2>
+<h2>MoveInfo<a class="headerlink" href="#moveinfo" title="Permalink to this heading">¶</a></h2>
 <p>Defines properties of a choreography move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -3926,6 +4727,11 @@ that sequence with the new metadata</p>
 <td></td>
 </tr>
 <tr>
+<td>is_looping</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+</tr>
+<tr>
 <td>display</td>
 <td><a href="#bosdyn.api.spot.ChoreographerDisplayInfo">ChoreographerDisplayInfo</a></td>
 <td>Information for the GUI tool to visualize the sequence move info.</td>
@@ -3939,7 +4745,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.MoveParams"></a></p>
 </section>
 <section id="moveparams">
-<h2>MoveParams<a class="headerlink" href="#moveparams" title="Permalink to this headline">¶</a></h2>
+<h2>MoveParams<a class="headerlink" href="#moveparams" title="Permalink to this heading">¶</a></h2>
 <p>Defines varying parameters for a particular instance of a move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -3964,6 +4770,11 @@ that sequence with the new metadata</p>
 <td>requested_slices</td>
 <td><a href="#int32">int32</a></td>
 <td>The number of slices (beats/sub-beats) that this move is supposed to last for. If the move was extendable, then this corresponds to the number of slices that the user requested.</td>
+</tr>
+<tr>
+<td>id</td>
+<td><a href="#int32">int32</a></td>
+<td>The ID number can be optionally set by the client as part of the UploadChoreographyRequest. If not set by the client, the robot will assign an id to each move that is unique within the sequence. The ID (either set by the client or the robot) will be reported in the ActiveMoves in the ChoreographyStatusResponse. The ID can be used to specify which move a Command is intended for.</td>
 </tr>
 <tr>
 <td>jump_params</td>
@@ -4126,6 +4937,16 @@ that sequence with the new metadata</p>
 <td></td>
 </tr>
 <tr>
+<td>custom_gait_params</td>
+<td><a href="#bosdyn.api.spot.CustomGaitParams">CustomGaitParams</a></td>
+<td></td>
+</tr>
+<tr>
+<td>leg_joint_params</td>
+<td><a href="#bosdyn.api.spot.LegJointParams">LegJointParams</a></td>
+<td></td>
+</tr>
+<tr>
 <td>animate_params</td>
 <td><a href="#bosdyn.api.spot.AnimateParams">AnimateParams</a></td>
 <td></td>
@@ -4134,7 +4955,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.SaveSequenceRequest"></a></p>
 </section>
 <section id="savesequencerequest">
-<h2>SaveSequenceRequest<a class="headerlink" href="#savesequencerequest" title="Permalink to this headline">¶</a></h2>
+<h2>SaveSequenceRequest<a class="headerlink" href="#savesequencerequest" title="Permalink to this heading">¶</a></h2>
 <p>Write a choreography sequence as a file to robot memory so it will be retained through reboot</p>
 <table border="1" class="docutils">
 <thead>
@@ -4164,7 +4985,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.SaveSequenceResponse"></a></p>
 </section>
 <section id="savesequenceresponse">
-<h2>SaveSequenceResponse<a class="headerlink" href="#savesequenceresponse" title="Permalink to this headline">¶</a></h2>
+<h2>SaveSequenceResponse<a class="headerlink" href="#savesequenceresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4188,7 +5009,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.SequenceInfo"></a></p>
 </section>
 <section id="sequenceinfo">
-<h2>SequenceInfo<a class="headerlink" href="#sequenceinfo" title="Permalink to this headline">¶</a></h2>
+<h2>SequenceInfo<a class="headerlink" href="#sequenceinfo" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4213,11 +5034,16 @@ that sequence with the new metadata</p>
 <td><a href="#bosdyn.api.spot.SequenceInfo.SavedState">SequenceInfo.SavedState</a></td>
 <td>Use temporary sequences during development with choreographer, and then tell the robot to retain the final version of the sequence so that it can be played back later from other interfaces, like the tablet</td>
 </tr>
+<tr>
+<td>exit_state</td>
+<td><a href="#bosdyn.api.spot.MoveInfo.TransitionState">MoveInfo.TransitionState</a></td>
+<td>The exit transition state of the sequence.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn.api.spot.StartRecordingStateRequest"></a></p>
 </section>
 <section id="startrecordingstaterequest">
-<h2>StartRecordingStateRequest<a class="headerlink" href="#startrecordingstaterequest" title="Permalink to this headline">¶</a></h2>
+<h2>StartRecordingStateRequest<a class="headerlink" href="#startrecordingstaterequest" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4246,7 +5072,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.StartRecordingStateResponse"></a></p>
 </section>
 <section id="startrecordingstateresponse">
-<h2>StartRecordingStateResponse<a class="headerlink" href="#startrecordingstateresponse" title="Permalink to this headline">¶</a></h2>
+<h2>StartRecordingStateResponse<a class="headerlink" href="#startrecordingstateresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4275,7 +5101,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.StopRecordingStateRequest"></a></p>
 </section>
 <section id="stoprecordingstaterequest">
-<h2>StopRecordingStateRequest<a class="headerlink" href="#stoprecordingstaterequest" title="Permalink to this headline">¶</a></h2>
+<h2>StopRecordingStateRequest<a class="headerlink" href="#stoprecordingstaterequest" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4294,7 +5120,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.StopRecordingStateResponse"></a></p>
 </section>
 <section id="stoprecordingstateresponse">
-<h2>StopRecordingStateResponse<a class="headerlink" href="#stoprecordingstateresponse" title="Permalink to this headline">¶</a></h2>
+<h2>StopRecordingStateResponse<a class="headerlink" href="#stoprecordingstateresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4313,7 +5139,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.UploadAnimatedMoveRequest"></a></p>
 </section>
 <section id="uploadanimatedmoverequest">
-<h2>UploadAnimatedMoveRequest<a class="headerlink" href="#uploadanimatedmoverequest" title="Permalink to this headline">¶</a></h2>
+<h2>UploadAnimatedMoveRequest<a class="headerlink" href="#uploadanimatedmoverequest" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4342,7 +5168,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.UploadAnimatedMoveResponse"></a></p>
 </section>
 <section id="uploadanimatedmoveresponse">
-<h2>UploadAnimatedMoveResponse<a class="headerlink" href="#uploadanimatedmoveresponse" title="Permalink to this headline">¶</a></h2>
+<h2>UploadAnimatedMoveResponse<a class="headerlink" href="#uploadanimatedmoveresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4371,7 +5197,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.UploadChoreographyRequest"></a></p>
 </section>
 <section id="uploadchoreographyrequest">
-<h2>UploadChoreographyRequest<a class="headerlink" href="#uploadchoreographyrequest" title="Permalink to this headline">¶</a></h2>
+<h2>UploadChoreographyRequest<a class="headerlink" href="#uploadchoreographyrequest" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4400,7 +5226,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.UploadChoreographyResponse"></a></p>
 </section>
 <section id="uploadchoreographyresponse">
-<h2>UploadChoreographyResponse<a class="headerlink" href="#uploadchoreographyresponse" title="Permalink to this headline">¶</a></h2>
+<h2>UploadChoreographyResponse<a class="headerlink" href="#uploadchoreographyresponse" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4424,7 +5250,7 @@ that sequence with the new metadata</p>
 </table> <!-- end messages --><p><a name="bosdyn.api.spot.Animation.ArmPlayback"></a></p>
 </section>
 <section id="animation-armplayback">
-<h2>Animation.ArmPlayback<a class="headerlink" href="#animation-armplayback" title="Permalink to this headline">¶</a></h2>
+<h2>Animation.ArmPlayback<a class="headerlink" href="#animation-armplayback" title="Permalink to this heading">¶</a></h2>
 <p>Mode for hand trajectory playback</p>
 <table border="1" class="docutils">
 <thead>
@@ -4459,7 +5285,7 @@ that sequence with the new metadata</p>
 </table><p><a name="bosdyn.api.spot.ChoreographerDisplayInfo.Category"></a></p>
 </section>
 <section id="choreographerdisplayinfo-category">
-<h2>ChoreographerDisplayInfo.Category<a class="headerlink" href="#choreographerdisplayinfo-category" title="Permalink to this headline">¶</a></h2>
+<h2>ChoreographerDisplayInfo.Category<a class="headerlink" href="#choreographerdisplayinfo-category" title="Permalink to this heading">¶</a></h2>
 <p>Move Category affects the grouping in the choreographer list view, as well as the color it’s
 displayed with.</p>
 <table border="1" class="docutils">
@@ -4527,10 +5353,123 @@ displayed with.</p>
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn.api.spot.ChoreographyCommandResponse.Status"></a></p>
+</section>
+<section id="choreographycommandresponse-status">
+<h2>ChoreographyCommandResponse.Status<a class="headerlink" href="#choreographycommandresponse-status" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_OK</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_ACCEPTED_WITH_MODIFICATION</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_LEASE_ERROR</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_NO_MATCHING_MOVE</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_INVALID_COMMAND</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_ALREADY_EXPIRED</td>
+<td>6</td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn.api.spot.ChoreographyStatusResponse.Status"></a></p>
+</section>
+<section id="choreographystatusresponse-status">
+<h2>ChoreographyStatusResponse.Status<a class="headerlink" href="#choreographystatusresponse-status" title="Permalink to this heading">¶</a></h2>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_DANCING</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_COMPLETED_SEQUENCE</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_PREPPING</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_WAITING_FOR_START_TIME</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_VALIDATING</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_INTERRUPTED</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_FALLEN</td>
+<td>7</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_POWERED_OFF</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_OTHER</td>
+<td>9</td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn.api.spot.ClearAllSequenceFilesResponse.Status"></a></p>
 </section>
 <section id="clearallsequencefilesresponse-status">
-<h2>ClearAllSequenceFilesResponse.Status<a class="headerlink" href="#clearallsequencefilesresponse-status" title="Permalink to this headline">¶</a></h2>
+<h2>ClearAllSequenceFilesResponse.Status<a class="headerlink" href="#clearallsequencefilesresponse-status" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4559,7 +5498,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.DeleteSequenceResponse.Status"></a></p>
 </section>
 <section id="deletesequenceresponse-status">
-<h2>DeleteSequenceResponse.Status<a class="headerlink" href="#deletesequenceresponse-status" title="Permalink to this headline">¶</a></h2>
+<h2>DeleteSequenceResponse.Status<a class="headerlink" href="#deletesequenceresponse-status" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4598,7 +5537,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.DownloadRobotStateLogRequest.LogType"></a></p>
 </section>
 <section id="downloadrobotstatelogrequest-logtype">
-<h2>DownloadRobotStateLogRequest.LogType<a class="headerlink" href="#downloadrobotstatelogrequest-logtype" title="Permalink to this headline">¶</a></h2>
+<h2>DownloadRobotStateLogRequest.LogType<a class="headerlink" href="#downloadrobotstatelogrequest-logtype" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4627,7 +5566,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.DownloadRobotStateLogResponse.Status"></a></p>
 </section>
 <section id="downloadrobotstatelogresponse-status">
-<h2>DownloadRobotStateLogResponse.Status<a class="headerlink" href="#downloadrobotstatelogresponse-status" title="Permalink to this headline">¶</a></h2>
+<h2>DownloadRobotStateLogResponse.Status<a class="headerlink" href="#downloadrobotstatelogresponse-status" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4661,7 +5600,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.ExecuteChoreographyResponse.Status"></a></p>
 </section>
 <section id="executechoreographyresponse-status">
-<h2>ExecuteChoreographyResponse.Status<a class="headerlink" href="#executechoreographyresponse-status" title="Permalink to this headline">¶</a></h2>
+<h2>ExecuteChoreographyResponse.Status<a class="headerlink" href="#executechoreographyresponse-status" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4700,7 +5639,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.ModifyChoreographyInfoResponse.Status"></a></p>
 </section>
 <section id="modifychoreographyinforesponse-status">
-<h2>ModifyChoreographyInfoResponse.Status<a class="headerlink" href="#modifychoreographyinforesponse-status" title="Permalink to this headline">¶</a></h2>
+<h2>ModifyChoreographyInfoResponse.Status<a class="headerlink" href="#modifychoreographyinforesponse-status" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4739,7 +5678,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.MoveInfo.TransitionState"></a></p>
 </section>
 <section id="moveinfo-transitionstate">
-<h2>MoveInfo.TransitionState<a class="headerlink" href="#moveinfo-transitionstate" title="Permalink to this headline">¶</a></h2>
+<h2>MoveInfo.TransitionState<a class="headerlink" href="#moveinfo-transitionstate" title="Permalink to this heading">¶</a></h2>
 <p>The state that the robot is in at the start or end of a move.</p>
 <table border="1" class="docutils">
 <thead>
@@ -4779,7 +5718,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.SaveSequenceResponse.Status"></a></p>
 </section>
 <section id="savesequenceresponse-status">
-<h2>SaveSequenceResponse.Status<a class="headerlink" href="#savesequenceresponse-status" title="Permalink to this headline">¶</a></h2>
+<h2>SaveSequenceResponse.Status<a class="headerlink" href="#savesequenceresponse-status" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4802,7 +5741,7 @@ displayed with.</p>
 <tr>
 <td>STATUS_UNKNOWN_SEQUENCE</td>
 <td>2</td>
-<td>The sequence was successfully saved</td>
+<td>The requested sequence was not found</td>
 </tr>
 <tr>
 <td>STATUS_PERMANENT_SEQUENCE</td>
@@ -4818,7 +5757,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.SequenceInfo.SavedState"></a></p>
 </section>
 <section id="sequenceinfo-savedstate">
-<h2>SequenceInfo.SavedState<a class="headerlink" href="#sequenceinfo-savedstate" title="Permalink to this headline">¶</a></h2>
+<h2>SequenceInfo.SavedState<a class="headerlink" href="#sequenceinfo-savedstate" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4852,7 +5791,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.StartRecordingStateResponse.Status"></a></p>
 </section>
 <section id="startrecordingstateresponse-status">
-<h2>StartRecordingStateResponse.Status<a class="headerlink" href="#startrecordingstateresponse-status" title="Permalink to this headline">¶</a></h2>
+<h2>StartRecordingStateResponse.Status<a class="headerlink" href="#startrecordingstateresponse-status" title="Permalink to this heading">¶</a></h2>
 <p>The status for the start recording request.</p>
 <table border="1" class="docutils">
 <thead>
@@ -4887,7 +5826,7 @@ displayed with.</p>
 </table><p><a name="bosdyn.api.spot.UploadAnimatedMoveResponse.Status"></a></p>
 </section>
 <section id="uploadanimatedmoveresponse-status">
-<h2>UploadAnimatedMoveResponse.Status<a class="headerlink" href="#uploadanimatedmoveresponse-status" title="Permalink to this headline">¶</a></h2>
+<h2>UploadAnimatedMoveResponse.Status<a class="headerlink" href="#uploadanimatedmoveresponse-status" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -4922,10 +5861,10 @@ displayed with.</p>
 </section>
 </section>
 <section id="spot-choreography-service-proto">
-<h1>spot/choreography_service.proto<a class="headerlink" href="#spot-choreography-service-proto" title="Permalink to this headline">¶</a></h1>
+<h1>spot/choreography_service.proto<a class="headerlink" href="#spot-choreography-service-proto" title="Permalink to this heading">¶</a></h1>
  <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --><p><a name="bosdyn.api.spot.ChoreographyService"></a></p>
 <section id="choreographyservice">
-<h2>ChoreographyService<a class="headerlink" href="#choreographyservice" title="Permalink to this headline">¶</a></h2>
+<h2>ChoreographyService<a class="headerlink" href="#choreographyservice" title="Permalink to this heading">¶</a></h2>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -5008,11 +5947,23 @@ displayed with.</p>
 <td><a href="#bosdyn.api.spot.DownloadRobotStateLogResponse">DownloadRobotStateLogResponse</a> stream</td>
 <td>Download log of the latest recorded robot state information.</td>
 </tr>
+<tr>
+<td>ChoreographyStatus</td>
+<td><a href="#bosdyn.api.spot.ChoreographyStatusRequest">ChoreographyStatusRequest</a></td>
+<td><a href="#bosdyn.api.spot.ChoreographyStatusResponse">ChoreographyStatusResponse</a></td>
+<td>Report the status of a dancing robot.</td>
+</tr>
+<tr>
+<td>ChoreographyCommand</td>
+<td><a href="#bosdyn.api.spot.ChoreographyCommandRequest">ChoreographyCommandRequest</a></td>
+<td><a href="#bosdyn.api.spot.ChoreographyCommandResponse">ChoreographyCommandResponse</a></td>
+<td>Commands intended for individual dance moves that are currently executing.</td>
+</tr>
 </tbody>
 </table> <!-- end services --></section>
 </section>
 <section id="standard-types">
-<h1>Standard Types<a class="headerlink" href="#standard-types" title="Permalink to this headline">¶</a></h1>
+<h1>Standard Types<a class="headerlink" href="#standard-types" title="Permalink to this heading">¶</a></h1>
 <table border="1" class="docutils">
 <thead>
 <tr>

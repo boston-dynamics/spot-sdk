@@ -1,10 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Docking callback to automatically upload DAQ data to a destination."""
+"""Docking callback to automatically upload Data Acquisition data to a destination."""
 
 import argparse
 import datetime
@@ -51,7 +51,7 @@ class Session:
 
 
 class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
-    """When run, uploads all DAQ data to an S3 bucket.
+    """When run, uploads all acquired data to an S3 bucket.
     """
 
     def __init__(self, bosdyn_sdk_robot, options, logger=None):
@@ -127,7 +127,7 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
             current_time = time.time()
             query_params = make_time_query_params(self.start_time, current_time, robot)
         except ValueError as val_err:
-            print("Value Exception:\n" + str(val_err))
+            print(f'Value Exception:\n{val_err}')
 
         retry = 0
         success = False
@@ -137,8 +137,8 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
             retry += 1
 
         if not success:
-            self.logger.info('Unable to download mission data for {} through {}.'.format(
-                self.start_time, current_time))
+            self.logger.info(
+                f'Unable to download mission data for {self.start_time} through {current_time}.')
             return
 
         downloaded_zip_file = max(glob.glob(os.path.join(self.destination_folder, 'REST/*')),
@@ -171,7 +171,7 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
             list_of_files = upload(list_of_files, start_time_string, current_time_string)
             retry += 1
         if len(list_of_files) != 0:
-            self.logger.info('Unable to upload {}'.format(list_of_files))
+            self.logger.info(f'Unable to upload {list_of_files}')
 
         self.start_time = time.time()
 
@@ -180,21 +180,20 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
         failed_files = []
         for source_file in source_files:
             try:
-                destination_file = '{}_{}/{}'.format(start_time, current_time,
-                                                     source_file.split('/')[-1])
+                destination_file = f'{start_time}_{current_time}/{source_file.split("/")[-1]}'
                 self.s3_client.upload_file(source_file, self.options.bucket_name, destination_file)
-                self.logger.info('Upload of file {} as {} to {} successful'.format(
-                    source_file, destination_file, self.options.bucket_name))
+                self.logger.info(
+                    f'Upload of file {source_file} as {destination_file} to {self.options.bucket_name} successful'
+                )
             except IOError:
-                self.logger.info('The file {} was not found'.format(source_files))
+                self.logger.info(f'The file {source_files} was not found')
                 failed_files.append(source_file)
             except botocore.exceptions.EndpointConnectionError:
-                self.logger.info(
-                    'Could not connect to AWS. File is available at {}'.format(source_file))
+                self.logger.info(f'Could not connect to AWS. File is available at {source_file}')
                 failed_files.append(source_file)
             except Exception as e:
-                self.logger.info('Unknown exception occurred when trying to upload {}. {}'.format(
-                    source_file, e))
+                self.logger.info(
+                    f'Unknown exception occurred when trying to upload {source_file}. {e}')
                 failed_files.append(source_file)
         return failed_files
 
@@ -202,22 +201,22 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
         """Uploads a list of files to the bucket."""
         failed_files = []
         for source_file in source_files:
-            destination = '{}_{}/{}'.format(start_time, current_time, source_file.split('/')[-1])
+            destination = f'{start_time}_{current_time}/{source_file.split("/")[-1]}'
             blob = self.bucket.blob(destination)
             try:
                 blob.upload_from_filename(source_file)
-                self.logger.info('Upload of file {} as {} to {} successful'.format(
-                    source_file, source_file, self.options.bucket_name))
+                self.logger.info(
+                    f'Upload of file {source_file} as {source_file} to {self.options.bucket_name} successful'
+                )
             except IOError:
-                self.logger.info('The file {} was not found'.format(source_file))
+                self.logger.info(f'The file {source_file} was not found')
                 failed_files.append(source_file)
             except (requests.exceptions.ReadTimeout, google.auth.exceptions.TransportError):
-                self.logger.info(
-                    'Could not connect to GCP. File is available at {}'.format(source_file))
+                self.logger.info(f'Could not connect to GCP. File is available at {source_file}')
                 failed_files.append(source_file)
             except Exception as e:
-                self.logger.info('Unknown exception occurred when trying to upload {}. {}'.format(
-                    source_file, e))
+                self.logger.info(
+                    f'Unknown exception occurred when trying to upload {source_file}. {e}')
                 failed_files.append(source_file)
         return failed_files
 
@@ -239,7 +238,7 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
         if self.options.time_period:
             self.start_time = (
                 datetime.datetime.utcnow() -
-                datetime.timedelta(minutes=self.options.time_period)).strftime("%Y-%m-%dT%H:%M:%SZ")
+                datetime.timedelta(minutes=self.options.time_period)).strftime('%Y-%m-%dT%H:%M:%SZ')
         return response
 
     def Stop(self, request, context):
@@ -278,8 +277,9 @@ if __name__ == '__main__':
     bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_service_endpoint_arguments(parser)
     parser.add_argument('--destination', default='local', choices=['aws', 'gcp', 'local'])
-    parser.add_argument('--time-period', help=('How far back to download DAQ data in minutes.'),
-                        required=False, type=int)
+    parser.add_argument('--time-period',
+                        help=('How far back to download acquired data in minutes.'), required=False,
+                        type=int)
     parser.add_argument('--bucket-name', help=('The S3 or GCP bucket to save the acquired data.'))
     parser.add_argument('--aws-access-key', help=('Required if ~/.aws/config does not exist.'),
                         default=None, type=str)
@@ -288,7 +288,7 @@ if __name__ == '__main__':
     parser.add_argument('--key-filepath', help=('The filepath of your GCP key.'))
     parser.add_argument('--destination-folder', help=('The folder to save the acquired data'),
                         required=False, default='/tmp')
-    parser.add_argument('--unzip', action='store_true', help='Unzip the acquired DAQ file.')
+    parser.add_argument('--unzip', action='store_true', help='Unzip the acquired data file.')
 
     options = parser.parse_args()
 
@@ -308,7 +308,7 @@ if __name__ == '__main__':
     setup_logging(options.verbose)
 
     # Create and authenticate a bosdyn robot object.
-    sdk = bosdyn.client.create_standard_sdk("DaqUploadMissionServiceSDK")
+    sdk = bosdyn.client.create_standard_sdk('DaqUploadMissionServiceSDK')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()

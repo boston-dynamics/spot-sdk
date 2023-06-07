@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -46,14 +46,29 @@ functions in constrained_manipulation_helper.py for e.g.
 construct_crank_task(velocity_normalized)
 in the run_constrained_manipulation.py script.
 
-You can specify the task type, the velocity along the task
+You can run constrained manipulation in either velocity or position mode.
+
+In velocity mode, you specify the task type, the velocity along the task
 and the force or torque limits as arguments. Note that for
-all tasks besides the knob task type, the velocity is a
-normalized velocity in the range [-1, 1].
+all tasks, the velocity is a normalized velocity in the range [-1, 1].
 Please look in the file constrained_manipulation_helper.py
 for more details on how the velocity is scaled with the force limit.
 
 ```
 python3 run_constrained_manipulation.py ROBOT_IP --task-type crank  --task-velocity 0.5 --force-limit 40
+
+```
+
+In position mode, you specify the task type, task velocity, target-angle or
+target-linear-position and the force or torque limits as arguments. For position mode,
+the task velocity is used as a velocity limit, i.e. the max velocity that the planned trajectory
+can reach. Note that this velocity is normalized according to the force/torque limit.
+Please look in the file constrained_manipulation_helper.py for more details
+on how the velocity is scaled with the force or torque limit.
+Note that some steady state error will exist in position control, so we recommend extensively
+testing your specific task and choosing the target displacement based on the performance.
+
+```
+python3 run_constrained_manipulation.py ROBOT_IP --task-type crank   --force-limit 40 --task-velocity 0.5  --target-angle 3.14
 
 ```

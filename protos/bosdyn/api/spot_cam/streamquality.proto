@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,6 +12,7 @@ option java_outer_classname = "StreamQualityProto";
 
 import "bosdyn/api/header.proto";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/duration.proto";
 
 // Parameters for how the video stream should be processed and compressed.
 message StreamParams {
@@ -34,7 +35,7 @@ message StreamParams {
         CLOUDY = 6;
         TWILIGHT = 7;
         SHADE = 8;
-        DARK = 9 [deprecated=true];
+        DARK = 9 [deprecated = true];
     }
     // Wrapper for AwbModeEnum to allow it to be optionally set.
     message AwbMode {
@@ -42,6 +43,31 @@ message StreamParams {
     }
     // Optional setting of automatic white balancing mode.
     AwbMode awb = 4;
+
+    message AutoExposure {}
+    message SyncAutoExposure {
+        // brightness_target is a value between 0 and 255 which
+        // controls the setpoint for the exposure control algorithm
+        // if brightness_target is not set, a sensible default is chosen by the system
+        google.protobuf.Int32Value brightness_target = 1;
+    }
+    message ManualExposure {
+        // duration is required, and may be clamped depending
+        // on the parameters of the camera
+        google.protobuf.Duration exposure = 1;
+        // if gain is omitted, it is assumed to be 1.0
+        google.protobuf.FloatValue gain = 2;
+    }
+
+    oneof exposure {
+        // the AutoExposure option runs exposure independently on each of the ring cameras
+        AutoExposure auto_exposure = 5;
+        // the SyncAutoExposure option runs a single autoexposure algorithm that takes into
+        // account data from all ring cameras
+        SyncAutoExposure sync_exposure = 6;
+        // manual exposure sets an exposure for all ring cameras.
+        ManualExposure manual_exposure = 7;
+    }
 }
 
 // Request the current video stream parameters.

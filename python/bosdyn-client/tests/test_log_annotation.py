@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,20 +9,17 @@ import logging
 import sys
 import time
 import types
+from unittest import mock
 
 import pytest
 from google.protobuf import timestamp_pb2
 
 import bosdyn.client
+import bosdyn.client.log_annotation
+from bosdyn.api import header_pb2
 from bosdyn.api.log_annotation_pb2 import LogAnnotationTextMessage
 from bosdyn.client.log_annotation import InvalidArgument, LogAnnotationClient, LogAnnotationHandler
 
-if sys.version_info[0:2] >= (3, 3):
-    # Python version 3.3 added unittest.mock
-    from unittest import mock
-else:
-    # The backport is on PyPi as just "mock"
-    import mock
 
 
 
@@ -105,7 +102,7 @@ def test_handler_simple(mock_log_client, handler, logger, record_and_proto_level
     assert text_log_proto_list[0].timestamp == mock_now_ts.return_value
 
 
-@pytest.mark.timeout(1)
+@pytest.mark.timeout(10)
 def test_handler_autoflush(mock_log_client, handler, logger):
     """The handler should automatically flush messages to the log client."""
     # Build the handler with a specific record level and our mock client.
@@ -125,7 +122,6 @@ def test_handler_autoflush(mock_log_client, handler, logger):
     mock_log_client.add_text_messages.assert_called_once()
 
 
-@pytest.mark.timeout(1)
 @pytest.mark.parametrize('num_msgs', (100, 10, 50, 2))
 def test_handler_multi_message(logger, handler, mock_log_client, num_msgs):
     """Ensure proper behavior with a large number of sequential messages."""
@@ -147,7 +143,7 @@ def test_handler_multi_message(logger, handler, mock_log_client, num_msgs):
     assert num_msgs_sent == num_msgs
 
 
-@pytest.mark.timeout(1)
+@pytest.mark.timeout(10)
 def test_handler_failure(logger, handler, mock_log_client):
     """When log client fails, we should get error messages and the failed log message."""
     msg = 'This should fail'
@@ -202,7 +198,12 @@ def log_client(constant_log_timestamp):
     client._stub = mock.Mock()
     future = mock.Mock()
     future.exception.return_value = None
+    # Make sure we're setting a valid common error code on responses.
+    future.result.return_value = mock.Mock()
+    future.result.return_value.header.error.code = header_pb2.CommonError.CODE_OK
     client._stub.AddLogAnnotation.future.return_value = future
+    client._stub.AddLogAnnotation.return_value = future.result.return_value
+    print(future.result.return_value)
     # Set up the endpoint such that its conversions will return the constant_log_timestamp.
     client._timesync_endpoint = mock.Mock()
     client._timesync_endpoint.get_robot_time_converter.return_value = converter

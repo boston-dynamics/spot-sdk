@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,11 +12,14 @@ import threading
 import time
 from unittest import mock
 
+import grpc
 import pytest
 from google.protobuf import text_format
 
+import bosdyn.client
 from bosdyn.api import lease_pb2
 from bosdyn.api.graph_nav import area_callback_pb2
+from bosdyn.api.service_customization_pb2 import CustomParamError
 from bosdyn.client.area_callback_region_handler_base import (AreaCallbackRegionHandlerBase,
                                                              IncorrectUsage)
 from bosdyn.client.area_callback_service_servicer import AreaCallbackServiceServicer
@@ -541,3 +544,19 @@ def test_bad_handlers_begin():
     handler = BadHandlerBegin(conf, mock_robot, 'block_until_arrived_at_end')
     with pytest.raises(IncorrectUsage):
         handler.begin(req)
+
+
+def test_bad_custom_params():
+    mock_lease = MockLeaseClient(should_throw=False)
+    mock_robot = MockRobot(mock_lease)
+    conf = AreaCallbackServiceConfig("service-name", required_lease_resources=["body"])
+    servicer = AreaCallbackServiceServicer(mock_robot, conf, AreaCallbackRegionHandlerBase)
+
+    request = area_callback_pb2.BeginCallbackRequest()
+    request.custom_params.values['nonexistent_param'].int_value.value = 5
+    response = servicer.BeginCallback(request, context=None)
+    # This is a little hacky. Ideally I'd have a client hooked up here raising the exception.
+    exc = bosdyn.client.common.custom_params_error(response)
+    assert exc is not None
+    assert isinstance(exc, bosdyn.client.CustomParamError)
+    assert exc.custom_param_error.status == CustomParamError.STATUS_UNSUPPORTED_PARAMETER

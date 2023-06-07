@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,6 +14,7 @@ import pytest
 import bosdyn.api.image_pb2 as image_protos
 import bosdyn.api.image_service_pb2_grpc as image_service
 import bosdyn.client.image
+from bosdyn.api.service_customization_pb2 import CustomParamError
 from bosdyn.client.exceptions import TimedOutError
 
 from . import helpers
@@ -193,3 +194,15 @@ def test_get_image_source_data_error():
                                      image_responses=[image_response])
     with pytest.raises(bosdyn.client.image.ImageDataError):
         res = client.get_image_from_sources(image_sources=['foo'])
+
+
+def test_get_image_custom_params_errror():
+    image_response = image_protos.ImageResponse(
+        status=image_protos.ImageResponse.STATUS_CUSTOM_PARAMS_ERROR)
+    image_response.custom_param_error.status = CustomParamError.STATUS_UNSUPPORTED_PARAMETER
+    image_response.custom_param_error.error_messages.append('Bad param added.')
+    client, service, server = _setup(expected_image_sources=['foo'],
+                                     image_responses=[image_response])
+    with pytest.raises(bosdyn.client.CustomParamError) as excinfo:
+        res = client.get_image_from_sources(image_sources=['foo'])
+    assert excinfo.value.custom_param_error.status == CustomParamError.STATUS_UNSUPPORTED_PARAMETER

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,11 +13,14 @@ import socket
 import types
 
 import grpc
-import six
+from deprecated.sphinx import deprecated
+
+from bosdyn.api.header_pb2 import CommonError
 
 from .channel import TransportError, translate_exception
-from .exceptions import (Error, InternalServerError, InvalidRequestError, LeaseUseError,
-                         LicenseError, UnsetStatusError)
+from .data_chunk import chunk_message, parse_from_chunks
+from .exceptions import (CustomParamError, Error, InternalServerError, InvalidRequestError,
+                         LeaseUseError, LicenseError, ResponseError, UnsetStatusError)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -28,13 +31,15 @@ DEFAULT_RPC_TIMEOUT = 30  # seconds
 
 def common_header_errors(response):
     """Return an exception based on common response header. None if no error."""
-    if response.header.error.code == response.header.error.CODE_UNSPECIFIED:
+    if response.header.error.code == CommonError.CODE_OK:
+        return None
+    if response.header.error.code == CommonError.CODE_UNSPECIFIED:
         return UnsetStatusError(response)
-    if response.header.error.code == response.header.error.CODE_INTERNAL_SERVER_ERROR:
+    if response.header.error.code == CommonError.CODE_INTERNAL_SERVER_ERROR:
         return InternalServerError(response)
-    if response.header.error.code == response.header.error.CODE_INVALID_REQUEST:
+    if response.header.error.code == CommonError.CODE_INVALID_REQUEST:
         return InvalidRequestError(response)
-    return None
+    return ResponseError(response)
 
 
 def streaming_common_header_errors(response_iterator):
@@ -65,7 +70,7 @@ def common_lease_errors(response):
 
     for result in lease_use_results:
         if result.status != result.STATUS_OK:
-            return LeaseUseError(response)
+            return LeaseUseError(response, result)
     return None
 
 
@@ -77,6 +82,17 @@ def streaming_common_lease_errors(response_iterator):
         if error is not None:
             return error
     # No lease use error found.
+    return None
+
+
+def custom_params_error(response, status_value=None, status_field_name='status',
+                        error_field_name='custom_param_error', total_response=None):
+    """Return an exception based on having a custom parameter status and message.
+    None if no error."""
+    if status_value is None:
+        status_value = response.STATUS_CUSTOM_PARAMS_ERROR
+    if getattr(response, status_field_name) == status_value:
+        return CustomParamError(total_response or response, getattr(response, error_field_name))
     return None
 
 
@@ -193,6 +209,28 @@ def handle_lease_use_result_errors(func):
     return wrapper
 
 
+def handle_custom_params_errors(*args, status_value=None, status_field_name='status',
+                                error_field_name='custom_param_error'):
+    """Decorate "error from response" functions to handle custom param errors."""
+
+    def decorator(func):
+
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # pylint: disable=no-value-for-parameter
+            return custom_params_error(*args, status_value=status_value,
+                                       status_field_name=status_field_name,
+                                       error_field_name=error_field_name) or func(*args, **kwargs)
+
+        return wrapper
+
+    if len(args) == 1 and callable(args[0]):
+        # No arguments, this is the decorator
+        return decorator(args[0])
+
+    return decorator
+
+
 def maybe_raise(exc):
     """raise the provided exception if it is not None"""
     if exc is not None:
@@ -263,10 +301,14 @@ class BaseClient(object):
         self.client_name = None
 
     @staticmethod
+    @deprecated(reason='Forces serialization even if the logging is not happening.  Do not use.',
+                version='3.3.0')
     def request_trim_for_log(req):
         return '\n{}\n'.format(req)
 
     @staticmethod
+    @deprecated(reason='Forces serialization even if the logging is not happening.  Do not use.',
+                version='3.3.0')
     def response_trim_for_log(resp):
         return '\n{}\n'.format(resp)
 
@@ -294,11 +336,9 @@ class BaseClient(object):
         for request in request_iterator:
             request = self._apply_request_processors(request, copy_request=copy_request)
             if is_blocking:
-                logger.debug('blocking request: %s %s', rpc_method._method,
-                             self.request_trim_for_log(request))
+                logger.debug('blocking request: %s\n%s', rpc_method._method, request)
             else:
-                logger.debug('async request: %s %s', rpc_method._method,
-                             self.request_trim_for_log(request))
+                logger.debug('async request: %s\n%s', rpc_method._method, request)
             yield request
 
     def update_response_iterator(self, response_iterator, logger, rpc_method, is_blocking):
@@ -306,11 +346,9 @@ class BaseClient(object):
             for response in response_iterator:
                 response = self._apply_response_processors(copy.deepcopy(response))
                 if is_blocking:
-                    logger.debug('blocking response: %s %s', rpc_method._method,
-                                 self.request_trim_for_log(response))
+                    logger.debug('blocking response: %s\n%s', rpc_method._method, response)
                 else:
-                    logger.debug('async response: %s %s', rpc_method._method,
-                                 self.request_trim_for_log(response))
+                    logger.debug('async response: %s\n%s', rpc_method._method, response)
                 yield response
         except TransportError as e:
             # Iterating through the response_iterator is the point that transport exceptions will
@@ -319,11 +357,11 @@ class BaseClient(object):
             # Any ResponseErrors or other exception types can be let through untranslated.
             # Use the "raise from None" pattern to reset the exception's context, which produces
             # confusing stack traces.
-            six.raise_from(translate_exception(e), None)
+            raise translate_exception(e) from None
 
     @process_kwargs
     def call(self, rpc_method, request, value_from_response=None, error_from_response=None,
-             copy_request=True, **kwargs):
+             assemble_type=None, copy_request=True, **kwargs):
         """Returns result of calling rpc_method(request, kwargs) after running processors.
 
         value_from_response and error_from_response should not raise their own exceptions!
@@ -338,8 +376,7 @@ class BaseClient(object):
                                                    copy_request=copy_request)
         else:
             request = self._apply_request_processors(request, copy_request=copy_request)
-            logger.debug('blocking request: %s %s', rpc_method._method,
-                         self.request_trim_for_log(request))
+            logger.debug('blocking request: %s\n%s', rpc_method._method, request)
 
         try:
             timeout = kwargs.pop('timeout', DEFAULT_RPC_TIMEOUT)
@@ -347,18 +384,34 @@ class BaseClient(object):
         except TransportError as e:
             # Use the "raise from None" pattern to reset the exception's context, which produces
             # confusing stack traces.
-            six.raise_from(translate_exception(e), None)
+            raise translate_exception(e) from None
 
         if isinstance(rpc_method, grpc.UnaryStreamMultiCallable) or isinstance(
                 rpc_method, grpc.StreamStreamMultiCallable):
             # The outgoing response is a streaming response.
-            response = self.update_response_iterator(response, logger, rpc_method, is_blocking=True)
-            return self.handle_response_streaming(list(response), error_from_response,
-                                                  value_from_response)
+            if assemble_type is not None:
+                # Assemble the data chunks into a message before passing to non-streaming handlers.
+                msg = assemble_type()
+
+                # For server streaming response RPCs, transport errors are not raised during the rpc call.
+                # We cannot explicitly check for them until the RPC deadline has been exceeded.
+                # To make due, we attempt to parse the response and catch transport errors raised while iterating through the responses.
+                try:
+                    parse_from_chunks(response, msg)
+                except TransportError as e:
+                    raise translate_exception(e) from None
+
+                msg = self._apply_response_processors(msg)
+                logger.debug('response: %s\n%s', rpc_method._method, msg)
+                return self.handle_response(msg, error_from_response, value_from_response)
+            else:
+                responses = self.update_response_iterator(response, logger, rpc_method,
+                                                          is_blocking=True)
+                return self.handle_response_streaming(list(responses), error_from_response,
+                                                      value_from_response)
         else:
             response = self._apply_response_processors(response)
-            logger.debug('response: %s %s', rpc_method._method,
-                         self.response_trim_for_log(response))
+            logger.debug('response: %s\n%s', rpc_method._method, response)
             return self.handle_response(response, error_from_response, value_from_response)
 
     def handle_response(self, response, error_from_response, value_from_response):
@@ -394,7 +447,7 @@ class BaseClient(object):
         """
         request = self._apply_request_processors(request, copy_request=copy_request)
         logger = self._get_logger(rpc_method)
-        logger.debug('async request: %s %s', rpc_method._method, self.request_trim_for_log(request))
+        logger.debug('async request: %s\n%s', rpc_method._method, request)
         timeout = kwargs.pop('timeout', DEFAULT_RPC_TIMEOUT)
         response_future = rpc_method.future(request, timeout=timeout, **kwargs)
 
@@ -409,8 +462,7 @@ class BaseClient(object):
                 except Exception:  # pylint: disable=broad-except
                     logger.exception("Error applying response processors.")
                 else:
-                    logger.debug('async response: %s %s', rpc_method._method,
-                                 self.response_trim_for_log(result))
+                    logger.debug('async response: %s\n%s', rpc_method._method, result)
 
         response_future.add_done_callback(on_finish)
         return FutureWrapper(response_future, value_from_response, error_from_response)
@@ -439,21 +491,8 @@ class BaseClient(object):
             return self.logger.getChild(method_name_short)
         return self.logger
 
-    @staticmethod
-    def chunk_message(message, data_chunk_byte_size):
-        """Take a message, and split it into data chunks
-        Args:
-            data_chunk_byte_size: max size of each streamed message
-        """
-        serialized = message.SerializeToString()
-        total_bytes_size = len(serialized)
-        num_chunks = math.ceil(total_bytes_size / data_chunk_byte_size)
-        for i in range(num_chunks):
-            start_index = i * data_chunk_byte_size
-            end_index = min(total_bytes_size, (i + 1) * data_chunk_byte_size)
-            chunk = data_chunk_pb2.DataChunk(total_size=total_bytes_size)
-            chunk.data = serialized[start_index:end_index]
-            yield chunk
+    chunk_message = deprecated(reason='Use bosdyn.client.data_chunk.chunk_message() instead.',
+                               version='3.3.0')(chunk_message)
 
 
 class FutureWrapper():

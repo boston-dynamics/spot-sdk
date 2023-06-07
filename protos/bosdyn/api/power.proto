@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -56,6 +56,10 @@ enum PowerCommandStatus {
     // ERROR: Robot has overridden the power command and disabled motor power. In the case
     // of a commanded power OFF, robot will report SUCCESS if power is disabled.
     STATUS_OVERRIDDEN = 11;
+
+    // ERROR: Cannot power on while a Keepalive policy with a motors-off action is active.
+    // See the Keepalive API service for more details.
+    STATUS_KEEPALIVE_MOTORS_OFF = 12;
 }
 
 // The PowerCommand request which specifies a change in the robot's motor power.

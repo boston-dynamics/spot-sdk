@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data Buffer &mdash; Spot 3.2.3 documentation</title>
+  <title>Data Buffer &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,17 +33,19 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/language_data.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Data Service" href="data_service.html" />
+    <link rel="next" title="Data Chunk" href="data_chunk.html" />
     <link rel="prev" title="Data Acquisition Store" href="data_acquisition_store.html" /> 
 </head>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -639,20 +681,20 @@
            <div itemprop="articleBody">
             
   <section id="module-bosdyn.client.data_buffer">
-<span id="data-buffer"></span><h1>Data Buffer<a class="headerlink" href="#module-bosdyn.client.data_buffer" title="Permalink to this headline">¶</a></h1>
+<span id="data-buffer"></span><h1>Data Buffer<a class="headerlink" href="#module-bosdyn.client.data_buffer" title="Permalink to this heading">¶</a></h1>
 <p>Client for the data-buffer service.</p>
 <p>This allows client code to log the following to the robot’s data buffer: text-messages,
 operator comments, blobs, signal ticks, and protobuf messages.</p>
 <dl class="py exception">
-<dt id="bosdyn.client.data_buffer.InvalidArgument">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.data_buffer.</code><code class="sig-name descname">InvalidArgument</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#InvalidArgument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.InvalidArgument" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.InvalidArgument">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_buffer.</span></span><span class="sig-name descname"><span class="pre">InvalidArgument</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#InvalidArgument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.InvalidArgument" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>A given argument could not be used.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="bosdyn.client.data_buffer.log_event">
-<code class="sig-prename descclassname">bosdyn.client.data_buffer.</code><code class="sig-name descname">log_event</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">robot</span></em>, <em class="sig-param"><span class="n">event_type</span></em>, <em class="sig-param"><span class="n">level</span></em>, <em class="sig-param"><span class="n">description</span></em>, <em class="sig-param"><span class="n">start_timestamp_secs</span></em>, <em class="sig-param"><span class="n">end_timestamp_secs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">id_str</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">log_preserve_hint</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#log_event"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.log_event" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.log_event">
+<span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_buffer.</span></span><span class="sig-name descname"><span class="pre">log_event</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_timestamp_secs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_timestamp_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_preserve_hint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#log_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.log_event" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an Event to the Data Buffer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -672,35 +714,35 @@ operator comments, blobs, signal ticks, and protobuf messages.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="bosdyn.client.data_buffer.make_parameter">
-<code class="sig-prename descclassname">bosdyn.client.data_buffer.</code><code class="sig-name descname">make_parameter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em>, <em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">notes</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#make_parameter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.make_parameter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.make_parameter">
+<span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_buffer.</span></span><span class="sig-name descname"><span class="pre">make_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#make_parameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.make_parameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a parameter proto from a label and the parameter value.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.data_buffer.DataBufferClient">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.data_buffer.</code><code class="sig-name descname">DataBufferClient</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_buffer.</span></span><span class="sig-name descname"><span class="pre">DataBufferClient</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseClient</span></code></a></p>
 <p>A client for adding to robot data buffer.</p>
 <dl class="py attribute">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.default_service_name">
-<code class="sig-name descname">default_service_name</code><em class="property"> = 'data-buffer'</em><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.default_service_name">
+<span class="sig-name descname"><span class="pre">default_service_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'data-buffer'</span></em><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.default_service_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.service_type">
-<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.DataBufferService'</em><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.service_type" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.service_type">
+<span class="sig-name descname"><span class="pre">service_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bosdyn.api.DataBufferService'</span></em><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.service_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.update_from">
-<code class="sig-name descname">update_from</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">other</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.update_from"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.update_from" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.update_from">
+<span class="sig-name descname"><span class="pre">update_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.update_from"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.update_from" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adopt key objects like processors, logger, and wallet from other.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_text_messages">
-<code class="sig-name descname">add_text_messages</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text_messages</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_text_messages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_text_messages" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_text_messages">
+<span class="sig-name descname"><span class="pre">add_text_messages</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_messages</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_text_messages"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_text_messages" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log text messages to the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -713,14 +755,14 @@ operator comments, blobs, signal ticks, and protobuf messages.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_text_messages_async">
-<code class="sig-name descname">add_text_messages_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">text_messages</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_text_messages_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_text_messages_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_text_messages_async">
+<span class="sig-name descname"><span class="pre">add_text_messages_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_messages</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_text_messages_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_text_messages_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of add_text_messages.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_operator_comment">
-<code class="sig-name descname">add_operator_comment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg</span></em>, <em class="sig-param"><span class="n">robot_timestamp</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_operator_comment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_operator_comment" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_operator_comment">
+<span class="sig-name descname"><span class="pre">add_operator_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_operator_comment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_operator_comment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an operator comment to the robot log.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -737,14 +779,14 @@ If not set, timestamp will be when the robot receives the message.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_operator_comment_async">
-<code class="sig-name descname">add_operator_comment_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg</span></em>, <em class="sig-param"><span class="n">robot_timestamp</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_operator_comment_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_operator_comment_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_operator_comment_async">
+<span class="sig-name descname"><span class="pre">add_operator_comment_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_operator_comment_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_operator_comment_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of add_operator_comment.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_blob">
-<code class="sig-name descname">add_blob</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">type_id</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">robot_timestamp</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">write_sync</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_blob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_blob" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_blob">
+<span class="sig-name descname"><span class="pre">add_blob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_blob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_blob" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log blob messages to the data buffer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -765,14 +807,14 @@ often the same as type_id, or of the form
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_blob_async">
-<code class="sig-name descname">add_blob_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">type_id</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">robot_timestamp</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">write_sync</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_blob_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_blob_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_blob_async">
+<span class="sig-name descname"><span class="pre">add_blob_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_blob_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_blob_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of add_blob.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_protobuf">
-<code class="sig-name descname">add_protobuf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">robot_timestamp</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">write_sync</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_protobuf"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_protobuf" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_protobuf">
+<span class="sig-name descname"><span class="pre">add_protobuf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_protobuf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_protobuf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log protobuf messages to the data buffer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -789,14 +831,14 @@ often the same as type_id, or of the form
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_protobuf_async">
-<code class="sig-name descname">add_protobuf_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">proto</span></em>, <em class="sig-param"><span class="n">channel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">robot_timestamp</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">write_sync</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_protobuf_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_protobuf_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_protobuf_async">
+<span class="sig-name descname"><span class="pre">add_protobuf_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robot_timestamp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_sync</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_protobuf_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_protobuf_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of add_protobuf.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_events">
-<code class="sig-name descname">add_events</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">events</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_events"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_events" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_events">
+<span class="sig-name descname"><span class="pre">add_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_events" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log event messages to the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -809,14 +851,14 @@ often the same as type_id, or of the form
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_events_async">
-<code class="sig-name descname">add_events_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">events</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_events_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_events_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_events_async">
+<span class="sig-name descname"><span class="pre">add_events_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">events</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_events_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_events_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of add_events.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.register_signal_schema">
-<code class="sig-name descname">register_signal_schema</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">variables</span></em>, <em class="sig-param"><span class="n">schema_name</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.register_signal_schema"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.register_signal_schema" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.register_signal_schema">
+<span class="sig-name descname"><span class="pre">register_signal_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.register_signal_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.register_signal_schema" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log signal schema to the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -833,14 +875,14 @@ defining what is in tick.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.register_signal_schema_async">
-<code class="sig-name descname">register_signal_schema_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">variables</span></em>, <em class="sig-param"><span class="n">schema_name</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.register_signal_schema_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.register_signal_schema_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.register_signal_schema_async">
+<span class="sig-name descname"><span class="pre">register_signal_schema_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.register_signal_schema_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.register_signal_schema_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of register_signal_schema</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_signal_tick">
-<code class="sig-name descname">add_signal_tick</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">schema_id</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">sequence_id</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">source</span><span class="o">=</span><span class="default_value">'client'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_signal_tick"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_signal_tick" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_signal_tick">
+<span class="sig-name descname"><span class="pre">add_signal_tick</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'client'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_signal_tick"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_signal_tick" title="Permalink to this definition">¶</a></dt>
 <dd><p>Log signal data to the robot data buffer.</p>
 <p>Schema should be sent before any ticks.</p>
 <dl class="field-list simple">
@@ -863,23 +905,23 @@ defining what is in tick.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.add_signal_tick_async">
-<code class="sig-name descname">add_signal_tick_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">schema_id</span></em>, <em class="sig-param"><span class="n">encoding</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">sequence_id</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">source</span><span class="o">=</span><span class="default_value">'client'</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_signal_tick_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_signal_tick_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.add_signal_tick_async">
+<span class="sig-name descname"><span class="pre">add_signal_tick_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'client'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.add_signal_tick_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.add_signal_tick_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of add_signal_tick.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.DataBufferClient.now_in_robot_basis">
-<code class="sig-name descname">now_in_robot_basis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg_type</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">proto</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.now_in_robot_basis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.now_in_robot_basis" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.DataBufferClient.now_in_robot_basis">
+<span class="sig-name descname"><span class="pre">now_in_robot_basis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#DataBufferClient.now_in_robot_basis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.DataBufferClient.now_in_robot_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get current time in robot clock basis if possible, None otherwise.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.data_buffer.LoggingHandler">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.data_buffer.</code><code class="sig-name descname">LoggingHandler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">service</span></em>, <em class="sig-param"><span class="n">data_buffer_client</span></em>, <em class="sig-param"><span class="n">level</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">time_sync_endpoint</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">rpc_timeout</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">msg_num_limit</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">msg_age_limit</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Handler</span></code></p>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.LoggingHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_buffer.</span></span><span class="sig-name descname"><span class="pre">LoggingHandler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">service</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_buffer_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_sync_endpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpc_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_num_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg_age_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Handler</span></code></p>
 <p>A logging system Handler that will publish text to a the data-buffer service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -899,24 +941,24 @@ data_buffer_client.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.LoggingHandler.emit">
-<code class="sig-name descname">emit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.emit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.emit" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.LoggingHandler.emit">
+<span class="sig-name descname"><span class="pre">emit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.emit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.emit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Do whatever it takes to actually log the specified logging record.</p>
 <p>This version is intended to be implemented by subclasses and so
 raises a NotImplementedError.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.LoggingHandler.flush">
-<code class="sig-name descname">flush</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.flush"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.flush" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.LoggingHandler.flush">
+<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.flush"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.flush" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensure all logging output has been flushed.</p>
 <p>This version does nothing and is intended to be implemented by
 subclasses.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.LoggingHandler.close">
-<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.close" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.LoggingHandler.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Tidy up any resources used by the handler.</p>
 <p>This version removes the handler from an internal map of handlers,
 _handlers, which is used for handler lookup by name. Subclasses
@@ -925,14 +967,14 @@ methods.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.LoggingHandler.is_thread_alive">
-<code class="sig-name descname">is_thread_alive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.is_thread_alive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.is_thread_alive" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.LoggingHandler.is_thread_alive">
+<span class="sig-name descname"><span class="pre">is_thread_alive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.is_thread_alive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.is_thread_alive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return true if send-thread is running.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.LoggingHandler.restart">
-<code class="sig-name descname">restart</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_buffer_client</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.restart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.restart" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.LoggingHandler.restart">
+<span class="sig-name descname"><span class="pre">restart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_buffer_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.restart"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.restart" title="Permalink to this definition">¶</a></dt>
 <dd><p>Restart the send thread.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -942,20 +984,20 @@ methods.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.LoggingHandler.fallback_log">
-<em class="property">static </em><code class="sig-name descname">fallback_log</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">msg</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.fallback_log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.fallback_log" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.LoggingHandler.fallback_log">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fallback_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.fallback_log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.fallback_log" title="Permalink to this definition">¶</a></dt>
 <dd><p>Handle log messages that were failed to be sent by printing to the console.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.LoggingHandler.record_to_msg">
-<code class="sig-name descname">record_to_msg</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.record_to_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.record_to_msg" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.LoggingHandler.record_to_msg">
+<span class="sig-name descname"><span class="pre">record_to_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.record_to_msg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.record_to_msg" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert logging record to TextMessage proto.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_buffer.LoggingHandler.record_level_to_proto_level">
-<em class="property">static </em><code class="sig-name descname">record_level_to_proto_level</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">record_level</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.record_level_to_proto_level"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.record_level_to_proto_level" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_buffer.LoggingHandler.record_level_to_proto_level">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">record_level_to_proto_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record_level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_buffer.html#LoggingHandler.record_level_to_proto_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_buffer.LoggingHandler.record_level_to_proto_level" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert logging record level to TextMessage proto level.</p>
 </dd></dl>
 

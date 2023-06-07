@@ -1,11 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Sdk is  a repository for settings typically common to a single developer and/or robot fleet."""
-from __future__ import absolute_import
 
 import datetime
 import glob
@@ -37,11 +36,14 @@ from .fault import FaultClient
 from .graph_nav import GraphNavClient
 from .gripper_camera_param import GripperCameraParamClient
 from .image import ImageClient
+from .inverse_kinematics import InverseKinematicsClient
 from .ir_enable_disable import IREnableDisableServiceClient
+from .keepalive import KeepaliveClient
 from .lease import LeaseClient
 from .license import LicenseClient
 from .local_grid import LocalGridClient
 from .log_annotation import LogAnnotationClient
+from .log_status import LogStatusClient
 from .manipulation_api_client import ManipulationApiClient
 from .map_processing import MapProcessingServiceClient
 from .network_compute_bridge_client import NetworkComputeBridgeClient
@@ -82,9 +84,10 @@ BOSDYN_RESOURCE_ROOT = os.environ.get('BOSDYN_RESOURCE_ROOT',
 
 def generate_client_name(prefix=''):
     """Returns a descriptive client name for API clients with an optional prefix."""
-    import __main__
+    import bosdyn.client.__main__
     try:
-        process_info = '{}-{}'.format(os.path.basename(__main__.__file__), os.getpid())
+        process_info = '{}-{}'.format(os.path.basename(bosdyn.client.__main__.__file__),
+                                      os.getpid())
     except AttributeError:
         process_info = '{}'.format(os.getpid())
     machine_name = platform.node()
@@ -121,8 +124,10 @@ _DEFAULT_SERVICE_CLIENTS = [
     ImageClient,
     IREnableDisableServiceClient,
     LeaseClient,
+    KeepaliveClient,
     LicenseClient,
     LogAnnotationClient,
+    LogStatusClient,
     LocalGridClient,
     ManipulationApiClient,
     MapProcessingServiceClient,
@@ -136,6 +141,7 @@ _DEFAULT_SERVICE_CLIENTS = [
     RobotIdClient,
     RobotStateClient,
     SpotCheckClient,
+    InverseKinematicsClient,
     TimeSyncClient,
     WorldObjectClient,
 ]

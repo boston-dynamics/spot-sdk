@@ -1,12 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """General client implementation for the main, on-robot data-acquisition service."""
-
-from __future__ import print_function
 
 import collections
 import functools
@@ -132,7 +130,7 @@ class DataAcquisitionClient(BaseClient):
 
         Raises:
           RpcError: Problem communicating with the robot.
-          RequestIdDoesNotExistError: The request id provided is incorrect.
+          bosdyn.client.data_acquisition.RequestIdDoesNotExistError: The request id provided is incorrect.
 
         Returns:
             If the RPC is successful, then it will return the full status response, which includes the
@@ -149,8 +147,8 @@ class DataAcquisitionClient(BaseClient):
                                copy_request=False, **kwargs)
 
     def get_service_info(self, **kwargs):
-        """Get information from a DAQ service to list its capabilities - which data, metadata,
-        or processing the DAQ service will perform.
+        """Get information from a Data Acquisition service to list its capabilities - which data,
+        metadata,or processing the Data Acquisition service will perform.
 
         Raises:
           RpcError: Problem communicating with the robot.
@@ -179,7 +177,7 @@ class DataAcquisitionClient(BaseClient):
           RpcError: Problem communicating with the robot.
           CancellationFailedError: The data acquisitions associated with the request id were unable
                                    to be cancelled.
-          RequestIdDoesNotExistError: The request id provided is incorrect.
+          bosdyn.client.data_acquisition.RequestIdDoesNotExistError: The request id provided is incorrect.
         Returns:
             If the RPC is successful, then it will return the full status response, which includes the
             status as well as other information about any possible errors.

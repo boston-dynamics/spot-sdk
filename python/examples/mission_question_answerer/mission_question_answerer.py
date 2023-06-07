@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,8 +8,6 @@
 import argparse
 import logging
 import time
-
-import six.moves
 
 import bosdyn.client
 import bosdyn.client.util
@@ -47,12 +45,12 @@ def ask_user_for_answer(question_proto):
     # Build a list of tuples, each tuple is (Text associated with the option, answer_code)
     user_options = []
     for option in question_proto.options:
-        user_options.append(('{}) {}'.format(selection_number, option.text), option.answer_code))
+        user_options.append((f'{selection_number}) {option.text}', option.answer_code))
         selection_number += 1
 
-    text = 'Question: "{}"\n\nChoose one:\n'.format(question_proto.text)
+    text = f'Question: "{question_proto.text}"\n\nChoose one:\n'
     text += ''.join(opt[0] + '\n' for opt in user_options)
-    idx = int(six.moves.input(text)) - 1
+    idx = int(input(text)) - 1
     return user_options[idx][1]
 
 

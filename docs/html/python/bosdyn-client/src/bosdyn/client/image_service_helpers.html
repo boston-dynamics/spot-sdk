@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Image Service Helpers &mdash; Spot 3.2.3 documentation</title>
+  <title>Image Service Helpers &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,17 +33,19 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/language_data.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
-    <link rel="next" title="Ir Enable Disable" href="ir_enable_disable.html" />
+    <link rel="next" title="Inverse Kinematics" href="inverse_kinematics.html" />
     <link rel="prev" title="Image" href="image.html" /> 
 </head>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -639,18 +681,18 @@
            <div itemprop="articleBody">
             
   <section id="module-bosdyn.client.image_service_helpers">
-<span id="image-service-helpers"></span><h1>Image Service Helpers<a class="headerlink" href="#module-bosdyn.client.image_service_helpers" title="Permalink to this headline">¶</a></h1>
+<span id="image-service-helpers"></span><h1>Image Service Helpers<a class="headerlink" href="#module-bosdyn.client.image_service_helpers" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
-<dt id="bosdyn.client.image_service_helpers.convert_RGB_to_grayscale">
-<code class="sig-prename descclassname">bosdyn.client.image_service_helpers.</code><code class="sig-name descname">convert_RGB_to_grayscale</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_data_RGB_np</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#convert_RGB_to_grayscale"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.convert_RGB_to_grayscale" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.convert_RGB_to_grayscale">
+<span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">convert_RGB_to_grayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_data_RGB_np</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#convert_RGB_to_grayscale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.convert_RGB_to_grayscale" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert numpy image from RGB to grayscale using Pillow’s formula.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>image_data_RGB_np</strong> (<em>numpy array</em>) – The RGB image data output from a capture as a 3D numpy</p></li>
-<li><p><strong>with R</strong> (<em>array</em>) – </p></li>
+<li><p><strong>R</strong> (<em>array with</em>) – </p></li>
 <li><p><strong>G</strong> – </p></li>
-<li><p><strong>channels in that order in the array.</strong> (<em>B</em>) – </p></li>
+<li><p><strong>array.</strong> (<em>B channels in that order in the</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -660,32 +702,43 @@
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.image_service_helpers.CameraInterface">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.image_service_helpers.</code><code class="sig-name descname">CameraInterface</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraInterface"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraInterface" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.CameraInterface">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">CameraInterface</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraInterface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraInterface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Abstract class interface for capturing and decoding images from a camera.</p>
 <p>This interface is used by the VisualImageSource to ensure that each image source
 has the expected capture and decoding methods with the right specification.</p>
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.CameraInterface.blocking_capture">
-<em class="property">abstract </em><code class="sig-name descname">blocking_capture</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraInterface.blocking_capture"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraInterface.blocking_capture" title="Permalink to this definition">¶</a></dt>
-<dd><p>Communicates with the camera payload to collect the image data.</p>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.CameraInterface.blocking_capture">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">blocking_capture</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraInterface.blocking_capture"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraInterface.blocking_capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Communicates with the camera payload to collect the image data. Ensure this is threadsafe as multiple
+threads/requests may try to call blocking_capture at the same time. A Lock (self.capture_lock) is provided
+as a convenience to help with this.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>A tuple with image data (in any format), and the capture timestamp in seconds (float) in the
+<dt class="field-odd">Keyword Arguments</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>custom_params</strong> (<em>service_customization_pb2.DictParam</em>) – Custom parameters defined by the image source
+affecting the resulting capture</p></li>
+<li><p><strong>**kwargs</strong> – Other keyword arguments including future additions to the request that affect the capture.
+If an implementer is looking to use kwargs, it is expected that they update their
+blocking_capture function signature to accept named keyword arguments such as custom_params</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple with image data (in any format), and the capture timestamp in seconds (float) in the
 service computer’s clock.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.CameraInterface.image_decode">
-<em class="property">abstract </em><code class="sig-name descname">image_decode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_data</span></em>, <em class="sig-param"><span class="n">image_proto</span></em>, <em class="sig-param"><span class="n">image_req</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraInterface.image_decode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraInterface.image_decode" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.CameraInterface.image_decode">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">image_decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_proto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_req</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraInterface.image_decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraInterface.image_decode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decode the image data into an Image proto based on the requested format and quality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>image_data</strong> (<em>Same format as the output of blocking_capture</em>) – The image data output from a capture.</p></li>
+<li><p><strong>image_data</strong> (<em>Same format as the output</em><em> of </em><em>blocking_capture</em>) – The image data output from a capture.</p></li>
 <li><p><strong>image_proto</strong> (<em>image_pb2.Image</em>) – The proto message to populate with decoded image data.</p></li>
 <li><p><strong>image_req</strong> (<em>image_pb2.ImageRequest</em>) – The image request associated with the image_data.</p></li>
 </ul>
@@ -701,8 +754,8 @@ protobuf message.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.image_service_helpers.</code><code class="sig-name descname">VisualImageSource</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_name</span></em>, <em class="sig-param"><span class="n">camera_interface</span></em>, <em class="sig-param"><span class="n">rows</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cols</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">gain</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exposure</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pixel_formats</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">VisualImageSource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">camera_interface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_formats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_spec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Helper class to represent a single image source.</p>
 <p>This helper class can be used to track state associated with an image source. It can capture
@@ -715,34 +768,36 @@ rapidly to GetImage requests.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>image_name</strong> (<em>string</em>) – The name of the image source.</p></li>
-<li><p><strong>camera_interface</strong> (<em>subclass of CameraInterface</em>) – A camera class which inherits from and implements
+<li><p><strong>camera_interface</strong> (<em>subclass</em><em> of </em><a class="reference internal" href="#bosdyn.client.image_service_helpers.CameraInterface" title="bosdyn.client.image_service_helpers.CameraInterface"><em>CameraInterface</em></a>) – A camera class which inherits from and implements
 the abstract methods of the CameraInterface class.</p></li>
 <li><p><strong>rows</strong> (<em>int</em>) – The number of rows of pixels in the image.</p></li>
 <li><p><strong>cols</strong> (<em>int</em>) – The number of cols of pixels in the image.</p></li>
-<li><p><strong>gain</strong> (<em>float | function</em>) – The sensor’s gain in dB. This can be a fixed value or a function
+<li><p><strong>gain</strong> (<em>float</em><em> | </em><em>function</em>) – The sensor’s gain in dB. This can be a fixed value or a function
 which returns the gain as a float.</p></li>
-<li><p><strong>exposure</strong> (<em>float | function</em>) – The exposure time for an image in seconds. This can be a fixed
+<li><p><strong>exposure</strong> (<em>float</em><em> | </em><em>function</em>) – The exposure time for an image in seconds. This can be a fixed
 value or a function which returns the exposure time as a float.</p></li>
 <li><p><strong>pixel_formats</strong> (<em>image_pb2.Image.PixelFormat</em><em>[</em><em>]</em>) – Supported pixel formats.</p></li>
+<li><p><strong>param_spec</strong> (<em>service_customization_pb2.DictParam.Spec</em>) – A set of custom parameters passed into this
+image source</p></li>
 <li><p><strong>logger</strong> (<em>logging.Logger</em>) – Logger for debug and warning messages.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.set_logger">
-<code class="sig-name descname">set_logger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">logger</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.set_logger"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.set_logger" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.set_logger">
+<span class="sig-name descname"><span class="pre">set_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.set_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.set_logger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override the existing logger for the VisualImageSource class.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.create_capture_thread">
-<code class="sig-name descname">create_capture_thread</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.create_capture_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.create_capture_thread" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.create_capture_thread">
+<span class="sig-name descname"><span class="pre">create_capture_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.create_capture_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.create_capture_thread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize a background thread to continuously capture images.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.initialize_faults">
-<code class="sig-name descname">initialize_faults</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fault_client</span></em>, <em class="sig-param"><span class="n">image_service</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.initialize_faults"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.initialize_faults" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.initialize_faults">
+<span class="sig-name descname"><span class="pre">initialize_faults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fault_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_service</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.initialize_faults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.initialize_faults" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize a fault client and faults for the image source (linked to the image service).</p>
 <p>The fault client can be used to throw faults for capture and decode errors. All faults
 associated with the image service name provided will be cleared.</p>
@@ -757,8 +812,8 @@ associated with the image service name provided will be cleared.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.trigger_fault">
-<code class="sig-name descname">trigger_fault</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">error_message</span></em>, <em class="sig-param"><span class="n">fault</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.trigger_fault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.trigger_fault" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.trigger_fault">
+<span class="sig-name descname"><span class="pre">trigger_fault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fault</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.trigger_fault"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.trigger_fault" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trigger a service fault for a failure to the fault service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -771,8 +826,8 @@ associated with the image service name provided will be cleared.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.clear_fault">
-<code class="sig-name descname">clear_fault</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fault</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.clear_fault"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.clear_fault" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.clear_fault">
+<span class="sig-name descname"><span class="pre">clear_fault</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fault</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.clear_fault"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.clear_fault" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attempts to clear the camera capture fault from the fault service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -782,20 +837,27 @@ associated with the image service name provided will be cleared.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.get_image_and_timestamp">
-<code class="sig-name descname">get_image_and_timestamp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.get_image_and_timestamp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.get_image_and_timestamp" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.get_image_and_timestamp">
+<span class="sig-name descname"><span class="pre">get_image_and_timestamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">capture_func_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.get_image_and_timestamp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.get_image_and_timestamp" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the latest captured image and timestamp.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>The latest captured image and the time (in seconds) associated with that image capture.
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>custom_params</strong> (<em>service_customization_pb2.DictParam</em>) – Custom parameters passed to the object’s
+capture_function affecting the resulting capture</p></li>
+<li><p><strong>**capture_func_kwargs</strong> – Other keyword arguments for the capture_function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The latest captured image and the time (in seconds) associated with that image capture.
 Throws a camera capture fault and returns None if the image cannot be retrieved.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.image_decode_with_error_checking">
-<code class="sig-name descname">image_decode_with_error_checking</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_data</span></em>, <em class="sig-param"><span class="n">image_proto</span></em>, <em class="sig-param"><span class="n">image_req</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.image_decode_with_error_checking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.image_decode_with_error_checking" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.image_decode_with_error_checking">
+<span class="sig-name descname"><span class="pre">image_decode_with_error_checking</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_proto</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_req</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.image_decode_with_error_checking"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.image_decode_with_error_checking" title="Permalink to this definition">¶</a></dt>
 <dd><p>Decode the image data into an Image proto based on the requested format and quality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -816,8 +878,8 @@ with the decoded data if successful.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.stop_capturing">
-<code class="sig-name descname">stop_capturing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.stop_capturing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.stop_capturing" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.stop_capturing">
+<span class="sig-name descname"><span class="pre">stop_capturing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.stop_capturing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.stop_capturing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop the image capture thread if one exists.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -827,8 +889,8 @@ with the decoded data if successful.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.make_image_source">
-<em class="property">static </em><code class="sig-name descname">make_image_source</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source_name</span></em>, <em class="sig-param"><span class="n">rows</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cols</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">pixel_formats</span><span class="o">=</span><span class="default_value">[]</span></em>, <em class="sig-param"><span class="n">image_type</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">image_formats</span><span class="o">=</span><span class="default_value">[1]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.make_image_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.make_image_source" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.make_image_source">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">make_image_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cols</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_formats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_formats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[1]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_spec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.make_image_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.make_image_source" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create an instance of the image_pb2.ImageSource for a given source name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -839,6 +901,8 @@ with the decoded data if successful.</p>
 <li><p><strong>image_type</strong> (<em>image_pb2.ImageType</em>) – The type of image (e.g. visual, depth).</p></li>
 <li><p><strong>image_formats</strong> (<em>image_pb2.Image.Format</em>) – The image formats supported (jpeg, raw)</p></li>
 <li><p><strong>pixel_formats</strong> (<em>image_pb2.Image.PixelFormat</em>) – The pixel formats supported</p></li>
+<li><p><strong>param_spec</strong> (<em>service_customization_pb2.DictParam.Spec</em>) – A set of custom parameters
+passed into this image source</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -848,16 +912,18 @@ with the decoded data if successful.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.VisualImageSource.make_capture_parameters">
-<em class="property">static </em><code class="sig-name descname">make_capture_parameters</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gain</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">exposure</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.make_capture_parameters"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.make_capture_parameters" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.VisualImageSource.make_capture_parameters">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">make_capture_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exposure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">request_custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#VisualImageSource.make_capture_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.VisualImageSource.make_capture_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates an instance of the image_pb2.CaptureParameters protobuf message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>gain</strong> (<em>float | function</em>) – The sensor’s gain in dB. This can be a fixed value or a function
+<li><p><strong>gain</strong> (<em>float</em><em> | </em><em>function</em>) – The sensor’s gain in dB. This can be a fixed value or a function
 which returns the gain as a float.</p></li>
-<li><p><strong>exposure</strong> (<em>float | function</em>) – The exposure time for an image in seconds. This can be a fixed
+<li><p><strong>exposure</strong> (<em>float</em><em> | </em><em>function</em>) – The exposure time for an image in seconds. This can be a fixed
 value or a function which returns the exposure time as a float.</p></li>
+<li><p><strong>request_custom_params</strong> (<em>service_customization_pb2.DictParam</em>) – Custom Params associated with the image
+request. Should not be ‘None’, but left as an option to accomodate old callers</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -869,8 +935,27 @@ value or a function which returns the exposure time as a float.</p></li>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.image_service_helpers.ImageCaptureThread">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.image_service_helpers.</code><code class="sig-name descname">ImageCaptureThread</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_source_name</span></em>, <em class="sig-param"><span class="n">capture_func</span></em>, <em class="sig-param"><span class="n">capture_period_secs</span><span class="o">=</span><span class="default_value">0.05</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ThreadCaptureOutput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">ThreadCaptureOutput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_valid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ThreadCaptureOutput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ThreadCaptureOutput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Small struct to represent the output of an ImageCaptureThread’s get_latest_captured_image
+in a future-compatible way</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>is_valid</strong> (<em>Boolean</em>) – Whether the latest capture uses the custom parameters and other arguments
+supplied in the latest request, and is therefore returned</p></li>
+<li><p><strong>image</strong> (<em>Any</em><em> | </em><em>None</em>) – If the latest capture is valid, the image data in any format
+(e.g. numpy, bytes, array)</p></li>
+<li><p><strong>timestamp</strong> (<em>float</em>) – The timestamp that the latest valid capture was taken</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ImageCaptureThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">ImageCaptureThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_source_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_period_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">capture_func_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Continuously query and store the last successfully captured image and its
 associated timestamp for a single camera device.</p>
@@ -883,39 +968,49 @@ data and timestamp.</p></li>
 <li><p><strong>capture_period_secs</strong> (<em>int</em>) – Amount of time (in seconds) between captures to wait
 before triggering the next capture. Defaults to
 0.05s between captures.</p></li>
+<li><p><strong>custom_params</strong> (<em>service_customization_pb2.DictParam</em>) – Custom parameters passed to capture_func
+affecting the resulting capture</p></li>
+<li><p><strong>**capture_func_kwargs</strong> – Other keyword arguments for the capture_func</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.ImageCaptureThread.start_capturing">
-<code class="sig-name descname">start_capturing</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.start_capturing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.start_capturing" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ImageCaptureThread.start_capturing">
+<span class="sig-name descname"><span class="pre">start_capturing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.start_capturing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.start_capturing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the background thread for the image captures.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.ImageCaptureThread.set_last_captured_image">
-<code class="sig-name descname">set_last_captured_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_frame</span></em>, <em class="sig-param"><span class="n">capture_time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.set_last_captured_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.set_last_captured_image" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ImageCaptureThread.maybe_update_thread">
+<span class="sig-name descname"><span class="pre">maybe_update_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">capture_func_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.maybe_update_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.maybe_update_thread" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ImageCaptureThread.set_last_captured_image">
+<span class="sig-name descname"><span class="pre">set_last_captured_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capture_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.set_last_captured_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.set_last_captured_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the last image capture and timestamp.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.ImageCaptureThread.get_latest_captured_image">
-<code class="sig-name descname">get_latest_captured_image</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.get_latest_captured_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.get_latest_captured_image" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the last found image and the timestamp it was acquired at.</p>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ImageCaptureThread.get_latest_captured_image">
+<span class="sig-name descname"><span class="pre">get_latest_captured_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">custom_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">capture_func_kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.get_latest_captured_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.get_latest_captured_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the last found image and timestamp in a ThreadCaptureOutput object if that
+image uses the latest params. Otherwise returns a ThreadCaptureOutput object with
+is_valid = False and capture/timestamp as None.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.ImageCaptureThread.stop_capturing">
-<code class="sig-name descname">stop_capturing</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout_secs</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.stop_capturing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.stop_capturing" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.ImageCaptureThread.stop_capturing">
+<span class="sig-name descname"><span class="pre">stop_capturing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#ImageCaptureThread.stop_capturing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.ImageCaptureThread.stop_capturing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop the image capture thread.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.image_service_helpers.CameraBaseImageServicer">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.image_service_helpers.</code><code class="sig-name descname">CameraBaseImageServicer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bosdyn_sdk_robot</span></em>, <em class="sig-param"><span class="n">service_name</span></em>, <em class="sig-param"><span class="n">image_sources</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_background_capture_thread</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraBaseImageServicer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraBaseImageServicer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.api.image_service_pb2_grpc.ImageServiceServicer</span></code></p>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.CameraBaseImageServicer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">CameraBaseImageServicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bosdyn_sdk_robot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_sources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_background_capture_thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_capture_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraBaseImageServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraBaseImageServicer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ImageServiceServicer</span></code></p>
 <p>GRPC service to provide access to multiple different image sources.</p>
 <p>The service can list the available image (device) sources and query each source for image data.</p>
 <dl class="field-list simple">
@@ -928,12 +1023,14 @@ before triggering the next capture. Defaults to
 <li><p><strong>use_background_capture_thread</strong> (<em>bool</em>) – If true, the image service will create a thread that continuously
 captures images so the image service can respond rapidly to the GetImage request. If false,
 the image service will call an image sources’ blocking_capture_function during the GetImage request.</p></li>
+<li><p><strong>background_capture_params</strong> (<em>service_customization_pb2.DictParam</em>) – If use_background_capture_thread is true,
+custom image source parameters used for all of the background captures. Otherwise ignored</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.CameraBaseImageServicer.ListImageSources">
-<code class="sig-name descname">ListImageSources</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraBaseImageServicer.ListImageSources"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraBaseImageServicer.ListImageSources" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.CameraBaseImageServicer.ListImageSources">
+<span class="sig-name descname"><span class="pre">ListImageSources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraBaseImageServicer.ListImageSources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraBaseImageServicer.ListImageSources" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtain the list of ImageSources for this given service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -950,8 +1047,8 @@ services registered with the robot’s directory service that can have different
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.image_service_helpers.CameraBaseImageServicer.GetImage">
-<code class="sig-name descname">GetImage</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraBaseImageServicer.GetImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraBaseImageServicer.GetImage" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.CameraBaseImageServicer.GetImage">
+<span class="sig-name descname"><span class="pre">GetImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraBaseImageServicer.GetImage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraBaseImageServicer.GetImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the latest image capture from all the image sources specified in the request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

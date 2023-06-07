@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Post Docking Callback Examples
 
-The scripts in this folder allow you to upload files saved to DAQ during robot operation to various endpoints, with the target use case having the callback run when Spot docks at the end of an Autowalk mission.
+The scripts in this folder allow you to upload files saved to the Data Acquisition Store during robot operation to various endpoints, with the target use case having the callback run when Spot docks at the end of an Autowalk mission.
 
 ## Install Packages
 

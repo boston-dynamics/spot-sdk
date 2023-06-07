@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,8 +6,6 @@
 
 """Test script to run a simple stance command.
 """
-from __future__ import print_function
-
 import argparse
 import sys
 import time
@@ -56,7 +54,7 @@ def run(config):
 
         # Power On
         robot.power_on()
-        assert robot.is_powered_on(), "Robot power on failed."
+        assert robot.is_powered_on(), 'Robot power on failed.'
 
         # Stand
         robot_command.blocking_stand(command_client)
@@ -74,7 +72,7 @@ def run(config):
             frame_helpers.VISION_FRAME_NAME, pos_fl_rt_vision.position, pos_fr_rt_vision.position,
             pos_hl_rt_vision.position, pos_hr_rt_vision.position)
 
-        print("After stance adjustment, press Ctrl-C to sit Spot and turn off motors.")
+        print('After stance adjustment, press Ctrl-C to sit Spot and turn off motors.')
 
         while True:
             # Update end time
@@ -92,14 +90,14 @@ def main(argv):
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--x-offset', default=0.3, type=float, help='Offset in X for Spot to step')
-    parser.add_argument('--y-offset', default=0.3, type=float, help="Offset in Y for Spot to step")
+    parser.add_argument('--y-offset', default=0.3, type=float, help='Offset in Y for Spot to step')
     options = parser.parse_args(argv)
 
     if not 0.2 <= abs(options.x_offset) <= 0.5:
-        print("Invalid x-offset value. Please pass a value between 0.2 and 0.5")
+        print('Invalid x-offset value. Please pass a value between 0.2 and 0.5')
         sys.exit(1)
     if not 0.1 <= abs(options.y_offset) <= 0.4:
-        print("Invalid y-offset value. Please pass a value between 0.1 and 0.4")
+        print('Invalid y-offset value. Please pass a value between 0.1 and 0.4')
         sys.exit(1)
 
     try:
@@ -107,7 +105,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.error("Threw an exception: %s\n%s", exc, traceback.format_exc())
+        logger.error('Threw an exception: %s\n%s', exc, traceback.format_exc())
         return False
 
 

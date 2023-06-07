@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -20,17 +20,11 @@ class PtzCommands(Subcommands):
     NAME = 'ptz'
 
     def __init__(self, subparsers, command_dict):
-        super(PtzCommands, self).__init__(
-            subparsers,
-            command_dict,
-            [
-                PtzListPtzCommand,
-                PtzGetPtzPositionCommand,
-                PtzGetPtzVelocityCommand,
-                PtzSetPtzPositionCommand,
-                PtzSetPtzVelocityCommand,
-                PtzInitializeLensCommand,
-            ])
+        super(PtzCommands, self).__init__(subparsers, command_dict, [
+            PtzListPtzCommand, PtzGetPtzPositionCommand, PtzGetPtzVelocityCommand,
+            PtzSetPtzPositionCommand, PtzSetPtzVelocityCommand, PtzInitializeLensCommand,
+            PtzGetPtzFocusCommand, PtzSetPtzFocusCommand
+        ])
 
 
 class PtzListPtzCommand(Command):
@@ -144,3 +138,49 @@ class PtzInitializeLensCommand(Command):
         return resp
 
 
+# Manual Focus RPCs
+
+
+class PtzGetPtzFocusCommand(Command):
+    """Focus of the ptz"""
+
+    NAME = 'get_focus'
+
+    def __init__(self, subparsers, command_dict):
+        super(PtzGetPtzFocusCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        focus = robot.ensure_client(PtzClient.default_service_name).get_ptz_focus_state()
+
+        return focus
+
+
+class PtzSetPtzFocusCommand(Command):
+    """Set focus of the ptz"""
+
+    NAME = 'set_focus'
+
+    def __init__(self, subparsers, command_dict):
+        super(PtzSetPtzFocusCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('focus_mode', default='auto_focus', const='auto_focus', nargs='?',
+                                  choices=['auto_focus', 'manual_focus'])
+        self._parser.add_argument(
+            '--distance',
+            help='Distance at which to focus in meters, only used for manual focus mode',
+            default=0.0, type=float)
+
+    def _focus_mode_str_to_enum(self, mode: str):
+        """
+        Returns a PTZ focus mode enum based on the input string
+        """
+        str_to_enum_dict = {
+            'auto_focus': ptz_pb2.PtzFocusState.PTZ_FOCUS_AUTO,
+            'manual_focus': ptz_pb2.PtzFocusState.PTZ_FOCUS_MANUAL,
+        }
+        return str_to_enum_dict[mode.lower()]
+
+    def _run(self, robot, options):
+        ptz_focus = robot.ensure_client(PtzClient.default_service_name).set_ptz_focus_state(
+            self._focus_mode_str_to_enum(options.focus_mode), options.distance, None)
+
+        return ptz_focus

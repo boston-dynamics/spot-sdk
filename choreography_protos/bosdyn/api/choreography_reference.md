@@ -41,6 +41,24 @@
 
 
 
+<a name="bosdyn.api.spot.AnimatedCycleParams"></a>
+
+### AnimatedCycleParams
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| animation_name | [google.protobuf.StringValue](#google.protobuf.StringValue) |  |
+| enable_animation_duration | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| enable_leg_timing | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| enable_stance_shape | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.ArmMoveParams"></a>
 
 ### ArmMoveParams
@@ -202,11 +220,109 @@ Parameters for the robot's crawling gait.
 
 
 
+<a name="bosdyn.api.spot.CustomGaitCommand"></a>
+
+### CustomGaitCommand
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| drive_velocity_body | [bosdyn.api.SE2Velocity](#bosdyn.api.SE2Velocity) | Locomotion velocity in the horizontal plane in robot body frame. (m/s, m/s, rad/s) |
+| finished | [bool](#bool) | When true, robot will transition to a stand, then continue the sequence. Until then, the sequence will keep looping through this move. |
+| body_translation_offset | [bosdyn.api.Vec3](#bosdyn.api.Vec3) | How much to offset the body pose. Additive with other offsets.
+
+Meters. |
+| body_orientation_offset | [EulerZYX](#bosdyn.api.spot.EulerZYX) | Radians. |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.CustomGaitCommandLimits"></a>
+
+### CustomGaitCommandLimits
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| maximum_drive_velocity_body | [bosdyn.api.SE2Velocity](#bosdyn.api.SE2Velocity) | Maximum absolute value of locomotion velocity in the horizontal plane in robot body frame. (m/s, m/s, rad/s) |
+| maximum_body_translation_offset | [bosdyn.api.Vec3](#bosdyn.api.Vec3) | Maximum absolute value of the body offsets.
+
+Meters. |
+| maximum_body_orientation_offset | [EulerZYX](#bosdyn.api.spot.EulerZYX) | Radians. |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.CustomGaitParams"></a>
+
+### CustomGaitParams
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| max_velocity | [bosdyn.api.Vec2Value](#bosdyn.api.Vec2Value) | Maximum steering commands that will be accepted. |
+| max_yaw_rate | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| acceleration_scaling | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | How much to limit steering acceleration. 1 is normal. Smaller is less acceleration. |
+| cycle_duration | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | Gait pattern. When to liftoff and touchdown each leg. |
+| fl_swing | [SwingPhases](#bosdyn.api.spot.SwingPhases) |  |
+| two_fl_swings | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| second_fl_swing | [SwingPhases](#bosdyn.api.spot.SwingPhases) |  |
+| fr_swing | [SwingPhases](#bosdyn.api.spot.SwingPhases) |  |
+| two_fr_swings | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| second_fr_swing | [SwingPhases](#bosdyn.api.spot.SwingPhases) |  |
+| hl_swing | [SwingPhases](#bosdyn.api.spot.SwingPhases) |  |
+| two_hl_swings | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| second_hl_swing | [SwingPhases](#bosdyn.api.spot.SwingPhases) |  |
+| hr_swing | [SwingPhases](#bosdyn.api.spot.SwingPhases) |  |
+| two_hr_swings | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| second_hr_swing | [SwingPhases](#bosdyn.api.spot.SwingPhases) |  |
+| show_stance_shape | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Relative positions of feet. |
+| stance_shape | [StanceShape](#bosdyn.api.spot.StanceShape) |  |
+| com_height | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | Constant posture. For a phase-dependent posture, combine with a Body move. |
+| body_translation_offset | [bosdyn.api.Vec3Value](#bosdyn.api.Vec3Value) |  |
+| body_rotation_offset | [EulerZYXValue](#bosdyn.api.spot.EulerZYXValue) |  |
+| low_speed_body_fraction | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| general_swing_params | [SwingParams](#bosdyn.api.spot.SwingParams) | Modify the path the foot takes between liftoff and touchdown. General swing parameters apply to legs that are not configured to have their own parameter set. |
+| use_fl_swing_params | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Individual legs can have their own parameters or use the general swing parameters. |
+| fl_swing_params | [SwingParams](#bosdyn.api.spot.SwingParams) |  |
+| use_fr_swing_params | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| fr_swing_params | [SwingParams](#bosdyn.api.spot.SwingParams) |  |
+| use_hl_swing_params | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| hl_swing_params | [SwingParams](#bosdyn.api.spot.SwingParams) |  |
+| use_hr_swing_params | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| hr_swing_params | [SwingParams](#bosdyn.api.spot.SwingParams) |  |
+| stand_in_place | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Stand rather than stepping in place when not moving. |
+| standard_final_stance | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Go back to a standard rectangular stance when ending the gait. Otherwise maintains the customized stance shape. |
+| show_stability_params | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Parameters that impact the stability of the gait rather than its appearance. |
+| mu | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | Friction coefficient between the feet and the ground. |
+| timing_stiffness | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | How much the robot is allowed to deviate from the specified timing. 0 means no deviation. Otherwise: large values mean less deviation and small values mean more is acceptable. Too much timing adjustment (low, non-zero values) may make the gait unstable. At least a little timing adjustment is recommended for gaits with flight phases (periods with 0 feet on the ground). |
+| step_position_stiffness | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | How much the robot is allowed to deviate from the specified stance shape. 0 means no deviation. Otherwise: large values mean less deviation and small values mean more is acceptable. Too much position adjustment (low, non-zero values) may make the gait unstable. |
+| enable_perception_obstacle_avoidance | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Enable/disable various aspects of perception. |
+| obstacle_avoidance_padding | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| enable_perception_terrain_height | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| enable_perception_step_placement | [google.protobuf.BoolValue](#google.protobuf.BoolValue) |  |
+| maximum_stumble_distance | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | How far the robot should stumble before giving up and freezing. |
+| trip_sensitivity | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | How sensitive we should be to trip detection. On the range [0, 1], where 1 is normal sensitivity and 0 is ignoring all trips. Useful for very aggressive gaits or when a costume is restricting leg motion. |
+| animated_cycle_params | [AnimatedCycleParams](#bosdyn.api.spot.AnimatedCycleParams) | Using an animated cycle to define the gait style |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.EulerRateZYXValue"></a>
 
 ### EulerRateZYXValue
 
-Euler Angle rates (yaw->pitch->roll) vector that uses wrapped values so we can tell which elements are set.
+Euler Angle rates (yaw->pitch->roll) vector that uses wrapped values so we can tell which
+elements are set.
 
 
 
@@ -221,11 +337,31 @@ Euler Angle rates (yaw->pitch->roll) vector that uses wrapped values so we can t
 
 
 
+<a name="bosdyn.api.spot.EulerZYX"></a>
+
+### EulerZYX
+
+Euler Angle (yaw->pitch->roll) vector.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| roll | [double](#double) |  |
+| pitch | [double](#double) |  |
+| yaw | [double](#double) |  |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.EulerZYXValue"></a>
 
 ### EulerZYXValue
 
-Euler Angle (yaw->pitch->roll) vector that uses wrapped values so we can tell which elements are set.
+Euler Angle (yaw->pitch->roll) vector that uses wrapped values so we can tell which elements are
+set.
 
 
 
@@ -517,6 +653,32 @@ Parameters specific to KneelLegMove move.
 
 
 
+<a name="bosdyn.api.spot.LegJointParams"></a>
+
+### LegJointParams
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| fl_hx | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| fl_hy | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| fl_kn | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| fr_hx | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| fr_hy | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| fr_kn | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| hl_hx | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| hl_hy | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| hl_kn | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| hr_hx | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| hr_hy | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| hr_kn | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.Pace2StepParams"></a>
 
 ### Pace2StepParams
@@ -660,6 +822,25 @@ Parameters for moves that can go to either side.
 
 
 
+<a name="bosdyn.api.spot.StanceShape"></a>
+
+### StanceShape
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| length | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| width | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| front_wider_than_hind | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| left_longer_than_right | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| left_forward_of_right | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.StepParams"></a>
 
 ### StepParams
@@ -706,6 +887,43 @@ Parameters specific to Sway move.
 | style | [SwayParams.SwayStyle](#bosdyn.api.spot.SwayParams.SwayStyle) | What style motion should we use? |
 | pronounced | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) | How pronounced should the sway-style be? The value is on a scale from [0,1.0]. |
 | hold_zero_axes | [google.protobuf.BoolValue](#google.protobuf.BoolValue) | Should the robot hold previous values for the vertical, horizontal, and roll axes if the value is left unspecified (value of zero). |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.SwingParams"></a>
+
+### SwingParams
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| height | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| liftoff_speed | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| vertical_speed | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| vertical_acceleration | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| overlay_outside | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| overlay_forward | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| low_speed_fraction | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.SwingPhases"></a>
+
+### SwingPhases
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| liftoff_phase | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
+| touchdown_phase | [google.protobuf.DoubleValue](#google.protobuf.DoubleValue) |  |
 
 
 
@@ -1006,6 +1224,22 @@ The type of motion used by the Sway sequence move.
 
 
 
+<a name="bosdyn.api.spot.ActiveMove"></a>
+
+### ActiveMove
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| move | [MoveParams](#bosdyn.api.spot.MoveParams) | Any parameters that had to be adjusted into the legal range will have their adjusted values. |
+| custom_gait_command_limits | [CustomGaitCommandLimits](#bosdyn.api.spot.CustomGaitCommandLimits) |  |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.AnimateArm"></a>
 
 ### AnimateArm
@@ -1145,10 +1379,13 @@ Represents an animated dance move that can be used whithin choreographies after 
 | extendable | [bool](#bool) | Indicates if the animated moves can be stretched (animated move will loop). Not supported for leg moves. |
 | neutral_start | [bool](#bool) | Indicates if the move should start in a neutral stand position. |
 | precise_steps | [bool](#bool) | Step exactly at the animated locations, even at the expense of balance. By default, the optimizer may adjust step locations slightly. |
-| precise_timing | [bool](#bool) | Time everything exactly as animated, even at the expense of balance. By default, the optimizer may adjust timing slightly. |
+| precise_timing | [bool](#bool) | DEPRECATED as of 3.3.0: The boolean field has been replaced by the more fine-grained control of timing_adjustability. The following field will be deprecated and moved to 'reserved' in a future release. |
+| timing_adjustability | [double](#double) | How much the optimizer is allowed to adjust the timing. On the range [-1, 1]. -1: Everything will be timed exactly as animated, even at the expense of balance. 0: Default value: some timing adjust allowed. 1: Timing can be adjusted drastically. |
 | arm_required | [bool](#bool) | If set true, this animation will not run unless the robot has an arm. |
 | arm_prohibited | [bool](#bool) | If set true, this animation will not run unless the robot has no arm. |
 | no_looping | [bool](#bool) | If the animation completes before the move's duration, freeze rather than looping. |
+| starts_sitting | [bool](#bool) | If the animation starts from a sit pose. Default starting pose is stand. |
+| custom_gait_cycle | [bool](#bool) | If true, this animation can be used as direct input to custom gait to define the gait style |
 
 
 
@@ -1260,6 +1497,41 @@ the API
 
 
 
+<a name="bosdyn.api.spot.ChoreographyCommandRequest"></a>
+
+### ChoreographyCommandRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header |
+| commands | [MoveCommand](#bosdyn.api.spot.MoveCommand) | Commands intended for individual moves. Repeated because multiple moves may be playing simultaneously and we may want to command multiple of them. |
+| lease | [bosdyn.api.Lease](#bosdyn.api.Lease) | The Lease to show ownership of the robot body. |
+| command_end_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | When the commands expire. In the robot's clock. |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.ChoreographyCommandResponse"></a>
+
+### ChoreographyCommandResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header |
+| lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn.api.LeaseUseResult) |  |
+| status | [ChoreographyCommandResponse.Status](#bosdyn.api.spot.ChoreographyCommandResponse.Status) | One status for each command sent. |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.ChoreographyInfo"></a>
 
 ### ChoreographyInfo
@@ -1290,7 +1562,8 @@ Represents a particular choreography sequence, made up of MoveParams.
 | name | [string](#string) | Display name or file name associated with the choreography sequence. |
 | slices_per_minute | [double](#double) | Number of slices per minute in the choreography sequence. Typically a slice will correspond to 1/4 a beat. |
 | moves | [MoveParams](#bosdyn.api.spot.MoveParams) | All of the moves in this choreography sequence. |
-| choreography_info | [ChoreographyInfo](#bosdyn.api.spot.ChoreographyInfo) |  |
+| choreography_info | [ChoreographyInfo](#bosdyn.api.spot.ChoreographyInfo) | Metadata associated with the sequence. |
+| entrance_state | [MoveInfo.TransitionState](#bosdyn.api.spot.MoveInfo.TransitionState) | Can be used to specify an explicit entrance_state in the case where the first legs-track move accepts multiple entrace_states. Will also be used if the sequence contains no legs-track moves. Can otherwise be left unset. If set and not within the set of acceptable entrance_states for the first legs-track move, the Sequence will be considered invalid. |
 
 
 
@@ -1312,11 +1585,48 @@ Represents a particular choreography sequence, made up of MoveParams.
 
 
 
+<a name="bosdyn.api.spot.ChoreographyStatusRequest"></a>
+
+### ChoreographyStatusRequest
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn.api.RequestHeader) | Common request header |
+
+
+
+
+
+
+<a name="bosdyn.api.spot.ChoreographyStatusResponse"></a>
+
+### ChoreographyStatusResponse
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header |
+| status | [ChoreographyStatusResponse.Status](#bosdyn.api.spot.ChoreographyStatusResponse.Status) |  |
+| execution_id | [int32](#int32) | If dancing (or preparing to dance), the unique execution_id matching the one from ExecuteChoreographyResponse. If not dancing, 0. |
+| current_slice | [double](#double) | Where we are in the script. (slice = 1/4 beat; standard unit of "time" within Choreography) |
+| active_moves | [ActiveMove](#bosdyn.api.spot.ActiveMove) | All of the moves currently executing. |
+| sequence_slices | [int32](#int32) | Length of the current sequence. |
+| sequence_slices_per_minute | [double](#double) | Cadence of the current sequence. |
+| validity_time | [google.protobuf.Timestamp](#google.protobuf.Timestamp) | When this was true in robot time. |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.ClearAllSequenceFilesRequest"></a>
 
 ### ClearAllSequenceFilesRequest
 
-Reset to a clean slate with no retained files by deleting all non-permanent 
+Reset to a clean slate with no retained files by deleting all non-permanent
 choreography related files
 
 
@@ -1443,6 +1753,7 @@ Delete the retained file for a choreography sequence so the sequence will be for
 | header | [bosdyn.api.ResponseHeader](#bosdyn.api.ResponseHeader) | Common response header |
 | lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn.api.LeaseUseResult) |  |
 | status | [ExecuteChoreographyResponse.Status](#bosdyn.api.spot.ExecuteChoreographyResponse.Status) |  |
+| execution_id | [int32](#int32) | Unique ID for the execution. Will increment whenever an ExecuteChoreographRequest is received. Will reset upon robot boot. |
 
 
 
@@ -1598,7 +1909,7 @@ Request a list of all playable choreography sequences that the robot knows about
 
 ### ModifyChoreographyInfoRequest
 
-Edit the metadata of a choreography sequence and update any retained files for 
+Edit the metadata of a choreography sequence and update any retained files for
 that sequence with the new metadata
 
 
@@ -1631,6 +1942,26 @@ that sequence with the new metadata
 
 
 
+<a name="bosdyn.api.spot.MoveCommand"></a>
+
+### MoveCommand
+
+Either, both, or neither of move_type and move_id can be used to specify which move this
+command is intended for.
+
+
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| move_type | [string](#string) | Name of the move type this command is intended for. |
+| move_id | [int32](#int32) | ID of the move this command is intended for. |
+| custom_gait_command | [CustomGaitCommand](#bosdyn.api.spot.CustomGaitCommand) |  |
+
+
+
+
+
+
 <a name="bosdyn.api.spot.MoveInfo"></a>
 
 ### MoveInfo
@@ -1657,6 +1988,7 @@ Defines properties of a choreography move.
 | controls_gripper | [bool](#bool) |  |
 | controls_lights | [bool](#bool) |  |
 | controls_annotations | [bool](#bool) |  |
+| is_looping | [bool](#bool) |  |
 | display | [ChoreographerDisplayInfo](#bosdyn.api.spot.ChoreographerDisplayInfo) | Information for the GUI tool to visualize the sequence move info. |
 | animated_move_generated_id | [google.protobuf.StringValue](#google.protobuf.StringValue) | Unique ID for the animated moves. This is sent with the UploadAnimatedMove request and use to track which version of the animated move is currently saved on robot. The ID can be unset, meaning the RPC which uploaded the animation did not provide an identifying hash. |
 
@@ -1678,6 +2010,7 @@ Defines varying parameters for a particular instance of a move.
 | type | [string](#string) | Unique ID of the move type that these params are associated with. |
 | start_slice | [int32](#int32) | How many slices since the start of the song this move should be executed at. |
 | requested_slices | [int32](#int32) | The number of slices (beats/sub-beats) that this move is supposed to last for. If the move was extendable, then this corresponds to the number of slices that the user requested. |
+| id | [int32](#int32) | The ID number can be optionally set by the client as part of the UploadChoreographyRequest. If not set by the client, the robot will assign an id to each move that is unique within the sequence. The ID (either set by the client or the robot) will be reported in the ActiveMoves in the ChoreographyStatusResponse. The ID can be used to specify which move a Command is intended for. |
 | jump_params | [JumpParams](#bosdyn.api.spot.JumpParams) |  |
 | rotate_body_params | [RotateBodyParams](#bosdyn.api.spot.RotateBodyParams) |  |
 | step_params | [StepParams](#bosdyn.api.spot.StepParams) |  |
@@ -1710,6 +2043,8 @@ Defines varying parameters for a particular instance of a move.
 | ripple_color_params | [RippleColorParams](#bosdyn.api.spot.RippleColorParams) |  |
 | fade_color_params | [FadeColorParams](#bosdyn.api.spot.FadeColorParams) |  |
 | independent_color_params | [IndependentColorParams](#bosdyn.api.spot.IndependentColorParams) |  |
+| custom_gait_params | [CustomGaitParams](#bosdyn.api.spot.CustomGaitParams) |  |
+| leg_joint_params | [LegJointParams](#bosdyn.api.spot.LegJointParams) |  |
 | animate_params | [AnimateParams](#bosdyn.api.spot.AnimateParams) |  |
 
 
@@ -1763,6 +2098,7 @@ Write a choreography sequence as a file to robot memory so it will be retained t
 | name | [string](#string) |  |
 | labels | [string](#string) |  |
 | saved_state | [SequenceInfo.SavedState](#bosdyn.api.spot.SequenceInfo.SavedState) | Use temporary sequences during development with choreographer, and then tell the robot to retain the final version of the sequence so that it can be played back later from other interfaces, like the tablet |
+| exit_state | [MoveInfo.TransitionState](#bosdyn.api.spot.MoveInfo.TransitionState) | The exit transition state of the sequence. |
 
 
 
@@ -1944,6 +2280,45 @@ displayed with.
 
 
 
+<a name="bosdyn.api.spot.ChoreographyCommandResponse.Status"></a>
+
+### ChoreographyCommandResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_ACCEPTED_WITH_MODIFICATION | 2 |  |
+| STATUS_LEASE_ERROR | 3 |  |
+| STATUS_NO_MATCHING_MOVE | 4 |  |
+| STATUS_INVALID_COMMAND | 5 |  |
+| STATUS_ALREADY_EXPIRED | 6 |  |
+
+
+
+<a name="bosdyn.api.spot.ChoreographyStatusResponse.Status"></a>
+
+### ChoreographyStatusResponse.Status
+
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_DANCING | 1 |  |
+| STATUS_COMPLETED_SEQUENCE | 2 |  |
+| STATUS_PREPPING | 3 |  |
+| STATUS_WAITING_FOR_START_TIME | 4 |  |
+| STATUS_VALIDATING | 5 |  |
+| STATUS_INTERRUPTED | 6 |  |
+| STATUS_FALLEN | 7 |  |
+| STATUS_POWERED_OFF | 8 |  |
+| STATUS_OTHER | 9 |  |
+
+
+
 <a name="bosdyn.api.spot.ClearAllSequenceFilesResponse.Status"></a>
 
 ### ClearAllSequenceFilesResponse.Status
@@ -2063,7 +2438,7 @@ The state that the robot is in at the start or end of a move.
 | ---- | ------ | ----------- |
 | STATUS_UNKNOWN | 0 | Do not use. |
 | STATUS_OK | 1 | The sequence was successfully saved |
-| STATUS_UNKNOWN_SEQUENCE | 2 | The sequence was successfully saved |
+| STATUS_UNKNOWN_SEQUENCE | 2 | The requested sequence was not found |
 | STATUS_PERMANENT_SEQUENCE | 3 | This sequence is already saved in the release |
 | STATUS_FAILED_TO_SAVE | 4 | We failed to save a file with the sequence information to robot |
 
@@ -2155,6 +2530,8 @@ The status for the start recording request.
 | StartRecordingState | [StartRecordingStateRequest](#bosdyn.api.spot.StartRecordingStateRequest) | [StartRecordingStateResponse](#bosdyn.api.spot.StartRecordingStateResponse) | Manually start (or continue) recording the robot state. |
 | StopRecordingState | [StopRecordingStateRequest](#bosdyn.api.spot.StopRecordingStateRequest) | [StopRecordingStateResponse](#bosdyn.api.spot.StopRecordingStateResponse) | Manually stop recording the robot state. |
 | DownloadRobotStateLog | [DownloadRobotStateLogRequest](#bosdyn.api.spot.DownloadRobotStateLogRequest) | [DownloadRobotStateLogResponse](#bosdyn.api.spot.DownloadRobotStateLogResponse) stream | Download log of the latest recorded robot state information. |
+| ChoreographyStatus | [ChoreographyStatusRequest](#bosdyn.api.spot.ChoreographyStatusRequest) | [ChoreographyStatusResponse](#bosdyn.api.spot.ChoreographyStatusResponse) | Report the status of a dancing robot. |
+| ChoreographyCommand | [ChoreographyCommandRequest](#bosdyn.api.spot.ChoreographyCommandRequest) | [ChoreographyCommandResponse](#bosdyn.api.spot.ChoreographyCommandResponse) | Commands intended for individual dance moves that are currently executing. |
 
  <!-- end services -->
 

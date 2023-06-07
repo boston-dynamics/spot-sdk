@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -38,21 +38,22 @@ enum LocomotionHint {
     // Demo gait which hops while holding some feet in the air.
     HINT_HOP = 8;
     // HINT_AUTO_TROT is deprecated due to the name being too similar to the Spot Autowalk feature.
-    // It has been replaced by HINT_SPEED_SELECT_TROT. Keeping this value in here for now for backwards
-    // compatibility, but this may be removed in future releases.
+    // It has been replaced by HINT_SPEED_SELECT_TROT. Keeping this value in here for now for
+    // backwards compatibility, but this may be removed in future releases.
     HINT_AUTO_TROT = 3;
     // HINT_AUTO_AMBLE is deprecated due to the name being too similar to the Spot Autowalk feature.
-    // It has been replaced by HINT_SPEED_SELECT_AMBLE. Keeping this value in here for now for backwards
-    // compatibility, but this may be removed in future releases.
+    // It has been replaced by HINT_SPEED_SELECT_AMBLE. Keeping this value in here for now for
+    // backwards compatibility, but this may be removed in future releases.
     HINT_AUTO_AMBLE = 6;
 }
 
 // The type of swing height for a step.
 enum SwingHeight {
-    SWING_HEIGHT_UNKNOWN = 0;    // Invalid; do not use.
-    SWING_HEIGHT_LOW = 1;        // Low-stepping. Robot will try to only swing legs a few cm away from ground.
-    SWING_HEIGHT_MEDIUM = 2;     // Default for most cases, use other values with caution.
-    SWING_HEIGHT_HIGH = 3;       // High-stepping. Possibly useful with degraded vision operation.
+    SWING_HEIGHT_UNKNOWN = 0;  // Invalid; do not use.
+    SWING_HEIGHT_LOW =
+        1;  // Low-stepping. Robot will try to only swing legs a few cm away from ground.
+    SWING_HEIGHT_MEDIUM = 2;  // Default for most cases, use other values with caution.
+    SWING_HEIGHT_HIGH = 3;    // High-stepping. Possibly useful with degraded vision operation.
 }
 
 // Params common across spot movement and mobility.
@@ -70,17 +71,17 @@ message MobilityParams {
     // The following field will be deprecated and moved to 'reserved' in a future release.
     bool stair_hint = 4 [deprecated = true];
 
-    // Stairs are only supported in trot gaits. Enabling stairs mode will override some user defaults in
-    // order to optimize stair behavior.
+    // Stairs are only supported in trot gaits. Enabling stairs mode will override some user
+    // defaults in order to optimize stair behavior.
     enum StairsMode {
-        STAIRS_MODE_UNKNOWN = 0; // Invalid; do not use.
+        STAIRS_MODE_UNKNOWN = 0;  // Invalid; do not use.
         STAIRS_MODE_OFF = 1;
         STAIRS_MODE_ON = 2;
-        STAIRS_MODE_AUTO = 3;    // Robot will automatically turn mode on or off
+        STAIRS_MODE_AUTO = 3;  // Robot will automatically turn mode on or off
     }
     // The selected option for stairs mode.
     // If unset, will use the deprecated stair_hint instead.
-    // If falling back on stair_hint, false will map to STAIRS_MODE_OFF.  
+    // If falling back on stair_hint, false will map to STAIRS_MODE_OFF.
     // This will be changed to STAIRS_MODE_AUTO in a future release.
     StairsMode stairs_mode = 17;
 
@@ -99,14 +100,15 @@ message MobilityParams {
     // Prevent the robot from using StairTracker even if in stairs mode.
     bool disallow_stair_tracker = 9;
 
-    // Prevent the robot from automatically walking off a staircase in the case of an error 
+    // Prevent the robot from automatically walking off a staircase in the case of an error
     // (ex: e-stop settle_then_cut, critical battery level)
     bool disable_stair_error_auto_descent = 16;
 
     // Robot Body External Force parameters
     BodyExternalForceParams external_force_params = 10;
 
-    // Prevent the robot from pitching to get a better look at rearward terrain except in stairs mode.
+    // Prevent the robot from pitching to get a better look at rearward terrain except in stairs
+    // mode.
     bool disallow_non_stairs_pitch_limiting = 11;
 
     // Disable the secondary nearmap-based cliff avoidance that runs while on stairs.
@@ -116,65 +118,83 @@ message MobilityParams {
 
 // Parameters for offsetting the body from the normal default.
 message BodyControlParams {
-    
     oneof param {
         // Desired base offset relative to the footprint pseudo-frame.
         // The footprint pseudo-frame is a gravity aligned frame with its origin located at the
-        // geometric center of the feet in the X-Y axis, and at the nominal height of the hips in the Z axis.
-        // The yaw of the frame (wrt the world) is calcuated by the average foot locations, and is aligned with the feet.
+        // geometric center of the feet in the X-Y axis, and at the nominal height of the hips in
+        // the Z axis. The yaw of the frame (wrt the world) is calcuated by the average foot
+        // locations, and is aligned with the feet.
         SE3Trajectory base_offset_rt_footprint = 1;
-        
-        // The base will adjust to assist with manipulation, adjusting its height, pitch, and yaw as a function of
-        // the hand's location.  Note, manipulation assisted body control is only available for ArmCommand requests
-        // that control the end-effector, and are expressed in an inertial frame.  For example, sending a
-        // ArmCartesianCommand request with root_frame_name set to "odom" will allow the robot to compute a body
-        // adjustment.  However, sending a ArmCartesianCommand request with root_frame_name set to "body" or
-        // sending an ArmJointMoveCommand request is incompatible, and the body will reset to default height
-        // and orientation. 
+
+        // The base will adjust to assist with manipulation, adjusting its height, pitch, and yaw as
+        // a function of the hand's location.  Note, manipulation assisted body control is only
+        // available for ArmCommand requests that control the end-effector, and are expressed in an
+        // inertial frame.  For example, sending a ArmCartesianCommand request with root_frame_name
+        // set to "odom" will allow the robot to compute a body adjustment.  However, sending a
+        // ArmCartesianCommand request with root_frame_name set to "body" or sending an
+        // ArmJointMoveCommand request is incompatible, and the body will reset to default height
+        // and orientation.
         BodyAssistForManipulation body_assist_for_manipulation = 3;
+
+        // An absolute desired position and orientation of the robot body origin. Command may be
+        // saturated to achievable or safe postures on receipt. Note: This parameter only has effect
+        // when coupled with a StandCommand. For other commands, the robot will fall back to
+        // defaults.
+        BodyPose body_pose = 4;
     }
 
     // Setting for how the robot interprets base offset pitch & roll components.
-    // In the default case (ROTATION_SETTING_OFFSET) the robot will naturally align the body to the pitch of the current terrain.
-    // In some circumstances, the user may wish to override this value and try to maintain alignment
-    // with respect to gravity. Be careful with this setting as it may likely degrade robot performance in
-    // complex terrain, e.g. stairs, platforms, or slopes of sufficiently high grade.
+    // In the default case (ROTATION_SETTING_OFFSET) the robot will naturally align the body to the
+    // pitch of the current terrain. In some circumstances, the user may wish to override this value
+    // and try to maintain alignment with respect to gravity. Be careful with this setting as it may
+    // likely degrade robot performance in complex terrain, e.g. stairs, platforms, or slopes of
+    // sufficiently high grade.
     enum RotationSetting {
-        ROTATION_SETTING_UNKNOWN = 0;    // Invalid; do not use.
-        ROTATION_SETTING_OFFSET = 1;     // Pitch & Roll are offset with respect to orientation of the footprint.
-        ROTATION_SETTING_ABSOLUTE = 2;   // Pitch & Roll are offset with respect to gravity.
+        ROTATION_SETTING_UNKNOWN = 0;  // Invalid; do not use.
+        ROTATION_SETTING_OFFSET =
+            1;  // Pitch & Roll are offset with respect to orientation of the footprint.
+        ROTATION_SETTING_ABSOLUTE = 2;  // Pitch & Roll are offset with respect to gravity.
     }
-    // The rotation setting for the robot body.  Ignored if body_assist_for_manipulation is requested.
+    // The rotation setting for the robot body.  Ignored if body_assist_for_manipulation or
+    // body_pose are enabled.
     RotationSetting rotation_setting = 2;
 
-    // Instead of directly specify the base offset trajectory, these options allow the robot to calcuate offsets
-    // based on the hand's location.  If the robot does not have a SpotArm attached, sending this request will
-    // hvae no effect.
+    // Instead of directly specify the base offset trajectory, these options allow the robot to
+    // calcuate offsets based on the hand's location.  If the robot does not have a SpotArm
+    // attached, sending this request will have no effect.
     message BodyAssistForManipulation {
         // Enable the use of body yaw to assist with manipulation.
         bool enable_body_yaw_assist = 1;
 
         // Enable use of hip height (e.g. body height/pitch) to assist with manipulation.
         bool enable_hip_height_assist = 2;
-    }  
+    }
+
+    // An SE3 based desired body pose trajectory with a specified base frame.
+    message BodyPose {
+        // The root frame for the desired pose, e.g. "vision" or "odom"
+        string root_frame_name = 1;
+        // The SE3 pose trajectory
+        SE3Trajectory base_offset_rt_root = 2;
+    }
 }
 
 // Parameters for obstacle avoidance types.
 message ObstacleParams {
-  // Use vision to make the feet avoid obstacles by swinging higher?
-  bool disable_vision_foot_obstacle_avoidance = 1;
-  // Use vision to make the feet avoid constraints like edges of stairs?
-  bool disable_vision_foot_constraint_avoidance = 2;
-  // Use vision to make the body avoid obstacles?
-  bool disable_vision_body_obstacle_avoidance = 3;
-  // Desired padding around the body to use when attempting to avoid obstacles.
-  // Described in meters. Must be >= 0.
-  double obstacle_avoidance_padding = 4;
-  // Prevent the robot body from raising above nominal height to avoid lower-leg collisions with
-  // the terrain.
-  bool disable_vision_foot_obstacle_body_assist = 5;
-  // Use vision to make the robot avoid stepping into negative obstacles?
-  bool disable_vision_negative_obstacles = 6;
+    // Use vision to make the feet avoid obstacles by swinging higher?
+    bool disable_vision_foot_obstacle_avoidance = 1;
+    // Use vision to make the feet avoid constraints like edges of stairs?
+    bool disable_vision_foot_constraint_avoidance = 2;
+    // Use vision to make the body avoid obstacles?
+    bool disable_vision_body_obstacle_avoidance = 3;
+    // Desired padding around the body to use when attempting to avoid obstacles.
+    // Described in meters. Must be >= 0.
+    double obstacle_avoidance_padding = 4;
+    // Prevent the robot body from raising above nominal height to avoid lower-leg collisions with
+    // the terrain.
+    bool disable_vision_foot_obstacle_body_assist = 5;
+    // Use vision to make the robot avoid stepping into negative obstacles?
+    bool disable_vision_negative_obstacles = 6;
 
 }
 
@@ -196,39 +216,38 @@ message TerrainParams {
     // make assumptions about the environment structure and more aggressively filter noise in
     // perception data.
     enum GratedSurfacesMode {
-        GRATED_SURFACES_MODE_UNKNOWN = 0; // Invalid; do not use.
+        GRATED_SURFACES_MODE_UNKNOWN = 0;  // Invalid; do not use.
         GRATED_SURFACES_MODE_OFF = 1;
         GRATED_SURFACES_MODE_ON = 2;
-        GRATED_SURFACES_MODE_AUTO = 3;    // Robot will automatically turn mode on or off
+        GRATED_SURFACES_MODE_AUTO = 3;  // Robot will automatically turn mode on or off
     }
     // The selected option for grated surfaces mode
     GratedSurfacesMode grated_surfaces_mode = 4;
-
-
 }
 
-// External Force on robot body parameters. This is a beta feature and still can have some odd behaviors.
-// By default, the external force estimator is disabled on the robot.
+// External Force on robot body parameters. This is a beta feature and still can have some odd
+// behaviors. By default, the external force estimator is disabled on the robot.
 message BodyExternalForceParams {
     // Indicates what external force estimate/override the robot should use.
     // By default, the external force estimator is disabled on the robot.
     enum ExternalForceIndicator {
-        EXTERNAL_FORCE_NONE = 0;         // No external forces considered.
-        EXTERNAL_FORCE_USE_ESTIMATE = 1; // Use external forces estimated by the robot
-        EXTERNAL_FORCE_USE_OVERRIDE = 2; // Use external forces specified in an override vector.
+        EXTERNAL_FORCE_NONE = 0;          // No external forces considered.
+        EXTERNAL_FORCE_USE_ESTIMATE = 1;  // Use external forces estimated by the robot
+        EXTERNAL_FORCE_USE_OVERRIDE = 2;  // Use external forces specified in an override vector.
     }
     // The type of external force described by the parameters.
     ExternalForceIndicator external_force_indicator = 1;
 
-    // The frame name for which the external_force_override is defined in. The frame must be known to the robot.
+    // The frame name for which the external_force_override is defined in. The frame must be known
+    // to the robot.
     string frame_name = 4;
 
     // Specifies a force that the body should expect to feel. This allows the robot to "lean into"
     // an external force. Be careful using this override, since incorrect information can cause
     // the robot to fall over.
-    // For example, if the robot is leaning against a wall in front of it, the force override would be in the
-    // negative x dimension. If the robot was pulling something directly behind it, the force override would
-    // be in the negative x dimension as well.
+    // For example, if the robot is leaning against a wall in front of it, the force override would
+    // be in the negative x dimension. If the robot was pulling something directly behind it, the
+    // force override would be in the negative x dimension as well.
     Vec3 external_force_override = 3;
 
     // Reserved for deprecated fields.

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -103,6 +103,11 @@ Once a choreography sequence is created, the `UploadChoreography` RPC sends the 
 The service returns a list of warnings and failures related to the uploaded choreography sequence. A failure is something the choreography service could not automatically correct and must be fixed before the routine can be executed. Warnings are automatically corrected and do not block the execution of the routine in certain scenarios. If the boolean `non_strict_parsing` is set to true in the `UploadChoreography` RPC, the service fixes any correctable errors within the routine (for example, by limiting parameters to the acceptable range) and allows a choreography sequence with warnings to be completed.
 
 The `ExecuteChoreography` RPC runs the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Starting time (in robot’s time) and starting slice specifies when the robot when starts the choreography sequence and at which move.  Named sequences can be returned using the `ListAllSequences` RPC.
+
+### Interacting With a Sequence During Execution
+The `ChoreographyStatus` RPC returns information about whether the robot is currently executing a sequence or why it isn't.  If it is executing a sequence, the response tells you where (what slice) within the sequence Spot currently is as well as listing which moves are currently active.
+
+Some moves (e.g. [CustomGait](custom_gait.md)) can respond to commands through the `ChorographyCommand` RPC.  When such moves are active, they will provide information about what commands they are currently able to accept in the `command_limits` field as part of the Status response.  The `ChoreographyCommand` RPC sends `MoveCommand`s, which are targeted at specific moves.  The `move_type` and `move_id` can (optionally) be used to restrict wich moves will accept the command and ensure that only the intended recipient can respond to it.
 
 ### Saving Choreography Sequences to your Spot
 

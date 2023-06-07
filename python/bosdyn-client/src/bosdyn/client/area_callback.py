@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,8 +8,8 @@ import collections
 
 from bosdyn.api.graph_nav import area_callback_pb2, area_callback_service_pb2_grpc
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
-                                  handle_common_header_errors, handle_lease_use_result_errors,
-                                  handle_unset_status_error)
+                                  handle_common_header_errors, handle_custom_params_errors,
+                                  handle_lease_use_result_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import LeaseUseError, ResponseError
 
 
@@ -77,6 +77,7 @@ _BEGIN_CALLBACK_TO_ERROR.update({
 })
 
 @handle_common_header_errors
+@handle_custom_params_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _begin_callback_error(response):
     return error_factory(response, response.status,

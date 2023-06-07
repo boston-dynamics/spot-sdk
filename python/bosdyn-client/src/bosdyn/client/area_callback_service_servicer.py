@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,6 +12,7 @@ from typing import Callable
 
 from bosdyn.api import lease_pb2
 from bosdyn.api.graph_nav import area_callback_pb2, area_callback_service_pb2_grpc
+from bosdyn.client import service_customization_helpers
 from bosdyn.client.area_callback_region_handler_base import AreaCallbackRegionHandlerBase
 from bosdyn.client.area_callback_service_utils import AreaCallbackServiceConfig
 from bosdyn.client.data_buffer import DataBufferClient
@@ -47,6 +48,8 @@ class AreaCallbackServiceServicer(area_callback_service_pb2_grpc.AreaCallbackSer
         self.area_callback_active_thread = None
         self.area_callback_active_thread_event = None
         self.robot = robot
+        self.param_validator = service_customization_helpers.create_value_validator(
+            self.area_callback_service_config.area_callback_information.custom_params)
 
         self._lock = Lock()
         self._next_command_id = 1
@@ -72,6 +75,11 @@ class AreaCallbackServiceServicer(area_callback_service_pb2_grpc.AreaCallbackSer
             request_to_log = copy.deepcopy(request)
         response = area_callback_pb2.BeginCallbackResponse()
         with ResponseContext(response, request_to_log, self._rpc_logger), self._lock:
+            param_error = self.param_validator(request.custom_params)
+            if param_error:
+                response.status = area_callback_pb2.BeginCallbackResponse.STATUS_CUSTOM_PARAMS_ERROR
+                response.custom_param_error.CopyFrom(param_error)
+                return response
             if self._is_expired(request.end_time):
                 response.status = area_callback_pb2.BeginCallbackResponse.STATUS_EXPIRED_END_TIME
                 return response

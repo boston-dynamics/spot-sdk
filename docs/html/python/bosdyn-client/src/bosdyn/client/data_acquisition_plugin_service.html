@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data Acquisition Plugin Service &mdash; Spot 3.2.3 documentation</title>
+  <title>Data Acquisition Plugin Service &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/language_data.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -639,7 +681,7 @@
            <div itemprop="articleBody">
             
   <section id="module-bosdyn.client.data_acquisition_plugin_service">
-<span id="data-acquisition-plugin-service"></span><h1>Data Acquisition Plugin Service<a class="headerlink" href="#module-bosdyn.client.data_acquisition_plugin_service" title="Permalink to this headline">¶</a></h1>
+<span id="data-acquisition-plugin-service"></span><h1>Data Acquisition Plugin Service<a class="headerlink" href="#module-bosdyn.client.data_acquisition_plugin_service" title="Permalink to this heading">¶</a></h1>
 <p>A set of helper functions for implementing a Data Acquisition plugin service.</p>
 <p>The DataAcquisitionPluginService class in this module is the recommended way to create a
 plugin service for data acquisition.  To use it, you must define a function for performing the
@@ -671,15 +713,15 @@ then perform the cleanup and re-raise the exception. For example:</p>
 However, the data_collect_fn function should update the status to STATUS_SAVING when it transitions to
 storing the data.</p>
 <dl class="py exception">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestCancelledError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.data_acquisition_plugin_service.</code><code class="sig-name descname">RequestCancelledError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestCancelledError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestCancelledError" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestCancelledError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_acquisition_plugin_service.</span></span><span class="sig-name descname"><span class="pre">RequestCancelledError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestCancelledError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestCancelledError" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>The request has been cancelled and should no longer be handled.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="bosdyn.client.data_acquisition_plugin_service.make_error">
-<code class="sig-prename descclassname">bosdyn.client.data_acquisition_plugin_service.</code><code class="sig-name descname">make_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_id</span></em>, <em class="sig-param"><span class="n">error_msg</span></em>, <em class="sig-param"><span class="n">error_data</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#make_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.make_error" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.make_error">
+<span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_acquisition_plugin_service.</span></span><span class="sig-name descname"><span class="pre">make_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_msg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#make_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.make_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper to simplify creating a DataError to send to RequestState.add_errors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -696,21 +738,21 @@ storing the data.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestState">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.data_acquisition_plugin_service.</code><code class="sig-name descname">RequestState</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestState">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_acquisition_plugin_service.</span></span><span class="sig-name descname"><span class="pre">RequestState</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Interface for a data collection to update its state as it proceeds.</p>
 <p>Each AcquireData RPC made to the plugin service will create an instance of RequestState
 to manage the incoming acquisition request’s overall state, including if it has been
 cancelled, any errors that occur, and the current status of the request.</p>
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestState.kNonError">
-<code class="sig-name descname">kNonError</code><em class="property"> = {1, 2}</em><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.kNonError" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestState.kNonError">
+<span class="sig-name descname"><span class="pre">kNonError</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{1,</span> <span class="pre">2}</span></em><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.kNonError" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestState.set_status">
-<code class="sig-name descname">set_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.set_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.set_status" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestState.set_status">
+<span class="sig-name descname"><span class="pre">set_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.set_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.set_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the status of the request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -721,14 +763,14 @@ stored GetStatusResponse.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestState.set_complete_if_no_error">
-<code class="sig-name descname">set_complete_if_no_error</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.set_complete_if_no_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.set_complete_if_no_error" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestState.set_complete_if_no_error">
+<span class="sig-name descname"><span class="pre">set_complete_if_no_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.set_complete_if_no_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.set_complete_if_no_error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark that everything is complete.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestState.add_saved">
-<code class="sig-name descname">add_saved</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_ids</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.add_saved"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.add_saved" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestState.add_saved">
+<span class="sig-name descname"><span class="pre">add_saved</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.add_saved"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.add_saved" title="Permalink to this definition">¶</a></dt>
 <dd><p>Record that some data was saved successfully.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -738,8 +780,8 @@ stored GetStatusResponse.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestState.add_errors">
-<code class="sig-name descname">add_errors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_errors</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.add_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.add_errors" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestState.add_errors">
+<span class="sig-name descname"><span class="pre">add_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_errors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.add_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.add_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Report that some errors have occurred during the data capture.
 Use the make_error function to simplify creating data errors.</p>
 <dl class="field-list simple">
@@ -750,28 +792,28 @@ Use the make_error function to simplify creating data errors.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestState.has_data_errors">
-<code class="sig-name descname">has_data_errors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.has_data_errors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.has_data_errors" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestState.has_data_errors">
+<span class="sig-name descname"><span class="pre">has_data_errors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.has_data_errors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.has_data_errors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return True if any data errors have been added to this status.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestState.cancel_check">
-<code class="sig-name descname">cancel_check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.cancel_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.cancel_check" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestState.cancel_check">
+<span class="sig-name descname"><span class="pre">cancel_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.cancel_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.cancel_check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raises RequestCancelledError if the request has already been cancelled.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestState.is_cancelled">
-<code class="sig-name descname">is_cancelled</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.is_cancelled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.is_cancelled" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestState.is_cancelled">
+<span class="sig-name descname"><span class="pre">is_cancelled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestState.is_cancelled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestState.is_cancelled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query if the request is already cancelled.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.data_acquisition_plugin_service.</code><code class="sig-name descname">DataAcquisitionStoreHelper</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">store_client</span></em>, <em class="sig-param"><span class="n">state</span></em>, <em class="sig-param"><span class="n">cancel_interval</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_acquisition_plugin_service.</span></span><span class="sig-name descname"><span class="pre">DataAcquisitionStoreHelper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cancel_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class simplifies the management of data acquisition stores for a single request.</p>
 <p>Request state will be updated according to store progress.</p>
@@ -786,8 +828,8 @@ waiting for the futures to complete.</p></li>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_client">
-<code class="sig-name descname">store_client</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_client" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_client">
+<span class="sig-name descname"><span class="pre">store_client</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_client" title="Permalink to this definition">¶</a></dt>
 <dd><p>A data acquisition store client.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -797,8 +839,8 @@ waiting for the futures to complete.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.state">
-<code class="sig-name descname">state</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.state" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.state">
+<span class="sig-name descname"><span class="pre">state</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.state" title="Permalink to this definition">¶</a></dt>
 <dd><p>state of the request, to be modified with errors or completion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -808,8 +850,8 @@ waiting for the futures to complete.</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_interval">
-<code class="sig-name descname">cancel_interval</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_interval" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_interval">
+<span class="sig-name descname"><span class="pre">cancel_interval</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_interval" title="Permalink to this definition">¶</a></dt>
 <dd><p>How often to check for cancellation of the request while
 waiting for the futures to complete.</p>
 <dl class="field-list simple">
@@ -820,8 +862,8 @@ waiting for the futures to complete.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.data_id_future_pairs">
-<code class="sig-name descname">data_id_future_pairs</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.data_id_future_pairs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.data_id_future_pairs">
+<span class="sig-name descname"><span class="pre">data_id_future_pairs</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.data_id_future_pairs" title="Permalink to this definition">¶</a></dt>
 <dd><p>The data identifier and the associated
 future which results from the async store data rpc.</p>
 <dl class="field-list simple">
@@ -832,8 +874,8 @@ future which results from the async store data rpc.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_metadata">
-<code class="sig-name descname">store_metadata</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">metadata</span></em>, <em class="sig-param"><span class="n">data_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.store_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_metadata" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_metadata">
+<span class="sig-name descname"><span class="pre">store_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.store_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store metadata with the data acquisition store service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -849,8 +891,8 @@ future which results from the async store data rpc.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_image">
-<code class="sig-name descname">store_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_capture</span></em>, <em class="sig-param"><span class="n">data_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.store_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_image" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_image">
+<span class="sig-name descname"><span class="pre">store_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_capture</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.store_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store an image with the data acquisition store service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -866,8 +908,8 @@ future which results from the async store data rpc.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_data">
-<code class="sig-name descname">store_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">message</span></em>, <em class="sig-param"><span class="n">data_id</span></em>, <em class="sig-param"><span class="n">file_extension</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.store_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_data">
+<span class="sig-name descname"><span class="pre">store_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_extension</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.store_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.store_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store a data message with the data acquisition store service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -884,14 +926,14 @@ future which results from the async store data rpc.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_check">
-<code class="sig-name descname">cancel_check</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.cancel_check"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_check" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_check">
+<span class="sig-name descname"><span class="pre">cancel_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.cancel_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.cancel_check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Raises RequestCancelledError if the request has already been cancelled.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.wait_for_stores_complete">
-<code class="sig-name descname">wait_for_stores_complete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.wait_for_stores_complete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.wait_for_stores_complete" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.wait_for_stores_complete">
+<span class="sig-name descname"><span class="pre">wait_for_stores_complete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionStoreHelper.wait_for_stores_complete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionStoreHelper.wait_for_stores_complete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Block and wait for all stores to complete. Update state with store success/failures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -903,9 +945,9 @@ future which results from the async store data rpc.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.data_acquisition_plugin_service.</code><code class="sig-name descname">DataAcquisitionPluginService</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">robot</span></em>, <em class="sig-param"><span class="n">capabilities</span></em>, <em class="sig-param"><span class="n">data_collect_fn</span></em>, <em class="sig-param"><span class="n">acquire_response_fn</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">executor</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.api.data_acquisition_plugin_service_pb2_grpc.DataAcquisitionPluginServiceServicer</span></code></p>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_acquisition_plugin_service.</span></span><span class="sig-name descname"><span class="pre">DataAcquisitionPluginService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">capabilities</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_collect_fn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">acquire_response_fn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">executor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DataAcquisitionPluginServiceServicer</span></code></p>
 <p>Implementation of a data acquisition plugin. It relies on the provided data_collect_fn
 to implement the heart of the data collection and storage.</p>
 <dl class="field-list simple">
@@ -926,8 +968,8 @@ data_collect_fn): Boolean</p></li>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.logger">
-<code class="sig-name descname">logger</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.logger" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.logger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Logger used by the service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -937,8 +979,8 @@ data_collect_fn): Boolean</p></li>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.capabilities">
-<code class="sig-name descname">capabilities</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.capabilities" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.capabilities">
+<span class="sig-name descname"><span class="pre">capabilities</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.capabilities" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of capabilities that describe what
 this plugin can do.</p>
 <dl class="field-list simple">
@@ -949,20 +991,20 @@ this plugin can do.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.data_collect_fn">
-<code class="sig-name descname">data_collect_fn</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.data_collect_fn" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.data_collect_fn">
+<span class="sig-name descname"><span class="pre">data_collect_fn</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.data_collect_fn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function that performs the data collection and storage.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.acquire_response_fn">
-<code class="sig-name descname">acquire_response_fn</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.acquire_response_fn" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.acquire_response_fn">
+<span class="sig-name descname"><span class="pre">acquire_response_fn</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.acquire_response_fn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function that can validate a request and provide a timeout deadline.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.request_manager">
-<code class="sig-name descname">request_manager</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.request_manager" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.request_manager">
+<span class="sig-name descname"><span class="pre">request_manager</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.request_manager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Helper class which manages the RequestStates created with
 each acquisition RPC.</p>
 <dl class="field-list simple">
@@ -973,8 +1015,8 @@ each acquisition RPC.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.executor">
-<code class="sig-name descname">executor</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.executor" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.executor">
+<span class="sig-name descname"><span class="pre">executor</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.executor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Thread pool to run the plugin service on.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -984,8 +1026,8 @@ each acquisition RPC.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.robot">
-<code class="sig-name descname">robot</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.robot" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.robot">
+<span class="sig-name descname"><span class="pre">robot</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.robot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Authenticated robot object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -995,8 +1037,8 @@ each acquisition RPC.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.store_client">
-<code class="sig-name descname">store_client</code><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.store_client" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.store_client">
+<span class="sig-name descname"><span class="pre">store_client</span></span><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.store_client" title="Permalink to this definition">¶</a></dt>
 <dd><p>Client for the data acquisition store service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -1006,13 +1048,19 @@ each acquisition RPC.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.service_type">
-<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.DataAcquisitionPluginService'</em><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.service_type" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.service_type">
+<span class="sig-name descname"><span class="pre">service_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bosdyn.api.DataAcquisitionPluginService'</span></em><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.service_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.AcquirePluginData">
-<code class="sig-name descname">AcquirePluginData</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService.AcquirePluginData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.AcquirePluginData" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.validate_params">
+<span class="sig-name descname"><span class="pre">validate_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService.validate_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.validate_params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that any parameters set in the request are valid according the the spec.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.AcquirePluginData">
+<span class="sig-name descname"><span class="pre">AcquirePluginData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService.AcquirePluginData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.AcquirePluginData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Trigger a data acquisition and store results in the data acquisition store service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1028,8 +1076,8 @@ each acquisition RPC.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetStatus">
-<code class="sig-name descname">GetStatus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService.GetStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetStatus" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetStatus">
+<span class="sig-name descname"><span class="pre">GetStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService.GetStatus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Query the status of a data acquisition by ID.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1045,8 +1093,8 @@ each acquisition RPC.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetServiceInfo">
-<code class="sig-name descname">GetServiceInfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService.GetServiceInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetServiceInfo" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetServiceInfo">
+<span class="sig-name descname"><span class="pre">GetServiceInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService.GetServiceInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.GetServiceInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a list of data acquisition capabilities.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1062,8 +1110,8 @@ each acquisition RPC.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.CancelAcquisition">
-<code class="sig-name descname">CancelAcquisition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService.CancelAcquisition"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.CancelAcquisition" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.CancelAcquisition">
+<span class="sig-name descname"><span class="pre">CancelAcquisition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#DataAcquisitionPluginService.CancelAcquisition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.DataAcquisitionPluginService.CancelAcquisition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cancel a data acquisition by ID.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1081,8 +1129,8 @@ each acquisition RPC.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestManager">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.data_acquisition_plugin_service.</code><code class="sig-name descname">RequestManager</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.data_acquisition_plugin_service.</span></span><span class="sig-name descname"><span class="pre">RequestManager</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Manage request lifecycles and status.</p>
 <p>The RequestManager manages some internals of the RequestState class, so it will access its
@@ -1090,14 +1138,14 @@ protected variables.  We leave those variables protected so that users of the Re
 class are less tempted to fiddle with them incorrectly, but we turn off the linting for the
 rest of this file.</p>
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestManager.add_request">
-<code class="sig-name descname">add_request</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.add_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.add_request" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestManager.add_request">
+<span class="sig-name descname"><span class="pre">add_request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.add_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.add_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new request to manage</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestManager.get_request_state">
-<code class="sig-name descname">get_request_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.get_request_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.get_request_state" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestManager.get_request_state">
+<span class="sig-name descname"><span class="pre">get_request_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.get_request_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.get_request_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the RequestState object for managing a request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1107,8 +1155,8 @@ rest of this file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestManager.get_status_proto">
-<code class="sig-name descname">get_status_proto</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.get_status_proto"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.get_status_proto" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestManager.get_status_proto">
+<span class="sig-name descname"><span class="pre">get_status_proto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.get_status_proto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.get_status_proto" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a copy of the current status for the specified request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1118,8 +1166,8 @@ rest of this file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_cancelled">
-<code class="sig-name descname">mark_request_cancelled</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.mark_request_cancelled"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_cancelled" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_cancelled">
+<span class="sig-name descname"><span class="pre">mark_request_cancelled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.mark_request_cancelled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_cancelled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark a request as cancelled, and no longer able to be updated.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1129,8 +1177,8 @@ rest of this file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_finished">
-<code class="sig-name descname">mark_request_finished</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request_id</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.mark_request_finished"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_finished" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_finished">
+<span class="sig-name descname"><span class="pre">mark_request_finished</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.mark_request_finished"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.mark_request_finished" title="Permalink to this definition">¶</a></dt>
 <dd><p>Mark a request as finished, and able to be removed later.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1140,8 +1188,8 @@ rest of this file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.data_acquisition_plugin_service.RequestManager.cleanup_requests">
-<code class="sig-name descname">cleanup_requests</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">older_than_time</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.cleanup_requests"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.cleanup_requests" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.data_acquisition_plugin_service.RequestManager.cleanup_requests">
+<span class="sig-name descname"><span class="pre">cleanup_requests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">older_than_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/data_acquisition_plugin_service.html#RequestManager.cleanup_requests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.data_acquisition_plugin_service.RequestManager.cleanup_requests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove all requests that were completed farther in the past than older_than_time.</p>
 <p>Defaults to removing anything older than 30 seconds.</p>
 <dl class="field-list simple">

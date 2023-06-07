@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,7 +9,6 @@
 The log-annotation service is deprecated and will be removed in a later release.
 Instead, please use the data_buffer service going forward.
 """
-from __future__ import print_function
 
 import logging
 import random
@@ -19,9 +18,9 @@ import sys
 import threading
 import time
 import traceback
+from queue import Queue
 
-from deprecated import deprecated
-from six.moves.queue import Queue
+from deprecated.sphinx import deprecated
 
 import bosdyn.api.log_annotation_pb2 as log_annotation_protos
 import bosdyn.api.log_annotation_service_pb2_grpc as log_annotation_service

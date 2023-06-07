@@ -1,21 +1,21 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-from __future__ import unicode_literals
-
 import copy
+import json
 import operator
 import re
 from builtins import str as text
 
 import google.protobuf.message
+import google.protobuf.struct_pb2
 import google.protobuf.text_format
-import six
 
 from bosdyn.api import data_acquisition_pb2, geometry_pb2, gripper_camera_param_pb2
+from bosdyn.api.autowalk import walks_pb2
 from bosdyn.api.docking import docking_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2
 from bosdyn.api.mission import mission_pb2, nodes_pb2, util_pb2
@@ -23,8 +23,6 @@ from bosdyn.mission import constants
 
 # This is a special dummy message we'll use for TYPE_MESSAGE parameters.
 DUMMY_MESSAGE = nodes_pb2.Node(name='dummy-message-for-parameterization')
-
-UNEXPECTED_EXCEPTION_EVENT_TYPE = 'bosdyn:mission:exception'
 
 
 
@@ -44,7 +42,7 @@ class InvalidConversion(Error):
                                                             self.destination_typename)
 
 
-_python_identifier_regex = re.compile('[A-Za-z_]\w*$')
+_python_identifier_regex = re.compile(r'[A-Za-z_]\w*$')
 
 
 def tree_to_string(root, start_level=0, include_status=False):
@@ -97,20 +95,20 @@ def proto_from_tuple(tup):
         if 'user_data' in name_or_dict:
             node.user_data.CopyFrom(name_or_dict['user_data'])
 
-        for name, pb_type in six.iteritems(name_or_dict.get('parameters', {})):
+        for name, pb_type in name_or_dict.get('parameters', {}).items():
             parameter = util_pb2.VariableDeclaration(name=name, type=pb_type)
             node.parameters.add().CopyFrom(parameter)
 
-        for key, value in six.iteritems(name_or_dict.get('parameter_values', {})):
+        for key, value in name_or_dict.get('parameter_values', {}).items():
             parameter_value = util_pb2.KeyValue(key=key)
-            if isinstance(value, six.string_types) and value[0] == '$':
+            if isinstance(value, str) and value[0] == '$':
                 parameter_value.value.parameter.name = value[1:]
                 # Leave type unspecified, since we can't look it up easily yet.
             else:
                 parameter_value.value.constant.CopyFrom(python_var_to_value(value))
             node.parameter_values.add().CopyFrom(parameter_value)
 
-        for key, value in six.iteritems(name_or_dict.get('overrides', {})):
+        for key, value in name_or_dict.get('overrides', {}).items():
             # Rather than keep this matching the compiler functionality, just omit the check.
             # It's not even a CompileError anyway.
             #if key not in inner_proto.DESCRIPTOR.fields_by_name:
@@ -160,11 +158,11 @@ def python_var_to_value(var):
     value = util_pb2.ConstantValue()
     if isinstance(var, bool):
         value.bool_value = var
-    elif isinstance(var, six.integer_types):
+    elif isinstance(var, int):
         value.int_value = var
     elif isinstance(var, float):
         value.float_value = var
-    elif isinstance(var, six.string_types):
+    elif isinstance(var, str):
         value.string_value = var
     elif isinstance(var, google.protobuf.message.Message):
         value.msg_value.Pack(var)
@@ -177,12 +175,12 @@ def python_type_to_pb_type(var):
     """Returns the protobuf-schema variable type that corresponds to the given variable."""
     if isinstance(var, bool):
         return util_pb2.VariableDeclaration.TYPE_BOOL
-    elif isinstance(var, six.integer_types):
+    elif isinstance(var, int):
         return util_pb2.VariableDeclaration.TYPE_INT
     elif isinstance(var, float):
         # Python floating point is typically a C double.
         return util_pb2.VariableDeclaration.TYPE_FLOAT
-    elif isinstance(var, six.string_types):
+    elif isinstance(var, str):
         return util_pb2.VariableDeclaration.TYPE_STRING
     elif isinstance(var, google.protobuf.message.Message):
         return util_pb2.VariableDeclaration.TYPE_MESSAGE
@@ -243,7 +241,7 @@ class ResultFromProto:
         util_pb2.RESULT_ERROR: constants.Result.ERROR,
     }
 
-    proto_from_results = {v: k for k, v in six.iteritems(results_from_proto)}
+    proto_from_results = {v: k for k, v in results_from_proto.items()}
 
 
 def proto_enum_to_result_constant(proto_msg):
@@ -329,3 +327,5 @@ def safe_pb_enum_to_string(value, pb_enum_obj):
     except ValueError:
         pass
     return '<unknown> (value: {})'.format(value)
+
+

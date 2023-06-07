@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.math_helpers &mdash; Spot 3.2.3 documentation</title>
+  <title>bosdyn.client.math_helpers &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -30,10 +32,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -66,7 +70,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -94,13 +98,16 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -129,6 +136,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -183,6 +191,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -195,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -202,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -227,9 +238,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -244,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -266,6 +280,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -293,6 +314,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -306,13 +328,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -330,6 +355,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -391,6 +417,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -469,6 +501,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -483,9 +516,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -494,6 +530,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -524,10 +562,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -549,6 +591,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -565,7 +608,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -630,7 +672,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.math_helpers</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -640,8 +682,7 @@
 <span class="kn">import</span> <span class="nn">numbers</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">six</span>
-<span class="kn">from</span> <span class="nn">deprecated</span> <span class="kn">import</span> <span class="n">deprecated</span>
+<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">geometry_pb2</span>
 
@@ -669,7 +710,7 @@
 
 
 <div class="viewcode-block" id="Vec2"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec2">[docs]</a><span class="k">class</span> <span class="nc">Vec2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class representing a two dimensional vector.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing a two dimensional vector.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
@@ -728,7 +769,7 @@
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Vec2.to_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec2.to_proto">[docs]</a>    <span class="k">def</span> <span class="nf">to_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts the math_helpers.Vec2 into an output of the protobuf geometry_pb2.Vec2.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the math_helpers.Vec2 into an output of the protobuf geometry_pb2.Vec2.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Vec2.dot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec2.dot">[docs]</a>    <span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -743,12 +784,12 @@
 
 <div class="viewcode-block" id="Vec2.from_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec2.from_proto">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_proto</span><span class="p">(</span><span class="n">proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a math_helpers.Vec2 from a geometry_pb2.Vec2 proto.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a math_helpers.Vec2 from a geometry_pb2.Vec2 proto.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Vec2</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">y</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Vec3"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec3">[docs]</a><span class="k">class</span> <span class="nc">Vec3</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class representing a three dimensional vector.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing a three dimensional vector.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
@@ -813,7 +854,7 @@
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Vec3.to_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec3.to_proto">[docs]</a>    <span class="k">def</span> <span class="nf">to_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts the math_helpers.Vec3 into an output of the protobuf geometry_pb2.Vec3.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the math_helpers.Vec3 into an output of the protobuf geometry_pb2.Vec3.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Vec3.dot"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec3.dot">[docs]</a>    <span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
@@ -829,12 +870,12 @@
 
 <div class="viewcode-block" id="Vec3.from_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Vec3.from_proto">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_proto</span><span class="p">(</span><span class="n">proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a math_helpers.Vec3 from a geometry_pb2.Vec3 proto.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a math_helpers.Vec3 from a geometry_pb2.Vec3 proto.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Vec3</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="SE2Pose"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose">[docs]</a><span class="k">class</span> <span class="nc">SE2Pose</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class representing an SE2Pose with position and angle.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing an SE2Pose with position and angle.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">angle</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
@@ -847,7 +888,7 @@
 
 <div class="viewcode-block" id="SE2Pose.flatten"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.flatten">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">flatten</span><span class="p">(</span><span class="n">se3pose</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Flatten a given SE3Pose to an SE2Pose. This will lose height information</span>
 <span class="sd">        if the se3pose provided is not gravity aligned. The common gravity aligned</span>
 <span class="sd">        frames are odom, vision, and flat_body.</span>
@@ -864,18 +905,18 @@
         <span class="k">return</span> <span class="n">SE2Pose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE2Pose.to_obj"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.to_obj">[docs]</a>    <span class="k">def</span> <span class="nf">to_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds the math_helpers.SE2Pose properties into the geometry_pb2.SE2Pose &#39;proto&#39;.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the math_helpers.SE2Pose properties into the geometry_pb2.SE2Pose &#39;proto&#39;.&quot;&quot;&quot;</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle</span></div>
 
 <div class="viewcode-block" id="SE2Pose.to_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.to_proto">[docs]</a>    <span class="k">def</span> <span class="nf">to_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts the math_helpers.SE2Pose into an output of the protobuf geometry_pb2.SE2Pose.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the math_helpers.SE2Pose into an output of the protobuf geometry_pb2.SE2Pose.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Pose</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">),</span>
                                     <span class="n">angle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE2Pose.inverse"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.inverse">[docs]</a>    <span class="k">def</span> <span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the inverse of the math_helpers.SE2Pose.</span>
 
 <span class="sd">        For example, if the SE(2) pose represented a_tform_b, then the inverse pose is b_tform_a.</span>
@@ -888,7 +929,7 @@
         <span class="k">return</span> <span class="n">SE2Pose</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">c</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE2Pose.mult"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.mult">[docs]</a>    <span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">se2pose</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the multiplication between the current math_helpers.SE2Pose and the input se2pose.</span>
 
 <span class="sd">        For example, if the &#39;self&#39; SE2Pose represents a_tform_b and the input se2pose represents b_tform_c,</span>
@@ -906,7 +947,7 @@
                        <span class="n">recenter_angle_mod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span> <span class="o">+</span> <span class="n">se2pose</span><span class="o">.</span><span class="n">angle</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Overrides the &#39;*&#39; symbol to compute the multiplication between two SE(2) poses,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Overrides the &#39;*&#39; symbol to compute the multiplication between two SE(2) poses,</span>
 <span class="sd">        or between an SE(2) pose and a Vec2&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Vec2</span><span class="p">):</span>
             <span class="n">rotation_matrix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_rot_matrix</span><span class="p">()</span>
@@ -921,19 +962,19 @@
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t multiply types </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
 <div class="viewcode-block" id="SE2Pose.to_rot_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.to_rot_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">to_rot_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the rotation matrix generate from the angle of the current SE(2) Pose.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the rotation matrix generate from the angle of the current SE(2) Pose.&quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">c</span><span class="p">,</span> <span class="o">-</span><span class="n">s</span><span class="p">],</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">]])</span></div>
 
 <div class="viewcode-block" id="SE2Pose.to_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.to_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the 3x3 matrix to transform a 2D point (in generalized coordinates).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the 3x3 matrix to transform a 2D point (in generalized coordinates).&quot;&quot;&quot;</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">c</span><span class="p">,</span> <span class="o">-</span><span class="n">s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span></div>
 
 <div class="viewcode-block" id="SE2Pose.to_adjoint_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.to_adjoint_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">to_adjoint_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This creates the adjoint matrix for the current SE2Pose.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This creates the adjoint matrix for the current SE2Pose.</span>
 
 <span class="sd">        The adjoint matrix can be used to change reference frames for a SE(2) velocity vector. For</span>
 <span class="sd">        example, if you have math_helpers.SE2Velocity velocity_in_frame_b, then the adjoint matrix</span>
@@ -950,13 +991,13 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;position&#39; similar to</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;position&#39; similar to</span>
 <span class="sd">        the geometry_pb2.SE2Pose for the math_helper.SE2Pose.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SE2Pose.from_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.from_matrix">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_matrix</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Extract SE2Pose from a 3x3 matrix&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract SE2Pose from a 3x3 matrix&quot;&quot;&quot;</span>
         <span class="c1"># Extract separately to get float type, instead of single-element matrix type.</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
@@ -971,11 +1012,11 @@
 
 <div class="viewcode-block" id="SE2Pose.from_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.from_proto">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_proto</span><span class="p">(</span><span class="n">tform</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a math_helpers.SE2Pose from a geometry_pb2.SE2Pose proto.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a math_helpers.SE2Pose from a geometry_pb2.SE2Pose proto.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">SE2Pose</span><span class="p">(</span><span class="n">tform</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">tform</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">tform</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE2Pose.get_closest_se3_transform"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Pose.get_closest_se3_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_se3_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height_z</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compute the closest math_helpers.SE3Pose from the current math_helpers.SE2Pose.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the closest math_helpers.SE3Pose from the current math_helpers.SE2Pose.&quot;&quot;&quot;</span>
         <span class="c1"># Note that if the SE(2) pose is a transform from a non-gravity-aligned frame,</span>
         <span class="c1"># then height information will be incorrect in the inflated SE(3) pose unless</span>
         <span class="c1"># the correct height is passed into the function as height_z.</span>
@@ -983,7 +1024,7 @@
 
 
 <div class="viewcode-block" id="SE2Velocity"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Velocity">[docs]</a><span class="k">class</span> <span class="nc">SE2Velocity</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class representing an SE2Velocity with linear velocity and angular velocity.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing an SE2Velocity with linear velocity and angular velocity.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">angular</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -995,26 +1036,26 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SE2Velocity.to_obj"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Velocity.to_obj">[docs]</a>    <span class="k">def</span> <span class="nf">to_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds the math_helpers.SE2Velocity properties into the geometry_pb2.SE2Velocity &#39;proto&#39;.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the math_helpers.SE2Velocity properties into the geometry_pb2.SE2Velocity &#39;proto&#39;.&quot;&quot;&quot;</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_y</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">angular</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity</span></div>
 
 <div class="viewcode-block" id="SE2Velocity.to_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Velocity.to_proto">[docs]</a>    <span class="k">def</span> <span class="nf">to_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts the math_helpers.SE2Velocity into an output of the protobuf geometry_pb2.SE2Velocity.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the math_helpers.SE2Velocity into an output of the protobuf geometry_pb2.SE2Velocity.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Velocity</span><span class="p">(</span>
             <span class="n">linear</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_y</span><span class="p">),</span>
             <span class="n">angular</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE2Velocity.to_vector"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Velocity.to_vector">[docs]</a>    <span class="k">def</span> <span class="nf">to_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a 3x1 velocity vector as a numpy array.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a 3x1 velocity vector as a numpy array.&quot;&quot;&quot;</span>
         <span class="c1"># Create a 3x1 vector of [x_d, y_d, r_d]</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_y</span><span class="p">,</span>
                             <span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="SE2Velocity.from_vector"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Velocity.from_vector">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_vector</span><span class="p">(</span><span class="n">se2_vel_vector</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts a 3x1 velocity vector (of either a numpy array or a list) into a math_helpers.SE2Velocity object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a 3x1 velocity vector (of either a numpy array or a list) into a math_helpers.SE2Velocity object.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">se2_vel_vector</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">se2_vel_vector</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
                 <span class="c1"># Must have 3 elements to be a complete SE2Velocity</span>
@@ -1037,13 +1078,13 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">linear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;linear&#39; similar to the geometry_pb2.SE2Velocity</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;linear&#39; similar to the geometry_pb2.SE2Velocity</span>
 <span class="sd">           for the math_helper.SE2Velocity.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_y</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">angular</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;angular&#39; similar to the geometry_pb2.SE2Velocity</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;angular&#39; similar to the geometry_pb2.SE2Velocity</span>
 <span class="sd">           for the math_helper.SE2Velocity.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity</span>
 
@@ -1054,12 +1095,12 @@
 
 <div class="viewcode-block" id="SE2Velocity.from_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE2Velocity.from_proto">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_proto</span><span class="p">(</span><span class="n">vel</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a math_helpers.SE2Velocity from a geometry_pb2.SE2Velocity proto.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a math_helpers.SE2Velocity from a geometry_pb2.SE2Velocity proto.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">SE2Velocity</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">vel</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">vel</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">angular</span><span class="o">=</span><span class="n">vel</span><span class="o">.</span><span class="n">angular</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="SE3Velocity"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Velocity">[docs]</a><span class="k">class</span> <span class="nc">SE3Velocity</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class representing an SE3Velocity with linear velocity and angular velocity.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing an SE3Velocity with linear velocity and angular velocity.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lin_x</span><span class="p">,</span> <span class="n">lin_y</span><span class="p">,</span> <span class="n">lin_z</span><span class="p">,</span> <span class="n">ang_x</span><span class="p">,</span> <span class="n">ang_y</span><span class="p">,</span> <span class="n">ang_z</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lin_x</span><span class="p">)</span>
@@ -1075,7 +1116,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity_z</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SE3Velocity.to_obj"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Velocity.to_obj">[docs]</a>    <span class="k">def</span> <span class="nf">to_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds the math_helpers.SE3Velocity properties into the geometry_pb2.SE3Velocity &#39;proto&#39;.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the math_helpers.SE3Velocity properties into the geometry_pb2.SE3Velocity &#39;proto&#39;.&quot;&quot;&quot;</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_y</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_z</span>
@@ -1084,7 +1125,7 @@
         <span class="n">proto</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity_z</span></div>
 
 <div class="viewcode-block" id="SE3Velocity.to_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Velocity.to_proto">[docs]</a>    <span class="k">def</span> <span class="nf">to_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts the math_helpers.SE3Velocity into an output of the protobuf geometry_pb2.SE3Velocity.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the math_helpers.SE3Velocity into an output of the protobuf geometry_pb2.SE3Velocity.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE3Velocity</span><span class="p">(</span>
             <span class="n">linear</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_y</span><span class="p">,</span>
                                      <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_z</span><span class="p">),</span>
@@ -1092,7 +1133,7 @@
                                       <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity_z</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="SE3Velocity.to_vector"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Velocity.to_vector">[docs]</a>    <span class="k">def</span> <span class="nf">to_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a 6x1 velocity vector as a numpy array.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a 6x1 velocity vector as a numpy array.&quot;&quot;&quot;</span>
         <span class="c1"># Create a vector [x_d, y_d, z_d, r_x_d, r_y_d, r_z_d] of dimensions 6x1</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_z</span><span class="p">,</span>
@@ -1101,14 +1142,14 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">linear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;linear&#39; similar to the geometry_pb2.SE3Velocity</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;linear&#39; similar to the geometry_pb2.SE3Velocity</span>
 <span class="sd">           for the math_helper.SE3Velocity.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_y</span><span class="p">,</span>
                                  <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">linear_velocity_z</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">angular</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;angular&#39; similar to the geometry_pb2.SE3Velocity</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;angular&#39; similar to the geometry_pb2.SE3Velocity</span>
 <span class="sd">           for the math_helper.SE3Velocity.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity_y</span><span class="p">,</span>
                                  <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">angular_velocity_z</span><span class="p">)</span>
@@ -1120,13 +1161,13 @@
 
 <div class="viewcode-block" id="SE3Velocity.from_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Velocity.from_proto">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_proto</span><span class="p">(</span><span class="n">vel</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a math_helpers.SE3Velocity from a geometry_pb2.SE3Velocity proto.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a math_helpers.SE3Velocity from a geometry_pb2.SE3Velocity proto.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">SE3Velocity</span><span class="p">(</span><span class="n">lin_x</span><span class="o">=</span><span class="n">vel</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">lin_y</span><span class="o">=</span><span class="n">vel</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">lin_z</span><span class="o">=</span><span class="n">vel</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
                            <span class="n">ang_x</span><span class="o">=</span><span class="n">vel</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">ang_y</span><span class="o">=</span><span class="n">vel</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">ang_z</span><span class="o">=</span><span class="n">vel</span><span class="o">.</span><span class="n">angular</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE3Velocity.from_vector"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Velocity.from_vector">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_vector</span><span class="p">(</span><span class="n">se3_vel_vector</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts a 6x1 velocity vector (of either a numpy array or a list) into a math_helpers.SE3Velocity object.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a 6x1 velocity vector (of either a numpy array or a list) into a math_helpers.SE3Velocity object.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">se3_vel_vector</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">se3_vel_vector</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">6</span><span class="p">:</span>
                 <span class="c1"># Must have 6 elements to be a complete SE3Velocity</span>
@@ -1151,7 +1192,7 @@
 
 
 <div class="viewcode-block" id="SE3Pose"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose">[docs]</a><span class="k">class</span> <span class="nc">SE3Pose</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class representing an SE3Pose with position and rotation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing an SE3Pose with position and rotation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">rot</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
@@ -1177,7 +1218,7 @@
 
 <div class="viewcode-block" id="SE3Pose.from_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.from_proto">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_proto</span><span class="p">(</span><span class="n">tform</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a math_helpers.SE3Pose from a geometry_pb2.SE3Pose proto.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a math_helpers.SE3Pose from a geometry_pb2.SE3Pose proto.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">tform</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;rotation&#39;</span><span class="p">):</span>
             <span class="n">quat</span> <span class="o">=</span> <span class="n">Quat</span><span class="o">.</span><span class="n">from_proto</span><span class="p">(</span><span class="n">tform</span><span class="o">.</span><span class="n">rotation</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1190,21 +1231,21 @@
         <span class="k">return</span> <span class="n">SE3Pose</span><span class="p">(</span><span class="n">tform</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">tform</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">Quat</span><span class="o">.</span><span class="n">from_yaw</span><span class="p">(</span><span class="n">tform</span><span class="o">.</span><span class="n">angle</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="SE3Pose.to_obj"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.to_obj">[docs]</a>    <span class="k">def</span> <span class="nf">to_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds the math_helpers.SE3Pose properties into the geometry_pb2.SE3Pose &#39;proto&#39;.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the math_helpers.SE3Pose properties into the geometry_pb2.SE3Pose &#39;proto&#39;.&quot;&quot;&quot;</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rot</span><span class="o">.</span><span class="n">to_obj</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">rotation</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE3Pose.to_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.to_proto">[docs]</a>    <span class="k">def</span> <span class="nf">to_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts the math_helpers.SE3Pose into an output of the protobuf geometry_pb2.SE3Pose.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the math_helpers.SE3Pose into an output of the protobuf geometry_pb2.SE3Pose.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE3Pose</span><span class="p">(</span>
             <span class="n">position</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
             <span class="n">rotation</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Quaternion</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rot</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rot</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rot</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
                                              <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rot</span><span class="o">.</span><span class="n">z</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="SE3Pose.inverse"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.inverse">[docs]</a>    <span class="k">def</span> <span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the inverse of the math_helpers.SE3Pose.</span>
 
 <span class="sd">        For example, if the SE(3) pose represented a_tform_b, then the inverse pose is b_tform_a.</span>
@@ -1217,7 +1258,7 @@
         <span class="k">return</span> <span class="n">SE3Pose</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">z</span><span class="p">,</span> <span class="n">inv_rot</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE3Pose.transform_point"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.transform_point">[docs]</a>    <span class="k">def</span> <span class="nf">transform_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the transformation (translation and rotation) of a (x,y,z) vector using the</span>
 <span class="sd">        current SE(3) pose.</span>
 
@@ -1228,7 +1269,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">out_x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">out_y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">out_z</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE3Pose.transform_vec3"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.transform_vec3">[docs]</a>    <span class="k">def</span> <span class="nf">transform_vec3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec3</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the transformation (translation and rotation) of a (x,y,z) vector using the</span>
 <span class="sd">        current SE(3) pose.</span>
 
@@ -1239,7 +1280,7 @@
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">out_x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">out_y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">out_z</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE3Pose.transform_cloud"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.transform_cloud">[docs]</a>    <span class="k">def</span> <span class="nf">transform_cloud</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the transformation (translation and rotation) of multiple vector/points using the</span>
 <span class="sd">        current math_helpers.SE3Pose.</span>
 
@@ -1253,7 +1294,7 @@
 
 <div class="viewcode-block" id="SE3Pose.transform_cloud_from_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.transform_cloud_from_matrix">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">transform_cloud_from_matrix</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the transformation (translation and rotation) of multiple vector/points using the</span>
 <span class="sd">        input SE(3) pose.</span>
 
@@ -1269,14 +1310,14 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">rot</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">trans</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="SE3Pose.to_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.to_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the 4x4 matrix to transform a 3D point (in generalized coordinates).&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the 4x4 matrix to transform a 3D point (in generalized coordinates).&quot;&quot;&quot;</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
         <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">()</span>
         <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">ret</span></div>
 
 <div class="viewcode-block" id="SE3Pose.mult"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.mult">[docs]</a>    <span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">se3pose</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the multiplication between the current math_helpers.SE3Pose and the input se3pose.</span>
 
 <span class="sd">        For example, if the &#39;self&#39; SE3Pose represents a_tform_b and the input se3pose represents b_tform_c,</span>
@@ -1292,7 +1333,7 @@
         <span class="k">return</span> <span class="n">SE3Pose</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot</span><span class="o">.</span><span class="n">mult</span><span class="p">(</span><span class="n">se3pose</span><span class="o">.</span><span class="n">rot</span><span class="p">))</span></div>
 
     <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Overrides the &#39;*&#39; symbol to compute the multiplication between two SE(3) poses,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Overrides the &#39;*&#39; symbol to compute the multiplication between two SE(3) poses,</span>
 <span class="sd">        or between an SE(3) pose and a Vec3.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Vec3</span><span class="p">):</span>
             <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_point</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
@@ -1305,19 +1346,19 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">position</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;position&#39; similar to the geometry_pb2.SE3Pose</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;position&#39; similar to the geometry_pb2.SE3Pose</span>
 <span class="sd">           for the math_helper.SE3Pose.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;rotation&#39; similar to the geometry_pb2.SE3Pose</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Property to allow attribute access of the protobuf message field &#39;rotation&#39; similar to the geometry_pb2.SE3Pose</span>
 <span class="sd">           for the math_helper.SE3Pose.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot</span>
 
 <div class="viewcode-block" id="SE3Pose.from_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.from_matrix">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_matrix</span><span class="p">(</span><span class="n">mat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Extract math_helpers.SE3Pose from a 4x4 matrix.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract math_helpers.SE3Pose from a 4x4 matrix.&quot;&quot;&quot;</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
         <span class="n">rot</span> <span class="o">=</span> <span class="n">Quat</span><span class="o">.</span><span class="n">from_matrix</span><span class="p">(</span><span class="n">mat</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">SE3Pose</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">rot</span><span class="p">)</span></div>
@@ -1325,15 +1366,15 @@
 
 <div class="viewcode-block" id="SE3Pose.from_identity"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.from_identity">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_identity</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;Create a math_helpers.SE3Pose representing the identity SE(3) pose.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a math_helpers.SE3Pose representing the identity SE(3) pose.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">SE3Pose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Quat</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="SE3Pose.get_translation"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.get_translation">[docs]</a>    <span class="k">def</span> <span class="nf">get_translation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a 3x1 numpy array representing the translation only of the current SE3Pose.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a 3x1 numpy array representing the translation only of the current SE3Pose.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="SE3Pose.to_adjoint_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.to_adjoint_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">to_adjoint_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;This creates the adjoint matrix for the current SE3Pose.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;This creates the adjoint matrix for the current SE3Pose.</span>
 
 <span class="sd">        The adjoint matrix can be used to change reference frames for a SE(3) velocity vector. For</span>
 <span class="sd">        example, if you have math_helpers.SE3Velocity velocity_in_frame_b, then the adjoint matrix</span>
@@ -1350,7 +1391,7 @@
         <span class="k">return</span> <span class="n">a_adjoint_b</span></div>
 
 <div class="viewcode-block" id="SE3Pose.get_closest_se2_transform"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.get_closest_se2_transform">[docs]</a>    <span class="k">def</span> <span class="nf">get_closest_se2_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compute the closest math_helpers.SE2Pose from the current math_helpers.SE3Pose.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute the closest math_helpers.SE2Pose from the current math_helpers.SE3Pose.&quot;&quot;&quot;</span>
         <span class="c1"># For a transform a_T_b, the pose_frame_name represents &quot;frame A&quot;. This must be a gravity</span>
         <span class="c1"># aligned frame, either &quot;vision&quot;, &quot;odom&quot;, or &quot;flat_body&quot; to be safely converted from</span>
         <span class="c1"># an SE3Pose to an SE2Pose with minimal loss of height information.</span>
@@ -1358,7 +1399,7 @@
 
 <div class="viewcode-block" id="SE3Pose.interp"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.SE3Pose.interp">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">interp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">fraction</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a blend of two SE3Poses.  Out = a * (1 - fraction) + b * fraction</span>
 
 <span class="sd">        Args:</span>
@@ -1376,7 +1417,7 @@
 
 
 <div class="viewcode-block" id="Quat"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat">[docs]</a><span class="k">class</span> <span class="nc">Quat</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class representing a Quaternion.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class representing a Quaternion.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">w</span>
@@ -1388,11 +1429,11 @@
         <span class="k">return</span> <span class="s1">&#39;W: </span><span class="si">%0.4f</span><span class="s1"> X: </span><span class="si">%0.4f</span><span class="s1"> Y: </span><span class="si">%0.4f</span><span class="s1"> Z: </span><span class="si">%0.4f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Quat.inverse"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.inverse">[docs]</a>    <span class="k">def</span> <span class="nf">inverse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the inverse of the current math_helpers.Quat.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the inverse of the current math_helpers.Quat.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Quat.transform_point"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.transform_point">[docs]</a>    <span class="k">def</span> <span class="nf">transform_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the transformation (rotation by the quaternion) of a single (x,y,z)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the transformation (rotation by the quaternion) of a single (x,y,z)</span>
 <span class="sd">            point using the current math_helpers.Quat.&quot;&quot;&quot;</span>
         <span class="n">inv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse</span><span class="p">()</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">Quat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
@@ -1401,13 +1442,13 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Quat.transform_vec3"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.transform_vec3">[docs]</a>    <span class="k">def</span> <span class="nf">transform_vec3</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vec3</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the transformation (rotation by the quaternion) of a Vec3</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the transformation (rotation by the quaternion) of a Vec3</span>
 <span class="sd">            point using the current math_helpers.Quat.&quot;&quot;&quot;</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_point</span><span class="p">(</span><span class="n">vec3</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">vec3</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">vec3</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Quat.to_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.to_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">to_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates the 3x3 numpy rotation matrix from the current math_helpers.Quat&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates the 3x3 numpy rotation matrix from the current math_helpers.Quat&quot;&quot;&quot;</span>
         <span class="n">ret</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
         <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span>
         <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
@@ -1425,7 +1466,7 @@
 
 <div class="viewcode-block" id="Quat.from_matrix"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.from_matrix">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_matrix</span><span class="p">(</span><span class="n">rot</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates a math_helpers.Quat from a numpy 3x3 matrix representing rotation.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a math_helpers.Quat from a numpy 3x3 matrix representing rotation.&quot;&quot;&quot;</span>
         <span class="n">wt</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
         <span class="c1"># do this most often so we get consistently signed quaternions</span>
         <span class="k">if</span> <span class="n">wt</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">:</span>
@@ -1448,49 +1489,49 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_from_matrix_w</span><span class="p">(</span><span class="n">rot</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the value of the quaternion for the w-axis from a numpy 3x3 rotation matrix.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the value of the quaternion for the w-axis from a numpy 3x3 rotation matrix.&quot;&quot;&quot;</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.5</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span>
                     <span class="n">y</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="n">z</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">w</span><span class="p">))</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_from_matrix_x</span><span class="p">(</span><span class="n">rot</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the value of the quaternion for the x-axis from a numpy 3x3 rotation matrix.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the value of the quaternion for the x-axis from a numpy 3x3 rotation matrix.&quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.5</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
                     <span class="n">y</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">x</span><span class="p">),</span> <span class="n">z</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">x</span><span class="p">))</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_from_matrix_y</span><span class="p">(</span><span class="n">rot</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the value of the quaternion for the y-axis from a numpy 3x3 rotation matrix.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the value of the quaternion for the y-axis from a numpy 3x3 rotation matrix.&quot;&quot;&quot;</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.5</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">y</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">y</span><span class="p">),</span>
                     <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">y</span><span class="p">))</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_from_matrix_z</span><span class="p">(</span><span class="n">rot</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the value of the quaternion for the z-axis from a numpy 3x3 rotation matrix.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the value of the quaternion for the z-axis from a numpy 3x3 rotation matrix.&quot;&quot;&quot;</span>
         <span class="n">z</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.5</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">z</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">z</span><span class="p">),</span>
                     <span class="n">y</span><span class="o">=</span><span class="p">(</span><span class="n">rot</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">rot</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">z</span><span class="p">),</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Quat.from_roll"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.from_roll">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_roll</span><span class="p">(</span><span class="n">angle</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes a representative math_helpers.Quat from the Euler angle for roll.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes a representative math_helpers.Quat from the Euler angle for roll.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">x</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Quat.from_pitch"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.from_pitch">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_pitch</span><span class="p">(</span><span class="n">angle</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes a representative math_helpers.Quat from the Euler angle for pitch.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes a representative math_helpers.Quat from the Euler angle for pitch.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">y</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Quat.from_yaw"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.from_yaw">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_yaw</span><span class="p">(</span><span class="n">angle</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes a representative math_helpers.Quat from the Euler angle for yaw.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes a representative math_helpers.Quat from the Euler angle for yaw.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">z</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="Quat.to_roll"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.to_roll">[docs]</a>    <span class="k">def</span> <span class="nf">to_roll</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the Euler angle roll from the current math_helpers.Quat&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the Euler angle roll from the current math_helpers.Quat&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">):</span>
             <span class="k">return</span> <span class="mf">0.0</span>
         <span class="n">t0</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
@@ -1498,7 +1539,7 @@
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t1</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Quat.to_pitch"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.to_pitch">[docs]</a>    <span class="k">def</span> <span class="nf">to_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the Euler angle pitch from the current math_helpers.Quat&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the Euler angle pitch from the current math_helpers.Quat&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">):</span>
             <span class="k">return</span> <span class="mf">0.0</span>
         <span class="n">t2</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
@@ -1509,12 +1550,12 @@
         <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">asin</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Quat.to_yaw"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.to_yaw">[docs]</a>    <span class="k">def</span> <span class="nf">to_yaw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the Euler angle yaw from the current math_helpers.Quat&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the Euler angle yaw from the current math_helpers.Quat&quot;&quot;&quot;</span>
         <span class="n">yaw_only_quat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">closest_yaw_only_quaternion</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">recenter_angle_mod</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">yaw_only_quat</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">yaw_only_quat</span><span class="o">.</span><span class="n">w</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Quat.to_axis_angle"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.to_axis_angle">[docs]</a>    <span class="k">def</span> <span class="nf">to_axis_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the angle and the respective axis from the math_helpers.Quat&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the angle and the respective axis from the math_helpers.Quat&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
 
@@ -1537,22 +1578,22 @@
 
 <div class="viewcode-block" id="Quat.from_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.from_proto">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">from_proto</span><span class="p">(</span><span class="n">proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a math_helpers.Quat from a geometry_pb2.Quaternion proto.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a math_helpers.Quat from a geometry_pb2.Quaternion proto.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">proto</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">proto</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Quat.to_obj"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.to_obj">[docs]</a>    <span class="k">def</span> <span class="nf">to_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Adds the math_helpers.Quat properties into the geometry_pb2.Quaternion &#39;proto&#39;.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds the math_helpers.Quat properties into the geometry_pb2.Quaternion &#39;proto&#39;.&quot;&quot;&quot;</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span>
         <span class="n">proto</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span></div>
 
 <div class="viewcode-block" id="Quat.to_proto"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.to_proto">[docs]</a>    <span class="k">def</span> <span class="nf">to_proto</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Converts the math_helpers.Quat into an output of the protobuf geometry_pb2.Quaternion.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the math_helpers.Quat into an output of the protobuf geometry_pb2.Quaternion.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Quaternion</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Quat.mult"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.mult">[docs]</a>    <span class="k">def</span> <span class="nf">mult</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_quat</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes the multiplication of two math_helpers.Quats.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes the multiplication of two math_helpers.Quats.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="n">other_quat</span><span class="o">.</span><span class="n">w</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">other_quat</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">other_quat</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">other_quat</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="n">other_quat</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">other_quat</span><span class="o">.</span><span class="n">w</span> <span class="o">+</span>
@@ -1562,7 +1603,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="n">other_quat</span><span class="o">.</span><span class="n">w</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Overrides the &#39;*&#39; symbol to compute the multiplication between two math_helpers.Quats</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Overrides the &#39;*&#39; symbol to compute the multiplication between two math_helpers.Quats</span>
 <span class="sd">        or between a Quat and a Vec3.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Vec3</span><span class="p">):</span>
             <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform_point</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
@@ -1572,7 +1613,7 @@
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t multiply types </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
 
 <div class="viewcode-block" id="Quat.normalize"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Normalizes the quaternion.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalizes the quaternion.&quot;&quot;&quot;</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">])</span>
         <span class="nb">len</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">q</span><span class="p">))</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">len</span> <span class="o">&lt;</span> <span class="mf">1e-15</span><span class="p">):</span>
@@ -1586,7 +1627,7 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="Quat.closest_yaw_only_quaternion"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.closest_yaw_only_quaternion">[docs]</a>    <span class="k">def</span> <span class="nf">closest_yaw_only_quaternion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Computes a yaw-only math_helpers.Quat from the current roll/pitch/yaw math_helpers.Quat&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes a yaw-only math_helpers.Quat from the current roll/pitch/yaw math_helpers.Quat&quot;&quot;&quot;</span>
         <span class="n">mag</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mag</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">/</span> <span class="n">mag</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span> <span class="o">/</span> <span class="n">mag</span><span class="p">)</span>
@@ -1626,11 +1667,65 @@
             <span class="n">s1</span> <span class="o">=</span> <span class="n">sin_theta</span> <span class="o">/</span> <span class="n">sin_theta_0</span>
 
             <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">s0</span> <span class="o">*</span> <span class="n">v0</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">s1</span> <span class="o">*</span> <span class="n">v1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span></div></div>
+        <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Quat.from_two_vectors"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.from_two_vectors">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_two_vectors</span><span class="p">(</span><span class="n">u_in</span><span class="p">:</span> <span class="n">Vec3</span><span class="p">,</span> <span class="n">v_in</span><span class="p">:</span> <span class="n">Vec3</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns a quaternion representing the rotation from u to v.&quot;&quot;&quot;</span>
+        <span class="c1"># Normalizing by max avoids all sorts of underflow and overflow issues when we multiply</span>
+        <span class="c1"># terms together, including any issues in calculating the norm itself.</span>
+        <span class="n">max_u</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">u_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">u_in</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">u_in</span><span class="p">[</span><span class="mi">2</span><span class="p">])])</span>
+        <span class="n">max_v</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">v_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">v_in</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">v_in</span><span class="p">[</span><span class="mi">2</span><span class="p">])])</span>
+        <span class="k">if</span> <span class="n">max_u</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">max_v</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Undefined; return identity</span>
+            <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">u_in</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">max_u</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v_in</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">max_v</span><span class="p">)</span>
+
+        <span class="n">u_dot_v</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">u_dot_u</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+        <span class="n">v_dot_v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">norm_u_norm_v</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">u_dot_u</span> <span class="o">*</span> <span class="n">v_dot_v</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">u_dot_v</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1">#When this is the case, things get annoying because the |u||v| + u.v (see u_dot_v &gt;= 0</span>
+            <span class="c1">#case below) has cancellation; this leads us to a different formula that is sensitive to</span>
+            <span class="c1">#the magnitude of c. If the vectors are close to antipodal, the cross product itself can</span>
+            <span class="c1">#be ill conditioned. Algebraically, u x (u + v) is equal to u x v, but, the result is</span>
+            <span class="c1">#much more likely to be orthogonal to u and v for extreme cases.</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">u</span> <span class="o">+</span> <span class="n">v</span><span class="p">)</span>
+            <span class="n">max_c</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">])])</span>
+            <span class="k">if</span> <span class="n">max_c</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># We pick an orthogonal axis, avoiding the smallest one</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                        <span class="n">q</span> <span class="o">=</span> <span class="n">Quat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">q</span> <span class="o">=</span> <span class="n">Quat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                        <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">]):</span>
+                    <span class="n">q</span> <span class="o">=</span> <span class="n">Quat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">q</span> <span class="o">=</span> <span class="n">Quat</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+            <span class="n">c_scl</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">max_c</span><span class="p">)</span> <span class="o">*</span> <span class="n">c</span>
+            <span class="n">norm2_c_scl</span> <span class="o">=</span> <span class="n">c_scl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">c_scl</span><span class="p">)</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="p">(</span><span class="n">norm_u_norm_v</span> <span class="o">-</span> <span class="n">u_dot_v</span><span class="p">)</span> <span class="o">*</span> <span class="n">c_scl</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Quat</span><span class="p">(</span><span class="n">norm2_c_scl</span> <span class="o">*</span> <span class="n">max_c</span><span class="p">,</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">Quat</span><span class="p">(</span><span class="n">norm_u_norm_v</span> <span class="o">+</span> <span class="n">u_dot_v</span><span class="p">,</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">q</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Quat.conj"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.Quat.conj">[docs]</a>    <span class="k">def</span> <span class="nf">conj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Quat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">z</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="pose_to_xyz_yaw"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.pose_to_xyz_yaw">[docs]</a><span class="k">def</span> <span class="nf">pose_to_xyz_yaw</span><span class="p">(</span><span class="n">A_tform_B</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Gets the x,y,z yaw of B in A from the SE3Pose protobuf message.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets the x,y,z yaw of B in A from the SE3Pose protobuf message.&quot;&quot;&quot;</span>
     <span class="n">yaw</span> <span class="o">=</span> <span class="n">Quat</span><span class="o">.</span><span class="n">from_proto</span><span class="p">(</span><span class="n">A_tform_B</span><span class="o">.</span><span class="n">rotation</span><span class="p">)</span><span class="o">.</span><span class="n">to_yaw</span><span class="p">()</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">A_tform_B</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">A_tform_B</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span>
@@ -1639,7 +1734,7 @@
 
 
 <div class="viewcode-block" id="is_within_threshold"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.is_within_threshold">[docs]</a><span class="k">def</span> <span class="nf">is_within_threshold</span><span class="p">(</span><span class="n">pose_3d</span><span class="p">,</span> <span class="n">max_translation_meters</span><span class="p">,</span> <span class="n">max_yaw_degrees</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Determines whether the given SE3 pose is small enough in X, Y, and theta.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Determines whether the given SE3 pose is small enough in X, Y, and theta.&quot;&quot;&quot;</span>
     <span class="n">delta</span> <span class="o">=</span> <span class="n">SE2Pose</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">SE3Pose</span><span class="o">.</span><span class="n">from_proto</span><span class="p">(</span><span class="n">pose_3d</span><span class="p">))</span>
     <span class="n">dist_2d</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">delta</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">delta</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="n">delta</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
     <span class="n">angle_deg</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">delta</span><span class="o">.</span><span class="n">angle</span><span class="p">))</span>
@@ -1657,20 +1752,20 @@
 
 
 <div class="viewcode-block" id="skew_matrix_3d"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.skew_matrix_3d">[docs]</a><span class="k">def</span> <span class="nf">skew_matrix_3d</span><span class="p">(</span><span class="n">vec3_proto</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Creates a 3x3 numpy matrix representing the skew symmetric matrix for a vec3.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a 3x3 numpy matrix representing the skew symmetric matrix for a vec3.</span>
 <span class="sd">       These are used to create the adjoint matrices for SE3Pose&#39;s, among other things.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">vec3_proto</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">vec3_proto</span><span class="o">.</span><span class="n">y</span><span class="p">],</span> <span class="p">[</span><span class="n">vec3_proto</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">vec3_proto</span><span class="o">.</span><span class="n">x</span><span class="p">],</span>
                         <span class="p">[</span><span class="o">-</span><span class="n">vec3_proto</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">vec3_proto</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span></div>
 
 
 <div class="viewcode-block" id="skew_matrix_2d"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.skew_matrix_2d">[docs]</a><span class="k">def</span> <span class="nf">skew_matrix_2d</span><span class="p">(</span><span class="n">vec2_proto</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Creates a 2x1 numpy matrix representing the skew symmetric matrix for a vec2.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates a 2x1 numpy matrix representing the skew symmetric matrix for a vec2.</span>
 <span class="sd">       These are used to create the adjoint matrices for SE2Pose&#39;s, among other things.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">vec2_proto</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="o">-</span><span class="n">vec2_proto</span><span class="o">.</span><span class="n">x</span><span class="p">]])</span></div>
 
 
 <div class="viewcode-block" id="transform_se2velocity"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.transform_se2velocity">[docs]</a><span class="k">def</span> <span class="nf">transform_se2velocity</span><span class="p">(</span><span class="n">a_adjoint_b_matrix</span><span class="p">,</span> <span class="n">se2_velocity_in_b</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Changes the frame that the SE(2) Velocity is expressed in. More specifically, it converts the</span>
 <span class="sd">    SE(2) Velocity in frame b to a SE(2) Velocity in frame c using the adjoint matrix a_adjoint_b.</span>
 
@@ -1694,7 +1789,7 @@
 
 
 <div class="viewcode-block" id="transform_se3velocity"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.transform_se3velocity">[docs]</a><span class="k">def</span> <span class="nf">transform_se3velocity</span><span class="p">(</span><span class="n">a_adjoint_b_matrix</span><span class="p">,</span> <span class="n">se3_velocity_in_b</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Changes the frame that the SE(3) Velocity is expressed in. More specifically, it converts the</span>
 <span class="sd">    SE(3) Velocity in frame b to a SE(3) Velocity in frame c using the adjoint matrix a_adjoint_b.</span>
 
@@ -1717,7 +1812,7 @@
 
 
 <div class="viewcode-block" id="quat_to_eulerZYX"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html#bosdyn.client.math_helpers.quat_to_eulerZYX">[docs]</a><span class="k">def</span> <span class="nf">quat_to_eulerZYX</span><span class="p">(</span><span class="n">q</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert a Quat object into Euler yaw, pitch, roll angles (radians).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Quat object into Euler yaw, pitch, roll angles (radians).&quot;&quot;&quot;</span>
     <span class="n">pitch</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">asin</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="n">q</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">q</span><span class="o">.</span><span class="n">w</span> <span class="o">*</span> <span class="n">q</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">pitch</span> <span class="o">&gt;</span> <span class="mf">0.9999</span><span class="p">:</span>
         <span class="n">yaw</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">q</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>

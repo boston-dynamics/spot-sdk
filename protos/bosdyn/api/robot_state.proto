@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -58,6 +58,7 @@ message HardwareConfiguration {
     bool can_power_command_request_payload_ports = 4;    // Control power to the payload ports.
     bool can_power_command_request_wifi_radio = 5;       // Control power to the hardware Wi-Fi radio.
 
+    bool has_audio_visual_system = 7;                    // Robot has audio visual system installed.
 }
 
 // The current state of the robot.
@@ -709,6 +710,10 @@ message RobotImpairedState {
         IMPAIRED_STATUS_SERVICE_FAULT = 6;
         // A behavior fault caused the robot to stop. See behavior_faults for details.
         IMPAIRED_STATUS_BEHAVIOR_FAULT = 7;
+        // The autonomous system expected to have a payload providing an entity detector.
+        // The detector is either not present, or not working. Note that if the detector
+        // exists but is throwing a system fault, the status will be IMPAIRED_STATUS_SYSTEM_FAULT.
+        IMPAIRED_STATUS_ENTITY_DETECTOR_NOT_WORKING = 8;
     }
     // If the status is ROBOT_IMPAIRED, this is specifically why the robot is impaired.
     ImpairedStatus impaired_status = 1;

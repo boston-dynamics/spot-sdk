@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -36,10 +36,7 @@ class RecordingInterface(object):
         self._robot.time_sync.wait_for_sync()
 
         # Filepath for the location to put the downloaded graph and snapshots.
-        if download_filepath[-1] == "/":
-            self._download_filepath = download_filepath + "downloaded_graph"
-        else:
-            self._download_filepath = download_filepath + "/downloaded_graph"
+        self._download_filepath = os.path.join(download_filepath, 'downloaded_graph')
 
         # Setup the recording service client.
         self._recording_client = self._robot.ensure_client(
@@ -104,16 +101,16 @@ class RecordingInterface(object):
         """Start recording a map."""
         should_start_recording = self.should_we_start_recording()
         if not should_start_recording:
-            print("The system is not in the proper state to start recording.", \
-                   "Try using the graph_nav_command_line to either clear the map or", \
-                   "attempt to localize to the map.")
+            print('The system is not in the proper state to start recording.'
+                  'Try using the graph_nav_command_line to either clear the map or'
+                  'attempt to localize to the map.')
             return
         try:
             status = self._recording_client.start_recording(
                 recording_environment=self._recording_environment)
-            print("Successfully started recording a map.")
+            print('Successfully started recording a map.')
         except Exception as err:
-            print("Start recording failed: " + str(err))
+            print(f'Start recording failed: {err}')
 
     def _stop_recording(self, *args):
         """Stop or pause recording a map."""
@@ -121,45 +118,45 @@ class RecordingInterface(object):
         while True:
             try:
                 status = self._recording_client.stop_recording()
-                print("Successfully stopped recording a map.")
+                print('Successfully stopped recording a map.')
                 break
             except bosdyn.client.recording.NotReadyYetError as err:
                 # It is possible that we are not finished recording yet due to
                 # background processing. Try again every 1 second.
                 if first_iter:
-                    print("Cleaning up recording...")
+                    print('Cleaning up recording...')
                 first_iter = False
                 time.sleep(1.0)
                 continue
             except Exception as err:
-                print("Stop recording failed: " + str(err))
+                print(f'Stop recording failed: {err}')
                 break
 
     def _get_recording_status(self, *args):
         """Get the recording service's status."""
         status = self._recording_client.get_record_status()
         if status.is_recording:
-            print("The recording service is on.")
+            print('The recording service is on.')
         else:
-            print("The recording service is off.")
+            print('The recording service is off.')
 
     def _create_default_waypoint(self, *args):
         """Create a default waypoint at the robot's current location."""
-        resp = self._recording_client.create_waypoint(waypoint_name="default")
+        resp = self._recording_client.create_waypoint(waypoint_name='default')
         if resp.status == recording_pb2.CreateWaypointResponse.STATUS_OK:
-            print("Successfully created a waypoint.")
+            print('Successfully created a waypoint.')
         else:
-            print("Could not create a waypoint.")
+            print('Could not create a waypoint.')
 
     def _download_full_graph(self, *args):
         """Download the graph and snapshots from the robot."""
         graph = self._graph_nav_client.download_graph()
         if graph is None:
-            print("Failed to download the graph.")
+            print('Failed to download the graph.')
             return
         self._write_full_graph(graph)
-        print("Graph downloaded with {} waypoints and {} edges".format(
-            len(graph.waypoints), len(graph.edges)))
+        print(
+            f'Graph downloaded with {len(graph.waypoints)} waypoints and {len(graph.edges)} edges')
         # Download the waypoint and edge snapshots.
         self._download_and_write_waypoint_snapshots(graph.waypoints)
         self._download_and_write_edge_snapshots(graph.edges)
@@ -167,7 +164,7 @@ class RecordingInterface(object):
     def _write_full_graph(self, graph):
         """Download the graph from robot to the specified, local filepath location."""
         graph_bytes = graph.SerializeToString()
-        self._write_bytes(self._download_filepath, '/graph', graph_bytes)
+        self._write_bytes(self._download_filepath, 'graph', graph_bytes)
 
     def _download_and_write_waypoint_snapshots(self, waypoints):
         """Download the waypoint snapshots from robot to the specified, local filepath location."""
@@ -180,13 +177,14 @@ class RecordingInterface(object):
                     waypoint.snapshot_id)
             except Exception:
                 # Failure in downloading waypoint snapshot. Continue to next snapshot.
-                print("Failed to download waypoint snapshot: " + waypoint.snapshot_id)
+                print(f'Failed to download waypoint snapshot: {waypoint.snapshot_id}')
                 continue
-            self._write_bytes(self._download_filepath + '/waypoint_snapshots',
-                              '/' + waypoint.snapshot_id, waypoint_snapshot.SerializeToString())
+            self._write_bytes(os.path.join(self._download_filepath, 'waypoint_snapshots'),
+                              str(waypoint.snapshot_id), waypoint_snapshot.SerializeToString())
             num_waypoint_snapshots_downloaded += 1
-            print("Downloaded {} of the total {} waypoint snapshots.".format(
-                num_waypoint_snapshots_downloaded, len(waypoints)))
+            print(
+                f'Downloaded {num_waypoint_snapshots_downloaded} of the total {len(waypoints)} waypoint snapshots.'
+            )
 
     def _download_and_write_edge_snapshots(self, edges):
         """Download the edge snapshots from robot to the specified, local filepath location."""
@@ -200,18 +198,19 @@ class RecordingInterface(object):
                 edge_snapshot = self._graph_nav_client.download_edge_snapshot(edge.snapshot_id)
             except Exception:
                 # Failure in downloading edge snapshot. Continue to next snapshot.
-                print("Failed to download edge snapshot: " + edge.snapshot_id)
+                print(f'Failed to download edge snapshot: {edge.snapshot_id}')
                 continue
-            self._write_bytes(self._download_filepath + '/edge_snapshots', '/' + edge.snapshot_id,
-                              edge_snapshot.SerializeToString())
+            self._write_bytes(os.path.join(self._download_filepath, 'edge_snapshots'),
+                              str(edge.snapshot_id), edge_snapshot.SerializeToString())
             num_edge_snapshots_downloaded += 1
-            print("Downloaded {} of the total {} edge snapshots.".format(
-                num_edge_snapshots_downloaded, num_to_download))
+            print(
+                f'Downloaded {num_edge_snapshots_downloaded} of the total {num_to_download} edge snapshots.'
+            )
 
     def _write_bytes(self, filepath, filename, data):
         """Write data to a file."""
         os.makedirs(filepath, exist_ok=True)
-        with open(filepath + filename, 'wb+') as f:
+        with open(os.path.join(filepath, filename), 'wb+') as f:
             f.write(data)
             f.close()
 
@@ -219,7 +218,7 @@ class RecordingInterface(object):
         # Download current graph
         graph = self._graph_nav_client.download_graph()
         if graph is None:
-            print("Empty graph.")
+            print('Empty graph.')
             return
         self._current_graph = graph
 
@@ -237,7 +236,7 @@ class RecordingInterface(object):
         """Create new edge between existing waypoints in map."""
 
         if len(args[0]) != 2:
-            print("ERROR: Specify the two waypoints to connect (short code or annotation).")
+            print('ERROR: Specify the two waypoints to connect (short code or annotation).')
             return
 
         self._update_graph_waypoint_and_edge_ids(do_print=False)
@@ -247,7 +246,7 @@ class RecordingInterface(object):
         to_id = graph_nav_util.find_unique_waypoint_id(args[0][1], self._current_graph,
                                                        self._current_annotation_name_to_wp_id)
 
-        print("Creating edge from {} to {}.".format(from_id, to_id))
+        print(f'Creating edge from {from_id} to {to_id}.')
 
         from_wp = self._get_waypoint(from_id)
         if from_wp is None:
@@ -266,7 +265,7 @@ class RecordingInterface(object):
         new_edge.id.to_waypoint = to_id
         new_edge.from_tform_to.CopyFrom(edge_transform)
 
-        print("edge transform =", new_edge.from_tform_to)
+        print(f'edge transform = {new_edge.from_tform_to}')
 
         # Send request to add edge to map
         self._recording_client.create_edge(edge=new_edge)
@@ -278,8 +277,8 @@ class RecordingInterface(object):
 
         if len(self._current_graph.waypoints) < 2:
             self._add_message(
-                "Graph contains {} waypoints -- at least two are needed to create loop.".format(
-                    len(self._current_graph.waypoints)))
+                f'Graph contains {len(self._current_graph.waypoints)} waypoints -- at least two are '
+                f'needed to create loop.')
             return False
 
         sorted_waypoints = graph_nav_util.sort_waypoints_chrono(self._current_graph)
@@ -312,7 +311,7 @@ class RecordingInterface(object):
         elif req_type == 'q':
             return
         else:
-            print("Unrecognized command. Going back.")
+            print('Unrecognized command. Going back.')
             return
         self._auto_close_loops(close_fiducial_loops, close_odometry_loops)
 
@@ -323,7 +322,7 @@ class RecordingInterface(object):
                 do_fiducial_loop_closure=wrappers.BoolValue(value=close_fiducial_loops),
                 do_odometry_loop_closure=wrappers.BoolValue(value=close_odometry_loops)),
             modify_map_on_server=True)
-        print("Created {} new edge(s).".format(len(response.new_subgraph.edges)))
+        print(f'Created {len(response.new_subgraph.edges)} new edge(s).')
 
     def _optimize_anchoring(self, *args):
         """Call anchoring optimization on the server, producing a globally optimal reference frame for waypoints to be expressed in."""
@@ -331,9 +330,9 @@ class RecordingInterface(object):
             params=map_processing_pb2.ProcessAnchoringRequest.Params(),
             modify_anchoring_on_server=True, stream_intermediate_results=False)
         if response.status == map_processing_pb2.ProcessAnchoringResponse.STATUS_OK:
-            print("Optimized anchoring after {} iteration(s).".format(response.iteration))
+            print(f'Optimized anchoring after {response.iteration} iteration(s).')
         else:
-            print("Error optimizing {}".format(response))
+            print(f'Error optimizing {response}')
 
     def _get_waypoint(self, id):
         """Get waypoint from graph (return None if waypoint not found)"""
@@ -345,7 +344,7 @@ class RecordingInterface(object):
             if waypoint.id == id:
                 return waypoint
 
-        print('ERROR: Waypoint {} not found in graph.'.format(id))
+        print(f'ERROR: Waypoint {id} not found in graph.')
         return None
 
     def _get_transform(self, from_wp, to_wp):
@@ -394,7 +393,7 @@ class RecordingInterface(object):
                 break
 
             if req_type not in self._command_dictionary:
-                print("Request not in the known command dictionary.")
+                print('Request not in the known command dictionary.')
                 continue
             try:
                 cmd_func = self._command_dictionary[req_type]
@@ -444,7 +443,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         print(exc)
-        print("Recording command line client threw an error.")
+        print('Recording command line client threw an error.')
         return False
 
 

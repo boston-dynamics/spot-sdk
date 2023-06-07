@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -32,10 +32,12 @@ OPTIONS_KEYWORDS_TO_FUNCTION = {
     "truncatable": truncatable_option,
     "neutral_start": neutral_start_option,
     "precise_steps": precise_steps_option,
-    "precise_timing": precise_timing_option,
+    "precise_timing": precise_timing_option,  # Deprecated.
+    "timing_adjustability": timing_adjustability_option,
     "no_looping": no_looping_option,
     "arm_required": arm_required_option,
     "arm_prohibited": arm_prohibited_option,
+    "starts_sitting": starts_sitting_option,
     "track_swing_trajectories": track_swing_trajectories_option,
     "assume_zero_roll_and_pitch": assume_zero_roll_and_pitch_option,
     "arm_playback": arm_playback_option,
@@ -43,6 +45,7 @@ OPTIONS_KEYWORDS_TO_FUNCTION = {
     "frequency": frequency_option,
     "retime_to_integer_slices": retime_to_integer_slices_option,
     "description": description_option,
+    "custom_gait_cycle": custom_gait_cycle_option,
 }
 
 # The grouped headers represent animation keyframe values which can be used and specify multiple protobuf
@@ -138,6 +141,11 @@ SINGLE_HEADERS = {
 COMMENT_DELIMITERS = ["//", "#"]
 
 
+class AnimationFileFormatError(Exception):
+    """Specific Exception raised when we identify a issue with an animation (*.cha) file."""
+    pass
+
+
 class Animation():
     """Helper class to track values read from the animation file that are important to choreographer
     and necessary when uploading animated moves."""
@@ -209,8 +217,13 @@ class Animation():
         move_info.display.color.a = 1.0
         move_info.display.description = self.description
 
-        # Animations are required to start and end in a standing position.
-        move_info.entrance_states.append(choreography_sequence_pb2.MoveInfo.TRANSITION_STATE_STAND)
+        # Animations are required to start and end in a standing position (by default).
+        if self.proto.starts_sitting:
+            move_info.entrance_states.append(
+                choreography_sequence_pb2.MoveInfo.TRANSITION_STATE_SIT)
+        else:
+            move_info.entrance_states.append(
+                choreography_sequence_pb2.MoveInfo.TRANSITION_STATE_STAND)
         move_info.exit_state = choreography_sequence_pb2.MoveInfo.TRANSITION_STATE_STAND
 
         return move_info
@@ -292,7 +305,7 @@ def read_animation_params(animation):
             except AttributeError:
                 err = "Cannot parse file %s: unknown parameter field name %s." % (animation.name,
                                                                                   param_name)
-                raise Exception(err)
+                raise AnimationFileFormatError(err)
         else:
             # Individual field using a DoubleValue proto.
             try:
@@ -302,7 +315,7 @@ def read_animation_params(animation):
             except AttributeError:
                 err = "Cannot parse file %s: unknown parameter field name %s." % (animation.name,
                                                                                   param_name)
-                raise Exception(err)
+                raise AnimationFileFormatError(err)
     return animation
 
 
@@ -444,7 +457,7 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
                 else:
                     err = "Cannot parse file %s: parameter field name %s was provided but is not a default parameter." % (
                         animation.name, split_line[0])
-                    raise Exception(err)
+                    raise AnimationFileFormatError(err)
             else:
                 animation.parameter_lines.append(line)
 
@@ -460,7 +473,7 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
                     if animation.frequency is None:
                         prefix = "Cannot parse file %s: " % animation.name
                         err = prefix + "Either frequency or keyframe timestamps must be provided. Neither were found."
-                        raise Exception(err)
+                        raise AnimationFileFormatError(err)
                 continue
 
             vals = line.split()
@@ -487,7 +500,7 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
                     # Don't fail silently and mismatch indices of other groups if one group header is not found.
                     err = "Cannot parse file %s: Unknown body movement keyword %s" % (
                         animation.name, header)
-                    raise Exception(err)
+                    raise AnimationFileFormatError(err)
 
             if set_keyframe_times[0]:
                 # Update the timestamp in the keyframe, then increment it based on the frequency
@@ -502,7 +515,7 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
             err = (
                 "Cannot parse file %s: Animation file contains more than 3 sections delineated by whitespace."
                 " Make sure all comments are included in a existing section." % (animation.name))
-            raise Exception(err)
+            raise AnimationFileFormatError(err)
 
     animation.proto.name = animation.name
     if animation.bpm is not None:

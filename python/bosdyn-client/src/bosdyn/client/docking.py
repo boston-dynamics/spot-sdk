@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -9,7 +9,7 @@
 import collections
 import time
 
-from deprecated import deprecated
+from deprecated.sphinx import deprecated
 
 from bosdyn.api.docking import docking_pb2, docking_service_pb2_grpc
 from bosdyn.client import lease
@@ -70,19 +70,20 @@ class DockingClient(BaseClient):
                                _docking_command_error_from_response, copy_request=False, **kwargs)
 
     def docking_command_full(self, station_id, clock_identifier, end_time, prep_pose_behavior=None,
-                             lease=None, **kwargs):
+                             lease=None, require_fiducial=False, **kwargs):
         """Identical to docking_command(), except will return the full DockingCommandResponse."""
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
-                                            prep_pose_behavior)
+                                            prep_pose_behavior, require_fiducial)
         return self.call(self._stub.DockingCommand, req,
                          error_from_response=_docking_command_error_from_response,
                          copy_request=False, **kwargs)
 
     def docking_command_full_async(self, station_id, clock_identifier, end_time,
-                                   prep_pose_behavior=None, lease=None, **kwargs):
+                                   prep_pose_behavior=None, lease=None, require_fiducial=False,
+                                   **kwargs):
         """Identical to docking_command_async(), except will return the full DockingCommandResponse."""
         req = self._docking_command_request(lease, station_id, clock_identifier, end_time,
-                                            prep_pose_behavior)
+                                            prep_pose_behavior, require_fiducial)
         return self.call_async(self._stub.DockingCommand, req,
                                error_from_response=_docking_command_error_from_response,
                                copy_request=False, **kwargs)
@@ -170,11 +171,12 @@ class DockingClient(BaseClient):
                                _docking_get_state_error_from_response, copy_request=False, **kwargs)
 
     @staticmethod
-    def _docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior):
-        return docking_pb2.DockingCommandRequest(lease=lease, docking_station_id=station_id,
-                                                 clock_identifier=clock_identifier,
-                                                 end_time=end_time,
-                                                 prep_pose_behavior=prep_pose_behavior)
+    def _docking_command_request(lease, station_id, clock_identifier, end_time, prep_pose_behavior,
+                                 require_fiducial=False):
+        return docking_pb2.DockingCommandRequest(
+            lease=lease, docking_station_id=station_id, clock_identifier=clock_identifier,
+            end_time=end_time, prep_pose_behavior=prep_pose_behavior,
+            require_fiducial=require_fiducial)
 
     @staticmethod
     def _docking_command_feedback_request(command_id, end_time=None):

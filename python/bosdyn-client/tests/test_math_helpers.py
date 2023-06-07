@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -26,7 +26,7 @@ EPSILON = 0.0001
 def test_create_se2_pose():
     # Test creating an SE2Pose from a proto with from_obj()
     proto_se2 = geometry_pb2.SE2Pose(position=geometry_pb2.Vec2(x=1, y=2), angle=.2)
-    se2 = SE2Pose.from_obj(proto_se2)
+    se2 = SE2Pose.from_proto(proto_se2)
     assert type(se2) == SE2Pose
     assert se2.x == proto_se2.position.x
     assert se2.y == proto_se2.position.y
@@ -283,7 +283,7 @@ def test_create_se3_pose():
     # Test creating an SE3Pose from a proto with from_obj()
     proto_se3 = geometry_pb2.SE3Pose(position=geometry_pb2.Vec3(x=1, y=2, z=3),
                                      rotation=geometry_pb2.Quaternion(w=.1, x=.2, y=.2, z=.1))
-    se3 = SE3Pose.from_obj(proto_se3)
+    se3 = SE3Pose.from_proto(proto_se3)
     assert type(se3) == SE3Pose
     assert se3.x == proto_se3.position.x
     assert se3.y == proto_se3.position.y
@@ -457,7 +457,7 @@ def test_matrices_se3():
 def test_create_se2_vel():
     # Test creating an SE2Velocity from a proto with from_obj()
     proto_se2 = geometry_pb2.SE2Velocity(linear=geometry_pb2.Vec2(x=1, y=2), angular=.2)
-    se2 = SE2Velocity.from_obj(proto_se2)
+    se2 = SE2Velocity.from_proto(proto_se2)
     assert type(se2) == SE2Velocity
     assert se2.linear_velocity_x == proto_se2.linear.x
     assert se2.linear_velocity_y == proto_se2.linear.y
@@ -513,7 +513,7 @@ def test_create_se3_vel():
     # Test creating an SE3Velocity from a proto with from_obj()
     proto_se3 = geometry_pb2.SE3Velocity(linear=geometry_pb2.Vec3(x=1, y=2, z=3),
                                          angular=geometry_pb2.Vec3(x=1, y=2, z=3))
-    se3 = SE3Velocity.from_obj(proto_se3)
+    se3 = SE3Velocity.from_proto(proto_se3)
     assert type(se3) == SE3Velocity
     assert se3.linear_velocity_x == proto_se3.linear.x
     assert se3.linear_velocity_y == proto_se3.linear.y
@@ -640,6 +640,31 @@ def test_transform_velocity():
                     2 * .000302 + 5 * (-0.999698) + 1 + 3 * (-.000302),
                     -0.999698 + 5 * .000302 + -2, 1, .000302 * 2 - 0.999698 * 3,
                     0.999698 * 2 + .000302 * 3), 1e-4)
+
+
+def test_closest_yaw_only():
+    # Check a number of random rotations
+    random.seed(1234)
+    for i in range(50):
+        v1 = Vec3(random.gauss(0, 1), random.gauss(0, 1), random.gauss(0, 1))
+        v2 = Vec3(random.gauss(0, 1), random.gauss(0, 1), random.gauss(0, 1))
+
+        Q = Quat.from_two_vectors(v1, v2)
+
+        n_z = Q.closest_yaw_only_quaternion() * Vec3(0, 0, 1)
+
+        assert fabs(n_z.x - 0) < 1e-10
+        assert fabs(n_z.y - 0) < 1e-10
+        assert fabs(n_z.z - 1) < 1e-10
+
+        # Find the rotation that rotates Q into closest_yaw_only_quaternion().
+        # We expect this to have no z component.
+        quat_err = Q.closest_yaw_only_quaternion() * (Q.conj())
+        if (quat_err.w < 0):
+            #Forces the quaternion into the hemisphere with the scalar >= 0
+            quat_err = -quat_err
+        (err_angle, err_axis) = quat_err.to_axis_angle()
+        assert fabs(err_angle * err_axis[2]) < 1e-10
 
 
 def test_quat_to_euler():

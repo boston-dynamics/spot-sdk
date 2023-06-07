@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -17,7 +17,7 @@ from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder,
 from bosdyn.api import geometry_pb2
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.api import image_pb2
-from bosdyn.client.network_compute_bridge_client import NetworkComputeBridgeClient
+from bosdyn.client.network_compute_bridge_client import NetworkComputeBridgeClient, ExternalServerError
 from bosdyn.api import network_compute_bridge_pb2
 from google.protobuf import wrappers_pb2
 from bosdyn.client.manipulation_api_client import ManipulationApiClient
@@ -58,8 +58,12 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
         process_img_req = network_compute_bridge_pb2.NetworkComputeRequest(
             input_data=input_data, server_config=server_data)
 
-        resp = network_compute_client.network_compute_bridge_command(
-            process_img_req)
+        try:
+            resp = network_compute_client.network_compute_bridge_command(process_img_req)
+        except ExternalServerError:
+            # This sometimes happens if the NCB is unreachable due to intermittent wifi failures.
+            print('Error connecting to network compute bridge. This may be temporary.')
+            return None, None, None
 
         best_obj = None
         highest_conf = 0.0
@@ -448,7 +452,7 @@ def main(argv):
                 frame_helpers.VISION_FRAME_NAME,
                 frame_helpers.GRAV_ALIGNED_BODY_FRAME_NAME)
 
-            vision_tform_hand_at_drop = vision_tform_flat_body * math_helpers.SE3Pose.from_obj(
+            vision_tform_hand_at_drop = vision_tform_flat_body * math_helpers.SE3Pose.from_proto(
                 flat_body_tform_hand)
 
             # duration in seconds

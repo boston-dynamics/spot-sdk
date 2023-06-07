@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -58,8 +58,9 @@ class WebRTCSaveCommand(Command):
         self._parser.add_argument('--sdp-filename', default='h264.sdp',
                                   help='File being streamed from WebRTC server')
         self._parser.add_argument('--sdp-port', default=31102, help='SDP port of WebRTC server')
-        self._parser.add_argument('--cam-ssl-cert', default=None,
-                                  help="Spot CAM's client cert path to check with Spot CAM server")
+        self._parser.add_argument(
+            '--cam-ssl-cert', default=None,
+            help='Spot CAM\'s client cert path to check with Spot CAM serverF')
         self._parser.add_argument('--dst-prefix', default='h264.sdp',
                                   help='Filename prefix to prepend to all output data')
         self._parser.add_argument('--count', type=int, default=1,
@@ -99,7 +100,7 @@ class WebRTCRecordCommand(Command):
                                   help='File being streamed from WebRTC server')
         self._parser.add_argument('--sdp-port', default=31102, help='SDP port of WebRTC server')
         self._parser.add_argument('--cam-ssl-cert', default=None,
-                                  help="Spot CAM's client cert path to check with Spot CAM server")
+                                  help='Spot CAM\'s client cert path to check with Spot CAM server')
         self._parser.add_argument('--dst-prefix', default='h264.sdp',
                                   help='Filename prefix to prepend to all output data')
         self._parser.add_argument('--time', type=int, default=10,

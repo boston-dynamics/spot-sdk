@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -115,6 +115,7 @@ class Robot(object):
         self.channels_by_authority = {}
         self.authorities_by_name = {}
         self._robot_id = None
+        self._hardware_config = None
         self._has_arm = None
         self._secure_channel_port = _DEFAULT_SECURE_CHANNEL_PORT
 
@@ -198,7 +199,7 @@ class Robot(object):
         self.client_name = other.client_name
         self.lease_wallet.set_client_name(self.client_name)
 
-    def ensure_client(self, service_name, channel=None, options=[]):
+    def ensure_client(self, service_name, channel=None, options=[], service_endpoint=None):
         """Ensure a Client for a given service.
         Note: If a new service has been registered with the directory service, this may raise
         UnregisteredServiceNameError when trying to connect to it until sync_with_directory() is
@@ -233,13 +234,18 @@ class Robot(object):
         self.logger.debug('Created client for %s', service_name)
 
         if channel is None:
-            channel = self.ensure_channel(service_name, options=options)
+            channel = self.ensure_channel(service_name, options=options,
+                                          service_endpoint=service_endpoint)
 
         client.channel = channel
         client.update_from(self)
         # Track service clients that have been created to avoid duplicate clients
         self.service_clients_by_name[service_name] = client
         return client
+
+    def shutdown(self):
+        for channel_from_auth in self.channels_by_authority.values():
+            channel_from_auth.close()
 
     def get_cached_robot_id(self):
         """Return the RobotId proto for this robot, querying it from the robot if not yet cached.
@@ -252,8 +258,20 @@ class Robot(object):
             self._robot_id = robot_id_client.get_id()
         return self._robot_id
 
+    def get_cached_hardware_hardware_configuration(self):
+        """Return the HardwareConfiguration proto for this robot, querying it from the robot if not
+        yet cached.
+        
+        Raises:
+            RpcError: There as a problem communicating with the robot.
+        """
+        if not self._hardware_config:
+            client = self.ensure_client(RobotStateClient.default_service_name)
+            self._hardware_config = client.get_robot_hardware_configuration()
+        return self._hardware_config
 
-    def ensure_channel(self, service_name, options=[]):
+
+    def ensure_channel(self, service_name, options=[], service_endpoint=None):
         """Verify the right information exists before calling the ensure_secure_channel
         method.
 

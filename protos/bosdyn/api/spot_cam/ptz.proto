@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,22 +13,22 @@ option java_outer_classname = "PtzProto";
 import "google/protobuf/wrappers.proto";
 import "bosdyn/api/header.proto";
 
-//PtzDescription provides information about a given PTZ. The name is usually all that's required to
-//describe a PTZ, but ListPtzResponse will include more information.
+// PtzDescription provides information about a given PTZ. The name is usually all that's required to
+// describe a PTZ, but ListPtzResponse will include more information.
 message PtzDescription {
     // Identifier of a particular controllable PTZ mechanism (real or virtual).
     string name = 1;
 
     // Limits for a single axis.
     message Limits {
-        google.protobuf.FloatValue min = 1; // Units depend on the axis being controlled.
-        google.protobuf.FloatValue max = 2; // Units depend on the axis being controlled.
+        google.protobuf.FloatValue min = 1;  // Units depend on the axis being controlled.
+        google.protobuf.FloatValue max = 2;  // Units depend on the axis being controlled.
     }
 
     // If a limit is not set, all positions are valid
-    Limits pan_limit = 2; // Limits in degrees.
-    Limits tilt_limit = 3; // Limits in degrees.
-    Limits zoom_limit = 4; // Limits in zoom level.
+    Limits pan_limit = 2;   // Limits in degrees.
+    Limits tilt_limit = 3;  // Limits in degrees.
+    Limits zoom_limit = 4;  // Limits in zoom level.
 }
 
 // Doubles as a description of current state, or a command for a new position.
@@ -37,18 +37,18 @@ message PtzPosition {
     // tilt approximately [-30, 100] degrees where 0 is the horizon, IR and PTZ models differ
     // and zoom between 1x and 30x.
     PtzDescription ptz = 2;
-    google.protobuf.FloatValue pan = 3; // degrees
-    google.protobuf.FloatValue tilt = 4; // degrees
-    google.protobuf.FloatValue zoom = 5; // zoom level
+    google.protobuf.FloatValue pan = 3;   // degrees
+    google.protobuf.FloatValue tilt = 4;  // degrees
+    google.protobuf.FloatValue zoom = 5;  // zoom level
 }
 
 // Doubles as a description of current state, or a command for a new velocity.
 message PtzVelocity {
     // The "mech" ptz cannot be used with Velocity.
     PtzDescription ptz = 2;
-    google.protobuf.FloatValue pan = 3; // degrees/second
-    google.protobuf.FloatValue tilt = 4; // degrees/second
-    google.protobuf.FloatValue zoom = 5; // zoom level/second
+    google.protobuf.FloatValue pan = 3;   // degrees/second
+    google.protobuf.FloatValue tilt = 4;  // degrees/second
+    google.protobuf.FloatValue zoom = 5;  // zoom level/second
 }
 
 // Request the current position of a ptz.
@@ -141,3 +141,41 @@ message InitializeLensResponse {
     bosdyn.api.ResponseHeader header = 1;
 }
 
+
+// focus commands only affect the mech EO camera
+message PtzFocusState {
+    enum PtzFocusMode {
+        PTZ_FOCUS_UNDEFINED = 0;
+        PTZ_FOCUS_AUTO = 1;
+        PTZ_FOCUS_MANUAL = 2;
+    }
+
+    PtzFocusMode mode = 1;
+
+    // focus_position only settable in PTZ_FOCUS_MANUAL mode
+    // this represents a precise lens position for the camera for repeatable operations
+    google.protobuf.Int32Value focus_position = 2;
+
+    // approx_distance only settable in PTZ_FOCUS_MANUAL mode
+    // approx_distance is most accurate between 1.2m and 20m
+    // approx_distance is ignored on a Set operation if focus_position is included
+    google.protobuf.FloatValue approx_distance = 3;
+}
+
+message SetPtzFocusStateRequest {
+    bosdyn.api.RequestHeader header = 1;
+    PtzFocusState focus_state = 2;
+}
+
+message SetPtzFocusStateResponse {
+    bosdyn.api.ResponseHeader header = 1;
+}
+
+message GetPtzFocusStateRequest {
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetPtzFocusStateResponse {
+    bosdyn.api.ResponseHeader header = 1;
+    PtzFocusState focus_state = 2;
+}

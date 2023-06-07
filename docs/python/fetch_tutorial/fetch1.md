@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,6 +13,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Tutorial: Playing Fetch with Spot
 
+**NOTE: This tutorial uses some deprecated APIs and will be updated in the future.**
 
 <div class="section line-numbers">
 
@@ -29,6 +30,7 @@ In this tutorial, you'll create a fully-functional API example, enabling Spot to
 </ul>
 
 At the end, you'll have a fully-functional API example that enables Spot to autonomously play fetch with you.
+
 <p></p>
 <video autoplay loop muted playsinline class="tutorial-video">
     <source src="videos/fetch_with_titles_c.webm" type="video/webm">
@@ -54,11 +56,11 @@ At the end, you'll have a fully-functional API example that enables Spot to auto
 
 ## Contents
 
-* [Part 2: Training the Model](fetch2.md)
-* [Part 3: Evaluating the Model](fetch3.md)
-* [Part 4: Autonomous Pick Up](fetch4.md)
-* [Part 5: Detecting People and Playing Fetch](fetch5.md)
-* [Part 6: Running the model on Core IO](fetch6.md)
+- [Part 2: Training the Model](fetch2.md)
+- [Part 3: Evaluating the Model](fetch3.md)
+- [Part 4: Autonomous Pick Up](fetch4.md)
+- [Part 5: Detecting People and Playing Fetch](fetch5.md)
+- [Part 6: Running the model on Core IO](fetch6.md)
 
 <hr />
 <h2>Collect and Label Training Data</h2>
@@ -127,7 +129,6 @@ cd ~/fetch</code></pre>
     Copy (or <a href="files/capture_images.py">download</a>) the script below into a file called <code>capture_images.py</code> and place it in the <code>~/fetch</code> folder
 </p>
 
-
 <h4>Live Image Capture Script</h4>
 
 <p>
@@ -145,7 +146,6 @@ import cv2
 import numpy as np
 import time
 </code></pre>
-
 
 <p>Then, set up basics:</p>
 
@@ -243,7 +243,7 @@ if __name__ == "__main__":
 
 <pre>
 <code class="language-text wrap">mkdir -p dogtoy/images
-python capture_images.py 192.168.80.3 --image-source right_fisheye_image --folder dogtoy/images
+python3 capture_images.py 192.168.80.3 --image-source right_fisheye_image --folder dogtoy/images
 </code></pre>
 
 <pre><code class="language-text">Wrote: dogtoy/images/right_fisheye_image_0000.jpg
@@ -303,10 +303,9 @@ First we make a directory to store our images.  Then we run the code with parame
 
 <h2>Label the Images</h2>
 
-To label our images, we'll use an <a href="https://github.com/tzutalin/labelImg">open source off-the-shelf labeling program</a>.  There are many out there, but this one is simple and works great for our purposes.
+To label our images, we'll use an <a href="https://github.com/tzutalin/labelImg">open source off-the-shelf labeling program</a>. There are many out there, but this one is simple and works great for our purposes.
 
 <h4>Install labelImg</h4>
-
 
 Use <code>pip</code> to install:
 
@@ -370,7 +369,6 @@ Tip: If the box <strong>refuses to be a rectangle</strong>, press <code>Ctrl</co
     <source src="videos/labeling_start.webm" type="video/webm">
     <source src="videos/labeling_start.mp4" type="video/mp4">
 </video>
-
 
 <p>
     Before you label the rest of your images:
@@ -468,9 +466,4 @@ Tip: If the box <strong>refuses to be a rectangle</strong>, press <code>Ctrl</co
 </p>
 <hr />
 
-
-
-
-
 </div>
-

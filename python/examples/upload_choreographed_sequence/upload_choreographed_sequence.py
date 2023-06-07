@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -18,7 +18,7 @@ from bosdyn.client.exceptions import UnauthenticatedError
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.license import LicenseClient
 
-DEFAULT_DANCE = "default_dance.csq"
+DEFAULT_DANCE = 'default_dance.csq'
 
 
 def main(argv):
@@ -40,12 +40,12 @@ def main(argv):
     license_client = robot.ensure_client(LicenseClient.default_service_name)
     if not license_client.get_feature_enabled([ChoreographyClient.license_name
                                               ])[ChoreographyClient.license_name]:
-        print("This robot is not licensed for choreography.")
+        print('This robot is not licensed for choreography.')
         sys.exit(1)
 
     # Check that an estop is connected with the robot so that the robot commands can be executed.
-    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
-                                    "such as the estop SDK example, to configure E-Stop."
+    assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client, ' \
+                                    'such as the estop SDK example, to configure E-Stop.'
 
     # Create a lease and lease keep-alive so we can issue commands. A lease is required to execute
     # a choreographed sequence.
@@ -61,16 +61,16 @@ def main(argv):
         # Use the filepath provided.
         try:
             choreography = load_choreography_sequence_from_txt_file(options.choreography_filepath)
-        except Exception as execp:
-            print("Failed to load choreography. Raised exception: " + str(execp))
+        except Exception as excep:
+            print(f'Failed to load choreography. Raised exception: {excep}')
             return True
     else:
         # Use a default dance stored in this directory.
         default_filepath = os.path.join(os.path.dirname(os.path.abspath(__file__)), DEFAULT_DANCE)
         try:
             choreography = load_choreography_sequence_from_txt_file(default_filepath)
-        except Exception as execp:
-            print("Failed to load choreography. Raised exception: " + str(execp))
+        except Exception as excep:
+            print(f'Failed to load choreography. Raised exception: {excep}')
             return True
 
     # Once the choreography is loaded into a protobuf message, upload the routine to the robot. We set
@@ -80,21 +80,21 @@ def main(argv):
                                                                   non_strict_parsing=True)
     except UnauthenticatedError as err:
         print(
-            "The robot license must contain 'choreography' permissions to upload and execute dances. "
-            "Please contact Boston Dynamics Support to get the appropriate license file. ")
+            'The robot license must contain \'choreography\' permissions to upload and execute dances. '
+            'Please contact Boston Dynamics Support to get the appropriate license file. ')
         return True
     except ResponseError as err:
         # Check if the ChoreographyService considers the uploaded routine as valid. If not, then the warnings must be
         # addressed before the routine can be executed on robot.
-        error_msg = "Choreography sequence upload failed. The following warnings were produced: "
+        error_msg = 'Choreography sequence upload failed. The following warnings were produced: '
         for warn in err.response.warnings:
             error_msg += warn
         print(error_msg)
         return True
 
     sequences_on_robot = choreography_client.list_all_sequences()
-    print('Sequence uploaded. All sequences on the robot:\n{}'.format('\n'.join(
-        sequences_on_robot.known_sequences)))
+    known_sequences = '\n'.join(sequences_on_robot.known_sequences)
+    print(f'Sequence uploaded. All sequences on the robot:\n{known_sequences}')
     if options.upload_only:
         return True
 
@@ -128,6 +128,6 @@ def main(argv):
     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main(sys.argv[1:]):
         sys.exit(1)

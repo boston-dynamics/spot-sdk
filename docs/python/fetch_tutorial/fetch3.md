@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -37,7 +37,7 @@ In this portion of the tutorial, you will:
     <li>Make a directory for our exported model:</li>
     <pre><code class="language-text wrap">mkdir -p dogtoy/exported-models/dogtoy-model</code></pre>
     <li>Run the exporter:</li>
-    <pre><code class="language-text wrap">python exporter_main_v2.py --input_type image_tensor --pipeline_config_path dogtoy/models/my_ssd_resnet50_v1_fpn/pipeline.config --trained_checkpoint_dir dogtoy/models/my_ssd_resnet50_v1_fpn/ --output_directory dogtoy/exported-models/dogtoy-model</code></pre>
+    <pre><code class="language-text wrap">python3 exporter_main_v2.py --input_type image_tensor --pipeline_config_path dogtoy/models/my_ssd_resnet50_v1_fpn/pipeline.config --trained_checkpoint_dir dogtoy/models/my_ssd_resnet50_v1_fpn/ --output_directory dogtoy/exported-models/dogtoy-model</code></pre>
 </ul>
 
 <h4>Evaluate the Model</h4>
@@ -50,7 +50,7 @@ In this portion of the tutorial, you will:
     <li>Make a directory for the output images</li>
     <pre><code class="language-text">mkdir -p dogtoy/output</code></pre>
     <li>Evaluate on all of the images:</li>
-    <pre><code class="language-text wrap">python eval.py -i dogtoy/images -m dogtoy/exported-models/dogtoy-model/saved_model -l dogtoy/annotations/label_map.pbtxt -o dogtoy/output</code></pre>
+    <pre><code class="language-text wrap">python3 eval.py -i dogtoy/images -m dogtoy/exported-models/dogtoy-model/saved_model -l dogtoy/annotations/label_map.pbtxt -o dogtoy/output</code></pre>
 </ul>
 
 <p>
@@ -197,7 +197,7 @@ kServiceAuthority = "fetch-tutorial-worker.spot.robot"
 <pre><code class="language-python">        if isinstance(request, network_compute_bridge_pb2.ListAvailableModelsRequest):
             out_proto = network_compute_bridge_pb2.ListAvailableModelsResponse()
             for model_name in models:
-                out_proto.available_models.append(model_name)
+                out_proto.models.data.append(network_compute_bridge_pb2.ModelData(model_name=model_name))
             response_queue.put(out_proto)
             continue
         else:
@@ -551,7 +551,7 @@ if __name__ == '__main__':
     Run the script:
 </p>
 
-<pre><code class="language-text wrap">python network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model dogtoy/annotations/label_map.pbtxt 192.168.80.3
+<pre><code class="language-text wrap">python3 network_compute_server.py -m dogtoy/exported-models/dogtoy-model/saved_model dogtoy/annotations/label_map.pbtxt 192.168.80.3
 </code></pre>
 
 <p>
@@ -560,8 +560,6 @@ if __name__ == '__main__':
 <ul>
     <li>path to the model to use</li>
     <li>path to the labels file</li>
-    <li>username (often <code>user</code>)</li>
-    <li>password</li>
     <li>IP address of the robot. Above, we've used the default IP when the robot is hosting its own access point <code>192.168.80.3</code>.  Yours might be different depending on how Spot is connected to your network.</li>
 </ul>
 
@@ -570,7 +568,7 @@ if __name__ == '__main__':
 </p>
 
 <pre><code class="language-text wrap">source my_spot_env/bin/activate
-python -m bosdyn.client 192.168.80.3 dir list</code></pre>
+python3 -m bosdyn.client 192.168.80.3 dir list</code></pre>
 <p>
     Fill in your IP, username, and password.  If it worked, you should see an entry like this:
 </p>
@@ -626,7 +624,7 @@ fetch-server              bosdyn.api.NetworkComputeBridgeWorker                 
      Main PID: 26704 (code=exited, status=0/SUCCESS)
 </code></pre>
     <ul>
-        <li>If you see <code>Active: active</code> on the line with the arrow above, consider opening the port in your firewall.</li>
+        <li>If you see <code>Active: active</code> on the line with the arrow above, consider opening the port in your firewall, e.g. <code>sudo ufw allow from 192.168.80.3 to any port 50051</code>.</li>
         <li>If <code>ufw</code> isn't running, you'll see <code>Active: inactive (dead)</code></li>
     </ul>
 </ul>

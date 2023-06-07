@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Time Sync &mdash; Spot 3.2.3 documentation</title>
+  <title>Time Sync &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/language_data.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -639,58 +681,58 @@
            <div itemprop="articleBody">
             
   <section id="module-bosdyn.client.time_sync">
-<span id="time-sync"></span><h1>Time Sync<a class="headerlink" href="#module-bosdyn.client.time_sync" title="Permalink to this headline">¶</a></h1>
+<span id="time-sync"></span><h1>Time Sync<a class="headerlink" href="#module-bosdyn.client.time_sync" title="Permalink to this heading">¶</a></h1>
 <p>A client for the time-sync service.</p>
 <p>The time-sync service helps track the difference between the robot’s system clock and the
 system clock of clients, and sends an estimate of this difference to the client.  The client
 uses this information when it needs to send a timestamp to the robot in a request proto.
 Timestamps in request protos generally need to be specified relative to the robot’s system clock.</p>
 <dl class="py exception">
-<dt id="bosdyn.client.time_sync.TimeSyncError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimeSyncError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.Error</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">TimeSyncError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.Error" title="bosdyn.client.exceptions.Error"><code class="xref py py-class docutils literal notranslate"><span class="pre">Error</span></code></a></p>
 <p>General class of errors for TimeSync non-response / non-grpc errors.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.time_sync.NotEstablishedError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">NotEstablishedError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#NotEstablishedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.NotEstablishedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.time_sync.TimeSyncError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.NotEstablishedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">NotEstablishedError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#NotEstablishedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.NotEstablishedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeSyncError</span></code></a></p>
 <p>Client has not established time-sync with the robot.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.time_sync.TimedOutError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimedOutError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimedOutError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimedOutError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.time_sync.TimeSyncError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimedOutError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">TimedOutError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimedOutError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimedOutError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeSyncError</span></code></a></p>
 <p>Exceeded deadline to achieve time-sync.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.time_sync.InactiveThreadError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">InactiveThreadError</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#InactiveThreadError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.InactiveThreadError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.time_sync.TimeSyncError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.InactiveThreadError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">InactiveThreadError</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#InactiveThreadError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.InactiveThreadError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.time_sync.TimeSyncError" title="bosdyn.client.time_sync.TimeSyncError"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeSyncError</span></code></a></p>
 <p>Time-sync thread is no longer running.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.time_sync.TimeSyncClient">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimeSyncClient</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">TimeSyncClient</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseClient</span></code></a></p>
 <p>A client for establishing time-sync with a server/robot.</p>
 <dl class="py attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncClient.default_service_name">
-<code class="sig-name descname">default_service_name</code><em class="property"> = 'time-sync'</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncClient.default_service_name">
+<span class="sig-name descname"><span class="pre">default_service_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'time-sync'</span></em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.default_service_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncClient.service_type">
-<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.TimeSyncService'</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.service_type" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncClient.service_type">
+<span class="sig-name descname"><span class="pre">service_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bosdyn.api.TimeSyncService'</span></em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.service_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update">
-<code class="sig-name descname">get_time_sync_update</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">previous_round_trip</span></em>, <em class="sig-param"><span class="n">clock_identifier</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncClient.get_time_sync_update"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update">
+<span class="sig-name descname"><span class="pre">get_time_sync_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_round_trip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock_identifier</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncClient.get_time_sync_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtain an initial or updated timesync estimate with server.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -708,16 +750,16 @@ from server.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update_async">
-<code class="sig-name descname">get_time_sync_update_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">previous_round_trip</span></em>, <em class="sig-param"><span class="n">clock_identifier</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncClient.get_time_sync_update_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update_async">
+<span class="sig-name descname"><span class="pre">get_time_sync_update_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_round_trip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock_identifier</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncClient.get_time_sync_update_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncClient.get_time_sync_update_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Async version of get_time_sync_update()</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt id="bosdyn.client.time_sync.robot_time_range_from_nanoseconds">
-<code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">robot_time_range_from_nanoseconds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_nsec</span></em>, <em class="sig-param"><span class="n">end_nsec</span></em>, <em class="sig-param"><span class="n">time_sync_endpoint</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#robot_time_range_from_nanoseconds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.robot_time_range_from_nanoseconds" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.robot_time_range_from_nanoseconds">
+<span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">robot_time_range_from_nanoseconds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_nsec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_nsec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_sync_endpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#robot_time_range_from_nanoseconds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.robot_time_range_from_nanoseconds" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate timespan as a TimeRange proto, in robot time.</p>
 <dl class="simple">
 <dt>If time_sync_endpoint is a TimeSyncEndpoint, the time_spec is in the local clock and will</dt><dd><p>be converted to robot_time.</p>
@@ -728,9 +770,9 @@ from server.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nanoseconds since the Unix epoch</strong><strong> or </strong><strong>None</strong> (<em>end_nsec</em>) – </p></li>
-<li><p><strong>nanoseconds since the Unix epoch</strong><strong> or </strong><strong>None</strong> – </p></li>
-<li><p><strong>Either TimeSyncEndpoint</strong><strong> or </strong><strong>None.</strong> (<em>time_sync_endpoint</em>) – </p></li>
+<li><p><strong>None</strong> (<em>end_nsec              nanoseconds since the Unix epoch or</em>) – </p></li>
+<li><p><strong>None</strong> – </p></li>
+<li><p><strong>None.</strong> (<em>time_sync_endpoint    Either TimeSyncEndpoint or</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -740,8 +782,8 @@ from server.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="bosdyn.client.time_sync.robot_time_range_from_datetimes">
-<code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">robot_time_range_from_datetimes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start_datetime</span></em>, <em class="sig-param"><span class="n">end_datetime</span></em>, <em class="sig-param"><span class="n">time_sync_endpoint</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#robot_time_range_from_datetimes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.robot_time_range_from_datetimes" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.robot_time_range_from_datetimes">
+<span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">robot_time_range_from_datetimes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_sync_endpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#robot_time_range_from_datetimes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.robot_time_range_from_datetimes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate timespan as a TimeRange proto, in robot time.</p>
 <dl class="simple">
 <dt>If time_sync_endpoint is a TimeSyncEndpoint, the time_spec is in the local clock and will</dt><dd><p>be converted to robot_time.</p>
@@ -764,8 +806,8 @@ from server.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt id="bosdyn.client.time_sync.timespec_to_robot_timespan">
-<code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">timespec_to_robot_timespan</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timespan_spec</span></em>, <em class="sig-param"><span class="n">time_sync_endpoint</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#timespec_to_robot_timespan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.timespec_to_robot_timespan" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.timespec_to_robot_timespan">
+<span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">timespec_to_robot_timespan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timespan_spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_sync_endpoint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#timespec_to_robot_timespan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.timespec_to_robot_timespan" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate timespan as TimeRange proto, in robot time.</p>
 <dl class="simple">
 <dt>If time_sync_endpoint is a TimeSyncEndpoint, the time_spec is in the local clock and will</dt><dd><p>be converted to robot_time.</p>
@@ -776,8 +818,8 @@ from server.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>'{val}-{val}'</strong><strong> or </strong><strong>'{val}' time spec string</strong> (<em>timespan_spec</em>) – </p></li>
-<li><p><strong>Either TimeSyncEndpoint</strong><strong> or </strong><strong>None.</strong> (<em>time_sync_endpoint</em>) – </p></li>
+<li><p><strong>string</strong> (<em>timespan_spec        '{val}-{val}'</em><em> or </em><em>'{val}' time spec</em>) – </p></li>
+<li><p><strong>None.</strong> (<em>time_sync_endpoint    Either TimeSyncEndpoint or</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -787,17 +829,17 @@ from server.</p></li>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimeSyncEndpoint</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_sync_client</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">TimeSyncEndpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_sync_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A wrapper that uses a TimeSyncClient object to establish and maintain timesync with a robot.</p>
 <p>This class manages internal state, including a clock identifier and previous best time sync
 estimates. This class automatically builds requests passed to the TimeSyncClient, so users
 don’t have to worry about the details of establishing and maintaining timesync.</p>
 <p>This object is thread-safe.</p>
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.response">
-<em class="property">property </em><code class="sig-name descname">response</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.response" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint.response">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">response</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.response" title="Permalink to this definition">¶</a></dt>
 <dd><p>The last response message from the time-sync service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -806,9 +848,9 @@ don’t have to worry about the details of establishing and maintaining timesync
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.has_established_time_sync">
-<em class="property">property </em><code class="sig-name descname">has_established_time_sync</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.has_established_time_sync" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint.has_established_time_sync">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_established_time_sync</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.has_established_time_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if the client has successfully established time-sync with the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -817,9 +859,9 @@ don’t have to worry about the details of establishing and maintaining timesync
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.round_trip_time">
-<em class="property">property </em><code class="sig-name descname">round_trip_time</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.round_trip_time" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint.round_trip_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">round_trip_time</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.round_trip_time" title="Permalink to this definition">¶</a></dt>
 <dd><p>The previous round trip time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -828,9 +870,9 @@ don’t have to worry about the details of establishing and maintaining timesync
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.clock_identifier">
-<em class="property">property </em><code class="sig-name descname">clock_identifier</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.clock_identifier" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint.clock_identifier">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clock_identifier</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.clock_identifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>The clock identifier for the instance of the time-sync client.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -839,9 +881,9 @@ don’t have to worry about the details of establishing and maintaining timesync
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.clock_skew">
-<em class="property">property </em><code class="sig-name descname">clock_skew</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.clock_skew" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint.clock_skew">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clock_skew</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.clock_skew" title="Permalink to this definition">¶</a></dt>
 <dd><p>The best current estimate of clock skew from the time-sync service.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -854,8 +896,8 @@ don’t have to worry about the details of establishing and maintaining timesync
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.establish_timesync">
-<code class="sig-name descname">establish_timesync</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">max_samples</span><span class="o">=</span><span class="default_value">25</span></em>, <em class="sig-param"><span class="n">break_on_success</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.establish_timesync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.establish_timesync" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint.establish_timesync">
+<span class="sig-name descname"><span class="pre">establish_timesync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">break_on_success</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.establish_timesync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.establish_timesync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform time-synchronization until time sync established.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -873,8 +915,8 @@ time-sync is established.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.get_new_estimate">
-<code class="sig-name descname">get_new_estimate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.get_new_estimate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.get_new_estimate" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint.get_new_estimate">
+<span class="sig-name descname"><span class="pre">get_new_estimate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.get_new_estimate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.get_new_estimate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform an update-cycle toward achieving time-synchronization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -884,8 +926,8 @@ time-sync is established.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.get_robot_time_converter">
-<code class="sig-name descname">get_robot_time_converter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.get_robot_time_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.get_robot_time_converter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint.get_robot_time_converter">
+<span class="sig-name descname"><span class="pre">get_robot_time_converter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.get_robot_time_converter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.get_robot_time_converter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a RobotTimeConverter for current estimate for robot clock skew from local time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -898,8 +940,8 @@ time-sync is established.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncEndpoint.robot_timestamp_from_local_secs">
-<code class="sig-name descname">robot_timestamp_from_local_secs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_time_secs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.robot_timestamp_from_local_secs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncEndpoint.robot_timestamp_from_local_secs">
+<span class="sig-name descname"><span class="pre">robot_timestamp_from_local_secs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_time_secs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncEndpoint.robot_timestamp_from_local_secs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncEndpoint.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a local time in seconds to a timestamp proto in robot time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -922,47 +964,47 @@ from time.time()).</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.time_sync.TimeSyncThread">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.time_sync.</code><code class="sig-name descname">TimeSyncThread</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time_sync_client</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.time_sync.</span></span><span class="sig-name descname"><span class="pre">TimeSyncThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_sync_client</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Background thread for achieving and maintaining time-sync to the robot.</p>
 <dl class="py attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.DEFAULT_TIME_SYNC_INTERVAL_SEC">
-<code class="sig-name descname">DEFAULT_TIME_SYNC_INTERVAL_SEC</code><em class="property"> = 60</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.DEFAULT_TIME_SYNC_INTERVAL_SEC" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.DEFAULT_TIME_SYNC_INTERVAL_SEC">
+<span class="sig-name descname"><span class="pre">DEFAULT_TIME_SYNC_INTERVAL_SEC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">60</span></em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.DEFAULT_TIME_SYNC_INTERVAL_SEC" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC">
-<code class="sig-name descname">TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC</code><em class="property"> = 5</em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC">
+<span class="sig-name descname"><span class="pre">TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.start">
-<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.start" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the thread.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.stop">
-<code class="sig-name descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.stop" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shut down the thread if it is running.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.time_sync_interval_sec">
-<em class="property">property </em><code class="sig-name descname">time_sync_interval_sec</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.time_sync_interval_sec" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.time_sync_interval_sec">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">time_sync_interval_sec</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.time_sync_interval_sec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns interval at which time-sync is updated in the thread.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.should_exit">
-<em class="property">property </em><code class="sig-name descname">should_exit</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.should_exit" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.should_exit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">should_exit</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.should_exit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if thread should stop iterating.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.wait_for_sync">
-<code class="sig-name descname">wait_for_sync</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout_sec</span><span class="o">=</span><span class="default_value">3.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.wait_for_sync"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.wait_for_sync" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.wait_for_sync">
+<span class="sig-name descname"><span class="pre">wait_for_sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.wait_for_sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.wait_for_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for up to the given timeout for time-sync to be achieved</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -978,9 +1020,9 @@ from time.time()).</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.has_established_time_sync">
-<em class="property">property </em><code class="sig-name descname">has_established_time_sync</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.has_established_time_sync" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.has_established_time_sync">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_established_time_sync</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.has_established_time_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks if the client has successfully established time-sync with the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -989,27 +1031,27 @@ from time.time()).</p>
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.stopped">
-<em class="property">property </em><code class="sig-name descname">stopped</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.stopped" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.stopped">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stopped</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.stopped" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns True if thread is no longer running.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.thread_exception">
-<em class="property">property </em><code class="sig-name descname">thread_exception</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.thread_exception" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.thread_exception">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">thread_exception</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.thread_exception" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return any exception which ended the time-sync thread.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.endpoint">
-<em class="property">property </em><code class="sig-name descname">endpoint</code><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.endpoint" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.endpoint">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">endpoint</span></span><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.endpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the TimeSyncEndpoint used by this thread.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.get_robot_clock_skew">
-<code class="sig-name descname">get_robot_clock_skew</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timesync_timeout_sec</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.get_robot_clock_skew"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.get_robot_clock_skew" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.get_robot_clock_skew">
+<span class="sig-name descname"><span class="pre">get_robot_clock_skew</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timesync_timeout_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.get_robot_clock_skew"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.get_robot_clock_skew" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get current estimate for robot clock skew from local time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1029,8 +1071,8 @@ from time.time()).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.get_robot_time_converter">
-<code class="sig-name descname">get_robot_time_converter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timesync_timeout_sec</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.get_robot_time_converter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.get_robot_time_converter" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.get_robot_time_converter">
+<span class="sig-name descname"><span class="pre">get_robot_time_converter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timesync_timeout_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.get_robot_time_converter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.get_robot_time_converter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get a RobotTimeConverter for current estimate for robot clock skew from local time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -1047,8 +1089,8 @@ from time.time()).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.time_sync.TimeSyncThread.robot_timestamp_from_local_secs">
-<code class="sig-name descname">robot_timestamp_from_local_secs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">local_time_secs</span></em>, <em class="sig-param"><span class="n">timesync_timeout_sec</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.robot_timestamp_from_local_secs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.time_sync.TimeSyncThread.robot_timestamp_from_local_secs">
+<span class="sig-name descname"><span class="pre">robot_timestamp_from_local_secs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_time_secs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timesync_timeout_sec</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/time_sync.html#TimeSyncThread.robot_timestamp_from_local_secs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.time_sync.TimeSyncThread.robot_timestamp_from_local_secs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a local time in seconds to a timestamp proto in robot time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

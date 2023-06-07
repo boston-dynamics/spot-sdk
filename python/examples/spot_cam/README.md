@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -29,9 +29,7 @@ python3 -m pip install --upgrade pip
 To run the examples:
 
 ```
-USERNAME=<username>
-PASSWORD=<password>
-ROBOT_IP=<ip-address>
+export ROBOT_IP=<ip-address>
 
 # Version Service
 python -m command_line $ROBOT_IP version software
@@ -52,6 +50,7 @@ python -m command_line $ROBOT_IP compositor set mech
 python -m command_line $ROBOT_IP compositor visible
 python -m command_line $ROBOT_IP compositor get_colormap
 python -m command_line $ROBOT_IP compositor set_colormap jet
+python -m command_line $ROBOT_IP compositor set_reticle --xs 0.1 0.2 0.3 --ys 0.1 0.4 0.8 --unit c
 
 # Lighting Service
 python -m command_line $ROBOT_IP lighting set 0.1 0.2 0.3 0.4
@@ -77,12 +76,9 @@ seq 10 | xargs -I{} python -m command_line $ROBOT_IP media_log store_retrieve pa
 python -m command_line $ROBOT_IP ptz list
 python -m command_line $ROBOT_IP ptz set_position mech 0 0 1
 python -m command_line $ROBOT_IP ptz get_position mech
-
-# Network Service
-# Get Spot CAM network settings
-python -m command_line $ROBOT_IP network settings
-# Set Spot CAM network settings (examples arguments below are the default values)
-python -m command_line $ROBOT_IP network set 192.168.50.6 255.255.255.0 192.168.50.3 1500
+python -m command_line $ROBOT_IP ptz set_focus auto_focus
+python -m command_line $ROBOT_IP ptz set_focus manual_focus --distance 5
+python -m command_line $ROBOT_IP ptz get_focus
 
 # Get Spot CAM ICE settings
 python -m command_line $ROBOT_IP network ice_settings

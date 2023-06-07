@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -34,12 +34,12 @@ def gaze_control(config):
     bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
-    assert robot.has_arm(), "Robot requires an arm to run this example."
+    assert robot.has_arm(), 'Robot requires an arm to run this example.'
 
     # Verify the robot is not estopped and that an external application has registered and holds
     # an estop endpoint.
-    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
-                                    "such as the estop SDK example, to configure E-Stop."
+    assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client, ' \
+                                    'such as the estop SDK example, to configure E-Stop.'
 
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
 
@@ -48,26 +48,26 @@ def gaze_control(config):
         # Now, we are ready to power on the robot. This call will block until the power
         # is on. Commands would fail if this did not happen. We can also check that the robot is
         # powered at any point.
-        robot.logger.info("Powering on robot... This may take a several seconds.")
+        robot.logger.info('Powering on robot... This may take a several seconds.')
         robot.power_on(timeout_sec=20)
-        assert robot.is_powered_on(), "Robot power on failed."
-        robot.logger.info("Robot powered on.")
+        assert robot.is_powered_on(), 'Robot power on failed.'
+        robot.logger.info('Robot powered on.')
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
         # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
-        robot.logger.info("Commanding robot to stand...")
+        robot.logger.info('Commanding robot to stand...')
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         blocking_stand(command_client, timeout_sec=10)
-        robot.logger.info("Robot standing.")
+        robot.logger.info('Robot standing.')
 
         # Unstow the arm
         unstow = RobotCommandBuilder.arm_ready_command()
 
         # Issue the command via the RobotCommandClient
         unstow_command_id = command_client.robot_command(unstow)
-        robot.logger.info("Unstow command issued.")
+        robot.logger.info('Unstow command issued.')
 
         block_until_arm_arrives(command_client, unstow_command_id, 3.0)
 
@@ -90,7 +90,7 @@ def gaze_control(config):
         synchro_command = RobotCommandBuilder.build_synchro_command(gripper_command, gaze_command)
 
         # Send the request
-        robot.logger.info("Requesting gaze.")
+        robot.logger.info('Requesting gaze.')
         gaze_command_id = command_client.robot_command(synchro_command)
 
         block_until_arm_arrives(command_client, gaze_command_id, 4.0)
@@ -175,9 +175,9 @@ def gaze_control(config):
         hand_pose1_in_flat_body = geometry_pb2.SE3Pose(position=hand_vec3_start, rotation=quat)
         hand_pose2_in_flat_body = geometry_pb2.SE3Pose(position=hand_vec3_end, rotation=quat)
 
-        hand_pose1_in_odom = odom_T_flat_body * math_helpers.SE3Pose.from_obj(
+        hand_pose1_in_odom = odom_T_flat_body * math_helpers.SE3Pose.from_proto(
             hand_pose1_in_flat_body)
-        hand_pose2_in_odom = odom_T_flat_body * math_helpers.SE3Pose.from_obj(
+        hand_pose2_in_odom = odom_T_flat_body * math_helpers.SE3Pose.from_proto(
             hand_pose2_in_flat_body)
 
         traj_point1 = trajectory_pb2.SE3TrajectoryPoint(pose=hand_pose1_in_odom.to_proto())
@@ -217,8 +217,8 @@ def gaze_control(config):
         # Power the robot off. By specifying "cut_immediately=False", a safe power off command
         # is issued to the robot. This will attempt to sit the robot before powering off.
         robot.power_off(cut_immediately=False, timeout_sec=20)
-        assert not robot.is_powered_on(), "Robot power off failed."
-        robot.logger.info("Robot safely powered off.")
+        assert not robot.is_powered_on(), 'Robot power off failed.'
+        robot.logger.info('Robot safely powered off.')
 
 
 def main(argv):
@@ -231,7 +231,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.exception("Threw an exception")
+        logger.exception('Threw an exception')
         return False
 
 

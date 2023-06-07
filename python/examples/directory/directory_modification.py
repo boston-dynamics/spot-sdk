@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -7,7 +7,6 @@
 """
 Example code for using the directory (registration) service API
 """
-from __future__ import print_function
 
 import argparse
 import io
@@ -29,7 +28,7 @@ def directory_spot(config):
     Lists all known services with a robot, adds a service, lists all, modifies the service, lists
     all, deletes the service, lists all.
     """
-    sdk = bosdyn.client.create_standard_sdk("directory_example")
+    sdk = bosdyn.client.create_standard_sdk('directory_example')
 
     robot = sdk.create_robot(config.hostname)
 
@@ -41,19 +40,19 @@ def directory_spot(config):
     directory_registration_client = robot.ensure_client(
         bosdyn.client.directory_registration.DirectoryRegistrationClient.default_service_name)
 
-    kServiceName = "foo-service"
-    kServiceAuthority = "auth.spot.robot"
-    kServiceIp = "192.168.50.5"
+    kServiceName = 'foo-service'
+    kServiceAuthority = 'auth.spot.robot'
+    kServiceIp = '192.168.50.5'
     kServicePort = 52789
 
     print_services(directory_client.list())
     # Register service
-    directory_registration_client.register(kServiceName, "bosdyn.api.FooService", kServiceAuthority,
+    directory_registration_client.register(kServiceName, 'bosdyn.api.FooService', kServiceAuthority,
                                            kServiceIp, kServicePort)
     print_services(directory_client.list())
 
     # Update service
-    directory_registration_client.update(kServiceName, "bosdyn.api.BarService", kServiceAuthority,
+    directory_registration_client.update(kServiceName, 'bosdyn.api.BarService', kServiceAuthority,
                                          kServiceIp, kServicePort)
     print_services(directory_client.list())
 
@@ -65,7 +64,7 @@ def directory_spot(config):
 def print_services(services):
     print('\n\nServices running on robot:')
     for s in services:
-        print('{: <20}\t{: <20}'.format(s.name, s.authority))
+        print(f'{s.name: <20}\t{s.authority: <20}')
 
 
 def main(argv):

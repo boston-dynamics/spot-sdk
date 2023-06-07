@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -35,9 +35,10 @@ message OpenDoorCommandResponse {
     LeaseUseResult lease_use_result = 2;
 
     enum Status {
-        STATUS_UNKNOWN = 0;             // An unknown / unexpected error occurred.
-        STATUS_OK = 1;                  // Request was accepted.
-        STATUS_ROBOT_COMMAND_ERROR = 2; // Error sending command to RobotCommandService.
+        STATUS_UNKNOWN = 0;                  // An unknown / unexpected error occurred.
+        STATUS_OK = 1;                       // Request was accepted.
+        STATUS_ROBOT_COMMAND_ERROR = 2;      // Error sending command to RobotCommandService.
+        STATUS_DOOR_PLANE_NOT_DETECTED = 3;  // The plane of the door could not be detected.
     }
     // Return status for a request.
     Status status = 3;
@@ -66,13 +67,15 @@ message OpenDoorFeedbackResponse {
     // Generic robot command feedback.
     RobotCommandFeedbackStatus.Status status = 100;
 
+    // Details about how the lease was used (unset if unknown).
+    LeaseUseResult lease_use_result = 3;
+
     // Specific door full body command feedback.
     DoorCommand.Feedback feedback = 2;
 }
 
 //  Door Command specific request and Feedback.
 message DoorCommand {
-
     // Specify if the hinge is on the left or right side of the door, when looking at the door,
     // relative to the door handle.
     enum HingeSide {
@@ -98,6 +101,7 @@ message DoorCommand {
         HANDLE_TYPE_KNOB = 2;
         HANDLE_TYPE_FIXED_GRASP = 3;
     }
+
 
     // The robot searches along a ray for the door handle and automatically grasp it before
     // executing door opening.
@@ -143,8 +147,8 @@ message DoorCommand {
 
         // The side of the hinge with respect to the robot when facing the door.
         HingeSide hinge_side = 3;
-    }
 
+    }
 
     message Request {
         oneof command {
@@ -153,7 +157,6 @@ message DoorCommand {
             WarmstartCommand warmstart_command = 11;
 
             AutoPushCommand auto_push_command = 12;
-
         }
 
     }
@@ -166,8 +169,20 @@ message DoorCommand {
             STATUS_COMPLETED = 1;
             // Robot is attempting to open the door.
             STATUS_IN_PROGRESS = 2;
+            // The robot has stopped making progress in opening and going through the door. It will
+            // keep trying but may stay in this state indefinitely.
+            STATUS_STALLED = 3;
+            // The robot could not detect the door. It will keep trying but may stay in this state
+            // indefinitely.
+            STATUS_NOT_DETECTED = 4;
         }
         // Current status of the command.
         Status status = 1;
+
+        // This is the distance the robot (i.e. the origin of the 'body' frame) is past the door
+        // frame threshold. When it's negative the robot is on the starting side of the door, 0 when
+        // the robot is in the middle of the door, and positive when the robot is on the finishing
+        // side.
+        double distance_past_threshold = 2;
     }
 }

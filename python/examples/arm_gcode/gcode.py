@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -65,7 +65,7 @@ class GcodeReader:
     def __init__(self, file_path, scale, logger, below_z_is_admittance, travel_z, draw_on_wall,
                  gcode_start_x=0, gcode_start_y=0):
         # open the file
-        self.file = open(file_path, "r")
+        self.file = open(file_path, 'r')
         self.scale = scale
         self.logger = logger
         self.below_z_is_admittance = below_z_is_admittance
@@ -110,7 +110,7 @@ class GcodeReader:
 
             self.world_T_origin = SE3Pose(world_T_origin.x, world_T_origin.y, world_T_origin.z,
                                           Quat.from_matrix(mat))
-            print('origin: ', self.world_T_origin)
+            print(f'origin: {self.world_T_origin}')
 
     def get_origin_Q_goal(self):
         if not self.draw_on_wall:
@@ -174,12 +174,12 @@ class GcodeReader:
                 elif array[i][0] == 'F':
                     f = float(array[i][1:]) * self.scale
                 else:
-                    self.logger.info("Warning, unknown parameter \"" + array[i][0] +
-                                     "\" in line \"" + raw_line + "\"")
+                    self.logger.info('Warning, unknown parameter "%s" in line "%s"', array[i][0],
+                                     raw_line)
 
             # Build a pose
             origin_T_goal = SE3Pose(x, y, z, self.get_origin_Q_goal())
-            #self.logger.info("Translated \"" + line.strip() + "\" to: (" + str(x) + ", " + str(y) + ", " + str(z) + ")")
+            # self.logger.info('Translated "%s" to: (%s, %s, %s)', line.strip(), str(x), str(y), str(z))
             self.last_x = x
             self.last_y = y
             self.last_z = z
@@ -215,8 +215,8 @@ class GcodeReader:
                 elif array[i][0] == 'F':
                     f = float(array[i][1:]) * self.scale
                 else:
-                    self.logger.info("Warning, unknown parameter \"" + array[i][0] +
-                                     "\" in line \"" + raw_line + "\"")
+                    self.logger.info('Warning, unknown parameter "%s" in line "%s"', array[i][0],
+                                     raw_line)
 
             if array[0] == 'G02':
                 clockwise = True
@@ -266,8 +266,8 @@ class GcodeReader:
             tolerance = 0.1
             if abs(last_r - end_r) > tolerance:
                 self.logger.info(
-                    "GCODE WARNING: arc not valid: last_r - end_r is not zero: abs(last_r - end_r) = "
-                    + str(abs(last_r - end_r)))
+                    'GCODE WARNING: arc not valid: last_r - end_r is not zero: abs(last_r - end_r) = %s',
+                    str(abs(last_r - end_r)))
             #assert abs(last_r - end_r) < tolerance
 
             # Sample between thetas.
@@ -341,7 +341,7 @@ class GcodeReader:
             return se3_poses
 
         else:
-            self.logger.info("Unsupported gcode action: " + line[0:2] + " skipping.")
+            self.logger.info('Unsupported gcode action: %s skipping.', line[0:2])
             return None
 
     def get_world_T_goal(self, origin_T_goal, ground_plane_rt_vo):
@@ -377,7 +377,7 @@ class GcodeReader:
         while not origin_T_goals:
             if read_new_line:
                 self.last_line = self.file.readline()
-                self.logger.info("Gcode: " + self.last_line.strip())
+                self.logger.info('Gcode: %s', self.last_line.strip())
             if not self.last_line:
                 return (False, None, False)
             elif self.last_line.strip() == 'M0':
@@ -496,16 +496,16 @@ def move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_clie
 
 def get_transforms(use_vision_frame, robot_state):
     if not use_vision_frame:
-        world_T_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "odom",
-                                     "body")
+        world_T_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, 'odom',
+                                     'body')
     else:
-        world_T_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "vision",
-                                     "body")
+        world_T_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, 'vision',
+                                     'body')
 
-    body_T_hand = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "body", "hand")
+    body_T_hand = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, 'body', 'hand')
     world_T_hand = world_T_body * body_T_hand
 
-    odom_T_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "odom", "body")
+    odom_T_body = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, 'odom', 'body')
 
     return (world_T_body, body_T_hand, world_T_hand, odom_T_body)
 
@@ -519,34 +519,34 @@ def run_gcode_program(config):
 
     config_parser = configparser.ConfigParser()
     config_parser.read_file(open('gcode.cfg'))
-    gcode_file = config_parser.get("General", "gcode_file")
-    scale = config_parser.getfloat("General", "scale")
-    min_dist_to_goal = config_parser.getfloat("General", "min_dist_to_goal")
-    allow_walking = config_parser.getboolean("General", "allow_walking")
-    velocity = config_parser.getfloat("General", "velocity")
-    press_force_percent = config_parser.getfloat("General", "press_force_percent")
-    below_z_is_admittance = config_parser.getfloat("General", "below_z_is_admittance")
-    travel_z = config_parser.getfloat("General", "travel_z")
-    gcode_start_x = config_parser.getfloat("General", "gcode_start_x")
-    gcode_start_y = config_parser.getfloat("General", "gcode_start_y")
-    draw_on_wall = config_parser.getboolean("General", "draw_on_wall")
-    use_vision_frame = config_parser.getboolean("General", "use_vision_frame")
-    use_xy_to_z_cross_term = config_parser.getboolean("General", "use_xy_to_z_cross_term")
-    bias_force_x = config_parser.getfloat("General", "bias_force_x")
+    gcode_file = config_parser.get('General', 'gcode_file')
+    scale = config_parser.getfloat('General', 'scale')
+    min_dist_to_goal = config_parser.getfloat('General', 'min_dist_to_goal')
+    allow_walking = config_parser.getboolean('General', 'allow_walking')
+    velocity = config_parser.getfloat('General', 'velocity')
+    press_force_percent = config_parser.getfloat('General', 'press_force_percent')
+    below_z_is_admittance = config_parser.getfloat('General', 'below_z_is_admittance')
+    travel_z = config_parser.getfloat('General', 'travel_z')
+    gcode_start_x = config_parser.getfloat('General', 'gcode_start_x')
+    gcode_start_y = config_parser.getfloat('General', 'gcode_start_y')
+    draw_on_wall = config_parser.getboolean('General', 'draw_on_wall')
+    use_vision_frame = config_parser.getboolean('General', 'use_vision_frame')
+    use_xy_to_z_cross_term = config_parser.getboolean('General', 'use_xy_to_z_cross_term')
+    bias_force_x = config_parser.getfloat('General', 'bias_force_x')
 
-    if config_parser.has_option("General",
-                                "walk_to_at_end_rt_gcode_origin_x") and config_parser.has_option(
-                                    "General", "walk_to_at_end_rt_gcode_origin_y"):
+    if config_parser.has_option('General',
+                                'walk_to_at_end_rt_gcode_origin_x') and config_parser.has_option(
+                                    'General', 'walk_to_at_end_rt_gcode_origin_y'):
         walk_to_at_end_rt_gcode_origin_x = config_parser.getfloat(
-            "General", "walk_to_at_end_rt_gcode_origin_x")
+            'General', 'walk_to_at_end_rt_gcode_origin_x')
         walk_to_at_end_rt_gcode_origin_y = config_parser.getfloat(
-            "General", "walk_to_at_end_rt_gcode_origin_y")
+            'General', 'walk_to_at_end_rt_gcode_origin_y')
     else:
         walk_to_at_end_rt_gcode_origin_x = None
         walk_to_at_end_rt_gcode_origin_y = None
 
     if velocity <= 0:
-        print('Velocity must be greater than 0.  Currently is: ', velocity)
+        print(f'Velocity must be greater than 0.  Currently is: {velocity}')
         return
 
     if use_vision_frame:
@@ -587,12 +587,12 @@ def run_gcode_program(config):
     robot.time_sync.wait_for_sync()
 
     # Verify the robot has an arm.
-    assert robot.has_arm(), "Robot requires an arm to run the gcode example."
+    assert robot.has_arm(), 'Robot requires an arm to run the gcode example.'
 
     # Verify the robot is not estopped and that an external application has registered and holds
     # an estop endpoint.
-    assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client, " \
-                                    "such as the estop SDK example, to configure E-Stop."
+    assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client, ' \
+                                    'such as the estop SDK example, to configure E-Stop.'
 
     arm_surface_contact_client = robot.ensure_client(ArmSurfaceContactClient.default_service_name)
 
@@ -607,19 +607,19 @@ def run_gcode_program(config):
         # Now, we are ready to power on the robot. This call will block until the power
         # is on. Commands would fail if this did not happen. We can also check that the robot is
         # powered at any point.
-        robot.logger.info("Powering on robot... This may take a several seconds.")
+        robot.logger.info('Powering on robot... This may take a several seconds.')
         robot.power_on(timeout_sec=20)
-        assert robot.is_powered_on(), "Robot power on failed."
-        robot.logger.info("Robot powered on.")
+        assert robot.is_powered_on(), 'Robot power on failed.'
+        robot.logger.info('Robot powered on.')
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
         # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
-        robot.logger.info("Commanding robot to stand...")
+        robot.logger.info('Commanding robot to stand...')
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         blocking_stand(command_client, timeout_sec=10)
-        robot.logger.info("Robot standing.")
+        robot.logger.info('Robot standing.')
 
         robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
         # Update state
@@ -712,8 +712,8 @@ def run_gcode_program(config):
         (world_T_body, body_T_hand, world_T_hand, odom_T_body) = get_transforms(
             use_vision_frame, robot_state)
 
-        odom_T_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, "odom",
-                                            "gpe")
+        odom_T_ground_plane = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot, 'odom',
+                                            'gpe')
         world_T_odom = world_T_body * odom_T_body.inverse()
 
         (gx, gy, gz) = world_T_odom.transform_point(odom_T_ground_plane.x, odom_T_ground_plane.y,
@@ -781,7 +781,7 @@ def run_gcode_program(config):
             world_T_odom = world_T_body * odom_T_body.inverse()
             odom_T_hand = odom_T_body * body_T_hand
 
-            admittance_frame_T_world = math_helpers.SE3Pose.from_obj(
+            admittance_frame_T_world = math_helpers.SE3Pose.from_proto(
                 world_T_admittance_frame).inverse()
             admit_frame_T_hand = admittance_frame_T_world * world_T_odom * odom_T_body * body_T_hand
             admit_frame_T_hand_goal = admittance_frame_T_world * world_T_odom * odom_T_hand_goal
@@ -810,7 +810,7 @@ def run_gcode_program(config):
                 if world_T_goals is None:
                     # we're done!
                     done = True
-                    robot.logger.info("Gcode program finished.")
+                    robot.logger.info('Gcode program finished.')
                     break
 
                 move_arm(robot_state, is_admittance, world_T_goals, arm_surface_contact_client,
@@ -834,11 +834,11 @@ def run_gcode_program(config):
         # At the end, walk back to the start.
         robot.logger.info('Done with gcode, going to stand...')
         blocking_stand(command_client, timeout_sec=10)
-        robot.logger.info("Robot standing")
+        robot.logger.info('Robot standing')
 
         # Compute walking location
         if walk_to_at_end_rt_gcode_origin_x is not None and walk_to_at_end_rt_gcode_origin_y is not None:
-            robot.logger.info("Walking to end position...")
+            robot.logger.info('Walking to end position...')
             gcode_origin_T_walk = SE3Pose(walk_to_at_end_rt_gcode_origin_x * scale,
                                           walk_to_at_end_rt_gcode_origin_y * scale, 0,
                                           Quat(1, 0, 0, 0))
@@ -851,7 +851,7 @@ def run_gcode_program(config):
             walk_cmd = RobotCommandBuilder.trajectory_command(goal_x=odom_T_walk_se2.x,
                                                               goal_y=odom_T_walk_se2.y,
                                                               goal_heading=odom_T_walk_se2.angle,
-                                                              frame_name="odom")
+                                                              frame_name='odom')
             end_time = 15.0
             #Issue the command to the robot
             command_client.robot_command(command=walk_cmd, end_time_secs=time.time() + end_time)
@@ -864,8 +864,8 @@ def run_gcode_program(config):
         # Power the robot off. By specifying "cut_immediately=False", a safe power off command
         # is issued to the robot. This will attempt to sit the robot before powering off.
         robot.power_off(cut_immediately=False, timeout_sec=20)
-        assert not robot.is_powered_on(), "Robot power off failed."
-        robot.logger.info("Robot safely powered off.")
+        assert not robot.is_powered_on(), 'Robot power off failed.'
+        robot.logger.info('Robot safely powered off.')
 
 
 def main(argv):
@@ -880,7 +880,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.exception("Threw an exception")
+        logger.exception('Threw an exception')
         return False
 
 

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -331,7 +331,7 @@ lead_leg_pair | If split_fraction is not 0, indicates which legs lift off first.
 
 ![](gif_images/image10.gif)
 
-Sit the robot down.  Requires at least 3 seconds.
+Sit the robot down or remain seated.  Requires at least 3 seconds.
 
 ***No Parameters***
 
@@ -389,6 +389,14 @@ Transitions from kneeling on the hind legs to a stand.  Faster and smoother than
 Activate the self-right behavior.  Primarily useful as the first move in a dance if you wish to start from a non-standard posture.  Nominally requires 5 seconds, but can be extended to ensure that it completes.
 
 ***No Parameters***
+
+### leg_pose
+
+Directly pose Spot's legs by specifying joint angles.  Spot will make no attempt to balance.
+
+Parameter | Effect
+--|--
+angles | The specified joint angles.
 
 ## Kneel moves
 
@@ -495,6 +503,10 @@ Parameter | Effect
 angles | The specified joint angles, including the gripper angle.
 easing | Controls the velocity profile of the motion.
 
+### arm_move_no_gripper
+
+Identical to arm_move, but excluding the gripper track.
+
 ### arm_move_relative
 
 Moves the arm incrementally, relative to the previous pose.   Nominally takes one beat (4 slices) but can be adjusted to go faster or slower.
@@ -587,7 +599,7 @@ bottom_color | The color of the bottommost lights.
 fade_in_slices | How long to brighten, measured in slices (1/4 beats).
 fade_out_slices | How long to dim at the end, measured in slices (1/4 beats).
 
-### independent_Color
+### independent_color
 
 Independently specifies the color of all 8 lights.
 
@@ -604,7 +616,7 @@ bottom_right | Color of the bottom right light.
 fade_in_slices | How long to brighten, measured in slices (1/4 beats).
 fade_out_slices | How long to dim at the end, measured in slices (1/4 beats).
 
-### ripple_Color
+### ripple_color
 
 Sets the lights in a variety of moving patterns.
 
@@ -615,3 +627,6 @@ secondary | Second color to make the lights, used only by some patterns.
 pattern | Select from a variety of light motion patterns.
 light_side | Which side lights to use for the pattern.
 increment_slices | How quickly to move the pattern in slices (1/4 beats) between updates to the pattern.
+
+### custom_gait
+See [CustomGait](custom_gait.md)

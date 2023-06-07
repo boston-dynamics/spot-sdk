@@ -1,11 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Tutorial to show how to use the Boston Dynamics API"""
-from __future__ import print_function
 
 import argparse
 import datetime
@@ -34,11 +33,11 @@ def _timestamp_to_str(timestamp, first_timestamp=None):
 def _show_page(page):
     start_str = _timestamp_to_str(page.time_range.start)
     end_str = _timestamp_to_str(page.time_range.end, page.time_range.start)
-    is_open = " (open)" if page.is_open else ""
-    print("{}\n    {} - {} ({})\n    {} ticks {} bytes  {} {}{}\n    {}\n".format(
-        page.id, start_str, end_str, page.source, page.num_ticks, page.total_bytes,
-        page.PageFormat.Name(page.format), page.Compression.Name(page.compression), is_open,
-        page.path))
+    is_open = ' (open)' if page.is_open else ''
+    print(
+        f'{page.id}\n    {start_str} - {end_str} ({page.source})\n    {page.num_ticks} ticks {page.total_bytes} bytes\
+{page.PageFormat.Name(page.format)} {page.Compression.Name(page.compression)}{is_open}\n    {page.path}\n'
+    )
 
 
 def get_pages(options):
@@ -56,11 +55,11 @@ def get_pages(options):
         time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)
         time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
         if not time_sync_endpoint.establish_timesync():
-            raise NotEstablishedError("time sync not established")
+            raise NotEstablishedError('time sync not established')
 
     resp = service_client.get_data_pages(
         timespec_to_robot_timespan(options.timespan, time_sync_endpoint))
-    print("-------- {} pages --------\n".format(len(resp.pages)))
+    print(f'-------- {len(resp.pages)} pages --------\n')
     for page in resp.pages:
         _show_page(page)
 
@@ -79,7 +78,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.error("get_pages threw an exception: %r", exc)
+        logger.error('get_pages threw an exception: %r', exc)
         return False
 
 

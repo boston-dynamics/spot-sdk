@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -93,7 +93,7 @@ def create_fiducial_object(world_object, waypoint, renderer):
     odom_tform_fiducial_filtered = get_a_tform_b(
         world_object.transforms_snapshot, ODOM_FRAME_NAME,
         world_object.apriltag_properties.frame_name_fiducial_filtered)
-    waypoint_tform_odom = SE3Pose.from_obj(waypoint.waypoint_tform_ko)
+    waypoint_tform_odom = SE3Pose.from_proto(waypoint.waypoint_tform_ko)
     waypoint_tform_fiducial_filtered = api_to_vtk_se3_pose(
         waypoint_tform_odom * odom_tform_fiducial_filtered)
     plane_source = vtk.vtkPlaneSource()
@@ -127,7 +127,7 @@ def create_point_cloud_object(waypoints, snapshots, waypoint_id):
     cloud = snapshot.point_cloud
     odom_tform_cloud = get_a_tform_b(cloud.source.transforms_snapshot, ODOM_FRAME_NAME,
                                      cloud.source.frame_name_sensor)
-    waypoint_tform_odom = SE3Pose.from_obj(wp.waypoint_tform_ko)
+    waypoint_tform_odom = SE3Pose.from_proto(wp.waypoint_tform_ko)
     waypoint_tform_cloud = api_to_vtk_se3_pose(waypoint_tform_odom * odom_tform_cloud)
 
     point_cloud_data = np.frombuffer(cloud.data, dtype=np.float32).reshape(int(cloud.num_points), 3)
@@ -135,9 +135,9 @@ def create_point_cloud_object(waypoints, snapshots, waypoint_id):
     arr = vtk.vtkFloatArray()
     for i in range(cloud.num_points):
         arr.InsertNextValue(point_cloud_data[i, 2])
-    arr.SetName("z_coord")
+    arr.SetName('z_coord')
     poly_data.GetPointData().AddArray(arr)
-    poly_data.GetPointData().SetActiveScalars("z_coord")
+    poly_data.GetPointData().SetActiveScalars('z_coord')
     actor = vtk.vtkActor()
     mapper = vtk.vtkPolyDataMapper()
     mapper.SetInputData(poly_data)
@@ -159,9 +159,9 @@ def create_waypoint_object(renderer, waypoints, snapshots, waypoint_id):
     """
     assembly = vtk.vtkAssembly()
     actor = vtk.vtkAxesActor()
-    actor.SetXAxisLabelText("")
-    actor.SetYAxisLabelText("")
-    actor.SetZAxisLabelText("")
+    actor.SetXAxisLabelText('')
+    actor.SetYAxisLabelText('')
+    actor.SetZAxisLabelText('')
     actor.SetTotalLength(0.2, 0.2, 0.2)
     point_cloud_actor = create_point_cloud_object(waypoints, snapshots, waypoint_id)
     assembly.AddPart(actor)
@@ -228,7 +228,7 @@ def load_map(path):
     :param path: Path to the root directory of the map.
     :return: the graph, waypoints, waypoint snapshots and edge snapshots.
     """
-    with open(os.path.join(path, "graph"), "rb") as graph_file:
+    with open(os.path.join(path, 'graph'), 'rb') as graph_file:
         # Load the graph file and deserialize it. The graph file is a protobuf containing only the waypoints and the
         # edges between them.
         data = graph_file.read()
@@ -252,16 +252,16 @@ def load_map(path):
             if len(waypoint.snapshot_id) == 0:
                 continue
             # Load the snapshot. Note that snapshots contain all of the raw data in a waypoint and may be large.
-            file_name = os.path.join(path, "waypoint_snapshots", waypoint.snapshot_id)
+            file_name = os.path.join(path, 'waypoint_snapshots', waypoint.snapshot_id)
             if not os.path.exists(file_name):
                 continue
-            with open(file_name, "rb") as snapshot_file:
+            with open(file_name, 'rb') as snapshot_file:
                 waypoint_snapshot = map_pb2.WaypointSnapshot()
                 waypoint_snapshot.ParseFromString(snapshot_file.read())
                 current_waypoint_snapshots[waypoint_snapshot.id] = waypoint_snapshot
 
                 for fiducial in waypoint_snapshot.objects:
-                    if not fiducial.HasField("apriltag_properties"):
+                    if not fiducial.HasField('apriltag_properties'):
                         continue
 
                     str_id = str(fiducial.apriltag_properties.tag_id)
@@ -276,18 +276,19 @@ def load_map(path):
         for edge in current_graph.edges:
             if len(edge.snapshot_id) == 0:
                 continue
-            file_name = os.path.join(path, "edge_snapshots", edge.snapshot_id)
+            file_name = os.path.join(path, 'edge_snapshots', edge.snapshot_id)
             if not os.path.exists(file_name):
                 continue
-            with open(file_name, "rb") as snapshot_file:
+            with open(file_name, 'rb') as snapshot_file:
                 edge_snapshot = map_pb2.EdgeSnapshot()
                 edge_snapshot.ParseFromString(snapshot_file.read())
                 current_edge_snapshots[edge_snapshot.id] = edge_snapshot
         for anchor in current_graph.anchoring.anchors:
             current_anchors[anchor.id] = anchor
-        print("Loaded graph with {} waypoints, {} edges, {} anchors, and {} anchored world objects".
-              format(len(current_graph.waypoints), len(current_graph.edges),
-                     len(current_graph.anchoring.anchors), len(current_graph.anchoring.objects)))
+        print(
+            f'Loaded graph with {len(current_graph.waypoints)} waypoints, {len(current_graph.edges)} edges, '
+            f'{len(current_graph.anchoring.anchors)} anchors, and {len(current_graph.anchoring.objects)} anchored world objects'
+        )
         return (current_graph, current_waypoints, current_waypoint_snapshots,
                 current_edge_snapshots, current_anchors, current_anchored_world_objects)
 
@@ -310,7 +311,7 @@ def create_anchored_graph_objects(current_graph, current_waypoint_snapshots, cur
         if waypoint.id in current_anchors:
             waypoint_object = create_waypoint_object(renderer, current_waypoints,
                                                      current_waypoint_snapshots, waypoint.id)
-            seed_tform_waypoint = SE3Pose.from_obj(
+            seed_tform_waypoint = SE3Pose.from_proto(
                 current_anchors[waypoint.id].seed_tform_waypoint).to_matrix()
             waypoint_object.SetUserTransform(mat_to_vtk(seed_tform_waypoint))
             make_text(waypoint.annotations.name, seed_tform_waypoint[:3, 3], renderer)
@@ -322,16 +323,16 @@ def create_anchored_graph_objects(current_graph, current_waypoint_snapshots, cur
     # Create VTK objects associated with each edge.
     for edge in current_graph.edges:
         if edge.id.from_waypoint in current_anchors and edge.id.to_waypoint in current_anchors:
-            seed_tform_from = SE3Pose.from_obj(
+            seed_tform_from = SE3Pose.from_proto(
                 current_anchors[edge.id.from_waypoint].seed_tform_waypoint).to_matrix()
-            from_tform_to = SE3Pose.from_obj(edge.from_tform_to).to_matrix()
+            from_tform_to = SE3Pose.from_proto(edge.from_tform_to).to_matrix()
             create_edge_object(from_tform_to, seed_tform_from, renderer)
 
     # Create VTK objects associated with each anchored world object.
     for anchored_wo in current_anchored_world_objects.values():
         # anchored_wo is a tuple of (anchored_world_object, waypoint, fiducial).
         (fiducial_object, _) = create_fiducial_object(anchored_wo[2], anchored_wo[1], renderer)
-        seed_tform_fiducial = SE3Pose.from_obj(anchored_wo[0].seed_tform_object).to_matrix()
+        seed_tform_fiducial = SE3Pose.from_proto(anchored_wo[0].seed_tform_object).to_matrix()
         fiducial_object.SetUserTransform(mat_to_vtk(seed_tform_fiducial))
         make_text(anchored_wo[0].id, seed_tform_fiducial[:3, 3], renderer)
 
@@ -383,7 +384,7 @@ def create_graph_objects(current_graph, current_waypoint_snapshots, current_wayp
         if (curr_waypoint.snapshot_id in current_waypoint_snapshots):
             snapshot = current_waypoint_snapshots[curr_waypoint.snapshot_id]
             for fiducial in snapshot.objects:
-                if fiducial.HasField("apriltag_properties"):
+                if fiducial.HasField('apriltag_properties'):
                     (fiducial_object, curr_wp_tform_fiducial) = create_fiducial_object(
                         fiducial, curr_waypoint, renderer)
                     world_tform_fiducial = np.dot(world_tform_current_waypoint,
@@ -396,7 +397,7 @@ def create_graph_objects(current_graph, current_waypoint_snapshots, current_wayp
         for edge in current_graph.edges:
             # If the edge is directed away from us...
             if edge.id.from_waypoint == curr_waypoint.id and edge.id.to_waypoint not in visited:
-                current_waypoint_tform_to_waypoint = SE3Pose.from_obj(
+                current_waypoint_tform_to_waypoint = SE3Pose.from_proto(
                     edge.from_tform_to).to_matrix()
                 world_tform_to_wp = create_edge_object(current_waypoint_tform_to_waypoint,
                                                        world_tform_current_waypoint, renderer)
@@ -405,7 +406,7 @@ def create_graph_objects(current_graph, current_waypoint_snapshots, current_wayp
                 avg_pos += world_tform_to_wp[:3, 3]
             # If the edge is directed toward us...
             elif edge.id.to_waypoint == curr_waypoint.id and edge.id.from_waypoint not in visited:
-                current_waypoint_tform_from_waypoint = (SE3Pose.from_obj(
+                current_waypoint_tform_from_waypoint = (SE3Pose.from_proto(
                     edge.from_tform_to).inverse()).to_matrix()
                 world_tform_from_wp = create_edge_object(current_waypoint_tform_from_waypoint,
                                                          world_tform_current_waypoint, renderer)

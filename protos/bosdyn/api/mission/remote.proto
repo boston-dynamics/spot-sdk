@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,6 +12,7 @@ option java_outer_classname = "RemoteProto";
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
+import "bosdyn/api/service_customization.proto";
 import "bosdyn/api/mission/util.proto";
 
 // Information to initialize a session to the remote service
@@ -25,8 +26,11 @@ message EstablishSessionRequest {
 
     // Use this to provide other data (e.g. from the blackboard).
     // The RemoteGrpc node will provide the name of the node automatically.
-    repeated VariableDeclaration inputs = 3;
+    // DEPRECATED as of 3.3.  Please use 'params' in [TickRequest] instead.
+    repeated VariableDeclaration inputs = 3 [deprecated = true];
 
+
+    reserved 5;
 }
 
 // Provide the id to use for the particular mission node to tick this remote service.
@@ -64,7 +68,8 @@ message EstablishSessionResponse {
     repeated LeaseUseResult lease_use_results = 5;
 
     // The inputs required by the contacted node that were not mentioned in the request.
-    repeated VariableDeclaration missing_inputs = 6;
+    // DEPRECATED as of 3.3.  Please use 'params_error' instead.
+    repeated VariableDeclaration missing_inputs = 6 [deprecated = true];
 
 }
 
@@ -80,7 +85,18 @@ message TickRequest {
     repeated Lease leases = 3;
 
     // Inputs provided to the servicer.
+    // DEPRECATED as of 3.3.  Please use 'params' instead.
     repeated KeyValue inputs = 4;
+
+    // Parameters set by the client.  Depending on the structure of the mission,
+    // the value may change during ticking.
+    DictParam params = 5;
+
+    // Callbacks can be used to record data using Data Acquisition.  The mission
+    // can provide a hint to the callback with the current group, so that the
+    // data the callback saves is correctly grouped with other data generated
+    // by the mission.  The value may change during ticking.
+    string group_name = 6;
 }
 
 // Response with the results of the tick.
@@ -106,7 +122,11 @@ message TickResponse {
         STATUS_MISSING_LEASES = 5;
         // The request was missing required inputs.
         STATUS_MISSING_INPUTS = 6;
+        // There was another error with the input parameters.
+        // See the params_error field for details.
+        STATUS_CUSTOM_PARAMS_ERROR = 7;
     }
+
     // Result of the current tick.
     Status status = 3;
 
@@ -123,6 +143,9 @@ message TickResponse {
 
     // If you need to report other error details, you can use this field.
     string error_message = 8;
+
+    // Filled out if status is STATUS_CUSTOM_PARAMS_ERROR.
+    CustomParamError custom_param_error = 9;
 }
 
 // Used to stop a node that was previously ticked, so that it knows that
@@ -178,4 +201,17 @@ message TeardownSessionResponse {
     }
     // The result of a TeardownSessionRequest.
     Status status = 2;
+}
+
+message GetRemoteMissionServiceInfoRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message GetRemoteMissionServiceInfoResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // The parameters the service expects to be called at runtime with.
+    DictParam.Spec custom_params = 2;
 }

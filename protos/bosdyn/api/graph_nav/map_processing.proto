@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -57,6 +57,9 @@ message ProcessTopologyRequest {
         // loop closures using odometry. Alternatively, the user may call the ProcessTopology
         // RPC multiple times to achieve the same effect.
         google.protobuf.Int32Value num_extra_loop_closure_iterations = 5;
+        // If true, redundant edges will be ignored, and only the "best" in a small area
+        // will be selected (true by default).
+        google.protobuf.BoolValue  prune_edges = 6;
     }
     // Parameters for how to close a loop using fiducials (AprilTags). This infers
     // which waypoints should be connected to one another based on shared observations
@@ -80,6 +83,9 @@ message ProcessTopologyRequest {
         // willing to accept between waypoints. This avoids closing loops up ramps,
         // stairs, etc. or closing loops where there is significant odometry drift.
         google.protobuf.DoubleValue max_loop_closure_height_change = 4;
+        // If true, redundant edges will be ignored, and only the "best" in a small area
+        // will be selected (true by default).
+        google.protobuf.BoolValue  prune_edges = 5;
     }
     // Parameters for how to check for collisions when creating loop closures. The system
     // will avoid creating edges in the map that the robot cannot actually traverse due to
@@ -387,4 +393,8 @@ message ProcessAnchoringResponse {
     repeated string missing_waypoint_ids = 12;
     // Unorganized list of waypoints and object IDs which were invalid (missing from the map).
     repeated string invalid_hints = 13;
+    // List of edges that are inconsistent with the optimized result. This can happen when incorrect
+    // loop closures have been made before optimization, when inconsistent anchoring hints were passed in,
+    // or because the optmizer ended up in a local minimum.
+    repeated Edge.Id inconsistent_edges = 14;
 }

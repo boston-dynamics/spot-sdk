@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,7 +14,7 @@ import bosdyn.client.graph_nav
 from bosdyn.api import header_pb2, lease_pb2, time_sync_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2, graph_nav_service_pb2_grpc, map_pb2, nav_pb2
 from bosdyn.client.exceptions import InternalServerError, UnsetStatusError
-from bosdyn.client.graph_nav import GraphNavClient
+from bosdyn.client.graph_nav import GraphNavClient, UnrecognizedCommandError
 from bosdyn.client.time_sync import TimeSyncEndpoint
 
 
@@ -28,6 +28,7 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
         super(MockGraphNavServicer, self).__init__()
         self.common_header_code = header_pb2.CommonError.CODE_OK
         self.nav_feedback_status = graph_nav_pb2.NavigationFeedbackResponse.STATUS_REACHED_GOAL
+        self.modify_navigation_status = graph_nav_pb2.ModifyNavigationResponse.STATUS_OK
         self.nav_to_resp = graph_nav_pb2.NavigateToResponse(
             status=graph_nav_pb2.NavigateToResponse.STATUS_OK)
         self.nav_route_resp = graph_nav_pb2.NavigateRouteResponse(
@@ -101,6 +102,12 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
         resp = graph_nav_pb2.NavigationFeedbackResponse()
         resp.header.error.code = self.common_header_code
         resp.status = self.nav_feedback_status
+        return resp
+
+    def ModifyNavigation(self, request, context):
+        resp = graph_nav_pb2.ModifyNavigationResponse()
+        resp.header.error.code = self.common_header_code
+        resp.status = self.modify_navigation_status
         return resp
 
     def DownloadWaypointSnapshot(self, request, context):
@@ -178,6 +185,8 @@ def test_feedback_exceptions(client, service, server, func):
     service.common_header_code = header_pb2.CommonError.CODE_INTERNAL_SERVER_ERROR
     with pytest.raises(InternalServerError):
         call()
+
+
 
 
 def test_navigate_to_exceptions(client, service, server):

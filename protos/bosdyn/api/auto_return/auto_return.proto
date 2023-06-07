@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -90,9 +90,32 @@ message GetConfigurationResponse {
 message StartRequest {
     // Common request header.
     RequestHeader header = 1;
+
+    // Leases that AutoReturn may use to accomplish its goals.
+    // If left empty, use the leases specified in ConfigureRequest.
+    // If empty and no leases have been specified by ConfigureRequest, the response will have a
+    // CODE_INVALID_REQUEST in the header.
+    repeated Lease leases = 2;
+
+    // Parameters to use.
+    // If left empty, use the params specified in ConfigureRequest.
+    // If empty and no params have been specified by ConfigureRequest, the response will have a
+    // CODE_INVALID_REQUEST in the header.
+    Params params = 3;
 }
 
 message StartResponse {
     // Common response header.
     ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_INVALID_PARAMS = 2;
+    }
+
+    Status status = 2;
+
+    // If status is STATUS_INVALID_PARAMS, this contains the settings that were invalid.
+    Params invalid_params = 3;
 }

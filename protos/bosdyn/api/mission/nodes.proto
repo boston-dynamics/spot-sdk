@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,6 +12,7 @@ option java_outer_classname = "NodesProto";
 
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
+import "google/protobuf/struct.proto";
 
 import "bosdyn/api/alerts.proto";
 import "bosdyn/api/docking/docking.proto";
@@ -26,7 +27,9 @@ import "bosdyn/api/data_acquisition.proto";
 import "bosdyn/api/data_buffer.proto";
 import "bosdyn/api/graph_nav/graph_nav.proto";
 import "bosdyn/api/graph_nav/nav.proto";
+import "bosdyn/api/manipulation_api.proto";
 import "bosdyn/api/mission/util.proto";
+import "bosdyn/api/service_customization.proto";
 
 // Wrapper for a mission node. Contains the basics common to all mission nodes.
 // Specifics of what the node does are contained in the "impl" field.
@@ -86,7 +89,7 @@ message Selector {
 //
 // This node exists because of a subtle implmentation detail in Selector(always_restart = true).
 // The astute reader might believe that they can construct a switch node by using a selector
-// with sequences & conditions as children.  This is ALMOST true, EXCEPT that a selector 
+// with sequences & conditions as children.  This is ALMOST true, EXCEPT that a selector
 // (with always_restart = true) can leave multiple children in the running state IF:
 //
 //  - A later selector child was RUNNING last tick
@@ -170,9 +173,27 @@ message ForDuration {
 // Run two child nodes together, returning the primary child's result when it completes.
 message SimpleParallel {
     // Primary node, whose completion will end the execution of SimpleParallel.
+    // The secondary node will be ticked at least once.
     Node primary = 1;
     // Secondary node, which will be ticked as long as the primary is still running.
     Node secondary = 2;
+    // By default, if the secondary node finishes before the primary node, the secondary node
+    // will be restarted.  If this flag is set to true, and the secondary node completes before
+    // the primary node, it will never be restarted.
+    bool run_secondary_node_once = 3;
+}
+
+// Run many child nodes together, returning only after they have all completed or an
+// early exit is triggered.
+message ParallelAnd {
+    repeated Node children = 1;
+    // Boolean to finish every child node. If this is false, if one of the nodes fails, the whole
+    // ParallelAnd will stop & return the failure immediately.
+    // If this is true, if one of the nodes fails, the ParallelAnd will continue to run until all
+    // the children have exited, then report the failure.
+    // If a node raises an error, the error will always be reported immediately.
+    // Default false.
+    bool finish_every_node = 2;
 }
 
 // Checks a simple comparison statement.
@@ -217,7 +238,8 @@ message Condition {
     enum HandleStaleness {
         HANDLE_STALE_UNKNOWN = 0;      // acts like READ_ANYWAY for backwards compatibility.
         HANDLE_STALE_READ_ANYWAY = 1;  // ignore how stale this data is.
-        HANDLE_STALE_RUN_UNTIL_FRESH = 2; // return the RUNNING status until the data being read is not stale.
+        HANDLE_STALE_RUN_UNTIL_FRESH =
+            2;                  // return the RUNNING status until the data being read is not stale.
         HANDLE_STALE_FAIL = 3;  // return FAILURE status if stale data is read.
     }
     HandleStaleness handle_staleness = 6;
@@ -259,7 +281,7 @@ message BosdynRobotCommand {
     string host = 2;
     // The command to execute. See the RobotCommand documentation for details.
     RobotCommand command = 3;
-    
+
 }
 
 // Make a robot power request
@@ -271,6 +293,7 @@ message BosdynPowerRequest {
     // The request to make. See the PowerCommandRequest documentation for details.
     bosdyn.api.PowerCommandRequest.Request request = 4;
 }
+
 
 // Tell the robot to navigate to a waypoint.
 message BosdynNavigateTo {
@@ -293,6 +316,9 @@ message BosdynNavigateTo {
     // If provided, this will write the last NavigateToResponse message to
     // a blackboard variable with this name.
     string navigate_to_response_blackboard_key = 7;
+
+    // Defines robot behavior when route is blocked. Defaults to reroute when route is blocked.
+    bosdyn.api.graph_nav.RouteFollowingParams.RouteBlockedBehavior route_blocked_behavior = 8;
 }
 
 // Tell the robot to navigate a route.
@@ -351,6 +377,13 @@ message BosdynGraphNavLocalize {
     // Otherwise, the options inside the set_localization_request will be used.
     // Note that ko_tform_body in the request will be ignored (it will be recalculated at runtime).
     bosdyn.api.graph_nav.SetLocalizationRequest localization_request = 3;
+    // If true, a poor quality check will not result in the node returning FAILURE.
+    // If false, the localization will be checked for quality by comparing agains the map data, and
+    // if the localization is poor quality, the node returns FAILURE.
+    bool allow_bad_quality = 4;
+    // If non-empty, the blackboard variable with this name will contain the response of the
+    // graph nav SetLocalization request after this node receives it.
+    string response_bb_key = 5;
 }
 
 // Record an APIEvent
@@ -393,6 +426,18 @@ message RemoteGrpc {
     // Variables given can be available at either run-time or compile-time.
     // The "key" in KeyValue is the name of the variable as used by the remote system.
     repeated KeyValue inputs = 6;
+
+    // Define a format string that will be used together with the blackboard to generate
+    // a group_name.  If a value is specified in this field, it will override the group_name value
+    // specified in the group_name of the TickRequest.  Values from the blackboard will
+    // replace the keys in braces {}.
+    // Example: "telop-{date}", where "date" is a blackboard variable.
+    // Example: "{date}_loop_{loop_counter}", where "loop_counter" is a blackboard variable from a
+    // Repeat node.
+    string group_name_format = 8;
+
+    // Should match the advertised spec for the RemoteMissionService in question.
+    DictParam params = 9;
 }
 
 // When started, begins a sleep timer for X seconds. Returns "success" after the timer elapses,
@@ -445,13 +490,17 @@ message Prompt {
     // Severity for this prompt. Used to determine what sort of alerting
     // this prompt will trigger.
     // Here are guidelines for severity as it pertains to missions:
-    // INFO: Normal operation.  For example, waiting for charge; waiting on the dock for logs to download.
-    // WARN: Something went wrong, but the mission will try to recover autonomously.
+    // INFO: Normal operation.  For example, waiting for charge; waiting on the dock for logs to
+    // download. WARN: Something went wrong, but the mission will try to recover autonomously.
     // ERROR: Something went wrong, and the mission can't recover without human intervention.
     // Intervention is not time sensitive and can be resolved when convenient.
     // CRITICAL: Something went wrong, and the mission can't recover without human intervention.
     // Human needs to rescue the robot before battery runs out because it's not charging.
     AlertData.SeverityLevel severity = 7;
+
+    // If specified, this node will write its current question (bosdyn.api.mission.Question proto)
+    // to the blackboard while it is being ticked.
+    string question_name_in_blackboard = 8;
 }
 
 // Get the state of the gripper camera params from the robot.
@@ -483,6 +532,18 @@ message SetGripperCameraParams {
         string params_in_blackboard_key = 3;
         bosdyn.api.GripperCameraParams new_params = 4;
     }
+}
+
+// Set grasp override and carry state override requests
+message SetGraspOverride {
+    // Name of the service to use.
+    string service_name = 1;
+
+    // Host machine of the directory server that the gripper camera param service is registered
+    // with.
+    string host = 2;
+
+    bosdyn.api.ApiGraspOverrideRequest grasp_override_request = 3;
 }
 
 // Point the PTZ to a specified orientation
@@ -566,7 +627,7 @@ message Dock {
     // Optional child node. Children will have access to the status variables gathered by this node.
     // If specified, child node will determine success/failure of this node.
     //
-    // DEPRECATED!  Use docking_command_response_blackboard_key and
+    // DEPRECATED as of 3.0.0.  Use docking_command_response_blackboard_key and
     // docking_command_feedback_response_blackboard_key instead.
     Node child = 4 [deprecated = true];
 
@@ -576,7 +637,7 @@ message Dock {
     // name to look up docking command status in the blackboard. If no name is provided, status will
     // not be available.
     //
-    // DEPRECATED!  Use docking_command_response_blackboard_key and
+    // DEPRECATED as of 3.0.0.  Use docking_command_response_blackboard_key and
     // docking_command_feedback_response_blackboard_key instead.
     string command_status_name = 5 [deprecated = true];
 
@@ -586,7 +647,7 @@ message Dock {
     // values.  Children can use this name to look up docking status in the blackboard. If no name
     // is provided, status will not be available.
     //
-    // DEPRECATED!  Use docking_command_response_blackboard_key and
+    // DEPRECATED as of 3.0.0.  Use docking_command_response_blackboard_key and
     // docking_command_feedback_response_blackboard_key instead.
     string feedback_status_name = 6 [deprecated = true];
 
@@ -600,6 +661,9 @@ message Dock {
     // If provided, this will write the last DockingCommandResponse message to
     // a blackboard variable with this name.
     string docking_command_response_blackboard_key = 9;
+
+    // Require the detection of the dock's fiducial
+    bool require_fiducial = 10;
 }
 
 // Triggers a StoreMetadataRequest to the data acquisition store.
@@ -614,9 +678,14 @@ message StoreMetadata {
     // reference ID that this metadata is associated with will be copied from the request.
     string acquire_data_request_name = 3;
 
-    // The name of the metadata object in the blackboard to be stored.
-    // The metadata object can be any protobuf message.
-    string metadata_name = 5;
+    oneof data {
+        // The name of the metadata object in the blackboard to be stored.
+        // The metadata object can be any protobuf message.
+        string metadata_name = 5;
+
+        // JSON representation of metadata
+        google.protobuf.Struct metadata_json = 7;
+    }
 
     // The data buffer channel on which to store the metadata.
     string metadata_channel = 6;
@@ -644,15 +713,38 @@ message DataAcquisition {
     CompletionBehavior completion_behavior = 4;
 
     // Define a format string that will be used together with the blackboard to generate
-    // a group name.  Values from the blackboard will replace the keys in braces {}.
+    // a group_name.  If a value is specified in this field, it will override the group_name value
+    // specified in the CaptureActionId of the AcquireDataRequest.  Values from the blackboard will
+    // replace the keys in braces {}.
     // Example: "telop-{date}", where "date" is a blackboard variable.
     // Example: "{date}_loop_{loop_counter}", where "loop_counter" is a blackboard variable from a
-    // Repeat.
+    // Repeat node.
     string group_name_format = 5;
 
-    // If populated, name of the variable in the blackboard in which to store the
-    // AcquireDataRequest.
+    // If populated, name of the variable in the blackboard in which to store the AcquireDataRequest
+    // after it's created, and sent to the Data Acquisition service.
     string request_name_in_blackboard = 6;
+
+    // The name of the metadata object in the blackboard to be stored.
+    // The metadata object can be any protobuf message.
+    // The metadata will be merged with the AcquireDataRequest's metadata field.
+    string metadata_name_in_blackboard = 9;
+
+    // Define a format string that will be used together with the blackboard to generate
+    // an action_name.  If a value is specified in this field, it will override the action_name
+    // value specified in the CaptureActionId of the AcquireDataRequest.  Values from the blackboard
+    // will replace the keys in braces {}.
+    // Example: "element 0 attempt {loop_counter}", where "loop_counter" is a blackboard variable
+    // from a Retry.
+    string action_name_format = 7;
+
+    // If set to false (default), this node will cancel an outgoing AcquireDataRequest when the node
+    // is paused / stopped.  When the node is resumed, it will restart the AcquireDataRequest.
+    //
+    // If set to true, this node will NOT cancel outgoing AcquireDataRequest's when the node is
+    // paused / stopped.  When the node is resumed, it will check feedback on the original outgoing
+    // AcquireDataReqeust.
+    bool disable_cancel_on_pause_or_stop = 8;
 
 }
 
@@ -749,6 +841,60 @@ message ConstantResult {
 // restarted when the mission is resumed.
 message RestartWhenPaused {
     Node child = 1;
+}
+
+// Send an AcquireDataRequest to the data acquisition service when the mission is interrupted.
+// Interuptions are anything that causes the mission to stop ticking automatically.
+message DataAcquisitionOnInterruption {
+    // Child to run when node starts. If mission is interrupted while the child is still running,
+    // the mission service will send an AcquireDataRequest to the data acquisition service. The
+    // child will resume when the mission resumes. The DataAcquisitionOnInterruption node will
+    // always return the status of this child node.
+    Node child = 1;
+
+    // Data acquisition request that will be sent if the mission is interrupted.
+    // This is not an actual node. It will only be used for the data acquisition request details.
+    // The completion_behavior and request_name_in_blackboard fields will not be used.
+    DataAcquisition request_when_interrupted = 2;
+
+    reserved 3;
+
+    // Clients can specify a chunk of metadata for each possible interruption reason (fields 4-11).
+    // When an interruption occurs the metdata corresponding to the interruption reason will be
+    // merged with request_when_interrupted.request.metadata.
+
+    // Interruption reason: PauseMission RPC called.
+    Metadata pause_mission_metadata = 4;
+
+    // Interruption reason: RestartMission RPC called.
+    Metadata restart_mission_metadata = 5;
+
+    // Interruption reason: LoadMission RPC called.
+    Metadata load_mission_metadata = 6;
+
+    // Interruption reason: StopMission RPC called.
+    Metadata stop_mission_metadata = 7;
+
+    // Interruption reason: Lease use error occured.
+    Metadata lease_use_error_metadata = 8;
+
+    // Interruption reason: Play mission timeout exceeded.
+    Metadata play_mission_timeout_metadata = 9;
+
+    // Interruption reason: Child node returned an error result.
+    Metadata child_node_error_metadata = 10;
+
+    // Interruption reason: Child node threw an exception.
+    Metadata child_node_exception_metadata = 11;
+
+    // This is used if any of the above are empty or if an unexpected interruption occurs.
+    Metadata default_metadata = 12;
+
+    // If key(s) are specified, the additional information about the lease use error will be stored
+    // in the AcquireDataRequest metadata. All given key(s) must be used in order to access the
+    // error message reason from the JSON metadata. The last key holds error message.
+    repeated string keys_for_lease_use_error_message = 13;
+
 }
 
 // This node will:

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -370,3 +370,11 @@ class RobotTimeConverter:
           local_time_secs:  Local system time, in seconds from the unix epoch.
         """
         return local_time_secs + nsec_to_sec(self._clock_skew_nsec)
+
+    def local_seconds_from_robot_timestamp(self, robot_timestamp):
+        """Returns the local time in seconds from a robot-clock Timestamp proto.
+
+        Args:
+          local_time_secs:  Local system time, in seconds from the unix epoch.
+        """
+        return nsec_to_sec(timestamp_to_nsec(robot_timestamp) - self._clock_skew_nsec)

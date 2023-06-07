@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -26,7 +26,7 @@ LOGGER = logging.getLogger()
 
 REQUEST_CHUNK_SIZE = 10 * (1024**2)  # This value is not guaranteed.
 
-DEFAULT_OUTPUT = "./download.bddf"
+DEFAULT_OUTPUT = './download.bddf'
 
 
 def _before_now(strval, delta_t):
@@ -85,7 +85,7 @@ def parse_datetime(val):
     for fmt, function in _TIME_FORMATS:
         if fmt.match(val):
             return function(val)
-    raise DatetimeParseError("Could not parse time from '{}'".format(val))
+    raise DatetimeParseError(f'Could not parse time from \'{val}\'')
 
 
 def request_timespan(time_spec, time_sync_endpoint):
@@ -108,7 +108,7 @@ def request_timespan(time_spec, time_sync_endpoint):
     def _time_str(timeval):
         return str(int(timeval + skew))
 
-    return {"from_sec": str(_time_str(start_time)), "to_sec": str(_time_str(end_time))}
+    return {'from_sec': str(_time_str(start_time)), 'to_sec': str(_time_str(end_time))}
 
 
 def output_filename(output, response):
@@ -117,7 +117,7 @@ def output_filename(output, response):
         return output
     content = response.headers['Content-Disposition']
     if len(content) < 2:
-        LOGGER.debug("Content-Disposition not set correctly.")
+        LOGGER.debug('Content-Disposition not set correctly.')
         return DEFAULT_OUTPUT
     match = re.search(r'filename=\"?([^\"]+)', content)
     if not match:
@@ -133,12 +133,12 @@ def prepare_download(robot, timespan, channel, message_type, service):
     time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
     did_establish = time_sync_endpoint.establish_timesync()
     if did_establish:
-        LOGGER.debug("Established timesync, skew of sec:%d nanosec:%d",
+        LOGGER.debug('Established timesync, skew of sec:%d nanosec:%d',
                      time_sync_endpoint.clock_skew.seconds, time_sync_endpoint.clock_skew.nanos)
 
     # Now assemble the query to obtain a bddf file.
-    url = 'https://{}/v1/data-buffer/bddf/'.format(robot.address)
-    headers = {"Authorization": "Bearer {}".format(robot.user_token)}
+    url = f'https://{robot.address}/v1/data-buffer/bddf/'
+    headers = {'Authorization': f'Bearer {robot.user_token}'}
 
     # Get the parameters for limiting the timespan of the response.
     get_params = request_timespan(timespan, time_sync_endpoint)
@@ -164,7 +164,7 @@ def collect_and_write_file(url, headers, parameters, output):
             # Transfer encoding is chunked.
             total_content_length = 0
         if resp.status_code != 200:
-            LOGGER.error("Unable to get data. https response: %d", resp.status_code)
+            LOGGER.error('Unable to get data. https response: %d', resp.status_code)
             yield None, None, resp.status_code
         else:
             outfile = output_filename(output, resp)
@@ -173,7 +173,7 @@ def collect_and_write_file(url, headers, parameters, output):
                     fid.write(chunk)
                     yield len(chunk), int(total_content_length), resp.status_code
 
-    LOGGER.info("Wrote '%s'.", outfile)
+    LOGGER.info('Wrote \'%s\'.', outfile)
 
 
 def main():  # pylint: disable=too-many-locals
@@ -218,15 +218,15 @@ def main():  # pylint: disable=too-many-locals
             total_size_of_request = total_content_length
             if total_size_of_request == 0:
                 print(
-                    f"Data is chunked. Number of megabytes processed: {number_of_bytes_processed/1e6:.0f} [MB].",
-                    end="\r")
+                    f'Data is chunked. Number of megabytes processed: {number_of_bytes_processed/1e6:.0f} [MB].',
+                    end='\r')
             else:
                 percentage_compete = (number_of_bytes_processed / total_size_of_request) * 100
-                print(f"Download is {percentage_compete:.2f}% complete.", end="\r")
+                print(f'Download is {percentage_compete:.2f}% complete.', end='\r')
     print()
 
     return 0
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.exit(main())

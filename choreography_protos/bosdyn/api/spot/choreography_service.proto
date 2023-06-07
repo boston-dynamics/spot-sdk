@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -50,5 +50,11 @@ service ChoreographyService {
 
     // Download log of the latest recorded robot state information.
     rpc DownloadRobotStateLog(DownloadRobotStateLogRequest) returns (stream DownloadRobotStateLogResponse) {}
+
+    // Report the status of a dancing robot.
+    rpc ChoreographyStatus(ChoreographyStatusRequest) returns (ChoreographyStatusResponse) {}
+
+    // Commands intended for individual dance moves that are currently executing.
+    rpc ChoreographyCommand(ChoreographyCommandRequest) returns (ChoreographyCommandResponse) {}
 
 }

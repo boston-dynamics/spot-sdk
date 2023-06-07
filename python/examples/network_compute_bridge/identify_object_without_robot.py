@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -20,7 +20,8 @@ from bosdyn.api import (image_pb2, network_compute_bridge_pb2, network_compute_b
 
 
 def append_str_to_filename(filename, string):
-    return "{0}_{2}{1}".format(*os.path.splitext(filename) + (string,))
+    path = os.path.splitext(filename) + (string,)
+    return f'{path[0]}_{path[2]}{path[1]}'
 
 
 def _send_request(server, image_path, model, confidence, verbose=False):
@@ -32,15 +33,15 @@ def _send_request(server, image_path, model, confidence, verbose=False):
     # Read the input image.
     image_in = cv2.imread(image_path)
     if image_in is None:
-        print('Error: failed to read "' + image_path + '".  Does the file exist?')
+        print(f'Error: failed to read "{image_path}". Does the file exist?')
         sys.exit(1)
 
     rgb = cv2.cvtColor(image_in, cv2.COLOR_BGR2RGB)
 
-    success, im_buffer = cv2.imencode(".jpg", rgb)
+    success, im_buffer = cv2.imencode('.jpg', rgb)
 
     if not success:
-        print('Error: failed to encode input image as a jpg.  Abort.')
+        print('Error: failed to encode input image as a jpg. Abort.')
         sys.exit(1)
 
     height = image_in.shape[0]
@@ -66,7 +67,7 @@ def _send_request(server, image_path, model, confidence, verbose=False):
         if len(response.object_in_image) <= 0:
             print('No objects found')
         else:
-            print('Got ' + str(len(response.object_in_image)) + ' objects.')
+            print(f'Got {len(response.object_in_image)} objects.')
 
         # Draw bounding boxes in the image for all the detections.
         for obj in response.object_in_image:
@@ -87,7 +88,7 @@ def _send_request(server, image_path, model, confidence, verbose=False):
             polygon = polygon.reshape((-1, 1, 2))
             cv2.polylines(image_in, [polygon], True, (0, 255, 0), 2)
 
-            caption = "{} {:.3f}".format(obj.name, confidence)
+            caption = f'{obj.name} {confidence:.3f}'
             cv2.putText(image_in, caption, (int(min_x), int(min_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                         (0, 255, 0), 2)
 
@@ -127,14 +128,14 @@ def main(argv):
         list_req = network_compute_bridge_pb2.ListAvailableModelsRequest(server_config=server_data)
         response = stub.ListAvailableModels(list_req)
 
-        print('Available models on server at ' + options.server + ' are:')
-        for model in response.available_models:
-            print('    ' + model)
+        print(f'Available models on server at {options.server} are:')
+        for model in response.models.data:
+            print('    ' + model.model_name)
         sys.exit(0)
 
     image_paths = []
     for entry in os.scandir(options.input_image_dir):
-        if (entry.path.endswith(".jpg") or entry.path.endswith(".png")) and entry.is_file():
+        if (entry.path.endswith('.jpg') or entry.path.endswith('.png')) and entry.is_file():
             image_paths.append(entry.path)
 
     image_paths = image_paths * options.num_runs

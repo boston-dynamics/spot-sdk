@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -47,6 +47,8 @@ The `image_format` is the requested format (e.g. jpeg, raw); if the image data c
 Lastly, the `quality_percent` may be provided as a parameter for decoding the image data.
 
 **Note:** The tablet and the on-robot data acquisition service makes requests for JPEG formatted images, so the `image_decode` function must at least be able to respond to a `image_format=image_pb2.Image.FORMAT_JPEG` to ensure that the camera payload can be viewed on the tablet.
+
+**Note:** Does your camera service require inputs or parameters?  Do you want controls or widgets for those parameters to show up on the SpotApp android application or on Scout?  Please refer to [this document](service_customization.md) to learn how to add parameters to a camera service.
 
 ### Using Background Capture Threads
 

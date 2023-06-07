@@ -1,10 +1,8 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
-
-from __future__ import print_function
 
 import argparse
 import math
@@ -76,7 +74,7 @@ class XboxController:
     """
 
     def __init__(self):
-        self.client_name = "XboxControllerClient"
+        self.client_name = 'XboxControllerClient'
         self.robot = None
         self.command_client = None
         self.lease_client = None
@@ -153,9 +151,9 @@ class XboxController:
         """))
 
         # Describe the necessary steps before one can command the robot.
-        print("Before you can command the robot: \n" + \
-            "\t1. Acquire a software E-Stop (Left Button + Right Button + B). \n" + \
-            "\t2. Obtain a lease and power on the robot's motors (Start button).")
+        print('Before you can command the robot: \n' + \
+            '\t1. Acquire a software E-Stop (Left Button + Right Button + B). \n' + \
+            '\t2. Obtain a lease and power on the robot\'s motors (Start button).')
 
     def _shutdown(self):
         """Returns lease to power off.
@@ -169,7 +167,7 @@ class XboxController:
 
         if not self.estop_keepalive:
             if self.estop_client.get_status().stop_level == estop_pb2.ESTOP_LEVEL_NONE:
-                print("Taking E-Stop from another controller")
+                print('Taking E-Stop from another controller')
 
             #register endpoint with 9 second timeout
             estop_endpoint = bosdyn.client.estop.EstopEndpoint(client=self.estop_client,
@@ -194,9 +192,9 @@ class XboxController:
         try:
             self.lease_client.acquire()
         except ResourceAlreadyClaimedError as exc:
-            print("Another controller " + exc.response.lease_owner.client_name +
-                  " has a lease. Close that controller"
-                  ", wait a few seconds and press the Start button again.")
+            print(
+                f'Another controller {exc.response.lease_owner.client_name} has a lease. Close that controller, '
+                f'wait a few seconds and press the Start button again.')
             return
         else:
             self.lease_keep_alive = bosdyn.client.lease.LeaseKeepAlive(
@@ -207,10 +205,8 @@ class XboxController:
         """Powers the motors on in the robot.
         """
 
-        if self.motors_powered or \
-        not self.has_robot_control or \
-        not self.estop_keepalive or \
-        self.robot.is_powered_on():
+        if self.motors_powered or not self.has_robot_control or not self.estop_keepalive or self.robot.is_powered_on(
+        ):
             return
 
         self.robot.power_on(timeout_sec=20)
@@ -225,10 +221,10 @@ class XboxController:
             endtime: Time (in the local clock) that the robot command should stop.
         """
         if not self.has_robot_control:
-            print("Must have control by acquiring a lease before commanding the robot.")
+            print('Must have control by acquiring a lease before commanding the robot.')
             return
         if not self.motors_powered:
-            print("Must have motors powered on before commanding the robot.")
+            print('Must have motors powered on before commanding the robot.')
             return
 
         self.command_client.robot_command_async(command, end_time_secs=endtime)
@@ -495,20 +491,20 @@ class XboxController:
         """
 
         # Move cursor back to the start of the line
-        print(chr(13), end="")
+        print(chr(13), end='')
         if self.estop_keepalive:
-            print("E-Stop: Acquired    ", end="")
+            print('E-Stop: Acquired    ', end='')
         else:
-            print("E-Stop: Not Acquired", end="")
+            print('E-Stop: Not Acquired', end='')
         if self.has_robot_control:
-            print("\tRobot Lease: Acquired    ", end="")
+            print('\tRobot Lease: Acquired    ', end='')
         if self.robot.is_powered_on():
-            print("\tRobot Motors: Powered On ", end="")
+            print('\tRobot Motors: Powered On ', end='')
         if self.mode:
-            print("\t\t" + "In Robot Mode: " + self.mode.name, end="")
+            print(f'\t\tIn Robot Mode: {self.mode.name}', end='')
             num_chars = len(self.mode.name)
             if num_chars < 6:  # 6 is the length of Stairs enum
-                print(" " * (6 - num_chars), end="")
+                print(' ' * (6 - num_chars), end='')
 
     def control_robot(self, frequency):
         """Controls robot from an Xbox controller.
@@ -655,9 +651,9 @@ def main(argv):
         to be released. The estop_gui script from the estop SDK example can be used to release
         the E-Stop. Press ctrl-c at any time to safely power off the robot.
         '''))
-    parser.add_argument("--max-frequency", default=10, type=int,
-                        help="Max frequency in Hz to send commands to robot")
-    parser.add_argument("--logging", action='store_true', help="Turn on logging output")
+    parser.add_argument('--max-frequency', default=10, type=int,
+                        help='Max frequency in Hz to send commands to robot')
+    parser.add_argument('--logging', action='store_true', help='Turn on logging output')
 
     bosdyn.client.util.add_base_arguments(parser)
     options = parser.parse_args(argv)
@@ -673,6 +669,6 @@ def main(argv):
     controller.control_robot(max_frequency)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     import sys
     main(sys.argv[1:])

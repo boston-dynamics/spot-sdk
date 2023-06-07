@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -28,7 +28,7 @@ camera.downloadLastImage()
 
 gen = camera.yieldLivePreview()
 jpg = next(gen)
-with open("ricoh_theta_live_preview.jpg", 'wb') as f:
+with open('ricoh_theta_live_preview.jpg', 'wb') as f:
     f.write(jpg)
 gen.close()
 
@@ -38,9 +38,9 @@ gen.close()
 # camera.showState()
 # camera.takePicture()
 # camera.listFiles(1)
-# camera.downloadLastImage(directory="")
+# camera.downloadLastImage(directory='')
 # camera.previewLastImage()
-# camera.connectToAP(ap_ssid=None, ap_sec="WPA/WPA2 PSK", ap_pw=None)
+# camera.connectToAP(ap_ssid=None, ap_sec='WPA/WPA2 PSK', ap_pw=None)
 # camera.getCaptureParameters()
 # camera.getFileFormat()
 # camera.getLastImage()

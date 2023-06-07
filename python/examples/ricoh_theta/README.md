@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -51,7 +51,7 @@ python3 test_driver.py
 Perform the following steps on your PC to set up Ricoh Theta client mode, which means the Ricoh Theta will be connected to a different network (in this case, Spot's WiFI) instead of broadcasting its own network (which is the direct mode). The python script below is required for this example to set the static ip, which the App does not allow.
 
 1. Enable wireless connection on the Ricoh Theta and connect your PC to the Ricoh Theta via WiFi.
-1. Run `ricoh_client_mode.py` on your PC via the CLI. Replace the capitalized letters in the command below with your Ricoh Theta SSID **with the .OSC removed from the end**, Spot's WiFi SSID, and Spot's WiFi password. The `disable-sleep-mode` will disable the Ricoh Theta's automatic sleep with inactivity mode. Note, this can also be done through the Ricoh Theta's phone application, in which case this argument does not need to be provided when running the client mode script.
+2. Run `ricoh_client_mode.py` on your PC via the CLI. Replace the capitalized letters in the command below with your Ricoh Theta SSID **with the .OSC removed from the end**, Spot's WiFi SSID, and Spot's WiFi password. The `disable-sleep-mode` will disable the Ricoh Theta's automatic sleep with inactivity mode. Note, this can also be done through the Ricoh Theta's phone application, in which case this argument does not need to be provided when running the client mode script.
 
    ```
    python ricoh_client_mode.py --theta-ssid THETAYL00196843 --wifi-ssid WIFI_SSID --wifi-password WIFI_PASSWORD --disable-sleep-mode
@@ -76,7 +76,7 @@ Perform the following steps on your PC to set up Ricoh Theta client mode, which 
    def __init__(..., static_ip="192.168.80.110", subnet_mask="255.255.255.0", default_gateway="192.168.80.1"):
    ```
 
-1. Enable client mode on your Ricoh Theta (press the wireless button on the camera) and confirm connection with Spot's access point. The wireless indicator should stop blinking and become solid green in client mode for Ricoh Theta V. On a Ricoh Theta Z, on the OLED display screen of the camera, there will be a 'CL' icon next to the wireless indicator. **Often a Ricoh Theta power cycle is required.** Note, the new static IP for the Ricoh Theta in client mode will be persistent across reboots of the camera.
+3. Enable client mode on your Ricoh Theta (press the wireless button on the camera) and confirm connection with Spot's access point. The wireless indicator should stop blinking and become solid green in client mode for Ricoh Theta V. On a Ricoh Theta Z, on the OLED display screen of the camera, there will be a 'CL' icon next to the wireless indicator. **Often a Ricoh Theta power cycle is required.** Note, the new static IP for the Ricoh Theta in client mode will be persistent across reboots of the camera.
 
 ## Run Image Service
 

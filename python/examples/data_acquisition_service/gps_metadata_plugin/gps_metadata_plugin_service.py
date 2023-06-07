@@ -1,10 +1,8 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
-
-from __future__ import print_function
 
 import logging
 import math
@@ -74,11 +72,11 @@ class GPS_Adapter:
         message = data_acquisition_pb2.AssociatedMetadata()
         message.reference_id.action_id.CopyFrom(request.action_id)
         message.metadata.data.update({
-            "latitude": data.lat,
-            "longitude": data.lon,
-            "altitude": data.alt,
+            'latitude': data.lat,
+            'longitude': data.lon,
+            'altitude': data.alt,
         })
-        _LOGGER.info("Retrieving GPS data: {}".format(message.metadata.data))
+        _LOGGER.info('Retrieving GPS data: %s', message.metadata.data)
 
         # Store the data and manage store state.
         store_helper.store_metadata(message, data_id)
@@ -113,7 +111,7 @@ if __name__ == '__main__':
     setup_logging(options.verbose)
 
     # Create and authenticate a bosdyn robot object.
-    sdk = bosdyn.client.create_standard_sdk("GpsMetadataPluginServiceSDK")
+    sdk = bosdyn.client.create_standard_sdk('GpsMetadataPluginServiceSDK')
     robot = sdk.create_robot(options.hostname)
     robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(options))
 

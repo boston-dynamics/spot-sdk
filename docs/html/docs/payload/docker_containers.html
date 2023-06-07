@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Running Custom Applications with Spot &mdash; Spot 3.2.3 documentation</title>
+  <title>Running Custom Applications with Spot &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -635,7 +677,7 @@
            <div itemprop="articleBody">
             
   <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -643,7 +685,7 @@ Development Kit License (20191101-BDSDK-SL).
 --><script type="text/javascript" src="../python/fetch_tutorial/video_play_at_scroll.js"></script><link rel="stylesheet" type="text/css" href="../python/fetch_tutorial/tutorial.css">
 <link href="../python/fetch_tutorial/prism.css" rel="stylesheet" />
 <script src="../python/fetch_tutorial/prism.js"></script><section id="running-custom-applications-with-spot">
-<h1>Running Custom Applications with Spot<a class="headerlink" href="#running-custom-applications-with-spot" title="Permalink to this headline">¶</a></h1>
+<h1>Running Custom Applications with Spot<a class="headerlink" href="#running-custom-applications-with-spot" title="Permalink to this heading">¶</a></h1>
 <p>Spot’s computing power can be extended through additional computation payloads mounted on the robot. Boston Dynamics offers CORE I/O computation payloads, but users can attach other types of computation payloads as well. This document describes how to configure software to run on these computation payloads. Most instructions describe steps on how to manage custom software on the CORE I/O, but these steps are applicable to other computation payloads as well.</p>
 <p>The purpose of computation payloads is to run custom software applications on the robot that interact with the robot software system and the other payloads attached to Spot. For CORE I/O, we suggest using the provided Extensions framework to install, configure and run custom software. The suggested approach to develop, test and deploy software on computation payloads is as follows:</p>
 <ol class="simple">
@@ -660,19 +702,26 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html"><span class="doc">Spot Detect and Follow</span></a></p></li>
 <li><p><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html"><span class="doc">Web Cam Image Service</span></a></p></li>
 </ul>
+<section id="installing-docker-engine">
+<h2>Installing Docker Engine<a class="headerlink" href="#installing-docker-engine" title="Permalink to this heading">¶</a></h2>
+<p>See the <a class="reference external" href="https://docs.docker.com/engine/install/">Docker Engine installation instructions</a> for instructions on how to install Docker Engine on your development environment.</p>
+<p>Note: if you have previously installed Docker Engine using a package manager, you may need to remove the old version before installing the new version. Please follow the instructions in the <a class="reference external" href="https://docs.docker.com/engine/install/">Docker Engine installation instructions</a> for instructions on how to remove the old version. If you find that <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">buildx</span></code> does not function properly, you may need to remove the old version of Docker Engine.</p>
+</section>
 <section id="create-docker-images">
-<h2>Create Docker Images<a class="headerlink" href="#create-docker-images" title="Permalink to this headline">¶</a></h2>
+<h2>Create Docker Images<a class="headerlink" href="#create-docker-images" title="Permalink to this heading">¶</a></h2>
 <p>After implementing and testing the application on the development environment, the first step is to create a docker image with the software application and its dependencies. Docker containers are dependent on images and use them to construct a run-time environment and run an application. The instructions to create a docker image are specified in a file, usually named <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>. The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> specifies what base docker image to start from, what additional software and libraries to install on top of the base image, and what software needs to be run when the container starts. A variety of Spot SDK examples contain a <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> files in the SDK examples contain instructions to create x86/AMD-based Ubuntu docker images. On top of <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> files, SDK examples also contain <code class="docutils literal notranslate"><span class="pre">Dockerfile.l4t</span></code> for creating ARM-based Ubuntu docker images for the CORE I/O payloads.</p>
+<p>When writing Dockerfiles for images targeted for the CORE I/O, if using <a class="reference external" href="https://catalog.ngc.nvidia.com/containers?filters=&amp;orderBy=scoreDESC&amp;query=l4t">Nvidia Docker images</a> as a base, ensure that the tag matches the version of Jetpack running on the CORE I/O. As of 3.3.0, the CORE I/O is running JetPack 4.6.1 (L4T R32.7.1).</p>
+<p><strong>Note:</strong> OpenCV is commonly used for processing image data on the CORE I/O. By Default, most installations of OpenCV do not have CUDA support. Nvidia’s <a class="reference external" href="https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-ml">l4t-ml</a> container provides a version of OpenCV with CUDA support built-in, but is also fairly large. To build a more lightweight container with CUDA support in OpenCV, follow the instructions provided <a class="reference external" href="https://github.com/dusty-nv/jetson-containers/blob/master/Dockerfile.opencv">here</a>, replacing <code class="docutils literal notranslate"><span class="pre">BASE_IMAGE</span></code> and <code class="docutils literal notranslate"><span class="pre">OPENCV_VERSION</span></code> with the desired versions (see above).</p>
 <p><strong>Note:</strong> Most of the Dockerfiles in the SDK examples use the default user provided by the base image. This user is usually the <code class="docutils literal notranslate"><span class="pre">root</span></code> user and is not recommended to be used for running applications on CORE I/O. In most cases, it is good practice to change this to a non-root user with limited privileges.
 Running as the <code class="docutils literal notranslate"><span class="pre">root</span></code> user bypasses certain limitations imposed on non-root users around resource utilization. This means that unintentional memory or thread leaks in a program running as the <code class="docutils literal notranslate"><span class="pre">root</span></code> user can crash the entire system or cause other undefined behavior.
 The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> files in the SDK examples do not change the user, but the user can be changed by adding the following lines to the <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>:</p>
-<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">RUN</span> useradd -ms /bin/bash &lt;username&gt;
-<span class="k">USER</span><span class="s"> &lt;username&gt;</span>
+<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">RUN</span><span class="w"> </span>useradd<span class="w"> </span>-ms<span class="w"> </span>/bin/bash<span class="w"> </span>&lt;username&gt;
+<span class="k">USER</span><span class="w"> </span><span class="s">&lt;username&gt;</span>
 </pre></div>
 </div>
 <section id="build-docker-images">
-<h3>Build Docker Images<a class="headerlink" href="#build-docker-images" title="Permalink to this headline">¶</a></h3>
+<h3>Build Docker Images<a class="headerlink" href="#build-docker-images" title="Permalink to this heading">¶</a></h3>
 <p>This section describes the steps to create and run a docker image on the development environment. Docker images created to run on the same architecture as the development environment can be created with the simple <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span></code> commands listed below.</p>
 <p>An x86/AMD docker image can be built on an x86/AMD development environment using the following commands, where {IMAGE_NAME} represents the desired docker image name.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="o">.</span>
@@ -700,7 +749,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </div>
 </section>
 <section id="test-docker-images-locally">
-<h3>Test Docker Images Locally<a class="headerlink" href="#test-docker-images-locally" title="Permalink to this headline">¶</a></h3>
+<h3>Test Docker Images Locally<a class="headerlink" href="#test-docker-images-locally" title="Permalink to this heading">¶</a></h3>
 <p>The next step after creating the docker image is to test the container on a local development environment first. To start a docker container and its configured software application, run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">--</span><span class="n">network</span><span class="o">=</span><span class="n">host</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="p">{</span><span class="n">APPLICATION</span> <span class="n">ARGUMENTS</span><span class="p">}</span>
 </pre></div>
@@ -723,7 +772,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </div>
 </section>
 <section id="ports-for-incoming-traffic">
-<h3>Ports For Incoming Traffic<a class="headerlink" href="#ports-for-incoming-traffic" title="Permalink to this headline">¶</a></h3>
+<h3>Ports For Incoming Traffic<a class="headerlink" href="#ports-for-incoming-traffic" title="Permalink to this heading">¶</a></h3>
 <p>Both the CORE I/O and the Scout platforms uses firewall rules that control the ports on which incoming traffic is allowed. If a custom application needs to open a port for incoming traffic, for example when hosting a server that external clients can connect to, it must choose a port from within the port ranges below. Docker’s host networking mode is used to simplify networking and allow deployed containers to communicate with each other. The port ranges below are allowed to accept incoming traffic on the host networking stack.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Allowed</span> <span class="n">Port</span> <span class="n">Ranges</span>
 <span class="o">-------------------</span>
@@ -734,10 +783,10 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </section>
 </section>
 <section id="manage-payload-software-in-core-i-o">
-<h2>Manage Payload Software in CORE I/O<a class="headerlink" href="#manage-payload-software-in-core-i-o" title="Permalink to this headline">¶</a></h2>
+<h2>Manage Payload Software in CORE I/O<a class="headerlink" href="#manage-payload-software-in-core-i-o" title="Permalink to this heading">¶</a></h2>
 <p>This section describes two ways to manage docker containers on a computation payload, using CORE I/O extensions or command-line tools.</p>
 <section id="core-i-o-extensions-configuration">
-<h3>CORE I/O Extensions Configuration<a class="headerlink" href="#core-i-o-extensions-configuration" title="Permalink to this headline">¶</a></h3>
+<h3>CORE I/O Extensions Configuration<a class="headerlink" href="#core-i-o-extensions-configuration" title="Permalink to this heading">¶</a></h3>
 <p>Extensions are software packages or static files introduced in 3.2 that can be installed or simply uploaded in CORE I/O or Scout platforms.</p>
 <p>Configured as software packages, Extensions provide the functionality for external developers to easily install applications onto CORE I/O and Scout platforms. On the CORE I/O, these software packages can integrate a newly-mounted payload with the Spot API, or not be associated with any payload functionality at all, such as uploading data to an AWS bucket.</p>
 <p>Extensions can also simply be static files that developers need to upload into CORE I/O or Scout platform. This configuration supports two important use cases:</p>
@@ -746,7 +795,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <li><p>It allows the developers to split their Extensions into a generic software package that is identical for all customers, and separate Extensions with configuration files that are applicable to one of a subset of customers. This configuration simplifies the process of installing customer-specific Extensions by maintaining the common part of the package in one Extension and the customer-specific configuration in another Extension.</p></li>
 </ol>
 <section id="extension-structure">
-<h4>Extension Structure<a class="headerlink" href="#extension-structure" title="Permalink to this headline">¶</a></h4>
+<h4>Extension Structure<a class="headerlink" href="#extension-structure" title="Permalink to this heading">¶</a></h4>
 <p>An Extension is a set of docker images configured with a docker-compose yaml configuration file. Extensions are structured as a tgz file with an .spx file extension and contain the following files:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file with metadata about the Extension</p></li>
@@ -758,7 +807,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </ul>
 <p>The name of the spx file represents the name of the extension.</p>
 <section id="manifest-file">
-<h5>Manifest file<a class="headerlink" href="#manifest-file" title="Permalink to this headline">¶</a></h5>
+<h5>Manifest file<a class="headerlink" href="#manifest-file" title="Permalink to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file is the Extension parameterization file with the following parameters:</p>
 <ul class="simple">
 <li><p>description: String with a short description of the extension</p></li>
@@ -769,15 +818,15 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </ul>
 </section>
 <section id="docker-images">
-<h5>Docker Images<a class="headerlink" href="#docker-images" title="Permalink to this headline">¶</a></h5>
+<h5>Docker Images<a class="headerlink" href="#docker-images" title="Permalink to this heading">¶</a></h5>
 <p>The docker images listed in the <code class="docutils literal notranslate"><span class="pre">images</span></code> field of the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file also need to be included in the Extension. These are the docker images that contain the software components to run as part of the extension. The inclusion of docker images in the Extension is optional if the images are available from a public source, such as dockerhub. The Extension setup could also contain a mix-and-match of public and non-public images. In that case, the <code class="docutils literal notranslate"><span class="pre">images</span></code> field in the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file would include only the non-public images included in the Extension, and the docker-compose rules would specify all images (public and non-public).</p>
 </section>
 <section id="docker-compose-yaml-configuration-file">
-<h5>Docker Compose YAML configuration file<a class="headerlink" href="#docker-compose-yaml-configuration-file" title="Permalink to this headline">¶</a></h5>
+<h5>Docker Compose YAML configuration file<a class="headerlink" href="#docker-compose-yaml-configuration-file" title="Permalink to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together.</p>
 </section>
 <section id="other-files">
-<h5>Other files<a class="headerlink" href="#other-files" title="Permalink to this headline">¶</a></h5>
+<h5>Other files<a class="headerlink" href="#other-files" title="Permalink to this heading">¶</a></h5>
 <p>Extensions can also include the following files:</p>
 <ul class="simple">
 <li><p>Icon file: Optional image file with the icon to show for the extension in the UI. The icon filename is specified in the <code class="docutils literal notranslate"><span class="pre">icon</span></code> field in the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file. If omitted, a generic icon will be used for the extension.</p></li>
@@ -787,9 +836,9 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </section>
 </section>
 <section id="extension-management">
-<h4>Extension Management<a class="headerlink" href="#extension-management" title="Permalink to this headline">¶</a></h4>
+<h4>Extension Management<a class="headerlink" href="#extension-management" title="Permalink to this heading">¶</a></h4>
 <section id="create-extension">
-<h5>Create Extension<a class="headerlink" href="#create-extension" title="Permalink to this headline">¶</a></h5>
+<h5>Create Extension<a class="headerlink" href="#create-extension" title="Permalink to this heading">¶</a></h5>
 <p>Once the files described in the section above are created, they can be packaged into an Extension file by simply tar-ing and zipping them into an <code class="docutils literal notranslate"><span class="pre">spx</span></code> file. With all the files contained in a folder, run the following command from that folder:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tar</span> <span class="n">zcfv</span> <span class="p">{</span><span class="n">EXTENSION_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">spx</span> <span class="o">*</span>
 </pre></div>
@@ -800,7 +849,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </div>
 </section>
 <section id="install-extension-using-web-portal">
-<h5>Install Extension Using Web Portal<a class="headerlink" href="#install-extension-using-web-portal" title="Permalink to this headline">¶</a></h5>
+<h5>Install Extension Using Web Portal<a class="headerlink" href="#install-extension-using-web-portal" title="Permalink to this heading">¶</a></h5>
 <p>Extensions can be installed from the Extensions page by drag-and-dropping the Extension file onto the “Upload New Extension” subpanel, as shown in the video below:</p>
 <video autoplay loop muted playsinline class="tutorial-video"><source src="videos/extension_installation.mp4" type="video/mp4">
 </video><p>Extensions can also be installed by clicking the “Choose File” button, and selecting the Extension file manually in the File browser window that opens up.</p>
@@ -812,11 +861,12 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </ol>
 </section>
 <section id="install-extension-using-a-usb-drive">
-<h5>Install Extension Using a USB Drive<a class="headerlink" href="#install-extension-using-a-usb-drive" title="Permalink to this headline">¶</a></h5>
+<h5>Install Extension Using a USB Drive<a class="headerlink" href="#install-extension-using-a-usb-drive" title="Permalink to this heading">¶</a></h5>
 <p>For cases when the Extension has a very large size, users can also install the Extension from a USB drive attached to the CORE I/O. On the command-line, simply <code class="docutils literal notranslate"><span class="pre">untar</span></code> the <code class="docutils literal notranslate"><span class="pre">spx</span></code> Extension file in the folder <code class="docutils literal notranslate"><span class="pre">/data/.extensions/</span></code> using the command <code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">xzfm</span> <span class="pre">{PATH_TO_SPX_FILE}</span> <span class="pre">-C</span> <span class="pre">/data/.extensions/{EXTENSION_NAME}</span></code>. Then, go to Extensions tab in the web portal and start the Extension manually by pressing the “Start” button.</p>
+<p>If the extension contains udev rules, those will need to be copied to <code class="docutils literal notranslate"><span class="pre">/persist/udev/rules.d/</span></code> and reloaded manually with <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">udevadm</span> <span class="pre">control</span> <span class="pre">--reload-rules</span></code> and triggered with <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">udevadm</span> <span class="pre">trigger</span></code></p>
 </section>
 <section id="monitoring">
-<h5>Monitoring<a class="headerlink" href="#monitoring" title="Permalink to this headline">¶</a></h5>
+<h5>Monitoring<a class="headerlink" href="#monitoring" title="Permalink to this heading">¶</a></h5>
 <p>The Extensions page shows the status of each Extension installed in the system, as well as the status of all the docker containers in each Extension. The status of a container or an extension can be one of the following values:</p>
 <ul class="simple">
 <li><p>CREATED</p></li>
@@ -845,29 +895,29 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </ul>
 </section>
 <section id="access-extension-logs">
-<h5>Access Extension Logs<a class="headerlink" href="#access-extension-logs" title="Permalink to this headline">¶</a></h5>
+<h5>Access Extension Logs<a class="headerlink" href="#access-extension-logs" title="Permalink to this heading">¶</a></h5>
 <p>Users can view logs from the containers in the Extensions page by clicking the down-arrow button on each container. The expanded text window shows the most recent logs reported by the application running in the container. Users can scroll to the bottom of the text window, which triggers an automatic update of the logs in the text window, as reported by the application running in the container. Users can also copy the whole text displayed in the window, or download the full logs from the container using the two buttons in the top right corner of the Extension view, as shown in the video below:</p>
 <video autoplay loop muted playsinline class="tutorial-video"><source src="videos/extension_logs.mp4" type="video/mp4">
 </video></section>
 <section id="stop-extension">
-<h5>Stop Extension<a class="headerlink" href="#stop-extension" title="Permalink to this headline">¶</a></h5>
+<h5>Stop Extension<a class="headerlink" href="#stop-extension" title="Permalink to this heading">¶</a></h5>
 <p>Extensions can be temporarily stopped from running by clicking the Stop button at the top-right corner of the Extension view, as shown in the screenshot below for the battery Extension:
 <img alt="Stop Extension" src="../../_images/extension_stop.png" /></p>
 <p>Once the Extension is stopped, the “Stop” button converts to a Start button and the Extension could be manually started by clicking it, as shown in the screenshot below for the battery Extension:
 <img alt="Start Extension" src="../../_images/extension_start.png" /></p>
 </section>
 <section id="remove-extension">
-<h5>Remove Extension<a class="headerlink" href="#remove-extension" title="Permalink to this headline">¶</a></h5>
+<h5>Remove Extension<a class="headerlink" href="#remove-extension" title="Permalink to this heading">¶</a></h5>
 <p>To uninstall and remove an extension, click the “Trash Bin” icon for the Extension, as shown in the video below:</p>
 <video autoplay loop muted playsinline class="tutorial-video"><source src="videos/extension_removal.mp4" type="video/mp4">
 </video></section>
 </section>
 </section>
 <section id="command-line-configuration">
-<h3>Command-line Configuration<a class="headerlink" href="#command-line-configuration" title="Permalink to this headline">¶</a></h3>
+<h3>Command-line Configuration<a class="headerlink" href="#command-line-configuration" title="Permalink to this heading">¶</a></h3>
 <p>Users can also manage their applications manually on the CORE I/O, or other compute payloads, by ssh-ing into it (<code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-p</span> <span class="pre">20022</span> <span class="pre">192.168.80.3</span></code> from the robot’s WiFi) and starting their applications using the options described below. The Extensions functionality included in CORE I/O and Scout platforms simplify the process of managing applications on these platforms, but users can also use the instructions below for debugging and testing purposes.</p>
 <section id="run-application-s-directly-on-compute-payload">
-<h4>Run Application(s) Directly on Compute Payload<a class="headerlink" href="#run-application-s-directly-on-compute-payload" title="Permalink to this headline">¶</a></h4>
+<h4>Run Application(s) Directly on Compute Payload<a class="headerlink" href="#run-application-s-directly-on-compute-payload" title="Permalink to this heading">¶</a></h4>
 <p>Users can copy their application to the CORE I/O:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
 <span class="n">scp</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">P</span> <span class="mi">20022</span> <span class="p">{</span><span class="n">APPLICATION_FILES</span><span class="p">}</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168.80.3</span><span class="p">:</span>
@@ -876,7 +926,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <p>and run them on the command line. <code class="docutils literal notranslate"><span class="pre">python3</span></code> is pre-installed in the CORE I/O.</p>
 </section>
 <section id="run-application-s-as-a-docker-container">
-<h4>Run Application(s) as a Docker Container<a class="headerlink" href="#run-application-s-as-a-docker-container" title="Permalink to this headline">¶</a></h4>
+<h4>Run Application(s) as a Docker Container<a class="headerlink" href="#run-application-s-as-a-docker-container" title="Permalink to this heading">¶</a></h4>
 <p>To run the docker container on CORE I/O, first copy the docker image tar file and then manually run it on the computation payload. To copy the docker file, run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="o">-</span><span class="n">r</span> <span class="o">-</span><span class="n">P</span> <span class="mi">20022</span> <span class="p">{</span><span class="n">IMAGE_NAME</span><span class="p">}</span><span class="o">.</span><span class="n">tar</span> <span class="n">spot</span><span class="o">@</span><span class="mf">192.168.80.3</span><span class="p">:</span>
 </pre></div>
@@ -899,7 +949,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <p>The manual configuration described in this section does not persist across reboots without additional configuration.</p>
 </section>
 <section id="run-applications-with-docker-compose">
-<h4>Run Applications with docker-compose<a class="headerlink" href="#run-applications-with-docker-compose" title="Permalink to this headline">¶</a></h4>
+<h4>Run Applications with docker-compose<a class="headerlink" href="#run-applications-with-docker-compose" title="Permalink to this heading">¶</a></h4>
 <p>Users can execute a combination of docker images on the CORE I/O using <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code>, which comes pre-installed in the CORE I/O. Using the commands shown in the section above, users can copy the docker images and the docker-compose YAML file to the CORE I/O and load the docker images individually. Then, they can start the docker images by running the <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span><span class="o">-</span><span class="n">compose</span> <span class="o">-</span><span class="n">f</span> <span class="p">{</span><span class="n">PATH</span> <span class="n">TO</span> <span class="n">DOCKER</span> <span class="n">COMPOSE</span> <span class="n">YAML</span> <span class="n">FILE</span><span class="p">}</span> <span class="n">start</span>
 </pre></div>

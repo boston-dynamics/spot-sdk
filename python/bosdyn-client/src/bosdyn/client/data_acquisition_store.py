@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,8 +6,6 @@
 
 """Client implementation for data acquisition store service.
 """
-
-from __future__ import print_function
 
 import collections
 import functools
@@ -18,6 +16,7 @@ from google.protobuf import json_format
 from bosdyn.api import data_acquisition_store_pb2 as data_acquisition_store
 from bosdyn.api import data_acquisition_store_service_pb2_grpc as data_acquisition_store_service
 from bosdyn.api import image_pb2
+from bosdyn.client import data_chunk
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
                                   handle_common_header_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import Error, ResponseError
@@ -255,6 +254,7 @@ class DataAcquisitionStoreClient(BaseClient):
         return self.call_async(self._stub.StoreData, request,
                                error_from_response=common_header_errors, copy_request=False,
                                **kwargs)
+
 
 
 def _get_action_ids(response):

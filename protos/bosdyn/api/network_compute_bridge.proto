@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -12,12 +12,13 @@ option java_outer_classname = "NetworkComputeBridgeProto";
 import "bosdyn/api/alerts.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
+import "bosdyn/api/service_customization.proto";
 import "bosdyn/api/world_object.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/struct.proto";
 
 message ListAvailableModelsRequest {
-    RequestHeader header = 1; // Common request header
+    RequestHeader header = 1;  // Common request header
 
     // Configuration about which server to use.
     NetworkComputeServerConfiguration server_config = 2;
@@ -26,14 +27,43 @@ message ListAvailableModelsRequest {
 message ListAvailableModelsResponse {
     ResponseHeader header = 1;  // Common response header.
 
-    // Provide list of available models
-    repeated string available_models = 2;
+    // Provide list of available models.
+    // DEPRECATED as of 3.3. Replaced by AvailableModels.
+    repeated string available_models = 2 [deprecated = true];
 
     // Optional information about available classes for each model
-    repeated ModelLabels labels = 6;
+    // DEPRECATED as of 3.3. Replaced by AvailableModels.
+    repeated ModelLabels labels = 6 [deprecated = true];
+
+    // Envelope message for repeated ModelData.
+    AvailableModels models = 3;
 
     // Command status
     ListAvailableModelsStatus status = 5;
+}
+
+message AvailableModels {
+    // Contains model name, class labels, and per-model parameters.
+    repeated ModelData data = 1;
+}
+
+message ModelData {
+    // The model name used should match a name specified here.
+    string model_name = 1;
+
+    // List of class labels returned by this model (optional).
+    repeated string available_labels = 2;
+
+    // An ordered list of what types of outputs this NCB model generates.
+    // This can be used by clients to determine which NCB images to display first
+    // at action configuration time.
+    //
+    // It's ok for the NCB worker to return a different set of outputs (more / fewer)
+    // than specified here.
+    repeated OutputImageSpec output_image_spec = 3;
+
+    // Per-model parameters.
+    DictParam.Spec custom_params = 7;
 }
 
 message ModelLabels {
@@ -47,8 +77,40 @@ message ModelLabels {
 message NetworkComputeRequest {
     RequestHeader header = 1;  // Common request header.
 
-    // Input data.
-    NetworkComputeInputData input_data = 2;
+    // There are two forms of input for NetworkComputeRequest.
+    //
+    //   Input             | Worker has NetworkCompute | Worker has WorkerCompute | Result
+    //   ------------------+---------------------------+--------------------------+-------
+    //   input_data        | True                      | True                     | 1
+    //   input_data        | True                      | False                    | 2
+    //   input_data        | False                     | True                     | 3
+    //   input_data_bridge | True                      | True                     | 4
+    //   input_data_bridge | True                      | False                    | 5
+    //   input_data_bridge | False                     | True                     | 6
+    //   -------------+--------------------------------+--------------------------+-------
+    //
+    // Notes: If the client specifies the old deprecated input_data field, the NetworkComputeBridge
+    // will responds with the older output format.  This is because the NetworkComputeBridge does
+    // not know if the client can handle the new output format.
+    //
+    // 1. NetworkComputeBridge will call the worker's deprecated [NetworkCompute] RPC, and use
+    //    deprecated output fields.
+    // 2. NetworkComputeBridge will call the worker's deprecated [NetworkCompute] RPC, and use
+    //    deprecated output fields.
+    // 3. Returns an RPC error.  This row represents older clients talking to newer workers.
+    //    Upgrade the client in this cast.
+    // 4. NetworkComputeBridge will call the [WorkerCompute] RPC, and use the new output fields.
+    // 5. NetworkComputeBridge will call the [WorkerCompute] RPC which will return an Unimplemented
+    //    error.  The NetworkComputeBridge will then silently gobble up that error, call the
+    //    worker's old deprecated [NetworkCompute] RPC, and convert the output of that RPC to the
+    //    new format.
+    // 6. NetworkComputeBridge will call the [WorkerCompute] RPC, and use the new output fields.
+    oneof input {
+        // Input data.
+        // DEPRECATED as of 3.3, use input_data_bridge instead.
+        NetworkComputeInputData input_data = 2 [deprecated = true];
+        NetworkComputeInputDataBridge input_data_bridge = 4;
+    }
 
     // Configuration about which server to use.
     NetworkComputeServerConfiguration server_config = 3;
@@ -67,8 +129,76 @@ message ImageSourceAndService {
     string image_service = 2;
 }
 
+message OutputData {
+    // DEPRECATED as of 3.3. Support for non-image products will be added in the future.
+    option deprecated = true;
+
+    // Optional metadata related to this image/region.
+    google.protobuf.Struct metadata = 2;
+
+    // Optional detection information. May include bounding boxes, image coordinates,
+    // 3D pose information, etc.
+    repeated WorldObject object_in_image = 3;
+
+    // Optional alert related to this image/region.
+    AlertData alert_data = 4;
+
+    // Optional data of a custom type.
+    google.protobuf.Any other_data = 5;
+}
+
+message ComputeParameters {
+    // Other data that isn't an image.  NetworkComputeBridge service will pass it through
+    // to the remote server so you can do computation on arbitrary data.
+    google.protobuf.Any other_data = 3;
+
+    // Name of the model to be run on the input data.
+    string model_name = 4;
+
+    // For some computer vision operations a number of reference images are required along with the
+    // input image.  These images might have been taken months ago, not neccessarilly taken right
+    // now.
+    repeated ImageCaptureAndSource reference_images = 6;
+
+    // Input parameters unique to this worker that do not match any of the above fields.
+    DictParam custom_params = 7;
+}
+
+/**
+ * The network compute bridge will receive this input data, and convert it to a
+ * [NetworkComputeInputDataWorker] before sending an RPC to the network compute bridge worker.
+ */
+message NetworkComputeInputDataBridge {
+    // Image sources to collect a number of images from.  The ImageResponses
+    // will populate the [images] field in [NetworkComputeInputDataWorker].
+    repeated ImageSourceAndService image_sources_and_services = 1;
+
+    ComputeParameters parameters = 2;
+}
+
+/**
+ * The network compute bridge worker will receive this input data.
+ */
+message NetworkComputeInputDataWorker {
+    // Live images (usually) filled out by NetworkComputeBridge right before NCB worker
+    // is called.
+    repeated ImageCaptureAndSource images = 1;
+
+    // Input data.
+    ComputeParameters parameters = 2;
+}
 
 message NetworkComputeInputData {
+    // DEPRECATED as of 3.3. Use NetworkComputeInputDataBridge instead.
+    option deprecated = true;
+
+    // NetworkComputeInputData is multipurpose.  It's used both at runtime to call a NCB
+    // worker "run right now with this data" AND it's embedded in missions to say "when
+    // you run this action, run this NCB worker with an image from this camera".  When
+    // embedded in missions, we store which camera source and service to take a picture from
+    // at runtime.  At runtime, the ImageSourceAndService is converted to an actual image
+    // by the NetworkComputeBridge service.  If you're writing a worker, you can always
+    // expect to receive an actual image.
 
     oneof input {
         // Image source to collect an image from.
@@ -76,8 +206,8 @@ message NetworkComputeInputData {
 
         // Image to process, if you are not using an image source.
         Image image = 2;
-
     }
+
     // Other data that isn't an image.  NetworkComputeBridge service will pass it through
     // to the remote server so you can do computation on arbitrary data.
     google.protobuf.Any other_data = 3;
@@ -101,8 +231,8 @@ message NetworkComputeInputData {
 
         // Rotate the images so that the horizon in the image is aligned with the inclination of
         // the body. For example, when applied to the left body camera this option rotates the image
-        // so that the world does not appear upside down when the robot is standing upright, but if the
-        // body is pitched up, the image will appear rotated.
+        // so that the world does not appear upside down when the robot is standing upright, but if
+        // the body is pitched up, the image will appear rotated.
         ROTATE_IMAGE_ALIGN_WITH_BODY = 2;
     }
 
@@ -111,12 +241,15 @@ message NetworkComputeInputData {
     // Rotation is supported for data from image services that provide a FrameTreeSnapshot
     // defining the sensor's frame with respect to Spot's body and vision frames.
     // Field is ignored for non-image input.
+    // DEPRECATED as of 3.3. Please rotate the image client-side before passing it to NCB worker.
     RotateImage rotate_image = 6;
+
+
     reserved 1;
+    reserved 9;
 }
 
 message NetworkComputeServerConfiguration {
-
     // Service name in the robot's Directory for the worker that will process the request.
     string service_name = 3;
 
@@ -139,22 +272,36 @@ message OutputImage {
     AlertData alert_data = 4;
 }
 
+// Information about the output of an NCB worker.
+message OutputImageSpec {
+    // This string corresponds to the key in `output_images`
+    string key = 1;
+    // A human readable name for this output_image.
+    string name = 2;
+}
+
 message NetworkComputeResponse {
     ResponseHeader header = 1;  // Common response header.
 
-    // Detection information. May include bounding boxes, image coordinates, 3D pose information, etc.
+    // Detection information. May include bounding boxes, image coordinates, 3D pose information,
+    // etc.
     repeated WorldObject object_in_image = 2;
 
     // The image we computed the data on. If the input image itself was provided in the request,
     // this field is not populated.  This field is not set for non-image input.
-    ImageResponse image_response = 3;
+    // DEPRECATED as of 3.3. Use image_responses instead.
+    ImageResponse image_response = 3 [deprecated = true];
+
+    // The image we computed the data on. This field is not set for non-image input.
+    repeated ImageCaptureAndSource image_responses = 13;
 
     // If the image was rotated for processing, this field will contain the amount it was rotated by
     // (counter-clockwise, in radians).
     //
     // Note that the image returned is *not* rotated, regardless of if it was rotated
     // for processing.  This ensures that all other calibration and metadata remains valid.
-    double image_rotation_angle = 6;
+    // DEPRECATED as of 3.3.  Please rotate the image client-side before passing it to NCB worker.
+    double image_rotation_angle = 6 [deprecated = true];
 
     // Non image-type data that can optionally be returned by a remote server.
     google.protobuf.Any other_data = 4;
@@ -162,18 +309,49 @@ message NetworkComputeResponse {
     // Command status
     NetworkComputeStatus status = 5;
 
+    // Filled out if status is NETWORK_COMPUTE_STATUS_CUSTOM_PARAMS_ERROR.
+    CustomParamError custom_param_error = 11;
+
     // Optional field to indicate an alert detected by this model.
     //
     // Note that this alert will be reported for this entire response (including all output images).
     // If you have multiple output images and only want to alert on a specific image,
     // use the alert_data field in the associated OutputImage message.
-    AlertData alert_data = 7;
+    // DEPRECATED as of 3.3. Use alert_data in OutputImage instead.
+    AlertData alert_data = 7 [deprecated = true];
 
     // Optional field to output images generated by this model.
     // Maps name to OutputImage.
     map<string, OutputImage> output_images = 8;
 
 
+    // Information computed about the regions of interest by the worker.
+    // DEPRECATED as of 3.3. Support for non-image products will be added in the future.
+    map<string, OutputData> roi_output_data = 10 [deprecated = true];
+}
+
+message WorkerComputeRequest {
+    RequestHeader header = 1;  // Common request header.
+
+    NetworkComputeInputDataWorker input_data = 2;
+}
+
+message WorkerComputeResponse {
+    ResponseHeader header = 1;  // Common response header.
+
+    // Non image-type data that can optionally be returned by a remote server.
+    google.protobuf.Any other_data = 2;
+
+    // Command status
+    NetworkComputeStatus status = 3;
+
+    // Filled out if status is NETWORK_COMPUTE_STATUS_CUSTOM_PARAMS_ERROR.
+    CustomParamError custom_param_error = 4;
+
+    // Output images generated by this model.
+    map<string, OutputImage> output_images = 7;
+
+    reserved 5, 6;
 }
 
 enum NetworkComputeStatus {
@@ -191,6 +369,10 @@ enum NetworkComputeStatus {
 
     // The robot failed to rotate the image as requested.
     NETWORK_COMPUTE_STATUS_ROTATION_ERROR = 4;
+
+    // One or more keys or values in the input custom_params are unsupported by the service.
+    // See the custom_param_error for details.
+    NETWORK_COMPUTE_STATUS_CUSTOM_PARAMS_ERROR = 5;
 }
 
 enum ListAvailableModelsStatus {

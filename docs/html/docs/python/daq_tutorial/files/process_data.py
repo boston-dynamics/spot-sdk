@@ -1,27 +1,30 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 import json
+
 import matplotlib.pyplot as plot
 import numpy as np
 from PIL import Image
 
 from bosdyn.api.graph_nav import map_pb2
 
+
 def extract_data(filename):
-    """Display the captured images and battery data (and optionally the map edges)
-    onto a plot of the "seed" frame."""
+    """Load a json file and extract the desired data for each action in the file:
+        (seed x, seed y, action name, battery percentage, image file name)
+    """
     with open(filename, 'r') as f:
         json_data = json.load(f)
     out_data = []
+
     for action in json_data['actions']:
-        if 'web-cam-service_video0' not in action['data']:
+        if 'data' not in action or 'web-cam-service_video0' not in action['data']:
             # Only process actions that saved to the web-cam-service_video0 channel
             continue
-
         image_action = action['data']['web-cam-service_video0'][0]
         action_name = image_action['data_id']['action_id']['action_name']
         image_file = image_action['filename']
@@ -49,7 +52,6 @@ def plot_data(action_data, graph: map_pb2.Graph = None, image_size=2):
         image = Image.open(args.data_dir + '/' + filename)
         aspect = image.size[1] / image.size[0]  # keep the aspect ratio the same for the image.
         sx, sy = image_size, image_size * aspect
-
         plot.imshow(np.asarray(image), origin='upper', extent=(x - sx, x + sx, y - sy, y + sy),
                     zorder=2)
         # Plot the action name under the image.
@@ -66,7 +68,9 @@ def anchor_positions(anchors):
     }
 
 
+# Define a simple rectangle that can be easily scaled to draw a battery image.
 BOX = np.array([[0, -1], [0, 1], [0.6, 1], [0.6, -1]])
+
 
 def draw_battery(origin, scale, fraction):
     """Draw a simple battery gauge."""
@@ -77,6 +81,7 @@ def draw_battery(origin, scale, fraction):
 
 
 def load_graph(filename):
+    """Read the map file into a protobuf"""
     graph = map_pb2.Graph()
     with open(filename, 'rb') as f:
         graph.ParseFromString(f.read())

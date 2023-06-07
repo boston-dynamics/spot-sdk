@@ -1,11 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Tutorial to show how to use the Boston Dynamics API"""
-from __future__ import print_function
 
 import argparse
 import sys
@@ -36,7 +35,7 @@ def delete_pages(config):
         time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)
         time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
         if not time_sync_endpoint.establish_timesync():
-            raise NotEstablishedError("time sync not established")
+            raise NotEstablishedError('time sync not established')
 
     if config.timespan:
         time_range = timespec_to_robot_timespan(config.timespan, time_sync_endpoint)
@@ -51,7 +50,7 @@ def main(argv):
     parser.add_argument('-T', '--timespan', default='5m', help='Time span (default last 5 minutes)')
     parser.add_argument('-R', '--robot-time', action='store_true',
                         help='Specified timespan is in robot time')
-    parser.add_argument("--id", nargs="+", help="delete pages by page id")
+    parser.add_argument('--id', nargs='+', help='delete pages by page id')
 
     options = parser.parse_args(argv)
     try:
@@ -59,7 +58,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.error("delete_pages threw an exception: %r", exc)
+        logger.error('delete_pages threw an exception: %r', exc)
         return False
 
 

@@ -1,12 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Tutorial to show how to use the Boston Dynamics API to detect and follow an object"""
-from __future__ import print_function
-
 import argparse
 import io
 import json
@@ -391,7 +389,7 @@ def get_go_to(world_tform_object, robot_state, mobility_params, dist_margin=0.5)
         dist_margin (float): Distance margin to target
     """
     vo_tform_robot = get_vision_tform_body(robot_state.kinematic_state.transforms_snapshot)
-    print(f"robot pos: {vo_tform_robot}")
+    print(f'robot pos: {vo_tform_robot}')
     delta_ewrt_vo = np.array(
         [world_tform_object.x - vo_tform_robot.x, world_tform_object.y - vo_tform_robot.y, 0])
     norm = np.linalg.norm(delta_ewrt_vo)
@@ -611,7 +609,7 @@ def get_object_position(world_tform_cam, world_tform_gpe, visual_dims, depth_ima
             print('Not enough depth data.')
             return False
         else:
-            print(f"distance to object: {depth}")
+            print(f'distance to object: {depth}')
 
         center_x = round((x_max - x_min) / 2.0 + x_min)
         center_y = round((y_max - y_min) / 2.0 + y_min)
@@ -631,7 +629,7 @@ def _check_model_path(model_path):
     if model_path is None or \
     not os.path.exists(model_path) or \
     not os.path.isfile(model_path):
-        print("ERROR, could not find model file " + str(model_path))
+        print(f'ERROR, could not find model file {model_path}')
         return False
     return True
 
@@ -668,32 +666,33 @@ def main(argv):
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model-path", default="/model.pb", help=
-        ("Local file path to the Tensorflow model, example pre-trained models can be found at "
-         "https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf1_detection_zoo.md"
+        '--model-path', default='/model.pb', help=
+        ('Local file path to the Tensorflow model, example pre-trained models can be found at '
+         'https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf1_detection_zoo.md'
         ))
-    parser.add_argument("--classes", default='/classes.json', type=str,
-                        help="File containing json mapping of object class IDs to class names")
-    parser.add_argument("--number-tensorflow-processes", default=1, type=int,
-                        help="Number of Tensorflow processes to run in parallel")
-    parser.add_argument("--detection-threshold", default=0.7, type=float,
-                        help="Detection threshold to use for Tensorflow detections")
+    parser.add_argument('--classes', default='/classes.json', type=str,
+                        help='File containing json mapping of object class IDs to class names')
+    parser.add_argument('--number-tensorflow-processes', default=1, type=int,
+                        help='Number of Tensorflow processes to run in parallel')
+    parser.add_argument('--detection-threshold', default=0.7, type=float,
+                        help='Detection threshold to use for Tensorflow detections')
     parser.add_argument(
-        "--sleep-between-capture", default=0.2, type=float,
-        help=("Seconds to sleep between each image capture loop iteration, which captures "
-              "an image from all cameras"))
+        '--sleep-between-capture', default=0.2, type=float,
+        help=('Seconds to sleep between each image capture loop iteration, which captures '
+              'an image from all cameras'))
     parser.add_argument(
-        "--detection-class", default=1, type=int,
-        help=("Detection classes to use in the Tensorflow model."
-              "Default is to use 1, which is a person in the Coco dataset"))
+        '--detection-class', default=1, type=int,
+        help=('Detection classes to use in the Tensorflow model.'
+              'Default is to use 1, which is a person in the Coco dataset'))
     parser.add_argument(
-        "--max-processing-delay", default=7.0, type=float,
-        help=("Maximum allowed delay for processing an image. "
-              "Any image older than this value will be skipped"))
-    parser.add_argument("--test-mode", action='store_true',
-                        help="Run application in test mode, don't execute commands")
+        '--max-processing-delay', default=7.0, type=float,
+        help=('Maximum allowed delay for processing an image. '
+              'Any image older than this value will be skipped'))
+    parser.add_argument('--test-mode', action='store_true',
+                        help='Run application in test mode, don\'t execute commands')
 
     bosdyn.client.util.add_base_arguments(parser)
+    bosdyn.client.util.add_payload_credentials_arguments(parser)
     options = parser.parse_args(argv)
     signal.signal(signal.SIGINT, signal_handler)
     try:
@@ -723,14 +722,20 @@ def main(argv):
         # Create robot object with a world object client
         sdk = bosdyn.client.create_standard_sdk('SpotFollowClient')
         robot = sdk.create_robot(options.hostname)
-        bosdyn.client.util.authenticate(robot)
-        #Time sync is necessary so that time-based filter requests can be converted
+
+        if options.payload_credentials_file:
+            robot.authenticate_from_payload_credentials(
+                *bosdyn.client.util.get_guid_and_secret(options))
+        else:
+            bosdyn.client.util.authenticate(robot)
+
+        # Time sync is necessary so that time-based filter requests can be converted
         robot.time_sync.wait_for_sync()
 
         # Verify the robot is not estopped and that an external application has registered and holds
         # an estop endpoint.
-        assert not robot.is_estopped(), "Robot is estopped. Please use an external E-Stop client," \
-                                        " such as the estop SDK example, to configure E-Stop."
+        assert not robot.is_estopped(), 'Robot is estopped. Please use an external E-Stop client,' \
+                                        ' such as the estop SDK example, to configure E-Stop.'
 
         # Create the sdk clients
         robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
@@ -799,12 +804,12 @@ def main(argv):
                 capture_to_use['depth_image'], capture_to_use['boxes'][0],
                 ROTATION_ANGLES[capture_to_use['source']])
             get_object_position_end = time.time()
-            print(f"system_cap_time: {capture_to_use['system_cap_time']}, "
-                  f"image_queued_time: {capture_to_use['image_queued_time']}, "
-                  f"processed_image_start_time: {capture_to_use['processed_image_start_time']}, "
-                  f"processed_image_end_time: {capture_to_use['processed_image_end_time']}, "
-                  f"get_object_position_start_time: {get_object_position_start}, "
-                  f"get_object_position_end_time: {get_object_position_end}, ")
+            print(f'system_cap_time: {capture_to_use["system_cap_time"]}, '
+                  f'image_queued_time: {capture_to_use["image_queued_time"]}, '
+                  f'processed_image_start_time: {capture_to_use["processed_image_start_time"]}, '
+                  f'processed_image_end_time: {capture_to_use["processed_image_end_time"]}, '
+                  f'get_object_position_start_time: {get_object_position_start}, '
+                  f'get_object_position_end_time: {get_object_position_end}, ')
 
             # get_object_position can fail if there is insufficient depth sensor information
             if not world_tform_object:
@@ -817,18 +822,18 @@ def main(argv):
             end_time = 15.0
             if tag_cmd is not None:
                 if not options.test_mode:
-                    print("executing command")
+                    print('executing command')
                     robot_command_client.robot_command(lease=None, command=tag_cmd,
                                                        end_time_secs=time.time() + end_time)
                 else:
-                    print("Running in test mode, skipping command.")
+                    print('Running in test mode, skipping command.')
 
         # Shutdown lease keep-alive and return lease gracefully.
         lease_keep.shutdown()
         lease_client.return_lease(lease)
         return True
     except Exception as exc:  # pylint: disable=broad-except
-        LOGGER.error("Spot Tensorflow Detector threw an exception: %s", exc)
+        LOGGER.error('Spot Tensorflow Detector threw an exception: %s', exc)
         # Shutdown lease keep-alive and return lease gracefully.
         return False
 

@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -24,6 +24,7 @@ See the [robot services](../../../docs/concepts/robot_services.md) document and 
 - [Arm Joint Move Command](../arm_joint_move/README.md)
 - [Arm Force Control Command](../arm_force_control/README.md)
 - [Arm Grasp Command](../arm_grasp/README.md)
+- [Arm Grasp and Carry Overrides](../arm_grasp_carry_overrides/README.md)
 - [Arm Gaze Command](../arm_gaze/README.md)
 - [Arm Command with Surface Contact](../arm_surface_contact/README.md)
 - [Arm Door Opening Command](../arm_door/README.md)
@@ -31,3 +32,4 @@ See the [robot services](../../../docs/concepts/robot_services.md) document and 
 - [Writing Gcode](../arm_gcode/README.md)
 - [Gripper Camera Parameters](../gripper_camera_params/README.md)
 - [Arm Impedance Control](../arm_impedance_control/README.md)
+- [Inverse Kinematics](../inverse_kinematics/README.md)

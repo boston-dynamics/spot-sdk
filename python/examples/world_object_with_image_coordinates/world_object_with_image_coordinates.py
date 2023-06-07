@@ -1,13 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Example using the world objects service. """
-
-from __future__ import print_function
-
 import argparse
 import sys
 
@@ -37,7 +34,7 @@ def main(argv):
 
     # List all world objects in the scene before any mutation.
     world_objects = world_object_client.list_world_objects().world_objects
-    print("Current World objects before mutations: " + str([obj for obj in world_objects]))
+    print(f'Current World objects before mutations: {[obj for obj in world_objects]}')
 
     # Set the detection time for the additional april tag. The client library will convert the time into robot time.
     # Uses a function to get google.protobuf.Timestamp of the current system time.
@@ -46,9 +43,9 @@ def main(argv):
     # Create the image coordinate object. This type of object does not require a base frame for the world object.
     # Since we are not providing a transform to the object expressed by the image coordinates, it is not necessary
     # to set the frame_name_image_properties, as this describes the frame used in a transform (such as world_tform_image_coords).
-    img_coord = wo.ImageProperties(camera_source="back",
+    img_coord = wo.ImageProperties(camera_source='back',
                                    coordinates=geom.Polygon(vertexes=[geom.Vec2(x=100, y=100)]))
-    wo_obj = wo.WorldObject(id=2, name="img_coord_tester", acquisition_time=timestamp,
+    wo_obj = wo.WorldObject(id=2, name='img_coord_tester', acquisition_time=timestamp,
                             image_properties=img_coord)
 
     # Request to add the image coordinates detection to the world object service.
@@ -57,7 +54,7 @@ def main(argv):
 
     # List all world objects in the scene after the mutation was applied.
     world_objects = world_object_client.list_world_objects().world_objects
-    print("Current World objects after adding coordinates: " + str([obj for obj in world_objects]))
+    print(f'Current World objects after adding coordinates: {[obj for obj in world_objects]}')
 
     return True
 

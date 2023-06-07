@@ -1,11 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Provides a programmatic estop to stop the robot."""
-from __future__ import print_function
 
 import argparse
 import curses
@@ -76,7 +75,7 @@ def main(argv):
     estop_client = robot.ensure_client(EstopClient.default_service_name)
 
     # Create nogui estop
-    estop_nogui = EstopNoGui(estop_client, options.timeout, "Estop NoGUI")
+    estop_nogui = EstopNoGui(estop_client, options.timeout, 'Estop NoGUI')
 
     # Create robot state client for the robot
     state_client = robot.ensure_client(RobotStateClient.default_service_name)
@@ -150,7 +149,7 @@ def main(argv):
                     estop_nogui.settle_then_cut()
             # If the user attempts to toggle estop without valid endpoint
             except bosdyn.client.estop.EndpointUnknownError:
-                clean_exit("This estop endpoint no longer valid. Exiting...")
+                clean_exit('This estop endpoint no longer valid. Exiting...')
 
             # Check if robot is estopped by any estops
             estop_status = 'NOT_STOPPED\n'

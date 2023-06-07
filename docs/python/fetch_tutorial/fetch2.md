@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -66,10 +66,11 @@ In this portion of the tutorial, you will:
 <h4>Install NVIDIA drivers, CUDA, and cuDNN</h4>
 <ul>
     <li>We will not cover system-specific NVIDIA driver, CUDA, or cuDNN installation here.  Use the links above for installation guides.</li>
-    <li>You must install <strong>CUDA version 10.1</strong></li>
+    <li>You must install <strong>CUDA version 10.1</strong> and <strong>cuDNN version 7.6.x</strong></li>
     <ul>
-        <li>CUDA and cuDNN versions <mark>other than <strong>10.1</strong> will not work</mark>.</li>
+        <li>CUDA and cuDNN versions other than this will not work</li>
     </ul>
+    <li>Ensure your NVIDIA driver is >= 418.39 to be compatible with CUDA 10.1, as specified in NVIDIA's compatibility tables <a href="https://docs.nvidia.com/deploy/cuda-compatibility/">here</a></li>
 </ul>
 
 <h3>Install TensorFlow</h3>
@@ -84,9 +85,9 @@ If that worked, your prompt should now have <code>(my_spot_env)</code> at the fr
 </p>
 <h4>Install TensorFlow</h4>
 
-<pre><code class="language-text">python -m pip install --upgrade pip
-python -m pip install tensorflow-gpu==2.3.1 tensorflow==2.3.1 tensorboard==2.3.0 tf-models-official==2.3.0 pycocotools lvis
-python -m pip uninstall opencv-python-headless
+<pre><code class="language-text">python3 -m pip install --upgrade pip
+python3 -m pip install tensorflow-gpu==2.3.1 tensorflow==2.3.1 tensorboard==2.3.0 tf-models-official==2.3.0 pycocotools lvis
+python3 -m pip uninstall opencv-python-headless
 </code></pre>
 <ul>
     <li>Tensorflow likes to install a non-GUI version of OpenCV, which will cause us problems later</li>
@@ -96,7 +97,7 @@ python -m pip uninstall opencv-python-headless
 
 <h4>Test TensorFlow and CUDA installation</h4>
 
-<pre><code class="language-text">(my_spot_env) $ python
+<pre><code class="language-text">(my_spot_env) $ python3
 >>> import tensorflow as tf
 >>> print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 Num GPUs Available:  1
@@ -121,7 +122,7 @@ If this doesn't work for you, you'll need to figure out what is wrong with your 
 <pre><code class="language-bash">unzip models-with-protos.zip</code></pre>
     <li>Install the object detection API:</li>
 <pre><code class="language-bash">cd models-with-protos/research
-python -m pip install .</code></pre>
+python3 -m pip install .</code></pre>
 </ol>
 
 <div class="indent">
@@ -145,7 +146,7 @@ protoc object_detection/protos/*.proto --python_out=.
             <li>Copied and installed the object detection tf setup file:</li>
 
 <pre><code class="language-bash">cp object_detection/packages/tf2/setup.py .
-python -m pip install .
+python3 -m pip install .
 </code></pre>
 </ul>
       </div>
@@ -190,7 +191,7 @@ We want to hold back some of our data from the training set so that we can test 
 </p>
 
 <pre><code class="language-text wrap">cd ~/fetch
-python split_dataset.py --labels-dir dogtoy/annotations/ --output-dir dogtoy/annotations/ --ratio 0.9
+python3 split_dataset.py --labels-dir dogtoy/annotations/ --output-dir dogtoy/annotations/ --ratio 0.9
 </code></pre>
 
 <p>This copies your XML label files into the <code>train</code> and <code>test</code> folders, splitting them up randomly.  The script copies just to be extra safe and not delete your painstakingly labeled files!</p>
@@ -209,10 +210,10 @@ Create a file called <code>label_map.pbtxt</code> and put it in <code>dogtoy/ann
 <ul>
     <li>Download the script and place it in the <code>fetch</code> directory.</li>
     <li>Run it:</li>
-<pre><code class="language-bash wrap">python generate_tfrecord.py --xml_dir dogtoy/annotations/train --image_dir dogtoy/images --labels_path dogtoy/annotations/label_map.pbtxt --output_path dogtoy/annotations/train.record</code></pre>
+<pre><code class="language-bash wrap">python3 generate_tfrecord.py --xml_dir dogtoy/annotations/train --image_dir dogtoy/images --labels_path dogtoy/annotations/label_map.pbtxt --output_path dogtoy/annotations/train.record</code></pre>
     <li>Run it again for the test set:</li>
 
-<pre><code class="language-bash wrap">python generate_tfrecord.py --xml_dir dogtoy/annotations/test --image_dir dogtoy/images --labels_path dogtoy/annotations/label_map.pbtxt --output_path dogtoy/annotations/test.record</code></pre>
+<pre><code class="language-bash wrap">python3 generate_tfrecord.py --xml_dir dogtoy/annotations/test --image_dir dogtoy/images --labels_path dogtoy/annotations/label_map.pbtxt --output_path dogtoy/annotations/test.record</code></pre>
 </ul>
 
 <hr />
@@ -298,7 +299,7 @@ cp models-with-protos/research/object_detection/model_main_tf2.py .
 </code></pre>
     <li>Start training:</li>
 
-<pre><code class="language-bash wrap">python model_main_tf2.py --model_dir=dogtoy/models/my_ssd_resnet50_v1_fpn --pipeline_config_path=dogtoy/models/my_ssd_resnet50_v1_fpn/pipeline.config --num_train_steps=20000
+<pre><code class="language-bash wrap">python3 model_main_tf2.py --model_dir=dogtoy/models/my_ssd_resnet50_v1_fpn --pipeline_config_path=dogtoy/models/my_ssd_resnet50_v1_fpn/pipeline.config --num_train_steps=20000
 </code></pre>
 
 <li>If all goes well after a while, you'll start seeing output like this:</li>
@@ -331,7 +332,7 @@ During training, we can evaluate our network's current state against our test se
     <li>In a <strong>new terminal:</strong></li>
 <pre><code class="language-text wrap">source my_spot_env/bin/activate
 cd ~/fetch
-CUDA_VISIBLE_DEVICES="-1" python model_main_tf2.py --model_dir=dogtoy/models/my_ssd_resnet50_v1_fpn --pipeline_config_path=dogtoy/models/my_ssd_resnet50_v1_fpn/pipeline.config --checkpoint_dir=dogtoy/models/my_ssd_resnet50_v1_fpn</code></pre>
+CUDA_VISIBLE_DEVICES="-1" python3 model_main_tf2.py --model_dir=dogtoy/models/my_ssd_resnet50_v1_fpn --pipeline_config_path=dogtoy/models/my_ssd_resnet50_v1_fpn/pipeline.config --checkpoint_dir=dogtoy/models/my_ssd_resnet50_v1_fpn</code></pre>
 </ul>
 <p>
     Let's break down what this is doing.
@@ -424,7 +425,7 @@ CUDA_VISIBLE_DEVICES="-1" python model_main_tf2.py --model_dir=dogtoy/models/my_
         <li>Run with the environment variable: <code>TF_FORCE_GPU_ALLOW_GROWTH="true"</code></li>
         <ul>
             <li>You can set the environment variable right before the training line:</li>
-            <li class="nomarker"><pre><code class="language-text">TF_FORCE_GPU_ALLOW_GROWTH="true" python model_main_tf2.py --model_dir=dogtoy/models/my_ssd_resnet50_v1_fpn --pipeline_config_path=dogtoy/models/my_ssd_resnet50_v1_fpn/pipeline.config --num_train_steps=20000</code></pre></li>
+            <li class="nomarker"><pre><code class="language-text">TF_FORCE_GPU_ALLOW_GROWTH="true" python3 model_main_tf2.py --model_dir=dogtoy/models/my_ssd_resnet50_v1_fpn --pipeline_config_path=dogtoy/models/my_ssd_resnet50_v1_fpn/pipeline.config --num_train_steps=20000</code></pre></li>
         </ul>
         <li>Try closing items shown in <code>nvidia-smi</code> to free GPU memory.</li>
         <li>See the <a href="https://www.tensorflow.org/guide/gpu#limiting_gpu_memory_growth">tensorflow documentation</a> for other options.</li>

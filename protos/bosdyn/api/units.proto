@@ -1,0 +1,45 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+option go_package = "bosdyn/api";
+option java_outer_classname = "UnitsProto";
+
+enum TemperatureEnum {
+    TEMPERATURE_UNKNOWN = 0;
+    TEMPERATURE_KELVIN = 1;
+    TEMPERATURE_CELSIUS = 2;
+    TEMPERATURE_FAHRENHEIT = 3;
+}
+
+enum PressureEnum {
+    PRESSURE_UNKNOWN = 0;
+    PRESSURE_PSI = 1;  // Pound-force per square inch
+    PRESSURE_KPA = 2;  // KiloPascal
+    PRESSURE_BAR = 3;  // Bar
+}
+
+message Units {
+    oneof units {
+        string name = 1;  // Use this field if the desired unit is not a supported enum.
+        TemperatureEnum temp = 2;
+        PressureEnum press = 3;
+    }
+
+    // If a service wants an absolute temperature threshold between 0 C  and 100 C, that would show
+    // up as 32 F to 212 F on any Fahrenheit loving clients IF is_relative is set to false.  Note
+    // the change from 0 C to 32 F.
+    //
+    // If a service wants a relative temperate threshold (region A must be no more than X degrees
+    // hotter than region B), between 0 and 100 C, that would show up as 0 F to 180 F on any
+    // Fahrenheit loving clients IF is_relative is set to true.  Note that 0 C now maps to 0 F.
+    //
+    // NOTE: Only relevant for units with non equal zero points.
+    bool is_relative = 4;
+}

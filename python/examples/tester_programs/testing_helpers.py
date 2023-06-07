@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -40,11 +40,11 @@ def test_directory_registration(robot, service_name, expected_service_type):
         return True
     except NonexistentServiceError:
         _LOGGER.error(
-            "The service %s is not registered in the directory currently.\n Make sure the "
-            "service code is running, and starts a DirectoryRegistrationKeepAlive.", service_name)
+            'The service %s is not registered in the directory currently.\n Make sure the '
+            'service code is running, and starts a DirectoryRegistrationKeepAlive.', service_name)
         return False
     except ResponseError as err:
-        _LOGGER.error("Exception raised when checking the directory registration: %s", err)
+        _LOGGER.error('Exception raised when checking the directory registration: %s', err)
         return False
 
 
@@ -66,10 +66,10 @@ def test_if_service_has_active_service_faults(robot, service_name):
 
     if faults:
         _LOGGER.error(
-            "The service %s had the following active service faults (found in "
-            "RobotState): ", service_name)
+            'The service %s had the following active service faults (found in RobotState): ',
+            service_name)
         for fault in faults:
-            _LOGGER.info("Service fault: %s", fault)
+            _LOGGER.info('Service fault: %s', fault)
         return False
 
     # No service faults were associated with the service name.
@@ -94,26 +94,26 @@ def test_if_service_is_reachable(service_call, *args):
         return True
     except ServiceUnavailableError as err:
         _LOGGER.error(
-            "The service is unreachable with a gRPC service call. Check "
-            "the --host-ip argument (for running the service python file) matches the IP address of the computer "
-            "running the file and that the service is still running.")
-        _LOGGER.warning("The full error message is %s", err)
+            'The service is unreachable with a gRPC service call. Check '
+            'the --host-ip argument (for running the service python file) matches the IP address of the computer '
+            'running the file and that the service is still running.')
+        _LOGGER.warning('The full error message is %s', err)
         return False
     except TimedOutError as err:
         _LOGGER.error(
-            "The gRPC service call has timed out. Check that the "
-            "service is still running and the service port is NOT blocked by any firewalls.")
-        _LOGGER.warning("The full error message is %s", err)
+            'The gRPC service call has timed out. Check that the '
+            'service is still running and the service port is NOT blocked by any firewalls.')
+        _LOGGER.warning('The full error message is %s', err)
         return False
     except UnableToConnectToRobotError as err:
         _LOGGER.error(
-            "The gRPC service call is unable to connect to robot %s. Check that the service port is specified "
-            "as an argument (`--port`) when running the service, and that the port is NOT blocked by an firewalls."
+            'The gRPC service call is unable to connect to robot %s. Check that the service port is specified '
+            'as an argument (`--port`) when running the service, and that the port is NOT blocked by an firewalls.'
         )
-        _LOGGER.warning("The full error message is %s", err)
+        _LOGGER.warning('The full error message is %s', err)
         return False
     except ResponseError as err:
-        _LOGGER.error("Exception raised when testing the network connection to the service: %s",
+        _LOGGER.error('Exception raised when testing the network connection to the service: %s',
                       err)
         return False
 
@@ -126,9 +126,9 @@ def run_test(test_function, test_name, *args):
         test_name(string): The name of the test being run.
         args: Additional arguments to be passed to the test function.
     """
-    _LOGGER.info("TEST: %s" % test_name)
+    _LOGGER.info('TEST: %s', test_name)
     if test_function(*args):
-        _LOGGER.info("SUCCESS!\n")
+        _LOGGER.info('SUCCESS!\n')
     else:
         sys.exit(1)
 
@@ -145,18 +145,18 @@ def log_debug_information(response_error, request_msg=None, strip_response=False
                                   error message.
     """
     if isinstance(response_error, ResponseError):
-        _LOGGER.info("Complete error message: %s %s", type(response_error),
+        _LOGGER.info('Complete error message: %s %s', type(response_error),
                      response_error.error_message)
         if strip_response:
             # Make a copy of the proto message to prevent modifying the original.
             copied_message = type(response_error.response)()
             copied_message.CopyFrom(response_error.response)
             strip_large_bytes_fields(copied_message)
-            _LOGGER.info("RPC response (with bytes removed) from the service: %s", copied_message)
+            _LOGGER.info('RPC response (with bytes removed) from the service: %s', copied_message)
         else:
-            _LOGGER.info("RPC response from the service: %s", response_error.response)
+            _LOGGER.info('RPC response from the service: %s', response_error.response)
     else:
-        _LOGGER.info("Complete error message: %s %s", type(response_error), response_error)
+        _LOGGER.info('Complete error message: %s %s', type(response_error), response_error)
 
     if request_msg is not None:
-        _LOGGER.info("RPC request: %s", request_msg)
+        _LOGGER.info('RPC request: %s', request_msg)

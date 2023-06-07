@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,6 +14,7 @@ import "bosdyn/api/alerts.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/network_compute_bridge.proto";
+import "bosdyn/api/service_customization.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
@@ -35,19 +36,22 @@ message DataAcquisitionCapability {
 
     // The data acquisition plugin service's service name used in directory registration.
     string service_name = 4;
+
+    // Custom parameters supported by this instance of the service.
+    DictParam.Spec custom_params = 5;
 }
 
-// Description of an image acquisition capability. The image acquisition capabilities will be available
-// through the main data acquisition service on robot and are populated based on all bosdyn.api.ImageService
-// services registered to the robot's directory.
+// Description of an image acquisition capability. The image acquisition capabilities will be
+// available through the main data acquisition service on robot and are populated based on all
+// bosdyn.api.ImageService services registered to the robot's directory.
 message ImageAcquisitionCapability {
     // The image service's service name used in directory registration.
     string service_name = 1;
 
-    // (Depricate) Please use "image_sources" below for information regarding the image source
-    // associated with the service.
-    repeated string image_source_names = 2;
-    
+    // DEPRECATED as of 3.1.0. Please use "image_sources" below for information regarding the image
+    // source associated with the service.
+    repeated string image_source_names = 2 [deprecated = true];
+
     // List of image sources reported by the image service (through the ListImageSources RPC).
     repeated ImageSource image_sources = 3;
 }
@@ -56,14 +60,20 @@ message NetworkComputeCapability {
     // Service information.
     NetworkComputeServerConfiguration server_config = 1;
 
-    // Provide list of available models
-    repeated string available_models = 2;
+    // Provide list of available models.
+    // DEPRECATED as of 3.3. Replaced by AvailableModels.
+    repeated string available_models = 2 [deprecated = true];
 
-    repeated ModelLabels labels = 6;
+    // Information about available classes for each model.
+    // DEPRECATED as of 3.3. Replaced by AvailableModels.
+    repeated ModelLabels labels = 6 [deprecated = true];
+
+    // Envelope message for repeated ModelData.
+    AvailableModels models = 3;
 }
 
-// A list of all capabilities (data and images) that a specific data acquisition plugin service can successfully
-// acquire and save the data specified in each capability.
+// A list of all capabilities (data and images) that a specific data acquisition plugin service can
+// successfully acquire and save the data specified in each capability.
 message AcquisitionCapabilityList {
     // List of non-image data acquisition capabilities.
     repeated DataAcquisitionCapability data_sources = 1;
@@ -75,22 +85,24 @@ message AcquisitionCapabilityList {
     repeated NetworkComputeCapability network_compute_sources = 5;
 }
 
-// The CaptureActionId describes the entire capture action for an AcquireData request and will be used
-// to uniquely identify that full request's set of stored data.
+// The CaptureActionId describes the entire capture action for an AcquireData request and will be
+// used to uniquely identify that full request's set of stored data.
 message CaptureActionId {
     // The action name is used to group all pieces of data associated with a single AcquireData
     // request. The action name must be unique for the given group name, meaning no two actions
     // with the same group name can have the same action name.
     string action_name = 1;
 
-    // The group name is used to group a "session" of data, such as a mission or a teleop capture session, which
-    // includes multiple capture actions (from multiple AcquireData RPCs).
+    // The group name is used to group a "session" of data, such as a mission or a teleop capture
+    // session, which includes multiple capture actions (from multiple AcquireData RPCs).
     string group_name = 2;
 
-    // Time (in the robot's clock) at which this capture was triggered. If the timestamp is not specified
-    // in the AcquireData RPC, the main data acquisition service on robot will populate the timestamp field
-    // with the timestamp of when the RPC was recieved.
+    // Time (in the robot's clock) at which this capture was triggered. If the timestamp is not
+    // specified in the AcquireData RPC, the main data acquisition service on robot will populate
+    // the timestamp field with the timestamp of when the RPC was recieved.
     google.protobuf.Timestamp timestamp = 3;
+
+    reserved 4;
 }
 
 // A way to identify an individual piece of data stored in the data buffer.
@@ -99,15 +111,22 @@ message DataIdentifier {
     CaptureActionId action_id = 1;
 
     // Data buffer channel associated with the DataBlob. The channel is used to group data across
-    // actions by a specific source, and it can be used in queries to retrieve some subset of data. For example,
-    // the channel could be "ptz" and queries can be made for all PTZ images.
+    // actions by a specific source, and it can be used in queries to retrieve some subset of data.
+    // For example, the channel could be "ptz" and queries can be made for all PTZ images.
     string channel = 2;
 
-    // Data-specific identifier that can optionally be used to disambiguate cases where the action_id and
-    // channel are insufficient. For example, you save cropped SpotCAM pano image that are detected as gauges to
-    // a "detected_gauges" channel, but want a way to further individually identify them as each specific gauge,
-    // so you give each detection a unique data_name.
+    // Data-specific identifier that can optionally be used to disambiguate cases where the
+    // action_id and channel are insufficient. For example, you save cropped SpotCAM pano image that
+    // are detected as gauges to a "detected_gauges" channel, but want a way to further individually
+    // identify them as each specific gauge, so you give each detection a unique data_name.
     string data_name = 3;
+
+    // Unique identifier specified by the Data Acquisition Store service for this individual piece
+    // of data. It is a monotonically-increasing value that is incremented for each stored capture.
+    // This value is intended to be unique to a robot and not globally unique. We do not guarantee
+    // uniqueness pre and post software upgrades or factory resets. This id does not necessarily
+    // start at 0.
+    uint64 id = 4;
 }
 
 // Structured data that can be included within a AcquireData RPC and saved in association with
@@ -122,7 +141,8 @@ message Metadata {
 message AssociatedMetadata {
     // The data that this metadata refers to.
     // The timestamp field is ignored.
-    // If only the action_id is filled out, this metadata is associated with the entire capture action.
+    // If only the action_id is filled out, this metadata is associated with the entire capture
+    // action.
     DataIdentifier reference_id = 1;
 
     // Metadata message to be stored.
@@ -134,7 +154,8 @@ message AssociatedMetadata {
 message AssociatedAlertData {
     // The data that this AlertData refers to.
     // The timestamp field is ignored.
-    // If only the action_id is filled out, this AlertData is associated with the entire capture action.
+    // If only the action_id is filled out, this AlertData is associated with the entire capture
+    // action.
     DataIdentifier reference_id = 1;
 
     // AlertData message to be stored.
@@ -150,12 +171,12 @@ message ImageSourceCapture {
     // Options for requesting this particular image.
     ImageRequest image_request = 4;
 
-    // Deprecated.  Use image_request instead.
+    // DEPRECATED as of 3.2.0.  Use image_request instead.
     // Specific image source to use from the list reported by the image service within the
     // ImageAcquisitionCapability message.
     string image_source = 2 [deprecated = true];
 
-    // Deprecated.  Use image_request instead.
+    // DEPRECATED as of 3.2.0.  Use image_request instead.
     // Specific pixel format to capture reported by the ImageAcquisitionCapability message.
     Image.PixelFormat pixel_format = 3 [deprecated = true];
 }
@@ -166,14 +187,24 @@ message DataCapture {
     // Name of the data to be captured. This should match the uniquely identifying name from
     // the DataAcquisitionCapability.
     string name = 1;
+
+    // Values passed to the service at capture time.
+    // See the DictParam.Spec in DataAcquisitionCapability.
+    DictParam custom_params = 9;
 }
 
 message NetworkComputeCapture {
     // Data source and model.
-    NetworkComputeInputData input_data = 1;
+    oneof input {
+        // DEPRECATED as of 3.3.  Please use input_data_bridge instead.
+        NetworkComputeInputData input_data = 1 [deprecated = true];
+        NetworkComputeInputDataBridge input_data_bridge = 3;
+    }
+
     // Which service to use.
     NetworkComputeServerConfiguration server_config = 2;
 }
+
 
 // The grouping of all individual image and data captures for a given capture action.
 message AcquisitionRequestList {
@@ -185,6 +216,7 @@ message AcquisitionRequestList {
 
     // List of Network Compute Bridge requests
     repeated NetworkComputeCapture network_compute_captures = 4;
+
 }
 
 // An error associated with a particular capture action and piece of data.
@@ -192,6 +224,8 @@ message DataError {
     // Identifier for the data to be saved.
     DataIdentifier data_id = 1;
     // Human-readable message describing the error.
+    // If a capability was misconfigured, e.g. by an invalid CustomParam in one of the requests,
+    // it should show up here.
     string error_message = 2;
     // Custom plugin-specific data about the problem.
     google.protobuf.Any error_data = 3;
@@ -203,7 +237,7 @@ message PluginServiceError {
     string service_name = 1;
 
     // Possible ways a plugin can fail.
-    enum ErrorCode{
+    enum ErrorCode {
         STATUS_UNKNOWN = 0;
         // The initial RPC to the plugin failed
         STATUS_REQUEST_ERROR = 1;
@@ -224,7 +258,7 @@ message NetworkComputeError {
     // Name of the service with the error
     string service_name = 1;
 
-    enum ErrorCode{
+    enum ErrorCode {
         STATUS_UNKNOWN = 0;
         // The request was rejected.
         STATUS_REQUEST_ERROR = 1;
@@ -241,7 +275,6 @@ message NetworkComputeError {
 
     // Description of the error.
     string message = 4;
-
 }
 
 message AcquireDataRequest {
@@ -251,7 +284,8 @@ message AcquireDataRequest {
     // Define the unique action that all data should be saved with.
     CaptureActionId action_id = 2;
 
-    // Metadata to store with the data capture. The main DAQ service saves it in the DataBuffer.
+    // Metadata to store with the data capture. The main Data Acquisition service saves it in the
+    // DataBuffer.
     Metadata metadata = 3;
 
     // List of capability requests that should be collected as part of this capture action.
@@ -270,18 +304,20 @@ message AcquireDataResponse {
 
     enum Status {
         STATUS_UNKNOWN = 0;
-        STATUS_OK = 1; // The capture action has successfully started acquiring the data.
-        STATUS_UNKNOWN_CAPTURE_TYPE = 2; // One of the capability requests in the AcquisitionRequestList is unknown.
+        // The capture action has successfully started acquiring the data.
+        STATUS_OK = 1;
+        // One of the capability requests in the AcquisitionRequestList is unknown.
+        STATUS_UNKNOWN_CAPTURE_TYPE = 2;
     }
     // Result of the AcquirePluginData RPC call. Further monitoring on the success of the
     // acquisition request can be done using the GetStatus RPC.
     Status status = 2;
 
-    // Identifier which can be used to check the status of or cancel the acquisition action..
+    // Identifier which can be used to check the status of or cancel the acquisition action.
     uint32 request_id = 3;
 }
 
-// Message sent by main DAQ service to all data acquisition plugin services.
+// Message sent by main Data Acquisition service to all data acquisition plugin services.
 message AcquirePluginDataRequest {
     // Common request header
     RequestHeader header = 1;
@@ -299,7 +335,7 @@ message AcquirePluginDataRequest {
     // in the DataIdentifier field of each piece of data buffered from this request.
     CaptureActionId action_id = 4;
 
-    // List of capability requests specific for this DAQ plugin.
+    // List of capability requests specific for this Data Acquisition plugin.
     AcquisitionRequestList acquisition_requests = 5;
 }
 
@@ -309,8 +345,12 @@ message AcquirePluginDataResponse {
 
     enum Status {
         STATUS_UNKNOWN = 0;
-        STATUS_OK = 1; // The capture action has successfully started acquiring the data.
-        STATUS_UNKNOWN_CAPTURE_TYPE = 2; // One of the capability requests in the AcquisitionRequestList is unknown.
+        // The capture action has successfully started acquiring the data.
+        STATUS_OK = 1;
+        // One of the capability requests in the AcquisitionRequestList is unknown.
+        STATUS_UNKNOWN_CAPTURE_TYPE = 2;
+        // See custom_param_error field for details.
+        STATUS_CUSTOM_PARAMS_ERROR = 3;
     }
     // Result of the AcquirePluginData RPC call. Further monitoring on the success of the
     // acquisition request can be done using the GetStatus RPC.
@@ -322,6 +362,9 @@ message AcquirePluginDataResponse {
     // Time (in the robot's clock) by which this capture should definitely be complete.
     // If it is not complete by this time, something has gone wrong.
     google.protobuf.Timestamp timeout_deadline = 5;
+
+    // Filled out if status is STATUS_CUSTOM_PARAMS_ERROR.
+    CustomParamError custom_param_error = 6;
 }
 
 message GetStatusRequest {
@@ -338,28 +381,31 @@ message GetStatusResponse {
 
     enum Status {
         STATUS_UNKNOWN = 0;
-        STATUS_ACQUIRING = 1; // [Status] Data acquisition is still in progress
-        STATUS_SAVING = 2; // [Status] Data has been acquired, processing and storage is now in progress.
-        STATUS_COMPLETE = 3; // [Status] Data acquisition is complete.
-        STATUS_CANCEL_IN_PROGRESS = 4; // [Status] The data acquisition service is working to cancel the request.
-        STATUS_ACQUISITION_CANCELLED = 5; // [Status] The data acquisition request was cancelled manually.
+        // [Status]
+        STATUS_ACQUIRING = 1;  // Data acquisition is still in progress.
+        STATUS_SAVING = 2;     // Data has been acquired, processing and storage is now in progress.
+        STATUS_COMPLETE = 3;   // Data acquisition is complete.
+        STATUS_CANCEL_IN_PROGRESS = 4;  // The data acquisition service is cancelling the request.
+        STATUS_ACQUISITION_CANCELLED = 5;  // The data acquisition request was cancelled manually.
 
-        STATUS_DATA_ERROR = 10; // [Error - AcquireData] An error occurred while acquiring, processing, or saving data.
-        STATUS_TIMEDOUT = 11; // [Error - AcquireData] The data collection has passed the deadline for completion.
-        STATUS_INTERNAL_ERROR = 12; // [Error - AcquireData] An error occurred such that we don't even know our status.
+        // [Error - AcquireData]
+        STATUS_DATA_ERROR = 10;  // An error occurred while acquiring, processing, or saving data.
+        STATUS_TIMEDOUT = 11;    // The data collection has passed the deadline for completion.
+        STATUS_INTERNAL_ERROR = 12;  // An error occurred such that we don't even know our status.
 
-        STATUS_CANCEL_ACQUISITION_FAILED = 30; // [Error -CancelAcquisition] The cancellation request failed to complete.
+        // [Error - CancelAcquisition]
+        STATUS_CANCEL_ACQUISITION_FAILED = 30;  // The cancellation request failed to complete.
 
-        STATUS_REQUEST_ID_DOES_NOT_EXIST = 20; // [Error - GetStatus] The request_id does not exist.
+        // [Error - GetStatus]
+        STATUS_REQUEST_ID_DOES_NOT_EXIST = 20;  // The request_id does not exist.
     };
-
     Status status = 2;
 
     // Data that has been successfully saved into the data buffer for the capture action.
     repeated DataIdentifier data_saved = 3;
     // A list of data captures which have failed in some way during the action.
-    // For example, the data acquisition plugin is unable to communicate to a sensor and responds with
-    // a data error for that specific data capture.
+    // For example, the data acquisition plugin is unable to communicate to a sensor and responds
+    // with a data error for that specific data capture.
     repeated DataError data_errors = 9;
     // Services which failed independent of a particular data id.
     // For example, if a plugin times out or crashes, it could be reported here.
@@ -397,9 +443,9 @@ message CancelAcquisitionResponse {
 
     enum Status {
         STATUS_UNKNOWN = 0;
-        STATUS_OK = 1; // Successfully cancelled the data acquisition request.
-        STATUS_FAILED_TO_CANCEL = 2; // Unable to stop the data acquisition request.
-        STATUS_REQUEST_ID_DOES_NOT_EXIST = 3; // [Error] The request_id does not exist.
+        STATUS_OK = 1;                // Successfully cancelled the data acquisition request.
+        STATUS_FAILED_TO_CANCEL = 2;  // Unable to stop the data acquisition request.
+        STATUS_REQUEST_ID_DOES_NOT_EXIST = 3;  // [Error] The request_id does not exist.
     };
     // The status of the Cancellation RPC. Further monitoring on the success of the cancellation
     // request can be done using the GetStatus RPC.

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -43,12 +43,12 @@ message ListAllSequencesRequest {
     RequestHeader header = 1;
 }
 
-// 
+//
 message ListAllSequencesResponse {
     // Common response header.
     ResponseHeader header = 1;
 
-    // DEPRECATED as of 3.2.0: The string list of known sequence names has been  
+    // DEPRECATED as of 3.2.0: The string list of known sequence names has been
     // deprecated and replaced by the repeated field sequence_info.
     repeated string known_sequences = 2 [deprecated = true];
 
@@ -63,22 +63,24 @@ message SequenceInfo {
 
     enum SavedState {
         // Status unknown; do not use
-        SAVED_STATE_UNKNOWN = 0; 
+        SAVED_STATE_UNKNOWN = 0;
         // Sequence will be forgotten on reboot
-        SAVED_STATE_TEMPORARY = 1; 
-        // A file for this sequence is stored on the robot; the sequence will be loaded 
+        SAVED_STATE_TEMPORARY = 1;
+        // A file for this sequence is stored on the robot; the sequence will be loaded
         // to memory each time the robot boots
         SAVED_STATE_RETAINED = 2;
-        // Sequence was built into the release and can't be deleted 
-        SAVED_STATE_PERMANENT = 3; 
+        // Sequence was built into the release and can't be deleted
+        SAVED_STATE_PERMANENT = 3;
     }
-    
-    // Use temporary sequences during development with choreographer, and then tell the robot to 
-    // retain the final version of the sequence so that it can be played back later from other 
+
+    // Use temporary sequences during development with choreographer, and then tell the robot to
+    // retain the final version of the sequence so that it can be played back later from other
     // interfaces, like the tablet
     SavedState saved_state = 3;
-}
 
+    // The exit transition state of the sequence.
+    MoveInfo.TransitionState exit_state = 4;
+}
 
 // Delete the retained file for a choreography sequence so the sequence will be forgotten on reboot
 message DeleteSequenceRequest {
@@ -89,20 +91,20 @@ message DeleteSequenceRequest {
     string sequence_name = 2;
 }
 
-// 
+//
 message DeleteSequenceResponse {
     // Common response header.
     ResponseHeader header = 1;
 
     enum Status {
         // Do not use.
-        STATUS_UNKNOWN = 0; 
-        // The sequence was successfully deleted 
-        STATUS_OK = 1;  
+        STATUS_UNKNOWN = 0;
+        // The sequence was successfully deleted
+        STATUS_OK = 1;
         // The sequence does not exist
-        STATUS_UNKNOWN_SEQUENCE = 2; 
+        STATUS_UNKNOWN_SEQUENCE = 2;
         // The sequence is already temporary and will be removed at the next reboot.
-        STATUS_ALREADY_TEMPORARY = 3; 
+        STATUS_ALREADY_TEMPORARY = 3;
         // Permanent sequences cannot be deleted
         STATUS_PERMANENT_SEQUENCE = 4;
     }
@@ -114,14 +116,14 @@ message SaveSequenceRequest {
     // Common request header
     RequestHeader header = 1;
 
-    // Name of the sequence to be added to the selection of retained sequences 
+    // Name of the sequence to be added to the selection of retained sequences
     string sequence_name = 2;
 
     // List of labels to add to the sequence when it is being saved
     repeated string add_labels = 3;
 }
 
-// 
+//
 message SaveSequenceResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -129,19 +131,19 @@ message SaveSequenceResponse {
     enum Status {
         // Do not use.
         STATUS_UNKNOWN = 0;
-        // The sequence was successfully saved  
+        // The sequence was successfully saved
         STATUS_OK = 1;
-        // The sequence was successfully saved 
-        STATUS_UNKNOWN_SEQUENCE = 2; 
+        // The requested sequence was not found
+        STATUS_UNKNOWN_SEQUENCE = 2;
         // This sequence is already saved in the release
-        STATUS_PERMANENT_SEQUENCE = 3; 
+        STATUS_PERMANENT_SEQUENCE = 3;
         // We failed to save a file with the sequence information to robot
-        STATUS_FAILED_TO_SAVE = 4;  
+        STATUS_FAILED_TO_SAVE = 4;
     }
     Status status = 2;
 }
 
-// Edit the metadata of a choreography sequence and update any retained files for 
+// Edit the metadata of a choreography sequence and update any retained files for
 // that sequence with the new metadata
 message ModifyChoreographyInfoRequest {
     // Common request header
@@ -163,21 +165,21 @@ message ModifyChoreographyInfoResponse {
 
     enum Status {
         // Do not use.
-        STATUS_UNKNOWN = 0; 
+        STATUS_UNKNOWN = 0;
         // The sequence was successfully modified
-        STATUS_OK = 1;  
+        STATUS_OK = 1;
         // The sequence does not exist
-        STATUS_UNKNOWN_SEQUENCE = 2; 
+        STATUS_UNKNOWN_SEQUENCE = 2;
         // Permanent sequences cannot be modified
-        STATUS_PERMANENT_SEQUENCE = 3; 
-        // The changes were made, but the retained sequence file was not updated and 
+        STATUS_PERMANENT_SEQUENCE = 3;
+        // The changes were made, but the retained sequence file was not updated and
         // changes were reverted
-        STATUS_FAILED_TO_UPDATE = 4; 
+        STATUS_FAILED_TO_UPDATE = 4;
     }
     Status status = 2;
 }
 
-// Reset to a clean slate with no retained files by deleting all non-permanent 
+// Reset to a clean slate with no retained files by deleting all non-permanent
 // choreography related files
 message ClearAllSequenceFilesRequest {
     // Common request header
@@ -190,11 +192,11 @@ message ClearAllSequenceFilesResponse {
 
     enum Status {
         // Do not use.
-        STATUS_UNKNOWN = 0; 
+        STATUS_UNKNOWN = 0;
         // All retained sequences were successfully removed from robot memory
-        STATUS_OK = 1; 
+        STATUS_OK = 1;
         // Deletion of all retained files failed
-        STATUS_FAILED_TO_DELETE = 2; 
+        STATUS_FAILED_TO_DELETE = 2;
     }
     Status status = 2;
 }
@@ -244,17 +246,19 @@ message UploadAnimatedMoveResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        STATUS_UNKNOWN = 0; // Do not use.
-        STATUS_OK = 1; // Uploading + parsing the animated move succeeded.
-        STATUS_ANIMATION_VALIDATION_FAILED = 2; // The animated move is considered invalid, see the warnings.
-        STATUS_PING_RESPONSE = 3;  // Treated this message as a ping.  Responding to demonstrate connectivity.
+        STATUS_UNKNOWN = 0;  // Do not use.
+        STATUS_OK = 1;       // Uploading + parsing the animated move succeeded.
+        // The animated move is considered invalid, see the warnings.
+        STATUS_ANIMATION_VALIDATION_FAILED = 2;
+        // Treated this message as a ping.  Responding to demonstrate connectivity.
+        STATUS_PING_RESPONSE = 3;
     }
     Status status = 2;
 
-    // If the uploaded animated move is invalid (will throw a STATUS_ANIMATION_VALIDATION_FAILED), then
-    // warning messages describing the failure cases will be populated here to indicate which
-    // parts of the animated move failed. Note: there could be some warning messages even when an animation
-    // is marked as ok.
+    // If the uploaded animated move is invalid (will throw a STATUS_ANIMATION_VALIDATION_FAILED),
+    // then warning messages describing the failure cases will be populated here to indicate which
+    // parts of the animated move failed. Note: there could be some warning messages even when an
+    // animation is marked as ok.
     repeated string warnings = 3;
 }
 
@@ -289,6 +293,11 @@ message ExecuteChoreographyResponse {
         STATUS_LEASE_ERROR = 4;
     }
     Status status = 3;
+
+    // Unique ID for the execution.
+    // Will increment whenever an ExecuteChoreographRequest is received.
+    // Will reset upon robot boot.
+    int32 execution_id = 4;
 }
 
 message StartRecordingStateRequest {
@@ -296,12 +305,11 @@ message StartRecordingStateRequest {
     RequestHeader header = 1;
 
     // How long should the robot record for if no stop RPC is sent. A recording session can be
-    // extended by setting the recording_session_id below to a non-zero value matching the ID for the
-    // current recording session.
-    // For both start and continuation commands, the service will stop recording at
-    // end_time = (system time when the Start/Continue RPC is received) + (continue_recording_duration),
-    // unless another continuation request updates this end time.
-    // The robot has an internal maximum recording time of 5 minutes for the complete session log.
+    // extended by setting the recording_session_id below to a non-zero value matching the ID for
+    // the current recording session. For both start and continuation commands, the service will
+    // stop recording at end_time = (system time when the Start/Continue RPC is received) +
+    // (continue_recording_duration), unless another continuation request updates this end time. The
+    // robot has an internal maximum recording time of 5 minutes for the complete session log.
     google.protobuf.Duration continue_recording_duration = 2;
 
     // Provide the unique identifier of the recording session to extend the recording end time for.
@@ -323,11 +331,12 @@ message StartRecordingStateResponse {
         // The request succeeded and choreography has either started, or continued with an extended
         // duration based on if a session_id was provided.
         STATUS_OK = 1;
-        // The provided recording_session_id is unknown: it must either be 0 (start a new recording log)
-        // or it can match the current recording session id returned by the most recent start recording request.
+        // The provided recording_session_id is unknown: it must either be 0 (start a new recording
+        // log) or it can match the current recording session id returned by the most recent start
+        // recording request.
         STATUS_UNKNOWN_RECORDING_SESSION_ID = 2;
-        // The Choreography Service's internal buffer is filled. It will record for a maximum of 5 minutes. It
-        // will stop recording, but save the recorded data until
+        // The Choreography Service's internal buffer is filled. It will record for a maximum of 5
+        // minutes. It will stop recording, but save the recorded data until
         STATUS_RECORDING_BUFFER_FULL = 3;
     }
     Status status = 2;
@@ -353,13 +362,14 @@ message DownloadRobotStateLogRequest {
     enum LogType {
         // Unknown. Do not use.
         LOG_TYPE_UNKNOWN = 0;
-        // The robot state information recorded from the time of the manual start RPC (StartRecordingState)
-        // to either {the time of the manual stop RPC (StopRecordingState), the time of the download logs RPC,
-        // or the time of the internal service's buffer filling up}.
+        // The robot state information recorded from the time of the manual start RPC
+        // (StartRecordingState) to either {the time of the manual stop RPC (StopRecordingState),
+        // the time of the download logs RPC, or the time of the internal service's buffer filling
+        // up}.
         LOG_TYPE_MANUAL = 1;
-        // The robot will automatically record robot state information for the entire duration of an executing
-        // choreography in addition to any manual logging. This log type will download this information for the
-        // last completed choreography.
+        // The robot will automatically record robot state information for the entire duration of an
+        // executing choreography in addition to any manual logging. This log type will download
+        // this information for the last completed choreography.
         LOG_TYPE_LAST_CHOREOGRAPHY = 2;
     }
     // Which data should we download.
@@ -368,10 +378,10 @@ message DownloadRobotStateLogRequest {
 
 
 message LoggedJoints {
-    LegJointAngles fl = 1; // front left leg joint angles.
-    LegJointAngles fr = 2; // front right leg joint angles.
-    LegJointAngles hl = 3; // hind left leg joint angles.
-    LegJointAngles hr = 4; // hind right leg joint angles.
+    LegJointAngles fl = 1;  // front left leg joint angles.
+    LegJointAngles fr = 2;  // front right leg joint angles.
+    LegJointAngles hl = 3;  // hind left leg joint angles.
+    LegJointAngles hr = 4;  // hind right leg joint angles.
 
     // Full set of joint angles for the arm and gripper.
     ArmJointAngles arm = 5;
@@ -402,10 +412,10 @@ message LoggedStateKeyFrame {
 }
 
 message ChoreographyStateLog {
-    // A set of key frames recorded at a high rate. The key frames can be for the duration of an executing
-    // choreography or for the duration of a manual recorded log (triggered by the StartRecordingState and
-    // StopRecordingState RPCs). The specific set of keyframes is specified by the LogType when requesting
-    // to download the data.
+    // A set of key frames recorded at a high rate. The key frames can be for the duration of an
+    // executing choreography or for the duration of a manual recorded log (triggered by the
+    // StartRecordingState and StopRecordingState RPCs). The specific set of keyframes is specified
+    // by the LogType when requesting to download the data.
     repeated LoggedStateKeyFrame key_frames = 1;
 }
 
@@ -449,6 +459,13 @@ message MoveParams {
     // was extendable, then this corresponds to the number of slices that the user requested.
     int32 requested_slices = 3;
 
+    // The ID number can be optionally set by the client as part of the UploadChoreographyRequest.
+    // If not set by the client, the robot will assign an id to each move that is unique within the
+    // sequence. The ID (either set by the client or the robot) will be reported in the ActiveMoves
+    // in the ChoreographyStatusResponse. The ID can be used to specify which move a Command is
+    // intended for.
+    int32 id = 4;
+
     // Each move type can define its own parameters which get stored here. Only a single parameter
     // set can be used to describe a move instance.
     oneof params {
@@ -484,10 +501,62 @@ message MoveParams {
         RippleColorParams ripple_color_params = 40;
         FadeColorParams fade_color_params = 41;
         IndependentColorParams independent_color_params = 42;
+        CustomGaitParams custom_gait_params = 43;
+        LegJointParams leg_joint_params = 100;
 
 
         AnimateParams animate_params = 1000;
     }
+}
+
+message MoveCommand {
+    // Either, both, or neither of move_type and move_id can be used to specify which move this
+    // command is intended for.
+
+    // Name of the move type this command is intended for.
+    string move_type = 1;
+    // ID of the move this command is intended for.
+    int32 move_id = 2;
+
+    // Different move types will accept different types of commands.
+    oneof command {
+        CustomGaitCommand custom_gait_command = 3;
+    }
+}
+
+message ChoreographyCommandRequest {
+    // Common request header
+    RequestHeader header = 1;
+
+    // Commands intended for individual moves.
+    // Repeated because multiple moves may be playing simultaneously and we may want to command
+    // multiple of them.
+    repeated MoveCommand commands = 2;
+
+    // The Lease to show ownership of the robot body.
+    Lease lease = 3;
+
+    // When the commands expire.  In the robot's clock.
+    google.protobuf.Timestamp command_end_time = 4;
+}
+
+message ChoreographyCommandResponse {
+    // Common response header
+    ResponseHeader header = 1;
+    LeaseUseResult lease_use_result = 2;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_ACCEPTED_WITH_MODIFICATION = 2;
+        STATUS_LEASE_ERROR = 3;
+        STATUS_NO_MATCHING_MOVE = 4;
+        STATUS_INVALID_COMMAND = 5;
+        STATUS_ALREADY_EXPIRED = 6;
+    }
+
+    // One status for each command sent.
+    repeated Status status = 3;
 }
 
 // Defines properties of a choreography move.
@@ -500,7 +569,8 @@ message MoveInfo {
     // The duration of this move in seconds.  If specified, overrides move_length_slices.
     double move_length_time = 15;
 
-    // If true, the duration may be adjusted from the default specified by move_length_slices or move_length_time.
+    // If true, the duration may be adjusted from the default specified by move_length_slices or
+    // move_length_time.
     bool is_extendable = 3;
 
     // Bounds on the duration may be adjusted in slices (usually 1/4 beats).
@@ -529,7 +599,6 @@ message MoveInfo {
     // The state of the robot after the move is complete.
     TransitionState exit_state = 5;
 
-
     // Indicators as to which parts of the robot that the move controls.
     bool controls_arm = 8;
     bool controls_legs = 9;
@@ -537,6 +606,7 @@ message MoveInfo {
     bool controls_gripper = 12;
     bool controls_lights = 17;
     bool controls_annotations = 18;
+    bool is_looping = 19;
 
     // Information for the GUI tool to visualize the sequence move info.
     ChoreographerDisplayInfo display = 11;
@@ -600,7 +670,16 @@ message ChoreographySequence {
     // All of the moves in this choreography sequence.
     repeated MoveParams moves = 3;
 
-    ChoreographyInfo choreography_info = 4; 
+    // Metadata associated with the sequence.
+    ChoreographyInfo choreography_info = 4;
+
+    // Can be used to specify an explicit entrance_state in the case where the first legs-track move
+    // accepts multiple entrace_states.
+    // Will also be used if the sequence contains no legs-track moves.
+    // Can otherwise be left unset.
+    // If set and not within the set of acceptable entrance_states for the first legs-track move,
+    // the Sequence will be considered invalid.
+    MoveInfo.TransitionState entrance_state = 5;
 }
 
 // Describes metadata for the Choreography sequence that can be used for a number of different UIs
@@ -641,12 +720,13 @@ message Animation {
     bool controls_body = 5;
     bool controls_gripper = 6;
 
-    // Track animated swing trajectories.  Otherwise, takes standard swings between animated liftoff and touchdown locations.
+    // Track animated swing trajectories.  Otherwise, takes standard swings between animated liftoff
+    // and touchdown locations.
     bool track_swing_trajectories = 16;
 
     // For moves that control the legs, but not the body.
-    // If legs are specified by joint angles, we still need body roll and pitch to know the foot height.
-    // If `assume_zero_roll_and_pitch` is true, they needn't be explicitly specified.
+    // If legs are specified by joint angles, we still need body roll and pitch to know the foot
+    // height. If `assume_zero_roll_and_pitch` is true, they needn't be explicitly specified.
     bool assume_zero_roll_and_pitch = 19;
 
     // Mode for hand trajectory playback
@@ -696,9 +776,17 @@ message Animation {
     // By default, the optimizer may adjust step locations slightly.
     bool precise_steps = 15;
 
-    // Time everything exactly as animated, even at the expense of balance.
-    // By default, the optimizer may adjust timing slightly.
-    bool precise_timing = 18;
+    // DEPRECATED as of 3.3.0: The boolean field has been replaced by the more fine-grained control
+    // of timing_adjustability. The following field will be deprecated and moved to 'reserved' in a
+    // future release.
+    bool precise_timing = 18 [deprecated = true];
+
+    // How much the optimizer is allowed to adjust the timing.
+    // On the range [-1, 1].
+    // -1: Everything will be timed exactly as animated, even at the expense of balance.
+    // 0: Default value: some timing adjust allowed.
+    // 1: Timing can be adjusted drastically.
+    double timing_adjustability = 23;
 
     // If set true, this animation will not run unless the robot has an arm.
     bool arm_required = 20;
@@ -708,6 +796,13 @@ message Animation {
 
     // If the animation completes before the move's duration, freeze rather than looping.
     bool no_looping = 21;
+
+    // If the animation starts from a sit pose.  Default starting pose is stand.
+    bool starts_sitting = 24;
+
+    // If true, this animation can be used as direct input to custom gait
+    // to define the gait style
+    bool custom_gait_cycle = 27;
 }
 
 message AnimationKeyframe {
@@ -768,7 +863,6 @@ message ArmJointAngles {
 // The AnimateBody keyframe describes the body's position and orientation. At least
 // one dimension of the body must be specified.
 message AnimateBody {
-
     // For the animated body keyframe, describe the body position using either the body position or
     // the center of mass position. NOTE: each keyframe within a single Animation proto must always
     // specify the body position using the same format for all frames.
@@ -794,15 +888,14 @@ message AnimateBody {
 
 // The AnimateLegs keyframe describes each leg using either joint angles or the foot position.
 message AnimateLegs {
-    AnimateSingleLeg fl = 1; // Front left leg.
-    AnimateSingleLeg fr = 2; // Front right leg.
-    AnimateSingleLeg hl = 3; // Hind left leg.
-    AnimateSingleLeg hr = 4; // Hind right leg.
+    AnimateSingleLeg fl = 1;  // Front left leg.
+    AnimateSingleLeg fr = 2;  // Front right leg.
+    AnimateSingleLeg hl = 3;  // Hind left leg.
+    AnimateSingleLeg hr = 4;  // Hind right leg.
 }
 
 // A single leg keyframe to describe the leg motion.
 message AnimateSingleLeg {
-
     // For the animated single legs, the leg can be described using either the joint angles or
     // the position of the foot. NOTE: each keyframe within a single Animation proto must always
     // specify a single leg using the same format for all frames.
@@ -825,4 +918,58 @@ message LegJointAngles {
     double hip_x = 1;
     double hip_y = 2;
     double knee = 3;
+}
+
+message ActiveMove {
+    // Any parameters that had to be adjusted into the legal range will have their adjusted values.
+    MoveParams move = 1;
+
+    // Give information about the commands the move can accept.
+    // For example: Minimum and maximum values.
+    oneof command_limits {
+        CustomGaitCommandLimits custom_gait_command_limits = 2;
+    }
+}
+
+message ChoreographyStatusRequest {
+    // Common request header
+    RequestHeader header = 1;
+}
+
+message ChoreographyStatusResponse {
+    // Common response header
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_DANCING = 1;
+        STATUS_COMPLETED_SEQUENCE = 2;
+        STATUS_PREPPING = 3;
+        STATUS_WAITING_FOR_START_TIME = 4;
+        STATUS_VALIDATING = 5;
+        STATUS_INTERRUPTED = 6;
+        STATUS_FALLEN = 7;
+        STATUS_POWERED_OFF = 8;
+        STATUS_OTHER = 9;
+    }
+    Status status = 2;
+
+    // If dancing (or preparing to dance), the unique execution_id matching the one from
+    // ExecuteChoreographyResponse. If not dancing, 0.
+    int32 execution_id = 3;
+
+    // Where we are in the script. (slice = 1/4 beat; standard unit of "time" within Choreography)
+    double current_slice = 4;
+
+    // All of the moves currently executing.
+    repeated ActiveMove active_moves = 5;
+
+    // Length of the current sequence.
+    int32 sequence_slices = 6;
+
+    // Cadence of the current sequence.
+    double sequence_slices_per_minute = 7;
+
+    // When this was true in robot time.
+    google.protobuf.Timestamp validity_time = 8;
 }

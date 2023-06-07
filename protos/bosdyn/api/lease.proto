@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -35,7 +35,6 @@ message Lease {
     repeated string client_names = 4;
 }
 
-
 // Lease resources can be divided into a hierarchy of sub-resources that can
 // be commanded together. This message describes the hierarchy of a resource.
 message ResourceTree {
@@ -48,8 +47,8 @@ message ResourceTree {
 
 // Details about who currently owns the Lease for a resource.
 message LeaseOwner {
-    string client_name = 1; // The name of the client application.
-    string user_name = 2; // The name of the user.
+    string client_name = 1;  // The name of the client application.
+    string user_name = 2;    // The name of the user.
 }
 
 // Result for when a Lease is used - for example, in a LeaseRetainer, or
@@ -140,7 +139,8 @@ message AcquireLeaseResponse {
     // The lease for the resource. Only set if status field == STATUS_OK.
     Lease lease = 3;
 
-    // The owner for the lease. Set if status field == OK or status field == RESOURCE_ALREADY_CLAIMED.
+    // The owner for the lease. Set if status field == OK or status field ==
+    // RESOURCE_ALREADY_CLAIMED.
     LeaseOwner lease_owner = 4;
 }
 
@@ -149,7 +149,7 @@ message TakeLeaseRequest {
     // Common request header.
     RequestHeader header = 1;
 
-     // The resource to obtain a Lease for.
+    // The resource to obtain a Lease for.
     string resource = 2;
 }
 
@@ -166,7 +166,8 @@ message TakeLeaseResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        // UNKNOWN should never be used. An internal LeaseService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal LeaseService issue has happened if UNKNOWN is
+        // set.
         STATUS_UNKNOWN = 0;
 
         // TakeLease was successful. The lease field will be populated with the
@@ -209,7 +210,8 @@ message ReturnLeaseResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        // UNKNOWN should never be used. An internal LeaseService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal LeaseService issue has happened if UNKNOWN is
+        // set.
         STATUS_UNKNOWN = 0;
 
         // ReturnLease was successful.
@@ -264,7 +266,15 @@ message LeaseResource {
     //
     // Commands & RetainLeaseRequests issued with a stale lease will still be accepted.
     // Stale leases, when used, will cause the used lease to no longer be stale.
-    google.protobuf.Timestamp stale_time = 4;
+    //
+    // DEPRECATED as of 3.3. Lease staleness is now set by the Keepalive service.
+    // This value is only an estimate, and may not be correct if a Keepalive client has changed it.
+    // Please use the is_stale flag for an instantaneous report on staleness, or check the
+    // GetStatusResponse in the Keepalive service to get a time.
+    google.protobuf.Timestamp stale_time = 4 [deprecated = true];
+
+    // This lease has been marked stale, and may be acquired by another client.
+    bool is_stale = 5;
 }
 
 // The ListLease response message returns all known lease resources from the LeaseService.
@@ -301,5 +311,4 @@ message RetainLeaseResponse {
     // Result of using the lease.
     LeaseUseResult lease_use_result = 2;
 }
-
 

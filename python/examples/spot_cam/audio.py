@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -87,6 +87,8 @@ class AudioPlaySoundCommand(Command):
         if gain:
             gain = max(gain, 0.0)
         robot.ensure_client(AudioClient.default_service_name).play_sound(sound, gain)
+
+
 
 
 class AudioDeleteSoundCommand(Command):
@@ -187,10 +189,11 @@ class AudioSetAudioCaptureGain(Command):
         super(AudioSetAudioCaptureGain, self).__init__(subparsers, command_dict)
         self._parser.add_argument('channel_name', default='external_mic', const='internal_mic',
                                   nargs='?', choices=['internal_mic', 'external_mic'])
-        self._parser.add_argument('gain', help='Gain of the CAM\'s external microphone, 0.0 to 1.0')
+        self._parser.add_argument('gain', type=float,
+                                  help='Gain of the CAM\'s external microphone, 0.0 to 1.0')
 
     def _run(self, robot, options):
-        gain = min(max(float(options.gain), 0.0), 1.0)
+        gain = min(max(options.gain, 0.0), 1.0)
         if options.channel_name == 'internal_mic':
             channel = audio_pb2.AudioCaptureChannel.AUDIO_CHANNEL_INTERNAL_MIC
         else:

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -14,6 +14,7 @@ import "bosdyn/api/full_body_command.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
 import "bosdyn/api/mobility_command.proto";
+import "bosdyn/api/robot_state.proto";
 import "bosdyn/api/synchronized_command.proto";
 
 // A command for a robot to execute.
@@ -26,10 +27,9 @@ message RobotCommand {
         // A synchronized command, for partial or full control of robot.
         SynchronizedCommand.Request synchronized_command = 3;
 
-        // *** Deprecation Warning ***
-        // DEPRECATED as of 2.1.0: A mobility command for a robot to execute.
-        // The following fields will be deprecated and moved to 'reserved' in a future release.
-        MobilityCommand.Request mobility_command = 2 [deprecated=true];
+        // DEPRECATED as of 2.1.0, will be removed in 4.0.  Please use synchronized_command instead.
+        // A mobility command for a robot to execute.
+        MobilityCommand.Request mobility_command = 2 [deprecated = true];
     }
 }
 
@@ -43,14 +43,12 @@ message RobotCommandFeedback {
         // A synchronized command, for partial or full control of robot.
         SynchronizedCommand.Feedback synchronized_feedback = 3;
 
-        // *** Deprecation Warning ***
-        // DEPRECATED as of 2.1.0: Command to control mobility system of a robot.
-        // The following fields will be deprecated and moved to 'reserved' in a future release.
-        MobilityCommand.Feedback mobility_feedback = 1 [deprecated=true];
+        // DEPRECATED as of 2.1.0.  Will be removed in 4.0.  Please use
+        // RobotCommand.synchronized_command and synchronized_feedback instead.
+        // Command to control mobility system of a robot.
+        MobilityCommand.Feedback mobility_feedback = 1 [deprecated = true];
     }
 }
-
-
 
 // A RobotCommand request message includes the lease and command as well as a clock
 // identifier to ensure timesync when issuing commands with a fixed length.
@@ -78,21 +76,27 @@ message RobotCommandResponse {
     LeaseUseResult lease_use_result = 2;
 
     enum Status {
-        STATUS_UNKNOWN = 0;          // An unknown / unexpected error occurred.
-        STATUS_OK = 1;               // Request was accepted.
+        STATUS_UNKNOWN = 0;  // An unknown / unexpected error occurred.
+        STATUS_OK = 1;       // Request was accepted.
 
-        STATUS_INVALID_REQUEST = 2;  // [Programming Error] Request was invalid / malformed in some way.
-        STATUS_UNSUPPORTED = 3;      // [Programming Error] The robot does not understand this command.
+        // [Programming Error]
+        STATUS_INVALID_REQUEST = 2;  // Request was invalid / malformed in some way.
+        STATUS_UNSUPPORTED = 3;      // The robot does not understand this command.
 
-        STATUS_NO_TIMESYNC = 4;      // [Timesync Error] Client has not done timesync with robot.
-        STATUS_EXPIRED = 5;          // [Timesync Error] The command was received after its end_time had already passed.
-        STATUS_TOO_DISTANT = 6;      // [Timesync Error] The command end time was too far in the future.
+        // [Timesync Error]
+        STATUS_NO_TIMESYNC = 4;  // Client has not done timesync with robot.
+        STATUS_EXPIRED = 5;      // The command was received after its end_time had already passed.
+        STATUS_TOO_DISTANT = 6;  // The command end time was too far in the future.
 
-        STATUS_NOT_POWERED_ON = 7;   // [Hardware Error] The robot must be powered on to accept a command.
-        STATUS_BEHAVIOR_FAULT = 9;   // [Robot State Error] The robot must not have behavior faults.
-        STATUS_DOCKED = 10;          // [Robot State Error] The robot cannot be docked for certain commands.
+        // [Hardware Error]
+        STATUS_NOT_POWERED_ON = 7;  // The robot must be powered on to accept a command.
 
-        STATUS_UNKNOWN_FRAME = 8;    // [Frame Error] The frame_name for a command was not a known frame.
+        // [Robot State Error]
+        STATUS_BEHAVIOR_FAULT = 9;  // The robot must not have behavior faults.
+        STATUS_DOCKED = 10;         // The robot cannot be docked for certain commands.
+
+        //// [Frame Error]
+        STATUS_UNKNOWN_FRAME = 8;  // The frame_name for a command was not a known frame.
     }
     // Return status for a request.
     Status status = 3;
@@ -123,26 +127,31 @@ message RobotCommandFeedbackResponse {
     LeaseUseResult lease_use_result = 5;
 
     enum Status {
-        // Status enum is DEPRECATED as of 2.1.0. Behavior execution is in an unknown / unexpected state.
+        // Status enum is DEPRECATED as of 2.1.0 and Will be removed in 4.0.
+        option deprecated = true;
+
+        // Behavior execution is in an unknown / unexpected state.
         STATUS_UNKNOWN = 0;
 
-        // Status enum is DEPRECATED as of 2.1.0. The robot is actively working on the command
+        // The robot is actively working on the command
         STATUS_PROCESSING = 1;
 
-        // Status enum is DEPRECATED as of 2.1.0. The command was replaced by a new command
+        // The command was replaced by a new command
         STATUS_COMMAND_OVERRIDDEN = 2;
 
-        // Status enum is DEPRECATED as of 2.1.0. The command expired
+        // The command expired
         STATUS_COMMAND_TIMED_OUT = 3;
 
-        // Status enum is DEPRECATED as of 2.1.0. The robot is in an unsafe state, and will only respond to known safe commands.
+        // The robot is in an unsafe state, and will only respond to known safe commands.
         STATUS_ROBOT_FROZEN = 4;
     }
-    // DEPRECATED as of 2.1.0: General status whether or not command is still processing.
-    Status status = 2 [deprecated=true];
+    // DEPRECATED as of 2.1.0. Will be removed in 4.0.  Please use RobotCommandResponse.status.
+    // General status whether or not command is still processing.
+    Status status = 2 [deprecated = true];
 
-    // DEPRECATED as of 2.1.0: Human-readable status message.  Not for programmatic analysis.
-    string message = 3 [deprecated=true];
+    // DEPRECATED as of 2.1.0. Will be removed in 4.0. RobotCommandResponse.message.
+    // Human-readable status message.  Not for programmatic analysis.
+    string message = 3 [deprecated = true];
 
     // Command specific feedback.
     RobotCommandFeedback feedback = 4;
@@ -179,7 +188,14 @@ message ClearBehaviorFaultResponse {
         // The BehaviorFault could not be cleared.
         STATUS_NOT_CLEARED = 2;
     }
+
     // Return status for a request.
     Status status = 3;
+
+    // Echo back the behavior fault if it was active at the time of request.
+    BehaviorFault behavior_fault = 4;
+
+    // Blocking hardware faults for an unclearable behavior fault.
+    repeated SystemFault blocking_system_faults = 5;
 }
 

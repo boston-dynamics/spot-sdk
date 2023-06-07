@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -133,10 +133,19 @@ sudo docker run --name dev_env -d --entrypoint /bin/bash -v /data:/data arm64v8/
 This creates a detached Docker container with the /data directory mounted. To connect to it, run:
 
 ```sh
-sudo docker exec -it /bin/bash dev_env
+sudo docker exec -it dev_env /bin/bash
 ```
 
 You now have an environment where you can install additional dependencies using `apt` and `pip` and can execute Python code.
+
+An example development image is also available as a Spot Extension and can be downloaded [here](https://d3cjkvgbik1jtv.cloudfront.net/Extensions/playground_extension.spx).
+After uploading the extension (playground_extension.spx) to the CORE I/O, SSH to the payload, then connect to the running container with the following command:
+
+```sh
+sudo docker exec -it playground_extension-coreio_playground-1 /bin/bash
+```
+
+This "playground" container is based off the Linux for Tegra (L4T) base image and enables use of the GPU. It does not contain anything else, like the SDK, but those can be added if necessary by changing the Docker image included in the extension.
 
 ### GPIO and PWM
 
@@ -154,24 +163,25 @@ CORE I/O Diagram:
 
 Terminal Block Schematics:
 
-![terminal blocks](./images/CN1_CN2.png)
-![terminal blocks2](./images/CN3_CN4.png)
+![terminal blocks](./images/terminal_blocks.png)
 
 In table form:
 
-| Pin Number | Connector (CN)1 | CN2            | CN3          | CN4        |
-| ---------- | --------------- | -------------- | ------------ | ---------- |
-| 1          | Estop Loop 1    | GPIO pin 1     | 48v unreg    | 48v unreg  |
-| 2          | Estop Loop 1    | GPIO pin 2     | 24v output   | 24v output |
-| 3          | Estop Loop 2    | GPIO pin 3     | 12v output\* | 12v output |
-| 4          | Estop Loop 2    | GND            | 12v output\* | 12v output |
-| 5          | Estop Loop 3    | i2c serial SDA | 5v output    | 5v output  |
-| 6          | Estop Loop 3    | i2c serial SCL | 5v output    | 5v output  |
-| 7          | Estop Loop 3    | PPS pulse      | GND          | GND        |
-| 8          | Estop Loop 3    | GND            | GND          | GND        |
-| 9          | GND             | GND            | GND          | GND        |
-| 10         | GND             | GND            | GND          | GND        |
-| 11         |                 |                | GND          | GND        |
+| Pin Number | Connector (CN)1   | CN2            | CN3          | CN4          |
+| ---------- | ----------------- | -------------- | ------------ | ------------ |
+| 1          | Motor Loop Back   | GPIO pin 1     | 48v unreg    | 48v unreg    |
+| 2          | Motor Loop Back   | GPIO pin 2     | 24v output   | 24v output   |
+| 3          | Extra Loop Back B | GPIO pin 3     | 12v output\* | 12v output\* |
+| 4          | Extra Loop Back B | GND            | 12v output\* | 12v output\* |
+| 5          | Payload Loop Back | i2c serial SDA | 5v output    | 5v output    |
+| 6          | Payload Loop Back | i2c serial SCL | 5v output    | 5v output    |
+| 7          | Extra Loop Back A | PPS pulse      | GND          | GND          |
+| 8          | Extra Loop Back A | GND            | GND          | GND          |
+| 9          | GND               | GND            | GND          | GND          |
+| 10         | GND               | GND            | GND          | GND          |
+| 11         |                   |                | GND          | GND          |
+
+All loop backs must ensure continuity to like-named loop back connections ie. jumpered. 
 
 The easiest way to control the voltage output pins in CN3 and CN4 is through the GPIO page in the web server. At this time, PWM control has not yet been built into the web server.
 

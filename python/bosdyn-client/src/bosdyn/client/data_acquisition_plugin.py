@@ -1,19 +1,20 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """General client implementation for all data-acquisition plugin services."""
-
-from __future__ import print_function
-
+import collections
 import sys
 
 from bosdyn.api import data_acquisition_pb2 as data_acquisition
 from bosdyn.api import data_acquisition_plugin_service_pb2_grpc as data_acquisition_plugin_service
-from bosdyn.client.common import BaseClient
-from bosdyn.client.data_acquisition import (DataAcquisitionClient, acquire_data_error,
+from bosdyn.client.common import (BaseClient, error_factory, error_pair,
+                                  handle_common_header_errors, handle_custom_params_errors,
+                                  handle_unset_status_error)
+from bosdyn.client.data_acquisition import (DataAcquisitionClient, DataAcquisitionResponseError,
+                                            UnknownCaptureTypeError, acquire_data_error,
                                             get_request_id, metadata_to_proto)
 from bosdyn.util import now_timestamp
 
@@ -97,3 +98,23 @@ class DataAcquisitionPluginClient(BaseClient):
 
         cancel_acquisition = DataAcquisitionClient.cancel_acquisition
         cancel_acquisition_async = DataAcquisitionClient.cancel_acquisition_async
+
+
+_ACQUIRE_PLUGIN_DATA_STATUS_TO_ERROR = collections.defaultdict(lambda:
+                                                               (DataAcquisitionResponseError, None))
+
+_ACQUIRE_PLUGIN_DATA_STATUS_TO_ERROR.update({
+    data_acquisition.AcquirePluginDataResponse.STATUS_OK: (None, None),
+    data_acquisition.AcquirePluginDataResponse.STATUS_UNKNOWN_CAPTURE_TYPE:
+        error_pair(UnknownCaptureTypeError)
+})
+
+
+@handle_common_header_errors
+@handle_custom_params_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN')
+def _acquire_plugin_data_error(response):
+    """Return a custom exception based on the AcquireData response, None if no error."""
+    return error_factory(response, response.status,
+                         status_to_string=data_acquisition.AcquireDataResponse.Status.Name,
+                         status_to_error=_ACQUIRE_PLUGIN_DATA_STATUS_TO_ERROR)

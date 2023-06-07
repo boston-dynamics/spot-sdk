@@ -5,7 +5,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends python3-opencv
 
 COPY docker-requirements-l4t.txt prebuilt/*.whl ./
 
-RUN python3 -m pip install -r docker-requirements-l4t.txt --find-links .
+# Install the python requirements
+RUN python3 -m pip install pip==21.3.1 setuptools==59.6.0 wheel==0.37.1 && \
+    python3 -m pip install -r docker-requirements-l4t.txt --find-links .
 
 COPY web_cam_image_service.py /app/
 WORKDIR /app

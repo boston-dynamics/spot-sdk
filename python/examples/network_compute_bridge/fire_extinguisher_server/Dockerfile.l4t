@@ -11,7 +11,11 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     curl
 RUN python3 -m pip install --upgrade pip
 COPY requirements_l4t.txt prebuilt/*.whl ./
-RUN python3 -m pip install -r requirements_l4t.txt --find-links .
+
+# Install the python requirements
+RUN python3 -m pip install pip==21.3.1 setuptools==59.6.0 wheel==0.37.1 && \
+    python3 -m pip install -r requirements_l4t.txt --find-links .
+
 COPY fire_ext.csv /app/
 COPY fire_ext.h5 /app/
 COPY retinanet_server.py /app/

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,8 +10,6 @@ Example code demonstrating how a payload can register itself.
 Payload registration does not require auth credentials; however, registered payloads
 must be enabled and authorized via the robot web UI.
 """
-from __future__ import print_function
-
 import argparse
 import sys
 from time import sleep
@@ -78,13 +76,13 @@ def define_payload(guid, name, description):
     bb.frame_name_tform_box.rotation.y = 0
     bb.frame_name_tform_box.rotation.z = 0
     bb.frame_name_tform_box.rotation.w = 1.0
-    bb.frame_name = "payload"
+    bb.frame_name = 'payload'
 
     # Specify possible payload configurations by populating preset configs with sample values.
     # For example, define Preset1 as the same payload mounted on the center of the robot
     preset_conf_center = payload.preset_configurations.add()
-    preset_conf_center.preset_name = "Preset1"
-    preset_conf_center.description = "Preset1: Center-mounted configuration."
+    preset_conf_center.preset_name = 'Preset1'
+    preset_conf_center.description = 'Preset1: Center-mounted configuration.'
 
     # Specify the location of the payload under this possible configuration.
     preset_conf_center.mount_tform_payload.position.x = -0.2075  # Centered on robot back
@@ -115,8 +113,8 @@ def define_payload(guid, name, description):
 
     # Define Preset2 as the same payload mounted on the rear of the robot
     preset_conf_rear = payload.preset_configurations.add()
-    preset_conf_rear.preset_name = "Preset2"
-    preset_conf_rear.description = "Preset2: Rear-mounted configuration"
+    preset_conf_rear.preset_name = 'Preset2'
+    preset_conf_rear.description = 'Preset2: Rear-mounted configuration'
 
     # Specify the location of the payload under this possible configuration.
     preset_conf_rear.mount_tform_payload.position.x = -0.415  # Aligned with rear-most bolt of mounting rails
@@ -159,8 +157,9 @@ def self_register_payload(config):
     try:
         payload_registration_client.register_payload(payload, secret=config.secret)
     except PayloadAlreadyExistsError:
-        print("Payload config for {} already exists. Continuing with pre-existing configuration.".
-              format(payload.GUID))
+        print(
+            f'Payload config for {payload.GUID} already exists. Continuing with pre-existing configuration.'
+        )
 
     # Wait here until the admin authorizes the payload.
     robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(config))
@@ -174,9 +173,9 @@ def main():
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_payload_credentials_arguments(parser)
-    parser.add_argument("--name", required=True, type=str, help="Name of the payload.")
-    parser.add_argument("--description", required=True, type=str,
-                        help="Description of the payload.")
+    parser.add_argument('--name', required=True, type=str, help='Name of the payload.')
+    parser.add_argument('--description', required=True, type=str,
+                        help='Description of the payload.')
     options = parser.parse_args()
 
     self_register_payload(options)

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -45,6 +45,10 @@ class EstoppedError(PowerResponseError):
 
 class OverriddenError(PowerResponseError):
     """The command was overridden and is no longer valid."""
+
+
+class KeepaliveMotorsOffError(PowerResponseError):
+    """Cannot power on while Keepalive requests motors off."""
 
 
 class FaultedError(PowerResponseError):
@@ -203,6 +207,8 @@ _STATUS_TO_ERROR.update({
     power_pb2.STATUS_INTERNAL_ERROR: (InternalServerError, InternalServerError.__doc__),
     power_pb2.STATUS_LICENSE_ERROR: (LicenseError, LicenseError.__doc__),
     power_pb2.STATUS_OVERRIDDEN: (OverriddenError, OverriddenError.__doc__),
+    power_pb2.STATUS_KEEPALIVE_MOTORS_OFF:
+        (KeepaliveMotorsOffError, KeepaliveMotorsOffError.__doc__),
 })
 
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -527,7 +527,7 @@ message ArmImpedanceCommand {
         // Common frames for this include "odom", "vision", "body", and "flat_body".
         string root_frame_name = 1;
 
-        // This transform specifies the pose of the task frame realtive to the root frame.
+        // This transform specifies the pose of the task frame relative to the root frame.
         // If unset, it defaults to identity, and the task frame coincides with the root frame.
         // The `desired_tool` frame will be specified relative to the task frame. For peg in 
         // hole tasks for example, the task frame could be a frame attached to the top of the
@@ -577,5 +577,66 @@ message ArmImpedanceCommand {
     }
 
     message Feedback {
+        enum Status {
+            // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
+            STATUS_UNKNOWN = 0;
+            // Tool frame has reached the end of the trajectory, and is close to the `desired_tool`
+            // in directions with high stiffness and no feed forwards
+            STATUS_TRAJECTORY_COMPLETE = 1;
+            // Robot is moving along the `desired_tool` trajectory
+            STATUS_IN_PROGRESS = 2;
+            // The arm has stopped making progress to the goal and the measured tool frame is far
+            // from the `desired_tool` along directions where we expect good tracking
+            STATUS_TRAJECTORY_STALLED = 3;
+        }
+        // Current status of the pose trajectory.
+        Status status = 1;
+
+        // A tree-based collection of transformations relevant to the current impedance operation.
+        // In addition to the common frames ("vision", "body", "odom"), this snapshot contains the
+        // following:
+        // "task": The task frame that the impedance action is specified in.
+        // "desired_tool": The pose of the desired_tool frame at the current time.
+        // "tool": The current measured pose of the tool.
+        // "desired_tool_at_end": The desired tool pose at the end of the requested trajectory.
+        // "measured_tool_at_start": The measured pose of the tool when this command was first sent.
+        //
+        // While these poses can be used in any way the user sees fit, here are some useful ideas:
+        // desired_tool_tform_tool: The current measured tool pose relative to the `desired_tool`
+        //                          frame [meters, quaternion]. This is our "tracking error". 
+        //                          Multiplying this error by `diagonal_stiffness_matrix` should
+        //                          yield `commanded_wrench_from_stiffness_at_tool_in_desired_tool`.
+        // desired_tool_at_end_tform_tool: The current measured tool pose relative to the
+        //                                 `desired_tool` frame at the end of the user trajectory
+        //                                 [meters, quaternion]. This is our "distance to goal",
+        //                                 and can be used for checking when an impedance move is
+        //                                 "complete".
+        // measured_tool_at_start_tform_tool_in_task: The current measured tool pose relative to
+        //                                            the measured tool frame at the start,
+        //                                            expressed in the task frame
+        //                                            [meters, quaternion]. This can be used to
+        //                                            see how far the tool has moved since the
+        //                                            beginning of the command.
+        FrameTreeSnapshot transforms_snapshot = 2;
+
+        // The component of our commanded wrench at the tool expressed with respect to the
+        // `desired_tool` frame from our stiffness matrix [Newtons / Nm]
+        Wrench commanded_wrench_from_stiffness_at_tool_in_desired_tool = 3;
+        // The component of our commanded wrench at the tool expressed with respect to the
+        // `desired_tool` frame from our damping matrix [Newtons / Nm]
+        Wrench commanded_wrench_from_damping_at_tool_in_desired_tool = 4;
+        // The component of our commanded wrench at the tool expressed with respect to the
+        // `desired_tool` frame from our feed forward wrench [Newtons / Nm]
+        Wrench commanded_wrench_from_feed_forward_at_tool_in_desired_tool = 5;
+
+        // The commanded total wrench at the tool expressed with respect to the `desired_tool`
+        // frame. This wrench has been saturated to obey `max_force_mag` and `max_torque_mag`
+        // [Newtons / Nm]
+        Wrench total_commanded_wrench_at_tool_in_desired_tool = 6;
+
+        // Sometimes the arm cannot achieve the commanded wrench exactly because of the
+        // underlying controller or arm pose. This looks at the joint torque sensors to
+        // determine the actual force and torque being applied at the tool. [Newtons / Nm]
+        Wrench total_measured_wrench_at_tool_in_desired_tool = 7;
     }
 }

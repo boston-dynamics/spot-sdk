@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -33,6 +33,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 - [Data Acquisition Plugin Service](data_acquisition_plugin_service)
 - [Data Acquisition Store](data_acquisition_store)
 - [Data Buffer](data_buffer)
+- [Data Chunk](data_chunk)
 - [Data Service](data_service)
 - [Directory Registration](directory_registration)
 - [Directory](directory)
@@ -46,13 +47,16 @@ Client code and interfaces for the Boston Dynamics robot API.
 - [Gripper Camera Params](gripper_camera_param)
 - [Image](image)
 - [Image Service Helpers](image_service_helpers)
+- [Inverse Kinematics](inverse_kinematics)
 - [IR Enable/Disable](ir_enable_disable)
+- [Keep Alive](keepalive)
 - [Lease](lease)
 - [Lease Resource Hierarchy](lease_resource_hierarchy)
 - [Lease Validator](lease_validator)
 - [License](license)
 - [Local Grid](local_grid)
 - [Log Annotation](log_annotation)
+- [Log Status](log_status)
 - [Math Helpers](math_helpers)
 - [Manipulation API](manipulation_api_client)
 - [Map Processing](map_processing)
@@ -70,6 +74,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 - [Robot State](robot_state)
 - [SDK](sdk)
 - [Server Util](server_util)
+- [Service Parameterization Helpers](service_customization_helpers)
 - [Spot CAM](spot_cam/README)
 - [Spot Check](spot_check)
 - [Time Sync](time_sync)
@@ -104,11 +109,13 @@ The table below specifies the protobuf service definitions supported by each cli
 |                  [**GraphNav**](./graph_nav.py)                  |     [graph_nav/graph_nav_service.proto](../../../../../protos/bosdyn/api/graph_nav/graph_nav_service.proto)     |
 |      [**Gripper Camera Params**](./gripper_camera_param.py)      |    [gripper_camera_param_service.proto](../../../../../protos/bosdyn/api/gripper_camera_param_service.proto)    |
 |                     [**Image**](./image.py)                      |                   [image_service.proto](../../../../../protos/bosdyn/api/image_service.proto)                   |
+|         [**Inverse Kinematics**](inverse_kinematics.py)          |   [inverse_kinematics_service.proto](../../../../../protos/bosdyn/api/spot/inverse_kinematics_service.proto)    |
 |         [**IR Enable/Disable**](./ir_enable_disable.py)          |       [ir_enable_disable_service.proto](../../../../../protos/bosdyn/api/ir_enable_disable_service.proto)       |
 |                     [**Lease**](./lease.py)                      |                   [lease_service.proto](../../../../../protos/bosdyn/api/lease_service.proto)                   |
 |                   [**License**](./license.py)                    |                 [license_service.proto](../../../../../protos/bosdyn/api/license_service.proto)                 |
 |                [**Local Grid**](./local_grid.py)                 |              [local_grid_service.proto](../../../../../protos/bosdyn/api/local_grid_service.proto)              |
 |            [**Log Annotation**](./log_annotation.py)             |          [log_annotation_service.proto](../../../../../protos/bosdyn/api/log_annotation_service.proto)          |
+|                [**Log Status**](./log_status.py)                 |           [log_status_service](../../../../../protos/bosdyn/api/log_status/log_status_service.proto)            |
 |       [**Manipulation API**](./manipulation_api_client.py)       |        [manipulation_api_service.proto](../../../../../protos/bosdyn/api/manipulation_api_service.proto)        |
 |            [**Map Processing**](./map_processing.py)             |     [map_processing_service.proto](../../../../../protos/bosdyn/api/graph_nav/map_processing_service.proto)     |
 | [**Network Compute Bridge**](./network_compute_bridge_client.py) |  [network_compute_bridge_service.proto](../../../../../protos/bosdyn/api/network_compute_bridge_service.proto)  |

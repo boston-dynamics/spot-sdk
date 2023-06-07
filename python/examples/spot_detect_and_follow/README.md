@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -25,7 +25,7 @@ The pre-trained models may not be good at detecting some classes when using the 
 
 To install this example on Ubuntu 18.04, follow these instructions:
 
-- Install python3: `sudo apt-get install python3.6`
+- Install python3: `sudo apt-get install python3.10`
 - Install pip3: `sudo apt-get install python3-pip`
 - Install virtualenv: `python3 -m pip install virtualenv`
 - Change into example directory: `cd spot_detect_and_follow`
@@ -92,13 +92,21 @@ sudo docker build -t spot_detect_and_follow:l4t -f Dockerfile.l4t .
 To run a container, replace ROBOT_HOSTNAME and <absolute_path_to_pb> with the full path to the pb model file in the command below:
 
 ```sh
-sudo docker run -it --network=host spot_detect_and_follow --username $USER --password $PASSWORD ROBOT_HOSTNAME
+sudo docker run -it --network=host spot_detect_and_follow ROBOT_HOSTNAME
 ```
 
-On CORE I/O:
+On CORE I/O (using the GPU):
 
 ```sh
-sudo nvidia-docker run -it --network=host spot_detect_and_follow:l4t --username $USER --password $PASSWORD ROBOT_HOSTNAME
+sudo docker run --gpus all -it --network=host spot_detect_and_follow:l4t ROBOT_HOSTNAME
 ```
 
-To take advantage of GPU support if it is available on your system, add `--gpus all` in the command above.
+#### Running as a Spot Extension on CORE I/O
+
+This directory contains a script `create_extension.sh` that can be used to create an l4t-based Spot Extension for this example.
+This will create a file spot_detect_and_follow.spx, which can be uploaded to the CORE I/O.
+The extension requires that the payload be authorized on the robot admin console to run.
+
+If building the extension on an x86 system run the following to support building aarch64 containers
+`sudo apt-get install qemu binfmt-support qemu-user-static`
+`docker run --rm --privileged multiarch/qemu-user-static --reset -p yes`

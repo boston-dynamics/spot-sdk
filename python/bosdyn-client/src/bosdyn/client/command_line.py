@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -6,7 +6,7 @@
 
 """Command-line utility code for interacting with robot services."""
 
-from __future__ import division, print_function
+from __future__ import division
 
 import abc
 import argparse
@@ -17,13 +17,13 @@ import sys
 import threading
 import time
 
-import six
 from google.protobuf import json_format
 
 import bosdyn.client
 from bosdyn.api import data_acquisition_pb2, image_pb2
 from bosdyn.api.data_buffer_pb2 import Event, TextMessage
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
+from bosdyn.api.robot_state_pb2 import BehaviorFault
 from bosdyn.util import duration_str, timestamp_to_datetime
 
 from .auth import InvalidLoginError, InvalidTokenError
@@ -40,6 +40,7 @@ from .image import (ImageClient, ImageResponseError, UnknownImageSourceError, bu
 from .lease import LeaseClient
 from .license import LicenseClient
 from .local_grid import LocalGridClient
+from .log_status import InactiveLogError, LogStatusClient
 from .payload import PayloadClient
 from .payload_registration import PayloadAlreadyExistsError, PayloadRegistrationClient
 from .power import (PowerClient, power_cycle_robot, power_off_payload_ports, power_off_robot,
@@ -52,7 +53,7 @@ from .util import add_common_arguments, authenticate, setup_logging
 
 
 # pylint: disable=too-few-public-methods
-class Command(object, six.with_metaclass(abc.ABCMeta)):
+class Command(object, metaclass=abc.ABCMeta):
     """Command-line command.
 
     Args:
@@ -81,7 +82,8 @@ class Command(object, six.with_metaclass(abc.ABCMeta)):
 
         try:
             if self.NEED_AUTHENTICATION:
-                if options.username or options.password:
+                if hasattr(options, 'username') and hasattr(
+                        options, 'password') and (options.username or options.password):
                     robot.authenticate(options.username, options.password)
                 else:
                     authenticate(robot)
@@ -574,39 +576,63 @@ class FaultCommands(Subcommands):
                                             [FaultShowCommand, FaultWatchCommand])
 
 
-def _show_service_faults(robot):
-    """Print service faults for the robot.
+def _show_all_faults(robot):
+    """Print faults for the robot.
 
     Args:
         robot: Robot object used to get the list of services.
     """
-
     robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
-    service_fault_state = robot_state_client.get_robot_state().service_fault_state
+    robot_state = robot_state_client.get_robot_state()
+    system_fault_state = robot_state.system_fault_state
+    behavior_fault_state = robot_state.behavior_fault_state
+    service_fault_state = robot_state.service_fault_state
 
-    print("\n\n\n" + "-" * 80)
+    print('\n' + '-' * 80)
+    if len(system_fault_state.faults) == 0:
+        print("No active system faults.")
+    else:
+        for fault in system_fault_state.faults:
+            print('''
+{fault.name}
+    Error Message: {fault.error_message}
+    Onset Time: {timestamp}''' \
+              .format(fault=fault, timestamp=timestamp_to_datetime(fault.onset_timestamp)))
+
+    print()
+    if len(behavior_fault_state.faults) == 0:
+        print("No active behavior faults.")
+    else:
+        for fault in behavior_fault_state.faults:
+            print('''
+{cause}
+    Onset Time: {timestamp}
+    Clearable: {clearable}''' \
+                  .format(cause=BehaviorFault.Cause.Name(fault.cause),
+                          timestamp=timestamp_to_datetime(fault.onset_timestamp),
+                          clearable=BehaviorFault.Status.Name(fault.status)))
+
+    print()
     if len(service_fault_state.faults) == 0:
         print("No active service faults.")
-        return
-
-    for fault in service_fault_state.faults:
-        print('''
+    else:
+        for fault in service_fault_state.faults:
+            print('''
 {fault.fault_id.fault_name}
     Service Name: {fault.fault_id.service_name}
     Payload GUID: {fault.fault_id.payload_guid}
     Error Message: {fault.error_message}
     Onset Time: {timestamp}'''\
     .format(fault=fault, timestamp=timestamp_to_datetime(fault.onset_timestamp)))
-    return
 
 
 class FaultShowCommand(Command):
-    """Show all service faults currently active in robot state."""
+    """Show all faults currently active in robot state."""
 
     NAME = 'show'
 
     def __init__(self, subparsers, command_dict):
-        """Show all service faults currently active in robot state.
+        """Show all faults currently active in robot state.
 
         Args:
             subparsers: List of argument parsers.
@@ -624,12 +650,12 @@ class FaultShowCommand(Command):
         Returns:
             True
         """
-        _show_service_faults(robot)
+        _show_all_faults(robot)
         return True
 
 
 class FaultWatchCommand(Command):
-    """Watch all service faults in robot state and print them out."""
+    """Watch all faults in robot state and print them out."""
 
     NAME = 'watch'
 
@@ -653,10 +679,259 @@ class FaultWatchCommand(Command):
             True
         """
         print('Press Ctrl-C or send SIGINT to exit\n\n')
-        while True:
-            _show_service_faults(robot)
-            time.sleep(1)
+        try:
+            while True:
+                _show_all_faults(robot)
+                time.sleep(1)
+        except KeyboardInterrupt:
+            pass
 
+        return True
+
+
+class LogStatusCommands(Subcommands):
+    """Interact with start, update and terminate experiment logs, start and update retro logs and check status of active logs for robot."""
+
+    NAME = 'log-status'
+    NEED_AUTHENTICATION = True
+
+    def __init__(self, subparsers, command_dict):
+        """Interact with logs for robot
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(LogStatusCommands, self).__init__(subparsers, command_dict, [
+            GetLogCommand,
+            GetActiveLogStatusesCommand,
+            ExperimentLogCommand,
+            StartRetroLogCommand,
+            TerminateLogCommand,
+        ])
+
+
+class GetLogCommand(Command):
+    """Get log status but log id."""
+
+    NAME = 'get'
+
+    def __init__(self, subparsers, command_dict):
+        """Get log status from robot
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(GetLogCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('id', help='id of log bundle to display')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        Returns:
+            True
+        """
+
+        client = robot.ensure_client(LogStatusClient.default_service_name)
+        response = client.get_log_status(options.id)
+        print(response.log_status)
+        return True
+
+
+class GetActiveLogStatusesCommand(Command):
+    """Get active log bundles for robot."""
+
+    NAME = 'active'
+
+    def __init__(self, subparsers, command_dict):
+        """Retrieve active log statuses for robot.
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(GetActiveLogStatusesCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        Returns:
+            True
+        """
+        client = robot.ensure_client(LogStatusClient.default_service_name)
+        response = client.get_active_log_statuses()
+        print(response.log_statuses)
+        return True
+
+
+class ExperimentLogCommand(Subcommands):
+    """Give experiment log commands to robot."""
+
+    NAME = 'experiment'
+
+    def __init__(self, subparsers, command_dict):
+        """List log bundles with status for robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(ExperimentLogCommand, self).__init__(subparsers, command_dict, [
+            StartTimedExperimentLogCommand,
+            StartContinuousExperimentLogCommand,
+        ])
+
+
+class StartTimedExperimentLogCommand(Command):
+    """Start a timed experiment log."""
+
+    NAME = 'timed'
+
+    def __init__(self, subparsers, command_dict):
+        """Start timed experiment log
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(StartTimedExperimentLogCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('seconds', type=float, help='how long should the experiment run?')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+
+        client = robot.ensure_client(LogStatusClient.default_service_name)
+        response = client.start_experiment_log(options.seconds)
+        print(response.log_status)
+        return True
+
+
+class StartContinuousExperimentLogCommand(Command):
+    """Start a continuous experiment log."""
+
+    NAME = 'continuous'
+
+    def __init__(self, subparsers, command_dict):
+        """Start continuous experiment log, defaulted to update keep alive time by 10 seconds every 5 seconds.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(StartContinuousExperimentLogCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('-sleep', type=float, default=5,
+                                  help='how long should thread sleep before extending')
+
+    @staticmethod
+    def handle_keyboard_interruption(client, log_id):
+        try:
+            print(" Received keyboard interruption\n\n")
+            response = client.terminate_log(log_id)
+            print(response.log_status)
+        except KeyboardInterrupt:
+            client.terminate_log_async(log_id)
+            print("Log will terminate shortly")
+            response = client.get_log_status(log_id)
+            print(response.log_status)
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+
+        client = robot.ensure_client(LogStatusClient.default_service_name)
+        response = client.start_experiment_log(options.sleep * 2)
+        log_id = response.log_status.id
+        print("Experiment log id: ", log_id)
+        print('Use terminate command, press Ctrl-C or send SIGINT to complete log\n\n')
+
+        try:
+            while True:
+                time.sleep(options.sleep)
+                client.update_experiment(log_id, options.sleep * 2)
+        except InactiveLogError:
+            response = client.get_log_status(log_id)
+            print(response.log_status)
+        except KeyboardInterrupt:
+            self.handle_keyboard_interruption(client, log_id)
+        return True
+
+
+class StartRetroLogCommand(Command):
+    """Start a retro log."""
+
+    NAME = 'retro'
+
+    def __init__(self, subparsers, command_dict):
+        """Start a retroactive log
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(StartRetroLogCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('seconds', type=float, help='how long should the retro log run?')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        Returns:
+            True
+        """
+
+        client = robot.ensure_client(LogStatusClient.default_service_name)
+        response = client.start_retro_log(options.seconds)
+        print(response.log_status)
+        return True
+
+
+class TerminateLogCommand(Command):
+    """Terminate log gathering process."""
+
+    NAME = 'terminate'
+
+    def __init__(self, subparsers, command_dict):
+        """Terminate log on robot
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(TerminateLogCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('id', help='id of log to terminate')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+
+        client = robot.ensure_client(LogStatusClient.default_service_name)
+        response = client.terminate_log(options.id)
+        print(response.log_status)
         return True
 
 
@@ -1865,8 +2140,8 @@ class DataAcquisitionServiceCommand(Command):
             for img in img_service.image_source_names:
                 self._format_and_print_capability("image", img, img_service.service_name)
         for ncb_worker in capabilities.network_compute_sources:
-            for model in ncb_worker.available_models:
-                self._format_and_print_capability("models", model,
+            for model in ncb_worker.models.data:
+                self._format_and_print_capability("models", model.model_name,
                                                   ncb_worker.server_config.service_name)
         return True
 
@@ -2073,6 +2348,7 @@ def main(args=None):
     FaultCommands(subparsers, command_dict)
     RobotIdCommand(subparsers, command_dict)
     LicenseCommand(subparsers, command_dict)
+    LogStatusCommands(subparsers, command_dict)
     RobotStateCommands(subparsers, command_dict)
     DataBufferCommands(subparsers, command_dict)
     DataServiceCommands(subparsers, command_dict)

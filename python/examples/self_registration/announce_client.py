@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -65,7 +65,7 @@ def main():
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_payload_credentials_arguments(parser)
-    parser.add_argument("--message", required=True, type=str, help="Message to send to server")
+    parser.add_argument('--message', required=True, type=str, help='Message to send to server')
     options = parser.parse_args()
 
     run_announce_client(options)

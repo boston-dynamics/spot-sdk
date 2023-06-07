@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,16 +13,14 @@ import "google/protobuf/timestamp.proto";
 
 package bosdyn.api;
 
-
 // A message representing a discoverable service.  By definition, all services
 // discoverable by this system are expected to be grpc "services" provided by
 // some server.
 message ServiceEntry {
-
     // The unique user-friendly name of this service.
     string name = 1;
 
-    oneof service_type{
+    oneof service_type {
         // The type of this service. Usually identifies the underlying implementation.
         // Does not have to be unique among all ServiceEntry objects.
         string type = 2;
@@ -44,11 +42,6 @@ message ServiceEntry {
     bool user_token_required = 5;
 
 
-    // DEPRECATED as of 2.1.0: The application_token_required field has been removed and is not required anymore.
-    // Authorization checks were updated in 1.2.
-    reserved "application_token_required";
-    reserved 6;
-
     // If 'permission_required' field is non-empty, any requests to this service must
     // have the same string in the "per" claim of the user token.
     string permission_required = 7;
@@ -62,6 +55,9 @@ message ServiceEntry {
     // robot. This value is set automatically based on the user token and cannot be set or updated
     // via the API, so it should not be populated by the client at registration time.
     string host_payload_guid = 9;
+
+    // Reserved field numbers for removed fields.
+    reserved 6;
 }
 
 // A message containing information that allows a client to identify a
@@ -89,7 +85,8 @@ message GetServiceEntryResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        // UNKNOWN should never be used. An internal DirectoryService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal DirectoryService issue has happened if UNKNOWN
+        // is set.
         STATUS_UNKNOWN = 0;
 
         // GetService was successful. The service_entry field is filled out.

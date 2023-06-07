@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -17,8 +17,8 @@ import "google/protobuf/wrappers.proto";
 
 // Identifier for a playable sound.
 message Sound {
-    //internally, sounds are stored in a flat table. This name is the
-    //identifier of a sound effect
+    // internally, sounds are stored in a flat table. This name is the
+    // identifier of a sound effect
     string name = 1;
 }
 
@@ -40,7 +40,7 @@ message ListSoundsResponse {
 message SetVolumeRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-    //volume, as a percentage of maximum.
+    // volume, as a percentage of maximum.
     float volume = 2;
 }
 
@@ -60,7 +60,7 @@ message GetVolumeRequest {
 message GetVolumeResponse {
     // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    //volume, as a percentage of maximum.
+    // volume, as a percentage of maximum.
     float volume = 2;
 }
 
@@ -81,6 +81,7 @@ message PlaySoundResponse {
     bosdyn.api.ResponseHeader header = 1;
 }
 
+
 // Remove a loaded sound from the library of loaded sounds.
 message DeleteSoundRequest {
     // Common request header.
@@ -100,7 +101,8 @@ message LoadSoundRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
     // Identifier for the sound.
-    // If the same identifier is used as a previously loaded sound, that sound will be overwritten with the new data.
+    // If the same identifier is used as a previously loaded sound, that sound will be overwritten
+    // with the new data.
     Sound sound = 2;
     // WAV bytes to be joined.
     bosdyn.api.DataChunk data = 3;

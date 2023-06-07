@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -77,7 +77,7 @@ def get_graphnav_origin(self):
     graph_nav_client = self.bosdyn_sdk_robot.ensure_client(GraphNavClient.default_service_name)
     state = graph_nav_client.get_localization_state()
     gn_origin_tform_body = state.localization.seed_tform_body
-    return math_helpers.SE3Pose.from_obj(gn_origin_tform_body)
+    return math_helpers.SE3Pose.from_proto(gn_origin_tform_body)
 ```
 
 <!--- image and page reference link definitions --->

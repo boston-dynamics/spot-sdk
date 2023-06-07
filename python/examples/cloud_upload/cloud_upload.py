@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -32,8 +32,8 @@ def upload_to_gcp(bucket_name, source_file, destination_file):
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(destination_file)
     blob.upload_from_filename(source_file)
-    logger.info('Upload of file {} as {} to {} successful'.format(source_file, destination_file,
-                                                                  bucket_name))
+    logger.info('Upload of file %s as %s to %s successful', source_file, destination_file,
+                bucket_name)
 
 
 def upload_to_aws(bucket_name, source_file, destination_file):
@@ -51,8 +51,8 @@ def upload_to_aws(bucket_name, source_file, destination_file):
 
     s3 = boto3.client('s3')
     s3.upload_file(source_file, bucket_name, destination_file)
-    logger.info('Upload of file {} as {} to {} successful'.format(source_file, destination_file,
-                                                                  bucket_name))
+    logger.info('Upload of file %s as %s to %s successful', source_file, destination_file,
+                bucket_name)
 
 
 def main(argv):

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -19,6 +19,8 @@ import "bosdyn/api/graph_nav/graph_nav.proto";
 import "bosdyn/api/graph_nav/nav.proto";
 import "bosdyn/api/gripper_command.proto";
 import "bosdyn/api/geometry.proto";
+import "bosdyn/api/image.proto";
+import "bosdyn/api/service_customization.proto";
 import "bosdyn/api/trajectory.proto";
 import "bosdyn/api/spot_cam/ptz.proto";
 import "bosdyn/api/spot/robot_command.proto";
@@ -49,18 +51,22 @@ message Walk {
     // However, this is subject to change.
     repeated Dock docks = 6;
 
+    // Unique identifier for this walk.  This will be embedded in various Data Acquisition captures
+    // and various logging bundles.  This should be globally unique across all walks.
+    string id = 8;
+
 }
 
 // These parameters apply to the entire autowalk.
 message GlobalParameters {
     // If the mission contains data acquisitions, this will be their group name.
-    // The actual group name used will include the specified group name, and additional 
+    // The actual group name used will include the specified group name, and additional
     // qualifiers to ensure its unique for each start of this mission.
     string group_name = 1;
 
     // If the mission contains SpotCAM PTZ actions, set this to true. At the start of the
-    // mission, the SpotCAM PTZ autofocus will be reset, thereby improving the quality of
-    // the subsequent PTZ captures.
+    // mission (or if the robot falls), the SpotCAM PTZ autofocus will be reset, thereby
+    // improving the quality of the subsequent PTZ captures.
     bool should_autofocus_ptz = 2;
 
     // The mission can automatically self-right the robot. Autonomous self-rights
@@ -72,7 +78,7 @@ message GlobalParameters {
     int32 self_right_attempts = 3;
 
     // The callbacks that will be executed at the end of the mission. Functionality that
-    // is often found in post-mission callbacks includes uploading data to the cloud or 
+    // is often found in post-mission callbacks includes uploading data to the cloud or
     // sending an email. The callbacks will be executed serially (first in, first executed).
     repeated bosdyn.api.autowalk.Action.RemoteGrpc post_mission_callbacks = 4;
 
@@ -101,10 +107,10 @@ message Dock {
     // When it is time for the robot to dock, it will approach this target
     // before issuing docking commands. If the user is using graph_nav, the
     // final waypoint in the NavigateRoute OR the waypoint ID in the
-    // NavigateTo MUST be at the docking prep pose. To do this, send a docking 
-    // command to move the robot to the docking prep pose. Then, create a 
-    // waypoint at the docking prep pose location. Graph_nav is responsible for 
-    // navigating the robot to the docking prep pose. Once the robot is in the 
+    // NavigateTo MUST be at the docking prep pose. To do this, send a docking
+    // command to move the robot to the docking prep pose. Then, create a
+    // waypoint at the docking prep pose location. Graph_nav is responsible for
+    // navigating the robot to the docking prep pose. Once the robot is in the
     // docking prep pose, the docking service does the rest.
     Target target_prep_pose = 3;
 
@@ -147,7 +153,7 @@ message PlaybackMode {
         int32 repetitions = 2;
     }
 
-    // The mission should be played continuously only stopping if a battery 
+    // The mission should be played continuously only stopping if a battery
     // monitor stop threshold is crossed.
     message Continuous {}
 
@@ -195,6 +201,10 @@ message Element {
     // Not including, or including a zero duration will set the action to NOT have a
     // timeout.
     google.protobuf.Duration action_duration = 9;
+
+    // Unique identifier for this element.  This will be embedded in various Data Acquisition
+    // captures and various logging bundles.  This should be globally unique across all elements.
+    string id = 10;
 }
 
 // A Target is the location the robot should navigate to.
@@ -240,6 +250,7 @@ message Target {
     // This should increase the accuracy of the robots belief of it's position on the map.
     // After relocalizing, the robot will re-navigate to the target.
     Relocalize relocalize = 3;
+
 }
 
 // An Action is what the robot should do at a location. For example, the user
@@ -254,10 +265,30 @@ message Action {
         google.protobuf.Duration duration = 2;
     }
 
-    // For actions associated with the Data Acquisition Service (DAQ).
+    // For actions associated with the Data Acquisition Service.
     message DataAcquisition {
+        // The autowalk service replaces the action_name field in the CaptureActionId with the
+        // element name.
         AcquireDataRequest acquire_data_request = 1;
         bosdyn.api.mission.DataAcquisition.CompletionBehavior completion_behavior = 2;
+        // Last known Data Acquisition capabilities.
+        AcquisitionCapabilityList last_known_capabilities = 3;
+
+        // Any images taken at action creation time.  For DataAcquisition actions, this includes:
+        //    - Any images in the Data Acquisition capture.
+        //    - Any images that are inputs to NCB workers that are in the Data Acquisition capture.
+        //    - Any images that a Data Acquisition plugin in the Data Acquisition capture requests a
+        //    region of interest for.
+        //
+        // Note that both this message and AcquisitionCapabilityList will contain the
+        // Spec for images sources.  This message will contain the spec at record time,
+        // while last_known_capabilities should be updated as time progresses and services
+        // evolve.
+        //
+        // This data is meant to allow UI's to give users context about their actions, AND
+        // provide them a canvas to edit region of interests with after the fact.  It is
+        // not used at mission playback time.
+        repeated ImageCaptureAndSource record_time_images = 4;
     }
 
     message RemoteGrpc {
@@ -278,7 +309,20 @@ message Action {
         // The list of variables the remote host should receive.
         // Variables given can be available at either run-time or compile-time.
         // The "key" in KeyValue is the name of the variable as used by the remote system.
-        repeated bosdyn.api.mission.KeyValue inputs = 4;
+        // DEPRECATED as of 3.3.  Please use 'parameters' instead.
+        repeated bosdyn.api.mission.KeyValue inputs = 4 [deprecated = true];
+
+        // All specifications and any values chosen at record time.
+        CustomParamCollection parameters = 5;
+
+        // Any images taken at action creation time.  For RemoteGRPC's, this will only happen
+        // if the RemoteGRPC advertises parameters that require a region of interest for a specific
+        // camera.
+        //
+        // This data is meant to allow UI's to give users context about their actions, AND
+        // provide them a canvas to edit region of interests with after the fact.  It is
+        // not used at mission playback time.
+        repeated ImageCaptureAndSource record_time_images = 6;
     }
 
     oneof action {
@@ -327,6 +371,37 @@ message ActionWrapper {
         bosdyn.api.spot_cam.PtzPosition ptz_position = 1;
     }
 
+    // Align SpotCam to a waypoint. Cannot be used with SpotCamPtz or RobotBodyPose
+    message SpotCamAlignment {
+        message Alignment {
+            // Camera zoom parameter
+            float zoom = 1;
+
+            // Sensor to use for alignment
+            string sensor_id = 2;
+
+            // Image to use for alignment
+            oneof reference {
+                string scene_object_id = 3;
+            }
+
+            // If true, this alignment will be skipped during playback
+            bool is_skipped = 4;
+        }
+
+        // List of alignments to perform
+        repeated Alignment alignments = 2;
+
+        // Desired transform from the sensor to the target
+        bosdyn.api.SE3Pose target_tform_sensor = 3;
+
+        // Final zoom the camera should be after all alignments have finished
+        float final_zoom = 4;
+
+        // Optional list of sensor names which should be unobstructed after alignment
+        repeated string target_sensor_ids = 5;
+    }
+
     // Position the body and perform a joint move and cartesian command in target frame
     message ArmSensorPointing {
         // Arm Joint Move Command
@@ -370,6 +445,7 @@ message ActionWrapper {
     SpotCamLed spot_cam_led = 4;
     SpotCamPtz spot_cam_ptz = 5;
     ArmSensorPointing arm_sensor_pointing = 6;
+    SpotCamAlignment spot_cam_alignment = 9;
     GripperCameraParams gripper_camera_params = 7;
     GripperCommand gripper_command = 8;
 }

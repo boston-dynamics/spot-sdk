@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.recording &mdash; Spot 3.2.3 documentation</title>
+  <title>bosdyn.client.recording &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -30,10 +32,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -66,7 +70,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -94,13 +98,16 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -129,6 +136,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -183,6 +191,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -195,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -202,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -227,9 +238,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -244,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -266,6 +280,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -293,6 +314,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -306,13 +328,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -330,6 +355,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -391,6 +417,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -469,6 +501,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -483,9 +516,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -494,6 +530,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -524,10 +562,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -549,6 +591,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -565,7 +608,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -630,14 +672,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.recording</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
 <span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
 
 <span class="sd">&quot;&quot;&quot;For clients to use the graph nav recording service&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
@@ -651,14 +692,14 @@
 
 
 <div class="viewcode-block" id="WaypointRegion"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.WaypointRegion">[docs]</a><span class="k">class</span> <span class="nc">WaypointRegion</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper enum to describe the localization region type for a waypoint.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper enum to describe the localization region type for a waypoint.&quot;&quot;&quot;</span>
     <span class="n">DEFAULT_REGION</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">EMPTY_REGION</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">CIRCLE_REGION</span> <span class="o">=</span> <span class="mi">3</span></div>
 
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient">[docs]</a><span class="k">class</span> <span class="nc">GraphNavRecordingServiceClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Client for the GraphNav recording service.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for the GraphNav recording service.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;recording-service&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.graph_nav.GraphNavRecordingService&#39;</span>
 
@@ -668,11 +709,12 @@
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.start_recording"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.start_recording">[docs]</a>    <span class="k">def</span> <span class="nf">start_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recording_environment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_fiducials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Start the recording service to create/update a map.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start the recording service to create/update a map.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            lease: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
 <span class="sd">            recording_environment: RecordingEnvironment protobuf to be used for the initial waypoint created at start.</span>
+<span class="sd">            require_fiducials: Boolean to show whether a fiducial is needed to start the recording.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            The status of the start recording request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -681,17 +723,35 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartRecording</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_status</span><span class="p">,</span>
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">_start_recording_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="GraphNavRecordingServiceClient.start_recording_full"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.start_recording_full">[docs]</a>    <span class="k">def</span> <span class="nf">start_recording_full</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recording_environment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_fiducials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                             <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Same as start_recording() but returns a full response&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_start_recording_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">recording_environment</span><span class="p">,</span>
+                                                      <span class="n">require_fiducials</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartRecording</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">_start_recording_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.start_recording_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.start_recording_async">[docs]</a>    <span class="k">def</span> <span class="nf">start_recording_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recording_environment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">require_fiducials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of start_recording().&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of start_recording().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_start_recording_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">recording_environment</span><span class="p">,</span>
                                                       <span class="n">require_fiducials</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartRecording</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_status</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">_start_recording_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="GraphNavRecordingServiceClient.start_recording_full_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.start_recording_full_async">[docs]</a>    <span class="k">def</span> <span class="nf">start_recording_full_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recording_environment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">require_fiducials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of start_recording_full().&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_start_recording_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">recording_environment</span><span class="p">,</span>
+                                                      <span class="n">require_fiducials</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartRecording</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                               <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">_start_recording_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.stop_recording"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.stop_recording">[docs]</a>    <span class="k">def</span> <span class="nf">stop_recording</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Stop the recording service.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Stop the recording service.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            lease: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
@@ -703,14 +763,14 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">_stop_recording_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.stop_recording_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.stop_recording_async">[docs]</a>    <span class="k">def</span> <span class="nf">stop_recording_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of stop_recording().&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of stop_recording().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_stop_recording_request</span><span class="p">(</span><span class="n">lease</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StopRecording</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_status</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">_stop_recording_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.get_record_status"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.get_record_status">[docs]</a>    <span class="k">def</span> <span class="nf">get_record_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get the status of the recording service.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the status of the recording service.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The record service status, which indicates the current persistent environment and if it&#39;s recording a map.</span>
@@ -720,7 +780,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.get_record_status_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.get_record_status_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_record_status_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of get_record_status().&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_record_status().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_get_record_status_request</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetRecordStatus</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span>
@@ -728,7 +788,7 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.set_recording_environment"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.set_recording_environment">[docs]</a>    <span class="k">def</span> <span class="nf">set_recording_environment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recording_environment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the persistent recording environment.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the persistent recording environment.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            lease: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
@@ -741,14 +801,14 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.set_recording_environment_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.set_recording_environment_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_recording_environment_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recording_environment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of set_recording_environment().&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_recording_environment().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_set_recording_environment_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">recording_environment</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetRecordingEnvironment</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.create_waypoint"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.create_waypoint">[docs]</a>    <span class="k">def</span> <span class="nf">create_waypoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">waypoint_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recording_environment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a waypoint in the map at the current robot state.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a waypoint in the map at the current robot state.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            lease: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
@@ -764,7 +824,7 @@
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.create_waypoint_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.create_waypoint_async">[docs]</a>    <span class="k">def</span> <span class="nf">create_waypoint_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">waypoint_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">recording_environment</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                               <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of create_waypoint().&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of create_waypoint().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_create_waypoint_request</span><span class="p">(</span><span class="n">waypoint_name</span><span class="p">,</span> <span class="n">recording_environment</span><span class="p">,</span> <span class="n">lease</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">CreateWaypoint</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span>
@@ -772,7 +832,7 @@
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.create_edge"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.create_edge">[docs]</a>    <span class="k">def</span> <span class="nf">create_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a edge in the map between two existing waypoints.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a edge in the map between two existing waypoints.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            lease: Leases to show ownership of necessary resources. Will use the client&#39;s leases by default.</span>
@@ -785,7 +845,7 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">_create_edge_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.create_edge_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.create_edge_async">[docs]</a>    <span class="k">def</span> <span class="nf">create_edge_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of create_edge().&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of create_edge().&quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_create_edge_request</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="n">lease</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">CreateEdge</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_status</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">_create_edge_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -818,7 +878,7 @@
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.make_recording_environment"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.make_recording_environment">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">make_recording_environment</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">waypoint_env</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_env</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Construct a complete recording environment from the waypoint and edge environments.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a complete recording environment from the waypoint and edge environments.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name: A string name prefix which will prefix waypoint names (human-readable).</span>
@@ -834,7 +894,7 @@
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.make_waypoint_environment"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.make_waypoint_environment">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">make_waypoint_environment</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="n">WaypointRegion</span><span class="o">.</span><span class="n">DEFAULT_REGION</span><span class="p">,</span> <span class="n">dist_2d</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                   <span class="n">client_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a waypoint environment.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a waypoint environment.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            name: A string name for the waypoint (human-readable).</span>
@@ -869,7 +929,7 @@
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.make_client_metadata"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.make_client_metadata">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">make_client_metadata</span><span class="p">(</span><span class="n">session_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">client_username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">client_software_version</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">client_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">client_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates client metadata for recording.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates client metadata for recording.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            session_name: User-provided name for this recording &quot;session&quot;. For example, the user</span>
@@ -890,7 +950,7 @@
     <span class="k">def</span> <span class="nf">make_edge_environment</span><span class="p">(</span>
             <span class="n">vel_limit</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">direction_constraint</span><span class="o">=</span><span class="n">map_pb2</span><span class="o">.</span><span class="n">Edge</span><span class="o">.</span><span class="n">Annotations</span><span class="o">.</span><span class="n">DIRECTION_CONSTRAINT_NONE</span><span class="p">,</span>
             <span class="n">require_alignment</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">flat_ground</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ground_mu_hint</span><span class="o">=</span><span class="mf">.8</span><span class="p">,</span> <span class="n">grated_floor</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create a edge environment.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a edge environment.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            vel_limit: A SE2VelocityLimit to use while traversing the edge. Note this is not a target speed, just a max/min.</span>
@@ -916,7 +976,7 @@
 
 <div class="viewcode-block" id="GraphNavRecordingServiceClient.make_edge"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.GraphNavRecordingServiceClient.make_edge">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">make_edge</span><span class="p">(</span><span class="n">from_waypoint_id</span><span class="p">,</span> <span class="n">to_waypoint_id</span><span class="p">,</span> <span class="n">from_tform_to</span><span class="p">,</span> <span class="n">edge_environment</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create an edge between two waypoint ids.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an edge between two waypoint ids.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            from_waypoint_id: A waypoint string id for the from waypoint.</span>
@@ -939,79 +999,80 @@
 
 
 <div class="viewcode-block" id="RecordingServiceResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.RecordingServiceResponseError">[docs]</a><span class="k">class</span> <span class="nc">RecordingServiceResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;General class of errors for the GraphNav Recording Service.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors for the GraphNav Recording Service.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="CouldNotCreateWaypointError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.CouldNotCreateWaypointError">[docs]</a><span class="k">class</span> <span class="nc">CouldNotCreateWaypointError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Service could not create a waypoint.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Service could not create a waypoint.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NotRecordingError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.NotRecordingError">[docs]</a><span class="k">class</span> <span class="nc">NotRecordingError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The recording service has not been started.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The recording service has not been started.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnknownWaypointError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.UnknownWaypointError">[docs]</a><span class="k">class</span> <span class="nc">UnknownWaypointError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The edge requested has a waypoint id that is unknown.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The edge requested has a waypoint id that is unknown.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="EdgeExistsError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.EdgeExistsError">[docs]</a><span class="k">class</span> <span class="nc">EdgeExistsError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The edge requested with the given ID already exists in the map.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The edge requested with the given ID already exists in the map.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="EdgeMissingTransformError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.EdgeMissingTransformError">[docs]</a><span class="k">class</span> <span class="nc">EdgeMissingTransformError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The edge requested is missing the from_T_to transform in the edge.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The edge requested is missing the from_T_to transform in the edge.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NotLocalizedToEndError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.NotLocalizedToEndError">[docs]</a><span class="k">class</span> <span class="nc">NotLocalizedToEndError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Stop recording failed to localize to the last created waypoint.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Stop recording failed to localize to the last created waypoint.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="FollowingRouteError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.FollowingRouteError">[docs]</a><span class="k">class</span> <span class="nc">FollowingRouteError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Cannot start recording while the robot is already following a route.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Cannot start recording while the robot is already following a route.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NotLocalizedToExistingMapError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.NotLocalizedToExistingMapError">[docs]</a><span class="k">class</span> <span class="nc">NotLocalizedToExistingMapError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The robot is not localized to the existing map and cannot start recording.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The robot is not localized to the existing map and cannot start recording.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="TooFarFromExistingMapError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.TooFarFromExistingMapError">[docs]</a><span class="k">class</span> <span class="nc">TooFarFromExistingMapError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The robot is too far from the existing map and cannot start recording.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The robot is too far from the existing map and cannot start recording.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="RemoteCloudFailureNotInDirectoryError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.RemoteCloudFailureNotInDirectoryError">[docs]</a><span class="k">class</span> <span class="nc">RemoteCloudFailureNotInDirectoryError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Failed to start recording because a remote point cloud (e.g. a LIDAR) is not registered to the service directory.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Failed to start recording because a remote point cloud (e.g. a LIDAR) is not registered to the service directory.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="RemoteCloudFailureNoDataError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.RemoteCloudFailureNoDataError">[docs]</a><span class="k">class</span> <span class="nc">RemoteCloudFailureNoDataError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Failed to start recording because a remote point cloud (e.g. a LIDAR) is not delivering data.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Failed to start recording because a remote point cloud (e.g. a LIDAR) is not delivering data.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NotReadyYetError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.NotReadyYetError">[docs]</a><span class="k">class</span> <span class="nc">NotReadyYetError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The service is processing the map at it&#39;s current position. Try again in 1-2 seconds.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The service is processing the map at it&#39;s current position. Try again in 1-2 seconds.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="MapTooLargeLicenseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.MapTooLargeLicenseError">[docs]</a><span class="k">class</span> <span class="nc">MapTooLargeLicenseError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Map exceeds the size allowed by the license.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map exceeds the size allowed by the license.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="MissingFiducialsError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.MissingFiducialsError">[docs]</a><span class="k">class</span> <span class="nc">MissingFiducialsError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;One or more required fiducials were not detected.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One or more required fiducials were not detected.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="FiducialPoseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.FiducialPoseError">[docs]</a><span class="k">class</span> <span class="nc">FiducialPoseError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The pose of one or more required fiducials could not be determined accurately.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The pose of one or more required fiducials could not be determined accurately.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="RobotImpairedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html#bosdyn.client.recording.RobotImpairedError">[docs]</a><span class="k">class</span> <span class="nc">RobotImpairedError</span><span class="p">(</span><span class="n">RecordingServiceResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Failed to start recording because the robot is impaired.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Failed to start recording because the robot is impaired.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-        <span class="n">RecordingServiceResponseError</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error_message</span><span class="p">):</span>
+        <span class="n">RecordingServiceResponseError</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error_message</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">impaired_state</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">impaired_state</span>
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">RecordingServiceResponseError</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">base</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Impaired state: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">impaired_state</span><span class="p">)</span></div>
+        <span class="n">base</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Impaired state: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">impaired_state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">base</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_status</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
@@ -1053,7 +1114,7 @@
 <span class="c1"># @handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_start_recording_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a custom exception based on start recording response, None if no error.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on start recording response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">recording_pb2</span><span class="o">.</span><span class="n">StartRecordingResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_START_RECORDING_STATUS_TO_ERROR</span><span class="p">)</span>
@@ -1073,7 +1134,7 @@
 <span class="c1"># @handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_stop_recording_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a custom exception based on stop recording response, None if no error.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on stop recording response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">recording_pb2</span><span class="o">.</span><span class="n">StopRecordingResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_STOP_RECORDING_STATUS_TO_ERROR</span><span class="p">)</span>
@@ -1097,7 +1158,7 @@
 <span class="c1"># @handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_create_waypoint_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a custom exception based on create waypoint response, None if no error.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on create waypoint response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">recording_pb2</span><span class="o">.</span><span class="n">CreateWaypointResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_CREATE_WAYPOINT_STATUS_TO_ERROR</span><span class="p">)</span>
@@ -1120,7 +1181,7 @@
 <span class="c1"># @handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_create_edge_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a custom exception based on create edge response, None if no error.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on create edge response, None if no error.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">recording_pb2</span><span class="o">.</span><span class="n">CreateEdgeResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_CREATE_EDGE_STATUS_TO_ERROR</span><span class="p">)</span>

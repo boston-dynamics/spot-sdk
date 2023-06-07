@@ -1,12 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import os
 import threading
-from unittest import mock
 
 import cv2
 import numpy as np
@@ -14,11 +12,12 @@ import pytest
 from google.protobuf import timestamp_pb2
 from PIL import Image
 
-from bosdyn.api import header_pb2, image_pb2, service_fault_pb2
+from bosdyn.api import header_pb2, image_pb2, service_customization_pb2, service_fault_pb2
 from bosdyn.client.fault import FaultClient, ServiceFaultDoesNotExistError
 from bosdyn.client.image_service_helpers import (CameraBaseImageServicer, CameraInterface,
                                                  ImageCaptureThread, VisualImageSource,
                                                  convert_RGB_to_grayscale)
+from bosdyn.client.service_customization_helpers import InvalidCustomParamSpecError
 
 
 class MockFaultClient:
@@ -79,7 +78,23 @@ class MockRobot:
 
 ##### Helper functions to mimic the function signatures of the capture function
 # and the decode image function for the VisualImageSource.
+
+
 class FakeCamera(CameraInterface):
+
+    def __init__(self, capture_func, decode_func):
+        self.capture_func = capture_func
+        self.decode_func = decode_func
+
+    def blocking_capture(self, *, custom_params=None, **kwargs):
+        return self.capture_func(custom_params=custom_params, **kwargs)
+
+    def image_decode(self, image_data, image_proto, image_req):
+        return self.decode_func(image_data, image_proto, image_req)
+
+
+# Old definition, pre 3.3.0
+class OldFakeCamera(CameraInterface):
 
     def __init__(self, capture_func, decode_func):
         self.capture_func = capture_func
@@ -92,8 +107,14 @@ class FakeCamera(CameraInterface):
         return self.decode_func(image_data, image_proto, image_req)
 
 
-# Old definition, pre 3.1.0
-class OldFakeCamera(CameraInterface):
+@pytest.fixture(params=[FakeCamera, OldFakeCamera])
+def fake_camera(request):
+    #Use to test functionality that works differently based on whether the service uses custom params
+    return request.param
+
+
+# Older definition, pre 3.1.0
+class OlderFakeCamera(CameraInterface):
 
     def __init__(self, capture_func, decode_func):
         self.capture_func = capture_func
@@ -106,12 +127,26 @@ class OldFakeCamera(CameraInterface):
         return self.decode_func(image_data, image_proto, image_format, quality_percent)
 
 
-def capture_fake():
+def capture_fake(custom_params=None, **kwargs):
+    return "image", 1
+
+
+def capture_fake_with_custom_params(custom_params=None, **kwargs):
+    if custom_params:
+        return custom_params.values["string"].string_value.value + str(
+            custom_params.values["int"].int_value.value), 1
+    else:
+        return "noparams", 2
+
+
+def capture_fake_no_kwargs():
     return "image", 1
 
 
 def decode_fake(img_data, img_proto, img_req):
     img_proto.rows = 15
+    if isinstance(img_data, str):
+        img_proto.data = bytes(img_data, encoding="utf-8")
 
 
 def decode_fake_no_resize(img_data, img_proto, img_format, quality):
@@ -145,8 +180,11 @@ class Increment():
         self.barrier.wait(timeout=1)
         return "image", self.timestamp
 
+    def capture_increment_count_custom_params(self, custom_params=None):
+        self.capture_increment_count()
 
-def test_faults_in_visual_source():
+
+def test_faults_in_visual_source(fake_camera):
     # Create the fault client
     fault_client = MockFaultClient()
 
@@ -156,7 +194,7 @@ def test_faults_in_visual_source():
             fault_name="fault1")))
     init_fault_amount = fault_client.get_total_fault_count()
 
-    visual_src = VisualImageSource("source1", FakeCamera(capture_with_error, decode_with_error))
+    visual_src = VisualImageSource("source1", fake_camera(capture_with_error, decode_with_error))
 
     # Attempt to get an image with no fault client enabled. Make sure no error is raised, and
     # values are returned as none.
@@ -276,10 +314,10 @@ def test_faults_are_cleared_on_success():
     assert fault_client.service_fault_counts[visual_src.decode_data_fault.fault_id.fault_name] == 0
 
 
-def test_make_image_source():
+def test_make_image_source(fake_camera):
     # Create a visual source with no rows/cols/image type provided.
     src_name = "source1"
-    visual_src = VisualImageSource(src_name, FakeCamera(capture_fake, decode_fake))
+    visual_src = VisualImageSource(src_name, fake_camera(capture_fake, decode_fake))
     assert visual_src.image_source_proto.name == src_name
     assert visual_src.image_source_proto.image_type == image_pb2.ImageSource.IMAGE_TYPE_VISUAL
     assert visual_src.image_source_proto.rows == 0
@@ -289,7 +327,7 @@ def test_make_image_source():
     src_name2 = "source2"
     src_rows2 = 60
     src_cols2 = 100
-    visual_src2 = VisualImageSource(src_name2, FakeCamera(capture_fake, decode_fake), src_rows2,
+    visual_src2 = VisualImageSource(src_name2, fake_camera(capture_fake, decode_fake), src_rows2,
                                     src_cols2)
     assert visual_src2.image_source_proto.name == src_name2
     assert visual_src2.image_source_proto.image_type == image_pb2.ImageSource.IMAGE_TYPE_VISUAL
@@ -308,9 +346,9 @@ def test_make_image_source():
     assert img_proto.cols == src_cols3
 
 
-def test_make_capture_params():
+def test_make_capture_params(fake_camera):
     # Create a visual source with no gain/exposure provided.
-    visual_src = VisualImageSource("source1", FakeCamera(capture_fake, decode_fake))
+    visual_src = VisualImageSource("source1", fake_camera(capture_fake, decode_fake))
     params = visual_src.get_image_capture_params()
     assert params.gain == 0
     assert params.exposure_duration.seconds == 0
@@ -319,7 +357,7 @@ def test_make_capture_params():
     # Create a visual source with gain and exposure provided.
     gain = 1.5
     exposure = 101.005
-    visual_src = VisualImageSource("source1", FakeCamera(capture_fake, decode_fake), gain=gain,
+    visual_src = VisualImageSource("source1", fake_camera(capture_fake, decode_fake), gain=gain,
                                    exposure=exposure)
     params = visual_src.get_image_capture_params()
     assert abs(params.gain - gain) < 1e-3
@@ -339,11 +377,17 @@ def test_make_capture_params():
     assert abs(cap_proto.exposure_duration.nanos - int(.005 * 1e9)) <= 1
 
 
-def test_visual_source_with_thread():
+def test_visual_source_with_thread(fake_camera):
     barrier = threading.Barrier(2)
     inc = Increment(barrier)
 
-    visual_src = VisualImageSource("source1", FakeCamera(inc.capture_increment_count, decode_fake))
+    if fake_camera == FakeCamera:
+        visual_src = VisualImageSource(
+            "source1", fake_camera(inc.capture_increment_count_custom_params, decode_fake))
+    else:
+        visual_src = VisualImageSource("source1",
+                                       fake_camera(inc.capture_increment_count, decode_fake))
+
     visual_src.create_capture_thread()
     # The Increment class has a barrier looking for "2" wait calls. If the blocking capture function gets
     # called as expected, and we call wait in the main thread of the test, then it will release.
@@ -392,9 +436,10 @@ def test_image_capture_thread():
     # Test the setter/getter for the image and timestamp.
     override_time = 2.8
     cap_thread.set_last_captured_image("my image", override_time)
-    image, timestamp = cap_thread.get_latest_captured_image()
-    assert image == "my image"
-    assert abs(timestamp - override_time) < 1e-3
+    thread_capture_output = cap_thread.get_latest_captured_image()
+    assert thread_capture_output.is_valid
+    assert thread_capture_output.image == "my image"
+    assert abs(thread_capture_output.timestamp - override_time) < 1e-3
 
     # Test that starting will start the thread.
     cap_thread.start_capturing()
@@ -405,9 +450,10 @@ def test_image_capture_thread():
             barrier.wait(timeout=1)
         except threading.BrokenBarrierError:
             pytest.fail("Barrier reached the timeout, therefore blocking_capture is not called.")
-    image, t = cap_thread.get_latest_captured_image()
-    assert abs(t - default_time) < 1e-3
-    assert image is not None
+    thread_capture_output = cap_thread.get_latest_captured_image()
+    assert thread_capture_output.is_valid
+    assert abs(thread_capture_output.timestamp - default_time) < 1e-3
+    assert thread_capture_output.image is not None
 
     # Test stopping the thread.
     cap_thread.stop_capturing()
@@ -441,7 +487,12 @@ def _test_camera_service(use_background_capture_thread, logger=None):
     src_name6 = "source2"
     visual_src6 = VisualImageSource(src_name6, FakeCamera(capture_fake, decode_fake), rows=r_amt,
                                     cols=c_amt, gain=gain)
-    image_sources = [visual_src, visual_src2, visual_src3, visual_src4, visual_src5, visual_src6]
+    src_name7 = "source_old_blocking_capture"
+    visual_src7 = VisualImageSource(src_name7, OldFakeCamera(capture_fake_no_kwargs, decode_fake),
+                                    rows=r_amt, cols=c_amt, gain=gain)
+    image_sources = [
+        visual_src, visual_src2, visual_src3, visual_src4, visual_src5, visual_src6, visual_src7
+    ]
     camera_service = CameraBaseImageServicer(
         robot, "camera-service", image_sources,
         use_background_capture_thread=use_background_capture_thread, logger=logger)
@@ -449,8 +500,8 @@ def _test_camera_service(use_background_capture_thread, logger=None):
     req = image_pb2.ListImageSourcesRequest()
     resp = camera_service.ListImageSources(req, None)
     assert resp.header.error.code == header_pb2.CommonError.CODE_OK
-    assert len(resp.image_sources) == 6
-    found_src1, found_src2, found_src3, found_src4, found_src5, found_src6 = False, False, False, False, False, False
+    assert len(resp.image_sources) == 7
+    found_src1, found_src2, found_src3, found_src4, found_src5, found_src6, found_src7 = False, False, False, False, False, False, False
     for src in resp.image_sources:
         if src.name == src_name:
             found_src1 = True
@@ -464,7 +515,9 @@ def _test_camera_service(use_background_capture_thread, logger=None):
             found_src5 = True
         if src.name == src_name6:
             found_src6 = True
-    assert found_src1 and found_src2 and found_src3 and found_src4 and found_src5 and found_src6
+        if src.name == src_name7:
+            found_src7 = True
+    assert found_src1 and found_src2 and found_src3 and found_src4 and found_src5 and found_src6 and found_src7
 
     # Request a known image source and make sure the response is as expected.
     req = image_pb2.GetImageRequest()
@@ -487,18 +540,21 @@ def _test_camera_service(use_background_capture_thread, logger=None):
     req = image_pb2.GetImageRequest()
     req.image_requests.extend([
         image_pb2.ImageRequest(image_source_name=src_name, quality_percent=10),
-        image_pb2.ImageRequest(image_source_name=src_name6)
+        image_pb2.ImageRequest(image_source_name=src_name6),
+        image_pb2.ImageRequest(image_source_name=src_name7)
     ])
     resp = camera_service.GetImage(req, None)
     assert resp.header.error.code == header_pb2.CommonError.CODE_OK
-    assert len(resp.image_responses) == 2
-    found_src1, found_src6 = False, False
+    assert len(resp.image_responses) == 3
+    found_src1, found_src6, found_src7 = False, False, False
     for src in resp.image_responses:
         if src.source.name == src_name:
             found_src1 = True
         if src.source.name == src_name6:
             found_src6 = True
-    assert found_src6 and found_src1
+        if src.source.name == src_name7:
+            found_src7 = True
+    assert found_src6 and found_src1 and found_src7
 
     # Request an image source that does not exist.
     req = image_pb2.GetImageRequest()
@@ -584,14 +640,32 @@ def test_gain_and_exposure_as_functions():
 
 
 def test_decode_backwards_compatibility():
-    # Check that new decode call signature works with older camera interface that have specific
-    # arguments and no resize_ratio.
-    visual_src = VisualImageSource("source1", OldFakeCamera(capture_fake, decode_fake_no_resize))
+    # Check that new decode call signature works with older (pre-3.1) camera interface that have specific
+    # arguments and no resize_ratio. Pre-3.1 also had blocking_captures with no keyword args, so using that
+    # to keep this a truer test
+    visual_src = VisualImageSource("source1",
+                                   OlderFakeCamera(capture_fake_no_kwargs, decode_fake_no_resize))
     capture_params = visual_src.get_image_capture_params()
     im_proto = image_pb2.Image(rows=15)
     success = visual_src.image_decode_with_error_checking(None, im_proto, None)
     assert im_proto.rows == 16
     assert success
+
+
+def test_capture_backwards_compatibility():
+    # Check that the new blocking capture call signature works with older (pre-3.3) camera interfaces that
+    # do not pass in any arguments to blocking_capture
+    visual_src = VisualImageSource("source1", OldFakeCamera(capture_fake_no_kwargs, decode_fake))
+    image, timestamp = visual_src.get_image_and_timestamp()
+    #Should successfully call the function rather than going into errors
+    assert image == "image"
+    assert timestamp == 1
+
+    #More closely mimics how the tablet calls services without parameters
+    image, timestamp = visual_src.get_image_and_timestamp(
+        custom_params=service_customization_pb2.DictParam())
+    assert image == "image"
+    assert timestamp == 1
 
 
 def test_convert_pixel_format():
@@ -672,3 +746,238 @@ def test_convert_pixel_format_comparisons():
     pil_converted_im = pil_im.convert('L')
     pil_converted_im = np.asarray(pil_converted_im)
     assert converted_im.all() == pil_converted_im.all()
+
+
+@pytest.fixture
+def good_int_spec():
+    good_int_spec = service_customization_pb2.Int64Param.Spec()
+    good_int_spec.default_value.value = 17
+    good_int_spec.min_value.value = 1
+    good_int_spec.max_value.value = 100
+    return good_int_spec
+
+
+@pytest.fixture
+def bad_int_spec():
+    bad_int_spec = service_customization_pb2.Int64Param.Spec()
+    bad_int_spec.default_value.value = -1
+    bad_int_spec.min_value.value = 0
+    bad_int_spec.max_value.value = 50
+    return bad_int_spec
+
+
+@pytest.fixture
+def good_string_spec():
+    good_string_spec = service_customization_pb2.StringParam.Spec()
+    good_string_spec.default_value = "default"
+    return good_string_spec
+
+
+@pytest.fixture
+def good_dict_spec(good_int_spec, good_string_spec):
+    good_dict_spec = service_customization_pb2.DictParam.Spec()
+    good_dict_spec.specs["int"].spec.int_spec.CopyFrom(good_int_spec)
+    good_dict_spec.specs["string"].spec.string_spec.CopyFrom(good_string_spec)
+    return good_dict_spec
+
+
+@pytest.fixture
+def bad_dict_spec(good_dict_spec, bad_int_spec):
+    bad_dict_spec = service_customization_pb2.DictParam.Spec()
+    bad_dict_spec.CopyFrom(good_dict_spec)
+    bad_dict_spec.specs["bad_string"].spec.int_spec.CopyFrom(bad_int_spec)
+    return bad_dict_spec
+
+
+@pytest.fixture
+def good_value():
+    good_value = service_customization_pb2.DictParam()
+    good_value.values["int"].int_value.value = 25
+    good_value.values["string"].string_value.value = "test"
+    return good_value
+
+
+@pytest.fixture
+def bad_value():
+    bad_value = service_customization_pb2.DictParam()
+    bad_value.values["int"].int_value.value = -1
+    return bad_value
+
+
+def test_camera_with_custom_params(good_dict_spec, bad_dict_spec, good_value, bad_value,
+                                   logger=None):
+    robot = MockRobot()
+
+    r_amt = 10
+    c_amt = 21
+    gain = 25
+
+    src_name = "source_custom_param"
+    visual_src = VisualImageSource(src_name, FakeCamera(capture_fake_with_custom_params,
+                                                        decode_fake), rows=r_amt, cols=c_amt,
+                                   gain=gain, param_spec=good_dict_spec)
+    bad_src_name = "source_bad_custom_param"
+    with pytest.raises(InvalidCustomParamSpecError):
+        visual_src2 = VisualImageSource(bad_src_name,
+                                        FakeCamera(capture_fake_with_custom_params, decode_fake),
+                                        rows=r_amt, cols=c_amt, param_spec=bad_dict_spec)
+
+    image_sources = [visual_src]
+    basic_camera_service = CameraBaseImageServicer(robot, "camera-service", image_sources,
+                                                   use_background_capture_thread=False,
+                                                   logger=logger)
+
+    #Test passing in valid parameters
+    good_req = image_pb2.GetImageRequest()
+    good_image_req = image_pb2.ImageRequest(image_source_name=src_name, quality_percent=10)
+    good_image_req.custom_params.CopyFrom(good_value)
+    good_req.image_requests.append(good_image_req)
+
+    resp = basic_camera_service.GetImage(good_req, None)
+    assert resp.header.error.code == header_pb2.CommonError.CODE_OK
+    assert len(resp.image_responses) == 1
+    param_resp = resp.image_responses[0]
+
+    assert param_resp.status == image_pb2.ImageResponse.STATUS_OK
+    assert param_resp.shot.image.data == bytes("test25", encoding="utf-8")
+    assert not param_resp.HasField("custom_param_error")
+
+    #Test passing in invalid parameters
+    bad_req = image_pb2.GetImageRequest()
+    bad_image_req = image_pb2.ImageRequest(image_source_name=src_name, quality_percent=15)
+    bad_image_req.custom_params.CopyFrom(bad_value)
+    bad_req.image_requests.append(bad_image_req)
+
+    bad_resp = basic_camera_service.GetImage(bad_req, None)
+    assert bad_resp.header.error.code == header_pb2.CommonError.CODE_OK
+    assert len(bad_resp.image_responses) == 1
+    bad_param_resp = bad_resp.image_responses[0]
+
+    assert bad_param_resp.status == image_pb2.ImageResponse.STATUS_CUSTOM_PARAMS_ERROR
+    assert bad_param_resp.HasField("custom_param_error")
+    assert len(bad_param_resp.custom_param_error.error_messages) > 0
+
+
+def test_camera_with_custom_params_and_thread(good_dict_spec, good_value, logger=None):
+    robot = MockRobot()
+
+    src_name = "fake_camera"
+    visual_src = VisualImageSource(src_name, FakeCamera(capture_fake_with_custom_params,
+                                                        decode_fake), param_spec=good_dict_spec)
+    #Test custom parameters are fully passed through and used by an ImageCaptureThread
+    thread_camera_service = CameraBaseImageServicer(robot, "thread-camera-service", [visual_src],
+                                                    use_background_capture_thread=True,
+                                                    background_capture_params=good_value,
+                                                    logger=logger)
+    image_capture_thread = thread_camera_service.image_sources_mapped[src_name].capture_thread
+
+    #Test passing in valid  non-empty parameters
+    good_req = image_pb2.GetImageRequest()
+    good_image_req = image_pb2.ImageRequest(image_source_name=src_name, quality_percent=10)
+    good_image_req.custom_params.CopyFrom(good_value)
+    good_req.image_requests.append(good_image_req)
+
+    #Test that concurrent GetImage requests return the right response to each request
+    empty_req = image_pb2.GetImageRequest()
+    empty_image_req = image_pb2.ImageRequest(image_source_name=src_name, quality_percent=20)
+    empty_req.image_requests.append(empty_image_req)
+
+    empty_resp = thread_camera_service.GetImage(empty_req, None)
+    good_resp = thread_camera_service.GetImage(good_req, None)
+
+    assert good_resp.image_responses[0].shot.image.data == bytes("test25", encoding="utf-8")
+    assert empty_resp.image_responses[0].shot.image.data == bytes("noparams", encoding="utf-8")
+
+    #Force the thread to be used by calling set_last_captured_image, and check that the capture is marked usable in that case
+    thread_use_req = image_pb2.GetImageRequest()
+    thread_use_image_req = image_pb2.ImageRequest(image_source_name=src_name, quality_percent=50)
+    thread_use_image_req.custom_params.CopyFrom(image_capture_thread.custom_params)
+    thread_use_req.image_requests.append(thread_use_image_req)
+
+    #Force the thread to be used by calling set_last_captured_image, and check that the capture is marked usable in that case
+    image_capture_thread.set_last_captured_image(*image_capture_thread.capture_function())
+
+    #Test that a GetImage request using a thread returns the expected data from the image request's custom params
+    use_thread_resp = thread_camera_service.GetImage(thread_use_req, None)
+    assert use_thread_resp.image_responses[0].shot.image.data == bytes(
+        capture_fake_with_custom_params(custom_params=thread_use_image_req.custom_params)[0],
+        encoding="utf-8")
+
+    #Finally assert that all responses from the thread camera service have the expected codes/attributes indicating success
+    for resp in [empty_resp, good_resp, use_thread_resp]:
+        assert resp.header.error.code == header_pb2.CommonError.CODE_OK
+        assert len(resp.image_responses) == 1
+        param_resp = resp.image_responses[0]
+
+        assert param_resp.status == image_pb2.ImageResponse.STATUS_OK
+        assert not param_resp.HasField("custom_param_error")
+
+
+#Test custom parameters passed to old service doesn't break service
+def test_custom_param_with_old_blocking_capture(good_dict_spec, good_value, logger=None):
+    robot = MockRobot()
+
+    src_name = "custom_param_to_old_cam"
+    r_amt = 10
+    c_amt = 21
+    gain = 25
+
+    no_param_source = VisualImageSource(src_name, OldFakeCamera(capture_fake_no_kwargs,
+                                                                decode_fake), rows=r_amt,
+                                        cols=c_amt, gain=gain, param_spec=good_dict_spec)
+    param_sources = [no_param_source]
+    good_req = image_pb2.GetImageRequest()
+    good_image_req = image_pb2.ImageRequest(image_source_name=src_name, quality_percent=10)
+    good_image_req.custom_params.CopyFrom(good_value)
+    good_req.image_requests.append(good_image_req)
+
+    #Test old cameras work even when parameters are erroneously passed to them
+    no_param_camera_service = CameraBaseImageServicer(
+        robot, "no-param-camera-service", param_sources, use_background_capture_thread=False,
+        background_capture_params=good_value, logger=logger)
+
+    resp = no_param_camera_service.GetImage(good_req, None)
+    assert resp.header.error.code == header_pb2.CommonError.CODE_OK
+    assert len(resp.image_responses) == 1
+    param_resp = resp.image_responses[0]
+
+    assert param_resp.status == image_pb2.ImageResponse.STATUS_OK
+    assert param_resp.shot.image.data == bytes("image", encoding="utf-8")
+    assert not param_resp.HasField("custom_param_error")
+
+    #Test old cameras with threads work even when parameters are erroneously passed to them
+    no_param_thread_camera_service = CameraBaseImageServicer(
+        robot, "no-param-thread-camera-service", param_sources, use_background_capture_thread=True,
+        background_capture_params=good_value, logger=logger)
+
+    resp = no_param_thread_camera_service.GetImage(good_req, None)
+    assert resp.header.error.code == header_pb2.CommonError.CODE_OK
+    assert len(resp.image_responses) == 1
+    param_resp = resp.image_responses[0]
+
+    assert param_resp.status == image_pb2.ImageResponse.STATUS_OK
+    assert param_resp.shot.image.data == bytes("image", encoding="utf-8")
+    assert not param_resp.HasField("custom_param_error")
+
+    #Test a source with an old camera and no param_spec when receiving an empty (but not None) request
+    #Similar to how the tablet calls services with no parameters
+    src2_name = "no_param_spec"
+    source_no_param_spec = VisualImageSource(src2_name,
+                                             OldFakeCamera(capture_fake_no_kwargs, decode_fake),
+                                             rows=r_amt, cols=c_amt, gain=gain)
+    empty_param_sources = [source_no_param_spec]
+    empty_req = image_pb2.GetImageRequest()
+    empty_image_req = image_pb2.ImageRequest(image_source_name=src2_name, quality_percent=90,
+                                             custom_params=service_customization_pb2.DictParam())
+    empty_req.image_requests.append(empty_image_req)
+
+    empty_param_thread_camera_service = CameraBaseImageServicer(robot, "no-param-camera-service",
+                                                                empty_param_sources, logger=logger)
+
+    resp = empty_param_thread_camera_service.GetImage(empty_req, None)
+    assert resp.header.error.code == header_pb2.CommonError.CODE_OK
+    assert len(resp.image_responses) == 1
+    param_resp = resp.image_responses[0]
+    assert param_resp.status == image_pb2.ImageResponse.STATUS_OK
+    assert param_resp.shot.image.data == bytes("image", encoding="utf-8")
+    assert not param_resp.HasField("custom_param_error")

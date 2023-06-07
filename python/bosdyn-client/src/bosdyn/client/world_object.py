@@ -1,11 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """For clients to use the world object service"""
-from __future__ import print_function
 
 from bosdyn.api import geometry_pb2 as geom
 from bosdyn.api import world_object_pb2, world_object_service_pb2
@@ -116,6 +115,7 @@ class WorldObjectClient(BaseClient):
         return self.call_async(self._stub.MutateWorldObjects, mutation_req,
                                value_from_response=_get_status,
                                error_from_response=common_header_errors, **kwargs)
+
 
     def _update_time_filter(self, timestamp, timesync_endpoint):
         """Set or convert fields of the proto that need timestamps in the robot's clock.
@@ -276,7 +276,7 @@ def _get_status(response):
 
 
 '''
-Static helper methods for constructing mutation requests for a given world object.
+Static helper methods for constructing and sending mutation requests for a given world object.
 '''
 
 
@@ -327,3 +327,46 @@ def make_change_world_object_req(world_obj):
         action=world_object_pb2.MutateWorldObjectRequest.ACTION_CHANGE, object=world_obj)
     req = world_object_pb2.MutateWorldObjectRequest(mutation=change_obj)
     return req
+
+
+def send_add_mutation_requests(world_object_client, world_object_array):
+    """
+    Create and send an "add" mutation request for each world object in an array.  Return a matching
+    array of the object id's that are assigned when the object is created, so that each object we add
+    can be identified and removed individually (if desired) later.
+    
+    Args:
+        world_object_client (WorldObjectClient): Client for World Object service.
+        world_object_array (List): 
+    Returns:
+        A List containing the object ids associated with the objects created.
+    """
+    obj_id = [-1] * len(world_object_array)
+    for i, obj in enumerate(world_object_array):
+        add_req = make_add_world_object_req(obj)
+        add_resp = world_object_client.mutate_world_objects(mutation_req=add_req)
+        obj_id[i] = add_resp.mutated_object_id
+
+    return obj_id
+
+
+def send_delete_mutation_requests(world_object_client, delete_object_id_array):
+    """
+    Create and send a "delete" mutation request for each world object successfully identified from a
+    given list of object id's.
+        
+    Args:
+        world_object_client (WorldObjectClient): Client for World Object service.
+        delete_object_id_array (List): List of object id's to send delete requests for.
+    """
+    world_objects = world_object_client.list_world_objects().world_objects
+    for obj in world_objects:
+        this_object_id = obj.id
+        if type(delete_object_id_array) == int:
+            delete_object_id_array = [delete_object_id_array]
+        for i in range(len(delete_object_id_array)):
+            delete_id = delete_object_id_array[i]
+            if this_object_id == delete_id:
+                del_req = make_delete_world_object_req(obj)
+                del_resp = world_object_client.mutate_world_objects(mutation_req=del_req)
+                continue

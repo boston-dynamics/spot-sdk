@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Payload Registration &mdash; Spot 3.2.3 documentation</title>
+  <title>Payload Registration &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
         <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/language_data.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -639,62 +681,62 @@
            <div itemprop="articleBody">
             
   <section id="module-bosdyn.client.payload_registration">
-<span id="payload-registration"></span><h1>Payload Registration<a class="headerlink" href="#module-bosdyn.client.payload_registration" title="Permalink to this headline">¶</a></h1>
+<span id="payload-registration"></span><h1>Payload Registration<a class="headerlink" href="#module-bosdyn.client.payload_registration" title="Permalink to this heading">¶</a></h1>
 <p>Client for the payload service.</p>
 <p>This allows client code to write to the robot payload registry.</p>
 <dl class="py exception">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationResponseError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.payload_registration.</code><code class="sig-name descname">PayloadRegistrationResponseError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationResponseError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.exceptions.ResponseError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationResponseError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.payload_registration.</span></span><span class="sig-name descname"><span class="pre">PayloadRegistrationResponseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationResponseError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="exceptions.html#bosdyn.client.exceptions.ResponseError" title="bosdyn.client.exceptions.ResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ResponseError</span></code></a></p>
 <p>General class of errors for PayloadRegistration service.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.payload_registration.InvalidPayloadCredentialsError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.payload_registration.</code><code class="sig-name descname">InvalidPayloadCredentialsError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#InvalidPayloadCredentialsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.InvalidPayloadCredentialsError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="bosdyn.client.payload_registration.PayloadRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.payload_registration.PayloadRegistrationResponseError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.InvalidPayloadCredentialsError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.payload_registration.</span></span><span class="sig-name descname"><span class="pre">InvalidPayloadCredentialsError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#InvalidPayloadCredentialsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.InvalidPayloadCredentialsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="bosdyn.client.payload_registration.PayloadRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PayloadRegistrationResponseError</span></code></a></p>
 <p>The payload credentials do not match any payload registered to the robot.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.payload_registration.PayloadNotAuthorizedError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.payload_registration.</code><code class="sig-name descname">PayloadNotAuthorizedError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadNotAuthorizedError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadNotAuthorizedError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="bosdyn.client.payload_registration.PayloadRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.payload_registration.PayloadRegistrationResponseError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadNotAuthorizedError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.payload_registration.</span></span><span class="sig-name descname"><span class="pre">PayloadNotAuthorizedError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadNotAuthorizedError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadNotAuthorizedError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="bosdyn.client.payload_registration.PayloadRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PayloadRegistrationResponseError</span></code></a></p>
 <p>The payload is not authorized.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.payload_registration.PayloadAlreadyExistsError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.payload_registration.</code><code class="sig-name descname">PayloadAlreadyExistsError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadAlreadyExistsError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadAlreadyExistsError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="bosdyn.client.payload_registration.PayloadRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.payload_registration.PayloadRegistrationResponseError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadAlreadyExistsError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.payload_registration.</span></span><span class="sig-name descname"><span class="pre">PayloadAlreadyExistsError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadAlreadyExistsError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadAlreadyExistsError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="bosdyn.client.payload_registration.PayloadRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PayloadRegistrationResponseError</span></code></a></p>
 <p>A payload with this GUID is already registered on the robot.</p>
 </dd></dl>
 
 <dl class="py exception">
-<dt id="bosdyn.client.payload_registration.PayloadDoesNotExistError">
-<em class="property">exception </em><code class="sig-prename descclassname">bosdyn.client.payload_registration.</code><code class="sig-name descname">PayloadDoesNotExistError</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">response</span></em>, <em class="sig-param"><span class="n">error_message</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadDoesNotExistError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadDoesNotExistError" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="bosdyn.client.payload_registration.PayloadRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.payload_registration.PayloadRegistrationResponseError</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadDoesNotExistError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.payload_registration.</span></span><span class="sig-name descname"><span class="pre">PayloadDoesNotExistError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadDoesNotExistError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadDoesNotExistError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.payload_registration.PayloadRegistrationResponseError" title="bosdyn.client.payload_registration.PayloadRegistrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">PayloadRegistrationResponseError</span></code></a></p>
 <p>A payload with this GUID is not registered on the robot.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.payload_registration.</code><code class="sig-name descname">PayloadRegistrationClient</code><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.client.common.BaseClient</span></code></a></p>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.payload_registration.</span></span><span class="sig-name descname"><span class="pre">PayloadRegistrationClient</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="common.html#bosdyn.client.common.BaseClient" title="bosdyn.client.common.BaseClient"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseClient</span></code></a></p>
 <p>A client registering payload configs onto the robot.</p>
 <dl class="py attribute">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.default_service_name">
-<code class="sig-name descname">default_service_name</code><em class="property"> = 'payload-registration'</em><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.default_service_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.default_service_name">
+<span class="sig-name descname"><span class="pre">default_service_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'payload-registration'</span></em><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.default_service_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.service_type">
-<code class="sig-name descname">service_type</code><em class="property"> = 'bosdyn.api.PayloadRegistrationService'</em><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.service_type" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.service_type">
+<span class="sig-name descname"><span class="pre">service_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bosdyn.api.PayloadRegistrationService'</span></em><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.service_type" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload">
-<code class="sig-name descname">register_payload</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">payload</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw_args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.register_payload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload">
+<span class="sig-name descname"><span class="pre">register_payload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.register_payload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register a payload to the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -716,8 +758,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload_async">
-<code class="sig-name descname">register_payload_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">payload</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw_args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.register_payload_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload_async">
+<span class="sig-name descname"><span class="pre">register_payload_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.register_payload_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.register_payload_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register a payload to the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -739,8 +781,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version">
-<code class="sig-name descname">update_payload_version</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="n">updated_version</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw_args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.update_payload_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version">
+<span class="sig-name descname"><span class="pre">update_payload_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_version</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.update_payload_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update an existing payload’s version on the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -763,8 +805,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version_async">
-<code class="sig-name descname">update_payload_version_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="n">updated_version</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw_args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.update_payload_version_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version_async">
+<span class="sig-name descname"><span class="pre">update_payload_version_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_version</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.update_payload_version_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.update_payload_version_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update an existing payload on the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -787,8 +829,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.get_payload_auth_token">
-<code class="sig-name descname">get_payload_auth_token</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw_args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.get_payload_auth_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.get_payload_auth_token" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.get_payload_auth_token">
+<span class="sig-name descname"><span class="pre">get_payload_auth_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.get_payload_auth_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.get_payload_auth_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Request a limited-access auth token for a payload.</p>
 <p>Getting the auth token requires payload to be authorized via the web console.</p>
 <dl class="field-list simple">
@@ -816,8 +858,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.attach_payload">
-<code class="sig-name descname">attach_payload</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw_args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.attach_payload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.attach_payload" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.attach_payload">
+<span class="sig-name descname"><span class="pre">attach_payload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.attach_payload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.attach_payload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attach a payload to the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -840,8 +882,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.attach_payload_async">
-<code class="sig-name descname">attach_payload_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw_args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.attach_payload_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.attach_payload_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.attach_payload_async">
+<span class="sig-name descname"><span class="pre">attach_payload_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.attach_payload_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.attach_payload_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Attach a payload to the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -864,8 +906,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.detach_payload">
-<code class="sig-name descname">detach_payload</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw_args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.detach_payload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.detach_payload" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.detach_payload">
+<span class="sig-name descname"><span class="pre">detach_payload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.detach_payload"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.detach_payload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detach a payload from the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -888,8 +930,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationClient.detach_payload_async">
-<code class="sig-name descname">detach_payload_async</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">guid</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kw_args</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.detach_payload_async"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.detach_payload_async" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationClient.detach_payload_async">
+<span class="sig-name descname"><span class="pre">detach_payload_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">guid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw_args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationClient.detach_payload_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationClient.detach_payload_async" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detach a payload from the robot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -914,8 +956,8 @@
 </dd></dl>
 
 <dl class="py class">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationKeepAlive">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.payload_registration.</code><code class="sig-name descname">PayloadRegistrationKeepAlive</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pay_reg_client</span></em>, <em class="sig-param"><span class="n">payload</span></em>, <em class="sig-param"><span class="n">secret</span></em>, <em class="sig-param"><span class="n">registration_interval_secs</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">logger</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">rpc_timeout_secs</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationKeepAlive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationKeepAlive" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationKeepAlive">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.payload_registration.</span></span><span class="sig-name descname"><span class="pre">PayloadRegistrationKeepAlive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pay_reg_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">payload</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">registration_interval_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rpc_timeout_secs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationKeepAlive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationKeepAlive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Helper class to keep a payload entry registered.</p>
 <p>Using a payload keep alive will ensure that a payload automatically re-registers itself with
@@ -939,8 +981,8 @@ for no timeout.</p></li>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.start">
-<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationKeepAlive.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.start" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationKeepAlive.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.start" title="Permalink to this definition">¶</a></dt>
 <dd><p>Register and then kick off thread.</p>
 <p>Can not be restarted with this method after a shutdown.</p>
 <dl class="field-list simple">
@@ -954,8 +996,8 @@ for no timeout.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.is_alive">
-<code class="sig-name descname">is_alive</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationKeepAlive.is_alive"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.is_alive" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.is_alive">
+<span class="sig-name descname"><span class="pre">is_alive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationKeepAlive.is_alive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.is_alive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Are we still periodically re-registering?</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -965,8 +1007,8 @@ for no timeout.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.shutdown">
-<code class="sig-name descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationKeepAlive.shutdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.shutdown" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.shutdown">
+<span class="sig-name descname"><span class="pre">shutdown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/payload_registration.html#PayloadRegistrationKeepAlive.shutdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.payload_registration.PayloadRegistrationKeepAlive.shutdown" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop the background thread.</p>
 </dd></dl>
 

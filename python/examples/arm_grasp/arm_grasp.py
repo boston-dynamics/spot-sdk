@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -34,8 +34,8 @@ def verify_estop(robot):
 
     client = robot.ensure_client(EstopClient.default_service_name)
     if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
-        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
-        " estop SDK example, to configure E-Stop."
+        error_message = 'Robot is estopped. Please use an external E-Stop client, such as the' \
+                        ' estop SDK example, to configure E-Stop.'
         robot.logger.error(error_message)
         raise Exception(error_message)
 
@@ -51,7 +51,7 @@ def arm_object_grasp(config):
     bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
-    assert robot.has_arm(), "Robot requires an arm to run this example."
+    assert robot.has_arm(), 'Robot requires an arm to run this example.'
 
     # Verify the robot is not estopped and that an external application has registered and holds
     # an estop endpoint.
@@ -67,26 +67,26 @@ def arm_object_grasp(config):
         # Now, we are ready to power on the robot. This call will block until the power
         # is on. Commands would fail if this did not happen. We can also check that the robot is
         # powered at any point.
-        robot.logger.info("Powering on robot... This may take a several seconds.")
+        robot.logger.info('Powering on robot... This may take a several seconds.')
         robot.power_on(timeout_sec=20)
-        assert robot.is_powered_on(), "Robot power on failed."
-        robot.logger.info("Robot powered on.")
+        assert robot.is_powered_on(), 'Robot power on failed.'
+        robot.logger.info('Robot powered on.')
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
         # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
-        robot.logger.info("Commanding robot to stand...")
+        robot.logger.info('Commanding robot to stand...')
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         blocking_stand(command_client, timeout_sec=10)
-        robot.logger.info("Robot standing.")
+        robot.logger.info('Robot standing.')
 
         # Take a picture with a camera
-        robot.logger.info('Getting an image from: ' + config.image_source)
+        robot.logger.info('Getting an image from: %s', config.image_source)
         image_responses = image_client.get_image_from_sources([config.image_source])
 
         if len(image_responses) != 1:
-            print('Got invalid number of images: ' + str(len(image_responses)))
+            print(f'Got invalid number of images: {len(image_responses)}')
             print(image_responses)
             assert False
 
@@ -117,8 +117,10 @@ def arm_object_grasp(config):
                 print('"q" pressed, exiting.')
                 exit(0)
 
-        robot.logger.info('Picking object at image location (' + str(g_image_click[0]) + ', ' +
-                          str(g_image_click[1]) + ')')
+        robot.logger.info(
+            f'Picking object at image location ({g_image_click[0]}, {g_image_click[1]})')
+        robot.logger.info(f'Picking object at image location (%s, %s)', g_image_click[0],
+                          g_image_click[1])
 
         pick_vec = geometry_pb2.Vec2(x=g_image_click[0], y=g_image_click[1])
 
@@ -147,8 +149,9 @@ def arm_object_grasp(config):
             response = manipulation_api_client.manipulation_api_feedback_command(
                 manipulation_api_feedback_request=feedback_request)
 
-            print('Current state: ',
-                  manipulation_api_pb2.ManipulationFeedbackState.Name(response.current_state))
+            print(
+                f'Current state: {manipulation_api_pb2.ManipulationFeedbackState.Name(response.current_state)}'
+            )
 
             if response.current_state == manipulation_api_pb2.MANIP_STATE_GRASP_SUCCEEDED or response.current_state == manipulation_api_pb2.MANIP_STATE_GRASP_FAILED:
                 break
@@ -163,8 +166,8 @@ def arm_object_grasp(config):
         # Power the robot off. By specifying "cut_immediately=False", a safe power off command
         # is issued to the robot. This will attempt to sit the robot before powering off.
         robot.power_off(cut_immediately=False, timeout_sec=20)
-        assert not robot.is_powered_on(), "Robot power off failed."
-        robot.logger.info("Robot safely powered off.")
+        assert not robot.is_powered_on(), 'Robot power off failed.'
+        robot.logger.info('Robot safely powered off.')
 
 
 def cv_mouse_callback(event, x, y, flags, param):
@@ -174,7 +177,7 @@ def cv_mouse_callback(event, x, y, flags, param):
         g_image_click = (x, y)
     else:
         # Draw some lines on the image.
-        #print('mouse', x, y)
+        # print('mouse', x, y)
         color = (30, 30, 30)
         thickness = 2
         image_title = 'Click to grasp'
@@ -293,7 +296,7 @@ def main(argv):
         num += 1
 
     if num > 1:
-        print("Error: cannot force more than one type of grasp.  Choose only one.")
+        print('Error: cannot force more than one type of grasp.  Choose only one.')
         sys.exit(1)
 
     try:
@@ -301,7 +304,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.exception("Threw an exception")
+        logger.exception('Threw an exception')
         return False
 
 

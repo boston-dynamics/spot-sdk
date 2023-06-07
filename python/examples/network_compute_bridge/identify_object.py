@@ -1,10 +1,8 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
-
-from __future__ import print_function
 
 import argparse
 import math
@@ -40,7 +38,7 @@ def get_all_network_compute_services(directory_client):
     out = []
 
     for service in dir_list:
-        if service.type == "bosdyn.api.NetworkComputeBridgeWorker":
+        if service.type == 'bosdyn.api.NetworkComputeBridgeWorker':
             out.append(service.name)
 
     return out
@@ -82,7 +80,7 @@ def main(argv):
 
     if options.image_source is None and options.input_image is None and options.model_list == False:
         default_image_source = 'frontleft_fisheye_image'
-        print('No image source provided so defaulting to "' + default_image_source + '".')
+        print(f'No image source provided so defaulting to "{default_image_source}".')
         options.image_source = default_image_source
 
     # Create robot object with a world object client
@@ -106,12 +104,11 @@ def main(argv):
     if options.model_list:
         server_service_names = get_all_network_compute_services(directory_client)
 
-        print('Found ' + str(len(server_service_names)) +
-              ' available service(s).  Listing their models:')
+        print(f'Found {len(server_service_names)} available service(s).  Listing their models:')
         print('------------------------------------')
 
         for service in server_service_names:
-            print('    ' + service)
+            print(f'    {service}')
             server_data = network_compute_bridge_pb2.NetworkComputeServerConfiguration(
                 service_name=service)
             list_req = network_compute_bridge_pb2.ListAvailableModelsRequest(
@@ -119,10 +116,10 @@ def main(argv):
             response = network_compute_client.list_available_models_command(list_req)
 
             if response.header.error.message:
-                print('        Error message: {}'.format(response.header.error.message))
+                print(f'        Error message: {response.header.error.message}')
             else:
-                for model in response.available_models:
-                    print('        ' + model)
+                for model in response.models.data:
+                    print(f'        {model.model_name}')
         sys.exit(0)
 
     # A service name must be provided if not doing a directory list.
@@ -148,15 +145,15 @@ def main(argv):
         # Read the input image.
         image_in = cv2.imread(options.input_image)
         if image_in is None:
-            print('Error: failed to read "' + options.input_image + '".  Does the file exist?')
+            print(f'Error: failed to read "{options.input_image}".  Does the file exist?')
             sys.exit(1)
 
         rgb = cv2.cvtColor(image_in, cv2.COLOR_BGR2RGB)
 
-        success, im_buffer = cv2.imencode(".jpg", rgb)
+        success, im_buffer = cv2.imencode('.jpg', rgb)
 
         if not success:
-            print('Error: failed to encode input image as a jpg.  Abort.')
+            print('Error: failed to encode input image as a jpg. Abort.')
             sys.exit(1)
 
         height = image_in.shape[0]
@@ -182,7 +179,7 @@ def main(argv):
     if len(response.object_in_image) <= 0:
         print('No objects found')
     else:
-        print('Got ' + str(len(response.object_in_image)) + ' objects.')
+        print(f'Got {len(response.object_in_image)} objects.')
 
     if options.image_source is not None:
         # We asked for an image to be taken, so the return proto should have an image in it.
@@ -228,7 +225,7 @@ def main(argv):
         polygon = polygon.reshape((-1, 1, 2))
         cv2.polylines(img, [polygon], True, (0, 255, 0), 2)
 
-        caption = "{} {:.3f}".format(obj.name, confidence)
+        caption = f'{obj.name} {confidence:.3f}'
         cv2.putText(img, caption, (int(min_x), int(min_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                     (0, 255, 0), 2)
 

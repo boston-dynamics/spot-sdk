@@ -1,10 +1,8 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
-
-from __future__ import print_function
 
 import logging
 import signal
@@ -60,9 +58,8 @@ class PointCloudAdapter:
         for source in sources:
             name = source.name
             capabilities.append(
-                Capability(name=name,
-                           description="Point-clouds from a {} LIDAR sensor.".format(name),
-                           channel_name="{}--{}".format(self._service_name, name)))
+                Capability(name=name, description=f'Point-clouds from a {name} LIDAR sensor.',
+                           channel_name=f'{self._service_name}--{name}'))
         return capabilities
 
     def get_point_cloud_data(self, request, store_helper):
@@ -93,7 +90,7 @@ def run_service(bosdyn_sdk_robot, port, point_cloud_service_name, logger=None):
 
 def add_pointcloud_plugin_arguments(parser):
     parser.add_argument('--pointcloud-service',
-                        help="Name of the point-cloud service to get data from.", required=True)
+                        help='Name of the point-cloud service to get data from.', required=True)
 
 
 if __name__ == '__main__':
@@ -110,7 +107,7 @@ if __name__ == '__main__':
     setup_logging(options.verbose)
 
     # Create and authenticate a bosdyn robot object.
-    sdk = bosdyn.client.create_standard_sdk("PointcloudPluginServiceSDK")
+    sdk = bosdyn.client.create_standard_sdk('PointcloudPluginServiceSDK')
     robot = sdk.create_robot(options.hostname)
     robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(options))
     robot.sync_with_directory()

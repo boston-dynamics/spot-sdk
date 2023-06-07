@@ -1,0 +1,332 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+
+import "google/protobuf/wrappers.proto";
+import "bosdyn/api/image_geometry.proto";
+import "bosdyn/api/units.proto";
+
+option go_package = "bosdyn/api";
+option java_outer_classname = "ServiceCustomizationProto";
+
+// This file contains messages that can customize service APIs.
+// See also the markdown file with examples.
+//
+// Some fields have a comment like
+//
+// ERROR: It is an error to <foo>
+//
+// which means if a service does that thing, the client will treat it as a servicer error.
+// There may also be a comment like
+//
+// ADVICE: Services should <foo>
+//
+// to advise implementers in how to handle certain conditions from clients.
+
+message CustomParam {
+    message Spec {
+        // Type and type-specific specifications of this parameter.
+        oneof spec {
+            // This parameter is actually a set of sub-parameters.
+            // Useful for setting up a paramter hierarchy, e.g.
+            //           param A
+            //          /       \
+            //         /         \
+            //     param A.B   param A.C
+            DictParam.Spec dict_spec = 1;
+            // This parameter is a list of things.
+            ListParam.Spec list_spec = 2;
+            Int64Param.Spec int_spec = 3;
+            DoubleParam.Spec double_spec = 4;
+            StringParam.Spec string_spec = 5;
+            RegionOfInterestParam.Spec roi_spec = 6;
+            BoolParam.Spec bool_spec = 7;
+            OneOfParam.Spec one_of_spec = 12;
+        }
+
+        reserved 8, 9, 10, 11;
+    }
+
+    oneof value {
+        DictParam dict_value = 1;
+        ListParam list_value = 2;
+        Int64Param int_value = 3;
+        DoubleParam double_value = 4;
+        StringParam string_value = 5;
+        RegionOfInterestParam roi_value = 6;
+        BoolParam bool_value = 7;
+        OneOfParam one_of_value = 8;
+    }
+}
+
+message UserInterfaceInfo {
+    // This string is an optional display name for the UI.  If left unset, UI will use the
+    // DictParam key to label the corresponding UI element.  DictParam key is meant to be
+    // machine readable, and shouldn't change accross releases.  display_name is meant to be
+    // human readable, and can change from release to release if needed.
+    string display_name = 1;
+
+    // An optional description that provides additional information about the parameter. Use in
+    // combination with display_name.
+    string description = 2;
+
+    // This is an optional sorting hint.  UI elements will likely be shown in a list, and
+    // Dictionary children will be sorted by [display_order, display_name, dictionary key],
+    // in ascending numerical order and alphabetical string order.
+    int64 display_order = 3;
+}
+
+// Collection of both specifications and values.
+// Meant to be used as a snapshot of specifications offered by a service, and the values
+// chosen by a user.
+message CustomParamCollection {
+    DictParam.Spec specs = 1;
+    DictParam values = 2;
+}
+
+// A dictionary of parameters.
+message DictParam {
+    message ChildSpec {
+        CustomParam.Spec spec = 1;
+        UserInterfaceInfo ui_info = 2;
+    }
+
+    message Spec {
+        // Each element can have its own type.  Dictionaries can even contain dictionaries!
+        map<string, ChildSpec> specs = 2;
+        reserved 1;
+
+        // Whether the dict should initially appear hidden/collapsed. For example an "Advanced"
+        // section that users infrequently access.
+        //
+        // The client may ignore this value if there is sufficient screen space.
+        bool is_hidden_by_default = 3;
+    }
+
+    map<string, CustomParam> values = 1;
+}
+
+// A selected param from one of several options.  Can be useful to specify parameters
+// that have correlations.
+//
+// Example 1 - A camera that advertises an "exposure" parameter:
+//      OneOf Option 1: Auto exposure [no additional parameters]
+//      OneOf Option 2: Manual exposure [additonal exposure double parameter from 0 - 100 ms]
+//
+// Example 2 - A NCB worker that will alert if temperature outside a specified bound:
+//      OneOf Option 1: No alert [no additional parameters]
+//      OneOf Option 2: Alert if above max [addional max_temp parameter]
+//      OneOf Option 3: Alert if below min [additional min_temp parameter]
+//      OneOf Option 4: Alert if above max or below min [additional max_temp and min_temp
+//      parameters]
+//
+// In the above examples, the service advertises a OneOf spec, the UI lets user PICK which child
+// of the OneOf they want, and then the UI lets the user specify any child specific parameters.
+message OneOfParam {
+    message ChildSpec {
+        DictParam.Spec spec = 1;
+        UserInterfaceInfo ui_info = 2;
+    }
+
+    message Spec {
+        // What options are available.  Only one will be specified by the user.
+        //
+        // If an option has no additional parameters, its spec should be an empty DictParam.Spec.
+        map<string, ChildSpec> specs = 1;
+
+        // Which option to start selected.  If left blank, UI will pick one for you.
+        string default_key = 2;
+    }
+
+    string key = 1;
+
+    // The values of the chosen spec will is guaraunteed to be at value[key].
+    // The values of the other specs might at value[that_specs_key], but no guarantees.
+    map<string, DictParam> values = 3;
+
+    reserved 2;
+}
+
+// A list of elements of given types.
+message ListParam {
+    message Spec {
+        // Each element in the list must follow the specification of the matching type.
+        // For example, if element_specs.int_spec is filled out, all values should follow
+        // that specification. If element_specs.string_spec is filled out, all values
+        // should follow that specification.
+        CustomParam.Spec element_spec = 1;
+
+        reserved 2;
+
+        // Minimum and maximum number of values the client may send (inclusive).
+        // If min_number_of_values is 0, the parameter is optional.
+        //
+        // 0 <= min_number_of_values <= max_number_of_values
+        google.protobuf.Int64Value min_number_of_values = 3;
+        google.protobuf.Int64Value max_number_of_values = 4;
+    }
+
+    repeated CustomParam values = 1;
+}
+
+// A 64-bit integer parameter.
+// Wraps specification-related messages, and contains fields for the value sent by a client.
+message Int64Param {
+    message Spec {
+        reserved 1;
+
+        // Default value. If unspecified, UIs can pick their own default OR force user to make a
+        // selection.
+        google.protobuf.Int64Value default_value = 2;
+
+        // Units of value, default_value, min_value, min_value.
+        Units units = 3;
+
+        // A value sent by the client must be within this minimum and maximum (inclusive).
+        // If unset, only limited by system representation.
+        // ERROR: It is an error to specify a min_value larger than the max_value.
+        //
+        // ADVICE: If a client sends a value outside these bounds, reject, rather than clamp it.
+        google.protobuf.Int64Value min_value = 4;
+        google.protobuf.Int64Value max_value = 5;
+    }
+
+    // Value should be provided in the same units as defined by the spec.
+    int64 value = 1;
+}
+
+// A 64-bit floating point parameter.
+// Wraps specification-related messages, and contains fields for the value sent by a client.
+message DoubleParam {
+    message Spec {
+        reserved 1;
+
+        // Default value. If unspecified, UIs can pick their own default OR force user to make a
+        // selection.
+        google.protobuf.DoubleValue default_value = 2;
+        // Units of value, default_value, and min_max.
+
+        Units units = 3;
+
+        // A value sent by the client must be within this minimum and maximum (inclusive).
+        // If unset, only limited by system representation.
+        // ERROR: It is an error to specify a min_value larger than the max_value.
+        //
+        // ADVICE: If a client sends a value outside these bounds, reject, rather than clamp, it.
+        google.protobuf.DoubleValue min_value = 4;
+        google.protobuf.DoubleValue max_value = 5;
+    }
+
+    // Value should be provided in the same units as defined by the spec.
+    double value = 1;
+}
+
+// A text parameter.
+// Wraps specification-related messages, and contains fields for the value sent by a client.
+message StringParam {
+    message Spec {
+        // A value sent by the client must be equal to one of these.
+        repeated string options = 1;
+
+        // Whether or not this parameter accepts a freeform string.
+        // If set to true, clients can pick one of the given options OR type their own value.
+        // If set to false, clients have to pick one of the given options.
+        // If no options are specified, clients should type their own value (ignoring this bool).
+        bool editable = 2;
+
+        // Default value. If empty, UIs can pick their own default OR force user to make a
+        // selection.
+        string default_value = 3;
+    }
+
+    // The value sent by a client.
+    string value = 1;
+}
+
+// A boolean parameter.
+message BoolParam {
+    message Spec {
+        // Default value. If unset, UIs can pick their own default OR force user to make a
+        // selection.
+        google.protobuf.BoolValue default_value = 1;
+    }
+
+    // The value sent by a client.
+    bool value = 1;
+}
+
+// Region of Interest parameter, region is associated with a specific image.
+message RegionOfInterestParam {
+    message ServiceAndSource {
+        string service = 1;
+        string source = 2;
+    }
+
+    message Spec {
+        // Sometimes, which image the ROI will reference is obvious:
+        //   - Image services
+        //   - Network compute bridge workers that accept a single image
+        //
+        // Othertimes, it might not be clear which image an ROI is supposed to reference.  In those
+        // cases, the Spec for the ROI can advertise which image it wants.
+        ServiceAndSource service_and_source = 1;
+
+        // Default value. If unset, UIs can pick their own default OR force user to make a
+        // selection.
+        AreaI default_area = 2;
+
+        // Area may eventually contain many shape primatives.  In that case, services can constrain
+        // which primatives they accept.  These will be opt in, so that adding new primative types
+        // won't be automatically advertised by older services.
+        bool allows_rectangle = 3;
+    }
+
+    AreaI area = 1;
+
+    // The name of the image service and source the UI had the user specify the ROI on.
+    ServiceAndSource service_and_source = 2;
+
+    // Width of the image (in pixels) when the ROI was specified.
+    // This should be used to ensure that the ROI is applied to an image with the same
+    // size / aspect ratio.
+    int32 image_cols = 3;
+
+    // Height of the image (in pixels).
+    // This should be used to ensure that the ROI is applied to an image with the same
+    // size / aspect ratio.
+    int32 image_rows = 4;
+}
+
+// Errors specific to the use of custom parameters.
+message CustomParamError {
+    reserved 2, 3;
+    
+    enum Status {
+        // Invalid, do not use.
+        STATUS_UNKNOWN = 0;
+        // No problems!
+        STATUS_OK = 1;
+        // The combination of parameters was invalid.
+        STATUS_INVALID_COMBINATION = 2;
+        // One or more of the children parameters is unsupported by the service.
+        STATUS_UNSUPPORTED_PARAMETER = 3;
+        // One or more of the parameters had an invalid value.
+        STATUS_INVALID_VALUE = 4;
+        // One or more of the parameters had an invalid type (e.g. a string when an int was needed).
+        STATUS_INVALID_TYPE = 5;
+
+        reserved 6;
+    }
+
+    Status status = 4;
+    
+    // List of error messages from this parameter and its children
+    repeated string error_messages = 5;
+
+}

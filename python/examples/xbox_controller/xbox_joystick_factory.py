@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,7 +8,7 @@ import platform
 
 from xbox_joystick import XboxJoystick
 
-if platform.system() == "Windows":
+if platform.system() == 'Windows':
     from xbox_joystick_windows import XboxJoystickWindows
 else:
     import distro
@@ -29,16 +29,16 @@ class XboxJoystickFactory:
         """
 
         op_system = platform.system()
-        if op_system == "Linux":
+        if op_system == 'Linux':
             info = distro.linux_distribution(full_distribution_name=False)
-            if info[0] != "ubuntu":
-                print("WARNING, this Linux distribution has not been tested. Use at your own risk")
+            if info[0] != 'ubuntu':
+                print('WARNING, this Linux distribution has not been tested. Use at your own risk')
             return XboxJoystickLinux()
-        elif op_system == "Windows":
+        elif op_system == 'Windows':
             return XboxJoystickWindows()
-        elif op_system == "MacOS":
-            print("ERROR, MacOS is not currently supported")
+        elif op_system == 'MacOS':
+            print('ERROR, MacOS is not currently supported')
             return None
         else:
-            print("ERROR, OS is not supported")
+            print('ERROR, OS is not supported')
             return None

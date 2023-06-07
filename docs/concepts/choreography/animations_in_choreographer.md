@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -70,7 +70,7 @@ There are two ways to create choreography logs. A log is automatically started w
 
 The manual log has a maximum of 5 minutes of recording. The robot will only keep the most recent auto log and the most recent manual log saved. As a result, logs must be downloaded immediately to ensure data is not lost.
 
-The log can be downloaded as a [pickle file](https://docs.python.org/3/library/pickle.html) which tightly packages the data stored as a python dictionary into a serialized object. This is the default format and will be used if no file extension is specified in the file name when saving the log.
+The log can be downloaded as a [compressed npz file](https://numpy.org/doc/stable/reference/generated/numpy.savez_compressed.html) which tightly packages the data stored as a python dictionary into a serialized object. This is the default format and will be used if no file extension is specified in the file name when saving the log.
 
 Logs can also be downloaded as a text files, which saves the `ChoreographyStateLog` protobuf message as a protobuf-to-text message. To save in this format, include the ".txt" file extension when entering the log name.
 

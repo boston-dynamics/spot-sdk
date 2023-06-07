@@ -1,10 +1,8 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
-
-from __future__ import print_function
 
 import collections
 import time
@@ -326,7 +324,7 @@ def _calibration_command_error_from_response(response):
 def _calibration_feedback_error_from_response(response):
     # Special handling of lease case.
     if response.status == spot_check_pb2.CameraCalibrationFeedbackResponse.STATUS_LEASE_ERROR:
-        return LeaseUseError(response)
+        return LeaseUseError(response, None)
     return _cal_status_error_from_response(response)
 
 

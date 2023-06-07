@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,6 +11,7 @@ import sys
 
 import bosdyn.client
 import bosdyn.client.util
+from bosdyn.api import service_customization_pb2
 from bosdyn.api.mission import remote_pb2, remote_service_pb2_grpc
 from bosdyn.client.auth import AuthResponseError
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
@@ -18,6 +19,8 @@ from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
 from bosdyn.client.lease import Lease, LeaseClient
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.client.server_util import GrpcServiceRunner, ResponseContext
+from bosdyn.client.service_customization_helpers import (InvalidCustomParamSpecError,
+                                                         validate_dict_spec)
 from bosdyn.client.util import setup_logging
 from bosdyn.mission import util
 
@@ -26,6 +29,7 @@ AUTHORITY = 'remote-mission'
 SERVICE_TYPE = 'bosdyn.api.mission.RemoteMissionService'
 
 _LOGGER = logging.getLogger(__name__)
+_WHO_KEY = 'who'
 
 
 class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
@@ -38,21 +42,36 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
 
     def __init__(self, logger=None):
         self.logger = logger or _LOGGER
+        # Create the custom parameters.
+        self.custom_params = service_customization_pb2.DictParam.Spec()
+        who_param = service_customization_pb2.StringParam.Spec()
+        who_param.default_value = "World"
+        who_param.editable = True
+        who_ui_info = service_customization_pb2.UserInterfaceInfo()
+        who_ui_info.display_name = "Name"
+        who_ui_info.description = "Who Spot will say hello to"
+        dict_spec = service_customization_pb2.DictParam.Spec()
+        dict_spec.specs[_WHO_KEY].spec.string_spec.CopyFrom(who_param)
+        dict_spec.specs[_WHO_KEY].ui_info.CopyFrom(who_ui_info)
+        self.custom_params.CopyFrom(dict_spec)
+        try:
+            # Validate the custom parameters.
+            validate_dict_spec(self.custom_params)
+        except InvalidCustomParamSpecError as e:
+            self.logger.info(e)
+            # Clear the custom parameters if they are invalid.
+            self.custom_params.Clear()
 
     def Tick(self, request, context):
         """Logs text, then provides a valid response."""
         response = remote_pb2.TickResponse()
         # This utility context manager will fill out some fields in the message headers.
         with ResponseContext(response, request):
-            # Default to saying hello to "world".
+            # Default to saying hello to 'World'.
             name = 'World'
-
-            # See if a different name was provided to us in the request's inputs.
-            # This "user-string" input is provided by the Autowalk missions.
-            # To provide other inputs, see the RemoteGrpc message.
-            for keyvalue in request.inputs:
-                if keyvalue.key == 'user-string':
-                    name = util.get_value_from_constant_value_message(keyvalue.value.constant)
+            who = request.params.values.get(_WHO_KEY)
+            if who is not None:
+                name = who.string_value.value
             self.logger.info('Hello %s!', name)
             response.status = remote_pb2.TickResponse.STATUS_SUCCESS
         return response
@@ -76,6 +95,12 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         with ResponseContext(response, request):
             self.logger.info('TeardownSession unimplemented!')
             response.status = remote_pb2.TeardownSessionResponse.STATUS_OK
+        return response
+
+    def GetRemoteMissionServiceInfo(self, request, context):
+        response = remote_pb2.GetRemoteMissionServiceInfoResponse()
+        with ResponseContext(response, request):
+            response.custom_params.CopyFrom(self.custom_params)
         return response
 
 
@@ -114,9 +139,9 @@ if __name__ == '__main__':
         # Setup logging to use INFO level.
         setup_logging()
         service_runner = run_service(options.port, logger=_LOGGER)
-        print('{} service running.\nCtrl + C to shutdown.'.format(DIRECTORY_NAME))
+        print(f'{DIRECTORY_NAME} service running.\nCtrl + C to shutdown.')
         service_runner.run_until_interrupt()
-        sys.exit('Shutting down {} service'.format(DIRECTORY_NAME))
+        sys.exit(f'Shutting down {DIRECTORY_NAME} service')
 
     # Else if a robot is available, register the service with the robot so that all clients can
     # access it through the robot directory without knowledge of the service IP or port.
@@ -125,7 +150,7 @@ if __name__ == '__main__':
     setup_logging(options.verbose)
 
     # Create and authenticate a bosdyn robot object.
-    sdk = bosdyn.client.create_standard_sdk("HelloWorldMissionServiceSDK")
+    sdk = bosdyn.client.create_standard_sdk('HelloWorldMissionServiceSDK')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
 

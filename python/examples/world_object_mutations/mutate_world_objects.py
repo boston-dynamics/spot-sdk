@@ -1,12 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Example using the world objects service. """
-
-from __future__ import print_function
 
 import argparse
 import sys
@@ -30,7 +28,7 @@ def create_drawable_sphere_object():
     # Create a map between the child frame name and the parent frame name/SE3Pose parent_tform_child
     edges = {}
     # Create an edge in the frame tree snapshot that includes vision_tform_drawable
-    drawable_frame_name = "drawing_sphere"
+    drawable_frame_name = 'drawing_sphere'
     edges = add_edge_to_tree(edges, vision_tform_drawable, VISION_FRAME_NAME, drawable_frame_name)
     snapshot = geom.FrameTreeSnapshot(child_to_parent_edge_map=edges)
 
@@ -41,11 +39,11 @@ def create_drawable_sphere_object():
     sphere = world_object_pb2.DrawableSphere(radius=1)
     red_color = world_object_pb2.DrawableProperties.Color(r=255, b=0, g=0, a=1)
     sphere_drawable_prop = world_object_pb2.DrawableProperties(
-        color=red_color, label="red sphere", wireframe=False, sphere=sphere,
+        color=red_color, label='red sphere', wireframe=False, sphere=sphere,
         frame_name_drawable=drawable_frame_name)
 
     # Create the complete world object with transform information, a unique name, and the drawable sphere properties.
-    world_object_sphere = world_object_pb2.WorldObject(id=16, name="red_sphere_ball",
+    world_object_sphere = world_object_pb2.WorldObject(id=16, name='red_sphere_ball',
                                                        transforms_snapshot=snapshot,
                                                        acquisition_time=time_now,
                                                        drawable_properties=[sphere_drawable_prop])
@@ -62,8 +60,8 @@ def create_apriltag_object():
     tag_id = 308
 
     # Set the frame names used for the two variants of the apriltag (filtered, raw)
-    frame_name_fiducial = "fiducial_" + str(tag_id)
-    frame_name_fiducial_filtered = "filtered_fiducial_" + str(tag_id)
+    frame_name_fiducial = f'fiducial_{tag_id}'
+    frame_name_fiducial_filtered = f'filtered_fiducial_{tag_id}'
 
     # Make the april tag (slightly offset from the first tag detection) as a world object. Create the
     # different edges necessary to create an expressive tree. The root node will be the world frame.
@@ -89,7 +87,7 @@ def create_apriltag_object():
     vision_tform_special_frame = update_frame(tf=default_a_tform_b, position_change=(0, 0, -.2),
                                               rotation_change=(0, 0, 0, 0))
     edges = add_edge_to_tree(edges, vision_tform_special_frame, VISION_FRAME_NAME,
-                             "my_special_frame")
+                             'my_special_frame')
     snapshot = geom.FrameTreeSnapshot(child_to_parent_edge_map=edges)
 
     # Create the specific properties for the apriltag including the frame names for the transforms
@@ -123,7 +121,7 @@ def main(argv):
 
     # List all world objects in the scene.
     world_objects = world_object_client.list_world_objects().world_objects
-    print("Current World objects' ids " + str([obj.id for obj in world_objects]))
+    print(f'Current World objects\' ids {[obj.id for obj in world_objects]}')
 
     # If there are any world objects in Spot's perception scene, then attempt to mutate one.
     # This should fail and return a STATUS_NO_PERMISSION since a client cannot mutate
@@ -152,17 +150,18 @@ def main(argv):
 
     # List all world objects in the scene after the mutation was applied.
     world_objects = world_object_client.list_world_objects().world_objects
-    print("World object IDs after object addition: " +
-          str([obj.apriltag_properties.tag_id for obj in world_objects]))
+    print(
+        f'World object IDs after object addition: {[obj.apriltag_properties.tag_id for obj in world_objects]}'
+    )
 
     for world_obj in world_objects:
         if world_obj.id == added_apriltag_world_obj_id:
             # Look for the custom frame that was included in the add-request, where the child frame name was "my_special_frame"
             full_snapshot = world_obj.transforms_snapshot
             for edge in full_snapshot.child_to_parent_edge_map:
-                if edge == "my_special_frame":
+                if edge == 'my_special_frame':
                     print(
-                        "The world object includes the custom frame vision_tform_my_special_frame!")
+                        'The world object includes the custom frame vision_tform_my_special_frame!')
 
     # Request to change an existing apriltag's dimensions. This will succeed because it is changing
     # an object that was added by a client program. We are using the ID returned by the service to
@@ -171,11 +170,11 @@ def main(argv):
     tag_prop_modified = world_object_pb2.AprilTagProperties(tag_id=308,
                                                             dimensions=geom.Vec2(x=.35, y=.35))
     wo_obj_to_change = world_object_pb2.WorldObject(
-        id=added_apriltag_world_obj_id, name="world_obj_apriltag",
+        id=added_apriltag_world_obj_id, name='world_obj_apriltag',
         transforms_snapshot=wo_obj_to_add.transforms_snapshot, acquisition_time=time_now,
         apriltag_properties=tag_prop_modified)
-    print("World object X dimension of apriltag size before change: " +
-          str([obj.apriltag_properties.dimensions.x for obj in world_objects]))
+    print(f'World object X dimension of apriltag size before change: '
+          f'{[obj.apriltag_properties.dimensions.x for obj in world_objects]}')
 
     change_apriltag = make_change_world_object_req(wo_obj_to_change)
     resp = world_object_client.mutate_world_objects(mutation_req=change_apriltag)
@@ -183,8 +182,8 @@ def main(argv):
 
     # List all world objects in the scene after the mutation was applied.
     world_objects = world_object_client.list_world_objects().world_objects
-    print("World object X dimension of apriltag size after change: " +
-          str([obj.apriltag_properties.dimensions.x for obj in world_objects]))
+    print(f'World object X dimension of apriltag size after change: '
+          f'{[obj.apriltag_properties.dimensions.x for obj in world_objects]}')
 
     # Add a apriltag and then delete it. This will succeed because it is deleting an object added by
     # a client program and not specific to Spot's perception
@@ -206,8 +205,9 @@ def main(argv):
 
     # List all world objects in the scene after the deletion was applied.
     world_objects = world_object_client.list_world_objects().world_objects
-    print("World object IDs after object deletion: " +
-          str([obj.apriltag_properties.tag_id for obj in world_objects]))
+    print(
+        f'World object IDs after object deletion: {[obj.apriltag_properties.tag_id for obj in world_objects]}'
+    )
 
     # Add a drawable sphere into the perception scene with a custom frame and unique name.
     x = 0.5
@@ -220,8 +220,8 @@ def main(argv):
     radius = 0.05
     color = (255, 0, 0, 1)  # red, solid sphere
 
-    resp = world_object_client.draw_sphere("debug_sphere", x, y, z, frame, radius, color)
-    print('Added a world object sphere at (' + str(x) + ', ' + str(y) + ', ' + str(z) + ')')
+    resp = world_object_client.draw_sphere('debug_sphere', x, y, z, frame, radius, color)
+    print(f'Added a world object sphere at ({x}, {y}, {z})')
 
     # Get the world object ID set by the service.
     sphere_id = resp.mutated_object_id
@@ -231,11 +231,11 @@ def main(argv):
     world_objects = world_object_client.list_world_objects().world_objects
     for world_obj in world_objects:
         if world_obj.id == sphere_id:
-            print("Found sphere named " + world_obj.name)
+            print(f'Found sphere named {world_obj.name}')
             full_snapshot = world_obj.transforms_snapshot
             for edge in full_snapshot.child_to_parent_edge_map:
-                print("Child frame name: " + edge + ". Parent frame name: " +
-                      full_snapshot.child_to_parent_edge_map[edge].parent_frame_name)
+                print(f'Child frame name: {edge}. Parent frame name: '
+                      f'{full_snapshot.child_to_parent_edge_map[edge].parent_frame_name}')
     return True
 
 

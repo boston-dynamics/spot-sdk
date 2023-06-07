@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -29,8 +29,8 @@ def verify_estop(robot):
 
     client = robot.ensure_client(EstopClient.default_service_name)
     if client.get_status().stop_level != estop_pb2.ESTOP_LEVEL_NONE:
-        error_message = "Robot is estopped. Please use an external E-Stop client, such as the" \
-        " estop SDK example, to configure E-Stop."
+        error_message = 'Robot is estopped. Please use an external E-Stop client, such as the ' \
+                        'estop SDK example, to configure E-Stop.'
         robot.logger.error(error_message)
         raise Exception(error_message)
 
@@ -59,7 +59,8 @@ def print_feedback(feedback_resp, logger):
     logger.info('  planned_points:')
     for idx, points in enumerate(joint_move_feedback.planned_points):
         pos = points.position
-        pos_str = f'sh0 = {pos.sh0.value:.3f}, sh1 = {pos.sh1.value:.3f}, el0 = {pos.el0.value:.3f}, el1 = {pos.el1.value:.3f}, wr0 = {pos.wr0.value:.3f}, wr1 = {pos.wr1.value:.3f}'
+        pos_str = f'sh0 = {pos.sh0.value:.3f}, sh1 = {pos.sh1.value:.3f}, el0 = {pos.el0.value:.3f}, ' \
+                  f'el1 = {pos.el1.value:.3f}, wr0 = {pos.wr0.value:.3f}, wr1 = {pos.wr1.value:.3f}'
         logger.info(f'    {idx}: {pos_str}')
     return duration_to_seconds(joint_move_feedback.time_to_goal)
 
@@ -75,7 +76,7 @@ def joint_move_example(config):
     bosdyn.client.util.authenticate(robot)
     robot.time_sync.wait_for_sync()
 
-    assert robot.has_arm(), "Robot requires an arm to run this example."
+    assert robot.has_arm(), 'Robot requires an arm to run this example.'
 
     # Verify the robot is not estopped and that an external application has registered and holds
     # an estop endpoint.
@@ -88,19 +89,19 @@ def joint_move_example(config):
         # Now, we are ready to power on the robot. This call will block until the power
         # is on. Commands would fail if this did not happen. We can also check that the robot is
         # powered at any point.
-        robot.logger.info("Powering on robot... This may take a several seconds.")
+        robot.logger.info('Powering on robot... This may take a several seconds.')
         robot.power_on(timeout_sec=20)
-        assert robot.is_powered_on(), "Robot power on failed."
-        robot.logger.info("Robot powered on.")
+        assert robot.is_powered_on(), 'Robot power on failed.'
+        robot.logger.info('Robot powered on.')
 
         # Tell the robot to stand up. The command service is used to issue commands to a robot.
         # The set of valid commands for a robot depends on hardware configuration. See
         # RobotCommandBuilder for more detailed examples on command building. The robot
         # command service requires timesync between the robot and the client.
-        robot.logger.info("Commanding robot to stand...")
+        robot.logger.info('Commanding robot to stand...')
         command_client = robot.ensure_client(RobotCommandClient.default_service_name)
         blocking_stand(command_client, timeout_sec=10)
-        robot.logger.info("Robot standing.")
+        robot.logger.info('Robot standing.')
 
         # Example 1: issue a single point trajectory without a time_since_reference in order to perform
         # a minimum time joint move to the goal obeying the default acceleration and velocity limits.
@@ -123,7 +124,7 @@ def joint_move_example(config):
 
         # Query for feedback to determine how long the goto will take.
         feedback_resp = command_client.robot_command_feedback(cmd_id)
-        robot.logger.info("Feedback for Example 1: single point goto")
+        robot.logger.info('Feedback for Example 1: single point goto')
         time_to_goal = print_feedback(feedback_resp, robot.logger)
         time.sleep(time_to_goal)
 
@@ -151,7 +152,7 @@ def joint_move_example(config):
 
         # Query for feedback
         feedback_resp = command_client.robot_command_feedback(cmd_id)
-        robot.logger.info("Feedback for Example 2: planner modifies trajectory")
+        robot.logger.info('Feedback for Example 2: planner modifies trajectory')
         time_to_goal = print_feedback(feedback_resp, robot.logger)
         time.sleep(time_to_goal)
 
@@ -178,7 +179,7 @@ def joint_move_example(config):
 
         # Query for feedback
         feedback_resp = command_client.robot_command_feedback(cmd_id)
-        robot.logger.info("Feedback for Example 3: unmodified trajectory")
+        robot.logger.info('Feedback for Example 3: unmodified trajectory')
         time_to_goal = print_feedback(feedback_resp, robot.logger)
         time.sleep(time_to_goal)
 
@@ -191,7 +192,7 @@ def joint_move_example(config):
         # Issue the command via the RobotCommandClient
         stow_command_id = command_client.robot_command(stow)
 
-        robot.logger.info("Stow command issued.")
+        robot.logger.info('Stow command issued.')
         block_until_arm_arrives(command_client, stow_command_id, 3.0)
 
         # First point position
@@ -249,7 +250,7 @@ def joint_move_example(config):
 
         # Query for feedback to determine exactly what the planned trajectory is.
         feedback_resp = command_client.robot_command_feedback(cmd_id)
-        robot.logger.info("Feedback for 2-point joint trajectory")
+        robot.logger.info('Feedback for 2-point joint trajectory')
         print_feedback(feedback_resp, robot.logger)
 
         # Wait until the move completes before powering off.
@@ -258,8 +259,8 @@ def joint_move_example(config):
         # Power the robot off. By specifying "cut_immediately=False", a safe power off command
         # is issued to the robot. This will attempt to sit the robot before powering off.
         robot.power_off(cut_immediately=False, timeout_sec=20)
-        assert not robot.is_powered_on(), "Robot power off failed."
-        robot.logger.info("Robot safely powered off.")
+        assert not robot.is_powered_on(), 'Robot power off failed.'
+        robot.logger.info('Robot safely powered off.')
 
 
 def main(argv):
@@ -272,7 +273,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.exception("Threw an exception")
+        logger.exception('Threw an exception')
         return False
 
 

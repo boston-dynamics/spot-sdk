@@ -1,0 +1,23 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot;
+option java_outer_classname = "DoorAreaCallbackProto";
+
+import "bosdyn/api/spot/door.proto";
+
+// At record time, the robot is only physically required to go through the door in one direction,
+// but the command for both directions must be recorded.
+message AreaCallbackDoorConfig {
+    // The door command issued for going through the door in the recorded direction
+    DoorCommand.Request forward_command = 10;
+    
+    // The door command for going through the door in the reverse to recorded direction
+    DoorCommand.Request reverse_command = 20;
+
+}

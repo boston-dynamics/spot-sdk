@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,7 +13,8 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/geometry.proto";
 import "google/protobuf/wrappers.proto";
 
-// The GripperCameraParam request message sets new gripper sensor parameters. Gripper sensor parameters do not persist across reboots. 
+// The GripperCameraParam request message sets new gripper sensor parameters. Gripper sensor
+// parameters do not persist across reboots.
 message GripperCameraParamRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -26,13 +27,15 @@ message GripperCameraParamResponse {
     ResponseHeader header = 1;
 }
 
-// The GripperCameraGetParam request message queries the robot for the current gripper sensor parameters. 
+// The GripperCameraGetParam request message queries the robot for the current gripper sensor
+// parameters.
 message GripperCameraGetParamRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
-// The GripperCameraGetParam response message contains the current gripper sensor parameters. Gripper sensor parameters do not persist across reboots. 
+// The GripperCameraGetParam response message contains the current gripper sensor parameters.
+// Gripper sensor parameters do not persist across reboots.
 message GripperCameraGetParamResponse {
     // Common request header.
     ResponseHeader header = 1;
@@ -42,27 +45,34 @@ message GripperCameraGetParamResponse {
 
 message GripperCameraParams {
     enum CameraMode {
+        option allow_alias = true;
+
         // MODE_UNKNOWN should not be used.
         MODE_UNKNOWN = 0;
 
-        // 1280x720 pixels at 60 frames per second in UYVY format
-        MODE_1280_720_60FPS_UYVY = 1;
+        // 640x480 pixels.
+        MODE_640_480 = 11;
+        MODE_640_480_120FPS_UYVY = 11 [deprecated = true];
 
-        // 640x480 pixels at 120 frames per second in UYVY format
-        // Warning: this frame rate may not be achievable with long exposure times.
-        MODE_640_480_120FPS_UYVY = 11;
+        // 1280x720 pixels.
+        MODE_1280_720 = 1;
+        MODE_1280_720_60FPS_UYVY = 1 [deprecated = true];
 
-        // 1920x1080 pixels at 60 frames per second in Motion JPG format
-        MODE_1920_1080_60FPS_MJPG = 14;
+        // 1920x1080 pixels.
+        MODE_1920_1080 = 14;
+        MODE_1920_1080_60FPS_MJPG = 14 [deprecated = true];
 
-        // 3840x2160 pixels at 30 frames per second in Motion JPG format
-        MODE_3840_2160_30FPS_MJPG = 15;
+        // 3840x2160 pixels.
+        MODE_3840_2160 = 15;
+        MODE_3840_2160_30FPS_MJPG = 15 [deprecated = true];
 
-        // 4208x3120 pixels at 20 frames per second in Motion JPG format
-        MODE_4208_3120_20FPS_MJPG = 16;
+        // 4096x2160 pixels.
+        MODE_4096_2160 = 17;
+        MODE_4096_2160_30FPS_MJPG = 17 [deprecated = true];
 
-        // 4096x2160 pixels at 30 frames per second in Motion JPG format
-        MODE_4096_2160_30FPS_MJPG = 17;
+        // 4208x3120 pixels.
+        MODE_4208_3120 = 16;
+        MODE_4208_3120_20FPS_MJPG = 16 [deprecated = true];
 
     }
 
@@ -82,11 +92,12 @@ message GripperCameraParams {
     google.protobuf.FloatValue saturation = 4;
 
     // Set the image gain level.
+    // This paramater is only effective when manual exposure is used.
     // Min 0, max 1
     google.protobuf.FloatValue gain = 7;
 
     // Whether the camera should use auto exposure.
-    // Defaults to true.
+    // Unset is equivalent to setting exposure_auto = true
     google.protobuf.BoolValue exposure_auto = 10;
 
     // Manually set the image exposure level. This value is only used if exposure_auto is false.
@@ -98,7 +109,7 @@ message GripperCameraParams {
     RoiParameters exposure_roi = 16;
 
     // Whether the camera should automatically focus the image.
-    // Default true
+    // Unset is equivalent to setting focus_auto = true
     google.protobuf.BoolValue focus_auto = 13;
 
     // Manually set the image focus. This value is only used if focus_auto is false.
@@ -110,7 +121,7 @@ message GripperCameraParams {
     RoiParameters focus_roi = 14;
 
     // Set to true to draw a rectangle in the image where the focus ROI is.
-    // Default: false
+    // Unset is equivalent to setting draw_focus_roi_rectangle = false
     google.protobuf.BoolValue draw_focus_roi_rectangle = 18;
 
     // High dynamic range (HDR) mode sets the camera to take multiple frames to get exposure
@@ -126,7 +137,6 @@ message GripperCameraParams {
 
         // Constantly on. Brightness level can be set in the led_torch_brightness field.
         LED_MODE_TORCH = 2;
-
     }
     // Set the LED mode.
     LedMode led_mode = 19;
@@ -136,6 +146,24 @@ message GripperCameraParams {
     //       To turn off the LED, set the led_mode to LED_MODE_OFF
     google.protobuf.FloatValue led_torch_brightness = 20;
 
+    // Whether the camera should use auto white balance
+    // Unset is equivalent to setting white_balance_temperature_auto = true
+    google.protobuf.BoolValue white_balance_temperature_auto = 5;
+
+    // Set the image gamma level.
+    // Min 0, max 1
+    google.protobuf.FloatValue gamma = 6;
+
+    // Manually set the white balance focus. This value is only used if white_balance_temperature_auto is false.
+    // Min 0, max 1
+    // 0 corresponds to focus at infinity, 1 corresponds to a focal point close to the camera.
+    google.protobuf.FloatValue white_balance_temperature = 8;
+    
+    // Set the image sharpness level.
+    // Min 0, max 1
+    google.protobuf.FloatValue sharpness = 9;
+
+    
 }
 
 // High dynamic range (HDR) modes available. HDR sets the camera to take multiple frames to

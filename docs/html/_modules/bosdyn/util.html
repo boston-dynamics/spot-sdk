@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.util &mdash; Spot 3.2.3 documentation</title>
+  <title>bosdyn.util &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -30,10 +32,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -66,7 +70,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -94,13 +98,16 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -129,6 +136,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -183,6 +191,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -195,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -202,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -227,9 +238,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -244,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -266,6 +280,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -293,6 +314,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -306,13 +328,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -330,6 +355,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -391,6 +417,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -469,6 +501,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -483,9 +516,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -494,6 +530,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -524,10 +562,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -549,6 +591,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -565,7 +608,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -630,7 +672,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.util</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -660,7 +702,7 @@
 
 
 <div class="viewcode-block" id="duration_str"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.duration_str">[docs]</a><span class="k">def</span> <span class="nf">duration_str</span><span class="p">(</span><span class="n">duration</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a formatted string for a duration proto.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a formatted string for a duration proto.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      duration (google.protobuf.Duration): input duration</span>
@@ -681,7 +723,7 @@
 
 
 <div class="viewcode-block" id="duration_to_seconds"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.duration_to_seconds">[docs]</a><span class="k">def</span> <span class="nf">duration_to_seconds</span><span class="p">(</span><span class="n">duration</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a number of seconds, as a float, based on Duration protobuf fields.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a number of seconds, as a float, based on Duration protobuf fields.</span>
 
 <span class="sd">    If you want a precise duration, use the Duration class&#39;s ToTimedelta function.</span>
 
@@ -692,7 +734,7 @@
 
 
 <div class="viewcode-block" id="seconds_to_duration"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.seconds_to_duration">[docs]</a><span class="k">def</span> <span class="nf">seconds_to_duration</span><span class="p">(</span><span class="n">seconds</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a protobuf Duration from number of seconds, as a float.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a protobuf Duration from number of seconds, as a float.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      seconds (float): duration length</span>
@@ -703,7 +745,7 @@
 
 
 <div class="viewcode-block" id="seconds_to_timestamp"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.seconds_to_timestamp">[docs]</a><span class="k">def</span> <span class="nf">seconds_to_timestamp</span><span class="p">(</span><span class="n">seconds</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a protobuf Timestamps from number of seconds, as a float.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a protobuf Timestamps from number of seconds, as a float.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      seconds (float): seconds since epoch</span>
@@ -714,7 +756,7 @@
 
 
 <div class="viewcode-block" id="timestamp_str"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.timestamp_str">[docs]</a><span class="k">def</span> <span class="nf">timestamp_str</span><span class="p">(</span><span class="n">timestamp</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a formatted string for a timestamp or a duration proto.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a formatted string for a timestamp or a duration proto.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      timestamp (google.protobuf.Timestamp or google.protobuf.Duration): input duration</span>
@@ -727,7 +769,7 @@
 
 
 <div class="viewcode-block" id="sec_to_nsec"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.sec_to_nsec">[docs]</a><span class="k">def</span> <span class="nf">sec_to_nsec</span><span class="p">(</span><span class="n">secs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert time in seconds as from time.time() to a timestamp in nanoseconds.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert time in seconds as from time.time() to a timestamp in nanoseconds.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     secs: Time in seconds</span>
@@ -738,7 +780,7 @@
 
 
 <div class="viewcode-block" id="nsec_to_sec"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.nsec_to_sec">[docs]</a><span class="k">def</span> <span class="nf">nsec_to_sec</span><span class="p">(</span><span class="n">secs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert time in nanoseconds to a timestamp in seconds.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert time in nanoseconds to a timestamp in seconds.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     secs: Time in nanoseconds</span>
@@ -749,17 +791,17 @@
 
 
 <div class="viewcode-block" id="now_nsec"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.now_nsec">[docs]</a><span class="k">def</span> <span class="nf">now_nsec</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Returns nanoseconds from dawn of unix epoch until when this is called.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns nanoseconds from dawn of unix epoch until when this is called.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">sec_to_nsec</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span></div>
 
 
 <div class="viewcode-block" id="now_sec"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.now_sec">[docs]</a><span class="k">def</span> <span class="nf">now_sec</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Returns seconds from dawn of unix epoch until when this is called.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns seconds from dawn of unix epoch until when this is called.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="set_timestamp_from_now"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.set_timestamp_from_now">[docs]</a><span class="k">def</span> <span class="nf">set_timestamp_from_now</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sets google.protobuf.Timestamp to point to the current time on the system clock.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sets google.protobuf.Timestamp to point to the current time on the system clock.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     timestamp_proto[out] (google.protobuf.Timestamp): The proto into which the time will be written</span>
@@ -768,7 +810,7 @@
 
 
 <div class="viewcode-block" id="now_timestamp"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.now_timestamp">[docs]</a><span class="k">def</span> <span class="nf">now_timestamp</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Returns a google.protobuf.Timestamp set to the current time on the system clock.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a google.protobuf.Timestamp set to the current time on the system clock.&quot;&quot;&quot;</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">now_nsec</span><span class="p">()</span>
     <span class="n">timestamp_proto</span> <span class="o">=</span> <span class="n">Timestamp</span><span class="p">()</span>
     <span class="n">set_timestamp_from_nsec</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">,</span> <span class="n">now</span><span class="p">)</span>
@@ -776,7 +818,7 @@
 
 
 <div class="viewcode-block" id="set_timestamp_from_nsec"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.set_timestamp_from_nsec">[docs]</a><span class="k">def</span> <span class="nf">set_timestamp_from_nsec</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">,</span> <span class="n">time_nsec</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sets a Timestamp protobuf from an integer of nanoseconds since the unix epoch.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sets a Timestamp protobuf from an integer of nanoseconds since the unix epoch.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     timestamp_proto[out] (google.protobuf.Timestamp):  timestamp into which time will be written</span>
@@ -787,7 +829,7 @@
 
 
 <div class="viewcode-block" id="set_timestamp_from_datetime"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.set_timestamp_from_datetime">[docs]</a><span class="k">def</span> <span class="nf">set_timestamp_from_datetime</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">,</span> <span class="n">date_time</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Sets a Timestamp protobuf from datetime.datetime value.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sets a Timestamp protobuf from datetime.datetime value.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     timestamp_proto[out] (google.protobuf.Timestamp):  timestamp into which time will be written</span>
@@ -797,7 +839,7 @@
 
 
 <div class="viewcode-block" id="nsec_to_timestamp"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.nsec_to_timestamp">[docs]</a><span class="k">def</span> <span class="nf">nsec_to_timestamp</span><span class="p">(</span><span class="n">time_nsec</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns a google.protobuf.Timestamp for an integer value of nanoseconds since the unix epoch.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a google.protobuf.Timestamp for an integer value of nanoseconds since the unix epoch.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     time_nsec (int): the time, as an integer of nanoseconds from the unix epoch</span>
@@ -808,7 +850,7 @@
 
 
 <div class="viewcode-block" id="timestamp_to_sec"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.timestamp_to_sec">[docs]</a><span class="k">def</span> <span class="nf">timestamp_to_sec</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;From a Timestamp proto, return a floating point value of seconds from the unix epoch .</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;From a Timestamp proto, return a floating point value of seconds from the unix epoch .</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     timestamp_proto (google.protobuf.Timestamp): input time</span>
@@ -817,7 +859,7 @@
 
 
 <div class="viewcode-block" id="timestamp_to_nsec"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.timestamp_to_nsec">[docs]</a><span class="k">def</span> <span class="nf">timestamp_to_nsec</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;From a Timestamp proto, return an integer of nanoseconds from the unix epoch.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;From a Timestamp proto, return an integer of nanoseconds from the unix epoch.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     timestamp_proto (google.protobuf.Timestamp):  input time</span>
@@ -826,7 +868,7 @@
 
 
 <div class="viewcode-block" id="timestamp_to_datetime"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.timestamp_to_datetime">[docs]</a><span class="k">def</span> <span class="nf">timestamp_to_datetime</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">,</span> <span class="n">use_nanos</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert a google.protobuf.Timestamp to a Python datetime.datetime object.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a google.protobuf.Timestamp to a Python datetime.datetime object.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     timestamp_proto (google.protobuf.Timestamp): input time</span>
@@ -840,7 +882,7 @@
 
 
 <div class="viewcode-block" id="secs_to_hms"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.secs_to_hms">[docs]</a><span class="k">def</span> <span class="nf">secs_to_hms</span><span class="p">(</span><span class="n">seconds</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Format a time in seconds as &#39;H:MM:SS&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a time in seconds as &#39;H:MM:SS&#39;</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     seconds:   number of seconds (will be truncated to integer value)</span>
@@ -853,7 +895,7 @@
 
 
 <div class="viewcode-block" id="distance_str"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.distance_str">[docs]</a><span class="k">def</span> <span class="nf">distance_str</span><span class="p">(</span><span class="n">meters</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Convert a distance in meters to a either xxx.xx m or xxx.xx km</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a distance in meters to a either xxx.xx m or xxx.xx km</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      meters (float/int):   distance in meters</span>
@@ -864,7 +906,7 @@
 
 
 <div class="viewcode-block" id="format_metric"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.format_metric">[docs]</a><span class="k">def</span> <span class="nf">format_metric</span><span class="p">(</span><span class="n">metric</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns a string representing a metric.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a string representing a metric.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     metric (bosdyn.api.Parameter):   metric description</span>
@@ -905,7 +947,7 @@
 
 
 <div class="viewcode-block" id="DatetimeParseError"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.DatetimeParseError">[docs]</a><span class="k">class</span> <span class="nc">DatetimeParseError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Failed to parse any datetime formats known to parse_datetime()&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Failed to parse any datetime formats known to parse_datetime()&quot;&quot;&quot;</span></div>
 
 
 <span class="n">TIME_FORMAT_DESC</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
@@ -921,7 +963,7 @@
 
 
 <div class="viewcode-block" id="parse_datetime"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.parse_datetime">[docs]</a><span class="k">def</span> <span class="nf">parse_datetime</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Parse datetime from string</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse datetime from string</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     val: string with format like as described by TIME_FORMAT_DESC.</span>
@@ -937,7 +979,7 @@
 
 
 <div class="viewcode-block" id="parse_timespan"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.parse_timespan">[docs]</a><span class="k">def</span> <span class="nf">parse_timespan</span><span class="p">(</span><span class="n">timespan_spec</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Parse a timespan spec of the form {from-time}[-{to-time}]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse a timespan spec of the form {from-time}[-{to-time}]</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">     timespan_spec: string with format {spec} or {spec}-{spec} where {spec} is a string</span>
@@ -954,7 +996,7 @@
 
 
 <div class="viewcode-block" id="RobotTimeConverter"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.RobotTimeConverter">[docs]</a><span class="k">class</span> <span class="nc">RobotTimeConverter</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Converts times in the local system clock to times in the robot clock.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts times in the local system clock to times in the robot clock.</span>
 
 <span class="sd">    Conversions are made given an estimate of clock skew from the local clock to the robot clock.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -963,7 +1005,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_clock_skew_nsec</span> <span class="o">=</span> <span class="n">robot_clock_skew_nsec</span>
 
 <div class="viewcode-block" id="RobotTimeConverter.robot_timestamp_from_local_nsecs"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.RobotTimeConverter.robot_timestamp_from_local_nsecs">[docs]</a>    <span class="k">def</span> <span class="nf">robot_timestamp_from_local_nsecs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local_time_nsecs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a robot-clock Timestamp proto for a local time in nanoseconds.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a robot-clock Timestamp proto for a local time in nanoseconds.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          local_time_nsecs:  Local system time, in integer of nanoseconds from the unix epoch.</span>
@@ -971,7 +1013,7 @@
         <span class="k">return</span> <span class="n">nsec_to_timestamp</span><span class="p">(</span><span class="n">local_time_nsecs</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clock_skew_nsec</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotTimeConverter.robot_timestamp_from_local_secs"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.RobotTimeConverter.robot_timestamp_from_local_secs">[docs]</a>    <span class="k">def</span> <span class="nf">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local_time_secs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns a robot-clock Timestamp proto for a local time in seconds.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a robot-clock Timestamp proto for a local time in seconds.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          local_time_secs:  Local system time, in seconds from the unix epoch.</span>
@@ -979,7 +1021,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">robot_timestamp_from_local_nsecs</span><span class="p">(</span><span class="n">sec_to_nsec</span><span class="p">(</span><span class="n">local_time_secs</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="RobotTimeConverter.robot_timestamp_from_local"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.RobotTimeConverter.robot_timestamp_from_local">[docs]</a>    <span class="k">def</span> <span class="nf">robot_timestamp_from_local</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local_timestamp_proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Takes a Timestamp proto is local time and returns one in robot time.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Takes a Timestamp proto is local time and returns one in robot time.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          local_timestamp_proto (google.protobuf.Timestamp): timestamp in system clock</span>
@@ -988,7 +1030,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">robot_timestamp_from_local_nsecs</span><span class="p">(</span><span class="n">local_nsecs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotTimeConverter.convert_timestamp_from_local_to_robot"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.RobotTimeConverter.convert_timestamp_from_local_to_robot">[docs]</a>    <span class="k">def</span> <span class="nf">convert_timestamp_from_local_to_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp_proto</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Edits timestamp_proto in place to convert it from the local clock to the robot_clock.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Edits timestamp_proto in place to convert it from the local clock to the robot_clock.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          timestamp_proto[in/out] (google.protobuf.Timestamp): local system time</span>
@@ -996,12 +1038,20 @@
         <span class="n">timestamp_proto</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">robot_timestamp_from_local</span><span class="p">(</span><span class="n">timestamp_proto</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="RobotTimeConverter.robot_seconds_from_local_seconds"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.RobotTimeConverter.robot_seconds_from_local_seconds">[docs]</a>    <span class="k">def</span> <span class="nf">robot_seconds_from_local_seconds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local_time_secs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Returns the robot time in seconds from a local time in seconds.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the robot time in seconds from a local time in seconds.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          local_time_secs:  Local system time, in seconds from the unix epoch.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">local_time_secs</span> <span class="o">+</span> <span class="n">nsec_to_sec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clock_skew_nsec</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">local_time_secs</span> <span class="o">+</span> <span class="n">nsec_to_sec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clock_skew_nsec</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RobotTimeConverter.local_seconds_from_robot_timestamp"><a class="viewcode-back" href="../../python/bosdyn-core/src/bosdyn/util.html#bosdyn.util.RobotTimeConverter.local_seconds_from_robot_timestamp">[docs]</a>    <span class="k">def</span> <span class="nf">local_seconds_from_robot_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the local time in seconds from a robot-clock Timestamp proto.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          local_time_secs:  Local system time, in seconds from the unix epoch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">nsec_to_sec</span><span class="p">(</span><span class="n">timestamp_to_nsec</span><span class="p">(</span><span class="n">robot_timestamp</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clock_skew_nsec</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

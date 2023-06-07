@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,6 +11,242 @@ Development Kit License (20191101-BDSDK-SL).
 </p>
 
 # Spot Release Notes
+
+## 3.3.0
+
+### Upcoming Removals
+
+Several protobuf fields or services are scheduled to be removed in the 4.0 release. Please ensure that they are no longer used within your code.
+
+- `LogAnnotationService`
+- `SE3Covariance` fields
+- Auth application token.
+- Robot commands: non-synchronized mobility commands. Top-level feedback messages.
+- Graph Nav map edge annotations: `vel_limit`, `ground_mu_hint`, `grated_floor`
+- SpotCheck feedback: `foot_height_results` and `leg_pair_results`
+
+### New Features
+
+#### New Service - Inverse Kinematics
+
+Users can make reachability and stance-selection queries for reaching to locations with the arm or pointing a body-mounted sensor.
+Requests can specify pose or gaze targets for a wrist-mounted or body-mounted tool, with a variety of options for body, arm, and stance configuration.
+The service responds with a full robot configuration (and frame snapshot including body, feet, and tool) that satisfies the specifications of the request, or an indication that no solution was found.
+
+This service is only available if an arm is attached to the robot.
+
+#### New Service - LogStatus
+
+Use the LogStatus service to start and terminate experiment or retro logs. These logs can be used with Boston Dynamics support to diagnose problems with the robot or its systems.
+
+#### Service Customization
+
+When writing a service to extend the capabilities of the robot, there are now additional fields and messages to allow the service to specify which and what kind of parameters that the service can accept with its requests. These parameters can be modified by end users via tablet operation or Scout. The services that support this customization are
+
+- Image services
+- Data Acquisition plugins
+- Network Compute Bridge workers
+- Remote Mission callbacks
+- Area Callbacks
+
+More detailed descriptions of how to specify these parameters can be found in the [service customization documentation](concepts/service_customization.md).
+
+#### Arm and Manipulation
+
+- **Constrained Manipulation**: Users can put constrained manipulation in velocity control or position control of the task space. Previously, all constrained manipulation motions were velocity controlled, meaning that users would for example specify the velocity of turning a crank.
+  In position control mode, the user can specify target positions, such as the angle or distance to move the object, as well as acceleration limits to obey.
+  Previously, the internal estimator was always reset with a new request. Now users can disable that resetting, for cases where the task configuration has not changed from the previous request.
+- **Door opening**: Added new `STATUS_STALLED` and `STATUS_NOT_DETECTED` [error statuses](../protos/bosdyn/api/proto_reference#doorcommand-feedback-status), and `DoorCommand.Feedback` reports progress through the door.
+- **Gripper Camera**: New options added for controlling white balance, gamma, and sharpness.
+- Added many pieces of information to `ArmImpedanceCommand.Feedback`.
+
+#### Navigation
+
+**No-Go Regions**: Added the ability to apply user-defined rectangular obstacles to the foot and body obstacle maps.  
+A user can define rectangular regions in which the robot should not step, and/or rectangular regions the body should not enter, in addition to the standard obstacle mapping.
+By default, a User No-Go Region will add both a body obstacle, and a slightly expanded footstep obstacle to the respective obstacle maps. If this default behavior is not desired there are optional flags to designate the User No-Go Region as just a body obstacle or just a foot obstacle instead of both, and to remove the extra padding on the foot obstacle.
+These regions are added via the World Object Service, which now includes an `object_lifetime` field with the duration after which the obstacle expires.
+
+**Area Callbacks** can raise a `PathBlocked` error to indicate that the region is blocked and graph nav should re-route.
+Area callbacks that control the robot through the region can now update the localization to the end of the region when they have successfully moved the robot through the region so that Graph Nav does not try to re-navigate the region.
+
+**Uploading Graphs** has more validation steps and will report `STATUS_INVALID_GRAPH` under more scenarios. There is a new `ValidationStatus` to show the results of this process. Recoverable graph problems will not cause the load to fail, but will instead be reported as "warnings" in the `ValidationStatus` message.
+
+**Topology Processing** (auto loop closure) is now much less aggressive about creating loop closures and will make fewer and better loop closures than before, with the exception of waypoints near docks which are more forgiving (to allow the robot to get back to the dock from more locations).
+
+If the robot gets stuck, it will report a "stuck reason" indicating which kind of failure resulted in getting stuck.
+
+#### Choreography
+
+Added a new `ChoreographyCommand` RPC to support [interactive choreography moves](concepts/choreography/custom_gait.md).
+
+Added a new `ChoreographyStatus` RPC so that users can receive feedback on the dance state a robot is in and a robot’s progress in completing a dance or current move(s) in a dance.
+
+Added `exit_state` field in `SequenceInfo` message to specify the exit transition state of the sequence.
+Added `execution_id` field in `ExecuteChoreographyResponse` message with the unique ID for the execution.
+Added `id` field in `MoveParams` message, set by the client or auto-assigned by the service, to be reported in the `ChoreographyStatusResponse` `ActiveMoves` field.
+Added `custom_gait_params` and `leg_joint_params` fields in `MoveParams` object.
+Added `is_looping` field in `MoveInfo` message.
+Added `entrance_state` field in `ChoreographySequence` message to specify an explicit entrance state in the case where the first legs-track move accepts multiple entrance states.
+Animations now support more flexibility to adjusting timing, can specify whether the animation starts from a sit pose, or can specify that an Animation can be used for a custom gait.
+
+#### Payloads
+
+New fields in the Payload proto enable a liveness check, similar to a service liveness check. The robot will periodically try to ping (ICMP) the payload to see if it is still connected.
+
+- `liveness_timeout_secs`: How long payload can be unpingable before a liveness fault is raised.
+- `ipv4_address`: Address for the robot to ping the payload at.
+- `link_speed`: Expected ethernet speed negotiated.
+  If present, the `ipv4_address` field will also be used to detect whether a payload is mounted to the front or rear payload port. If a payload preset has a label "mount_port:rear" and the payload is connected to the front port, it will not be displayed on the registration page. The same is true if there is a preset "mount_port:front" and the payload is connected to the rear port.
+
+#### Images and Data
+
+Added the SpotCamAlignment action wrapper for aligning Spot Cam image captures.
+
+Images can be stored for Data Acquisition and RemoteGrpc elements in order to aid in editing walks.
+
+Updated the `IrMeterOverlay` Spot Cam message and added a new RPC to get the current overlay.
+Added new RPCs for setting and getting the focus state of the Spot Cam PTZ.
+Added exposure settings to the `StreamParams` message.
+
+New `AvailableModels` message to describe Network Compute Bridge models available for data acquisition capture.
+
+New unique `id` returned in `Store*` responses from the `DataAcquisitionStore` service. This id can be used in a `DataIdentifier` to uniquely identify a particular piece of stored data.
+
+#### Robot Control
+
+- `ClearBehaviorFault` echos back the behavior fault if it was active at the time of request.
+- `ClearBehaviorFault` specifies a list of blocking hardware faults for an unclearable behavior fault.
+- An absolute desired position and orientation of the robot’s body origin can now be specified when standing.
+- Users can override the configured Leases and Params when issuing an Autoreturn `StartRequest`.
+- A new `ImpairedStatus` value indicates when the entity detector (required for certain new avoidance behaviors) is not working.
+
+### Bug Fixes and Improvements
+
+- Mission blackboard state is now reported in the `NodeState` message.
+- `GraphNavClient.set_localization_full_response` added to return the full response.
+- `RecordingClient.start_recording_full` added to return the full response.
+- The Robot object has `get_cached_hardware_hardware_configuration()` for checking the hardware configuration efficiently.
+- The Robot object has an explicit `shutdown()` to stop any background threads it may be running.
+- World objects can be added or deleted in bulk using the `send_add_mutation_requests()` and `send_delete_mutation_requests()` helpers.
+- Uploading Graphs has more validation steps and will report `STATUS_INVALID_GRAPH` under more scenarios. There is a new `ValidationStatus` to show the results of this process. Recoverable graph problems will not cause the load to fail, but will instead be reported as warnings in the `ValidationStatus` message.
+- Some mission RPCs could fail due to response message size limits when missions become very large. Newly added RPCs (LoadMissionAsChunks2, GetInfoAsChunks, GetMissionAsChunks) use streaming responses that are assembled into the proper response.
+
+### Dependencies
+
+The Python SDK now requires protobuf >= 3.19.4
+
+### Deprecations
+
+The following will continue to work, but have been deprecated and may be removed in a future release.
+
+#### NetworkComputeBridge
+
+The NetworkComputeBridge Worker service has been re-worked to be more straightforward and provide additional options. The `NetworkCompute` RPC is deprecated from the NetworkComputeBridge Workers services; use the new `WorkerCompute` RPC instead.
+
+When calling the NetworkComputeBridge service, the `input_data` is deprecated in the `NetworkComputeRequest` message; use `input_data_bridge` instead. When using the `input_data_bridge` input, the following changes will apply to the `NetworkComputeResponse` output:
+
+- Deprecated `image_response` field; use `image_responses` instead.
+- Deprecated `image_rotation_angle` field; The worker should handle rotation on its own.
+- Deprecated the `alert_data` field; use `alert_data` in `OutputImage` instead.
+- Deprecated `roi_output_data` field; support for non-image products will be added in a future release.
+
+#### Deprecated fields and values
+
+**GripperCameraParam**: Renamed `CameraMode` enum values.
+**Graph Nav**: The `StraightStaircase` representation of staircases is deprecated and replaced with the new `StaircaseWithLandings`.
+**Choreography**; The `precise_timing` in `Animation` message is deprecated and replaced by the more fine-grained control of `timing_adjustability` field.
+**Leases**: Use `is_stale` instead of the stale time in the `LeaseResource` message to determine staleness.
+
+#### Python functions
+
+`BaseClient.chunk_message` has been moved to the `data_chunk` module, along with other serialization functions.
+
+`BaseClient.request_trim_for_log` and `BaseClient.response_trim_for_log` are deprecated with no replacement. Logging should use regular %-based formatting, rather than prematurely forcing serialization.
+
+### Breaking Changes
+
+When the robot loses connection with an E-stop endpoint, an attempt to power on the robot will now return `STATUS_KEEP_ALIVE_MOTOR_OFF` instead of `STATUS_ESTOPPED`. In python code it will raise the `KeepaliveMotorsOffError` exception instead of `EstoppedError`.
+
+Some malformed Graph Nav graphs were previously accepted, but would leave the service in a bad state. These graphs are now explicitly rejected during upload.
+
+### Known Issues
+
+**When a network transport failure occurs,** depending on the particular operating system and version of gRPC installed, the error from the python SDK may not always be the most specific error possible, such as `UnknownDnsNameError`. It may instead be raised as either a generic `RpcError`, or another generic failure type such as `UnableToConnectToRobotError`.
+
+**If you write a custom data acquisition plugin or image service,** do not change its `DataAcquisitionCapability` or `ImageSource` set once it is running and registered. New capabilities may not be detected, and old capabilities may still be listed as available in the Data Acquisition service. To change the capabilities of a service: unregister it from the directory, wait until its capabilities are no longer listed in the Data Acquisition service, and then re-register it. This waiting also applies to restarting a service if its capabilities will be different upon restart.
+
+**If you write a custom data acquisition plugin without using our helper class,** its `GetStatus()` RPC is expected to complete immediately. If it takes too long to complete it can cause timeouts when requesting `GetStatus()` of the data acquisition service.
+
+**If you register a new service with the robot**, calling `robot.ensure_client()` to create a client for that service may result in a `UnregisteredServiceNameError`.
+
+- Workaround: call `robot.sync_with_directory()` before `robot.ensure_client()`
+
+**SE2VelocityLimits require care**. Correct usage of the `SE2VelocityLimit` message requires the user to fully fill out all the fields, setting unlimited values to a large number, say 1e6.
+
+**Velodyne client API example has python/matplotlib issue** and it needs PyQt5
+
+- Workaround: run `pip install pyqt5` in the venv to get it to work.
+
+**Robot command feedback response incorrect with multiple clients running** in the configuration with a Mission client sending synchro arm commands with body lease and a Localnav client sending synchro mobility command with mobility lease. In this case, sending both robot command requests and robot command feedback requests, messes up the feedback request for the mission client. It was receiving feedback for the mobility request, and not the arm request.
+
+**CustomParam validation** will fail if extra parameters are provided that are not in the spec.
+
+### Sample Code
+
+#### New
+
+[Arm Grasp Carry Overrides](../python/examples/arm_grasp_carry_overrides/README.md): Show how to set grasp and carry overrides for Spot Arms.
+
+[Arm Impedance Control](../python/examples/arm_impedance_control/README.md): Show how to send arm impedance commands to the robot.
+
+[Arm WASD](../python/examples/arm_wasd/README.md): Create an interface for controlling the arm with your keyboard.
+
+[Inverse Kinematics](../python/examples/inverse_kinematics/README.md): Show to interact with the [Inverse Kinematics Service](concepts/arm/arm_services.md#inverse-kinematics-service).
+
+[Network Request Callback](../python/examples/network_request_callback/README.md): Provide a callback that queries a network endpoint and then checks if the response contains a particular string.
+
+[Record Autowalk](../python/examples/record_autowalk/README.md): Create an interface for recording an Autowalk with your keyboard.
+
+[Scout - Hello Scout](../python/examples/scout/hello_scout/README.md): Introductory programming example for the Scout client, which uses the Scout web API.
+
+[Service Customization for Image Services](../python/examples/service_customization//custom_parameter_image_server/README.md): Show how to host an image service that contains an image source with custom parameters.
+
+[Service Customization for Network Compute Worker Services](../python/examples/service_customization/custom_parameter_ncb_worker/README.md): Show how to host a Network Compute Bridge Worker service that contains custom parameters.
+
+[User Nogo Region](../python/examples/user_nogo_regions/README.md): Show how to add and delete user no-go regions to create user-defined body and/or foot obstacles using the World Object service.
+
+#### Updated
+
+[Area_callback](../python/examples/area_callback/README.md): Added `lease_client.take()` call.
+
+[Arm_constrained_manipulation](../python/examples/arm_constrained_manipulation/README.md): Improved documentation, introduced the position control loop for constrained manipulation and fixed bugs in setting position and velocity variables.
+
+[Arm Impedence_Control](../python/examples/arm_impedance_control/README.md): Added impedance feedback.
+
+[Estop](../python/examples/estop/README.md): Added feedback in GUI.
+
+[Gripper Camera Params](../python/examples/gripper_camera_params/README.md): Made all gripper camera parameters configurable.
+
+[Hello_spot](../python/examples/hello_spot/README.md): Updated body control command.
+
+[Replay Mission](../python/examples/replay_mission/README.md): Split timeout parameter into upload timeout and mission timeout.
+
+[Spot CAM](../python/examples/spot_cam/README.md)
+
+- Added compositor get/set reticle calls.
+- Removed network settings calls.
+- Added get/set ptz focus calls.
+- Added `exposure_mode` and `exposure_duration` in `StreamQualityCommand`.
+
+[Spot Detect and Follow](../python/examples/spot_detect_and_follow/README.md)
+
+- Added documentation for running it as a Spot Extension.
+- Added authentication through payload credentials.
+
+[Payloads](../python/examples/payloads/README.md): Updated example to work with robots that do not have an arm.
+
+[Remote Mission Service](../python/examples/remote_mission_service/README.md): Updated example to use custom parameters.
 
 ## 3.2.3
 
@@ -49,7 +285,7 @@ Fixed issues relating to GraphNav Area Callbacks and loop closures where connect
 
 Updated Fetch tutorial with information to run on CORE I/O payload.
 
-Added [Getting Started](scout/index.md#getting-started) section in Scout documentation.
+Added [Getting Started](concepts/about_scout.md) section in Scout documentation.
 
 Removed unused imports in the protobuf files `protos/bosdyn/api/autowalk/walks.proto`, `protos/bosdyn/api/graph_nav/area_callback.proto`, `protos/bosdyn/api/graph_nav/graph_nav.proto`, `protos/bosdyn/api/mission/nodes.proto`.
 
@@ -188,7 +424,7 @@ Improved Choreography documentation with 3.2 functionality and API changes.
 
 Updated the lease usage in the Fetch tutorial.
 
-Updated DAQ Tutorial documentation with information on how to convert the tutorial into a Spot Extension to run on the CORE I/O.
+Updated the Data Acquisition Tutorial documentation with information on how to convert the tutorial into a Spot Extension to run on the CORE I/O.
 
 Added documentation on thermal SpotCAM images [here](concepts/data_acquisition_thermal_raw.md).
 

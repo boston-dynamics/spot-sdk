@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -166,16 +166,15 @@ class FanOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
                     response.status = remote_pb2.TickResponse.STATUS_SUCCESS
                 elif (feedback_response.status == feedback_status_codes.STATUS_TEMPERATURE_STOP):
                     response.status = remote_pb2.TickResponse.STATUS_FAILURE
-                    response.error_message = "Temperature got too high to continue keeping fans off."
+                    response.error_message = 'Temperature got too high to continue keeping fans off.'
                 elif (feedback_response.status == feedback_status_codes.STATUS_OVERRIDDEN_BY_COMMAND
                      ):
                     response.status = remote_pb2.TickResponse.STATUS_FAILURE
                     #Honestly not sure how this would be possible given that this service should be holding the fan lease and only sends one request, but good to have a catch anyway
-                    response.error_message = "Another fan command unexpectedly came in and superseded this one."
+                    response.error_message = 'Another fan command unexpectedly came in and superseded this one.'
                 else:
                     response.status = remote_pb2.TickResponse.STATUS_FAILURE
-                    response.error_message = 'Unexpected feedback status "{}"!'.format(
-                        feedback_response.status)
+                    response.error_message = f'Unexpected feedback status "{feedback_response.status}"!'
                 return
 
         response.status = remote_pb2.TickResponse.STATUS_RUNNING
@@ -196,8 +195,7 @@ class FanOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
 
         # Provided more than one lease for the resource!
         response.header.error.code = header_pb2.CommonError.CODE_INVALID_REQUEST
-        response.header.error.message = '{} leases on resource {}'.format(
-            len(matching_leases), self.RESOURCE)
+        response.header.error.message = f'{len(matching_leases)} leases on resource {self.RESOURCE}'
         return None
 
     def EstablishSession(self, request, context):
@@ -313,7 +311,7 @@ if __name__ == '__main__':
     setup_logging(options.verbose)
 
     # Create and authenticate a bosdyn robot object.
-    sdk = bosdyn.client.create_standard_sdk("FanOffMissionServiceSDK")
+    sdk = bosdyn.client.create_standard_sdk('FanOffMissionServiceSDK')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
 

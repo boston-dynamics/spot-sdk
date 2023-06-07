@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -42,8 +42,17 @@ message Payload {
     SE3Pose body_tform_payload = 7;
     // The pose of the payload relative to the mount frame.
     SE3Pose mount_tform_payload = 8;
-    // Optional - mount frame_name (if not included, payload is assumed to be in the body mount frame)
+    // Optional - mount frame_name (if not included, payload is assumed to be in the body mount
+    // frame)
     MountFrameName mount_frame_name = 13;
+    // Number of seconds to wait between heartbeats before assuming payload is no longer live
+    // If unset (0) liveness checks will be disabled for this service.
+    double liveness_timeout_secs = 15;
+    // IP address of the payload for the robot to ping
+    // If left empty, assume that the payload will send heartbeats
+    string ipv4_address = 16;
+    // In mbps (10, 100, 1000, etc)
+    int32 link_speed = 17;
     // The mass and volume properties of the payload.
     PayloadMassVolumeProperties mass_volume_properties = 10;
     // A list of possible physical configurations for the payload.
@@ -60,7 +69,8 @@ message PayloadPreset {
     string description = 2;
     // The pose of the payload relative to the body frame.
     SE3Pose mount_tform_payload = 3;
-    // Optional - mount frame_name (if not included, payload is assumed to be in the body mount frame)
+    // Optional - mount frame_name (if not included, payload is assumed to be in the body mount
+    // frame)
     MountFrameName mount_frame_name = 6;
     // The mass and volume properties of the payload.
     PayloadMassVolumeProperties mass_volume_properties = 4;
@@ -130,14 +140,14 @@ message ListPayloadsResponse {
     repeated Payload payloads = 2;
 }
 
-// Payloads are defined relative to a frame on the robot. These are the possible frames. 
+// Payloads are defined relative to a frame on the robot. These are the possible frames.
 enum MountFrameName {
-    // The is the default. For backwards compatibility, we assume unknown means body mount frame. 
+    // This is the default. For backwards compatibility, we assume unknown means body mount frame.
     MOUNT_FRAME_UNKNOWN = 0;
-    // The body payload mount frame, as defined in documentation. 
+    // The body payload mount frame, as defined in documentation.
     MOUNT_FRAME_BODY_PAYLOAD = 1;
-    // The gripper payload mount frame, as defined in documentation. 
+    // The gripper payload mount frame, as defined in documentation.
     MOUNT_FRAME_GRIPPER_PAYLOAD = 2;
-    // The wrist link frame, as defined in the gripper CAD and documentation. 
+    // The wrist link frame, as defined in the gripper CAD and documentation.
     MOUNT_FRAME_WR1 = 3;
 }

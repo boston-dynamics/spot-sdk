@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -44,33 +44,33 @@ def print_response_from_robot(response):
         print(response.header.error)
     else:
         params = response.params
-
         print_line('Resolution', mode_to_resolution_str(params.camera_mode))
-        print_line('Brightness', '{:.2f}'.format((params.brightness.value)))
-        print_line('Contrast', '{:.2f}'.format(params.contrast.value))
-        print_line('Saturation', '{:.2f}'.format(params.saturation.value))
-        print_line('Gain', '{:.2f}'.format(params.gain.value))
+        print_line('Brightness', f'{params.brightness.value:.2f}')
+        print_line('Contrast', f'{params.contrast.value:.2f}')
+        print_line('Saturation', f'{params.saturation.value:.2f}')
+        print_line('Gain', f'{params.gain.value:.2f}')
 
         if params.HasField('focus_absolute'):
-            print_line('Focus', 'manual (' + '{:.2f}'.format(params.focus_absolute.value) + ')')
+            print_line('Focus', f'manual ({params.focus_absolute.value:.2f})')
         else:
             print_line('Focus', 'auto')
 
         if params.HasField('exposure_absolute'):
-            print_line('Exposure',
-                       'manual (' + '{:.2f}'.format(params.exposure_absolute.value) + ')')
+            print_line('Exposure', f'manual ({params.exposure_absolute.value:.2f})')
         else:
             print_line('Exposure', 'auto')
 
         if not params.HasField('exposure_roi'):
             print_line('Exposure ROI', 'unset')
         else:
+            exposure_roi_percentage_x = params.exposure_roi.roi_percentage_in_image.x
+            exposure_roi_percentage_y = params.exposure_roi.roi_percentage_in_image.y
+            roi_window_size = gripper_camera_param_pb2.RoiParameters.RoiWindowSize.Name(
+                params.exposure_roi.window_size)
             print_line(
                 'Exposure ROI',
-                '(' + '{:.2f}, {:.2f}'.format(params.exposure_roi.roi_percentage_in_image.x,
-                                              params.exposure_roi.roi_percentage_in_image.y) +
-                ') window size: ' + gripper_camera_param_pb2.RoiParameters.RoiWindowSize.Name(
-                    params.exposure_roi.window_size))
+                f'({exposure_roi_percentage_x:.2f}, {exposure_roi_percentage_y:.2f}) '
+                f'window size: {roi_window_size}')
 
         print_line('Draw focus ROI', str(params.draw_focus_roi_rectangle.value))
 
@@ -82,12 +82,14 @@ def print_response_from_robot(response):
         if not params.HasField('focus_roi'):
             print_line('Focus ROI', 'unset')
         else:
+            focus_roi_percentage_x = params.focus_roi.roi_percentage_in_image.x
+            focus_roi_percentage_y = params.focus_roi.roi_percentage_in_image.y
+            roi_window_size = gripper_camera_param_pb2.RoiParameters.RoiWindowSize.Name(
+                params.focus_roi.window_size)
+
             print_line(
-                'Focus ROI',
-                '(' + '{:.2f}, {:.2f}'.format(params.focus_roi.roi_percentage_in_image.x,
-                                              params.focus_roi.roi_percentage_in_image.y) +
-                ') window size: ' + gripper_camera_param_pb2.RoiParameters.RoiWindowSize.Name(
-                    params.focus_roi.window_size))
+                'Focus ROI', f'({focus_roi_percentage_x:.2f}, {focus_roi_percentage_y:.2f}) '
+                f'window size: {roi_window_size}')
 
         if params.led_mode == gripper_camera_param_pb2.GripperCameraParams.LED_MODE_UNKNOWN:
             print_line('LED mode', 'LED_MODE_OFF')
@@ -98,31 +100,50 @@ def print_response_from_robot(response):
         if not params.HasField('led_torch_brightness'):
             print_line('LED torch brightness', 'unset')
         else:
-            print_line('LED torch brightness', '{:.2f}'.format(params.led_torch_brightness.value))
+            print_line('LED torch brightness', f'{params.led_torch_brightness.value:.2f}')
+
+        if not params.HasField('gamma'):
+            print_line('gamma', 'unset')
+        else:
+            print_line('gamma', f'{params.gamma.value:.2f}')
+
+        if not params.HasField('sharpness'):
+            print_line('sharpness', 'unset')
+        else:
+            print_line('sharpness', f'{params.sharpness.value:.2f}')
+
+        if not params.HasField('white_balance_temperature') and not params.HasField(
+                'white_balance_temperature_auto'):
+            print_line('white_balance_temperature', 'unset')
+        elif params.HasField('white_balance_temperature'):
+            print_line('white_balance_temperature',
+                       f'manual ({params.white_balance_temperature.value:.2f})')
+        elif params.HasField('white_balance_temperature_auto'):
+            print_line('white_balance_temperature', 'auto')
 
     return True
 
 
 def print_line(label, value):
-    print(label + ' ' + ''.rjust(35 - len(label), '.') + ' ' + value)
+    print(f'{label} {"".rjust(35 - len(label), ".")} {value}')
 
 
 def mode_to_resolution_str(mode):
-    if mode == gripper_camera_param_pb2.GripperCameraParams.MODE_640_480_120FPS_UYVY:
+    if mode == gripper_camera_param_pb2.GripperCameraParams.MODE_640_480:
         return '640x480'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_1280_720_60FPS_UYVY:
+    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_1280_720:
         return '1280x720'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_1920_1080_60FPS_MJPG:
+    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_1920_1080:
         return '1920x1080'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_3840_2160_30FPS_MJPG:
+    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_3840_2160:
         return '3840x2160'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_4096_2160_30FPS_MJPG:
+    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_4096_2160:
         return '4096x2160'
-    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_4208_3120_20FPS_MJPG:
+    elif mode == gripper_camera_param_pb2.GripperCameraParams.MODE_4208_3120:
         return '4208x3120'
     return str(mode)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main(sys.argv[1:]):
         sys.exit(1)

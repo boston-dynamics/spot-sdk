@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -51,7 +51,6 @@ found in the SDK's docs/python directory. That will help you get your Python pro
 1. Remember, you will need to launch a software e-stop separately. The E-Stop programming example is [here](../estop/README.md).
 2. Make sure the Motor Enable button on the Spot rear panel is depressed.
 3. Make sure Spot is sitting upright, with the battery compartment on the side closest the floor.
-4. Make sure Spot is about 1 meter away from the door, facing the door. Manually position the robot before running this script.
 
 ## Setup Dependencies
 

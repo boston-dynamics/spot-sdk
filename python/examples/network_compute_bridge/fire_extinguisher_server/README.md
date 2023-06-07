@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -56,8 +56,8 @@ sudo docker run -d --name retinanet_server --network host --env BOSDYN_CLIENT_US
 
 - `$PORT` is the port to use for the server on the machine the server is running on
 - `$ROBOT_IP` is the IP address or hostname of your Spot.
-- `$USERNAME` is the username for the robot
-- `$PASSWORD` is the password for the robot
+- `BOSDYN_CLIENT_USERNAME` is the environment variable for the username for the robot
+- `BOSDYN_CLIENT_PASSWORD` is the environment variable for the password for the robot
 
 To run this example on a CORE I/O, run:
 

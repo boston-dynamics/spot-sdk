@@ -1,12 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Example to test the functionality of a bosdyn.api.DataAcquisitionPluginService in development."""
-from __future__ import print_function
-
 import argparse
 import datetime
 import functools
@@ -16,7 +14,7 @@ import sys
 import time
 
 # Logger for all the debug information from the tests.
-_LOGGER = logging.getLogger("Plugin Tester")
+_LOGGER = logging.getLogger('Plugin Tester')
 
 from testing_helpers import (log_debug_information, run_test, test_directory_registration,
                              test_if_service_has_active_service_faults,
@@ -78,58 +76,58 @@ def test_if_data_sources_are_available(plugin_client, main_daq_client, verbose):
     """
     plugin_service_info = plugin_client.get_service_info()
     # Check that the data source is not an ImageCapability, since these will only
-    # be added by the DAQ service for image services.
+    # be added by the Data Acquisition service for image services.
     if len(plugin_service_info.image_sources) > 0:
         _LOGGER.error(
-            "A DataAcquisitionPluginService is not allowed to advertise ImageCapabilities. These "
-            "will be created by the main, on-robot data acquisition service for all ImageService services."
+            'A DataAcquisitionPluginService is not allowed to advertise ImageCapabilities. These '
+            'will be created by the main, on-robot data acquisition service for all ImageService services.'
         )
         if verbose:
-            _LOGGER.info("Capabilities found for the plugin service: %s", plugin_service_info)
+            _LOGGER.info('Capabilities found for the plugin service: %s', plugin_service_info)
         return False, []
 
-    # Get the data sources from the on-robot DAQ service.
+    # Get the data sources from the on-robot Data Acquisition service.
     main_daq_service_info = main_daq_client.get_service_info()
     main_daq_data_sources = {src.name for src in main_daq_service_info.data_sources}
 
     # Iterate through all the plugin service's data sources and make sure they appear in the list of all data
-    # sources from the DAQ service.
+    # sources from the Data Acquisition service.
     data_source_names_not_found = set()
-    _LOGGER.info("The following capabilities are advertised by the plugin: ")
+    _LOGGER.info('The following capabilities are advertised by the plugin: ')
     for data_source in plugin_service_info.data_sources:
-        _LOGGER.info("Plugin data source: %s", data_source)
+        _LOGGER.info('Plugin data source: %s', data_source)
         if data_source.name not in main_daq_data_sources:
             data_source_names_not_found.add(data_source.name)
 
         if not data_source.description:
             _LOGGER.warning(
-                "The DataAcquisitionCapability %s has no 'description' field populated and will "
-                "not appear in the tablet.", data_source.name)
+                'The DataAcquisitionCapability %s has no \'description\' field populated and will '
+                'not appear in the tablet.', data_source.name)
 
     if len(data_source_names_not_found) == len(plugin_service_info.data_sources):
         _LOGGER.error(
-            "None of the plugin's data sources are being detected by the data acquisition "
-            "service. Try rebooting the robot and restarting the plugin service.")
+            'None of the plugin\'s data sources are being detected by the data acquisition '
+            'service. Try rebooting the robot and restarting the plugin service.')
         if verbose:
             _LOGGER.info(
-                "The data acquisition service's complete set of DataAcquisitionCapability names: %s",
+                'The data acquisition service\'s complete set of DataAcquisitionCapability names: %s',
                 main_daq_data_sources)
         return False, []
 
     if len(data_source_names_not_found) > 0:
         # Missing plugin data sources in the daq service's set of data-sources.
-        missing_srcs_string = ""
+        missing_srcs_string = ''
         for index, src_name in enumerate(data_source_names_not_found):
             missing_srcs_string += src_name
             if index != len(data_source_names_not_found) - 1:
-                missing_srcs_string += ", "
+                missing_srcs_string += ', '
         _LOGGER.error(
-            "The following data sources are not appearing in the data acquisition service: %s."
-            "Make sure the DataAcquisitionCapability name field is unique amongst all other data capabilities.",
+            'The following data sources are not appearing in the data acquisition service: %s.'
+            'Make sure the DataAcquisitionCapability name field is unique amongst all other data capabilities.',
             missing_srcs_string)
         if verbose:
             _LOGGER.info(
-                "The data acquisition service's complete set of DataAcquisitionCapability names: %s",
+                'The data acquisition service\'s complete set of DataAcquisitionCapability names: %s',
                 main_daq_data_sources)
         return False, []
 
@@ -159,22 +157,22 @@ def acquire_data_and_check_errors(acquisition_request, data_acq_client, capabili
         acquire_data_request_id = data_acq_client.acquire_data(acquisition_request, action_name,
                                                                group_name)
     except InvalidRequestError as err:
-        _LOGGER.error("The AcquireData RPC to the data-acquisition service for %s was invalid: %s",
+        _LOGGER.error('The AcquireData RPC to the data-acquisition service for %s was invalid: %s',
                       capability_name, err.error_message)
         if verbose:
             _LOGGER.info(
-                "The capture action ID associated with the request: %s",
+                'The capture action ID associated with the request: %s',
                 data_acquisition_pb2.CaptureActionId(action_name=action_name,
                                                      group_name=group_name))
             log_debug_information(err, acquisition_request)
         return False, acquire_data_request_id
     except ResponseError as err:
         _LOGGER.error(
-            "Exception raised when testing the AcquireData RPC to the data-acquisition service for %s: %s",
+            'Exception raised when testing the AcquireData RPC to the data-acquisition service for %s: %s',
             capability_name, err)
         if verbose:
             _LOGGER.info(
-                "The capture action ID associated with the request: %s",
+                'The capture action ID associated with the request: %s',
                 data_acquisition_pb2.CaptureActionId(action_name=action_name,
                                                      group_name=group_name))
             log_debug_information(err, acquisition_request)
@@ -205,7 +203,7 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
             get_status_response = client.get_status(request_id)
         except ResponseError as err:
             _LOGGER.error(
-                "Exception raised when monitoring the status of request %s for data '%s' with action_name '%s'.",
+                'Exception raised when monitoring the status of request %s for data \'%s\' with action_name \'%s\'.',
                 request_id, capability_name, action_name)
             if verbose:
                 log_debug_information(err)
@@ -215,11 +213,11 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
             return True
         elif get_status_response.status in kAcquisitionFailedStatuses:
             _LOGGER.error(
-                "Request %s for data '%s' with action_name '%s' failed the GetStatus RPC with status %s.",
+                'Request %s for data \'%s\' with action_name \'%s\' failed the GetStatus RPC with status %s.',
                 request_id, capability_name, action_name,
                 data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status))
             if verbose:
-                _LOGGER.info("The full GetStatus response: %s", get_status_response)
+                _LOGGER.info('The full GetStatus response: %s', get_status_response)
             return False
         elif get_status_response.status in kAcquisitionContinuesStatuses:
             # Sleep briefly, then re-attempt to make a GetStatus RPC to see if the acquisition has completed.
@@ -228,15 +226,15 @@ def monitor_status_until_complete_or_failed(request_id, client, capability_name,
             continue
         else:
             _LOGGER.error(
-                "Unexpected status %s when monitoring request %s for data '%s' with action_name '%s'.",
+                'Unexpected status %s when monitoring request %s for data \'%s\' with action_name \'%s\'.',
                 data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status),
                 request_id, capability_name, action_name)
             if verbose:
-                _LOGGER.info("The full GetStatus response: %s", get_status_response)
+                _LOGGER.info('The full GetStatus response: %s', get_status_response)
             return False
 
     _LOGGER.warning(
-        "No result to the GetStatus RPC within %s seconds for request %s of data '%s' with action_name '%s'.",
+        'No result to the GetStatus RPC within %s seconds for request %s of data \'%s\' with action_name \'%s\'.',
         kMonitorStatusTimeoutSecs, request_id, capability_name, action_name)
     return True
 
@@ -262,7 +260,7 @@ def test_capabilities_acquires_and_saves(capabilities, data_acq_client, data_sto
     success = True
     # Test each capability individually.
     for capability in capabilities:
-        action_name = "acquire and status check: " + capability.name
+        action_name = f'acquire and status check: {capability.name}'
         acquisition_request = data_acquisition_pb2.AcquisitionRequestList()
         acquisition_request.data_captures.extend(
             [data_acquisition_pb2.DataCapture(name=capability.name)])
@@ -273,11 +271,11 @@ def test_capabilities_acquires_and_saves(capabilities, data_acq_client, data_sto
 
     # Test requesting all the capabilities at once (if there are more than one data capabilities available).
     if len(capabilities) > 1:
-        action_name = "acquire and status check: all data at once"
+        action_name = 'acquire and status check: all data at once'
         acquisition_request = data_acquisition_pb2.AcquisitionRequestList()
         acquisition_request.data_captures.extend(
             [data_acquisition_pb2.DataCapture(name=capability.name) for capability in capabilities])
-        all_capabilities_success = acquire_get_status_and_save(acquisition_request, "all data",
+        all_capabilities_success = acquire_get_status_and_save(acquisition_request, 'all data',
                                                                action_name, group_name,
                                                                data_acq_client, data_store_client,
                                                                verbose)
@@ -324,16 +322,16 @@ def acquire_get_status_and_save(acquisition_request, capability_name, action_nam
             if len(saved_capture_actions) == 0:
                 # Nothing saved with a matching action and group name!
                 _LOGGER.error(
-                    "The request %s for data '%s' with action_name '%s' did NOT save to the data "
-                    "acquisition store or returned prematurely with a STATUS_COMPLETE in the GetStatus RPC.",
+                    'The request %s for data \'%s\' with action_name \'%s\' did NOT save to the data '
+                    'acquisition store or returned prematurely with a STATUS_COMPLETE in the GetStatus RPC.',
                     acquired_request_id, capability_name, action_name)
                 if verbose:
-                    _LOGGER.info("ListCaptureAction RPC's query parameters: ", query_params)
+                    _LOGGER.info('ListCaptureAction RPC\'s query parameters: ', query_params)
                 return False
         except ResponseError as err:
             _LOGGER.error(
-                "Exception raised when checking if request %s for data '%s' with action_name '%s' was "
-                "saved in the data acquisition store.", request_id, capability_name, action_name)
+                'Exception raised when checking if request %s for data \'%s\' with action_name \'%s\' was '
+                'saved in the data acquisition store.', request_id, capability_name, action_name)
             if verbose:
                 log_debug_information(err)
             return False
@@ -364,23 +362,23 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
         cancel_res = client.cancel_acquisition(request_id)
     except CancellationFailedError as err:
         _LOGGER.error(
-            "The CancelAcquisition RPC for request %s of data '%s' with action_name '%s' failed. "
-            "Check that the CancelAcquisition RPC is implemented and working in the plugin service.",
+            'The CancelAcquisition RPC for request %s of data \'%s\' with action_name \'%s\' failed. '
+            'Check that the CancelAcquisition RPC is implemented and working in the plugin service.',
             request_id, capability_name, action_name)
         if verbose:
             log_debug_information(err)
         return False
     except RequestIdDoesNotExistError as err:
         _LOGGER.error(
-            "The request ID %s for data '%s' with action_name '%s' does not exist. Something may have "
-            "gone wrong with the AcquireData request or the id was not saved/deleted by the plugin service.",
+            'The request ID %s for data \'%s\' with action_name \'%s\' does not exist. Something may have '
+            'gone wrong with the AcquireData request or the id was not saved/deleted by the plugin service.',
             request_id, capability_name, action_name)
         if verbose:
             log_debug_information(err)
         return False
     except ResponseError as err:
         _LOGGER.error(
-            "Exception raised when cancelling request %s for data '%s' with action_name '%s'.",
+            'Exception raised when cancelling request %s for data \'%s\' with action_name \'%s\'.',
             request_id, capability_name, action_name)
         if verbose:
             log_debug_information(err)
@@ -395,8 +393,8 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
             get_status_response = client.get_status(request_id)
         except ResponseError as err:
             _LOGGER.error(
-                "Exception raised when monitoring the cancellation status of request %s for data '%s'"
-                " with action_name '%s'.", request_id, capability_name, action_name)
+                'Exception raised when monitoring the cancellation status of request %s for data \'%s\''
+                ' with action_name \'%s\'.', request_id, capability_name, action_name)
             if verbose:
                 log_debug_information(err)
             return False
@@ -410,50 +408,50 @@ def cancel_request_and_monitor_status(request_id, client, capability_name, actio
             # Warning that plugin did not update status to reflect that cancel rpc was received.
             if first_time_warning:
                 _LOGGER.warning(
-                    "The plugin did not update the status to reflect that a CancelAcquisition RPC was received. Try "
-                    "setting the status as STATUS_CANCEL_IN_PROGRESS after responding to the RPC.")
-                _LOGGER.info("Request %s for data '%s' with action_name '%s", request_id,
+                    'The plugin did not update the status to reflect that a CancelAcquisition RPC was received. Try '
+                    'setting the status as STATUS_CANCEL_IN_PROGRESS after responding to the RPC.')
+                _LOGGER.info('Request %s for data \'%s\' with action_name \'%s\'', request_id,
                              capability_name, action_name)
                 if verbose:
-                    _LOGGER.info("Request %s for data '%s' with action_name '%s", request_id,
+                    _LOGGER.info('Request %s for data \'%s\' with action_name \'%s\'', request_id,
                                  capability_name, action_name)
-                    _LOGGER.info("The full GetStatus response: %s", get_status_response)
+                    _LOGGER.info('The full GetStatus response: %s', get_status_response)
                 first_time_warning = False
             # Sleep briefly, then re-attempt to make a GetStatus RPC to see if the acquisition has cancelled.
             time.sleep(0.2)
         elif get_status_response.status in kAcquisitionCancellationFailedStatuses:
             # Cancellation-specific failure.
             _LOGGER.error(
-                "The cancellation request %s for data '%s' with action_name '%s' failed the GetStatus "
-                "RPC with status %s.", request_id, capability_name, action_name,
+                'The cancellation request %s for data \'%s\' with action_name \'%s\' failed the GetStatus '
+                'RPC with status %s.', request_id, capability_name, action_name,
                 data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status))
             if verbose:
-                _LOGGER.info("The full GetStatus response: %s", get_status_response)
+                _LOGGER.info('The full GetStatus response: %s', get_status_response)
             return False
         elif get_status_response.status in kAcquisitionFailedStatuses:
             # Failed for reason other than cancellation failed statuses.
             _LOGGER.error(
-                "The cancellation request %s for data '%s' with action_name '%s' failed the GetStatus RPC with status %s."
-                "This is not an expected failure status after a CancelAcquisition RPC.", request_id,
-                capability_name, action_name,
+                'The cancellation request %s for data \'%s\' with action_name \'%s\' failed the GetStatus RPC with '
+                'status %s. This is not an expected failure status after a CancelAcquisition RPC.',
+                request_id, capability_name, action_name,
                 data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status))
             if verbose:
-                _LOGGER.info("The full GetStatus response: %s", get_status_response)
+                _LOGGER.info('The full GetStatus response: %s', get_status_response)
             return False
         else:
             _LOGGER.error(
-                "Unexpected status %s when monitoring cancellation request %s for data '%s' with action_name '%s'.",
+                'Unexpected status %s when monitoring cancellation request %s for data \'%s\' with action_name \'%s\'.',
                 data_acquisition_pb2.GetStatusResponse.Status.Name(get_status_response.status),
                 request_id, capability_name, action_name)
             if verbose:
-                _LOGGER.info("The full GetStatus response: %s", get_status_response)
+                _LOGGER.info('The full GetStatus response: %s', get_status_response)
             return False
 
         should_continue = time.time() - start_time < kMonitorStatusTimeoutSecs
 
     _LOGGER.warning(
-        "Did not get a result for the GetStatus RPC within %s seconds for request %s of data '%s' with "
-        "action_name '%s'.", kMonitorStatusTimeoutSecs, request_id, capability_name, action_name)
+        'Did not get a result for the GetStatus RPC within %s seconds for request %s of data \'%s\' with '
+        'action_name \'%s\'.', kMonitorStatusTimeoutSecs, request_id, capability_name, action_name)
     return True
 
 
@@ -478,7 +476,7 @@ def test_cancelling(capabilities, data_acq_client, group_name, verbose):
             [data_acquisition_pb2.DataCapture(name=capability.name)])
 
         # Make a request for this data capability and then attempt to cancel the request immediately after.
-        action_name = "cancel acquisition check: " + capability.name
+        action_name = f'cancel acquisition check: {capability.name}'
         request_id = data_acq_client.acquire_data(acquisition_request, action_name, group_name)
         success = cancel_request_and_monitor_status(request_id, data_acq_client, capability.name,
                                                     action_name, verbose)
@@ -514,8 +512,8 @@ def main(argv):
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument(
-        "--service-name", required=True, type=str,
-        help="Unique service name for the data acquisition plugin service being tested.")
+        '--service-name', required=True, type=str,
+        help='Unique service name for the data acquisition plugin service being tested.')
     parser.add_argument('--destination-folder',
                         help=('The folder where the data should be downloaded to.'), required=False,
                         default='.')
@@ -537,8 +535,8 @@ def main(argv):
     robot.sync_with_directory()
 
     # Create a group name for all data collected during this test of the plugin service
-    group_name = "Plugin [%s] Test %s" % (options.service_name,
-                                          datetime.datetime.today().strftime("%b %d %Y %H:%M:%S"))
+    today = datetime.datetime.today().strftime('%b %d %Y %H:%M:%S')
+    group_name = f'Plugin [{options.service_name}] Test {today}'
 
     # Create a client for the data-acquisition service on robot.
     main_daq_client = robot.ensure_client(DataAcquisitionClient.default_service_name)
@@ -547,8 +545,9 @@ def main(argv):
     data_store_client = robot.ensure_client(DataAcquisitionStoreClient.default_service_name)
 
     # Test the directory registration of the plugin.
-    run_test(test_directory_registration, "DAQ Plugin is registered in the robot's directory.",
-             robot, options.service_name, DataAcquisitionPluginClient.service_type)
+    run_test(test_directory_registration,
+             'Data Acquisition Plugin is registered in the robot\'s directory.', robot,
+             options.service_name, DataAcquisitionPluginClient.service_type)
 
     # Now create a data acquisition plugin client for the plugin service since we know it is
     # registered in the directory.
@@ -557,54 +556,53 @@ def main(argv):
 
     # Test that the gRPC communications go through to the plugin service.
     run_test(test_if_service_is_reachable,
-             ("Plugin's directory registration networking information "
-              "is correct and the plugin can be communicated with via gRPC."),
+             ('Plugin\'s directory registration networking information '
+              'is correct and the plugin can be communicated with via gRPC.'),
              plugin_daq_client.get_service_info)
 
     # Test if there are any active service faults thrown by the plugin service in the current
     # robot state proto.
-    run_test(test_if_service_has_active_service_faults, "The plugin service has no active service "
-             "faults in the current robot state.", robot, options.service_name)
+    run_test(test_if_service_has_active_service_faults, 'The plugin service has no active service '
+             'faults in the current robot state.', robot, options.service_name)
 
     # Test that the data-acquisition plugin service is detected by the data acquisition service
     # on robot and that the plugin's data sources are listed as well.
     _LOGGER.info(
-        "TEST: Plugin is recognized by the data acquisition service and its data sources are present."
+        'TEST: Plugin is recognized by the data acquisition service and its data sources are present.'
     )
     success, data_sources = test_if_data_sources_are_available(plugin_daq_client, main_daq_client,
                                                                options.verbose)
     if success:
-        _LOGGER.info("SUCCESS!\n")
+        _LOGGER.info('SUCCESS!\n')
     else:
         return False
 
     # Test that each data capability successfully gets acquired and saved to the data store by monitoring
     # the GetStatus request and then checking if the action id is in the data store afterwards.
     run_test(test_capabilities_acquires_and_saves,
-             ("All data sources are successfully acquired, respond "
-              "with 'status complete' to the GetStatus RPC, and are saved to the data store."),
+             ('All data sources are successfully acquired, respond '
+              'with \'status complete\' to the GetStatus RPC, and are saved to the data store.'),
              data_sources, main_daq_client, data_store_client, group_name, options.verbose)
 
     # Test that each data capability can successfully be cancelled with no errors.
-    run_test(test_cancelling, "All data sources can be cancelled with the CancelAcquisition RPC.",
+    run_test(test_cancelling, 'All data sources can be cancelled with the CancelAcquisition RPC.',
              data_sources, main_daq_client, group_name, options.verbose)
 
     # Test that after running multiple different tests that send each RPC to the plugin service, check
     # that there are still no service faults in the robot state.
     run_test(test_if_service_has_active_service_faults,
-             ("The plugin service has no active service "
-              "faults after running multiple tests sending RPCs to the plugin service."), robot,
+             ('The plugin service has no active service '
+              'faults after running multiple tests sending RPCs to the plugin service.'), robot,
              options.service_name)
 
     # Test downloading all of the capture data via the REST endpoint and save the captured data to a
     # specific location.
     run_test(test_downloading_all_data_via_REST,
-             "All of the captured data can be downloaded via the "
-             "REST endpoint.", data_store_client, group_name, options.hostname, robot,
-             options.destination_folder)
+             'All of the captured data can be downloaded via the REST endpoint.', data_store_client,
+             group_name, options.hostname, robot, options.destination_folder)
 
-    _LOGGER.info("Data is downloaded to: %s", options.destination_folder)
-    _LOGGER.info("All tests passed for plugin service %s", options.service_name)
+    _LOGGER.info('Data is downloaded to: %s', options.destination_folder)
+    _LOGGER.info('All tests passed for plugin service %s', options.service_name)
     return True
 
 

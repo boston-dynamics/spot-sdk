@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,8 +8,7 @@ import math
 import numbers
 
 import numpy
-import six
-from deprecated import deprecated
+from deprecated.sphinx import deprecated
 
 from bosdyn.api import geometry_pb2
 
@@ -995,6 +994,60 @@ class Quat(object):
 
             result = (s0 * v0) + (s1 * v1)
         return Quat(result[0], result[1], result[2], result[3])
+
+    @staticmethod
+    def from_two_vectors(u_in: Vec3, v_in: Vec3):
+        """ Returns a quaternion representing the rotation from u to v."""
+        # Normalizing by max avoids all sorts of underflow and overflow issues when we multiply
+        # terms together, including any issues in calculating the norm itself.
+        max_u = max([math.fabs(u_in[0]), math.fabs(u_in[1]), math.fabs(u_in[2])])
+        max_v = max([math.fabs(v_in[0]), math.fabs(v_in[1]), math.fabs(v_in[2])])
+        if max_u == 0 or max_v == 0:
+            # Undefined; return identity
+            return Quat(1, 0, 0, 0)
+        u = u_in * (1 / max_u)
+        v = v_in * (1 / max_v)
+
+        u_dot_v = u.dot(v)
+        u_dot_u = u.dot(u)
+        v_dot_v = v.dot(v)
+        norm_u_norm_v = math.sqrt(u_dot_u * v_dot_v)
+
+        if u_dot_v < 0:
+            #When this is the case, things get annoying because the |u||v| + u.v (see u_dot_v >= 0
+            #case below) has cancellation; this leads us to a different formula that is sensitive to
+            #the magnitude of c. If the vectors are close to antipodal, the cross product itself can
+            #be ill conditioned. Algebraically, u x (u + v) is equal to u x v, but, the result is
+            #much more likely to be orthogonal to u and v for extreme cases.
+            c = u.cross(u + v)
+            max_c = max([math.fabs(c[0]), math.fabs(c[1]), math.fabs(c[2])])
+            if max_c == 0:
+                # We pick an orthogonal axis, avoiding the smallest one
+                if abs(u[0]) > abs(u[1]):
+                    if abs(u[1]) > abs(u[2]):
+                        q = Quat(0, -u[1], u[0], 0)
+                        return q.normalize()
+                    else:
+                        q = Quat(0, u[2], 0, -u[0])
+                        return q.normalize()
+                elif abs(u[0]) > abs(u[2]):
+                    q = Quat(0, -u[1], u[0], 0)
+                    return q.normalize()
+                else:
+                    q = Quat(0, 0, -u[2], u[1])
+                    return q.normalize()
+            c_scl = (1 / max_c) * c
+            norm2_c_scl = c_scl.dot(c_scl)
+            tmp = (norm_u_norm_v - u_dot_v) * c_scl
+            q = Quat(norm2_c_scl * max_c, tmp[0], tmp[1], tmp[2])
+            return q.normalize()
+        else:
+            c = u.cross(v)
+            q = Quat(norm_u_norm_v + u_dot_v, c[0], c[1], c[2])
+            return q.normalize()
+
+    def conj(self):
+        return Quat(self.w, -self.x, -self.y, -self.z)
 
 
 def pose_to_xyz_yaw(A_tform_B):

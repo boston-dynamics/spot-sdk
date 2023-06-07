@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -181,8 +181,7 @@ class PowerOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
                         self.sessions_by_id[session_id] = (command_future, None)
                     else:
                         response.status = remote_pb2.TickResponse.STATUS_FAILURE
-                        response.error_message = 'Unexpected feedback status "{}"!'.format(
-                            safe_off_status_codes.Status.Name(status))
+                        response.error_message = f'Unexpected feedback status "{safe_off_status_codes.Status.Name(status)}"!'
                 else:
                     response.status = remote_pb2.TickResponse.STATUS_FAILURE
                     response.error_message = cmd_status_codes.Status.Name(command_response.status)
@@ -206,8 +205,7 @@ class PowerOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
 
         # Provided more than one lease for the resource!
         response.header.error.code = header_pb2.CommonError.CODE_INVALID_REQUEST
-        response.header.error.message = '{} leases on resource {}'.format(
-            len(matching_leases), self.RESOURCE)
+        response.header.error.message = f'{len(matching_leases)} leases on resource {self.RESOURCE}'
         return None
 
     def EstablishSession(self, request, context):
@@ -320,7 +318,7 @@ if __name__ == '__main__':
     setup_logging(options.verbose)
 
     # Create and authenticate a bosdyn robot object.
-    sdk = bosdyn.client.create_standard_sdk("PowerOffMissionServiceSDK")
+    sdk = bosdyn.client.create_standard_sdk('PowerOffMissionServiceSDK')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
 

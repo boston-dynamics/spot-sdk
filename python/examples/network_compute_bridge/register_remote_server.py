@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -41,9 +41,9 @@ def main(argv):
 
     options = parser.parse_args(argv)
 
-    kServiceAuthority = options.authority or "remote-server-worker.spot.robot"
+    kServiceAuthority = options.authority or 'remote-server-worker.spot.robot'
 
-    sdk = bosdyn.client.create_standard_sdk("register_remote_server")
+    sdk = bosdyn.client.create_standard_sdk('register_remote_server')
 
     robot = sdk.create_robot(options.hostname)
 
@@ -59,14 +59,14 @@ def main(argv):
     services = directory_client.list()
     for s in services:
         if s.name == options.service_name:
-            print("WARNING: existing service with name: \"" + options.service_name + "\"")
+            print(f'WARNING: existing service with name: "{options.service_name}"')
 
             if options.force:
-                print("Removing that client...")
+                print('Removing that client...')
                 directory_registration_client.unregister(options.service_name)
             else:
-                print("Pass the --force option to remove that client.")
-                print("Exit.")
+                print('Pass the --force option to remove that client.')
+                print('Exit.')
                 sys.exit(1)
             break
 
@@ -74,7 +74,7 @@ def main(argv):
     print('Attempting to register ' + options.server_ip + ':' + options.server_port + ' onto ' +
           options.hostname + ' directory...')
     directory_registration_client.register(options.service_name,
-                                           "bosdyn.api.NetworkComputeBridgeWorker",
+                                           'bosdyn.api.NetworkComputeBridgeWorker',
                                            kServiceAuthority, options.server_ip,
                                            int(options.server_port))
     print('Done.')

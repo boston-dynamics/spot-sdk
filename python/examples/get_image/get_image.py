@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -68,9 +68,9 @@ def main(argv):
     # Optionally list image sources on robot.
     if options.list:
         image_sources = image_client.list_image_sources()
-        print("Image sources:")
+        print('Image sources:')
         for source in image_sources:
-            print("\t" + source.name)
+            print('\t' + source.name)
 
     # Optionally capture one or more images.
     if options.image_sources:
@@ -86,7 +86,7 @@ def main(argv):
             num_bytes = 1  # Assume a default of 1 byte encodings.
             if image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
                 dtype = np.uint16
-                extension = ".png"
+                extension = '.png'
             else:
                 if image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_RGB_U8:
                     num_bytes = 3
@@ -97,7 +97,7 @@ def main(argv):
                 elif image.shot.image.pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16:
                     num_bytes = 2
                 dtype = np.uint8
-                extension = ".jpg"
+                extension = '.jpg'
 
             img = np.frombuffer(image.shot.image.data, dtype=dtype)
             if image.shot.image.format == image_pb2.Image.FORMAT_RAW:
@@ -117,11 +117,11 @@ def main(argv):
             # matching that of the image source.
             image_saved_path = image.source.name
             image_saved_path = image_saved_path.replace(
-                "/", '')  # Remove any slashes from the filename the image is saved at locally.
+                '/', '')  # Remove any slashes from the filename the image is saved at locally.
             cv2.imwrite(image_saved_path + extension, img)
     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main(sys.argv[1:]):
         sys.exit(1)

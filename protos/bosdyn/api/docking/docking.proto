@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -43,6 +43,8 @@ message DockingCommandRequest {
     // [Optional] Specify the prep pose behavior
     PrepPoseBehavior prep_pose_behavior = 9;
 
+    // Require the detection of the dock's fiducial
+    bool require_fiducial = 10;
 }
 
 // Response to a DockingCommandRequest
@@ -180,6 +182,8 @@ enum DockType {
     DOCK_TYPE_CONTACT_PROTOTYPE = 2;
     // Production version SpotDock
     DOCK_TYPE_SPOT_DOCK = 3;
+    // Production version SpotDock located in the dog house.
+    DOCK_TYPE_SPOT_DOGHOUSE = 4;
 }
 
 // The configuration of a range of dock ID's

@@ -1,11 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """Tutorial to show how to use the Boston Dynamics API"""
-from __future__ import print_function
 
 import argparse
 import sys
@@ -33,7 +32,7 @@ def run_query(options, query):
         time_sync_client = robot.ensure_client(TimeSyncClient.default_service_name)
         time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
         if not time_sync_endpoint.establish_timesync():
-            raise NotEstablishedError("time sync not established")
+            raise NotEstablishedError('time sync not established')
 
     # Now assemble the query to obtain a bddf file.
 
@@ -118,7 +117,7 @@ def main(argv):
         return True
     except Exception as exc:  # pylint: disable=broad-except
         logger = bosdyn.client.util.get_logger()
-        logger.error("get_index threw an exception: %s", exc)
+        logger.error('get_index threw an exception: %s', exc)
         return False
 
 

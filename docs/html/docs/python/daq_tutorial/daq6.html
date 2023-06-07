@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Part 6: Processing Collected Data &mdash; Spot 3.2.3 documentation</title>
+  <title>Part 6: Processing Collected Data &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -637,7 +679,7 @@
            <div itemprop="articleBody">
             
   <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -647,7 +689,7 @@ Development Kit License (20191101-BDSDK-SL).
 <script src="prism.js"></script><p><a class="reference internal" href="daq5.html"><span class="doc">&lt;&lt; Previous Page</span></a></p>
 <hr class="docutils" />
 <section id="part-6-processing-collected-data">
-<h1>Part 6: Processing Collected Data<a class="headerlink" href="#part-6-processing-collected-data" title="Permalink to this headline">¶</a></h1>
+<h1>Part 6: Processing Collected Data<a class="headerlink" href="#part-6-processing-collected-data" title="Permalink to this heading">¶</a></h1>
 <p>In this part of the tutorial, you will:</p>
 <ul class="simple">
 <li><p>Read and parse the data collected from a mission.</p></li>
@@ -655,15 +697,15 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Interpret position data to map recorded images to a final report.</p></li>
 </ul>
 <section id="understanding-the-data">
-<h2>Understanding the data<a class="headerlink" href="#understanding-the-data" title="Permalink to this headline">¶</a></h2>
+<h2>Understanding the data<a class="headerlink" href="#understanding-the-data" title="Permalink to this heading">¶</a></h2>
 <p>We will be using two sources of data for our processing script: the map and the downloaded data from a mission playback.</p>
-<p>The <a class="reference internal" href="../../concepts/autonomy/graphnav_map_structure.html"><span class="doc">map data</span></a> is made up of a collection of waypoints, and the edges that connect them.  The downloaded data will contain the images we recorded, and a json file that includes all other data and metadata stored during the mission.</p>
-<p>For displaying the data, we are going to use the <a class="reference external" href="../../concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">anchoring</a> defined in them map.  This will define a global “seed” frame, and all of the waypoint and data locations will be provided in that “seed” frame.  For the map, there is an <code class="docutils literal notranslate"><span class="pre">Anchoring</span></code> message defined in the map, which will have a list of anchors that provide the <code class="docutils literal notranslate"><span class="pre">seed_tform_waypoint</span></code> transforms.  For the downloaded data, we will use the <code class="docutils literal notranslate"><span class="pre">basic-position-data</span></code> metadata, which stores a <code class="docutils literal notranslate"><span class="pre">seed_tform_body</span></code> transform for each capture action.</p>
+<p>The <a class="reference internal" href="../../concepts/autonomy/graphnav_map_structure.html"><span class="doc">map data</span></a> is made up of a collection of waypoints, and the edges that connect them. The downloaded data will contain the images we recorded, and a json file that includes all other data and metadata stored during the mission.</p>
+<p>For displaying the data, we are going to use the <a class="reference external" href="../../concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">anchoring</a> defined in them map. This will define a global “seed” frame, and all of the waypoint and data locations will be provided in that “seed” frame. For the map, there is an <code class="docutils literal notranslate"><span class="pre">Anchoring</span></code> message defined in the map, which will have a list of anchors that provide the <code class="docutils literal notranslate"><span class="pre">seed_tform_waypoint</span></code> transforms. For the downloaded data, we will use the <code class="docutils literal notranslate"><span class="pre">basic-position-data</span></code> metadata, which stores a <code class="docutils literal notranslate"><span class="pre">seed_tform_body</span></code> transform for each capture action.</p>
 </section>
 <section id="writing-the-processing-script">
-<h2>Writing the processing script<a class="headerlink" href="#writing-the-processing-script" title="Permalink to this headline">¶</a></h2>
+<h2>Writing the processing script<a class="headerlink" href="#writing-the-processing-script" title="Permalink to this heading">¶</a></h2>
 <p>Copy (or <a href="files/process_data.py">download</a>)) the script below into a file called <code class="docutils literal notranslate"><span class="pre">process_data.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">~/data_capture</span></code> folder.</p>
-<p>Initial imports.  We will use matplotlib to draw the data.</p>
+<p>Initial imports. We will use matplotlib to draw the data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plot</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -672,9 +714,9 @@ Development Kit License (20191101-BDSDK-SL).
 <span class="kn">from</span> <span class="nn">bosdyn.api.graph_nav</span> <span class="kn">import</span> <span class="n">map_pb2</span>
 </pre></div>
 </div>
-<p>To extract the data we need, we will parse the <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> file that we downloaded along with the images.  This is simply a large json file, so we load it using python’s built-in json support.</p>
+<p>To extract the data we need, we will parse the <code class="docutils literal notranslate"><span class="pre">metadata.json</span></code> file that we downloaded along with the images. This is simply a large json file, so we load it using python’s built-in json support.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Display the captured images and battery data (and optionally the map edges)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the captured images and battery data (and optionally the map edges)</span>
 <span class="sd">    onto a plot of the &quot;seed&quot; frame.&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">json_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -686,19 +728,19 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <p>Note that we only want to extract data for the web cam images we took. If any other data collections took place in this mission, we
-will skip over them.  For this test we will check if the action stored anything to the “web-cam-service_video0” channel.  If you did not use the web cam example in your data collection, you can instead check for the “battery” channel in the metadata: <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">'battery'</span> <span class="pre">not</span> <span class="pre">in</span> <span class="pre">action['metadata']:</span></code>.  Images and binary data will be in the json under the “data” key, while pieces of data stored as <code class="docutils literal notranslate"><span class="pre">AssociatedMetadata</span></code> to the action will be under the “metadata” key.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="k">if</span> <span class="s1">&#39;web-cam-service_video0&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]:</span>
+will skip over them. For this test we will check if the action stored anything to the “web-cam-service_video0” channel. If you did not use the web cam example in your data collection, you can instead check for the “battery” channel in the metadata: <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">'battery'</span> <span class="pre">not</span> <span class="pre">in</span> <span class="pre">action['metadata']:</span></code>. Images and binary data will be in the json under the “data” key, while pieces of data stored as <code class="docutils literal notranslate"><span class="pre">AssociatedMetadata</span></code> to the action will be under the “metadata” key.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="k">if</span> <span class="s1">&#39;data&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">action</span> <span class="ow">or</span> <span class="s1">&#39;web-cam-service_video0&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]:</span>
             <span class="c1"># Only process actions that saved to the web-cam-service_video0 channel</span>
             <span class="k">continue</span>
 </pre></div>
 </div>
-<p>We will extract out the particular pieces of data we want to display.  From the image capture we will extract the action name and the image file name.  We assume only one image was stored on this channel.</p>
+<p>We will extract out the particular pieces of data we want to display. From the image capture we will extract the action name and the image file name. We assume only one image was stored on this channel.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">image_action</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;web-cam-service_video0&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">action_name</span> <span class="o">=</span> <span class="n">image_action</span><span class="p">[</span><span class="s1">&#39;data_id&#39;</span><span class="p">][</span><span class="s1">&#39;action_id&#39;</span><span class="p">][</span><span class="s1">&#39;action_name&#39;</span><span class="p">]</span>
         <span class="n">image_file</span> <span class="o">=</span> <span class="n">image_action</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>From the metadata, we read from the “basic-position-data” channel to get the location in the “seed” frame.  We also read the battery data that our example plugin saved to the “battery” channel.  The full set of data is appended to our list of action data and returned.</p>
+<p>From the metadata, we read from the “basic-position-data” channel to get the location in the “seed” frame. We also read the battery data that our example plugin saved to the “battery” channel. The full set of data is appended to our list of action data and returned.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="n">odom_location</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;basic-position-data&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;seed_tform_body&#39;</span><span class="p">][</span>
             <span class="s1">&#39;position&#39;</span><span class="p">]</span>
         <span class="n">battery</span> <span class="o">=</span> <span class="n">action</span><span class="p">[</span><span class="s1">&#39;metadata&#39;</span><span class="p">][</span><span class="s1">&#39;battery&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;battery_percentage&#39;</span><span class="p">]</span>
@@ -706,9 +748,9 @@ will skip over them.  For this test we will check if the action stored anything 
     <span class="k">return</span> <span class="n">out_data</span>
 </pre></div>
 </div>
-<p>We are now going to plot this extracted data along with the map.  We provide an additional argument to tweak how large the images will appear.</p>
+<p>We are now going to plot this extracted data along with the map. We provide an additional argument to tweak how large the images will appear.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">action_data</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">map_pb2</span><span class="o">.</span><span class="n">Graph</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Display the captured images and battery data (and optionally the map edges)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display the captured images and battery data (and optionally the map edges)</span>
 <span class="sd">    onto a plot of the &quot;seed&quot; frame.&quot;&quot;&quot;</span>
     <span class="n">plot</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>  <span class="c1"># Keep the x and y axes at the same scale.</span>
 </pre></div>
@@ -723,7 +765,7 @@ will skip over them.  For this test we will check if the action stored anything 
             <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">from_wp</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">to_wp</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">from_wp</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">to_wp</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
 </pre></div>
 </div>
-<p>Next we want to plot the data for each capture action.  First, we’ll load the image and figure out the aspect ratio and x and y sizing to use.</p>
+<p>Next we want to plot the data for each capture action. First, we’ll load the image and figure out the aspect ratio and x and y sizing to use.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Plot the image, battery level and label for each action.</span>
     <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">action_name</span><span class="p">,</span> <span class="n">battery_percent</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">action_data</span><span class="p">:</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">data_dir</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">)</span>
@@ -746,9 +788,9 @@ will skip over them.  For this test we will check if the action stored anything 
     <span class="n">plot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Below are the helper functions used in the drawing code above.  First, the helper to get the x and y position for each waypoint.</p>
+<p>Below are the helper functions used in the drawing code above. First, the helper to get the x and y position for each waypoint.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">anchor_positions</span><span class="p">(</span><span class="n">anchors</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Returns a dict of waypoint ids to seed positions for the given anchors.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a dict of waypoint ids to seed positions for the given anchors.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="n">a</span><span class="o">.</span><span class="n">id</span><span class="p">:</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">seed_tform_waypoint</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">seed_tform_waypoint</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">anchors</span>
     <span class="p">}</span>
@@ -757,15 +799,16 @@ will skip over them.  For this test we will check if the action stored anything 
 <p>Next, a drawing helper that draws a basic battery gauge.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">BOX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
 
+
 <span class="k">def</span> <span class="nf">draw_battery</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">fraction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Draw a simple battery gauge.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Draw a simple battery gauge.&quot;&quot;&quot;</span>
     <span class="n">box_x</span><span class="p">,</span> <span class="n">box_y</span> <span class="o">=</span> <span class="n">BOX</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="p">(</span><span class="n">BOX</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">fraction</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">fraction</span><span class="p">))</span> <span class="o">*</span> <span class="n">scale</span>
     <span class="n">plot</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">box_x</span> <span class="o">+</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">box_y</span> <span class="o">+</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">box_x</span><span class="p">,</span> <span class="n">box_y</span> <span class="o">=</span> <span class="n">BOX</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">scale</span><span class="p">,</span> <span class="n">BOX</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">scale</span>
     <span class="n">plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">box_x</span> <span class="o">+</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">box_y</span> <span class="o">+</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>All that remains is loading the correct data and passing it to these functions.  The map file will be stored in binary format in a file from the tablet.  To use the data, we will parse it into a protobuf.</p>
+<p>All that remains is loading the correct data and passing it to these functions. The map file will be stored in binary format in a file from the tablet. To use the data, we will parse it into a protobuf.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">load_graph</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">map_pb2</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -773,7 +816,7 @@ will skip over them.  For this test we will check if the action stored anything 
     <span class="k">return</span> <span class="n">graph</span>
 </pre></div>
 </div>
-<p>To read the data, we will specify a data directory that contains the unzipped contents of the data downloaded from the robot, and the graph file copied from the tablet.  We then pass this to <code class="docutils literal notranslate"><span class="pre">extract_data()</span></code> and <code class="docutils literal notranslate"><span class="pre">load_graph()</span></code> and then use that with <code class="docutils literal notranslate"><span class="pre">plot_data()</span></code>.</p>
+<p>To read the data, we will specify a data directory that contains the unzipped contents of the data downloaded from the robot, and the graph file copied from the tablet. We then pass this to <code class="docutils literal notranslate"><span class="pre">extract_data()</span></code> and <code class="docutils literal notranslate"><span class="pre">load_graph()</span></code> and then use that with <code class="docutils literal notranslate"><span class="pre">plot_data()</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">argparse</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
@@ -790,11 +833,11 @@ will skip over them.  For this test we will check if the action stored anything 
     <span class="n">plot_data</span><span class="p">(</span><span class="n">action_data</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">image_size</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">image_size</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The final result will be the map with the data collection overlayed.  Tweak the <code class="docutils literal notranslate"><span class="pre">--image-size</span></code> parameter to get something that looks good for your map size and collection density.</p>
+<p>The final result will be the map with the data collection overlayed. Tweak the <code class="docutils literal notranslate"><span class="pre">--image-size</span></code> parameter to get something that looks good for your map size and collection density.</p>
 <p><img alt="Collected data overlayed on the map" src="../../../_images/map1.png" /></p>
 </section>
 <section id="further-reading">
-<h2>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this headline">¶</a></h2>
+<h2>Further Reading<a class="headerlink" href="#further-reading" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="../../concepts/autonomy/graphnav_map_structure.html"><span class="doc">Graph Nav map structure</span></a></p></li>
 <li><p><a class="reference external" href="../../concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Optimizing Anchor locations</a></p></li>

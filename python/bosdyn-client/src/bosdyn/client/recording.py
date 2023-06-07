@@ -1,11 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """For clients to use the graph nav recording service"""
-from __future__ import print_function
 
 import collections
 from enum import Enum
@@ -41,6 +40,7 @@ class GraphNavRecordingServiceClient(BaseClient):
         Args:
             lease: Leases to show ownership of necessary resources. Will use the client's leases by default.
             recording_environment: RecordingEnvironment protobuf to be used for the initial waypoint created at start.
+            require_fiducials: Boolean to show whether a fiducial is needed to start the recording.
         Returns:
             The status of the start recording request.
         """
@@ -49,12 +49,30 @@ class GraphNavRecordingServiceClient(BaseClient):
         return self.call(self._stub.StartRecording, request, value_from_response=_get_status,
                          error_from_response=_start_recording_error, copy_request=False, **kwargs)
 
+    def start_recording_full(self, lease=None, recording_environment=None, require_fiducials=None,
+                             **kwargs):
+        """Same as start_recording() but returns a full response"""
+        request = self._build_start_recording_request(lease, recording_environment,
+                                                      require_fiducials)
+        return self.call(self._stub.StartRecording, request, value_from_response=_get_response,
+                         error_from_response=_start_recording_error, copy_request=False, **kwargs)
+
     def start_recording_async(self, lease=None, recording_environment=None, require_fiducials=None,
                               **kwargs):
         """Async version of start_recording()."""
         request = self._build_start_recording_request(lease, recording_environment,
                                                       require_fiducials)
         return self.call_async(self._stub.StartRecording, request, value_from_response=_get_status,
+                               error_from_response=_start_recording_error, copy_request=False,
+                               **kwargs)
+
+    def start_recording_full_async(self, lease=None, recording_environment=None,
+                                   require_fiducials=None, **kwargs):
+        """Async version of start_recording_full()."""
+        request = self._build_start_recording_request(lease, recording_environment,
+                                                      require_fiducials)
+        return self.call_async(self._stub.StartRecording, request,
+                               value_from_response=_get_response,
                                error_from_response=_start_recording_error, copy_request=False,
                                **kwargs)
 
@@ -373,13 +391,14 @@ class FiducialPoseError(RecordingServiceResponseError):
 class RobotImpairedError(RecordingServiceResponseError):
     """Failed to start recording because the robot is impaired."""
 
-    def __init__(self, response, message):
-        RecordingServiceResponseError.__init__(self, response, message)
+    def __init__(self, response, error_message):
+        RecordingServiceResponseError.__init__(self, response, error_message)
         self.impaired_state = response.impaired_state
 
     def __str__(self):
         base = RecordingServiceResponseError.__str__(self)
         base += "\nImpaired state: {}".format(self.impaired_state)
+        return base
 
 
 def _get_status(response):

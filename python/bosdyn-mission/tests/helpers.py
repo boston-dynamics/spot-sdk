@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,17 +10,10 @@
 import concurrent
 import sys
 import time
+from unittest import mock
 
 import grpc
 import pytest
-
-if sys.version_info[0:2] >= (3, 3):
-    # Python version 3.3 added unittest.mock
-    from unittest import mock
-else:
-    # The backport is on PyPi as just "mock"
-    import mock
-
 from google.protobuf import timestamp_pb2
 
 import bosdyn.api.header_pb2 as HeaderProto

@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -16,32 +16,33 @@ message Camera {
     // Identifier for the camera.
     string name = 1;
     // Resolution of the sensor, where x = width and y = height.
-    bosdyn.api.Vec2 resolution=2;
+    bosdyn.api.Vec2 resolution = 2;
 
-    // The frame name for the parent frame of this camera. This frame will show up in the FrameTreeSnapshot
-    // grabbed from the payload registration service.
+    // The frame name for the parent frame of this camera. This frame will show up in the
+    // FrameTreeSnapshot grabbed from the payload registration service.
     string base_frame_name = 3;
 
     // 'base_tfrom_sensor' defines the transform from the specific camera to the named base from.
-    // This is deprecated in favor of 'base_tform_sensor' which follows the intended naming convention
-    // and FrameTree directionality convention of the Spot system as defined in geometry.proto.
-    SE3Pose base_tfrom_sensor = 4[deprecated=true];
+    // DEPRECATED as of 3.0.1 in favor of 'base_tform_sensor' which follows the intended naming
+    // convention and FrameTree directionality convention of the Spot system as defined in
+    // geometry.proto.
+    SE3Pose base_tfrom_sensor = 4 [deprecated = true];
 
     // The transform from the named base frame to this specific camera
     SE3Pose base_tform_sensor = 7;
 
     message PinholeIntrinsics {
         // Focal_length in pixels
-        bosdyn.api.Vec2 focal_length=1;
+        bosdyn.api.Vec2 focal_length = 1;
         // Center point in pixels
-        bosdyn.api.Vec2 center_point=2;
+        bosdyn.api.Vec2 center_point = 2;
         // The following 4 parameters are radial distortion coefficeints to 4 orders.
         // See: https://en.wikipedia.org/wiki/Distortion_(optics)#Software_correction
         // If all 4 of these values are 0, do not apply any correction.
-        float k1=3;
-        float k2=4;
-        float k3=5;
-        float k4=6;
+        float k1 = 3;
+        float k2 = 4;
+        float k3 = 5;
+        float k4 = 6;
     }
 
     // Spherical limits are the minimum and maximum angle of the image.
@@ -49,14 +50,14 @@ message Camera {
     // and the lower right pixel is at max_angle.x, max_angle.y
     // for a full-FOV image this will be (-180, 90) and (180, -90)
     message SphericalLimits {
-        bosdyn.api.Vec2 min_angle=1;
-        bosdyn.api.Vec2 max_angle=2;
+        bosdyn.api.Vec2 min_angle = 1;
+        bosdyn.api.Vec2 max_angle = 2;
     }
 
-    oneof intrinsics{
+    oneof intrinsics {
         // Physical cameras
-        PinholeIntrinsics pinhole=5;
+        PinholeIntrinsics pinhole = 5;
         // Only synthetic spherical panoramas
-        SphericalLimits spherical=6;
+        SphericalLimits spherical = 6;
     }
 }

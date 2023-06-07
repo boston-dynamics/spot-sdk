@@ -1,10 +1,8 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
-
-from __future__ import absolute_import, print_function
 
 import io
 import json
@@ -34,8 +32,8 @@ from bosdyn.client.util import setup_logging
 # Create a virtual payload.
 PLACEHOLDER_PAYLOAD = payload_protos.Payload()
 PLACEHOLDER_PAYLOAD.name = 'Ricoh Theta Image Service'
-PLACEHOLDER_PAYLOAD.description = 'This is currently a virtual/weightless payload defined for the software service only. \
-                                   Please define weight and dimensions if the Ricoh Theta is mounted to Spot.'
+PLACEHOLDER_PAYLOAD.description = 'This is currently a virtual/weightless payload defined for the software service ' \
+                                  'only. Please define weight and dimensions if the Ricoh Theta is mounted to Spot.'
 
 # See https://dev.bostondynamics.com/docs/payload/configuring_payload_software#registering-payloads for more information.
 
@@ -69,7 +67,7 @@ class RicohThetaServiceHelper(CameraInterface):
 
         # Name of the image source that is being requested from.
         self.theta_ssid = theta_ssid
-        self.image_source_name = "RicohTheta_" + theta_ssid
+        self.image_source_name = f'RicohTheta_{theta_ssid}'
 
         # Default value for JPEG image quality, in case one is not provided in the GetImage request.
         self.default_jpeg_quality = 95
@@ -87,7 +85,7 @@ class RicohThetaServiceHelper(CameraInterface):
             # An issue occurred getting the file format for the camera images. This is likely due
             # to upstream failures creating the Theta instance, which already have triggered service
             # faults.
-            _LOGGER.info("Unable to set the image width/height dimensions. Error message: %s %s",
+            _LOGGER.info(f'Unable to set the image width/height dimensions. Error message: %s %s',
                          str(type(err)), str(err))
             pass
 
@@ -104,13 +102,13 @@ class RicohThetaServiceHelper(CameraInterface):
                 # to upstream failures creating the Theta instance, which already have triggered service
                 # faults.
                 _LOGGER.info(
-                    "Unable to set the image width/height dimensions. Error message: %s %s",
-                    str(type(err)), str(err))
+                    'Unable to set the image width/height dimensions. '
+                    'Error message: %s %s', str(type(err)), str(err))
                 pass
             if format_json is not None:
                 print(format_json)
-                self.cols = format_json["width"]
-                self.rows = format_json["height"]
+                self.cols = format_json['width']
+                self.rows = format_json['height']
         else:
             # The live stream has different dimensions then the full ricoh theta image because it
             # is lower resolution and doesn't have the full image processing as the regular ricoh
@@ -122,7 +120,7 @@ class RicohThetaServiceHelper(CameraInterface):
                 self.cols = pil_image.size[0]
                 self.rows = pil_image.size[1]
             else:
-                _LOGGER.info("Unable to set the image dimensions because no mjpeg generator.")
+                _LOGGER.info('Unable to set the image dimensions because no mjpeg generator.')
                 pass
 
     def _maybe_reset_mjpeg_generator(self):
@@ -135,7 +133,7 @@ class RicohThetaServiceHelper(CameraInterface):
             try:
                 self.mjpeg_generator = self.camera.yieldLivePreview(print_to_screen=False)
             except Exception as err:
-                _LOGGER.info("Error in creating the live preview: %s %s", str(type(err)), str(err))
+                _LOGGER.info('Error in creating the live preview: %s %s', str(type(err)), str(err))
                 # Default to original capture method.
                 self.live_stream = False
 
@@ -146,7 +144,7 @@ class RicohThetaServiceHelper(CameraInterface):
             The complete image's json data and a buffer of the image bytes.
         """
         if self.camera is None:
-            raise Exception("The Ricoh Theta camera instance is not initialized.")
+            raise Exception('The Ricoh Theta camera instance is not initialized.')
 
         if not self.capture_continuously and self.live_stream:
             self._maybe_reset_mjpeg_generator()
@@ -165,8 +163,8 @@ class RicohThetaServiceHelper(CameraInterface):
         img_json, img_raw = self.camera.getLastImage(wait_for_latest=True, print_to_screen=False)
         if not (img_json and img_raw):
             # The getLastImage request failed, return None.
-            _LOGGER.warning("The getLastImage request to the Ricoh Theta returned no data.")
-            raise Exception("The takePicture Request for the Ricoh Theta returned no data.")
+            _LOGGER.warning('The getLastImage request to the Ricoh Theta returned no data.')
+            raise Exception('The takePicture Request for the Ricoh Theta returned no data.')
 
         buffer_bytes = img_raw.raw
         buffer_bytes.decode_content = True
@@ -179,9 +177,9 @@ class RicohThetaServiceHelper(CameraInterface):
             # the time zone parsing in strptime does not correctly parse a timezone with a semicolon, and the
             # ricoh theta's output includes this. So for now, we use this string splitting to just remove the
             # timezone entirely.
-            date_time = img_json["dateTimeZone"].split("+")[0].split("-")[0]
+            date_time = img_json['dateTimeZone'].split('+')[0].split('-')[0]
             # Convert from string to an actual datetime object
-            date_time_obj = time.strptime(date_time, "%Y:%m:%d %H:%M:%S")
+            date_time_obj = time.strptime(date_time, '%Y:%m:%d %H:%M:%S')
             # Convert from a datetime object to a time object (seconds) in the local clock's time.
             capture_time_secs = time.mktime(date_time_obj)
         except Exception as err:
@@ -214,7 +212,7 @@ class RicohThetaServiceHelper(CameraInterface):
 
         compressed_byte_buffer = io.BytesIO()
         if resize_ratio < 0 or resize_ratio > 1:
-            raise ValueError("Resize ratio %s is out of bounds." % resize_ratio)
+            raise ValueError(f'Resize ratio {resize_ratio} is out of bounds.')
         if resize_ratio != 1.0 and resize_ratio != 0:
             new_width = int(converted_image_data.size[0])
             new_height = int(converted_image_data.size[1])
@@ -249,14 +247,14 @@ class RicohThetaServiceHelper(CameraInterface):
                     checked_quality = 95
                 else:
                     checked_quality = quality_percent
-            converted_image_data.save(compressed_byte_buffer, "JPEG", quality=int(checked_quality))
+            converted_image_data.save(compressed_byte_buffer, 'JPEG', quality=int(checked_quality))
             image_proto.data = compressed_byte_buffer.getvalue()
             # Set the format as JPEG because the incoming requested format could've initially been None/unknown
             # in this case.
             image_proto.format = image_pb2.Image.FORMAT_JPEG
         else:
             # Don't support RLE for ricoh theta cameras.
-            _LOGGER.info("GetImage request for unsupported format %s",
+            _LOGGER.info('GetImage request for unsupported format %s',
                          str(image_pb2.Image.Format.Name(image_format)))
 
 
@@ -270,18 +268,17 @@ def make_ricoh_theta_image_service(theta_ssid, theta_password, theta_client, rob
         # Test that communication to the camera works before creating the complete image service.
         theta_instance.showState()
     except json.decoder.JSONDecodeError as err:
-        _LOGGER.warning("Ricoh Theta faulted on initialization.")
+        _LOGGER.warning('Ricoh Theta faulted on initialization.')
         # The JSONDecodeError signifies that the response from the ricoh theta HTTP post requests are
         # coming back empty, meaning the camera is not setup correctly to communicate with the theta instance.
         fault_client = robot.ensure_client(FaultClient.default_service_name)
         fault = CAMERA_SETUP_FAULT
-        fault.error_message = "Failed to communicate with the camera at %s: server is " % theta_instance.baseip + \
-                                "responding with empty json messages."
+        fault.error_message = f'Failed to communicate with the camera at {theta_instance.baseip}: server is ' \
+                              f'responding with empty json messages.'
         resp = fault_client.trigger_service_fault_async(fault)
         return False, None
     except Exception as err:
-        error = "Exception raised when attempting to communicate with the ricoh theta: %s" % str(
-            err)
+        error = f'Exception raised when attempting to communicate with the ricoh theta: {err}'
         _LOGGER.warning(error)
         fault_client = robot.ensure_client(FaultClient.default_service_name)
         fault = CAMERA_SETUP_FAULT
@@ -316,7 +313,7 @@ def run_service(bosdyn_sdk_robot, options, logger=None):
 
 
 def add_ricoh_theta_arguments(parser):
-    parser.add_argument("--theta-ssid", default=None, required=True, help='Ricoh Theta ssid')
+    parser.add_argument('--theta-ssid', default=None, required=True, help='Ricoh Theta ssid')
     parser.add_argument(
         '--theta-password', default=None, required=False,
         help='Optional password for ricoh theta (if not provided, the default password is used).')
@@ -325,15 +322,15 @@ def add_ricoh_theta_arguments(parser):
         help='Run the Ricoh Theta in client mode (camera connects to specified network).')
     parser.add_argument(
         '--capture-continuously', action='store_true', dest='capture_continuously', help=
-        "Use a background thread to request images continuously. Otherwise, capture images only when a "
-        "GetImage RPC is received.")
+        'Use a background thread to request images continuously. Otherwise, capture images only when a '
+        'GetImage RPC is received.')
     parser.add_argument(
         '--capture-when-requested', action='store_false', dest='capture_continuously', help=
-        "Only request images from the Ricoh Theta when a GetImage RPC is received. Otherwise, use "
-        "a background thread to request images continuously.")
+        'Only request images from the Ricoh Theta when a GetImage RPC is received. Otherwise, use '
+        'a background thread to request images continuously.')
     parser.add_argument(
         '--live-stream', action='store_true',
-        help="Return images as a live stream but with less high quality image stitching.")
+        help='Return images as a live stream but with less high quality image stitching.')
     parser.set_defaults(capture_continuously=False)
 
 
@@ -351,7 +348,7 @@ if __name__ == '__main__':
     setup_logging(options.verbose, include_dedup_filter=True)
 
     # Create and authenticate a bosdyn robot object.
-    sdk = bosdyn.client.create_standard_sdk("RicohThetaImageServiceSDK")
+    sdk = bosdyn.client.create_standard_sdk('RicohThetaImageServiceSDK')
     robot = sdk.create_robot(options.hostname)
     PLACEHOLDER_PAYLOAD.GUID, secret = bosdyn.client.util.get_guid_and_secret(options)
     robot.register_payload_and_authenticate(PLACEHOLDER_PAYLOAD, secret)
@@ -362,8 +359,8 @@ if __name__ == '__main__':
     camera_initialization_success, service_runner = run_service(robot, options, logger=_LOGGER)
 
     if not camera_initialization_success:
-        _LOGGER.error("Ricoh Theta camera did not initialize successfully. The service will NOT be "
-                      "registered with the directory.")
+        _LOGGER.error('Ricoh Theta camera did not initialize successfully. The service will NOT be '
+                      'registered with the directory.')
         sys.exit(1)
 
     # The initialization for the camera succeeded! The directory registration will clear any

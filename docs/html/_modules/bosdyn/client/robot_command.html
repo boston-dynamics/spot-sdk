@@ -7,12 +7,14 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>bosdyn.client.robot_command &mdash; Spot 3.2.3 documentation</title>
+  <title>bosdyn.client.robot_command &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
 
   
   
@@ -30,10 +32,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../../_static/js/theme.js"></script>
 
@@ -66,7 +70,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -94,13 +98,16 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -129,6 +136,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -183,6 +191,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -195,6 +204,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -202,6 +212,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -227,9 +238,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -244,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -266,6 +280,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -293,6 +314,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -306,13 +328,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -330,6 +355,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -391,6 +417,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -469,6 +501,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -483,9 +516,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -494,6 +530,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -524,10 +562,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -549,6 +591,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -565,7 +608,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../docs/scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -630,7 +672,7 @@
            <div itemprop="articleBody">
             
   <h1>Source code for bosdyn.client.robot_command</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.</span>
+<span></span><span class="c1"># Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
@@ -666,59 +708,69 @@
 
 
 <div class="viewcode-block" id="RobotCommandResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandResponseError">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandResponseError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;General class of errors for RobotCommand service.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors for RobotCommand service.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="n">BaseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Base class for non-response errors in this module.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for non-response errors in this module.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NoTimeSyncError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.NoTimeSyncError">[docs]</a><span class="k">class</span> <span class="nc">NoTimeSyncError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Client has not done timesync with robot.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client has not done timesync with robot.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="ExpiredError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.ExpiredError">[docs]</a><span class="k">class</span> <span class="nc">ExpiredError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The command was received after its max_duration had already passed.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The command was received after its max_duration had already passed.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="TooDistantError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.TooDistantError">[docs]</a><span class="k">class</span> <span class="nc">TooDistantError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The command end time was too far in the future.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The command end time was too far in the future.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NotPoweredOnError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.NotPoweredOnError">[docs]</a><span class="k">class</span> <span class="nc">NotPoweredOnError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The robot must be powered on to accept a command.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The robot must be powered on to accept a command.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="BehaviorFaultError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.BehaviorFaultError">[docs]</a><span class="k">class</span> <span class="nc">BehaviorFaultError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The robot may not be commanded with uncleared behavior faults.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The robot may not be commanded with uncleared behavior faults.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="DockedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.DockedError">[docs]</a><span class="k">class</span> <span class="nc">DockedError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The command cannot be executed while the robot is docked.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The command cannot be executed while the robot is docked.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="NotClearedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.NotClearedError">[docs]</a><span class="k">class</span> <span class="nc">NotClearedError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Behavior fault could not be cleared.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Behavior fault could not be cleared.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnsupportedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.UnsupportedError">[docs]</a><span class="k">class</span> <span class="nc">UnsupportedError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;The API supports this request, but the system does not support this request.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The API supports this request, but the system does not support this request.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="CommandFailedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.CommandFailedError">[docs]</a><span class="k">class</span> <span class="nc">CommandFailedError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Command indicated it failed in its feedback.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Command indicated it failed in its feedback.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="CommandFailedErrorWithFeedback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.CommandFailedErrorWithFeedback">[docs]</a><span class="k">class</span> <span class="nc">CommandFailedErrorWithFeedback</span><span class="p">(</span><span class="n">CommandFailedError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Command indicated it failed in its feedback.</span>
+<span class="sd">    This subclass contains the feedback response causing the error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">feedback</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feedback</span> <span class="o">=</span> <span class="n">feedback</span></div>
 
 
 <div class="viewcode-block" id="CommandTimedOutError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.CommandTimedOutError">[docs]</a><span class="k">class</span> <span class="nc">CommandTimedOutError</span><span class="p">(</span><span class="n">Error</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Timed out waiting for SUCCESS response from robot command.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Timed out waiting for SUCCESS response from robot command.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="UnknownFrameError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.UnknownFrameError">[docs]</a><span class="k">class</span> <span class="nc">UnknownFrameError</span><span class="p">(</span><span class="n">RobotCommandResponseError</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Robot does not know how to handle supplied frame.&quot;&quot;&quot;</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Robot does not know how to handle supplied frame.&quot;&quot;&quot;</span></div>
 
 
 <span class="k">class</span> <span class="nc">_TimeConverter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Constructs a RobotTimeConverter as necessary.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constructs a RobotTimeConverter as necessary.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        parent: Parent for the time sync endpoint.</span>
@@ -732,14 +784,14 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Accessor which lazily constructs the RobotTimeConverter.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor which lazily constructs the RobotTimeConverter.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span><span class="p">:</span>
             <span class="n">endpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_endpoint</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">timesync_endpoint</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">get_robot_time_converter</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_converter</span>
 
     <span class="k">def</span> <span class="nf">convert_timestamp_from_local_to_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Calls RobotTimeConverter.convert_timestamp_from_local_to_robot().</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls RobotTimeConverter.convert_timestamp_from_local_to_robot().</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            timestamp: Timestamp to convert.</span>
@@ -747,12 +799,20 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">convert_timestamp_from_local_to_robot</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Calls RobotTimeConverter.robot_timestamp_from_local_secs().</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls RobotTimeConverter.robot_timestamp_from_local_secs().</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            end_time_secs: Time in seconds to convert.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">end_time_secs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">local_seconds_from_robot_timestamp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_timestamp</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calls RobotTimeConverter.local_seconds_from_robot_timestamp().</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          local_time_secs:  Local system time, in seconds from the unix epoch.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="o">.</span><span class="n">local_seconds_from_robot_timestamp</span><span class="p">(</span><span class="n">robot_timestamp</span><span class="p">)</span>
 
 
 <span class="c1"># Tree of proto-fields leading to end_time fields needing to be set from end_time_secs.</span>
@@ -806,7 +866,7 @@
                     <span class="s1">&#39;trajectory&#39;</span><span class="p">:</span> <span class="p">{</span>
                         <span class="s1">&#39;reference_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
                     <span class="p">}</span>
-                <span class="p">}</span>
+                <span class="p">},</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s1">&#39;gripper_command&#39;</span><span class="p">:</span> <span class="p">{</span>
@@ -860,9 +920,28 @@
     <span class="p">}</span>
 <span class="p">}</span>
 
+<span class="c1"># Tree of proto fields leading to Timestamp protos which need to be converted from</span>
+<span class="c1">#  client clock to robot clock values using timesync information from the robot.</span>
+<span class="c1"># Note, the &quot;@&quot; sign indicates a oneof field. The &quot;None&quot; indicates the field which</span>
+<span class="c1"># contains the timestamp to be updated.</span>
+<span class="n">MOBILITY_PARAM_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;body_control&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;@param&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;base_offset_rt_footprint&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;reference_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
+            <span class="p">},</span>
+            <span class="s1">&#39;body_pose&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;base_offset_rt_root&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;reference_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
 
 <span class="k">def</span> <span class="nf">_edit_proto</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">edit_tree</span><span class="p">,</span> <span class="n">edit_fn</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Recursion to update specified fields of a protobuf using a specified edit-function.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Recursion to update specified fields of a protobuf using a specified edit-function.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        proto: Protobuf to edit recursively.</span>
@@ -889,7 +968,7 @@
 
 
 <div class="viewcode-block" id="RobotCommandClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Client for calling RobotCommand services.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for calling RobotCommand services.&quot;&quot;&quot;</span>
     <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot-command&#39;</span>
     <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.RobotCommandService&#39;</span>
 
@@ -899,7 +978,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="RobotCommandClient.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update instance from another object.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            other: The object where to copy from.</span>
@@ -916,7 +995,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">timesync_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Accessor for timesync-endpoint that was grabbed via &#39;update_from()&#39;.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Accessor for timesync-endpoint that was grabbed via &#39;update_from()&#39;.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NoTimeSyncError</span><span class="p">(</span>
                 <span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -925,7 +1004,7 @@
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                       <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Issue a command to the robot synchronously.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue a command to the robot synchronously.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            command: Command to issue.</span>
@@ -958,7 +1037,7 @@
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of robot_command().</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of robot_command().</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            command: Command to issue.</span>
@@ -988,7 +1067,7 @@
                                <span class="n">_robot_command_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command_feedback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get feedback from a previously issued command.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback from a previously issued command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot_command_id: ID of the robot command to get feedback on.</span>
@@ -1002,7 +1081,7 @@
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.robot_command_feedback_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback_async">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of robot_command_feedback().</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of robot_command_feedback().</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot_command_id: ID of the robot command to get feedback on.</span>
@@ -1017,7 +1096,7 @@
 
 
 <div class="viewcode-block" id="RobotCommandClient.clear_behavior_fault"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault">[docs]</a>    <span class="k">def</span> <span class="nf">clear_behavior_fault</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Clear a behavior fault on the robot.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear a behavior fault on the robot.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            behavior_fault_id: ID of the behavior fault.</span>
@@ -1036,7 +1115,7 @@
                          <span class="n">_clear_behavior_fault_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandClient.clear_behavior_fault_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.clear_behavior_fault_async">[docs]</a>    <span class="k">def</span> <span class="nf">clear_behavior_fault_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">,</span> <span class="n">lease</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Async version of clear_behavior_fault().</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of clear_behavior_fault().</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            behavior_fault_id:</span>
@@ -1057,7 +1136,7 @@
                                <span class="n">_clear_behavior_fault_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_get_robot_command_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="n">command</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create RobotCommandRequest message from the given information.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create RobotCommandRequest message from the given information.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            lease: Lease to use for the command.</span>
@@ -1071,7 +1150,7 @@
             <span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">command</span><span class="p">,</span> <span class="n">clock_identifier</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="o">.</span><span class="n">clock_identifier</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_update_command_timestamps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set or convert fields of the command proto that need timestamps in the robot&#39;s clock.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or convert fields of the command proto that need timestamps in the robot&#39;s clock.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            command: Command message to update.</span>
@@ -1083,14 +1162,14 @@
         <span class="n">converter</span> <span class="o">=</span> <span class="n">_TimeConverter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">_set_end_time</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;If proto has a field named key, fill set it to end_time_secs as robot time. &quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;If proto has a field named key, fill set it to end_time_secs as robot time. &quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">proto</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">fields_by_name</span><span class="p">:</span>
                 <span class="k">return</span>  <span class="c1"># No such field in the proto to be set to the end-time.</span>
             <span class="n">end_time</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
             <span class="n">end_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">end_time_secs</span><span class="p">))</span>
 
         <span class="k">def</span> <span class="nf">_to_robot_time</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">proto</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;If proto has a field named key with a timestamp, convert timestamp to robot time.&quot;&quot;&quot;</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;If proto has a field named key with a timestamp, convert timestamp to robot time.&quot;&quot;&quot;</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="n">proto</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">fields_by_name</span> <span class="ow">and</span> <span class="n">proto</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="n">key</span><span class="p">)):</span>
                 <span class="c1"># No such field in proto, or field does not contain a timestamp.</span>
                 <span class="k">return</span>
@@ -1103,10 +1182,16 @@
 
         <span class="c1"># Convert timestamps from local time to robot time.</span>
         <span class="n">_edit_proto</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME</span><span class="p">,</span> <span class="n">_to_robot_time</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">command</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">mobility_command</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;params&quot;</span><span class="p">):</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">MobilityParams</span><span class="p">()</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">mobility_command</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Unpack</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+            <span class="n">_edit_proto</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">MOBILITY_PARAM_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME</span><span class="p">,</span>
+                        <span class="n">_to_robot_time</span><span class="p">)</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">mobility_command</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">Pack</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_robot_command_feedback_request</span><span class="p">(</span><span class="n">robot_command_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create RobotCommandFeedbackRequest message with the given command id.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create RobotCommandFeedbackRequest message with the given command id.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            robot_command_id: Command id to specify in the request message.</span>
@@ -1118,7 +1203,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_clear_behavior_fault_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">behavior_fault_id</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Create ClearBehaviorFaultRequest message with the given information.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create ClearBehaviorFaultRequest message with the given information.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            lease: Lease information to use in the request.</span>
@@ -1132,7 +1217,7 @@
 
 
 <span class="k">def</span> <span class="nf">_robot_command_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get the command id from a RobotCommandResponse.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the command id from a RobotCommandResponse.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        response: RobotCommandResponse message.</span>
@@ -1165,7 +1250,7 @@
 <span class="nd">@handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_robot_command_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        response: Response message to get the status from.</span>
@@ -1195,7 +1280,7 @@
 
 
 <span class="k">def</span> <span class="nf">_clear_behavior_fault_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Check if ClearBehaviorFault message status is STATUS_CLEARED.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if ClearBehaviorFault message status is STATUS_CLEARED.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        response: Response message to check.</span>
@@ -1221,7 +1306,7 @@
 <span class="nd">@handle_lease_use_result_errors</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_clear_behavior_fault_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        response: Response message to check.</span>
@@ -1235,7 +1320,7 @@
 
 
 <div class="viewcode-block" id="RobotCommandBuilder"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandBuilder</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;This class contains a set of static helper functions to build and issue robot commands.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class contains a set of static helper functions to build and issue robot commands.</span>
 
 <span class="sd">    This is not intended to cover every use case, but rather give developers a starting point for</span>
 <span class="sd">    issuing commands to the robot.The robot command proto uses several advanced protobuf techniques,</span>
@@ -1251,7 +1336,7 @@
     <span class="c1">######################</span>
 <div class="viewcode-block" id="RobotCommandBuilder.stop_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.stop_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">stop_command</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;Command to stop with minimal motion. If the robot is walking, it will transition to</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command to stop with minimal motion. If the robot is walking, it will transition to</span>
 <span class="sd">        stand. If the robot is standing or sitting, it will do nothing.</span>
 
 <span class="sd">        Returns:</span>
@@ -1264,7 +1349,7 @@
 
 <div class="viewcode-block" id="RobotCommandBuilder.freeze_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.freeze_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">freeze_command</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;Command to freeze all joints at their current positions (no balancing control)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command to freeze all joints at their current positions (no balancing control)</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
@@ -1276,7 +1361,7 @@
 
 <div class="viewcode-block" id="RobotCommandBuilder.selfright_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.selfright_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">selfright_command</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;Command to get the robot in a ready, sitting position. If the robot is on its back, it</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command to get the robot in a ready, sitting position. If the robot is on its back, it</span>
 <span class="sd">        will attempt to flip over.</span>
 
 <span class="sd">        Returns:</span>
@@ -1289,7 +1374,7 @@
 
 <div class="viewcode-block" id="RobotCommandBuilder.battery_change_pose_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.battery_change_pose_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">battery_change_pose_command</span><span class="p">(</span><span class="n">dir_hint</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Command that will have the robot sit down (if not already sitting) and roll onto its side</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command that will have the robot sit down (if not already sitting) and roll onto its side</span>
 <span class="sd">        for easier battery access.</span>
 
 <span class="sd">        Args:</span>
@@ -1304,7 +1389,7 @@
 
 <div class="viewcode-block" id="RobotCommandBuilder.payload_estimation_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.payload_estimation_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">payload_estimation_command</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;Command to get the robot estimate payload mass.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command to get the robot estimate payload mass.</span>
 
 <span class="sd">        Commands robot to stand and execute a routine to estimate the mass properties of an</span>
 <span class="sd">        unregistered payload attached to the robot.</span>
@@ -1319,7 +1404,7 @@
 
 <div class="viewcode-block" id="RobotCommandBuilder.safe_power_off_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.safe_power_off_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">safe_power_off_command</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;Command to get robot into a position where it is safe to power down, then power down. If</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command to get robot into a position where it is safe to power down, then power down. If</span>
 <span class="sd">        the robot has fallen, it will power down directly. If the robot is not in a safe position,</span>
 <span class="sd">        it will get to a safe position before powering down. The robot will not power down until it</span>
 <span class="sd">        is in a safe state.</span>
@@ -1333,24 +1418,33 @@
         <span class="k">return</span> <span class="n">command</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.constrained_manipulation_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.constrained_manipulation_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">constrained_manipulation_command</span><span class="p">(</span><span class="n">task_type</span><span class="p">,</span> <span class="n">init_wrench_direction_in_frame_name</span><span class="p">,</span>
-                                         <span class="n">force_limit</span><span class="p">,</span> <span class="n">torque_limit</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span>
-                                         <span class="n">tangential_speed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotational_speed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Command constrained manipulation. &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">tangential_speed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">full_body_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-                <span class="n">constrained_manipulation_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">ConstrainedManipulationCommand</span><span class="o">.</span>
-                <span class="n">Request</span><span class="p">(</span><span class="n">task_type</span><span class="o">=</span><span class="n">task_type</span><span class="p">,</span>
-                        <span class="n">init_wrench_direction_in_frame_name</span><span class="o">=</span><span class="n">init_wrench_direction_in_frame_name</span><span class="p">,</span>
-                        <span class="n">frame_name</span><span class="o">=</span><span class="n">frame_name</span><span class="p">,</span> <span class="n">tangential_speed</span><span class="o">=</span><span class="n">tangential_speed</span><span class="p">))</span>
-        <span class="k">elif</span> <span class="p">(</span><span class="n">rotational_speed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">full_body_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-                <span class="n">constrained_manipulation_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">ConstrainedManipulationCommand</span><span class="o">.</span>
-                <span class="n">Request</span><span class="p">(</span><span class="n">task_type</span><span class="o">=</span><span class="n">task_type</span><span class="p">,</span>
-                        <span class="n">init_wrench_direction_in_frame_name</span><span class="o">=</span><span class="n">init_wrench_direction_in_frame_name</span><span class="p">,</span>
-                        <span class="n">frame_name</span><span class="o">=</span><span class="n">frame_name</span><span class="p">,</span> <span class="n">rotational_speed</span><span class="o">=</span><span class="n">rotational_speed</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">constrained_manipulation_command</span><span class="p">(</span>
+        <span class="n">task_type</span><span class="p">,</span> <span class="n">init_wrench_direction_in_frame_name</span><span class="p">,</span> <span class="n">force_limit</span><span class="p">,</span> <span class="n">torque_limit</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span>
+        <span class="n">tangential_speed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rotational_speed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_linear_position</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">target_angle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">control_mode</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">ConstrainedManipulationCommand</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">CONTROL_MODE_VELOCITY</span><span class="p">,</span>
+        <span class="n">reset_estimator</span><span class="o">=</span><span class="n">wrappers_pb2</span><span class="o">.</span><span class="n">BoolValue</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command constrained manipulation. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">tangential_speed</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rotational_speed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Need either translational or rotational speed&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">target_angle</span> <span class="ow">and</span> <span class="n">target_linear_position</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Both target_angle and target_linear_position were specified.&quot;</span><span class="p">)</span>
+
+        <span class="n">in_position_control</span> <span class="o">=</span> <span class="n">control_mode</span> <span class="o">==</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">ConstrainedManipulationCommand</span><span class="o">.</span><span class="n">Request</span><span class="o">.</span><span class="n">CONTROL_MODE_POSITION</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">in_position_control</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">target_angle</span> <span class="ow">or</span> <span class="n">target_linear_position</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="s2">&quot;We are in position control mode, but neither target angle nor position were specified.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">full_body_command</span> <span class="o">=</span> <span class="n">full_body_command_pb2</span><span class="o">.</span><span class="n">FullBodyCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="n">constrained_manipulation_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">ConstrainedManipulationCommand</span><span class="o">.</span>
+            <span class="n">Request</span><span class="p">(</span><span class="n">task_type</span><span class="o">=</span><span class="n">task_type</span><span class="p">,</span>
+                    <span class="n">init_wrench_direction_in_frame_name</span><span class="o">=</span><span class="n">init_wrench_direction_in_frame_name</span><span class="p">,</span>
+                    <span class="n">frame_name</span><span class="o">=</span><span class="n">frame_name</span><span class="p">,</span> <span class="n">tangential_speed</span><span class="o">=</span><span class="n">tangential_speed</span><span class="p">,</span>
+                    <span class="n">rotational_speed</span><span class="o">=</span><span class="n">rotational_speed</span><span class="p">,</span> <span class="n">target_angle</span><span class="o">=</span><span class="n">target_angle</span><span class="p">,</span>
+                    <span class="n">target_linear_position</span><span class="o">=</span><span class="n">target_linear_position</span><span class="p">,</span> <span class="n">control_mode</span><span class="o">=</span><span class="n">control_mode</span><span class="p">,</span>
+                    <span class="n">reset_estimator</span><span class="o">=</span><span class="n">reset_estimator</span><span class="p">))</span>
+
         <span class="n">full_body_command</span><span class="o">.</span><span class="n">constrained_manipulation_request</span><span class="o">.</span><span class="n">force_limit</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">force_limit</span>
         <span class="n">full_body_command</span><span class="o">.</span><span class="n">constrained_manipulation_request</span><span class="o">.</span><span class="n">torque_limit</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">torque_limit</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">full_body_command</span><span class="o">=</span><span class="n">full_body_command</span><span class="p">)</span>
@@ -1361,9 +1455,11 @@
     <span class="c1">###################################</span>
 
 <div class="viewcode-block" id="RobotCommandBuilder.trajectory_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.trajectory_command">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Mobility commands are now sent as a part of synchronized commands. &#39;</span>
+                <span class="s1">&#39;Use synchro_se2_trajectory_command instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.1.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">trajectory_command</span><span class="p">(</span><span class="n">goal_x</span><span class="p">,</span> <span class="n">goal_y</span><span class="p">,</span> <span class="n">goal_heading</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                            <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Command robot to move to pose along a 2D plane. Pose can be specified in the world</span>
 <span class="sd">        (kinematic odometry) frame or the robot body frame. The arguments body_height and</span>
 <span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
@@ -1404,7 +1500,7 @@
                 <span class="s1">&#39;Use synchro_velocity_command instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.1.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">velocity_command</span><span class="p">(</span><span class="n">v_x</span><span class="p">,</span> <span class="n">v_y</span><span class="p">,</span> <span class="n">v_rot</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                          <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span> <span class="n">frame_name</span><span class="o">=</span><span class="n">BODY_FRAME_NAME</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Command robot to move along 2D plane. Velocity should be specified in the robot body</span>
 <span class="sd">        frame. Other frames are currently not supported. The arguments body_height and</span>
 <span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
@@ -1441,7 +1537,7 @@
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Mobility commands are now sent as a part of synchronized commands. &#39;</span>
                 <span class="s1">&#39;Use synchro_stand_command instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.1.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">stand_command</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">geometry</span><span class="o">.</span><span class="n">EulerZXY</span><span class="p">()):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Command robot to stand. If the robot is sitting, it will stand up. If the robot is</span>
 <span class="sd">        moving, it will come to a stop. Params can specify a trajectory for the body to follow</span>
 <span class="sd">        while standing. In the simplest case, this can be a specific position+orientation which the</span>
@@ -1471,7 +1567,7 @@
     <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Mobility commands are now sent as a part of synchronized commands. &#39;</span>
                 <span class="s1">&#39;Use synchro_sit_command instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.1.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">sit_command</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Command the robot to sit.</span>
 
 <span class="sd">        Args:</span>
@@ -1497,7 +1593,7 @@
                                              <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                                              <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span>
                                              <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Command robot to move to pose along a 2D plane. Pose can be specified in the world</span>
 <span class="sd">        (kinematic odometry) frame or the robot body frame. The arguments body_height and</span>
 <span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
@@ -1531,7 +1627,7 @@
     <span class="k">def</span> <span class="nf">synchro_se2_trajectory_command</span><span class="p">(</span><span class="n">goal_se2</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                                        <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span>
                                        <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Command robot to move to pose along a 2D plane. Pose can be specified in the world</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command robot to move to pose along a 2D plane. Pose can be specified in the world</span>
 <span class="sd">        (kinematic odometry or vision world) frames. The arguments body_height and</span>
 <span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
 
@@ -1574,7 +1670,7 @@
                                                  <span class="n">goal_heading_rt_body</span><span class="p">,</span> <span class="n">frame_tree_snapshot</span><span class="p">,</span>
                                                  <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                                                  <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Command robot to move to pose described relative to the robots body along a 2D plane. For example,</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command robot to move to pose described relative to the robots body along a 2D plane. For example,</span>
 <span class="sd">        a command to move forward 2 meters at the same heading will have goal_x_rt_body=2.0, goal_y_rt_body=0.0,</span>
 <span class="sd">        goal_heading_rt_body=0.0.</span>
 
@@ -1611,7 +1707,7 @@
     <span class="k">def</span> <span class="nf">synchro_velocity_command</span><span class="p">(</span><span class="n">v_x</span><span class="p">,</span> <span class="n">v_y</span><span class="p">,</span> <span class="n">v_rot</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                                  <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span>
                                  <span class="n">frame_name</span><span class="o">=</span><span class="n">BODY_FRAME_NAME</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Command robot to move along 2D plane. Velocity should be specified in the robot body</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command robot to move along 2D plane. Velocity should be specified in the robot body</span>
 <span class="sd">        frame. Other frames are currently not supported. The arguments body_height and</span>
 <span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
 
@@ -1656,7 +1752,7 @@
 <div class="viewcode-block" id="RobotCommandBuilder.synchro_stand_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.synchro_stand_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">synchro_stand_command</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">geometry</span><span class="o">.</span><span class="n">EulerZXY</span><span class="p">(),</span>
                               <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Command robot to stand. If the robot is sitting, it will stand up. If the robot is</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command robot to stand. If the robot is sitting, it will stand up. If the robot is</span>
 <span class="sd">        moving, it will come to a stop. Params can specify a trajectory for the body to follow</span>
 <span class="sd">        while standing. In the simplest case, this can be a specific position+orientation which the</span>
 <span class="sd">        body will hold at. The arguments body_height and footprint_R_body are ignored if params</span>
@@ -1690,7 +1786,7 @@
 
 <div class="viewcode-block" id="RobotCommandBuilder.synchro_sit_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.synchro_sit_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">synchro_sit_command</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Command the robot to sit.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command the robot to sit.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands.</span>
@@ -1717,7 +1813,7 @@
     <span class="k">def</span> <span class="nf">stance_command</span><span class="p">(</span><span class="n">se2_frame_name</span><span class="p">,</span> <span class="n">pos_fl_rt_frame</span><span class="p">,</span> <span class="n">pos_fr_rt_frame</span><span class="p">,</span> <span class="n">pos_hl_rt_frame</span><span class="p">,</span>
                        <span class="n">pos_hr_rt_frame</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
                        <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">geometry</span><span class="o">.</span><span class="n">EulerZXY</span><span class="p">(),</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Command robot to stance with the feet at specified positions.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command robot to stance with the feet at specified positions.</span>
 <span class="sd">        This will cause the robot to reposition its feet. This is not intended to be a mobility</span>
 <span class="sd">        command and will reject commands where the foot position is out of reach without locomoting.</span>
 <span class="sd">        To stance at a far location, try using SE2TrajectoryCommand to safely put the robot at the</span>
@@ -1770,7 +1866,7 @@
 
 <div class="viewcode-block" id="RobotCommandBuilder.follow_arm_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.follow_arm_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">follow_arm_command</span><span class="p">():</span>
-        <span class="sd">&quot;&quot;&quot;Command robot&#39;s body to follow the arm around.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Command robot&#39;s body to follow the arm around.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands.</span>
@@ -1816,7 +1912,7 @@
     <span class="k">def</span> <span class="nf">arm_gaze_command</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">frame2_tform_desired_hand</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">frame2_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_linear_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_angular_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">max_accel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Builds a Vec3Trajectory to tell the robot arm to gaze at a point in 3D space.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Builds a Vec3Trajectory to tell the robot arm to gaze at a point in 3D space.</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1852,17 +1948,22 @@
             <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">robot_command</span></div>
 
-<div class="viewcode-block" id="RobotCommandBuilder.arm_pose_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.arm_pose_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">arm_pose_command</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">qw</span><span class="p">,</span> <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">qz</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Builds an SE3Trajectory Point to tell robot arm to move to a pose in space</span>
+<div class="viewcode-block" id="RobotCommandBuilder.arm_pose_command_from_pose"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.arm_pose_command_from_pose">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">arm_pose_command_from_pose</span><span class="p">(</span><span class="n">hand_pose</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Builds an SE3Trajectory Point to tell robot arm to move to a pose in space</span>
 <span class="sd">        relative to the frame specified. Wraps it in SynchronizedCommand.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            hand_pose(geometry_pb2.SE3Pose): Protobuf message specifying the desired pose of the</span>
+<span class="sd">                hand.</span>
+<span class="sd">            frame_name(string): Name of the frame relative to which `hand_pose` is expressed.</span>
+<span class="sd">            seconds(float): Requested duration of the arm move.</span>
+<span class="sd">            build_on_command(robot_command_pb2.RobotCommand): Optional RobotCommand (not</span>
+<span class="sd">                containing a full_body_command). A mobility_command and gripper_command from</span>
+<span class="sd">                `build_on_command` will be added to the RobotCommand returned by this function.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            RobotCommand, which can be issued to the robot command service.&quot;&quot;&quot;</span>
-        <span class="n">position</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
-        <span class="n">rotation</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Quaternion</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">qw</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">qx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">qy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">qz</span><span class="p">)</span>
-        <span class="n">hand_pose</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE3Pose</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">)</span>
-
         <span class="n">duration</span> <span class="o">=</span> <span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
         <span class="n">hand_pose_traj_point</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE3TrajectoryPoint</span><span class="p">(</span><span class="n">pose</span><span class="o">=</span><span class="n">hand_pose</span><span class="p">,</span>
                                                                  <span class="n">time_since_reference</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
@@ -1879,10 +1980,24 @@
             <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">robot_command</span></div>
 
+<div class="viewcode-block" id="RobotCommandBuilder.arm_pose_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.arm_pose_command">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">arm_pose_command</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">qw</span><span class="p">,</span> <span class="n">qx</span><span class="p">,</span> <span class="n">qy</span><span class="p">,</span> <span class="n">qz</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Builds an SE3Trajectory Point to tell robot arm to move to a pose in space</span>
+<span class="sd">        relative to the frame specified. Wraps it in SynchronizedCommand.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            RobotCommand, which can be issued to the robot command service.&quot;&quot;&quot;</span>
+        <span class="n">position</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">rotation</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Quaternion</span><span class="p">(</span><span class="n">w</span><span class="o">=</span><span class="n">qw</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">qx</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">qy</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="n">qz</span><span class="p">)</span>
+        <span class="n">hand_pose</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE3Pose</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="n">rotation</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">arm_pose_command_from_pose</span><span class="p">(</span><span class="n">hand_pose</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span>
+                                                              <span class="n">seconds</span><span class="o">=</span><span class="n">seconds</span><span class="p">,</span>
+                                                              <span class="n">build_on_command</span><span class="o">=</span><span class="n">build_on_command</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="RobotCommandBuilder.arm_wrench_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.arm_wrench_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">arm_wrench_command</span><span class="p">(</span><span class="n">force_x</span><span class="p">,</span> <span class="n">force_y</span><span class="p">,</span> <span class="n">force_z</span><span class="p">,</span> <span class="n">torque_x</span><span class="p">,</span> <span class="n">torque_y</span><span class="p">,</span> <span class="n">torque_z</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span>
                            <span class="n">seconds</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Builds a command to tell robot arm to exhibit a wrench.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Builds a command to tell robot arm to exhibit a wrench.</span>
 <span class="sd">            Wraps it in a SynchronizedCommand.</span>
 
 <span class="sd">        Returns:</span>
@@ -1993,9 +2108,16 @@
         <span class="k">return</span> <span class="n">arm_sync_robot_cmd</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.arm_joint_move_helper"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.arm_joint_move_helper">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">arm_joint_move_helper</span><span class="p">(</span><span class="n">joint_positions</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="n">joint_velocities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ref_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                              <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Given a set of joint positions, times, and optional velocity, create a synchro command.</span>
+    <span class="k">def</span> <span class="nf">arm_joint_move_helper</span><span class="p">(</span>
+            <span class="n">joint_positions</span><span class="p">,</span>
+            <span class="n">times</span><span class="p">,</span>
+            <span class="n">joint_velocities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">ref_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">max_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Given a set of joint positions, times, and optional velocity, create a synchro command.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            joint_positions: A list of length N with joint positions at each knot point in our</span>
@@ -2011,11 +2133,16 @@
 <span class="sd">                        trajectory is safe and achievable, this can be set to a large value so it</span>
 <span class="sd">                        doesn&#39;t get in the way.</span>
 <span class="sd">            max_vel: Optional maximum allowable joint velocity. Same thing about defaults as max_acc</span>
+<span class="sd">            build_on_command: Option to input a RobotCommand (not containing a full_body_command). A</span>
+<span class="sd">                mobility_command and gripper_command from this incoming RobotCommand will be added</span>
+<span class="sd">                to the returned RobotCommand.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            robot_command_pb2.RobotCommand with an arm_joint_move_command filled out.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="k">assert</span> <span class="n">joint_positions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Must pass in a list of joint positions&quot;</span>
+        <span class="k">assert</span> <span class="n">times</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Must pass in a list of times&quot;</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">joint_positions</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
             <span class="n">times</span><span class="p">),</span> <span class="s2">&quot;Number of joint positions must match number of times&quot;</span>
         <span class="k">if</span> <span class="n">joint_velocities</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2026,7 +2153,6 @@
         <span class="n">robot_cmd</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
         <span class="n">arm_joint_traj</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">robot_cmd</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">arm_command</span><span class="o">.</span><span class="n">arm_joint_move_command</span><span class="o">.</span><span class="n">trajectory</span><span class="p">)</span>
-
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)):</span>
             <span class="c1"># Add a new trajectory point to our trajectory</span>
             <span class="n">traj_point</span> <span class="o">=</span> <span class="n">arm_joint_traj</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
@@ -2077,6 +2203,78 @@
             <span class="c1"># If unset, a safe default will be used</span>
             <span class="n">arm_joint_traj</span><span class="o">.</span><span class="n">maximum_velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_vel</span>
 
+        <span class="k">if</span> <span class="n">build_on_command</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">robot_cmd</span></div>
+
+<div class="viewcode-block" id="RobotCommandBuilder.claw_gripper_command_helper"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_command_helper">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">claw_gripper_command_helper</span><span class="p">(</span><span class="n">gripper_positions</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="n">gripper_velocities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">ref_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                    <span class="n">disable_force_on_contact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Given a set of gripper positions, times, and optional velocities, create a synchro command.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            gripper_positions: A list of length N with joint positions at each knot point in our</span>
+<span class="sd">                            trajectory.</span>
+<span class="sd">            times: A list of length N with the corresponding time_since_reference for each of our knots</span>
+<span class="sd">            gripper_velocities: Optional joint velocities at each knot. Same structure as gripper_positions.</span>
+<span class="sd">            ref_time: Optional robot reference time. If unset, we&#39;ll use the current synchronized robot</span>
+<span class="sd">                        time. Setting this is useful for getting a consistent trajectory over a long</span>
+<span class="sd">                        period of time when many ClawGripperCommandRequest commands are chained together.</span>
+<span class="sd">            max_acc: Optional maximum allowable gripper acceleration. Not setting this will lead to the</span>
+<span class="sd">                        robot using a relatively safe low default. If the user is sure their gripper</span>
+<span class="sd">                        trajectory is safe and achievable, this can be set to a large value so it</span>
+<span class="sd">                        doesn&#39;t get in the way.</span>
+<span class="sd">            max_vel: Optional maximum allowable gripper velocity. Same thing about defaults as max_acc.</span>
+<span class="sd">            disable_force_on_contact: Whether to switch the gripper to force control on contact detection.</span>
+<span class="sd">            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An</span>
+<span class="sd">                arm_command and mobility_command from this incoming RobotCommand will be added</span>
+<span class="sd">                to the returned RobotCommand.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">gripper_positions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Must pass in a list of gripper positions&quot;</span>
+        <span class="k">assert</span> <span class="n">times</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Must pass in a list of times&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">gripper_positions</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+            <span class="n">times</span><span class="p">),</span> <span class="s2">&quot;Number of gripper positions must match number of times&quot;</span>
+        <span class="k">if</span> <span class="n">gripper_velocities</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">gripper_velocities</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">times</span><span class="p">),</span> <span class="s2">&quot;Number of gripper velocities must match number of times&quot;</span>
+
+        <span class="c1"># Create a claw gripper command, and set the trajectory</span>
+        <span class="n">robot_cmd</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
+        <span class="n">gripper_cmd</span> <span class="o">=</span> <span class="n">robot_cmd</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">gripper_command</span><span class="o">.</span><span class="n">claw_gripper_command</span>
+        <span class="n">gripper_traj</span> <span class="o">=</span> <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">trajectory</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">)):</span>
+            <span class="c1"># Add a new trajectory point to our trajectory</span>
+            <span class="n">traj_point</span> <span class="o">=</span> <span class="n">gripper_traj</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+            <span class="n">traj_point</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">gripper_positions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">gripper_velocities</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">traj_point</span><span class="o">.</span><span class="n">velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">gripper_velocities</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="c1"># Set our time_since_reference for this trajectory point</span>
+            <span class="n">traj_point</span><span class="o">.</span><span class="n">time_since_reference</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+        <span class="c1"># Set our other optional arguments</span>
+        <span class="k">if</span> <span class="n">ref_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a reference time if desired. If not, we&#39;ll automatically set the reference time</span>
+            <span class="c1"># to be the current robot-synchronized time</span>
+            <span class="n">gripper_traj</span><span class="o">.</span><span class="n">reference_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">ref_time</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">max_acc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint acceleration if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_acceleration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_acc</span>
+        <span class="k">if</span> <span class="n">max_vel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint velocity if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_vel</span>
+
+        <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">disable_force_on_contact</span> <span class="o">=</span> <span class="n">disable_force_on_contact</span>
+
+        <span class="k">if</span> <span class="n">build_on_command</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">robot_cmd</span></div>
 
     <span class="c1">########################</span>
@@ -2087,7 +2285,7 @@
     <span class="k">def</span> <span class="nf">mobility_params</span><span class="p">(</span><span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">geometry</span><span class="o">.</span><span class="n">EulerZXY</span><span class="p">(),</span>
                         <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span> <span class="n">stair_hint</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="n">external_force_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stairs_mode</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Helper to create Mobility params for spot mobility commands. This function is designed</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to create Mobility params for spot mobility commands. This function is designed</span>
 <span class="sd">        to help get started issuing commands, but lots of options are not exposed via this</span>
 <span class="sd">        interface. See spot.robot_command_pb2 for more details. If unset, good defaults will be</span>
 <span class="sd">        chosen by the robot.</span>
@@ -2118,11 +2316,26 @@
             <span class="n">body_control</span><span class="o">=</span><span class="n">body_control</span><span class="p">,</span> <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">locomotion_hint</span><span class="p">,</span> <span class="n">stair_hint</span><span class="o">=</span><span class="n">stair_hint</span><span class="p">,</span>
             <span class="n">external_force_params</span><span class="o">=</span><span class="n">external_force_params</span><span class="p">,</span> <span class="n">stairs_mode</span><span class="o">=</span><span class="n">stairs_mode</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="RobotCommandBuilder.body_pose"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.body_pose">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">body_pose</span><span class="p">(</span><span class="n">frame_name</span><span class="p">,</span> <span class="n">body_pose</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to create a BodyControlParams.BodyPose from a single desired `body_pose` relative to `frame_name`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            frame_name(string): Name of the frame relative to which `body_pose` is expressed.</span>
+<span class="sd">            body_pose(geometry_pb2.SE3Pose): Protobuf message specifying the desired pose of the</span>
+<span class="sd">                body.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            spot.BodyControlParams.BodyPose, specifies the desired body pose for a StandCommand</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyControlParams</span><span class="o">.</span><span class="n">BodyPose</span><span class="p">(</span>
+            <span class="n">root_frame_name</span><span class="o">=</span><span class="n">frame_name</span><span class="p">,</span> <span class="n">base_offset_rt_root</span><span class="o">=</span><span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE3Trajectory</span><span class="p">(</span>
+                <span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE3TrajectoryPoint</span><span class="p">(</span><span class="n">pose</span><span class="o">=</span><span class="n">body_pose</span><span class="p">)]))</span></div>
+
 <div class="viewcode-block" id="RobotCommandBuilder.build_body_external_forces"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.build_body_external_forces">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">build_body_external_forces</span><span class="p">(</span>
             <span class="n">external_force_indicator</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">BodyExternalForceParams</span><span class="o">.</span><span class="n">EXTERNAL_FORCE_NONE</span><span class="p">,</span>
             <span class="n">override_external_force_vec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Helper to create Mobility params.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to create Mobility params.</span>
 
 <span class="sd">        This function allows the user to enable an external force estimator, or set a vector of</span>
 <span class="sd">        forces (in the body frame) which override the estimator with constant external forces.</span>
@@ -2170,7 +2383,7 @@
 
 <div class="viewcode-block" id="RobotCommandBuilder.build_synchro_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.build_synchro_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">build_synchro_command</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Combines multiple commands into one command. There&#39;s no intelligence here on</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Combines multiple commands into one command. There&#39;s no intelligence here on</span>
 <span class="sd">        duplicate commands.</span>
 <span class="sd">        Args: RobotCommand containing only either mobility commands or synchro commands</span>
 <span class="sd">        Returns: RobotCommand containing a synchro command &quot;&quot;&quot;</span>
@@ -2205,8 +2418,96 @@
         <span class="k">return</span> <span class="n">robot_command</span></div></div>
 
 
+<div class="viewcode-block" id="blocking_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.blocking_command">[docs]</a><span class="k">def</span> <span class="nf">blocking_command</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">command</span><span class="p">,</span> <span class="n">check_status_fn</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                     <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function which uses the RobotCommandService to execute the given command.</span>
+
+<span class="sd">    Blocks until check_status_fn return true, or raises an exception if the command times out or fails.</span>
+<span class="sd">    This helper checks the main full_body/synchronized command status (RobotCommandFeedbackStatus), but</span>
+<span class="sd">    the caller should check the status of the specific commands (stand, stow, selfright, etc) in the callback.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        command_client: RobotCommand client.</span>
+<span class="sd">        command: The robot command to issue to the robot.</span>
+<span class="sd">        check_status_fn: A callback that accepts RobotCommandFeedbackResponse and returns True when the</span>
+<span class="sd">                         correct status&#39;s are achieved for the specific requested command and throws </span>
+<span class="sd">                         CommandFailedErrorWithFeedback if an error state occurs.</span>
+<span class="sd">        end_time_sec: The local end time of the command (will be converted to robot time)</span>
+<span class="sd">        timeout_sec: Timeout for the rpc in seconds.</span>
+<span class="sd">        update_frequency: Update frequency for the command in Hz.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        CommandFailedErrorWithFeedback: Command feedback from robot is not STATUS_PROCESSING.</span>
+<span class="sd">        bosdyn.client.robot_command.CommandTimedOutError: Command took longer than provided</span>
+<span class="sd">            timeout.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">raise_not_processing</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">feedback_status</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="n">CommandFailedErrorWithFeedback</span><span class="p">(</span>
+            <span class="s1">&#39;Command (ID </span><span class="si">{}</span><span class="s1">) no longer processing (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">command_id</span><span class="p">,</span>
+                <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">feedback_status</span><span class="p">)),</span>
+            <span class="n">response</span><span class="p">)</span>
+
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
+    <span class="n">update_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">update_frequency</span>
+
+    <span class="n">command_id</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_sec</span><span class="p">,</span>
+                                              <span class="n">end_time_secs</span><span class="o">=</span><span class="n">end_time_secs</span><span class="p">)</span>
+
+    <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
+        <span class="n">time_until_timeout</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">now</span>
+        <span class="n">rpc_timeout</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">time_until_timeout</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">start_call_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command_feedback</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">rpc_timeout</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TimedOutError</span><span class="p">:</span>
+            <span class="c1"># Excuse the TimedOutError and let the while check bail us out if we&#39;re out of time.</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Check the high level robot command status&#39;</span>
+            <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;full_body_feedback&quot;</span><span class="p">):</span>
+                <span class="n">full_body_status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">full_body_feedback</span><span class="o">.</span><span class="n">status</span>
+                <span class="k">if</span> <span class="n">full_body_status</span> <span class="o">!=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
+                    <span class="n">raise_not_processing</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">full_body_status</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;synchronized_feedback&quot;</span><span class="p">):</span>
+                <span class="n">synchro_fb</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">synchronized_feedback</span>
+                <span class="c1"># Mobility Feedback</span>
+                <span class="k">if</span> <span class="n">synchro_fb</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;mobility_command_feedback&quot;</span><span class="p">):</span>
+                    <span class="n">mob_status</span> <span class="o">=</span> <span class="n">synchro_fb</span><span class="o">.</span><span class="n">mobility_command_feedback</span><span class="o">.</span><span class="n">status</span>
+                    <span class="k">if</span> <span class="n">mob_status</span> <span class="o">!=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
+                        <span class="n">raise_not_processing</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">mob_status</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+                <span class="c1"># Arm Feedback</span>
+                <span class="k">if</span> <span class="n">synchro_fb</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;arm_command_feedback&quot;</span><span class="p">):</span>
+                    <span class="n">arm_status</span> <span class="o">=</span> <span class="n">synchro_fb</span><span class="o">.</span><span class="n">arm_command_feedback</span><span class="o">.</span><span class="n">status</span>
+                    <span class="k">if</span> <span class="n">arm_status</span> <span class="o">!=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
+                        <span class="n">raise_not_processing</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">arm_status</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+                <span class="c1"># Gripper Feedback</span>
+                <span class="k">if</span> <span class="n">synchro_fb</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;gripper_command_feedback&quot;</span><span class="p">):</span>
+                    <span class="n">gripper_status</span> <span class="o">=</span> <span class="n">synchro_fb</span><span class="o">.</span><span class="n">gripper_command_feedback</span><span class="o">.</span><span class="n">status</span>
+                    <span class="k">if</span> <span class="n">gripper_status</span> <span class="o">!=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
+                        <span class="n">raise_not_processing</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">gripper_status</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">CommandFailedErrorWithFeedback</span><span class="p">(</span>
+                    <span class="s1">&#39;Command (ID </span><span class="si">{}</span><span class="s1">) has neither full body nor synchronized feedback&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">command_id</span><span class="p">),</span> <span class="n">response</span><span class="p">)</span>
+
+            <span class="c1"># Check low level command specific status&#39;</span>
+            <span class="k">if</span> <span class="n">check_status_fn</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+                <span class="k">return</span>
+
+        <span class="n">delta_t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_call_time</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">delta_t</span><span class="p">,</span> <span class="n">update_time</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="k">raise</span> <span class="n">CommandTimedOutError</span><span class="p">(</span>
+        <span class="s2">&quot;Took longer than </span><span class="si">{:.1f}</span><span class="s2"> seconds to execute the command.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span></div>
+
+
 <div class="viewcode-block" id="blocking_stand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.blocking_stand">[docs]</a><span class="k">def</span> <span class="nf">blocking_stand</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper function which uses the RobotCommandService to stand.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function which uses the RobotCommandService to stand.</span>
 
 <span class="sd">    Blocks until robot is standing, or raises an exception if the command times out or fails.</span>
 
@@ -2217,48 +2518,22 @@
 <span class="sd">        params(spot.MobilityParams): Spot specific parameters for mobility commands to optionally set say body_height</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        CommandFailedError: Command feedback from robot is not STATUS_PROCESSING.</span>
+<span class="sd">        CommandFailedErrorWithFeedback: Command feedback from robot is not STATUS_PROCESSING.</span>
 <span class="sd">        bosdyn.client.robot_command.CommandTimedOutError: Command took longer than provided</span>
 <span class="sd">            timeout.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
-    <span class="n">update_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">update_frequency</span>
+    <span class="k">def</span> <span class="nf">check_stand_status</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">synchronized_feedback</span><span class="o">.</span><span class="n">mobility_command_feedback</span><span class="o">.</span><span class="n">stand_feedback</span><span class="o">.</span><span class="n">status</span>
+        <span class="k">return</span> <span class="n">status</span> <span class="o">==</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">StandCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_IS_STANDING</span>
 
     <span class="n">stand_command</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">synchro_stand_command</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
-    <span class="n">command_id</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">stand_command</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_sec</span><span class="p">)</span>
-
-    <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="k">while</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
-        <span class="n">time_until_timeout</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">now</span>
-        <span class="n">rpc_timeout</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">time_until_timeout</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">start_call_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command_feedback</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">rpc_timeout</span><span class="p">)</span>
-            <span class="n">mob_feedback</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">synchronized_feedback</span><span class="o">.</span><span class="n">mobility_command_feedback</span>
-            <span class="n">mob_status</span> <span class="o">=</span> <span class="n">mob_feedback</span><span class="o">.</span><span class="n">status</span>
-            <span class="n">stand_status</span> <span class="o">=</span> <span class="n">mob_feedback</span><span class="o">.</span><span class="n">stand_feedback</span><span class="o">.</span><span class="n">status</span>
-        <span class="k">except</span> <span class="n">TimedOutError</span><span class="p">:</span>
-            <span class="c1"># Excuse the TimedOutError and let the while check bail us out if we&#39;re out of time.</span>
-            <span class="k">pass</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">mob_status</span> <span class="o">!=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">CommandFailedError</span><span class="p">(</span><span class="s1">&#39;Stand (ID </span><span class="si">{}</span><span class="s1">) no longer processing (now </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">command_id</span><span class="p">,</span>
-                    <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">mob_status</span><span class="p">)))</span>
-            <span class="k">if</span> <span class="n">stand_status</span> <span class="o">==</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">StandCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_IS_STANDING</span><span class="p">:</span>
-                <span class="k">return</span>
-        <span class="n">delta_t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_call_time</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">delta_t</span><span class="p">,</span> <span class="n">update_time</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-
-    <span class="k">raise</span> <span class="n">CommandTimedOutError</span><span class="p">(</span>
-        <span class="s2">&quot;Took longer than </span><span class="si">{:.1f}</span><span class="s2"> seconds to assure the robot stood.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span></div>
+    <span class="n">blocking_command</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">stand_command</span><span class="p">,</span> <span class="n">check_stand_status</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="n">timeout_sec</span><span class="p">,</span>
+                     <span class="n">update_frequency</span><span class="o">=</span><span class="n">update_frequency</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="blocking_sit"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.blocking_sit">[docs]</a><span class="k">def</span> <span class="nf">blocking_sit</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper function which uses the RobotCommandService to sit.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function which uses the RobotCommandService to sit.</span>
 
 <span class="sd">    Blocks until robot is sitting, or raises an exception if the command times out or fails.</span>
 
@@ -2268,48 +2543,22 @@
 <span class="sd">        update_frequency: Update frequency for the command in Hz.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        CommandFailedError: Command feedback from robot is not STATUS_PROCESSING.</span>
+<span class="sd">        CommandFailedErrorWithFeedback: Command feedback from robot is not STATUS_PROCESSING.</span>
 <span class="sd">        bosdyn.client.robot_command.CommandTimedOutError: Command took longer than provided</span>
 <span class="sd">            timeout.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
-    <span class="n">update_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">update_frequency</span>
+    <span class="k">def</span> <span class="nf">check_sit_status</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">synchronized_feedback</span><span class="o">.</span><span class="n">mobility_command_feedback</span><span class="o">.</span><span class="n">sit_feedback</span><span class="o">.</span><span class="n">status</span>
+        <span class="k">return</span> <span class="n">status</span> <span class="o">==</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SitCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_IS_SITTING</span>
 
     <span class="n">sit_command</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">synchro_sit_command</span><span class="p">()</span>
-    <span class="n">command_id</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">sit_command</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_sec</span><span class="p">)</span>
-
-    <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="k">while</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
-        <span class="n">time_until_timeout</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">now</span>
-        <span class="n">rpc_timeout</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">time_until_timeout</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">start_call_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command_feedback</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">rpc_timeout</span><span class="p">)</span>
-            <span class="n">mob_feedback</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">synchronized_feedback</span><span class="o">.</span><span class="n">mobility_command_feedback</span>
-            <span class="n">mob_status</span> <span class="o">=</span> <span class="n">mob_feedback</span><span class="o">.</span><span class="n">status</span>
-            <span class="n">sit_status</span> <span class="o">=</span> <span class="n">mob_feedback</span><span class="o">.</span><span class="n">sit_feedback</span><span class="o">.</span><span class="n">status</span>
-        <span class="k">except</span> <span class="n">TimedOutError</span><span class="p">:</span>
-            <span class="c1"># Excuse the TimedOutError and let the while check bail us out if we&#39;re out of time.</span>
-            <span class="k">pass</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">mob_status</span> <span class="o">!=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">CommandFailedError</span><span class="p">(</span><span class="s1">&#39;Sit (ID </span><span class="si">{}</span><span class="s1">) no longer processing (now </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">command_id</span><span class="p">,</span>
-                    <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">mob_status</span><span class="p">)))</span>
-            <span class="k">if</span> <span class="n">sit_status</span> <span class="o">==</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SitCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_IS_SITTING</span><span class="p">:</span>
-                <span class="k">return</span>
-        <span class="n">delta_t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_call_time</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">delta_t</span><span class="p">,</span> <span class="n">update_time</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-
-    <span class="k">raise</span> <span class="n">CommandTimedOutError</span><span class="p">(</span>
-        <span class="s2">&quot;Took longer than </span><span class="si">{:.1f}</span><span class="s2"> seconds to assure the robot sat.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span></div>
+    <span class="n">blocking_command</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">sit_command</span><span class="p">,</span> <span class="n">check_sit_status</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="n">timeout_sec</span><span class="p">,</span>
+                     <span class="n">update_frequency</span><span class="o">=</span><span class="n">update_frequency</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="blocking_selfright"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.blocking_selfright">[docs]</a><span class="k">def</span> <span class="nf">blocking_selfright</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper function which uses the RobotCommandService to self-right.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function which uses the RobotCommandService to self-right.</span>
 
 <span class="sd">    Blocks until self-right has completed, or raises an exception if the command times out or fails.</span>
 
@@ -2319,52 +2568,25 @@
 <span class="sd">        update_frequency: Update frequency for the command in Hz.</span>
 
 <span class="sd">    Raises:</span>
-<span class="sd">        CommandFailedError: Command feedback from robot is not STATUS_PROCESSING.</span>
+<span class="sd">        CommandFailedErrorWithFeedback: Command feedback from robot is not STATUS_PROCESSING.</span>
 <span class="sd">        bosdyn.client.robot_command.CommandTimedOutError: Command took longer than provided</span>
 <span class="sd">            timeout.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
-    <span class="n">update_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">update_frequency</span>
+    <span class="k">def</span> <span class="nf">check_self_right_status</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">full_body_feedback</span><span class="o">.</span><span class="n">selfright_feedback</span><span class="o">.</span><span class="n">status</span>
+        <span class="k">return</span> <span class="n">status</span> <span class="o">==</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SelfRightCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_COMPLETED</span>
 
     <span class="n">selfright_command</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">selfright_command</span><span class="p">()</span>
-    <span class="n">command_id</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">selfright_command</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_sec</span><span class="p">)</span>
-
-    <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-    <span class="k">while</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
-        <span class="n">time_until_timeout</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">now</span>
-        <span class="n">rpc_timeout</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">time_until_timeout</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">start_call_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command_feedback</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">rpc_timeout</span><span class="p">)</span>
-            <span class="n">full_body_feedback</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">full_body_feedback</span>
-            <span class="n">full_body_status</span> <span class="o">=</span> <span class="n">full_body_feedback</span><span class="o">.</span><span class="n">status</span>
-            <span class="n">selfright_status</span> <span class="o">=</span> <span class="n">full_body_feedback</span><span class="o">.</span><span class="n">selfright_feedback</span><span class="o">.</span><span class="n">status</span>
-        <span class="k">except</span> <span class="n">TimedOutError</span><span class="p">:</span>
-            <span class="c1"># Excuse the TimedOutError and let the while check bail us out if we&#39;re out of time.</span>
-            <span class="k">pass</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">full_body_status</span> <span class="o">!=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="n">CommandFailedError</span><span class="p">(</span><span class="s1">&#39;Self-right (ID </span><span class="si">{}</span><span class="s1">) no longer processing (now </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">command_id</span><span class="p">,</span>
-                    <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">full_body_status</span><span class="p">)))</span>
-            <span class="k">if</span> <span class="n">selfright_status</span> <span class="o">==</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SelfRightCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_COMPLETED</span><span class="p">:</span>
-                <span class="k">return</span>
-        <span class="n">delta_t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_call_time</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">delta_t</span><span class="p">,</span> <span class="n">update_time</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-
-    <span class="k">raise</span> <span class="n">CommandTimedOutError</span><span class="p">(</span>
-        <span class="s2">&quot;Took longer than </span><span class="si">{:.1f}</span><span class="s2"> seconds to assure the robot completed self-right.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">now</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span></div>
+    <span class="n">blocking_command</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">selfright_command</span><span class="p">,</span> <span class="n">check_self_right_status</span><span class="p">,</span>
+                     <span class="n">timeout_sec</span><span class="o">=</span><span class="n">timeout_sec</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="n">update_frequency</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="block_until_arm_arrives"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.block_until_arm_arrives">[docs]</a><span class="k">def</span> <span class="nf">block_until_arm_arrives</span><span class="p">(</span><span class="n">command_client</span><span class="p">,</span> <span class="n">cmd_id</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper that blocks until the arm achieves a finishing state for the specific arm command.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper that blocks until the arm achieves a finishing state for the specific arm command.</span>
 
 <span class="sd">       This helper will block and check the feedback for ArmCartesianCommand, GazeCommand,</span>
-<span class="sd">       ArmJointMoveCommand, and NamedArmPositionsCommand.</span>
+<span class="sd">       ArmJointMoveCommand, NamedArmPositionsCommand, and ArmImpedanceCommand.</span>
 
 <span class="sd">       Args:</span>
 <span class="sd">        command_client: robot command client, used to request feedback</span>
@@ -2374,7 +2596,8 @@
 
 <span class="sd">       Return values:</span>
 <span class="sd">        True if successfully got to the end of the trajectory, False if the arm stalled or</span>
-<span class="sd">        the move was canceled (the arm failed to reach the goal).</span>
+<span class="sd">        the move was canceled (the arm failed to reach the goal). See the proto definitions in </span>
+<span class="sd">        arm_command.proto for more information about why a trajectory would succeed or fail.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">timeout_sec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -2405,6 +2628,11 @@
                 <span class="k">return</span> <span class="kc">True</span>
             <span class="k">elif</span> <span class="n">arm_feedback</span><span class="o">.</span><span class="n">named_arm_position_feedback</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">arm_command_pb2</span><span class="o">.</span><span class="n">NamedArmPositionsCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_STALLED_HOLDING_ITEM</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">elif</span> <span class="n">arm_feedback</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;arm_impedance_feedback&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">arm_feedback</span><span class="o">.</span><span class="n">arm_impedance_feedback</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">arm_command_pb2</span><span class="o">.</span><span class="n">ArmImpedanceCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_TRAJECTORY_COMPLETE</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">elif</span> <span class="n">arm_feedback</span><span class="o">.</span><span class="n">arm_impedance_feedback</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">arm_command_pb2</span><span class="o">.</span><span class="n">ArmImpedanceCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_TRAJECTORY_STALLED</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
         <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -2415,7 +2643,7 @@
         <span class="n">command_client</span><span class="p">,</span> <span class="n">cmd_id</span><span class="p">,</span>
         <span class="n">trajectory_end_statuses</span><span class="o">=</span><span class="p">(</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SE2TrajectoryCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_AT_GOAL</span><span class="p">,),</span>
         <span class="n">body_movement_statuses</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">feedback_interval_secs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Helper that blocks until a trajectory command reaches a desired goal state or a timeout is reached.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper that blocks until a trajectory command reaches a desired goal state or a timeout is reached.</span>
 
 <span class="sd">       Args:</span>
 <span class="sd">        command_client (RobotCommandClient): the client used to request feedback</span>

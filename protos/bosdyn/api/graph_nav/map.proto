@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,6 +10,7 @@ package bosdyn.api.graph_nav;
 option java_outer_classname = "MapProto";
 
 import "bosdyn/api/geometry.proto";
+import "bosdyn/api/graph_nav/area_callback_data.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/local_grid.proto";
 import "bosdyn/api/payload.proto";
@@ -20,7 +21,6 @@ import "bosdyn/api/spot/robot_command.proto";
 import "bosdyn/api/stairs.proto";
 import "bosdyn/api/world_object.proto";
 
-import "google/protobuf/any.proto";
 import "google/protobuf/field_mask.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
@@ -67,7 +67,8 @@ message Waypoint {
         // The time that the waypoint was created while recording a map.
         google.protobuf.Timestamp creation_time = 4;
 
-        // Estimate of the variance of ICP when performed at this waypoint, collected at record time.
+        // Estimate of the variance of ICP when performed at this waypoint, collected at record
+        // time.
         bosdyn.api.SE3Covariance icp_variance = 2;
 
         message LocalizeRegion {
@@ -75,24 +76,24 @@ message Waypoint {
             AnnotationState state = 1;
 
             // Use the default region to localize in.
-            message Default {
-            }
+            message Default {}
             // Do not localize to this waypoint.
-            message Empty {
-            }
-            // Indicates the number of meters away we can be from this waypoint we can be before scan
-            // matching.
+            message Empty {}
+            // Indicates the number of meters away we can be from this waypoint we can be before
+            // scan matching.
             // - If zero, the default value is used.
             // - If less than zero, no scan matching will be performed at this waypoint.
-            // - If greater than zero, scan matching will only be performed if the robot is at most this
+            // - If greater than zero, scan matching will only be performed if the robot is at most
+            // this
             //   far away from the waypoint.
             // Distance calculation is done in the 2d plane with respect to the waypoint.
             message Circle2D {
-                double dist_2d = 1; // meters.
+                double dist_2d = 1;  // meters.
             }
 
             oneof region {
-                // Oneof field that describes the waypoint's location as a default region (no special features/traits).
+                // Oneof field that describes the waypoint's location as a default region (no
+                // special features/traits).
                 Default default_region = 2;
                 // Oneof field that describes the waypoint's location as a empty/featureless region.
                 Empty empty = 3;
@@ -108,6 +109,25 @@ message Waypoint {
 
         // Information about the state of the client when this waypoint was created.
         ClientMetadata client_metadata = 6;
+
+        message LoopClosureSettings {
+            // If true, loop closure will be fully disabled at this waypoint.
+            bool disable_loop_closure = 1;
+            // If true, collision checking will be disabled for loop closures
+            // from or to this waypoint.
+            bool disable_collision_check = 2;
+            // If nonzero, edges are allowed to be this long when making loop
+            // closures to this waypoint. If zero, global/default settings will
+            // be used.
+            double max_edge_length = 3;
+            // If nonzero, loop closures to this waypoint may shortcut this amount
+            // of path length. If zero, global/default settings will be used.
+            double max_odometry_path_length = 4;
+        }
+        // This waypoint may have specific settings to help with loop closure. This
+        // Is useful for example when trying to ensure that a loop closure occurs at
+        // a particular intersection or near a dock.
+        LoopClosureSettings loop_closure_settings = 7;
     }
     // Annotations specific to the current waypoint.
     Annotations annotations = 4;
@@ -157,8 +177,9 @@ message WaypointSnapshot {
 
     // If true, the point cloud of this snapshot has been processed.
     bool is_point_cloud_processed = 8;
-    // If this snapshot is a modified version of the raw snapshot with the given ID (for example, it has been processed),
-    // a new unique ID will we assigned to this field. If the field is empty, this is the raw version of the snapshot.
+    // If this snapshot is a modified version of the raw snapshot with the given ID (for example, it
+    // has been processed), a new unique ID will we assigned to this field. If the field is empty,
+    // this is the raw version of the snapshot.
     string version_id = 9;
 
     // If true, the point cloud contains data from a remote point cloud service,
@@ -218,13 +239,17 @@ message Edge {
         EDGE_SOURCE_ALTERNATE_ROUTE_FINDING = 4;
         // Created via a CreateEdge RPC.
         EDGE_SOURCE_USER_REQUEST = 5;
+        // Created when we start recording after recording has been paused.
+        // For example, an "extension" of a graph will start with an edge
+        // of type EDGE_SOURCE_LOCALIZATION.
+        EDGE_SOURCE_LOCALIZATION = 6;
     };
 
     // Annotations understood by BostonDynamics systems.
     message Annotations {
         // Velocity limits to use while traversing the edge.
         // These are maxima and minima, NOT target speeds.
-        // NOTE: as of 2.4 this is deprecated. Please use mobility_params.vel_limit.
+        // DEPRECATED as of 2.4 and will be removed in 4.0. Please use mobility_params.vel_limit.
         SE2VelocityLimit vel_limit = 1 [deprecated = true];
 
         // Defines any parameters of the stairs
@@ -232,8 +257,12 @@ message Edge {
             // Check this before reading other fields.
             AnnotationState state = 1;
 
-            //  Parameters describing a straight staircase.
-            bosdyn.api.StraightStaircase straight_staircase = 2;
+            // Parameters describing a straight staircase.
+            // DEPRECATED as of 3.3.  Please use staircase_with_landings.
+            bosdyn.api.StraightStaircase straight_staircase = 2 [deprecated = true];
+
+            // Parameters describing an arbitrary staircase.
+            bosdyn.api.StaircaseWithLandings staircase_with_landings = 3;
         }
         // Stairs information/parameters specific to the edge.
         StairData stairs = 2;
@@ -257,27 +286,30 @@ message Edge {
         // If true, the robot must be aligned with the edge in yaw before traversing it.
         google.protobuf.BoolValue require_alignment = 5;
 
-        // If true, the edge crosses flat ground and the robot shouldn't try to climb over obstacles.
-        google.protobuf.BoolValue flat_ground = 6;
+        // If true, the edge crosses flat ground and the robot shouldn't try to climb over
+        // obstacles.
+        // DEPRECATED as of 3.3.  Replaced by ground_clutter_mode.
+        google.protobuf.BoolValue flat_ground = 6 [deprecated = true];
 
         // Terrain coefficient of friction user hint. This value must be postive and will clamped if
         // necessary on the robot side. Best suggested values lie in the range between 0.4 and 0.8
         // (which is the robot's default.)
-        // WARNING: deprecated as of 2.1. Use mobility_params instead, which includes ground_mu_hint
-        // as part of the terrain_params.
+        // DEPRECATED as of 2.1 and will be removed in 4.0. Use mobility_params instead, which
+        // includes ground_mu_hint as part of the terrain_params.
         google.protobuf.DoubleValue ground_mu_hint = 7 [deprecated = true];
 
         // If true, the edge crosses over grated metal. This changes some parameters of the robot's
         // perception system to allow it to see grated floors bettter.
-        // WARNING: deprecated as of 2.1. Use mobility_params instead, which includes grated_floor
-        // as part of the terrain_params.
+        // DEPRECATED as of 2.1 and will be removed in 4.0. Use mobility_params instead, which
+        // includes grated_floor as part of the terrain_params.
         google.protobuf.BoolValue grated_floor = 8 [deprecated = true];
         // Overrides the following fields of the mobility parameters to whatever is
         // stored in the map. For example, if this FieldMask contains "stairs_mode" and
         // "terrain_params.enable_grated_floor", then the map will be
-        // annotated with "stairs_mode" and "enable_grated_floor" settings. An empty FieldMask means all fields are active
-        // annotations. Note that the more conservative of the velocity limit stored in the mobility parameters and the
-        // TravelParams of the entire route will be used for this edge (regardless of what override_mobility_params says).
+        // annotated with "stairs_mode" and "enable_grated_floor" settings. An empty FieldMask means
+        // all fields are active annotations. Note that the more conservative of the velocity limit
+        // stored in the mobility parameters and the TravelParams of the entire route will be used
+        // for this edge (regardless of what override_mobility_params says).
         google.protobuf.FieldMask override_mobility_params = 9;
         // Contains terrain parameters, swing height, obstacle avoidance parameters, etc.
         // When the robot crosses this edge, it will use the mobility parameters here.
@@ -294,9 +326,9 @@ message Edge {
 
         // Path following mode
         enum PathFollowingMode {
-            PATH_MODE_UNKNOWN = 0;       // Unknown value
-            PATH_MODE_DEFAULT = 1;       // Use default path following parameters
-            PATH_MODE_STRICT = 2;        // Use strict path following parameters
+            PATH_MODE_UNKNOWN = 0;  // Unknown value
+            PATH_MODE_DEFAULT = 1;  // Use default path following parameters
+            PATH_MODE_STRICT = 2;   // Use strict path following parameters
         }
 
         // Path following mode for this edge.
@@ -387,12 +419,9 @@ message AreaCallbackRegion {
 
     // Human-readable description of this region.
     string description = 3;
-}
 
-// Data for a AreaCallback to be stored in snapshots
-message AreaCallbackData {
-    // Config data used by the service to do its job.
-    google.protobuf.Any config_data = 1;
+    // Configuration data associated with this area callback.
+    AreaCallbackData recorded_data = 4;
 }
 
 // This is an arbitrary collection of waypoints and edges. The edges and waypoints are not required
@@ -408,4 +437,36 @@ message Graph {
 
     // The anchoring (mapping from waypoints to their pose in a shared reference frame).
     Anchoring anchoring = 3;
+}
+
+// General statistics on the map that is loaded into GraphNav on the robot, including
+// information on the graph topology and snapshot data.
+message MapStats {
+    // Statistics from a particular type of object stored in the GraphNav map.
+    message Stat {
+        // The number of elements.
+        int32 count = 1;
+        // Lower bound on the number of bytes allocated for these elements on RAM
+        // inside the GraphNav server.
+        int64 num_bytes = 2;
+    }
+    // Waypoints (including alternate route finding waypoints).
+    Stat waypoints = 1;
+    // Waypoint snapshots.
+    Stat waypoint_snapshots = 2;
+    // The alternate route finding waypoints (used for alternate path planning).
+    Stat alternate_waypoints = 3;
+    // Edges (including alternate route finding edges).
+    Stat edges = 4;
+    // Edge snapshots.
+    Stat edge_snapshots = 5;
+    // Alternate edges (used for alternate path planning).
+    Stat alternate_edges = 6;
+    // Anchors for waypoints. (For computing anchorings to fixed reference frames).
+    Stat waypoint_anchors = 7;
+    // Anchors for world objects (fiducials).
+    Stat object_anchors = 8;
+    // The total distance travelled along recorded edges by the robot in the loaded
+    // map.
+    double total_path_length = 9;
 }

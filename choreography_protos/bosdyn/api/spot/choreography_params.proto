@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,18 +13,27 @@ option java_outer_classname = "ChoreographyParamsProto";
 import "bosdyn/api/geometry.proto";
 import "google/protobuf/wrappers.proto";
 
-// Euler Angle (yaw->pitch->roll) vector that uses wrapped values so we can tell which elements are set.
-message EulerZYXValue {
-  google.protobuf.DoubleValue roll = 1;
-  google.protobuf.DoubleValue pitch = 2;
-  google.protobuf.DoubleValue yaw = 3;
+// Euler Angle (yaw->pitch->roll) vector.
+message EulerZYX {
+    double roll = 1;
+    double pitch = 2;
+    double yaw = 3;
 }
 
-// Euler Angle rates (yaw->pitch->roll) vector that uses wrapped values so we can tell which elements are set.
+// Euler Angle (yaw->pitch->roll) vector that uses wrapped values so we can tell which elements are
+// set.
+message EulerZYXValue {
+    google.protobuf.DoubleValue roll = 1;
+    google.protobuf.DoubleValue pitch = 2;
+    google.protobuf.DoubleValue yaw = 3;
+}
+
+// Euler Angle rates (yaw->pitch->roll) vector that uses wrapped values so we can tell which
+// elements are set.
 message EulerRateZYXValue {
-  google.protobuf.DoubleValue roll = 1;
-  google.protobuf.DoubleValue pitch = 2;
-  google.protobuf.DoubleValue yaw = 3;
+    google.protobuf.DoubleValue roll = 1;
+    google.protobuf.DoubleValue pitch = 2;
+    google.protobuf.DoubleValue yaw = 3;
 }
 
 // Parameters specific to the BodyHold move.
@@ -38,7 +47,8 @@ message BodyHoldParams {
     // How many "slices" (beats or sub-beats) are allowed before reaching the desired pose.
     google.protobuf.DoubleValue entry_slices = 3;
 
-    // How many "slices" (beats or sub-beats) are allowed for the robot to return to the original pose.
+    // How many "slices" (beats or sub-beats) are allowed for the robot to return to the original
+    // pose.
     google.protobuf.DoubleValue exit_slices = 4;
 }
 
@@ -59,8 +69,8 @@ message SwayParams {
     // How much to roll [rad].
     google.protobuf.DoubleValue roll = 3;
 
-    // What point on the robot's body should the swaying be centered at. For example, should the head move
-    // instead of the butt?
+    // What point on the robot's body should the swaying be centered at. For example, should the
+    // head move instead of the butt?
     Pivot pivot = 4;
 
     // The type of motion used by the Sway sequence move.
@@ -80,8 +90,8 @@ message SwayParams {
     // How pronounced should the sway-style be? The value is on a scale from [0,1.0].
     google.protobuf.DoubleValue pronounced = 6;
 
-    // Should the robot hold previous values for the vertical, horizontal, and roll axes if the value is
-    // left unspecified (value of zero).
+    // Should the robot hold previous values for the vertical, horizontal, and roll axes if the
+    // value is left unspecified (value of zero).
     google.protobuf.BoolValue hold_zero_axes = 7;
 }
 
@@ -100,7 +110,6 @@ enum Easing {
     EASING_EXPONENTIAL_OUTPUT = 9;
     EASING_EXPONENTIAL_IN_OUT = 10;
 }
-
 
 // Parameters specific to ArmMove move.
 message ArmMoveParams {
@@ -157,7 +166,8 @@ message Figure8Params {
 
 // Parameters for open/close of gripper.
 message GripperParams {
-    // Angle in radians at which the gripper is open. Note that a 0 radian angle correlates to completely closed.
+    // Angle in radians at which the gripper is open. Note that a 0 radian angle correlates to
+    // completely closed.
     google.protobuf.DoubleValue angle = 1;
 
     // Speed in m/s at which the gripper should open/close to achieve the desired angle.
@@ -182,7 +192,8 @@ message KneelLegMoveParams {
     google.protobuf.DoubleValue hip_y = 2;
     google.protobuf.DoubleValue knee = 3;
 
-    // If mirrored is true, the joints will be flipped for the leg on the other side (right vs left) of the body.
+    // If mirrored is true, the joints will be flipped for the leg on the other side (right vs left)
+    // of the body.
     google.protobuf.BoolValue mirror = 4;
 
     // How the motion should be paced.
@@ -217,7 +228,8 @@ message RunningManParams {
     google.protobuf.DoubleValue spread = 3;
     // Should we reverse the motion?
     google.protobuf.BoolValue reverse = 4;
-    // How many full running man cycles should the robot complete in place before starting to move with the desired velocity.
+    // How many full running man cycles should the robot complete in place before starting to move
+    // with the desired velocity.
     google.protobuf.Int32Value pre_move_cycles = 5;
     // Do the move at some multiple of the dance cadence.
     google.protobuf.DoubleValue speed_multiplier = 6;
@@ -260,7 +272,8 @@ message RandomRotateParams {
 
 // Parameters for the robot's crawling gait.
 message CrawlParams {
-    // The number of slices (beats/sub-beats) the duration of a leg swing in the crawl gait should be.
+    // The number of slices (beats/sub-beats) the duration of a leg swing in the crawl gait should
+    // be.
     google.protobuf.DoubleValue swing_slices = 1;
     // The speed at which we should crawl [m/s].  X is forward.  Y is left.
     Vec2Value velocity = 2;
@@ -311,7 +324,8 @@ message JumpParams {
     google.protobuf.DoubleValue stance_length = 4;
     // How far the robot should jump [m].
     Vec2Value translation = 6;
-    // How much it should lo/td the first pair of lets ahead of the other pair.  In fraction of flight time.
+    // How much it should lo/td the first pair of lets ahead of the other pair.  In fraction of
+    // flight time.
     google.protobuf.DoubleValue split_fraction = 7;
     // If split_fraction is non-zero, which legs to lift first.
     enum Lead {
@@ -329,17 +343,18 @@ message JumpParams {
     // Should we translate in choreography sequence frame?
     google.protobuf.BoolValue translation_is_absolute = 12;
 
-    // The direction the robot should face upon landing relative to pose at the start of the dance. [rad]
+    // The direction the robot should face upon landing relative to pose at the start of the dance.
+    // [rad]
     google.protobuf.DoubleValue absolute_yaw = 9;
     // Where the robot should land relative to the pose at the start of the dance. [m]
     Vec2Value absolute_translation = 10;
 
     google.protobuf.DoubleValue swing_height = 13;
 
-
     // *** Deprecation Warning ***
-    // DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the yaw_is_absolute and translation_is_absolute fields.
-    // The following field will be deprecated and moved to 'reserved' in a future release.
+    // DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the
+    // yaw_is_absolute and translation_is_absolute fields. The following field will be deprecated
+    // and moved to 'reserved' in a future release.
     google.protobuf.BoolValue absolute = 5 [deprecated = true];
 }
 
@@ -350,15 +365,16 @@ message StepParams {
     Vec2Value offset = 2;
     // Should we use a second foot?  (None = 0, FL = 1, FR = 2, HL = 3, HR = 4).
     Leg second_foot = 3;
-    // Where should the swing foot go?  This vector should be described in a gravity-aligned body frame
-    // relative to the centerpoint of the swing. If set to {0,0,0}, uses the default swing path.
+    // Where should the swing foot go?  This vector should be described in a gravity-aligned body
+    // frame relative to the centerpoint of the swing. If set to {0,0,0}, uses the default swing
+    // path.
     Vec3Value swing_waypoint = 5;
     // Parameters for altering swing.
-    // Note that these will have no effect if swing_waypoint is specified. As well, a zero (or nearly zero)
-    // value will be considered as an unspecified parameter.
-    google.protobuf.DoubleValue swing_height = 6; // meters
-    google.protobuf.DoubleValue liftoff_velocity = 7; // m/s
-    google.protobuf.DoubleValue touchdown_velocity = 8; // m/s
+    // Note that these will have no effect if swing_waypoint is specified. As well, a zero (or
+    // nearly zero) value will be considered as an unspecified parameter.
+    google.protobuf.DoubleValue swing_height = 6;        // meters
+    google.protobuf.DoubleValue liftoff_velocity = 7;    // m/s
+    google.protobuf.DoubleValue touchdown_velocity = 8;  // m/s
     // Should we mirror the offset for the second foot?
     // Ignored if second_foot is set to None
     google.protobuf.BoolValue mirror_x = 9;
@@ -381,8 +397,9 @@ message StepParams {
 message RotateBodyParams {
     // The robot will rotate its body to the specified orientation (roll/pitch/yaw).
     EulerZYXValue rotation = 1;
-    // If true, the robot will transition back to the initial pose we started at before this choreography sequence move begin execution,
-    // and otherwise it will remain in whatever pose it is in after completing the choreography sequence move.
+    // If true, the robot will transition back to the initial pose we started at before this
+    // choreography sequence move begin execution, and otherwise it will remain in whatever pose it
+    // is in after completing the choreography sequence move.
     google.protobuf.BoolValue return_to_start_pose = 2;
 }
 
@@ -392,7 +409,8 @@ message ButtCircleParams {
     google.protobuf.DoubleValue radius = 1;
     // The number of beats that elapse while performing the butt circle.
     google.protobuf.DoubleValue beats_per_circle = 2;
-    // The number of circles that will be performed.  If non-zero, takes precedence over beats_per_circle.
+    // The number of circles that will be performed.  If non-zero, takes precedence over
+    // beats_per_circle.
     google.protobuf.DoubleValue number_of_circles = 3;
     // The pivot point the butt circles should be centered around.
     Pivot pivot = 4;
@@ -416,8 +434,8 @@ message TurnParams {
     google.protobuf.DoubleValue absolute_yaw = 5;
     // Should we turn to a yaw in choreography sequence frame?
     google.protobuf.BoolValue yaw_is_absolute = 6;
-    // Swing parameters to describe the footstep pattern during the turning [height in meters]. Note,
-    // a zero (or nearly zero) value will be considered as an unspecified parameter.
+    // Swing parameters to describe the footstep pattern during the turning [height in meters].
+    // Note, a zero (or nearly zero) value will be considered as an unspecified parameter.
     google.protobuf.DoubleValue swing_height = 3;
     // Swing parameter to describe the foot's swing velocity during the turning [m/s]. Note, a zero
     // (or nearly zero) value will be considered as an unspecified parameter.
@@ -430,8 +448,9 @@ message TurnParams {
     google.protobuf.BoolValue motion_is_absolute = 9;
 
     // *** Deprecation Warning ***
-    // DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the yaw_is_absolute and translation_is_absolute fields.
-    // The following field will be deprecated and moved to 'reserved' in a future release.
+    // DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the
+    // yaw_is_absolute and translation_is_absolute fields. The following field will be deprecated
+    // and moved to 'reserved' in a future release.
     google.protobuf.BoolValue absolute = 2 [deprecated = true];
 }
 
@@ -443,11 +462,11 @@ message Pace2StepParams {
     Vec2Value absolute_motion = 6;
     // Is motion specified relative to pose at start of dance?
     google.protobuf.BoolValue motion_is_absolute = 7;
-    // Swing parameters to describe the footstep pattern during the pace translation gait. Note, a zero (or nearly zero)
-    // value will be considered as an unspecified parameter.
+    // Swing parameters to describe the footstep pattern during the pace translation gait. Note, a
+    // zero (or nearly zero) value will be considered as an unspecified parameter.
     google.protobuf.DoubleValue swing_height = 3;
     google.protobuf.DoubleValue swing_velocity = 4;
-     // How far to turn, described in radians with a positive value representing a turn to the left.
+    // How far to turn, described in radians with a positive value representing a turn to the left.
     google.protobuf.DoubleValue yaw = 8;
     // Orientation to turn to, relative to the orientation at the start of the script. [rad]
     google.protobuf.DoubleValue absolute_yaw = 9;
@@ -455,12 +474,13 @@ message Pace2StepParams {
     google.protobuf.BoolValue yaw_is_absolute = 10;
 
     // *** Deprecation Warning ***
-    // DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the yaw_is_absolute and translation_is_absolute fields.
-    // The following field will be deprecated and moved to 'reserved' in a future release.
+    // DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the
+    // yaw_is_absolute and translation_is_absolute fields. The following field will be deprecated
+    // and moved to 'reserved' in a future release.
     google.protobuf.BoolValue absolute = 5;
 }
 
-  // Parameters specific to the chicken head move.
+// Parameters specific to the chicken head move.
 message ChickenHeadParams {
     // Bobs the head in this direction in the robot footprint frame.
     Vec3Value bob_magnitude = 1;
@@ -471,7 +491,8 @@ message ChickenHeadParams {
 }
 // Parameters specific to clapping.
 message ClapParams {
-    // Direction in a gravity-aligned body frame of clapping motion. A typical value for the location is (0, 1, 0).
+    // Direction in a gravity-aligned body frame of clapping motion. A typical value for the
+    // location is (0, 1, 0).
     Vec3Value direction = 1;
     // Location in body frame of the clap. A typical value for the location is (0.4, 0, -0.5).
     Vec3Value location = 2;
@@ -483,7 +504,8 @@ message ClapParams {
 
 // Parameters specific to the kneel_circles move.
 message KneelCircleParams {
-    // Location in body frame of the circle center. A typical value for the location is (0.4, 0, -0.5).
+    // Location in body frame of the circle center. A typical value for the location is (0.4, 0,
+    // -0.5).
     Vec3Value location = 1;
     // How beats per circle.  One or two are reasonable values.
     google.protobuf.Int32Value beats_per_circle = 2;
@@ -616,6 +638,157 @@ message RippleColorParams {
     google.protobuf.DoubleValue increment_slices = 5;
 }
 
+message LegJointParams {
+    google.protobuf.DoubleValue fl_hx = 1;
+    google.protobuf.DoubleValue fl_hy = 2;
+    google.protobuf.DoubleValue fl_kn = 3;
+    google.protobuf.DoubleValue fr_hx = 4;
+    google.protobuf.DoubleValue fr_hy = 5;
+    google.protobuf.DoubleValue fr_kn = 6;
+    google.protobuf.DoubleValue hl_hx = 7;
+    google.protobuf.DoubleValue hl_hy = 8;
+    google.protobuf.DoubleValue hl_kn = 9;
+    google.protobuf.DoubleValue hr_hx = 10;
+    google.protobuf.DoubleValue hr_hy = 11;
+    google.protobuf.DoubleValue hr_kn = 12;
+}
+
+
+message StanceShape {
+    google.protobuf.DoubleValue length = 1;
+    google.protobuf.DoubleValue width = 2;
+    google.protobuf.DoubleValue front_wider_than_hind = 3;
+    google.protobuf.DoubleValue left_longer_than_right = 4;
+    google.protobuf.DoubleValue left_forward_of_right = 5;
+}
+
+message SwingPhases {
+    google.protobuf.DoubleValue liftoff_phase = 1;
+    google.protobuf.DoubleValue touchdown_phase = 2;
+}
+
+message SwingParams {
+    google.protobuf.DoubleValue height = 1;
+    google.protobuf.DoubleValue liftoff_speed = 2;
+    google.protobuf.DoubleValue vertical_speed = 3;
+    google.protobuf.DoubleValue vertical_acceleration = 4;
+    google.protobuf.DoubleValue overlay_outside = 5;
+    google.protobuf.DoubleValue overlay_forward = 6;
+    google.protobuf.DoubleValue low_speed_fraction = 7;
+}
+
+message AnimatedCycleParams {
+    google.protobuf.StringValue animation_name = 1;
+    google.protobuf.BoolValue enable_animation_duration = 2;
+    google.protobuf.BoolValue enable_leg_timing = 3;
+    google.protobuf.BoolValue enable_stance_shape = 4;
+}
+
+message CustomGaitParams {
+    // Maximum steering commands that will be accepted.
+    Vec2Value max_velocity = 3;
+    google.protobuf.DoubleValue max_yaw_rate = 4;
+    // How much to limit steering acceleration.  1 is normal.  Smaller is less acceleration.
+    google.protobuf.DoubleValue acceleration_scaling = 5;
+
+    // Gait pattern.  When to liftoff and touchdown each leg.
+    google.protobuf.DoubleValue cycle_duration = 51;
+    SwingPhases fl_swing = 52;
+    google.protobuf.BoolValue two_fl_swings = 53;
+    SwingPhases second_fl_swing = 54;
+    SwingPhases fr_swing = 55;
+    google.protobuf.BoolValue two_fr_swings = 56;
+    SwingPhases second_fr_swing = 57;
+    SwingPhases hl_swing = 58;
+    google.protobuf.BoolValue two_hl_swings = 59;
+    SwingPhases second_hl_swing = 60;
+    SwingPhases hr_swing = 61;
+    google.protobuf.BoolValue two_hr_swings = 62;
+    SwingPhases second_hr_swing = 63;
+
+    // Relative positions of feet.
+    google.protobuf.BoolValue show_stance_shape = 10;
+    StanceShape stance_shape = 11;
+
+    // Constant posture.
+    // For a phase-dependent posture, combine with a Body move.
+    google.protobuf.DoubleValue com_height = 20;
+    Vec3Value body_translation_offset = 21;
+    EulerZYXValue body_rotation_offset = 22;
+    google.protobuf.DoubleValue low_speed_body_fraction = 8;
+
+    // Modify the path the foot takes between liftoff and touchdown.
+    // General swing parameters apply to legs that are not configured to have their own parameter
+    // set.
+    SwingParams general_swing_params = 80;
+    // Individual legs can have their own parameters or use the general swing parameters.
+    google.protobuf.BoolValue use_fl_swing_params = 81;
+    SwingParams fl_swing_params = 82;
+    google.protobuf.BoolValue use_fr_swing_params = 83;
+    SwingParams fr_swing_params = 84;
+    google.protobuf.BoolValue use_hl_swing_params = 85;
+    SwingParams hl_swing_params = 86;
+    google.protobuf.BoolValue use_hr_swing_params = 87;
+    SwingParams hr_swing_params = 88;
+
+    // Stand rather than stepping in place when not moving.
+    google.protobuf.BoolValue stand_in_place = 90;
+    // Go back to a standard rectangular stance when ending the gait.
+    // Otherwise maintains the customized stance shape.
+    google.protobuf.BoolValue standard_final_stance = 91;
+
+    // Parameters that impact the stability of the gait rather than its appearance.
+    google.protobuf.BoolValue show_stability_params = 100;
+    // Friction coefficient between the feet and the ground.
+    google.protobuf.DoubleValue mu = 101;
+    // How much the robot is allowed to deviate from the specified timing.
+    // 0 means no deviation.
+    // Otherwise: large values mean less deviation and small values mean more is acceptable.
+    // Too much timing adjustment (low, non-zero values) may make the gait unstable.
+    // At least a little timing adjustment is recommended for gaits with flight phases (periods with
+    // 0 feet on the ground).
+    google.protobuf.DoubleValue timing_stiffness = 102;
+    // How much the robot is allowed to deviate from the specified stance shape.
+    // 0 means no deviation.
+    // Otherwise: large values mean less deviation and small values mean more is acceptable.
+    // Too much position adjustment (low, non-zero values) may make the gait unstable.
+    google.protobuf.DoubleValue step_position_stiffness = 103;
+    // Enable/disable various aspects of perception.
+    google.protobuf.BoolValue enable_perception_obstacle_avoidance = 130;
+    google.protobuf.DoubleValue obstacle_avoidance_padding = 131;
+    google.protobuf.BoolValue enable_perception_terrain_height = 132;
+    google.protobuf.BoolValue enable_perception_step_placement = 133;
+    // How far the robot should stumble before giving up and freezing.
+    google.protobuf.DoubleValue maximum_stumble_distance = 140;
+    // How sensitive we should be to trip detection.
+    // On the range [0, 1], where 1 is normal sensitivity and 0 is ignoring all trips.
+    // Useful for very aggressive gaits or when a costume is restricting leg motion.
+    google.protobuf.DoubleValue trip_sensitivity = 141;
+
+    // Using an animated cycle to define the gait style
+    AnimatedCycleParams animated_cycle_params = 161;
+}
+
+message CustomGaitCommand {
+    // Locomotion velocity in the horizontal plane in robot body frame. (m/s, m/s, rad/s)
+    SE2Velocity drive_velocity_body = 1;
+    // When true, robot will transition to a stand, then continue the sequence.
+    // Until then, the sequence will keep looping through this move.
+    bool finished = 2;
+
+    // How much to offset the body pose.  Additive with other offsets.
+    Vec3 body_translation_offset = 3;      // Meters.
+    EulerZYX body_orientation_offset = 4;  // Radians.
+}
+
+message CustomGaitCommandLimits {
+    // Maximum absolute value of locomotion velocity in the horizontal plane in robot body frame.
+    // (m/s, m/s, rad/s)
+    SE2Velocity maximum_drive_velocity_body = 1;
+    // Maximum absolute value of the body offsets.
+    Vec3 maximum_body_translation_offset = 3;      // Meters.
+    EulerZYX maximum_body_orientation_offset = 4;  // Radians.
+}
 
 message AnimateParams {
     // The name of the animated move. There are no default values/bounds associated with this field.
@@ -624,13 +797,16 @@ message AnimateParams {
     // How many slices to smoothly transition from previous pose to animation.
     google.protobuf.DoubleValue body_entry_slices = 2;
 
-    // How many slices to return from animation to nominal pose.  Zero indicates to keep final animated pose.
+    // How many slices to return from animation to nominal pose.  Zero indicates to keep final
+    // animated pose.
     google.protobuf.DoubleValue body_exit_slices = 3;
 
-    // Multiplier for animated translation by axis to exaggerate or suppress motion along specific axes.
+    // Multiplier for animated translation by axis to exaggerate or suppress motion along specific
+    // axes.
     Vec3Value translation_multiplier = 4;
 
-    // Multiplier for the animated orientation by axis to exaggerate or suppress motion along specific axes.
+    // Multiplier for the animated orientation by axis to exaggerate or suppress motion along
+    // specific axes.
     EulerZYXValue rotation_multiplier = 5;
 
     // How many slices to smoothly transition from previous pose to animation.
@@ -664,6 +840,7 @@ message AnimateParams {
     // How hard to try to track the animated body motion.
     // Only applicable to animations that control both the body and the legs.
     // On a scale of 1 to 10 (11 for a bit extra).
-    // Higher will result in more closely tracking the animated body motion, but possibly at the expense of balance for more difficult animations.
+    // Higher will result in more closely tracking the animated body motion, but possibly at the
+    // expense of balance for more difficult animations.
     google.protobuf.DoubleValue body_tracking_stiffness = 19;
 }

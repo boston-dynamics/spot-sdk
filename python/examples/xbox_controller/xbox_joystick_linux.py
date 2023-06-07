@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -54,8 +54,8 @@ class XboxJoystickLinux(XboxJoystick):
                                          stdout=subprocess.PIPE, bufsize=0)
         except FileNotFoundError as e:
             raise Exception(
-                'Error opening Xbox controller.  Have you installed the xbox driver with "sudo apt-get install xboxdrv" ?'
-            ) from e
+                'Error opening Xbox controller. '
+                'Have you installed the xbox driver with "sudo apt-get install xboxdrv" ?') from e
 
         self.pipe = self.proc.stdout
         self.reading = '0' * 140  #initialize stick readings to all zeros

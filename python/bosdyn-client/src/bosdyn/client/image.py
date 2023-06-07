@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -11,8 +11,8 @@ import os
 import numpy as np
 
 from bosdyn.api import image_pb2, image_service_pb2_grpc
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
-                                  handle_common_header_errors)
+from bosdyn.client.common import (BaseClient, common_header_errors, custom_params_error,
+                                  error_factory, error_pair, handle_common_header_errors)
 from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 
 
@@ -68,10 +68,16 @@ _STATUS_TO_ERROR.update({
 def _error_from_response(response):
     """Return a custom exception based on the first invalid image response, None if no error."""
     for image_response in response.image_responses:
+        result = custom_params_error(image_response, total_response=response)
+        if result is not None:
+            return result
+
         result = error_factory(response, image_response.status,
                                status_to_string=image_pb2.ImageResponse.Status.Name,
                                status_to_error=_STATUS_TO_ERROR)
         if result is not None:
+            # The exception is using the image_response.  Replace it with the full response.
+            result.response = response
             return result
     return None
 

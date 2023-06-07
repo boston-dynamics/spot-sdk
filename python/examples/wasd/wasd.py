@@ -1,13 +1,10 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
 """WASD driving of robot."""
-
-from __future__ import print_function
-
 import curses
 import io
 import logging
@@ -54,7 +51,7 @@ def _grpc_or_log(desc, thunk):
     try:
         return thunk()
     except (ResponseError, RpcError) as err:
-        LOGGER.error("Failed %s: %s" % (desc, err))
+        LOGGER.error('Failed %s: %s', desc, err)
 
 
 def _image_to_ascii(image, new_width):
@@ -128,14 +125,14 @@ class CursesHandler(logging.Handler):
     def emit(self, record):
         msg = record.getMessage()
         msg = msg.replace('\n', ' ').replace('\r', '')
-        self._wasd_interface.add_message('{:s} {:s}'.format(record.levelname, msg))
+        self._wasd_interface.add_message(f'{record.levelname:s} {msg:s}')
 
 
 class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
 
     def __init__(self, robot_state_client):
-        super(AsyncRobotState, self).__init__("robot_state", robot_state_client, LOGGER,
+        super(AsyncRobotState, self).__init__('robot_state', robot_state_client, LOGGER,
                                               period_sec=0.2)
 
     def _start_query(self):
@@ -167,7 +164,7 @@ class AsyncImageCapture(AsyncGRPCTask):
 
     def _start_query(self):
         self._should_take_image = False
-        source_name = "frontright_fisheye_image"
+        source_name = 'frontright_fisheye_image'
         return self._image_client.get_image_from_sources_async([source_name])
 
     def _should_query(self, now_sec):  # pylint: disable=unused-argument
@@ -179,7 +176,7 @@ class AsyncImageCapture(AsyncGRPCTask):
         self._ascii_image = _image_to_ascii(image, new_width=70)
 
     def _handle_error(self, exception):
-        LOGGER.exception("Failure getting image: %s" % exception)
+        LOGGER.exception('Failure getting image: %s', exception)
 
 
 class WasdInterface(object):
@@ -210,6 +207,7 @@ class WasdInterface(object):
             ord(' '): self._toggle_estop,
             ord('r'): self._self_right,
             ord('P'): self._toggle_power,
+            ord('p'): self._toggle_power,
             ord('v'): self._sit,
             ord('b'): self._battery_change_pose,
             ord('f'): self._stand,
@@ -246,7 +244,7 @@ class WasdInterface(object):
 
     def shutdown(self):
         """Release control of robot as gracefully as possible."""
-        LOGGER.info("Shutting down WasdInterface.")
+        LOGGER.info('Shutting down WasdInterface.')
         if self._estop_keepalive:
             # This stops the check-in thread but does not stop the robot.
             self._estop_keepalive.shutdown()
@@ -284,7 +282,7 @@ class WasdInterface(object):
             LOGGER.addHandler(curses_handler)
 
             stdscr.nodelay(True)  # Don't block for user input.
-            stdscr.resize(26, 96)
+            stdscr.resize(26, 140)
             stdscr.refresh()
 
             # for debug
@@ -313,9 +311,8 @@ class WasdInterface(object):
     def _drive_draw(self, stdscr, lease_keep_alive):
         """Draw the interface screen at each update."""
         stdscr.clear()  # clear screen
-        stdscr.resize(26, 96)
-        stdscr.addstr(0, 0, '{:20s} {}'.format(self._robot_id.nickname,
-                                               self._robot_id.serial_number))
+        stdscr.resize(26, 140)
+        stdscr.addstr(0, 0, f'{self._robot_id.nickname:20s} {self._robot_id.serial_number}')
         stdscr.addstr(1, 0, self._lease_str(lease_keep_alive))
         stdscr.addstr(2, 0, self._battery_str())
         stdscr.addstr(3, 0, self._estop_str())
@@ -323,15 +320,15 @@ class WasdInterface(object):
         stdscr.addstr(5, 0, self._time_sync_str())
         for i in range(3):
             stdscr.addstr(7 + i, 2, self.message(i))
-        stdscr.addstr(10, 0, "Commands: [TAB]: quit                               ")
-        stdscr.addstr(11, 0, "          [T]: Time-sync, [SPACE]: Estop, [P]: Power")
-        stdscr.addstr(12, 0, "          [I]: Take image, [O]: Video mode          ")
-        stdscr.addstr(13, 0, "          [f]: Stand, [r]: Self-right               ")
-        stdscr.addstr(14, 0, "          [v]: Sit, [b]: Battery-change             ")
-        stdscr.addstr(15, 0, "          [wasd]: Directional strafing              ")
-        stdscr.addstr(16, 0, "          [qe]: Turning, [ESC]: Stop              ")
-        stdscr.addstr(17, 0, "          [l]: Return/Acquire lease                 ")
-        stdscr.addstr(18, 0, "")
+        stdscr.addstr(10, 0, 'Commands: [TAB]: quit                               ')
+        stdscr.addstr(11, 0, '          [T]: Time-sync, [SPACE]: Estop, [P]: Power')
+        stdscr.addstr(12, 0, '          [I]: Take image, [O]: Video mode          ')
+        stdscr.addstr(13, 0, '          [f]: Stand, [r]: Self-right               ')
+        stdscr.addstr(14, 0, '          [v]: Sit, [b]: Battery-change             ')
+        stdscr.addstr(15, 0, '          [wasd]: Directional strafing              ')
+        stdscr.addstr(16, 0, '          [qe]: Turning, [ESC]: Stop                ')
+        stdscr.addstr(17, 0, '          [l]: Return/Acquire lease                 ')
+        stdscr.addstr(18, 0, '')
 
         # print as many lines of the image as will fit on the curses screen
         if self._image_task.ascii_image != None:
@@ -352,13 +349,13 @@ class WasdInterface(object):
 
         except KeyError:
             if key and key != -1 and key < 256:
-                self.add_message("Unrecognized keyboard command: '{}'".format(chr(key)))
+                self.add_message(f'Unrecognized keyboard command: \'{chr(key)}\'')
 
     def _try_grpc(self, desc, thunk):
         try:
             return thunk()
         except (ResponseError, RpcError, LeaseBaseError) as err:
-            self.add_message("Failed {}: {}".format(desc, err))
+            self.add_message(f'Failed {desc}: {err}')
             return None
 
     def _try_grpc_async(self, desc, thunk):
@@ -367,7 +364,7 @@ class WasdInterface(object):
             try:
                 fut.result()
             except (ResponseError, RpcError, LeaseBaseError) as err:
-                self.add_message("Failed {}: {}".format(desc, err))
+                self.add_message(f'Failed {desc}: {err}')
                 return None
 
         future = thunk()
@@ -390,7 +387,7 @@ class WasdInterface(object):
             if not self._estop_keepalive:
                 self._estop_keepalive = EstopKeepAlive(self._estop_endpoint)
             else:
-                self._try_grpc("stopping estop", self._estop_keepalive.stop)
+                self._try_grpc('stopping estop', self._estop_keepalive.stop)
                 self._estop_keepalive.shutdown()
                 self._estop_keepalive = None
 
@@ -469,7 +466,7 @@ class WasdInterface(object):
             end_time_secs=time.time() + 20)
 
     def _take_ascii_image(self):
-        source_name = "frontright_fisheye_image"
+        source_name = 'frontright_fisheye_image'
         image_response = self._image_client.get_image_from_sources([source_name])
         image = Image.open(io.BytesIO(image_response[0].shot.image.data))
         ascii_image = self._ascii_converter.convert_to_ascii(image, new_width=70)
@@ -489,9 +486,9 @@ class WasdInterface(object):
             return
 
         if power_state == robot_state_proto.PowerState.STATE_OFF:
-            self._try_grpc_async("powering-on", self._request_power_on)
+            self._try_grpc_async('powering-on', self._request_power_on)
         else:
-            self._try_grpc("powering-off", self._safe_power_off)
+            self._try_grpc('powering-off', self._safe_power_off)
 
     def _request_power_on(self):
         request = PowerServiceProto.PowerCommandRequest.REQUEST_ON
@@ -513,21 +510,21 @@ class WasdInterface(object):
         else:
             try:
                 _lease = lease_keep_alive.lease_wallet.get_lease()
-                lease = '{}:{}'.format(_lease.lease_proto.resource, _lease.lease_proto.sequence)
+                lease = f'{_lease.lease_proto.resource}:{_lease.lease_proto.sequence}'
             except bosdyn.client.lease.Error:
                 lease = '...'
             if lease_keep_alive.is_alive():
                 alive = 'RUNNING'
             else:
                 alive = 'STOPPED'
-        return 'Lease {} THREAD:{}'.format(lease, alive)
+        return f'Lease {lease} THREAD:{alive}'
 
     def _power_state_str(self):
         power_state = self._power_state()
         if power_state is None:
             return ''
         state_str = robot_state_proto.PowerState.MotorPowerState.Name(power_state)
-        return 'Power: {}'.format(state_str[6:])  # get rid of STATE_ prefix
+        return f'Power: {state_str[6:]}'  # get rid of STATE_ prefix
 
     def _estop_str(self):
         if not self._estop_client:
@@ -541,7 +538,7 @@ class WasdInterface(object):
                 if estop_state.type == estop_state.TYPE_SOFTWARE:
                     estop_status = estop_state.State.Name(estop_state.state)[6:]  # s/STATE_//
                     break
-        return 'Estop {} (thread: {})'.format(estop_status, thread_status)
+        return f'Estop {estop_status} (thread: {thread_status})'
 
     def _time_sync_str(self):
         if not self._robot.time_sync:
@@ -550,18 +547,18 @@ class WasdInterface(object):
             status = 'STOPPED'
             exception = self._robot.time_sync.thread_exception
             if exception:
-                status = '{} Exception: {}'.format(status, exception)
+                status = f'{status} Exception: {exception}'
         else:
             status = 'RUNNING'
         try:
             skew = self._robot.time_sync.get_robot_clock_skew()
             if skew:
-                skew_str = 'offset={}'.format(duration_str(skew))
+                skew_str = f'offset={duration_str(skew)}'
             else:
-                skew_str = "(Skew undetermined)"
+                skew_str = '(Skew undetermined)'
         except (TimeSyncError, RpcError) as err:
-            skew_str = '({})'.format(err)
-        return 'Time sync: {} {}'.format(status, skew_str)
+            skew_str = f'({err})'
+        return f'Time sync: {status} {skew_str}'
 
     def _battery_str(self):
         if not self.robot_state:
@@ -571,13 +568,13 @@ class WasdInterface(object):
         status = status[7:]  # get rid of STATUS_ prefix
         if battery_state.charge_percentage.value:
             bar_len = int(battery_state.charge_percentage.value) // 10
-            bat_bar = '|{}{}|'.format('=' * bar_len, ' ' * (10 - bar_len))
+            bat_bar = f'|{"=" * bar_len}{" " * (10 - bar_len)}|'
         else:
             bat_bar = ''
         time_left = ''
         if battery_state.estimated_runtime:
-            time_left = ' ({})'.format(secs_to_hms(battery_state.estimated_runtime.seconds))
-        return 'Battery: {}{}{}'.format(status, bat_bar, time_left)
+            time_left = f'({secs_to_hms(battery_state.estimated_runtime.seconds)})'
+        return f'Battery: {status}{bat_bar} {time_left}'
 
 
 def _setup_logging(verbose):
@@ -627,14 +624,14 @@ def main():
         bosdyn.client.util.authenticate(robot)
         robot.start_time_sync(options.time_sync_interval_sec)
     except RpcError as err:
-        LOGGER.error("Failed to communicate with robot: %s" % err)
+        LOGGER.error('Failed to communicate with robot: %s', err)
         return False
 
     wasd_interface = WasdInterface(robot)
     try:
         wasd_interface.start()
     except (ResponseError, RpcError) as err:
-        LOGGER.error("Failed to initialize robot communication: %s" % err)
+        LOGGER.error('Failed to initialize robot communication: %s', err)
         return False
 
     LOGGER.removeHandler(stream_handler)  # Don't use stream handler in curses mode.
@@ -649,7 +646,7 @@ def main():
             # Restore stream handler to show any exceptions or final messages.
             LOGGER.addHandler(stream_handler)
     except Exception as e:
-        LOGGER.error("WASD has thrown an error: [%r] %s", e, e)
+        LOGGER.error('WASD has thrown an error: [%r] %s', e, e)
     finally:
         # Do any final cleanup steps.
         wasd_interface.shutdown()
@@ -657,7 +654,7 @@ def main():
     return True
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main():
         os._exit(1)
     os._exit(0)

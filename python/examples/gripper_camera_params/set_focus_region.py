@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -80,7 +80,7 @@ def main(argv):
                 print('"q" pressed, exiting.')
                 exit(0)
 
-        print('Clicked at (' + str(g_image_click[0]) + ', ' + str(g_image_click[1]) + ')')
+        print(f'Clicked at ({g_image_click[0]}, {g_image_click[1]})')
 
         # Covert coordinate to percentage in image
         percent_x = g_image_click[0] / img.shape[1]
@@ -181,6 +181,6 @@ def draw_lines(image_title, img, mouse_pos):
     cv2.imshow(image_title, img)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main(sys.argv[1:]):
         sys.exit(1)

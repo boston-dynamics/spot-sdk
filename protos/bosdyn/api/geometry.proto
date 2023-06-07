@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -15,15 +15,15 @@ option java_outer_classname = "GeometryProto";
 
 // Two dimensional vector primitive.
 message Vec2 {
-  double x = 1;
-  double y = 2;
+    double x = 1;
+    double y = 2;
 }
 
 // Three dimensional vector primitive.
 message Vec3 {
-  double x = 1;
-  double y = 2;
-  double z = 3;
+    double x = 1;
+    double y = 2;
+    double z = 3;
 }
 
 // Cylindrical coordinates are a generalization of polar coordiates, adding a
@@ -31,23 +31,23 @@ message Vec3 {
 // axis. See (http://mathworld.wolfram.com/CylindricalCoordinates.html) for
 // more details.
 message CylindricalCoordinate {
-  double r = 1;     // Radial coordinate
-  double theta = 2; // Azimuthal coordinate
-  double z = 3;     // Vertical coordiante
+    double r = 1;      // Radial coordinate
+    double theta = 2;  // Azimuthal coordinate
+    double z = 3;      // Vertical coordiante
 }
 
 // Quaternion primitive. A quaternion can be used to describe the rotation.
 message Quaternion {
-  double x = 1;
-  double y = 2;
-  double z = 3;
-  double w = 4;
+    double x = 1;
+    double y = 2;
+    double z = 3;
+    double w = 4;
 }
 
 // Plane primitive, described with a point and normal.
 message Plane {
-  Vec3 point = 1;  // A point on the plane.
-  Vec3 normal = 2; // The direction of the planes normal.
+    Vec3 point = 1;   // A point on the plane.
+    Vec3 normal = 2;  // The direction of the planes normal.
 }
 
 // A square oriented in 3D space.
@@ -70,186 +70,190 @@ message Ray {
 
 // Geometric primitive to describe 2D position and rotation.
 message SE2Pose {
-  Vec2 position = 1; // (m)
-  double angle = 2;  // (rad)
+    Vec2 position = 1;  // (m)
+    double angle = 2;   // (rad)
 }
 
 // Geometric primitive that describes a 2D velocity through it's linear and angular components.
 message SE2Velocity {
-  Vec2 linear = 1;    // (m/s)
-  double angular = 2; // (rad/s)
+    Vec2 linear = 1;     // (m/s)
+    double angular = 2;  // (rad/s)
 }
 
 // Geometric primitive to couple minimum and maximum SE2Velocities in a single message.
 message SE2VelocityLimit {
-  // If set, limits the maximum velocity.
-  SE2Velocity max_vel = 1;
-  // If set, limits the minimum velocity.
-  SE2Velocity min_vel = 2;
+    // If set, limits the maximum velocity.
+    SE2Velocity max_vel = 1;
+    // If set, limits the minimum velocity.
+    SE2Velocity min_vel = 2;
 }
 
 // Geometric primitive to describe 3D position and rotation.
 message SE3Pose {
-  Vec3 position = 1; // (m)
-  Quaternion rotation = 2;
+    Vec3 position = 1;  // (m)
+    Quaternion rotation = 2;
 }
 
 // Geometric primitive that describes a 3D velocity through it's linear and angular components.
 message SE3Velocity {
-  Vec3 linear = 1;  // (m/s)
-  Vec3 angular = 2; // (rad/s)
+    Vec3 linear = 1;   // (m/s)
+    Vec3 angular = 2;  // (rad/s)
 }
 
 // Geometric primitive used to specify forces and torques.
 message Wrench {
-  Vec3 force = 1;  // (N)
-  Vec3 torque = 2; // (Nm)
+    Vec3 force = 1;   // (N)
+    Vec3 torque = 2;  // (Nm)
 }
 
 message FrameTreeSnapshot {
-/**
- *   A frame is a named location in space. \
- * For example, the following frames are defined by the API: \
- *  - "body":   A frame centered on the robot's body. \
- *  - "vision": A non-moving (inertial) frame that is the robot's best
- *              estimate of a fixed location in the world. It is based on
- *              both dead reckoning and visual analysis of the world. \
- *  - "odom":   A non-moving (inertial) frame that is based on the kinematic
- *              odometry of the robot only. \
- * Additional frames are available for robot joints, sensors, and items
- * detected in the world. \
- *
- * The FrameTreeSnapshot represents the relationships between the frames that the robot
- * knows about at a particular point in time. For example, with the FrameTreeSnapshot,
- * an API client can determine where the "body" is relative to the "vision". \
- *
- * To reduce data bandwidth, the FrameTreeSnapshot will typically contain
- * a small subset of all known frames. By default, all services MUST
- * include "vision", "body", and "odom" frames in the FrameTreeSnapshot, but
- * additional frames can also be included. For example, an Image service
- * would likely include the frame located at the base of the camera lens
- * where the picture was taken. \
- *
- * Frame relationships are expressed as edges between "parent" frames and
- * "child" frames, with an SE3Pose indicating the pose of the "child" frame
- * expressed in the "child" frame. These edges are included in the edge_map
- * field. For example, if frame "hand" is 1m in front of the frame "shoulder",
- * then the FrameTreeSnapshot might contain: \
- *  edge_map {                                    \
- *     key: "hand"                                \
- *     value: {                                   \
- *         parent_frame_name: "shoulder"          \
- *         parent_tform_child: {                  \
- *            position: {                         \
- *              x: 1.0                            \
- *              y: 0.0                            \
- *              z: 0.0                            \
- *            }                                   \
- *         }                                      \
- *      }                                         \
- *  }                                             \
- *
- * Frame relationships can be inverted. So, to find where the "shoulder"
- * is in relationship the "hand", the parent_tform_child pose in the edge
- * above can be inverted: \
- *      hand_tform_shoulder = shoulder_tform_hand.inverse() \
- * Frame relationships can also be concatenated. If there is an additional
- * edge specifying the pose of the "shoulder" relative to the "body", then
- * to find where the "hand" is relative to the "body" do: \
- *      body_tform_hand = body_tform_shoulder * shoulder_tform_hand \
- *
- * The two properties above reduce data size. Instead of having to send N^2
- * edge_map entries to represent all relationships between N frames,
- * only N edge_map entries need to be sent. Clients will need to determine
- * the chain of edges to follow to get from one frame to another frame,
- * and then do inversion and concatentation to generate the appropriate pose. \
- *
- * Note that all FrameTreeSnapshots are expected to be a single rooted tree.
- * The syntax for FrameTreeSnapshot could also support graphs with
- * cycles, or forests of trees - but clients should treat those as invalid
- * representations. \
- */
+    /**
+     *   A frame is a named location in space. \
+     * For example, the following frames are defined by the API: \
+     *  - "body":   A frame centered on the robot's body. \
+     *  - "vision": A non-moving (inertial) frame that is the robot's best
+     *              estimate of a fixed location in the world. It is based on
+     *              both dead reckoning and visual analysis of the world. \
+     *  - "odom":   A non-moving (inertial) frame that is based on the kinematic
+     *              odometry of the robot only. \
+     * Additional frames are available for robot joints, sensors, and items
+     * detected in the world. \
+     *
+     * The FrameTreeSnapshot represents the relationships between the frames that the robot
+     * knows about at a particular point in time. For example, with the FrameTreeSnapshot,
+     * an API client can determine where the "body" is relative to the "vision". \
+     *
+     * To reduce data bandwidth, the FrameTreeSnapshot will typically contain
+     * a small subset of all known frames. By default, all services MUST
+     * include "vision", "body", and "odom" frames in the FrameTreeSnapshot, but
+     * additional frames can also be included. For example, an Image service
+     * would likely include the frame located at the base of the camera lens
+     * where the picture was taken. \
+     *
+     * Frame relationships are expressed as edges between "parent" frames and
+     * "child" frames, with an SE3Pose indicating the pose of the "child" frame
+     * expressed in the "parent" frame. These edges are included in the edge_map
+     * field. For example, if frame "hand" is 1m in front of the frame "shoulder",
+     * then the FrameTreeSnapshot might contain: \
+     *  edge_map {                                    \
+     *     key: "hand"                                \
+     *     value: {                                   \
+     *         parent_frame_name: "shoulder"          \
+     *         parent_tform_child: {                  \
+     *            position: {                         \
+     *              x: 1.0                            \
+     *              y: 0.0                            \
+     *              z: 0.0                            \
+     *            }                                   \
+     *         }                                      \
+     *      }                                         \
+     *  }                                             \
+     *
+     * Frame relationships can be inverted. So, to find where the "shoulder"
+     * is in relationship the "hand", the parent_tform_child pose in the edge
+     * above can be inverted: \
+     *      hand_tform_shoulder = shoulder_tform_hand.inverse() \
+     * Frame relationships can also be concatenated. If there is an additional
+     * edge specifying the pose of the "shoulder" relative to the "body", then
+     * to find where the "hand" is relative to the "body" do: \
+     *      body_tform_hand = body_tform_shoulder * shoulder_tform_hand \
+     *
+     * The two properties above reduce data size. Instead of having to send N^2
+     * edge_map entries to represent all relationships between N frames,
+     * only N edge_map entries need to be sent. Clients will need to determine
+     * the chain of edges to follow to get from one frame to another frae,
+     * and then do inversion and concatentation to generate the appropriate pose. \
+     *
+     * Note that all FrameTreeSnapshots are expected to be a single rooted tree.
+     * The syntax for FrameTreeSnapshot could also support graphs with
+     * cycles, or forests of trees - but clients should treat those as invalid
+     * representations. \
+     */
 
-  // ParentEdge represents the relationship from a child frame to a parent frame.
-  message ParentEdge {
-    // The name of the parent frame. If a frame has no parent (parent_frame_name is empty), 
-    // it is the root of the tree.
-    string parent_frame_name = 1;
+    // ParentEdge represents the relationship from a child frame to a parent frame.
+    message ParentEdge {
+        // The name of the parent frame. If a frame has no parent (parent_frame_name is empty),
+        // it is the root of the tree.
+        string parent_frame_name = 1;
 
-    // Transform representing the pose of the child frame in the parent's frame.
-    SE3Pose parent_tform_child = 2;
+        // Transform representing the pose of the child frame in the parent's frame.
+        SE3Pose parent_tform_child = 2;
 
-  }
+    }
 
-  // child_to_parent_edge_map maps the child frame name to the ParentEdge.
-  // In aggregate, this forms the tree structure.
-  map<string, ParentEdge> child_to_parent_edge_map = 1;
+    // child_to_parent_edge_map maps the child frame name to the ParentEdge.
+    // In aggregate, this forms the tree structure.
+    map<string, ParentEdge> child_to_parent_edge_map = 1;
 }
 
 
 // Geometric primitive describing a two-dimensional box.
-message Box2 { Vec2 size = 1; }
+message Box2 {
+    Vec2 size = 1;
+}
 
 // Geometric primitive to describe a 2D box in a specific frame.
 message Box2WithFrame {
-  // The box is specified with width (y) and length (x), and the full box is
-  // fixed at an origin, where it's sides are along the coordinate frame's
-  // axes.
-  Box2 box = 1;
-  // The pose of the axis-aligned box is in 'frame_name'.
-  string frame_name = 2;
-  // The transformation of the axis-aligned box into the desired frame
-  // (specified above).
-  SE3Pose frame_name_tform_box = 3;
+    // The box is specified with width (y) and length (x), and the full box is
+    // fixed at an origin, where it's sides are along the coordinate frame's
+    // axes.
+    Box2 box = 1;
+    // The pose of the axis-aligned box is in 'frame_name'.
+    string frame_name = 2;
+    // The transformation of the axis-aligned box into the desired frame
+    // (specified above).
+    SE3Pose frame_name_tform_box = 3;
 }
 
 // Geometric primitive describing a three-dimensional box.
-message Box3 { Vec3 size = 1; }
+message Box3 {
+    Vec3 size = 1;
+}
 
 // Geometric primitive to describe a 3D box in a specific frame.
 message Box3WithFrame {
-  // The box width (y), length (x), and height (z) are interpreted in, and the
-  // full box is fixed at an origin, where it's sides are along the coordinate
-  // frame's axes.
-  Box3 box = 1;
-  // The pose of the axis-aligned box is in 'frame_name'.
-  string frame_name = 2;
-  // The transformation of the axis-aligned box into the desired frame
-  // (specified above).
-  SE3Pose frame_name_tform_box = 3;
+    // The box width (y), length (x), and height (z) are interpreted in, and the
+    // full box is fixed at an origin, where it's sides are along the coordinate
+    // frame's axes.
+    Box3 box = 1;
+    // The pose of the axis-aligned box is in 'frame_name'.
+    string frame_name = 2;
+    // The transformation of the axis-aligned box into the desired frame
+    // (specified above).
+    SE3Pose frame_name_tform_box = 3;
 }
 
 // Represents a row-major order matrix of doubles.
 message Matrix {
-  int32 rows = 1;
-  int32 cols = 2;
-  repeated double values = 3;
+    int32 rows = 1;
+    int32 cols = 2;
+    repeated double values = 3;
 }
 
 // Represents a row-major order matrix of floats.
 message Matrixf {
-  int32 rows = 1;
-  int32 cols = 2;
-  repeated float values = 3;
+    int32 rows = 1;
+    int32 cols = 2;
+    repeated float values = 3;
 }
 
 // Represents a row-major order matrix of int64.
 message MatrixInt64 {
-  int32 rows = 1;
-  int32 cols = 2;
-  repeated int64 values = 3;
+    int32 rows = 1;
+    int32 cols = 2;
+    repeated int64 values = 3;
 }
 
 // Represents a row-major order matrix of int32.
 message MatrixInt32 {
-  int32 rows = 1;
-  int32 cols = 2;
-  repeated int32 values = 3;
+    int32 rows = 1;
+    int32 cols = 2;
+    repeated int32 values = 3;
 }
 
 // Represents a vector of doubles
 message Vector {
-  repeated double values = 1;
+    repeated double values = 1;
 }
 
 // Represents the translation/rotation covariance of an SE3 Pose.
@@ -265,38 +269,43 @@ message Vector {
 // the x, y and z axes in radians.                                   \
 // The matrix is symmetric, so, for example, xy = yx.                \
 message SE3Covariance {
-  // Row-major order representation of the covariance matrix.
-  Matrix matrix = 1;
-  // Variance of the yaw component of the SE3 Pose.
-  // Warning: deprecated in 2.1. This should equal cov_rzrz, inside `matrix`.
-  double yaw_variance = 2 [deprecated = true];
-  // Warning: deprecated in 2.1. Use 'matrix.'
-  double cov_xx = 3 [deprecated = true];
-  // Warning: deprecated in 2.1. Use 'matrix.'
-  double cov_xy = 4 [deprecated = true];
-  // Warning: deprecated in 2.1. Use 'matrix.'
-  double cov_xz = 5 [deprecated = true];
-  // Warning: deprecated in 2.1. Use 'matrix.'
-  double cov_yx = 6 [deprecated = true];
-  // Warning: deprecated in 2.1. Use 'matrix.'
-  double cov_yy = 7 [deprecated = true];
-  // Warning: deprecated in 2.1. Use 'matrix.'
-  double cov_yz = 8 [deprecated = true];
-  // Warning: deprecated in 2.1. Use 'matrix.'
-  double cov_zx = 9 [deprecated = true];
-  // Warning: deprecated in 2.1. Use 'matrix.'
-  double cov_zy = 10 [deprecated = true];
-  // Warning: deprecated in 2.1. Use 'matrix.'
-  double cov_zz = 11 [deprecated = true];
+// Row-major order representation of the covariance matrix.
+Matrix matrix = 1;
+// Variance of the yaw component of the SE3 Pose.
+// Warning: DEPRECATED as of 2.1. This should equal cov_rzrz, inside `matrix`. Will be removed
+// in 4.0.
+double yaw_variance = 2 [deprecated = true];
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+double cov_xx = 3 [deprecated = true];
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+double cov_xy = 4 [deprecated = true];
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+double cov_xz = 5 [deprecated = true];
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+double cov_yx = 6 [deprecated = true];
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+double cov_yy = 7 [deprecated = true];
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+double cov_yz = 8 [deprecated = true];
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+double cov_zx = 9 [deprecated = true];
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+double cov_zy = 10 [deprecated = true];
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+double cov_zz = 11 [deprecated = true];
 }
 
 // Multi-part, 1D line segments defined by a series of points.
-message PolyLine { repeated bosdyn.api.Vec2 points = 1; }
+message PolyLine {
+    repeated bosdyn.api.Vec2 points = 1;
+}
 
 // Polygon in the XY plane.
 // May be concave, but should not self-intersect. Vertices can be specified in either
 // clockwise or counterclockwise orders.
-message Polygon { repeated Vec2 vertexes = 1; }
+message Polygon {
+    repeated Vec2 vertexes = 1;
+}
 
 // Represents a region in the XY plane that consists of a single polygon
 // from which polygons representing exclusion areas may be subtracted.
@@ -308,29 +317,30 @@ message Polygon { repeated Vec2 vertexes = 1; }
 // exclusions are not necessarily holes:  An exclusion polygon may not be
 // completely inside the inclusion polygon.
 message PolygonWithExclusions {
-  Polygon inclusion = 5;
-  repeated Polygon exclusions = 6;
+    Polygon inclusion = 5;
+    repeated Polygon exclusions = 6;
 }
+
 
 // Represents a circular 2D area.
 message Circle {
-  bosdyn.api.Vec2 center_pt = 1;
-  double radius = 2; // Dimensions in m from center_pt.
+    bosdyn.api.Vec2 center_pt = 1;
+    double radius = 2;  // Dimensions in m from center_pt.
 }
 
 // Represents an area in the XY plane.
 message Area {
-  oneof geometry {
-    Polygon polygon = 1;
-    Circle circle = 2;
-  }
+    oneof geometry {
+        Polygon polygon = 1;
+        Circle circle = 2;
+    }
 }
 
 // Represents a volume of space in an unspecified frame.
 message Volume {
-  oneof geometry {
-    Vec3 box = 1; // Dimensions in m, centered on frame origin.
-  }
+    oneof geometry {
+        Vec3 box = 1;  // Dimensions in m, centered on frame origin.
+    }
 }
 
 // Represents bounds on a value, such that lower < value < upper.
@@ -343,13 +353,13 @@ message Bounds {
 
 // A 2D vector of doubles that uses wrapped values so we can tell which elements are set.
 message Vec2Value {
-  google.protobuf.DoubleValue x = 1;
-  google.protobuf.DoubleValue y = 2;
+    google.protobuf.DoubleValue x = 1;
+    google.protobuf.DoubleValue y = 2;
 }
 
 // A 3D vector of doubles that uses wrapped values so we can tell which elements are set.
 message Vec3Value {
-  google.protobuf.DoubleValue x = 1;
-  google.protobuf.DoubleValue y = 2;
-  google.protobuf.DoubleValue z = 3;
+    google.protobuf.DoubleValue x = 1;
+    google.protobuf.DoubleValue y = 2;
+    google.protobuf.DoubleValue z = 3;
 }

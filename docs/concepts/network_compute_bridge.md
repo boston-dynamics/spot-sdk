@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -77,3 +77,7 @@ If you use the rotation functions, the robot will:
 ## Other Data
 
 The API provides an `Any` field in the proto to allow you to pack arbitrary input and output data.  This field allows you to perform external computation on any data.  However, the tablet application will not be able to interpret this custom data.
+
+
+## Parameterization
+Does your service require inputs or parameters?  Do you want controls or widgets for those parameters to show up on the SpotApp android application or on Scout?  Please refer to [this document](service_customization.md) to learn how to add parameters to a network compute bridge worker.

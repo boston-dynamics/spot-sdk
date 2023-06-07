@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -13,6 +13,8 @@ import "google/protobuf/timestamp.proto";
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
+import "bosdyn/api/service_customization.proto";
+import "bosdyn/api/graph_nav/area_callback_data.proto";
 import "bosdyn/api/graph_nav/nav.proto";
 
 
@@ -48,6 +50,9 @@ message AreaCallbackInformation {
     // A area callback can request to be in control of one or more resources at runtime.
     repeated string required_lease_resources = 1;
 
+    // Parameters this area callback supports that do not match any of the other fields.
+    DictParam.Spec custom_params = 4;
+
 }
 
 // Message for providing information about a area callback implementation.
@@ -81,6 +86,12 @@ message BeginCallbackRequest {
     // The timestamp (in robot time) by which a command must finish executing.
     // If unset, a AreaCallback implementation may pick a reasonable value.
     google.protobuf.Timestamp end_time = 3;
+
+    // Configuration data associated with this area callback region
+    AreaCallbackData recorded_data = 5;
+
+    // Any other custom parameters to the callback.
+    DictParam custom_params = 6;
 }
 
 message BeginCallbackResponse {
@@ -99,6 +110,10 @@ message BeginCallbackResponse {
 
         // The area callback end time already expired.
         STATUS_EXPIRED_END_TIME = 3;
+
+        // One or more keys or values in custom_params are unsupported by the area callback.
+        // See the custom_param_error for details.
+        STATUS_CUSTOM_PARAMS_ERROR = 8;
     }
 
     // Return status for the request.
@@ -107,6 +122,9 @@ message BeginCallbackResponse {
     // Unique identifier for the AreaCallback, used to update the callback in subsequent calls. If empty,
     // the request was not accepted.
     uint32 command_id = 3;
+
+    // Filled out if status is STATUS_CUSTOM_PARAMS_ERROR.
+    CustomParamError custom_param_error = 4;
 }
 
 message BeginControlRequest {
@@ -141,7 +159,7 @@ message BeginControlResponse {
         // The supplied lease does not match the leases requested in AreaCallbackInformation.
         STATUS_MISSING_LEASE_RESOURCES = 3;
 
-        // A lease use error occured.
+        // A lease use error occurred.
         STATUS_LEASE_ERROR = 4;
     }
 
@@ -199,13 +217,31 @@ message UpdateCallbackResponse {
         // instructs graph nav to wait or continue on.
         NavPolicy policy = 3;
 
-        // An error has occured. Graph Nav will stop calling UpdateCallback and will call EndCallback.
+        // An error has occurred. Graph Nav will stop calling UpdateCallback and will call EndCallback.
         Error error = 4;
 
         // The area callback is complete. Graph Nav will stop calling UpdateCallback and will call
         // EndCallback.
         Complete complete = 5;
     }
+
+
+    // Localization changes inform Graph Nav when the callback has moved the robot, 
+    // and are ignored unless callback has control of the robot.
+    UpdateLocalization localization = 6;
+
+    message UpdateLocalization{
+        enum LocalizationChange{
+            // When unset, Graph Nav will not change the localization.
+            LOCALIZATION_UNKNOWN = 0;
+            // The robot is now at the end of the region.
+            LOCALIZATION_AT_END = 1; 
+        }
+
+        // Change the localization within GraphNav.
+        LocalizationChange change = 1;
+    }
+
 
     message NavPolicy {
         enum Option {

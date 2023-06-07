@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -34,25 +34,25 @@ def main(argv):
 
         response = power_client.fan_power_command(percent_power=100, duration=5)
         #Clearing less pertinent fields, can delete these lines for full response
-        response.ClearField("header")
-        response.ClearField("lease_use_result")
-        print("Initial Command Response:")
+        response.ClearField('header')
+        response.ClearField('lease_use_result')
+        print('Initial Command Response:')
         print(response)
 
         time.sleep(1)
 
         feedback1 = power_client.fan_power_command_feedback(response.command_id)
         #Clearing less pertinent fields, can delete these lines for full response
-        feedback1.ClearField("header")
-        print("Active Command Feedback:")
+        feedback1.ClearField('header')
+        print('Active Command Feedback:')
         print(feedback1)
 
         time.sleep(5)
 
         feedback2 = power_client.fan_power_command_feedback(response.command_id)
         #Clearing less pertinent fields, can delete these lines for full response
-        feedback2.ClearField("header")
-        print("Completed Command Feedback:")
+        feedback2.ClearField('header')
+        print('Completed Command Feedback:')
         print(feedback2)
 
 

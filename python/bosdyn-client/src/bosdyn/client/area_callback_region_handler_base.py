@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -18,10 +18,16 @@ from bosdyn.client.robot import Robot
 _LOGGER = logging.getLogger(__name__)
 
 
+class PathBlocked(Exception):
+    """The callback reports the that path/area it's trying to traverse is blocked and the robot
+    should take another route or action.
+    """
+
+
 class IncorrectUsage(Exception):
     """Error raised by calling a helper function incorrectly.
 
-    Raised when a call would block forever has otherwise been used in an incorrect manner.
+    Raised when a call would block forever or has otherwise been used in an incorrect manner.
     This exception is not intended to be caught, but indicates a programming error.
     """
 
@@ -97,7 +103,7 @@ class AreaCallbackRegionHandlerBase:
     @property
     def area_callback_information(self) -> area_callback_pb2.AreaCallbackInformation:
         """Get area_callback_pb2.AreaCallbackInformation."""
-        return self._config.area_callback_information()
+        return self._config.area_callback_information
 
     @property
     def config(self) -> AreaCallbackServiceConfig:
@@ -147,6 +153,22 @@ class AreaCallbackRegionHandlerBase:
     def set_complete(self):
         with self._lock:
             self._update_response.complete.SetInParent()
+
+    def set_localization_at_end(self):
+        """Set the localization hint to the end of the callback region, indicating that graph nav 
+        that navigation should continue from this point.
+        Robot control is required to set this. It should be called after walking to the end of
+        the region, but before ceding control. 
+
+        Raises:
+            IncorrectUsage: When called without robot control.
+        """
+        if not self.has_control():
+            raise IncorrectUsage(
+                'set_localization_at_end should only be called with robot control.')
+        with self._lock:
+            self._update_response.localization.change = \
+                UpdateCallbackResponse.UpdateLocalization.LOCALIZATION_AT_END
 
     # Blocking functions to check for a particular event.
 
@@ -305,6 +327,10 @@ class AreaCallbackRegionHandlerBase:
             with self._lock:
                 if not self._update_response.HasField("error"):
                     self._update_response.complete.SetInParent()
+        except PathBlocked:
+            _LOGGER.warning('run() reported the path is blocked.')
+            with self._lock:
+                self._update_response.error.error = UpdateCallbackResponse.Error.ERROR_BLOCKED
         except LeaseUseError as lease_use_error:
             _LOGGER.warning('Something else has taken control, aborting.')
             error = UpdateCallbackResponse.Error()
@@ -327,8 +353,8 @@ class AreaCallbackRegionHandlerBase:
         except IncorrectUsage:
             raise
         # We want to keep running and just report an error regardless of what run() raises.
-        except Exception:  # pylint: disable=broad-except
-            _LOGGER.exception('Failed during run()')
+        except Exception as e:  # pylint: disable=broad-except
+            _LOGGER.exception('Failed during run(): %s', str(e))
             with self._lock:
                 self._update_response.error.error = UpdateCallbackResponse.Error.ERROR_CALLBACK_FAILED
         _LOGGER.info('Callback ended')

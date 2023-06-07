@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -113,7 +113,7 @@ class FollowFiducial(object):
         # List of all possible camera sources.
         self._source_names = [
             src.name for src in self._image_client.list_image_sources() if
-            (src.image_type == image_pb2.ImageSource.IMAGE_TYPE_VISUAL and "depth" not in src.name)
+            (src.image_type == image_pb2.ImageSource.IMAGE_TYPE_VISUAL and 'depth' not in src.name)
         ]
         print(self._source_names)
 
@@ -194,7 +194,7 @@ class FollowFiducial(object):
                 # Go to the tag and stop within a certain distance
                 self.go_to_tag(fiducial_rt_world)
             else:
-                print("No fiducials found")
+                print('No fiducials found')
 
             self._attempts += 1  #increment attempts at finding a fiducial
 
@@ -218,12 +218,12 @@ class FollowFiducial(object):
         """Power on the robot."""
         self._robot.power_on()
         self._powered_on = True
-        print("Powered On " + str(self._robot.is_powered_on()))
+        print(f'Powered On {self._robot.is_powered_on()}')
 
     def power_off(self):
         """Power off the robot."""
         self._robot.power_off()
-        print("Powered Off " + str(not self._robot.is_powered_on()))
+        print(f'Powered Off {not self._robot.is_powered_on()}')
 
     def image_to_bounding_box(self):
         """Determine which camera source has a fiducial.
@@ -260,11 +260,11 @@ class FollowFiducial(object):
             bboxes = self.detect_fiducial_in_image(image_response[0].shot.image, (width, height),
                                                    source_name)
             if bboxes:
-                print("Found bounding box for " + str(source_name))
+                print(f'Found bounding box for {source_name}')
                 return bboxes, source_name
             else:
                 self._tag_not_located = True
-                print("Failed to find bounding box for " + str(source_name))
+                print(f'Failed to find bounding box for {source_name}')
         return [], None
 
     def detect_fiducial_in_image(self, image, dim, source_name):
@@ -276,7 +276,7 @@ class FollowFiducial(object):
         image_grey = self.rotate_image(image_grey, source_name)
 
         #Make the image greyscale to use bounding box detections
-        detector = apriltag(family="tag36h11")
+        detector = apriltag(family='tag36h11')
         detections = detector.detect(image_grey)
 
         bboxes = []
@@ -450,11 +450,11 @@ class FollowFiducial(object):
     @staticmethod
     def rotate_image(image, source_name):
         """Rotate the image so that it is always displayed upright."""
-        if source_name == "frontleft_fisheye_image":
+        if source_name == 'frontleft_fisheye_image':
             image = cv2.rotate(image, rotateCode=0)
-        elif source_name == "right_fisheye_image":
+        elif source_name == 'right_fisheye_image':
             image = cv2.rotate(image, rotateCode=1)
-        elif source_name == "frontright_fisheye_image":
+        elif source_name == 'frontright_fisheye_image':
             image = cv2.rotate(image, rotateCode=0)
         return image
 
@@ -547,16 +547,16 @@ def main():
 
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    parser.add_argument("--distance-margin", default=.5,
-                        help="Distance [meters] that the robot should stop from the fiducial.")
-    parser.add_argument("--limit-speed", default=True, type=lambda x: (str(x).lower() == 'true'),
-                        help="If the robot should limit its maximum speed.")
-    parser.add_argument("--avoid-obstacles", default=False, type=lambda x:
+    parser.add_argument('--distance-margin', default=.5,
+                        help='Distance [meters] that the robot should stop from the fiducial.')
+    parser.add_argument('--limit-speed', default=True, type=lambda x: (str(x).lower() == 'true'),
+                        help='If the robot should limit its maximum speed.')
+    parser.add_argument('--avoid-obstacles', default=False, type=lambda x:
                         (str(x).lower() == 'true'),
-                        help="If the robot should have obstacle avoidance enabled.")
+                        help='If the robot should have obstacle avoidance enabled.')
     parser.add_argument(
-        "--use-world-objects", default=True, type=lambda x: (str(x).lower() == 'true'),
-        help="If fiducials should be from the world object service or the apriltag library.")
+        '--use-world-objects', default=True, type=lambda x: (str(x).lower() == 'true'),
+        help='If fiducials should be from the world object service or the apriltag library.')
     options = parser.parse_args()
 
     # If requested, attempt import of Apriltag library
@@ -565,7 +565,7 @@ def main():
             global apriltag
             from apriltag import apriltag
         except ImportError as e:
-            print("Could not import the AprilTag library. Aborting. Exception: ", str(e))
+            print(f'Could not import the AprilTag library. Aborting. Exception: {e}')
             return False
 
     # Create robot object.
@@ -580,13 +580,13 @@ def main():
             robot.start_time_sync()
 
             # Verify the robot is not estopped.
-            assert not robot.is_estopped(), "Robot is estopped. " \
-                                            "Please use an external E-Stop client, " \
-                                            "such as the estop SDK example, to configure E-Stop."
+            assert not robot.is_estopped(), 'Robot is estopped. ' \
+                                            'Please use an external E-Stop client, ' \
+                                            'such as the estop SDK example, to configure E-Stop.'
 
             fiducial_follower = FollowFiducial(robot, options)
             time.sleep(.1)
-            if not options.use_world_objects and str.lower(sys.platform) != "darwin":
+            if not options.use_world_objects and str.lower(sys.platform) != 'darwin':
                 # Display the detected bounding boxes on the images when using the april tag library.
                 # This is disabled for MacOS-X operating systems.
                 image_viewer = DisplayImagesAsync(fiducial_follower)
@@ -596,7 +596,7 @@ def main():
                                                     return_at_exit=True):
                 fiducial_follower.start()
     except RpcError as err:
-        LOGGER.error("Failed to communicate with robot: %s", err)
+        LOGGER.error('Failed to communicate with robot: %s', err)
     finally:
         if image_viewer is not None:
             image_viewer.stop()
@@ -604,6 +604,6 @@ def main():
     return False
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     if not main():
         sys.exit(1)

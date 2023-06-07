@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,6 +10,8 @@ import base64
 import requests
 from aiortc import MediaStreamTrack, RTCPeerConnection, RTCSessionDescription
 from aiortc.contrib.media import MediaBlackhole
+
+DEFAULT_WEB_REQUEST_TIMEOUT = 10.0
 
 
 class SpotCAMMediaStreamTrack(MediaStreamTrack):
@@ -44,6 +46,7 @@ class WebRTCClient:
         self.recorder_type = recorder_type
         self.sdp_filename = sdp_filename
         self.cam_ssl_cert = cam_ssl_cert
+        self.sink_task = None
 
     def get_bearer_token(self, mock=False):
         if mock:
@@ -55,7 +58,8 @@ class WebRTCClient:
         # then made the sdp request with the token
         headers = {'Authorization': f'Bearer {token}'}
         server_url = f'https://{self.hostname}:{self.sdp_port}/{self.sdp_filename}'
-        response = requests.get(server_url, verify=self.cam_ssl_cert, headers=headers)
+        response = requests.get(server_url, verify=self.cam_ssl_cert, headers=headers,
+                                timeout=DEFAULT_WEB_REQUEST_TIMEOUT)
         result = response.json()
         return result['id'], base64.b64decode(result['sdp']).decode()
 
@@ -64,7 +68,8 @@ class WebRTCClient:
         server_url = f'https://{self.hostname}:{self.sdp_port}/{self.sdp_filename}'
 
         payload = {'id': offer_id, 'sdp': base64.b64encode(sdp_answer).decode('utf8')}
-        r = requests.post(server_url, verify=self.cam_ssl_cert, json=payload, headers=headers)
+        r = requests.post(server_url, verify=self.cam_ssl_cert, json=payload, headers=headers,
+                          timeout=DEFAULT_WEB_REQUEST_TIMEOUT)
         if r.status_code != 200:
             raise ValueError(r)
 
@@ -109,7 +114,7 @@ class WebRTCClient:
                     self.media_black_hole = MediaBlackhole()
                     self.media_black_hole.addTrack(track)
                     loop = asyncio.get_event_loop()
-                    loop.create_task(self.media_black_hole.start())
+                    self.sink_task = loop.create_task(self.media_black_hole.start())
             else:
                 if track.kind == 'video':
                     video_track = SpotCAMMediaStreamTrack(track, self.video_frame_queue)
@@ -120,7 +125,7 @@ class WebRTCClient:
                     self.media_recorder = MediaBlackhole()
                     self.media_recorder.addTrack(track)
                     loop = asyncio.get_event_loop()
-                    loop.create_task(self.media_recorder.start())
+                    self.sink_task = loop.create_task(self.media_recorder.start())
 
         desc = RTCSessionDescription(sdp_offer, 'offer')
         await self.pc.setRemoteDescription(desc)

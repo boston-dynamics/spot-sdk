@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,7 +10,7 @@ import math
 import os
 import time
 
-from deprecated import deprecated
+from deprecated.sphinx import deprecated
 
 from bosdyn.api import data_chunk_pb2, lease_pb2
 from bosdyn.api.graph_nav import (graph_nav_pb2, graph_nav_service_pb2, graph_nav_service_pb2_grpc,
@@ -30,7 +30,7 @@ class GraphNavClient(BaseClient):
     def __init__(self):
         super(GraphNavClient, self).__init__(graph_nav_service_pb2_grpc.GraphNavServiceStub)
         self._timesync_endpoint = None
-        self._data_chunk_size = 1000  # bytes = 1 KB
+        self._data_chunk_size = 1024 * 1024  # bytes = 1 MB
 
     def update_from(self, other):
         super(GraphNavClient, self).update_from(other)
@@ -42,6 +42,34 @@ class GraphNavClient(BaseClient):
             self._timesync_endpoint = other.time_sync.endpoint
         except AttributeError:
             pass  # other doesn't have a time_sync accessor
+
+    def set_localization_full_response(
+            self, initial_guess_localization, ko_tform_body=None, max_distance=None, max_yaw=None,
+            fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST,
+            use_fiducial_id=None, refine_fiducial_result_with_icp=False, do_ambiguity_check=False,
+            refine_with_visual_features=False, verify_visual_features_quality=False, **kwargs):
+        """Version of set_localization which returns the full response,
+        rather than only the Localization message.
+        """
+        req = self._build_set_localization_request(
+            initial_guess_localization, ko_tform_body, max_distance, max_yaw, fiducial_init,
+            use_fiducial_id, refine_fiducial_result_with_icp, do_ambiguity_check,
+            refine_with_visual_features, verify_visual_features_quality)
+        return self.call(self._stub.SetLocalization, req, _get_response, _set_localization_error,
+                         copy_request=False, **kwargs)
+
+    def set_localization_async_full_response(
+            self, initial_guess_localization, ko_tform_body=None, max_distance=None, max_yaw=None,
+            fiducial_init=graph_nav_pb2.SetLocalizationRequest.FIDUCIAL_INIT_NEAREST,
+            use_fiducial_id=None, refine_fiducial_result_with_icp=False, do_ambiguity_check=False,
+            refine_with_visual_features=False, verify_visual_features_quality=False, **kwargs):
+        """Async version of set_localization_full_response()"""
+        req = self._build_set_localization_request(
+            initial_guess_localization, ko_tform_body, max_distance, max_yaw, fiducial_init,
+            use_fiducial_id, refine_fiducial_result_with_icp, do_ambiguity_check,
+            refine_with_visual_features, verify_visual_features_quality)
+        return self.call_async(self._stub.SetLocalization, req, _get_response,
+                               _set_localization_error, copy_request=False, **kwargs)
 
     def set_localization(
             self, initial_guess_localization, ko_tform_body=None, max_distance=None, max_yaw=None,
@@ -223,7 +251,8 @@ class GraphNavClient(BaseClient):
 
     def navigate_to(self, destination_waypoint_id, cmd_duration, route_params=None,
                     travel_params=None, leases=None, timesync_endpoint=None, command_id=None,
-                    destination_waypoint_tform_body_goal=None, **kwargs):
+                    destination_waypoint_tform_body_goal=None, route_blocked_behavior=None,
+                    **kwargs):
         """Navigate to a specific waypoint along a route chosen by the GraphNav service.
 
         Args:
@@ -236,6 +265,7 @@ class GraphNavClient(BaseClient):
             command_id: If not None, this continues an existing navigate_to command with the given ID. If None,
             a new command_id will be used.
             destination_waypoint_tform_body_goal: SE2Pose protobuf of an offset relative to the destination waypoint.
+            route_blocked_behavior: Defines robot behavior when route is block. If None robot will reroute.
         Returns:
             int: Command ID to use in feedback lookup.
         Raises:
@@ -256,14 +286,16 @@ class GraphNavClient(BaseClient):
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
                                                   route_params, cmd_duration, leases, used_endpoint,
-                                                  command_id, destination_waypoint_tform_body_goal)
+                                                  command_id, destination_waypoint_tform_body_goal,
+                                                  route_blocked_behavior)
         return self.call(self._stub.NavigateTo, request,
                          value_from_response=_command_id_from_navigate_route_response,
                          error_from_response=_navigate_to_error, copy_request=False, **kwargs)
 
     def navigate_to_async(self, destination_waypoint_id, cmd_duration, route_params=None,
                           travel_params=None, leases=None, timesync_endpoint=None, command_id=None,
-                          destination_waypoint_tform_body_goal=None, **kwargs):
+                          destination_waypoint_tform_body_goal=None, route_blocked_behavior=None,
+                          **kwargs):
         """Async version of navigate_to()."""
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
@@ -277,28 +309,31 @@ class GraphNavClient(BaseClient):
 
     def navigate_to_full(self, destination_waypoint_id, cmd_duration, route_params=None,
                          travel_params=None, leases=None, timesync_endpoint=None, command_id=None,
-                         destination_waypoint_tform_body_goal=None, **kwargs):
+                         destination_waypoint_tform_body_goal=None, route_blocked_behavior=None,
+                         **kwargs):
         """Identical to navigate_to(), except will return the full NavigateToResponse."""
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
                                                   route_params, cmd_duration, leases, used_endpoint,
-                                                  command_id, destination_waypoint_tform_body_goal)
+                                                  command_id, destination_waypoint_tform_body_goal,
+                                                  route_blocked_behavior)
         return self.call(self._stub.NavigateTo, request, error_from_response=_navigate_to_error,
                          copy_request=False, **kwargs)
 
     def navigate_to_full_async(self, destination_waypoint_id, cmd_duration, route_params=None,
                                travel_params=None, leases=None, timesync_endpoint=None,
                                command_id=None, destination_waypoint_tform_body_goal=None,
-                               **kwargs):
+                               route_blocked_behavior=None, **kwargs):
         """Async version of navigate_to_full()."""
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
                                                   route_params, cmd_duration, leases, used_endpoint,
-                                                  command_id, destination_waypoint_tform_body_goal)
+                                                  command_id, destination_waypoint_tform_body_goal,
+                                                  route_blocked_behavior)
         return self.call_async(self._stub.NavigateTo, request,
                                error_from_response=_navigate_to_error, copy_request=False, **kwargs)
 
@@ -620,7 +655,7 @@ class GraphNavClient(BaseClient):
     @staticmethod
     def _build_navigate_to_request(destination_waypoint_id, travel_params, route_params,
                                    end_time_secs, leases, timesync_endpoint, command_id,
-                                   destination_waypoint_tform_body_goal):
+                                   destination_waypoint_tform_body_goal, route_blocked_behavior):
         converter = timesync_endpoint.get_robot_time_converter()
         request = graph_nav_pb2.NavigateToRequest(
             destination_waypoint_id=destination_waypoint_id,
@@ -634,6 +669,8 @@ class GraphNavClient(BaseClient):
             request.route_params.CopyFrom(route_params)
         if command_id is not None:
             request.command_id = command_id
+        if route_blocked_behavior is not None:
+            request.route_blocked_behavior = route_blocked_behavior
         return request
 
     @staticmethod
@@ -737,21 +774,8 @@ class GraphNavClient(BaseClient):
         return travel_params
 
     @staticmethod
-    def generate_route_params(waypoint_id_list):
-        """ Generate the API RouteGenParams for navigation requests.
-
-        Args:
-            waypoint_id_list: List of waypoint id strings in which a route should pass through.
-        Returns:
-            The API RouteGenParams protobuf message.
-        """
-        route_params = graph_nav_pb2.RouteGenParams()
-        route_params.via_waypoints.extend(waypoint_id_list)
-        return route_params
-
-    @staticmethod
     def build_route(waypoint_id_list, edge_id_list):
-        """ Generate the API RouteGenParams for navigation requests.
+        """ Generate the API Route for navigation requests.
 
         Args:
             waypoint_id_list: List of waypoint id strings in which a route should pass through.
@@ -791,8 +815,12 @@ class InvalidGraphError(UploadGraphError):
     """The graph is invalid topologically, e.g. missing waypoints referenced by edges."""
 
 
-class IncompatibleSensorsError(ResponseError):
+class IncompatibleSensorsError(GraphNavServiceResponseError):
     """The map was recorded with using a sensor configuration which is incompatible with the robot (for example, LIDAR configuration)."""
+
+
+class AreaCallbackMapError(GraphNavServiceResponseError):
+    """The map specified an area callback that is not registered or is faulted."""
 
 
 class RequestAbortedError(GraphNavServiceResponseError):
@@ -978,7 +1006,9 @@ _UPLOAD_GRAPH_STATUS_TO_ERROR.update({
     graph_nav_pb2.UploadGraphResponse.STATUS_INVALID_GRAPH:
         error_pair(InvalidGraphError),
     graph_nav_pb2.UploadGraphResponse.STATUS_INCOMPATIBLE_SENSORS:
-        error_pair(IncompatibleSensorsError)
+        error_pair(IncompatibleSensorsError),
+    graph_nav_pb2.UploadGraphResponse.STATUS_AREA_CALLBACK_ERROR:
+        error_pair(AreaCallbackMapError),
 })
 
 
@@ -1089,7 +1119,9 @@ _NAVIGATE_ROUTE_STATUS_TO_ERROR.update({
     graph_nav_pb2.NavigateRouteResponse.STATUS_STUCK:
         error_pair(RobotStuckError),
     graph_nav_pb2.NavigateRouteResponse.STATUS_UNRECOGNIZED_COMMAND:
-        error_pair(UnrecognizedCommandError)
+        error_pair(UnrecognizedCommandError),
+    graph_nav_pb2.NavigateRouteResponse.STATUS_AREA_CALLBACK_ERROR:
+        error_pair(AreaCallbackMapError),
 })
 
 
@@ -1129,7 +1161,11 @@ _NAVIGATE_TO_STATUS_TO_ERROR.update({
     graph_nav_pb2.NavigateToResponse.STATUS_COULD_NOT_UPDATE_ROUTE:
         error_pair(RouteNotUpdatingError),
     graph_nav_pb2.NavigateToResponse.STATUS_STUCK:
-        error_pair(RobotStuckError)
+        error_pair(RobotStuckError),
+    graph_nav_pb2.NavigateToResponse.STATUS_UNRECOGNIZED_COMMAND:
+        error_pair(UnrecognizedCommandError),
+    graph_nav_pb2.NavigateToResponse.STATUS_AREA_CALLBACK_ERROR:
+        error_pair(AreaCallbackMapError),
 })
 
 
@@ -1171,7 +1207,11 @@ _NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.update({
     graph_nav_pb2.NavigateToAnchorResponse.STATUS_STUCK:
         error_pair(RobotStuckError),
     graph_nav_pb2.NavigateToAnchorResponse.STATUS_INVALID_POSE:
-        error_pair(InvalidPoseError)
+        error_pair(InvalidPoseError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_UNRECOGNIZED_COMMAND:
+        error_pair(UnrecognizedCommandError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_AREA_CALLBACK_ERROR:
+        error_pair(AreaCallbackMapError),
 })
 
 
@@ -1191,6 +1231,8 @@ def _navigate_feedback_error(response):
     """Return a custom exception based on navigate to response, None if no error."""
     # If the common response header is OK and the status is set, no error.
     return None
+
+
 
 
 @handle_common_header_errors

@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -21,7 +21,7 @@ from webrtc import WebRTCCommands
 
 import bosdyn.client
 from bosdyn.client import spot_cam
-from bosdyn.client.util import add_common_arguments, setup_logging
+from bosdyn.client.util import add_base_arguments, setup_logging
 
 
 
@@ -48,7 +48,7 @@ def register_all_commands(subparsers, command_dict):
 def main(args=None):
     """Command-line interface for interacting with Spot CAM"""
     parser = argparse.ArgumentParser(prog='bosdyn.api.spot_cam', description=main.__doc__)
-    add_common_arguments(parser, credentials_no_warn=True)
+    add_base_arguments(parser)
 
     command_dict = {}  # command name to fn which takes parsed options
     subparsers = parser.add_subparsers(title='commands', dest='command')
@@ -67,7 +67,7 @@ def main(args=None):
     robot = sdk.create_robot(options.hostname)
 
     result = command_dict[options.command].run(robot, options)
-    if args is None and result:
+    if args is None and result is not None:
         # Invoked as a CLI, so print result
         print(result)
 

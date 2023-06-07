@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -8,8 +8,6 @@
 This is a test application for performing comms testing as the client.
 It logs data in csv files.
 """
-
-from __future__ import absolute_import, print_function
 
 import argparse
 import csv
@@ -58,7 +56,7 @@ def check_ping(server_hostname):
     cmd = ['ping', '-c', '1', '-w', '1', server_hostname]
     try:
         output = subprocess.check_output(cmd).decode().strip()
-        lines = output.split("\n")
+        lines = output.split('\n')
         total = lines[-2].split(',')[3].split()[1]
         loss = lines[-2].split(',')[2].split()[0]
         timing = lines[-1].split()[3].split('/')
@@ -80,7 +78,7 @@ class AsyncRobotState(AsyncPeriodicQuery):
     """Grab robot state."""
 
     def __init__(self, robot_state_client):
-        super(AsyncRobotState, self).__init__("robot_state", robot_state_client, LOGGER,
+        super(AsyncRobotState, self).__init__('robot_state', robot_state_client, LOGGER,
                                               period_sec=0.2)
 
     def _start_query(self):
@@ -91,7 +89,7 @@ class AsyncMissionState(AsyncPeriodicQuery):
     """Grab mission state."""
 
     def __init__(self, mission_client):
-        super(AsyncMissionState, self).__init__("mission_state", mission_client, LOGGER,
+        super(AsyncMissionState, self).__init__('mission_state', mission_client, LOGGER,
                                                 period_sec=0.2)
 
     def _start_query(self):
@@ -153,7 +151,7 @@ def main(argv):
                     # position at boot time. Runs across boots will not be easily comparable
                     odom_tform_body = get_odom_tform_body(
                         _robot_state_task.proto.kinematic_state.transforms_snapshot).to_proto()
-                    helper_se3 = SE3Pose.from_obj(odom_tform_body)
+                    helper_se3 = SE3Pose.from_proto(odom_tform_body)
 
                     #check latency
                     ping_ret = check_ping(options.server_hostname)
@@ -211,7 +209,7 @@ def main(argv):
                     del client
 
     except KeyboardInterrupt:
-        print("Caught KeyboardInterrupt, exiting")
+        print('Caught KeyboardInterrupt, exiting')
         return True
 
 

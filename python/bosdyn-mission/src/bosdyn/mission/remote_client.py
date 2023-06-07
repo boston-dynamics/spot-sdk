@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -10,8 +10,8 @@ import collections
 
 from bosdyn.api.mission import remote_pb2, remote_service_pb2_grpc
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory,
-                                  handle_common_header_errors, handle_lease_use_result_errors,
-                                  handle_unset_status_error)
+                                  handle_common_header_errors, handle_custom_params_errors,
+                                  handle_lease_use_result_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import ResponseError
 from bosdyn.client.lease import (DEFAULT_RESOURCES, LeaseWalletRequestProcessor,
                                  LeaseWalletResponseProcessor)
@@ -85,7 +85,8 @@ class RemoteClient(BaseClient):
                                error_from_response=_establish_error_from_response,
                                copy_request=False, **kwargs)
 
-    def tick(self, session_id, leases=(), inputs=None, lease_resources=DEFAULT_RESOURCES, **kwargs):
+    def tick(self, session_id, leases=(), inputs=None, lease_resources=DEFAULT_RESOURCES,
+             group_name=None, params=None, **kwargs):
         """Tick the remote node.
 
         Args:
@@ -96,16 +97,18 @@ class RemoteClient(BaseClient):
                 Only applied if no leases are provided.
         """
         req = self._build_tick_request(inputs=inputs, leases=leases, session_id=session_id,
-                                       lease_resources=lease_resources)
+                                       lease_resources=lease_resources, group_name=group_name,
+                                       params=params)
         return self.call(self._stub.Tick, req, value_from_response=None,
                          error_from_response=_tick_error_from_response, copy_request=False,
                          **kwargs)
 
     def tick_async(self, session_id, leases=(), inputs=None, lease_resources=DEFAULT_RESOURCES,
-                   **kwargs):
+                   group_name=None, params=None, **kwargs):
         """Async version of tick()"""
         req = self._build_tick_request(inputs=inputs, leases=leases, session_id=session_id,
-                                       lease_resources=lease_resources)
+                                       lease_resources=lease_resources, group_name=group_name,
+                                       params=params)
         return self.call_async(self._stub.Tick, req, value_from_response=None,
                                error_from_response=_tick_error_from_response, copy_request=False,
                                **kwargs)
@@ -134,6 +137,26 @@ class RemoteClient(BaseClient):
                                error_from_response=_teardown_error_from_response,
                                copy_request=False, **kwargs)
 
+    def get_service_info(self, **kwargs):
+        """Get information about the service itself, such as a custom parameter spec.
+
+        Raises:
+            RpcError: problem communicating with the robot.
+
+        Returns:
+            A GetRemoteMissionServiceInfoResponse message describing this service.
+        """
+        req = remote_pb2.GetRemoteMissionServiceInfoRequest()
+        return self.call(self._stub.GetRemoteMissionServiceInfo, req,
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
+
+    def get_service_info_async(self, **kwargs):
+        """Async version of get_service_info()"""
+        req = remote_pb2.GetRemoteMissionServiceInfoRequest()
+        return self.call_async(self._stub.GetRemoteMissionServiceInfo, req,
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
+
     def _build_establish_session_request(self, inputs, leases, lease_resources):
         req = remote_pb2.EstablishSessionRequest(inputs=inputs)
         _copy_leases(req, leases)
@@ -142,8 +165,13 @@ class RemoteClient(BaseClient):
 
         return req
 
-    def _build_tick_request(self, inputs, leases, session_id, lease_resources):
+    def _build_tick_request(self, inputs, leases, session_id, lease_resources, group_name=None,
+                            params=None):
         req = remote_pb2.TickRequest(inputs=inputs, session_id=session_id)
+        if group_name:
+            req.group_name = group_name
+        if params:
+            req.params.CopyFrom(params)
         _copy_leases(req, leases)
         if self.lease_processor:
             self.lease_processor.mutate(req, resource_list=lease_resources)
@@ -201,6 +229,7 @@ _TICK_STATUS_TO_ERROR.update({
 
 @handle_common_header_errors
 @handle_lease_use_result_errors
+@handle_custom_params_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _tick_error_from_response(response):
     return error_factory(response, response.status,

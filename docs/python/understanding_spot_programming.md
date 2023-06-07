@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -285,18 +285,16 @@ stop_level_details: "Not all endpoints are registered"
 
 The `stop_level: ESTOP_LEVEL_CUT` line indicates that power will not be enabled since the E-Stop level is CUT.
 
-The `stop_level_details: "Not all endpoints are registered"` line indicates that there are no E-Stop Endpoints registered. An E-Stop Endpoint is the client component of the E-Stop system which lets a user immediately kill power. Spot may have more than one E-Stop Endpoint registered at a time - for example, during operator training the trainee may have a tablet which lets them control the robot and the E-Stop, and the trainer may have a tablet which also lets them e-stop the robot.
+The `stop_level_details: "Not all endpoints are registered"` line indicates that there are no E-Stop Endpoints registered. An E-Stop Endpoint is the client component of the E-Stop system which lets a user immediately kill power.
 
 #### Create and register an E-Stop Endpoint
-
-**SAFETY NOTE**: the act of registering an endpoint will trigger an emergency stop on the robot, so only perform this step when Spot's motors are already powered off.
 
 ```python
 >>> estop_endpoint = bosdyn.client.estop.EstopEndpoint(client=estop_client, name='my_estop', estop_timeout=9.0)
 >>> estop_endpoint.force_simple_setup()
 ```
 
-E-Stop endpoints are expected to regularly-check in to the robot to assure the robot is safely being controlled.  If it has been more than `estop_timeout` seconds, the motor power will be cut. Tuning this number is important: too low a number, and the power may cut out due to transient network issues; too large a number and you run the risk of Spot operating without safe supervision.
+E-Stop endpoints are expected to regularly check in to the robot to assure the robot is safely being controlled.  If it has been more than `estop_timeout` seconds, the motor power will be cut. Tuning this number is important: too low a number, and the power may cut out due to transient network issues; too large a number and you run the risk of Spot operating without safe supervision.
 
 The `force_simple_setup` call issues a few API calls to make your E-Stop Endpoint the sole endpoint in a new E-Stop configuration.
 
@@ -324,11 +322,11 @@ stop_level: ESTOP_LEVEL_CUT
 stop_level_details: "Endpoint requested stop"
 ```
 
-Now an E-Stop Endpoint appears with the name my_estop. The endpoint itself says `ESTOP_LEVEL_CUT`, with a very long ago time_since_valid_response. No check-ins from the E-Stop Endpoint have happened yet. Both the endpoint and the E-Stop systems stop level is `ESTOP_LEVEL_CUT` - if a single Endpoint wants to cut power, the entire system will cut power.
+Now an E-Stop Endpoint appears with the name `my_estop`. The endpoint itself says `ESTOP_LEVEL_CUT`, with a very long ago `time_since_valid_response`. No check-ins from the E-Stop Endpoint have happened yet. Both the endpoint and the E-Stop systems stop level is `ESTOP_LEVEL_CUT` - if a single Endpoint wants to cut power, the entire system will cut power.
 
 #### Clear the E-Stop
 
-To change E-Stop status and allow power, the endpoint needs to check in on a regular basis. We'll use the `EstopKeepAlive` class to do these checkins on a regular basis from a background thread.
+To change E-Stop status and allow power, the endpoint needs to check in on a regular basis. We'll use the `EstopKeepAlive` class to do these check-ins on a regular basis from a background thread.
 
 ```python
 >>> estop_keep_alive = bosdyn.client.estop.EstopKeepAlive(estop_endpoint)
@@ -353,9 +351,11 @@ endpoints {
 stop_level: ESTOP_LEVEL_NONE
 ```
 
-The stop_level is now `ESTOP_LEVEL_NONE`, indicating that power can start up.
+The `stop_level` is now `ESTOP_LEVEL_NONE`, indicating that power can start up.
 
-Note that in many implementations, you should specify the `keep_running_cb` argument to EstopKeepAlive, a function called by the background thread to see if check-ins should continue. For example, an interactive UI should give the E-Stop system a keep_running_cb function which blocks until the UI thread has run a cycle. This prevents a frozen client from continuing to allow power to the robot.
+Note that in many implementations, you should specify the `keep_running_cb` argument to EstopKeepAlive, a function called by the background thread to see if check-ins should continue. For example, an interactive UI should give the E-Stop system a `keep_running_cb` function which blocks until the UI thread has run a cycle. This prevents a frozen client from continuing to allow power to the robot.
+
+See the Concept documents for more details about [Spot's software E-Stop Service](../concepts/estop_service.md).
 
 ### Taking ownership of Spot (Leases)
 

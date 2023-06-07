@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -46,3 +46,29 @@ See the following example for using this service:
 
 [**Door Opening:**](../../../python/examples/arm_door/README.md)
 This examples uses both the `ManipulationAPIService` and the `DoorService` to have Spot semi-autonomously open a door. It opens an image display and requires the user to select the door handle and the door hinge. After receiving input, it uses the `ManipulationAPIService` to estimate the handles position in 3D space and aligns the robot with the door handle. Then it uses the `DoorService` to issue an automatic door open request.
+
+## Inverse Kinematics Service
+
+The inverse kinmatics (IK) service allows users to request robot configurations that satisfy a given set of stance, tool, and task specifications:
+
+- **Stance Specifications**
+  - **Fixed Stance**: A valid solution must place the feet at the specfied positions, or at their current positions if unspecified.
+  - **On Ground Plane Stance**: A valid solution must place the feet on the specified ground plane, or on the robots current estimated ground plane if unspecified.
+- **Tool Specifications**
+  - **Wrist-Mounted Tool**: The tool frame is fixed at a specified pose relative to the final arm link. If that pose is unspecified, the tool frame defaults to the [hand frame](./arm_concepts.md#hand-frame).
+  - **Body-Mounted Tool**: The tool frame is fixed at a specified pose relative to the body frame. If that pose is unspecified, the tool frame defaults to the [body frame](../geometry_and_frames.md#frames-in-the-spot-robot-world).
+- **Task Specifications**
+  - **Tool Pose Task**: A valid solution must place the tool frame at a specified pose.
+  - **Tool Pose Task**: A valid solution must place the tool frame such that the specified target lies on the tool frames's x-axis.
+
+The service responds with a robot configuration that meets those specifications or a status indicating that it was unable to find a solution.
+
+The IK service does not cause the robot to take any actions, but the information it returns can be used to populate [robot commands](../robot_services.md#robot-command). See the following [examples](../../../python/examples/inverse_kinematics/README.md) for more on how to use the service.
+
+### Frames
+Along with the [usual frames](../geometry_and_frames.md#frames-in-the-spot-robot-world), the IK service API refers to several additional frames:
+- **root frame**: The frame relative to which the problem is defined. Must be either "odom" or "vision".
+- **scene frame**: An optional frame at a user-specified pose relative to the root frame. Body and foot related quantities, as well as the task frame are expressed relative to this frame. Identity by default.
+- **task frame**: An optional frame at a user-specified pose relative to the scene fame. Task specifications are expressed relative to this frame. Identity by default.
+- **ground frame**: An optional frame at a user-specified pose relative to the scene frame. For an on-ground-plane stance, the feet must lie on the XY-plane of this frame. Defaults to the robot's current estimated ground plane.
+

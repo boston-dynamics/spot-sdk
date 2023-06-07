@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -7,8 +7,6 @@
 """Utilities for managing periodic tasks consisting of asynchronous GRPC calls."""
 import abc
 import time
-
-import six
 
 from .exceptions import ResponseError, RpcError
 
@@ -37,8 +35,8 @@ class AsyncTasks(object):
             task.update()
 
 
-@six.add_metaclass(abc.ABCMeta)  # pylint: disable=too-few-public-methods
-class AsyncGRPCTask(object):
+# pylint: disable=too-few-public-methods
+class AsyncGRPCTask(object, metaclass=abc.ABCMeta):
     """Task to be accomplished using asynchronous GRPC calls.
 
     When it is time to run the task, an async GRPC call is run resulting in a FutureWrapper object.
@@ -95,8 +93,7 @@ class AsyncGRPCTask(object):
 
 
 # pylint: disable=too-few-public-methods
-@six.add_metaclass(abc.ABCMeta)
-class AsyncPeriodicGRPCTask(AsyncGRPCTask):
+class AsyncPeriodicGRPCTask(AsyncGRPCTask, metaclass=abc.ABCMeta):
     """Periodic task to be accomplished using asynchronous GRPC calls.
 
     When it is time to run the task, an async GRPC call is run resulting in a FutureWrapper object.

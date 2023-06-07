@@ -1,0 +1,158 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.spot;
+option java_outer_classname = "InverseKinematicsProto";
+
+import "bosdyn/api/arm_command.proto";
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/robot_state.proto";
+
+// Public spot.InverseKinematics API messages.
+
+// Request a solution to an inverse kinematics problem for Spot (or an indication that a solution
+// could not be found). This message can be used to make both reachability and stance-selection
+// queries. When filling out the request, the caller specifies one option from each of the following
+// categories:
+//  - stance specifications (fixed foot positions or feet on a ground plane),
+//  - tool specifications (wrist-mounted), and
+//  - task specifications (tool pose or gaze)
+// When evaluating potential robot configurations, the service considers joint limits, and static
+// stability in addition to the requirements specified in the request.
+message InverseKinematicsRequest {
+    RequestHeader header = 1;
+
+    // The root frame is the parent for the optional scene frame. The root frame must be
+    // either “vision" or “odom”.
+    string root_frame_name = 2;
+
+    // The task frame as well as body and foot related fields below are specified in this optional
+    // scene frame. If unset, it defaults to the identity transform and all scene quantities are
+    // therefore expressed in the root frame. This frame is useful in cases where the inverse
+    // kinematics problem is most easily defined relative to some other frame (e.g. the frame
+    // defined by a fiducial detection next to a piece of equipment).
+    SE3Pose root_tform_scene = 3;
+
+    // Tool related fields below are specified in this optional task frame.  If unset it defaults
+    // to the identity transform and all task frame quantities are therefore expressed in the scene
+    // frame.
+    SE3Pose scene_tform_task = 4;
+
+    enum NamedArmConfiguration {
+        // Unknown arm configuration
+        ARM_CONFIG_UNKNOWN = 0;
+        // The current configuration of the arm joints
+        ARM_CONFIG_CURRENT = 1;
+        // The configuration of the arm joints in the ready position. The ready position is defined
+        // with the hand directly in front of and slightly above the body, with the hand facing
+        // forward in the robot body +X direction.
+        ARM_CONFIG_READY = 2;
+    }
+
+    // The solver will prefer arm configurations close to the specified named configuration.
+    // Defaults to ARM_CONFIG_CURRENT.
+    NamedArmConfiguration nominal_arm_configuration = 6;
+
+    // Entries override the nominal joint positions for the specified arm joints. Unspecified joints
+    // will use the values specified by nominal_arm_configuration.
+    ArmJointPosition nominal_arm_configuration_overrides = 5;
+
+    // The solver will prefer configurations that put the body close to this pose. Default to the
+    // current body pose.
+    SE3Pose scene_tform_body_nominal = 7;
+
+    message FixedStance {
+        // The feet will be constrained to the specified positions relative to the scene frame. If
+        // unspecified, these will default to the current positions of the feet.
+        Vec3 fl_rt_scene = 1;
+        Vec3 fr_rt_scene = 2;
+        Vec3 hl_rt_scene = 3;
+        Vec3 hr_rt_scene = 4;
+    }
+
+    message OnGroundPlaneStance {
+        // The feet will be constrained to lie on the XY-plane of the ground frame. If unspecified
+        // the ground plane will be the robot's current ground plane estimate.
+        SE3Pose scene_tform_ground = 1;
+    }
+
+    // Defines the stance condition for this query. Defaults to fixed_stance.
+    oneof stance_specification {
+        FixedStance fixed_stance = 8;
+
+        OnGroundPlaneStance on_ground_plane_stance = 9;
+    }
+
+    message WristMountedTool {
+        // The tool pose relative to the parent link (wrist).
+        // Defaults to
+        //     [0.19557 0 0]
+        //     [1 0 0 0]
+        // a frame with its origin slightly in front of the gripper's palm plate aligned with the
+        // wrist's orientation.
+        SE3Pose wrist_tform_tool = 1;
+    }
+
+    message BodyMountedTool {
+        // The tool pose relative to the parent link (body). Defaults to identity, making the tool
+        // frame coincident with the body frame
+        SE3Pose body_tform_tool = 1;
+    }
+
+    // Defines the tool for this query. Defaults to wrist_mounted_tool.
+    oneof tool_specification {
+        WristMountedTool wrist_mounted_tool = 10;
+        BodyMountedTool body_mounted_tool = 11;
+    }
+
+    message ToolPoseTask {
+        // The desired pose of the tool expressed in the task frame. Defaults to identity.
+        SE3Pose task_tform_desired_tool = 1;
+    }
+
+    message ToolGazeTask {
+        // The point to “look at” with the x-axis of the tool frame. Defaults to the zero vector.
+        Vec3 target_in_task = 1;
+
+        // Optional desired pose of the tool expressed in the task frame. Will be
+        // constrained to 'look at' the target regardless of the requested orientation. If unset,
+        // only the “look at” constraint will be applied.
+        SE3Pose task_tform_desired_tool = 2;
+    }
+
+    // Defines the task for this query.
+    oneof task_specification {
+        // The tool will be constrained to be at the desired pose.
+        ToolPoseTask tool_pose_task = 12;
+
+        // The tool's x-axis will be constrained to point at a target point while the solver will
+        // prefer configurations that put the tool frame closer to the desired pose.
+        ToolGazeTask tool_gaze_task = 13;
+    }
+}
+
+// Response type for InverseKinematicsRequest. If a solution was found (STATUS_OK) the
+// robot_configuration field will contain that solution. Otherwise robot_configuration
+// will be empty.
+message InverseKinematicsResponse {
+    ResponseHeader header = 1;
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_NO_SOLUTION_FOUND = 2;
+    }
+
+    // Return status of the request.
+    Status status = 2;
+
+    // The transforms_snapshot subfield will include the root, scene, and task frames of the request
+    // as well as the body, tool, and foot frames in the solved configuration. The joint_states
+    // subfield will include the name and position for each joint in the solved configuration.
+    KinematicState robot_configuration = 3;
+}

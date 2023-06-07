@@ -4,16 +4,18 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CORE I/O Documentation &mdash; Spot 3.2.3 documentation</title>
+  <title>CORE I/O Documentation &mdash; Spot 3.3.0 documentation</title>
   
 
   
   <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
 
   
   
@@ -31,10 +33,12 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     
     <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
@@ -69,7 +73,7 @@
             
             
               <div class="version">
-                3.2.3
+                3.3.0
               </div>
             
           
@@ -97,13 +101,16 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/about_scout.html">About Scout</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/geometry_and_frames.html">Geometry and Frames</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/service_customization.html">Service Parameterization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -132,6 +139,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/choreography_service.html">Choreography Service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/choreographer.html">Choreographer Overview</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
@@ -186,6 +194,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/auto_return/README.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
@@ -198,6 +207,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
@@ -205,6 +215,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -230,9 +241,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -247,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
@@ -269,6 +283,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/scout.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
 </ul>
 </li>
 </ul>
@@ -296,6 +317,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
@@ -309,13 +331,16 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
@@ -333,6 +358,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -394,6 +420,12 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
 </ul>
 </li>
 </ul>
@@ -472,6 +504,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
@@ -486,9 +519,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
@@ -497,6 +533,8 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
@@ -527,10 +565,14 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
@@ -552,6 +594,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
@@ -568,7 +611,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release Notes</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../scout/index.html">Scout</a></li>
 </ul>
 
             
@@ -635,16 +677,16 @@
            <div itemprop="articleBody">
             
   <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="core-i-o-documentation">
-<h1>CORE I/O Documentation<a class="headerlink" href="#core-i-o-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>CORE I/O Documentation<a class="headerlink" href="#core-i-o-documentation" title="Permalink to this heading">¶</a></h1>
 <p>This section describes how to develop and deploy applications on the CORE I/O and monitor its status.</p>
 <section id="file-system-and-release-system">
-<h2>File System and Release System<a class="headerlink" href="#file-system-and-release-system" title="Permalink to this headline">¶</a></h2>
+<h2>File System and Release System<a class="headerlink" href="#file-system-and-release-system" title="Permalink to this heading">¶</a></h2>
 <p>One of the signficant differences between the CORE I/O and original Spot CORE is that the root filesystem on the CORE I/O is read-only.
 The read-only root filesystem of the CORE I/O allows the system to be more secure and reliable.
 It also enables the system to perform updates more easily and roll back to previous releases when updates fail.
@@ -665,54 +707,54 @@ To disable this overlay, run the command <code class="docutils literal notransla
 </ul>
 </section>
 <section id="system-configuration">
-<h2>System Configuration<a class="headerlink" href="#system-configuration" title="Permalink to this headline">¶</a></h2>
+<h2>System Configuration<a class="headerlink" href="#system-configuration" title="Permalink to this heading">¶</a></h2>
 <section id="admin-web-server-authentication">
-<h3>Admin Web Server Authentication<a class="headerlink" href="#admin-web-server-authentication" title="Permalink to this headline">¶</a></h3>
+<h3>Admin Web Server Authentication<a class="headerlink" href="#admin-web-server-authentication" title="Permalink to this heading">¶</a></h3>
 <p>When attached to a robot, the CORE I/O web server will authenticate against the robot it’s attached to with the provided username and password.
 This will typically be the password printed in the battery compartment of the robot, but can be any other username/password combination that is valid for the robot, such as a user that has been added through the robot’s web interface.</p>
 <p>To disable authentication for the web server (needed if the payload is not attached to a robot),
 SSH to the CORE I/O (enter the password provided with the payload when prompted) and create the “skipAuth” file, then restart the web server:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ssh -o <span class="nv">IdentitiesOnly</span><span class="o">=</span>yes -p <span class="m">20022</span> spot@&lt;robot-ip&gt;
-sudo touch /opt/bd-docker-containers/skipAuth
-sudo systemctl restart bd-docker-containers.service
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>-o<span class="w"> </span><span class="nv">IdentitiesOnly</span><span class="o">=</span>yes<span class="w"> </span>-p<span class="w"> </span><span class="m">20022</span><span class="w"> </span>spot@&lt;robot-ip&gt;
+sudo<span class="w"> </span>touch<span class="w"> </span>/opt/bd-docker-containers/skipAuth
+sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>bd-docker-containers.service
 </pre></div>
 </div>
 <p>Disabling authentication will not persist across boots.</p>
 </section>
 <section id="how-to-connect-via-ssh">
-<h3>How to connect via SSH<a class="headerlink" href="#how-to-connect-via-ssh" title="Permalink to this headline">¶</a></h3>
+<h3>How to connect via SSH<a class="headerlink" href="#how-to-connect-via-ssh" title="Permalink to this heading">¶</a></h3>
 <p>If the payload is on a benchtop (e.g. not on a robot), connect the client device to one of the ethernet ports on the payload and set the connected device’s IP address to be on the same subnet (192.168.50.0/24), then run:</p>
 <p><code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">spot&#64;192.168.50.5</span></code></p>
 <p>If the payload is on a robot, connect the client device to the robot’s network and run:</p>
 <p><code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-p</span> <span class="pre">20022</span> <span class="pre">spot&#64;&lt;robot-ip&gt;</span></code></p>
 </section>
 <section id="how-to-connect-via-local-terminal-with-monitor-and-keyboard">
-<h3>How to connect via local terminal with monitor and keyboard<a class="headerlink" href="#how-to-connect-via-local-terminal-with-monitor-and-keyboard" title="Permalink to this headline">¶</a></h3>
+<h3>How to connect via local terminal with monitor and keyboard<a class="headerlink" href="#how-to-connect-via-local-terminal-with-monitor-and-keyboard" title="Permalink to this heading">¶</a></h3>
 <p>We recommend connecting to the payload through SSH, but if necessary, the payload provides a USB-C port and two USB-A ports for connecting a monitor and keyboard. To connect a monitor, use a USB-C to HDMI or USB-C to Displayport adapter.
 Desktop mode allows CORE I/O to be used without attaching to Spot.
 To use the payload in desktop mode, connect a <a class="reference external" href="https://www.digikey.com/en/products/detail/cui-inc/SDI65-48-UDC-P6/5425448">48V power adapter</a> (not included in packaging).
 When operating the payload in desktop mode, the only available interface is a terminal. Graphical elements have been removed from the software to optimize for other use-cases.</p>
 </section>
 <section id="network-and-ssh-configuration">
-<h3>Network and SSH Configuration<a class="headerlink" href="#network-and-ssh-configuration" title="Permalink to this headline">¶</a></h3>
+<h3>Network and SSH Configuration<a class="headerlink" href="#network-and-ssh-configuration" title="Permalink to this heading">¶</a></h3>
 <p>Network configuration on the CORE I/O is done using NetworkManager.
 By default, the payload has in IPv4 address of 192.168.50.5/24 on its ethernet interface, which connects to an onboard switch that also connects to the robot via the payload port.
 The IP address can be changed from the command line using the <code class="docutils literal notranslate"><span class="pre">nmcli</span></code> tool (https://developer-old.gnome.org/NetworkManager/stable/nmcli.html).
 If network settings are changed via a different interface (e.g. <code class="docutils literal notranslate"><span class="pre">ip</span></code> or <code class="docutils literal notranslate"><span class="pre">ifconfig</span></code>), the settings will not persist across reboots.</p>
 <p>To connect to a wifi network with a connected USB Wifi dongle:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo nmcli r wifi on
-sudo nmcli dev wifi list
-sudo nmcli --ask dev wifi connect &lt;SSID&gt;
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>nmcli<span class="w"> </span>r<span class="w"> </span>wifi<span class="w"> </span>on
+sudo<span class="w"> </span>nmcli<span class="w"> </span>dev<span class="w"> </span>wifi<span class="w"> </span>list
+sudo<span class="w"> </span>nmcli<span class="w"> </span>--ask<span class="w"> </span>dev<span class="w"> </span>wifi<span class="w"> </span>connect<span class="w"> </span>&lt;SSID&gt;
 </pre></div>
 </div>
 <p>By default, password-based SSH is allowed. To disable this and only allow key-based SSH, edit the SSHD config file located in <code class="docutils literal notranslate"><span class="pre">/persist/etc/ssh/sshd_config</span></code>.
 After password-based SSH has been disabled, copy the SSH key provided with the payload to your client system and connect to the payload using:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ssh -i &lt;/path/to/ssh.key&gt; -p <span class="m">20022</span> spot@&lt;robot-ip&gt;
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>ssh<span class="w"> </span>-i<span class="w"> </span>&lt;/path/to/ssh.key&gt;<span class="w"> </span>-p<span class="w"> </span><span class="m">20022</span><span class="w"> </span>spot@&lt;robot-ip&gt;
 </pre></div>
 </div>
 </section>
 <section id="default-services">
-<h3>Default Services<a class="headerlink" href="#default-services" title="Permalink to this headline">¶</a></h3>
+<h3>Default Services<a class="headerlink" href="#default-services" title="Permalink to this heading">¶</a></h3>
 <p>By default, the CORE I/O runs a set of software provided by Boston Dynamics. This includes the following:</p>
 <ul class="simple">
 <li><p>Velodyne LIDAR point cloud processing service (<code class="docutils literal notranslate"><span class="pre">/lib/systemd/system/velodyne_service.service</span></code>)</p></li>
@@ -723,7 +765,7 @@ After password-based SSH has been disabled, copy the SSH key provided with the p
 <p>If these are not needed, they can be stopped by the user until the next boot by running <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">stop</span> <span class="pre">velodyne_service</span></code> or <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">systemctl</span> <span class="pre">stop</span> <span class="pre">bd-docker-containers.service</span></code>.</p>
 </section>
 <section id="passwords-and-groups">
-<h3>Passwords and Groups<a class="headerlink" href="#passwords-and-groups" title="Permalink to this headline">¶</a></h3>
+<h3>Passwords and Groups<a class="headerlink" href="#passwords-and-groups" title="Permalink to this heading">¶</a></h3>
 <p>As of the 3.2.1 release of CORE I/O software, the password and groups on the payload can be modified by the user.
 To change the password for the <code class="docutils literal notranslate"><span class="pre">spot</span></code> user, log in to the payload as the <code class="docutils literal notranslate"><span class="pre">spot</span></code> user and run <code class="docutils literal notranslate"><span class="pre">passwd</span></code>.
 To add a new sudo user, run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">useradd</span> <span class="pre">-m</span> <span class="pre">-G</span> <span class="pre">sudo</span> <span class="pre">&lt;username&gt;</span></code> and then <code class="docutils literal notranslate"><span class="pre">passwd</span> <span class="pre">&lt;username&gt;</span></code>.
@@ -732,9 +774,9 @@ To add the <code class="docutils literal notranslate"><span class="pre">spot</sp
 </section>
 </section>
 <section id="developing-on-the-core-i-o">
-<h2>Developing on the CORE I/O<a class="headerlink" href="#developing-on-the-core-i-o" title="Permalink to this headline">¶</a></h2>
+<h2>Developing on the CORE I/O<a class="headerlink" href="#developing-on-the-core-i-o" title="Permalink to this heading">¶</a></h2>
 <section id="development-environment">
-<h3>Development Environment<a class="headerlink" href="#development-environment" title="Permalink to this headline">¶</a></h3>
+<h3>Development Environment<a class="headerlink" href="#development-environment" title="Permalink to this heading">¶</a></h3>
 <p>Due to the read-only filesystem, direct development on the CORE I/O is not recommended.
 Installing dependencies using <code class="docutils literal notranslate"><span class="pre">apt</span></code> and <code class="docutils literal notranslate"><span class="pre">pip</span></code> will not work correctly and even if they do, that environment is removed on the next boot.</p>
 <p>Instead, we recommend developing on a dedicated development machine and install the end product application to the CORE I/O as Docker images configured in an Extension.
@@ -744,17 +786,23 @@ All dependencies needed for development can be pre-installed in a docker image (
 Devices, files, and networking can also be supplied to a container by using the <code class="docutils literal notranslate"><span class="pre">--device</span></code>, <code class="docutils literal notranslate"><span class="pre">--volume</span></code>, and <code class="docutils literal notranslate"><span class="pre">-p</span></code> flags for <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code>.
 For more information, see <a class="reference external" href="https://docs.docker.com/engine/reference/run/">Docker run reference</a>.</p>
 <p>As an example, the follow command can be used to create a development Docker container (the payload will need internet access, or else the arm64v8/python:3.8-slim image needs to imported first):</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo docker run --name dev_env -d --entrypoint /bin/bash -v /data:/data arm64v8/python:3.8-slim
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>dev_env<span class="w"> </span>-d<span class="w"> </span>--entrypoint<span class="w"> </span>/bin/bash<span class="w"> </span>-v<span class="w"> </span>/data:/data<span class="w"> </span>arm64v8/python:3.8-slim
 </pre></div>
 </div>
 <p>This creates a detached Docker container with the /data directory mounted. To connect to it, run:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo docker <span class="nb">exec</span> -it /bin/bash dev_env
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>dev_env<span class="w"> </span>/bin/bash
 </pre></div>
 </div>
 <p>You now have an environment where you can install additional dependencies using <code class="docutils literal notranslate"><span class="pre">apt</span></code> and <code class="docutils literal notranslate"><span class="pre">pip</span></code> and can execute Python code.</p>
+<p>An example development image is also available as a Spot Extension and can be downloaded <a class="reference external" href="https://d3cjkvgbik1jtv.cloudfront.net/Extensions/playground_extension.spx">here</a>.
+After uploading the extension (playground_extension.spx) to the CORE I/O, SSH to the payload, then connect to the running container with the following command:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>playground_extension-coreio_playground-1<span class="w"> </span>/bin/bash
+</pre></div>
+</div>
+<p>This “playground” container is based off the Linux for Tegra (L4T) base image and enables use of the GPU. It does not contain anything else, like the SDK, but those can be added if necessary by changing the Docker image included in the extension.</p>
 </section>
 <section id="gpio-and-pwm">
-<h3>GPIO and PWM<a class="headerlink" href="#gpio-and-pwm" title="Permalink to this headline">¶</a></h3>
+<h3>GPIO and PWM<a class="headerlink" href="#gpio-and-pwm" title="Permalink to this heading">¶</a></h3>
 <p>GPIO stands for general purpose input/output.
 The CORE I/O comes with 3 pins a developer can utilize for these general purposes.
 They can be setup in software as a signal output of 3.3v,
@@ -765,8 +813,7 @@ There are also 2 pins providing i2c communication SDA (data) and SCL (clock).</p
 <p>CORE I/O Diagram:</p>
 <p><img alt="coreio ports" src="../../_images/coreio_ports.png" /></p>
 <p>Terminal Block Schematics:</p>
-<p><img alt="terminal blocks" src="../../_images/CN1_CN2.png" />
-<img alt="terminal blocks2" src="../../_images/CN3_CN4.png" /></p>
+<p><img alt="terminal blocks" src="../../_images/terminal_blocks.png" /></p>
 <p>In table form:</p>
 <table border="1" class="docutils">
 <thead>
@@ -781,56 +828,56 @@ There are also 2 pins providing i2c communication SDA (data) and SCL (clock).</p
 <tbody>
 <tr>
 <td>1</td>
-<td>Estop Loop 1</td>
+<td>Motor Loop Back</td>
 <td>GPIO pin 1</td>
 <td>48v unreg</td>
 <td>48v unreg</td>
 </tr>
 <tr>
 <td>2</td>
-<td>Estop Loop 1</td>
+<td>Motor Loop Back</td>
 <td>GPIO pin 2</td>
 <td>24v output</td>
 <td>24v output</td>
 </tr>
 <tr>
 <td>3</td>
-<td>Estop Loop 2</td>
+<td>Extra Loop Back B</td>
 <td>GPIO pin 3</td>
 <td>12v output*</td>
-<td>12v output</td>
+<td>12v output*</td>
 </tr>
 <tr>
 <td>4</td>
-<td>Estop Loop 2</td>
+<td>Extra Loop Back B</td>
 <td>GND</td>
 <td>12v output*</td>
-<td>12v output</td>
+<td>12v output*</td>
 </tr>
 <tr>
 <td>5</td>
-<td>Estop Loop 3</td>
+<td>Payload Loop Back</td>
 <td>i2c serial SDA</td>
 <td>5v output</td>
 <td>5v output</td>
 </tr>
 <tr>
 <td>6</td>
-<td>Estop Loop 3</td>
+<td>Payload Loop Back</td>
 <td>i2c serial SCL</td>
 <td>5v output</td>
 <td>5v output</td>
 </tr>
 <tr>
 <td>7</td>
-<td>Estop Loop 3</td>
+<td>Extra Loop Back A</td>
 <td>PPS pulse</td>
 <td>GND</td>
 <td>GND</td>
 </tr>
 <tr>
 <td>8</td>
-<td>Estop Loop 3</td>
+<td>Extra Loop Back A</td>
 <td>GND</td>
 <td>GND</td>
 <td>GND</td>
@@ -857,7 +904,8 @@ There are also 2 pins providing i2c communication SDA (data) and SCL (clock).</p
 <td>GND</td>
 </tr>
 </tbody>
-</table><p>The easiest way to control the voltage output pins in CN3 and CN4 is through the GPIO page in the web server. At this time, PWM control has not yet been built into the web server.</p>
+</table><p>All loop backs must ensure continuity to like-named loop back connections ie. jumpered.</p>
+<p>The easiest way to control the voltage output pins in CN3 and CN4 is through the GPIO page in the web server. At this time, PWM control has not yet been built into the web server.</p>
 <p>* Turning off GPIO pins while the payload is in operation may also adversely affect functionality.
 For example, turning off the 12V pin will cut power to an attached lidar and will inhibit Autowalk from working.
 The service serving LIDAR data to the robot also automatically turns on the 12V pin.
@@ -898,12 +946,12 @@ If the 12V pin needs to be turned off, the lidar service must be disabled.</p>
 <p>Working with other devices (e.g. USB devices, SD cards, etc.) is similar. The corresponding devices and volumes simply need to be mounted into the container.</p>
 </section>
 <section id="working-with-i2c">
-<h3>Working with i2c<a class="headerlink" href="#working-with-i2c" title="Permalink to this headline">¶</a></h3>
+<h3>Working with i2c<a class="headerlink" href="#working-with-i2c" title="Permalink to this heading">¶</a></h3>
 <p>i2c is a serial communication protocol that can be used to daisy chain many devices (provided they have different addresses) to a single bus.
 Communication happens across 2 pins SCL and SDA (clock and data) and chip power and ground are also required, 4 wires total for dozens of sensors and devices.</p>
 <p>The CORE I/O CN2 connector has i2c in pins 5 (SDA) and 6 (SCL)</p>
 <p>Once the device is connected to SDA, SCL, 3.3v, and GND it can be seen on the i2c bus #1 by using this shell command:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>i2cdetect -y -r <span class="m">1</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>i2cdetect<span class="w"> </span>-y<span class="w"> </span>-r<span class="w"> </span><span class="m">1</span>
 </pre></div>
 </div>
 <p>Which returns:</p>
@@ -920,12 +968,12 @@ Communication happens across 2 pins SCL and SDA (clock and data) and chip power 
 </div>
 <p>The table shows there is a device on bus 1 at address 0x6D
 To read individual registers on the device, run the following command:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>i2cget -y <span class="m">1</span> 0x6D 0x00
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>i2cget<span class="w"> </span>-y<span class="w"> </span><span class="m">1</span><span class="w"> </span>0x6D<span class="w"> </span>0x00
 </pre></div>
 </div>
 </section>
 <section id="working-with-the-gpu">
-<h3>Working with the GPU<a class="headerlink" href="#working-with-the-gpu" title="Permalink to this headline">¶</a></h3>
+<h3>Working with the GPU<a class="headerlink" href="#working-with-the-gpu" title="Permalink to this heading">¶</a></h3>
 <p>The CORE I/O has an NVIDIA Xavier NX, which has an NVIDIA Volta architecture GPU with 384 NVIDIA CUDA® cores.
 The GPU can be used for running ML models and examples for running ML models as Spot Extensions are provided as a part of the Spot SDK.
 The GPU can be used by multiple processes (and multiple Extensions), but performance may not be optimal.</p>
@@ -954,7 +1002,7 @@ An example using Docker Compose and Spot Extensions has also been provided as a 
 </section>
 </section>
 <section id="spot-extensions">
-<h2>Spot Extensions<a class="headerlink" href="#spot-extensions" title="Permalink to this headline">¶</a></h2>
+<h2>Spot Extensions<a class="headerlink" href="#spot-extensions" title="Permalink to this heading">¶</a></h2>
 <p>See <a class="reference internal" href="docker_containers.html"><span class="doc">Spot Extension Development</span></a>.</p>
 </section>
 </section>

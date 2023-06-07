@@ -1,5 +1,5 @@
 <!--
-Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
@@ -39,12 +39,13 @@ Structural nodes control the order in which nodes are visited in mission executi
 
 | Node  |  Description |
 | ----- | -----------|
-| Sequence | Specify a list of actions for the robot to perform. Sequences can be nested or combined with other structural node types.
+| Sequence | Specify a list of actions for the robot to perform. Child nodes are run in order until one of them fails. Sequences can be nested or combined with other structural node types.
 | Selector |	Selectors run their child nodes in order until one of them succeeds.
 | Repeat | Loop a subtree a certain number of times.
 | Retry |	Loop a subtree until it succeeds.
 | ForDuration |	Loop a subtree until it fails.
 | SimpleParallel |	Execute two nodes or subtrees at the same time.
+| Switch | Execute a specific child node based on a pivot value.
 
 ### Action nodes
 

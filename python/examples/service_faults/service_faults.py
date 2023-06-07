@@ -1,4 +1,4 @@
-# Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+# Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 #
 # Downloading, reproducing, distributing or otherwise using the SDK Software
 # is subject to the terms and conditions of the Boston Dynamics Software
@@ -44,7 +44,7 @@ def watch_service_fault_state(robot_state_client, watch_duration_secs=10):
     end_epoch_time = int(time.time()) + watch_duration_secs
     while (int(time.time()) < end_epoch_time):
         state = robot_state_client.get_robot_state()
-        print('\nCurrent ServiceFaults:\n' + str(state.service_fault_state.faults or ''))
+        print(f'\nCurrent ServiceFaults:\n{state.service_fault_state.faults or ""}')
         time.sleep(1)
 
 
@@ -78,24 +78,23 @@ def liveness_faulting(robot):
     services = directory_client.list()
     for service in services:
         if service.name == kServiceName:
-            print('Service registration confirmed with liveness timeout == ' +
-                  str(service.liveness_timeout_secs))
+            print(
+                f'Service registration confirmed with liveness timeout == {service.liveness_timeout_secs}'
+            )
 
     # Continually display ServiceFaults. Should not see liveness fault from service_name
-    print('\n\n\nHeartbeat thread is active. Should not see liveness fault from ' + kServiceName +
-          ':')
+    print(f'\n\n\nHeartbeat thread is active. Should not see liveness fault from {kServiceName}:')
     watch_service_fault_state(robot_state_client, 8)
 
     # Stop the service and display ServiceFaults. New liveness fault from service_name should appear.
-    print('\n\n\nHeartbeat thread is shutting down. Expect liveness faults from ' + kServiceName +
-          ':')
+    print(f'\n\n\nHeartbeat thread is shutting down. Expect liveness faults from {kServiceName}:')
     directory_keep_alive.shutdown()
     watch_service_fault_state(robot_state_client, 8)
 
     # Start a keep alive again, which should re-establish liveness and automatically clear the liveness fault.
     # Unregistering the service will also automatically clear liveness faults.
-    print('\n\n\nHeartbeat thread is starting again. Expect ' + kServiceName +
-          ' liveness faults to clear')
+    print(
+        f'\n\n\nHeartbeat thread is starting again. Expect {kServiceName} liveness faults to clear')
     directory_keep_alive_2 = DirectoryRegistrationKeepAlive(
         directory_registration_client, rpc_interval_seconds=kKeepAliveIntervalSecs)
     directory_keep_alive_2.start(kServiceName, kServiceType, kServiceAuthority, kServiceIp,

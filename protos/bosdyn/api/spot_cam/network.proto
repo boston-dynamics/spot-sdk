@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Boston Dynamics, Inc.  All rights reserved.
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 //
 // Downloading, reproducing, distributing or otherwise using the SDK Software
 // is subject to the terms and conditions of the Boston Dynamics Software
@@ -15,14 +15,14 @@ import "google/protobuf/wrappers.proto";
 
 // Network configuration data.
 message NetworkTuple {
-    //a big-endian representation of an IPv4 address
+    // a big-endian representation of an IPv4 address
     google.protobuf.UInt32Value address = 2;
-    //The mask used for defining the system's subnet
+    // The mask used for defining the system's subnet
     google.protobuf.UInt32Value netmask = 3;
-    //A global routing is set up for the address defined below (if present)
+    // A global routing is set up for the address defined below (if present)
     google.protobuf.UInt32Value gateway = 4;
-    //If MTU is present, and <16 bits wide, then it is set for the ethernet interface's MTU
-    //if not, the MTU is set to 1500
+    // If MTU is present, and <16 bits wide, then it is set for the ethernet interface's MTU
+    // if not, the MTU is set to 1500
     google.protobuf.UInt32Value mtu = 5;
 }
 
@@ -70,6 +70,26 @@ message ICEServer {
     string address = 2;
     // Only the least significant 16 bits are used.
     uint32 port = 3;
+    enum icetransport {
+        TRANSPORT_UNKNOWN = 0;
+        TRANSPORT_UDP = 1;
+        TRANSPORT_TCP = 2;
+    }
+    icetransport transport = 4;
+    message auth_params {
+        // username is optional, and is only used for authenticated TURN servers
+        google.protobuf.StringValue username = 1;
+        message oauth_pair {
+            string MACKey = 1;
+            string AccessToken = 2;
+        }
+        oneof credential {
+            oauth_pair oauth = 2;
+            google.protobuf.StringValue password = 3;
+        }
+    }
+    // auth is optional, and is only used for TURN
+    auth_params auth = 5;
 }
 
 // Request the servers used for ICE resolution.
