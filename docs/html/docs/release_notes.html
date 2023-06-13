@@ -744,13 +744,15 @@ Area callbacks that control the robot through the region can now update the loca
 <h4>Choreography<a class="headerlink" href="#choreography" title="Permalink to this headline">¶</a></h4>
 <p>Added a new <code class="docutils literal notranslate"><span class="pre">ChoreographyCommand</span></code> RPC to support <a class="reference internal" href="concepts/choreography/custom_gait.html"><span class="doc">interactive choreography moves</span></a>.</p>
 <p>Added a new <code class="docutils literal notranslate"><span class="pre">ChoreographyStatus</span></code> RPC so that users can receive feedback on the dance state a robot is in and a robot’s progress in completing a dance or current move(s) in a dance.</p>
-<p>Added <code class="docutils literal notranslate"><span class="pre">exit_state</span></code> field in <code class="docutils literal notranslate"><span class="pre">SequenceInfo</span></code> message to specify the exit transition state of the sequence.
-Added <code class="docutils literal notranslate"><span class="pre">execution_id</span></code> field in <code class="docutils literal notranslate"><span class="pre">ExecuteChoreographyResponse</span></code> message with the unique ID for the execution.
-Added <code class="docutils literal notranslate"><span class="pre">id</span></code> field in <code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> message, set by the client or auto-assigned by the service, to be reported in the <code class="docutils literal notranslate"><span class="pre">ChoreographyStatusResponse</span></code> <code class="docutils literal notranslate"><span class="pre">ActiveMoves</span></code> field.
-Added <code class="docutils literal notranslate"><span class="pre">custom_gait_params</span></code> and <code class="docutils literal notranslate"><span class="pre">leg_joint_params</span></code> fields in <code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> object.
-Added <code class="docutils literal notranslate"><span class="pre">is_looping</span></code> field in <code class="docutils literal notranslate"><span class="pre">MoveInfo</span></code> message.
-Added <code class="docutils literal notranslate"><span class="pre">entrance_state</span></code> field in <code class="docutils literal notranslate"><span class="pre">ChoreographySequence</span></code> message to specify an explicit entrance state in the case where the first legs-track move accepts multiple entrance states.
-Animations now support more flexibility to adjusting timing, can specify whether the animation starts from a sit pose, or can specify that an Animation can be used for a custom gait.</p>
+<ul class="simple">
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">exit_state</span></code> field in <code class="docutils literal notranslate"><span class="pre">SequenceInfo</span></code> message to specify the exit transition state of the sequence.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">execution_id</span></code> field in <code class="docutils literal notranslate"><span class="pre">ExecuteChoreographyResponse</span></code> message with the unique ID for the execution.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">id</span></code> field in <code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> message, set by the client or auto-assigned by the service, to be reported in the <code class="docutils literal notranslate"><span class="pre">ChoreographyStatusResponse</span></code> <code class="docutils literal notranslate"><span class="pre">ActiveMoves</span></code> field.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">custom_gait_params</span></code> and <code class="docutils literal notranslate"><span class="pre">leg_joint_params</span></code> fields in <code class="docutils literal notranslate"><span class="pre">MoveParams</span></code> object.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">is_looping</span></code> field in <code class="docutils literal notranslate"><span class="pre">MoveInfo</span></code> message.</p></li>
+<li><p>Added <code class="docutils literal notranslate"><span class="pre">entrance_state</span></code> field in <code class="docutils literal notranslate"><span class="pre">ChoreographySequence</span></code> message to specify an explicit entrance state in the case where the first legs-track move accepts multiple entrance states.</p></li>
+<li><p>Animations now support more flexibility to adjusting timing, can specify whether the animation starts from a sit pose, or can specify that an Animation can be used for a custom gait.</p></li>
+</ul>
 </section>
 <section id="payloads">
 <h4>Payloads<a class="headerlink" href="#payloads" title="Permalink to this headline">¶</a></h4>
@@ -758,17 +760,17 @@ Animations now support more flexibility to adjusting timing, can specify whether
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">liveness_timeout_secs</span></code>: How long payload can be unpingable before a liveness fault is raised.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ipv4_address</span></code>: Address for the robot to ping the payload at.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">link_speed</span></code>: Expected ethernet speed negotiated.
-If present, the <code class="docutils literal notranslate"><span class="pre">ipv4_address</span></code> field will also be used to detect whether a payload is mounted to the front or rear payload port. If a payload preset has a label “mount_port:rear” and the payload is connected to the front port, it will not be displayed on the registration page. The same is true if there is a preset “mount_port:front” and the payload is connected to the rear port.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">link_speed</span></code>: Expected ethernet speed negotiated.</p></li>
 </ul>
+<p>If present, the <code class="docutils literal notranslate"><span class="pre">ipv4_address</span></code> field will also be used to detect whether a payload is mounted to the front or rear payload port. If a payload preset has a label “mount_port:rear” and the payload is connected to the front port, it will not be displayed on the registration page. The same is true if there is a preset “mount_port:front” and the payload is connected to the rear port.</p>
 </section>
 <section id="images-and-data">
 <h4>Images and Data<a class="headerlink" href="#images-and-data" title="Permalink to this headline">¶</a></h4>
 <p>Added the SpotCamAlignment action wrapper for aligning Spot Cam image captures.</p>
 <p>Images can be stored for Data Acquisition and RemoteGrpc elements in order to aid in editing walks.</p>
-<p>Updated the <code class="docutils literal notranslate"><span class="pre">IrMeterOverlay</span></code> Spot Cam message and added a new RPC to get the current overlay.
-Added new RPCs for setting and getting the focus state of the Spot Cam PTZ.
-Added exposure settings to the <code class="docutils literal notranslate"><span class="pre">StreamParams</span></code> message.</p>
+<p>Updated the <code class="docutils literal notranslate"><span class="pre">IrMeterOverlay</span></code> Spot Cam message and added a new RPC to get the current overlay.</p>
+<p>Added new RPCs for setting and getting the focus state of the Spot Cam PTZ.</p>
+<p>Added exposure settings to the <code class="docutils literal notranslate"><span class="pre">StreamParams</span></code> message.</p>
 <p>New <code class="docutils literal notranslate"><span class="pre">AvailableModels</span></code> message to describe Network Compute Bridge models available for data acquisition capture.</p>
 <p>New unique <code class="docutils literal notranslate"><span class="pre">id</span></code> returned in <code class="docutils literal notranslate"><span class="pre">Store*</span></code> responses from the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionStore</span></code> service. This id can be used in a <code class="docutils literal notranslate"><span class="pre">DataIdentifier</span></code> to uniquely identify a particular piece of stored data.</p>
 </section>
@@ -816,10 +818,10 @@ Added exposure settings to the <code class="docutils literal notranslate"><span 
 </section>
 <section id="deprecated-fields-and-values">
 <h4>Deprecated fields and values<a class="headerlink" href="#deprecated-fields-and-values" title="Permalink to this headline">¶</a></h4>
-<p><strong>GripperCameraParam</strong>: Renamed <code class="docutils literal notranslate"><span class="pre">CameraMode</span></code> enum values.
-<strong>Graph Nav</strong>: The <code class="docutils literal notranslate"><span class="pre">StraightStaircase</span></code> representation of staircases is deprecated and replaced with the new <code class="docutils literal notranslate"><span class="pre">StaircaseWithLandings</span></code>.
-<strong>Choreography</strong>; The <code class="docutils literal notranslate"><span class="pre">precise_timing</span></code> in <code class="docutils literal notranslate"><span class="pre">Animation</span></code> message is deprecated and replaced by the more fine-grained control of <code class="docutils literal notranslate"><span class="pre">timing_adjustability</span></code> field.
-<strong>Leases</strong>: Use <code class="docutils literal notranslate"><span class="pre">is_stale</span></code> instead of the stale time in the <code class="docutils literal notranslate"><span class="pre">LeaseResource</span></code> message to determine staleness.</p>
+<p><strong>GripperCameraParam</strong>: Renamed <code class="docutils literal notranslate"><span class="pre">CameraMode</span></code> enum values.</p>
+<p><strong>Graph Nav</strong>: The <code class="docutils literal notranslate"><span class="pre">StraightStaircase</span></code> representation of staircases is deprecated and replaced with the new <code class="docutils literal notranslate"><span class="pre">StaircaseWithLandings</span></code>.</p>
+<p><strong>Choreography</strong>; The <code class="docutils literal notranslate"><span class="pre">precise_timing</span></code> in <code class="docutils literal notranslate"><span class="pre">Animation</span></code> message is deprecated and replaced by the more fine-grained control of <code class="docutils literal notranslate"><span class="pre">timing_adjustability</span></code> field.</p>
+<p><strong>Leases</strong>: Use <code class="docutils literal notranslate"><span class="pre">is_stale</span></code> instead of the stale time in the <code class="docutils literal notranslate"><span class="pre">LeaseResource</span></code> message to determine staleness.</p>
 </section>
 <section id="python-functions">
 <h4>Python functions<a class="headerlink" href="#python-functions" title="Permalink to this headline">¶</a></h4>

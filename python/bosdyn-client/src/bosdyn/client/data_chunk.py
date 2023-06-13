@@ -27,6 +27,7 @@ def chunk_serialized(serialized: bytes, data_chunk_byte_size: int):
 
 def chunk_message(message, data_chunk_byte_size: int):
     """Take a message, and split it into data chunks
+
     Args:
         data_chunk_byte_size: max size of each streamed message
     """

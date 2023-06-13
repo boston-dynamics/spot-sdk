@@ -82,13 +82,13 @@ Added a new `ChoreographyCommand` RPC to support [interactive choreography moves
 
 Added a new `ChoreographyStatus` RPC so that users can receive feedback on the dance state a robot is in and a robot’s progress in completing a dance or current move(s) in a dance.
 
-Added `exit_state` field in `SequenceInfo` message to specify the exit transition state of the sequence.
-Added `execution_id` field in `ExecuteChoreographyResponse` message with the unique ID for the execution.
-Added `id` field in `MoveParams` message, set by the client or auto-assigned by the service, to be reported in the `ChoreographyStatusResponse` `ActiveMoves` field.
-Added `custom_gait_params` and `leg_joint_params` fields in `MoveParams` object.
-Added `is_looping` field in `MoveInfo` message.
-Added `entrance_state` field in `ChoreographySequence` message to specify an explicit entrance state in the case where the first legs-track move accepts multiple entrance states.
-Animations now support more flexibility to adjusting timing, can specify whether the animation starts from a sit pose, or can specify that an Animation can be used for a custom gait.
+- Added `exit_state` field in `SequenceInfo` message to specify the exit transition state of the sequence.
+- Added `execution_id` field in `ExecuteChoreographyResponse` message with the unique ID for the execution.
+- Added `id` field in `MoveParams` message, set by the client or auto-assigned by the service, to be reported in the `ChoreographyStatusResponse` `ActiveMoves` field.
+- Added `custom_gait_params` and `leg_joint_params` fields in `MoveParams` object.
+- Added `is_looping` field in `MoveInfo` message.
+- Added `entrance_state` field in `ChoreographySequence` message to specify an explicit entrance state in the case where the first legs-track move accepts multiple entrance states.
+- Animations now support more flexibility to adjusting timing, can specify whether the animation starts from a sit pose, or can specify that an Animation can be used for a custom gait.
 
 #### Payloads
 
@@ -97,7 +97,8 @@ New fields in the Payload proto enable a liveness check, similar to a service li
 - `liveness_timeout_secs`: How long payload can be unpingable before a liveness fault is raised.
 - `ipv4_address`: Address for the robot to ping the payload at.
 - `link_speed`: Expected ethernet speed negotiated.
-  If present, the `ipv4_address` field will also be used to detect whether a payload is mounted to the front or rear payload port. If a payload preset has a label "mount_port:rear" and the payload is connected to the front port, it will not be displayed on the registration page. The same is true if there is a preset "mount_port:front" and the payload is connected to the rear port.
+  
+If present, the `ipv4_address` field will also be used to detect whether a payload is mounted to the front or rear payload port. If a payload preset has a label "mount_port:rear" and the payload is connected to the front port, it will not be displayed on the registration page. The same is true if there is a preset "mount_port:front" and the payload is connected to the rear port.
 
 #### Images and Data
 
@@ -106,7 +107,9 @@ Added the SpotCamAlignment action wrapper for aligning Spot Cam image captures.
 Images can be stored for Data Acquisition and RemoteGrpc elements in order to aid in editing walks.
 
 Updated the `IrMeterOverlay` Spot Cam message and added a new RPC to get the current overlay.
+
 Added new RPCs for setting and getting the focus state of the Spot Cam PTZ.
+
 Added exposure settings to the `StreamParams` message.
 
 New `AvailableModels` message to describe Network Compute Bridge models available for data acquisition capture.
@@ -154,8 +157,11 @@ When calling the NetworkComputeBridge service, the `input_data` is deprecated in
 #### Deprecated fields and values
 
 **GripperCameraParam**: Renamed `CameraMode` enum values.
+
 **Graph Nav**: The `StraightStaircase` representation of staircases is deprecated and replaced with the new `StaircaseWithLandings`.
+
 **Choreography**; The `precise_timing` in `Animation` message is deprecated and replaced by the more fine-grained control of `timing_adjustability` field.
+
 **Leases**: Use `is_stale` instead of the stale time in the `LeaseResource` message to determine staleness.
 
 #### Python functions
