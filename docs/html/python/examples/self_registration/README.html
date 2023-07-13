@@ -1,99 +1,53 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Payload &amp; Service Initialization &mdash; Spot 3.3.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
-  
-  
-  
     <link rel="canonical" href="https:://dev.bostondynamics.com/python/examples/self_registration/README.html"/>
-  
-
-  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Handling Service Faults" href="../service_faults/README.html" />
     <link rel="prev" title="Using the Payload Service" href="../payloads/README.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../../README.html">
           
-
-          
+          <a href="../../../README.html">
             
-            <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
-          
+              <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
               <div class="version">
                 3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
@@ -249,6 +203,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../data_buffer/README.html">Data Buffer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../data_service/README.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../log_status/README.html">Log Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
@@ -609,73 +564,32 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../README.html">Spot</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../README.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../../../docs/python/README.html">Python Library</a> &raquo;</li>
-        
-          <li><a href="../README.html">Python Examples</a> &raquo;</li>
-        
-          <li><a href="../docs/payloads_examples.html">Payload Examples</a> &raquo;</li>
-        
-      <li>Payload &amp; Service Initialization</li>
-    
-    
+      <li><a href="../../../README.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../docs/python/README.html">Python Library</a></li>
+          <li class="breadcrumb-item"><a href="../README.html">Python Examples</a></li>
+          <li class="breadcrumb-item"><a href="../docs/payloads_examples.html">Payload Examples</a></li>
+      <li class="breadcrumb-item active">Payload &amp; Service Initialization</li>
       <li class="wy-breadcrumbs-aside">
-        
-            
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <!--
 Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
@@ -683,37 +597,37 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="payload-service-initialization">
-<h1>Payload &amp; Service Initialization<a class="headerlink" href="#payload-service-initialization" title="Permalink to this headline">¶</a></h1>
+<h1>Payload &amp; Service Initialization<a class="headerlink" href="#payload-service-initialization" title="Permalink to this heading"></a></h1>
 <p>The files in this directory serve as an example of how a payload could register itself, register a service, and communicate to the service through the robot.</p>
 <section id="payload-registration">
-<h2>Payload Registration<a class="headerlink" href="#payload-registration" title="Permalink to this headline">¶</a></h2>
+<h2>Payload Registration<a class="headerlink" href="#payload-registration" title="Permalink to this heading"></a></h2>
 <p>Payloads are able to register themselves without the need for user credentials to be stored on the payload. A payload registration client can be used to communicate the details of the payload to the robot without need for authorization or authentication. All payloads registered this way <strong>must</strong> later be manually authorized by an admin via the Spot web UI. If the payload is attached to the robot, it should also be enabled on the webpage.</p>
 <p>Once a payload has been authorized, its <em>unique</em> GUID &amp; secret combination can be used as credentials to request a limited-access user token that wil grant permission to the auth, directory, and directory-registration services. The granted user token will be valid for 12 hours.</p>
 <p>Payload registration &amp; authorization needs to be done only once, as payload definitions will be kept on robot across reboots.</p>
 </section>
 <section id="service-registration">
-<h2>Service Registration<a class="headerlink" href="#service-registration" title="Permalink to this headline">¶</a></h2>
+<h2>Service Registration<a class="headerlink" href="#service-registration" title="Permalink to this heading"></a></h2>
 <p>A new service can be registered in the robot directory, which requires a user token containing directory permissions. A user token can be requested by using the GUID &amp; secret of an authorized payload. A directory registration client can be used to communicate the implementation and routing details of a service to the robot.</p>
 <p>Service registration needs to be done after each power cycle, as the robot directory is reset when the robot is powered down.</p>
 </section>
 <section id="communication-between-client-service">
-<h2>Communication Between Client &amp; Service<a class="headerlink" href="#communication-between-client-service" title="Permalink to this headline">¶</a></h2>
+<h2>Communication Between Client &amp; Service<a class="headerlink" href="#communication-between-client-service" title="Permalink to this heading"></a></h2>
 <p>All endpoint details for routing requests to a service should have been provided at service registration time. When any client makes a request to the robot with an authority &amp; service type matching a registered service, the request will be forwarded to the associated endpoint. It is assumed that a service will be running and available at the given endpoint to handle the request. Responses will be automatically routed back to the calling client. If no service is available, the request will time out.</p>
 </section>
 <section id="core-i-o">
-<h2>CORE I/O<a class="headerlink" href="#core-i-o" title="Permalink to this headline">¶</a></h2>
+<h2>CORE I/O<a class="headerlink" href="#core-i-o" title="Permalink to this heading"></a></h2>
 <p>If you are working with a CORE I/O, this example demonstrates how you can set up a simple service on your CORE I/O and communicate to it through a client. Copy these example files onto the CORE I/O and set up the payload registration, service creation, and service registration there. Then, run the client on a laptop connected to the robot.</p>
 </section>
 <section id="set-up">
-<h2>Set up<a class="headerlink" href="#set-up" title="Permalink to this headline">¶</a></h2>
+<h2>Set up<a class="headerlink" href="#set-up" title="Permalink to this heading"></a></h2>
 <p>The proto definition files need to be compiled into python files before they can be used for this system. Following the <a class="reference external" href="https://www.grpc.io/docs/tutorials/basic/python/">gRPC documentation</a>, these files can be generated by installing grpcio tools via <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">grpcio-tools</span></code> and then running <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">grpc_tools.protoc</span> <span class="pre">-I.</span> <span class="pre">--python_out=.</span> <span class="pre">--grpc_python_out=.</span> <span class="pre">announce.proto</span> <span class="pre">announce_service.proto</span></code>.</p>
 </section>
 <section id="demo">
-<h2>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h2>
+<h2>Demo<a class="headerlink" href="#demo" title="Permalink to this heading"></a></h2>
 <p>The files in this directory can be used to set up the current computer as a payload, start up an announce service, register the announce service, and run a client to access the announce service through the robot. This section will walk the user through that process.</p>
 <p>The explanation will follow the process laid out programmatically in the initialize_payload script, which automates this process. It is recommended that you go through the process manually first to gain an understanding of the process.</p>
 <section id="select-values">
-<h3>Select values<a class="headerlink" href="#select-values" title="Permalink to this headline">¶</a></h3>
+<h3>Select values<a class="headerlink" href="#select-values" title="Permalink to this heading"></a></h3>
 <p>Setting up a payload and onboard services requires defining at least one payload, service, and endpoint. These definitions require multiple pieces of information properly represent the concept. Before beginning, select and record what values you want to use to populate these objects. Examples of valid values can be seen in the initialize_payload script.</p>
 <p><strong>Robot</strong></p>
 <ul class="simple">
@@ -746,14 +660,14 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="register-the-payload">
-<h3>Register the payload<a class="headerlink" href="#register-the-payload" title="Permalink to this headline">¶</a></h3>
+<h3>Register the payload<a class="headerlink" href="#register-the-payload" title="Permalink to this heading"></a></h3>
 <p>self<em>register_payload.py can be used to register a single payload. The registered payload will be automatically set to unauthorized and disabled, until an admin updates it in the web console. The Python script will wait to exit until the registered payload is authorized. If the payload GUID has already been registered, it will _not</em> be overwritten by additional registration requests. The payload added by the self_registered_payload.py script adds a payload with a preset configuration. When authorizing the payload in the admin page, the admin user can select the default configuration, or the preset configuration. See documentation on <a class="reference internal" href="../../../docs/payload/configuring_payload_software.html"><span class="doc">configuration of payload software</span></a> for more information.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">self_register_payload</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">guid</span> <span class="o">&lt;</span><span class="n">payload_guid</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">secret</span> <span class="o">&lt;</span><span class="n">payload_secret</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">name</span> <span class="o">&lt;</span><span class="n">payload_name</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">description</span> <span class="o">&lt;</span><span class="n">payload_description</span><span class="o">&gt;</span> <span class="n">ROBOT_IP</span>
 </pre></div>
 </div>
 </section>
 <section id="start-the-announce-service">
-<h3>Start the announce service<a class="headerlink" href="#start-the-announce-service" title="Permalink to this headline">¶</a></h3>
+<h3>Start the announce service<a class="headerlink" href="#start-the-announce-service" title="Permalink to this heading"></a></h3>
 <p>announce_service.py can be used to start (and maintain) a very simple Python gRPC service. The service will accept announce requests with a message and return the message, in all caps, through an announce response. The service will continue to run until the user issues a keyboard interrupt or kills the PID.
 WARNING: The configured port must not be blocked by a firewall on the service hosting device.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">announce_service</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">port</span> <span class="o">&lt;</span><span class="n">endpoint_port</span><span class="o">&gt;</span>
@@ -761,21 +675,21 @@ WARNING: The configured port must not be blocked by a firewall on the service ho
 </div>
 </section>
 <section id="register-the-announce-service">
-<h3>Register the announce service<a class="headerlink" href="#register-the-announce-service" title="Permalink to this headline">¶</a></h3>
+<h3>Register the announce service<a class="headerlink" href="#register-the-announce-service" title="Permalink to this heading"></a></h3>
 <p>self_register_service.py can be used to register the announce service with the robot. Registering the service will tell the robot where to route Announce requests. In this case, we want these requests to be routed to the payload.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">self_register_service</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">guid</span> <span class="o">&lt;</span><span class="n">payload_guid</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">secret</span> <span class="o">&lt;</span><span class="n">payload_secret</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">host</span><span class="o">-</span><span class="n">ip</span> <span class="o">&lt;</span><span class="n">endpoint_ip</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">port</span> <span class="o">&lt;</span><span class="n">endpoint_port</span><span class="o">&gt;</span> <span class="n">ROBOT_IP</span>
 </pre></div>
 </div>
 </section>
 <section id="access-the-announce-service-with-a-client">
-<h3>Access the announce service with a client<a class="headerlink" href="#access-the-announce-service-with-a-client" title="Permalink to this headline">¶</a></h3>
+<h3>Access the announce service with a client<a class="headerlink" href="#access-the-announce-service-with-a-client" title="Permalink to this heading"></a></h3>
 <p>announce_client.py can be used to create an announce client and send a simple request to the announce service. If everything is set up correctly, the message sent to the service should be returned fully capitalized. The request will be routed through the robot, which will use the registered service description to forward the request to the payload. If the service name, type, or authority are incorrect, the request will fail to be routed.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">announce_client</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">guid</span> <span class="o">&lt;</span><span class="n">payload_guid</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">secret</span> <span class="o">&lt;</span><span class="n">payload_secret</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">message</span> <span class="o">&lt;</span><span class="n">string_message</span><span class="o">&gt;</span> <span class="n">ROBOT_IP</span>
 </pre></div>
 </div>
 </section>
 <section id="demo-script">
-<h3>Demo Script<a class="headerlink" href="#demo-script" title="Permalink to this headline">¶</a></h3>
+<h3>Demo Script<a class="headerlink" href="#demo-script" title="Permalink to this heading"></a></h3>
 <p>The initialize_payload.sh script will automatically attempt to perform all steps listed above, as well as the compilation of the protobuf files. For the ease of getting started, most of the fields have been filled with adequate default values inside of the demo script. However, running the demo will still require manually setting the robot ip, endpoint ip, endpoint host, and a payload secret.</p>
 <p>To use the demo, run <code class="docutils literal notranslate"><span class="pre">initialize_payload.sh</span> <span class="pre">&lt;robot_ip&gt;</span> <span class="pre">&lt;endpoint_ip&gt;</span> <span class="pre">&lt;endpoint_port&gt;</span> <span class="pre">&lt;payload_secret&gt;</span></code></p>
 <ul class="simple">
@@ -790,54 +704,41 @@ WARNING: The configured port must not be blocked by a firewall on the service ho
 
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-      
-      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
-      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
-      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+    <p>&#169; Copyright 2023 Boston Dynamics. All rights reserved..</p>
+  </div>
 
-    </p>
-  </div> 
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(false);
       });
   </script>
-
-  
-  
-    
     <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    ga('create', 'UA-XXXXXXX-1', 'auto');
-    ga('send', 'pageview');
-    </script>
-
-    
-   
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
 
 </body>
 </html>

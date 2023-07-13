@@ -28,7 +28,7 @@ Examples:
 
 ## System Diagram
 
-![System Diagram](documentation/system_diagram.png)
+![System Diagram](../../../docs/concepts/network_compute_bridge_diagram.png)
 
 ## Installation
 

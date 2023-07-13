@@ -67,6 +67,8 @@ The full robot state includes information about the batteries and power status, 
 
 The robot state service also tracks different parameters for the robot and this information can be accessed with the `GetRobotMetrics` RPC. These metrics can be useful for monitoring the system status and health of the robot.
 
+## log-status
+The log status service provides users access to files Spot generates that contains data about its performance during operation. Files can be generated with data from the past, such files are known as retro logs. Files can also be generated with present data and into the future, such files are called experiment logs. The `LogStatus` object in the response of each API displays the status of the requested file and the id that can be provided to BD support for assistance in debugging issues. The steps for sending logs to our support team are outlined [here](https://support.bostondynamics.com/s/article/Spot-robot-logging#DownloadSendLog).
 
 ## image
 

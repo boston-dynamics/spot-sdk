@@ -1,99 +1,53 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Data Buffer Overview &mdash; Spot 3.3.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
-  
-  
-  
     <link rel="canonical" href="https:://dev.bostondynamics.com/docs/concepts/data_buffer_overview.html"/>
-  
-
-  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="BDDF data format" href="bddf.html" />
     <link rel="prev" title="Integrate a Payload with the Data Acquisition Pipeline" href="writing_services_for_data_acquisition.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../README.html">
           
-
-          
+          <a href="../../README.html">
             
-            <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
-          
+              <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
               <div class="version">
                 3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
@@ -249,6 +203,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/data_buffer/README.html">Data Buffer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/data_service/README.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/log_status/README.html">Log Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
@@ -609,71 +564,31 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../README.html">Spot</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../README.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="README.html">Concepts</a> &raquo;</li>
-        
-          <li><a href="data.html">Spot Data</a> &raquo;</li>
-        
-      <li>Data Buffer Overview</li>
-    
-    
+      <li><a href="../../README.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="README.html">Concepts</a></li>
+          <li class="breadcrumb-item"><a href="data.html">Spot Data</a></li>
+      <li class="breadcrumb-item active">Data Buffer Overview</li>
       <li class="wy-breadcrumbs-aside">
-        
-            
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <!--
 Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
@@ -681,39 +596,39 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="data-buffer-overview">
-<h1>Data Buffer Overview<a class="headerlink" href="#data-buffer-overview" title="Permalink to this headline">¶</a></h1>
+<h1>Data Buffer Overview<a class="headerlink" href="#data-buffer-overview" title="Permalink to this heading"></a></h1>
 <p>The “Data Buffer” is a system that enables API clients to log data to the robot using the API.  This data is combined with data logged by internal robot services, offering users a better understanding of robot operation and offering developers better tools for developing and debugging their new services.  Clients are able to query the robot data service for information about the data stored on the robot as well as download the data from an HTTP server.  Data acquisition services use the data buffer as a mechanism for storing acquired sensor data.</p>
 <p>The robot allocates 60 gigabytes for data buffer storage.  Logged data is saved to persistent storage in data <em>pages</em>.  In Spot v2.1 all data pages are BDDF files on disk.  When the limit of 60 gigabytes is exceeded, data files are deleted in oldest-first order until disk space used by these files falls below that threshold.</p>
 <section id="supported-data-types">
-<h2>Supported Data Types<a class="headerlink" href="#supported-data-types" title="Permalink to this headline">¶</a></h2>
+<h2>Supported Data Types<a class="headerlink" href="#supported-data-types" title="Permalink to this heading"></a></h2>
 <p>Although API clients may log arbitrary data, the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#data-buffer-service-proto">Data Buffer service</a> enables clients to log specific <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#data-buffer-proto">structured types</a> that may be handled specially and simplify later analysis.</p>
 <section id="text-messages">
-<h3>Text Messages<a class="headerlink" href="#text-messages" title="Permalink to this headline">¶</a></h3>
+<h3>Text Messages<a class="headerlink" href="#text-messages" title="Permalink to this heading"></a></h3>
 <p>Basic text logs supporting <em>Info</em>, <em>Error</em>, <em>Warning</em>, and <em>Debug</em> levels, as well as file and line number of origin.  API clients and services may use the data buffer as a backend to their own text logging systems.  Clients may log text messages via the <code class="docutils literal notranslate"><span class="pre">RecordTextMessages</span></code> RPC.</p>
 </section>
 <section id="operator-comments">
-<h3>Operator Comments<a class="headerlink" href="#operator-comments" title="Permalink to this headline">¶</a></h3>
+<h3>Operator Comments<a class="headerlink" href="#operator-comments" title="Permalink to this heading"></a></h3>
 <p>Text-based messages, but primarily intended as a mechanism for robot operators to insert comments describing, for example, notable robot or mission observations, or instances where the robot did not perform as expected.  Operator comments do not have a level, file, or line number.  These messages are shown on the timeline in the log-download page.  Also, internal log data near the time of log comments is preserved for a longer time so that it may be selected for sending to Boston Dynamics for debugging and failure analysis.  Clients may log operator comments via the <code class="docutils literal notranslate"><span class="pre">RecordOperatorComments</span></code> RPC.</p>
 </section>
 <section id="events">
-<h3>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h3>
+<h3>Events<a class="headerlink" href="#events" title="Permalink to this heading"></a></h3>
 <p>Event messages are appended to an on-robot event <em>diary</em>, enabling a robot or mission timeline to be built.  Typical usage will include events for robot falls or calibration, but clients may add any context-building events that are useful when reviewing missions or robot performance.  Each event is logged with a “level” enum designating the importance or criticality of the event.  Most events will be enumerated with LOW, MEDIUM, or HIGH level, but the most important events may be enumerated as MISSION_CRITICAL or SYSTEM_CRITICAL.  Clients may choose any appropriate level, but SYSTEM_CRITICAL events are quasi-reserved for internal events generated by Boston Dynamics.  Clients may log events via the <code class="docutils literal notranslate"><span class="pre">RecordEvents</span></code> RPC.</p>
 </section>
 <section id="signals">
-<h3>Signals<a class="headerlink" href="#signals" title="Permalink to this headline">¶</a></h3>
+<h3>Signals<a class="headerlink" href="#signals" title="Permalink to this heading"></a></h3>
 <p>Signals messages enable logging of numerical time series data.  Clients must first log a “schema” message describing the time series data to be logged, including the name and type of each variable.  This enables post-processing tools to properly parse the downloaded signals logs.  The robot returns a schema id and the client may proceed to log the time varying values associated with that schema.  Clients may register schemas via the <code class="docutils literal notranslate"><span class="pre">RegisterSignalSchema</span></code> RPC and log signals via the <code class="docutils literal notranslate"><span class="pre">RecordSignalTicks</span></code> RPC.  Signals data is not well supported in release 2.1, but tools for using this data should become available in future releases.</p>
 </section>
 <section id="blobs">
-<h3>Blobs<a class="headerlink" href="#blobs" title="Permalink to this headline">¶</a></h3>
+<h3>Blobs<a class="headerlink" href="#blobs" title="Permalink to this heading"></a></h3>
 <p>Blob messages enable clients to log arbitrary binary message data to the robot.  This may include, for example, sensor data products, user-defined structures and messages, whole files, etc.  The data buffer itself does not parse the binary data, but requires that the client specify a <code class="docutils literal notranslate"><span class="pre">type_id</span></code> and <code class="docutils literal notranslate"><span class="pre">channel</span></code> in the logging request.  The <code class="docutils literal notranslate"><span class="pre">type_id</span></code> specifies the type of data stored in the opaque blob, required for post-processing.  The <code class="docutils literal notranslate"><span class="pre">channel</span></code> is a name for a sequence of messages.  Clients may log blobs via the <code class="docutils literal notranslate"><span class="pre">RecordDataBlobs</span></code> RPC.  The <a class="reference internal" href="data_acquisition_overview.html"><span class="doc">Data Acquisition system</span></a> logs acquired data to the data buffer as blobs for later retrieval.</p>
 </section>
 </section>
 <section id="internally-logged-data">
-<h2>Internally Logged Data<a class="headerlink" href="#internally-logged-data" title="Permalink to this headline">¶</a></h2>
+<h2>Internally Logged Data<a class="headerlink" href="#internally-logged-data" title="Permalink to this heading"></a></h2>
 <p>Internally, the robot logs a subset of its data to the data buffer which may be accessed by external clients.  This data set may expand in future releases.  The current set includes events for robot falls, SpotCheck, comms loss, along with all the gRPC requests/responses, and Spot IO data acquisitions.  For improved performance, large fields in the gRPC messages may be stripped from the log.</p>
 </section>
 <section id="data-service">
-<h2>Data Service<a class="headerlink" href="#data-service" title="Permalink to this headline">¶</a></h2>
+<h2>Data Service<a class="headerlink" href="#data-service" title="Permalink to this heading"></a></h2>
 <p>The data service is a gRPC service that allows clients to query for information about data that has been logged to the robot.  The user may:</p>
 <ul class="simple">
 <li><p>Query for pages containing data within a specified time range</p></li>
@@ -723,9 +638,9 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="data-download">
-<h2>Data Download<a class="headerlink" href="#data-download" title="Permalink to this headline">¶</a></h2>
+<h2>Data Download<a class="headerlink" href="#data-download" title="Permalink to this heading"></a></h2>
 <section id="raw-data-download">
-<h3>Raw Data Download<a class="headerlink" href="#raw-data-download" title="Permalink to this headline">¶</a></h3>
+<h3>Raw Data Download<a class="headerlink" href="#raw-data-download" title="Permalink to this heading"></a></h3>
 <p>Data may be downloaded as BDDF files by querying the robot’s HTTPS REST interface with a GET request at the URL <code class="docutils literal notranslate"><span class="pre">/v1/data-buffer/bddf/</span></code>.  Queries are limited to one hour.  A single start time must be specified in either the <code class="docutils literal notranslate"><span class="pre">from_sec</span></code> or <code class="docutils literal notranslate"><span class="pre">from_nsec</span></code> parameters.  Likewise, a single end time must be specified in either the <code class="docutils literal notranslate"><span class="pre">to_sec</span></code> or <code class="docutils literal notranslate"><span class="pre">to_nsec</span></code> parameters.  If the time range is unspecified or exceeds 3600 seconds, the query fails and HTTP 403 (Bad Request) is returned.  The <code class="docutils literal notranslate"><span class="pre">event_level_min</span></code> parameter can only be specified once.  All other parameters may be specified zero or more times in combination.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">from_sec</span></code> or <code class="docutils literal notranslate"><span class="pre">from_nsec</span></code>: Download data after the specified epoch time if set, in seconds and nanoseconds respectively.</p></li>
@@ -739,7 +654,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="data-acquisition-download">
-<h3>Data Acquisition Download<a class="headerlink" href="#data-acquisition-download" title="Permalink to this headline">¶</a></h3>
+<h3>Data Acquisition Download<a class="headerlink" href="#data-acquisition-download" title="Permalink to this heading"></a></h3>
 <p>As noted, Data Acquisition services use the data buffer for storing captured data.  The data is retrieved by querying the HTTPS server with a GET request at the URL <code class="docutils literal notranslate"><span class="pre">/v1/data-buffer/daq-data/</span></code>.  These requests return data blobs of type <code class="docutils literal notranslate"><span class="pre">bosdyn.api.DataAcquisitionObject</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn.api.AssociatedMetadata</span></code> as a ZIP file.  By default, all such objects are returned, but can be filtered by the following parameters:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">from_sec</span></code> or <code class="docutils literal notranslate"><span class="pre">from_nsec</span></code>: Download data after the specified epoch time if set, in seconds and nanoseconds respectively.  These are mutually exclusive, and may only be specified once.</p></li>
@@ -748,75 +663,62 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </section>
 <section id="authorization">
-<h3>Authorization<a class="headerlink" href="#authorization" title="Permalink to this headline">¶</a></h3>
+<h3>Authorization<a class="headerlink" href="#authorization" title="Permalink to this heading"></a></h3>
 <p>All requests to download data from the robot must be authorized with a user token included in the HTTP header as a bearer token.  User tokens may be acquired by authorizing with the API auth service.</p>
 </section>
 <section id="example">
-<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h3>
 <p>An example data download, using cURL, is shown below.  This example assumes the user has a valid user token in the file <code class="docutils literal notranslate"><span class="pre">user.token</span></code> and that the robot hostname or IP address is stored in the <code class="docutils literal notranslate"><span class="pre">$ROBOT</span></code> environment variable.  This downloads Data Acquisition data between the epoch timestamps <code class="docutils literal notranslate"><span class="pre">1601524800</span></code> and <code class="docutils literal notranslate"><span class="pre">1601611200</span></code>, corresponding to Thursday, October 1, 2020 12:00:00 AM GMT-04:00, through Friday, October 2, 2020 12:00:00 AM GMT-04:00.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl -O -J <span class="se">\</span>
-    -H <span class="s2">&quot;Authorization: Bearer </span><span class="k">$(</span>cat user.token<span class="k">)</span><span class="s2">&quot;</span>
-    <span class="s2">&quot;https://</span><span class="nv">$ROBOT</span><span class="s2">/v1/data-buffer/daq-data/?from_sec=1601524800&amp;to_sec=1601611200&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>-O<span class="w"> </span>-J<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="k">$(</span>cat<span class="w"> </span>user.token<span class="k">)</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="s2">&quot;https://</span><span class="nv">$ROBOT</span><span class="s2">/v1/data-buffer/daq-data/?from_sec=1601524800&amp;to_sec=1601611200&quot;</span>
 </pre></div>
 </div>
 </section>
 </section>
 <section id="bddf-boston-dynamics-data-format">
-<h2>BDDF (Boston Dynamics Data Format)<a class="headerlink" href="#bddf-boston-dynamics-data-format" title="Permalink to this headline">¶</a></h2>
+<h2>BDDF (Boston Dynamics Data Format)<a class="headerlink" href="#bddf-boston-dynamics-data-format" title="Permalink to this heading"></a></h2>
 <p>Raw data downloaded off the robot will generally be returned in BDDF (Bosdyn Download Data Format) files.  BDDF is an open file format developed by Boston Dynamics that can hold arbitrary POD (plain old data) or message style data.  BDDF files are simple to read and write, offer efficient random access to embedded messages or can be streamed, and are secure in that they require little or no parsing logic.  Additional details can be found in the <a class="reference internal" href="bddf.html"><span class="doc">BDDF documentation</span></a>.</p>
 </section>
 </section>
 
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-      
-      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
-      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
-      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+    <p>&#169; Copyright 2023 Boston Dynamics. All rights reserved..</p>
+  </div>
 
-    </p>
-  </div> 
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(false);
       });
   </script>
-
-  
-  
-    
     <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    ga('create', 'UA-XXXXXXX-1', 'auto');
-    ga('send', 'pageview');
-    </script>
-
-    
-   
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
 
 </body>
 </html>

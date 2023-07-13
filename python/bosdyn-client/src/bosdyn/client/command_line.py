@@ -690,7 +690,8 @@ class FaultWatchCommand(Command):
 
 
 class LogStatusCommands(Subcommands):
-    """Interact with start, update and terminate experiment logs, start and update retro logs and check status of active logs for robot."""
+    """Start, update and terminate experiment logs, start and terminate retro logs and check status of
+    active logs for robot."""
 
     NAME = 'log-status'
     NEED_AUTHENTICATION = True
@@ -773,7 +774,7 @@ class ExperimentLogCommand(Subcommands):
     NAME = 'experiment'
 
     def __init__(self, subparsers, command_dict):
-        """List log bundles with status for robot.
+        """Start a timed or continuous experiment log.
 
         Args:
             subparsers: List of argument parsers.
@@ -880,7 +881,7 @@ class StartRetroLogCommand(Command):
     NAME = 'retro'
 
     def __init__(self, subparsers, command_dict):
-        """Start a retroactive log
+        """Start a retro log
         Args:
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.

@@ -37,7 +37,7 @@ This service is only available if an arm is attached to the robot.
 
 #### New Service - LogStatus
 
-Use the LogStatus service to start and terminate experiment or retro logs. These logs can be used with Boston Dynamics support to diagnose problems with the robot or its systems.
+Use the [LogStatus service](concepts/robot_services.md#log-status) to start and terminate experiment or retro logs. These logs can be used with Boston Dynamics support to diagnose problems with the robot or its systems.
 
 #### Service Customization
 

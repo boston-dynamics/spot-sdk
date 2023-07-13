@@ -115,7 +115,7 @@ The table below specifies the protobuf service definitions supported by each cli
 |                   [**License**](./license.py)                    |                 [license_service.proto](../../../../../protos/bosdyn/api/license_service.proto)                 |
 |                [**Local Grid**](./local_grid.py)                 |              [local_grid_service.proto](../../../../../protos/bosdyn/api/local_grid_service.proto)              |
 |            [**Log Annotation**](./log_annotation.py)             |          [log_annotation_service.proto](../../../../../protos/bosdyn/api/log_annotation_service.proto)          |
-|                [**Log Status**](./log_status.py)                 |           [log_status_service](../../../../../protos/bosdyn/api/log_status/log_status_service.proto)            |
+|                [**Log Status**](./log_status.py)                 |        [log_status_service.proto](../../../../../protos/bosdyn/api/log_status/log_status_service.proto)         |
 |       [**Manipulation API**](./manipulation_api_client.py)       |        [manipulation_api_service.proto](../../../../../protos/bosdyn/api/manipulation_api_service.proto)        |
 |            [**Map Processing**](./map_processing.py)             |     [map_processing_service.proto](../../../../../protos/bosdyn/api/graph_nav/map_processing_service.proto)     |
 | [**Network Compute Bridge**](./network_compute_bridge_client.py) |  [network_compute_bridge_service.proto](../../../../../protos/bosdyn/api/network_compute_bridge_service.proto)  |

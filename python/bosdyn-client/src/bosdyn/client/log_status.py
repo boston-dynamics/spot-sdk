@@ -4,7 +4,10 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""For clients to the log bundling service."""
+"""Client for the log-status service.
+
+This allows client code to start, extend or terminate experiment logs and start retro logs.
+"""
 
 import collections
 
@@ -37,7 +40,7 @@ class ConcurrencyLimitReachedError(LogStatusResponseError):
 
 
 class LogStatusClient(BaseClient):
-    """Client to interact with robot logs."""
+    """A client for interacting with robot logs."""
     # Typical name of the service in the robot's directory listing.
     default_service_name = 'log-status'
     # gRPC service proto definition implemented by this service
@@ -48,7 +51,14 @@ class LogStatusClient(BaseClient):
             .__init__(log_status_service.LogStatusServiceStub)
 
     def get_log_status(self, id, **kwargs):
-        """Synchronously get status of a log."""
+        """Synchronously get status of a log.
+
+        Args:
+            id (string): Id of log to retrieve
+
+        Raises:
+            RequestIdDoesNotExistError: Id was not found on robot
+        """
         req = log_status.GetLogStatusRequest()
         req.id = id
         return self.call(self._stub.GetLogStatus, req, error_from_response=get_log_status_error,
@@ -77,7 +87,14 @@ class LogStatusClient(BaseClient):
                                copy_request=False, **kwargs)
 
     def start_experiment_log(self, seconds, **kwargs):
-        """Start an experiment log, to run for a specified duration."""
+        """Start an experiment log, to run for a specified duration.
+
+        Args:
+            seconds: Number of seconds to gather data for the experiment log
+
+        Raises:
+            ExperimentAlreadyRunningError: Only 1 experiment log can be run at a time
+        """
         req = log_status.StartExperimentLogRequest()
         req.keep_alive.CopyFrom(bosdyn.util.seconds_to_duration(seconds))
         return self.call(self._stub.StartExperimentLog, req,
@@ -93,7 +110,16 @@ class LogStatusClient(BaseClient):
                                **kwargs)
 
     def start_retro_log(self, seconds, **kwargs):
-        """Start a retro log, to run for a specified duration."""
+        """Start a retro log, to run for a specified duration.
+
+        Args:
+            seconds: Number of seconds to gather data for the retro log
+
+        Raises:
+            ExperimentAlreadyRunningError: Retro logs cannot be run while an experiment log is running
+
+            ConcurrencyLimitReachedError: Maximum number of retro logs are already running, another cannot be started
+        """
         req = log_status.StartRetroLogRequest()
         req.past_duration.CopyFrom(bosdyn.util.seconds_to_duration(-seconds))
         return self.call(self._stub.StartRetroLog, req, error_from_response=start_retro_log_error,
@@ -108,7 +134,16 @@ class LogStatusClient(BaseClient):
                                **kwargs)
 
     def update_experiment(self, id, seconds, **kwargs):
-        """Update an experiment log to run for a specified duration."""
+        """Update an experiment log to run for a specified duration.
+
+        Args:
+            id (string): Id of log to retrieve
+            seconds (float): Number of seconds to gather data for the experiment log
+
+        Raises:
+            RequestIdDoesNotExistError: Id was not found on robot
+            InactiveLogError: Cannot update log, it is already terminated
+        """
         req = log_status.UpdateExperimentLogRequest()
         req.id = id
         req.keep_alive.CopyFrom(bosdyn.util.seconds_to_duration(seconds))
@@ -126,7 +161,14 @@ class LogStatusClient(BaseClient):
                                **kwargs)
 
     def terminate_log(self, id, **kwargs):
-        """Terminate an experiment log."""
+        """Terminate an experiment log.
+
+        Args:
+            id (string): Id of log to terminate
+
+        Raises:
+            RequestIdDoesNotExistError: Id was not found on robot
+        """
         req = log_status.TerminateLogRequest()
         req.id = id
         return self.call(self._stub.TerminateLog, req, error_from_response=terminate_log_error,
@@ -193,7 +235,7 @@ _TERMINATE_LOG_STATUS_TO_ERROR.update({
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def get_log_status_error(response):
-    """Return a custom exception based on the StartExperimentLog response, None if no error."""
+    """Return a custom exception based on the GetLogStatus response, None if no error."""
     return error_factory(response, response.status,
                          status_to_string=log_status.GetLogStatusResponse.Status.Name,
                          status_to_error=_GET_LOG_STATUS_STATUS_TO_ERROR)
@@ -202,7 +244,7 @@ def get_log_status_error(response):
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def get_active_log_statuses_error(response):
-    """Return a custom exception based on the StartExperimentLog response, None if no error."""
+    """Return a custom exception based on the GetActiveLogStatuses response, None if no error."""
     return error_factory(response, response.status,
                          status_to_string=log_status.GetActiveLogStatusesResponse.Status.Name,
                          status_to_error=_GET_ACTIVE_LOG_STATUSES_STATUS_TO_ERROR)
@@ -229,7 +271,7 @@ def start_retro_log_error(response):
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def update_experiment_log_error(response):
-    """Return a custom exception based on the StartExperimentLog response, None if no error."""
+    """Return a custom exception based on the UpdateExperimentLog response, None if no error."""
     return error_factory(response, response.status,
                          status_to_string=log_status.UpdateExperimentLogResponse.Status.Name,
                          status_to_error=_UPDATE_EXPERIMENT_LOG_STATUS_TO_ERROR)
@@ -238,7 +280,7 @@ def update_experiment_log_error(response):
 @handle_common_header_errors
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def terminate_log_error(response):
-    """Return a custom exception based on the StartExperimentLog response, None if no error."""
+    """Return a custom exception based on the TerminateLog response, None if no error."""
     return error_factory(response, response.status,
                          status_to_string=log_status.TerminateLogResponse.Status.Name,
                          status_to_error=_TERMINATE_LOG_STATUS_TO_ERROR)

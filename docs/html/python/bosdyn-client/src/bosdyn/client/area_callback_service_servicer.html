@@ -1,99 +1,53 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Area Callback Service Servicer &mdash; Spot 3.3.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
-  
-  
-  
     <link rel="canonical" href="https:://dev.bostondynamics.com/python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html"/>
-  
-
-  
   <!--[if lt IE 9]>
     <script src="../../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/jquery.js"></script>
-        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
         <script src="../../../../../_static/doctools.js"></script>
-        <script src="../../../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
-
-    
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" />
     <link rel="next" title="Area Callback Service Utils" href="area_callback_service_utils.html" />
     <link rel="prev" title="Area Callback Service Runner" href="area_callback_service_runner.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../../../../README.html">
           
-
-          
+          <a href="../../../../../README.html">
             
-            <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
-          
+              <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
               <div class="version">
                 3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
@@ -249,6 +203,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/data_buffer/README.html">Data Buffer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/data_service/README.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/log_status/README.html">Log Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
@@ -609,82 +564,41 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../../README.html">Spot</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../../../README.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../../../../../docs/python/README.html">Python Library</a> &raquo;</li>
-        
-          <li><a href="../../../../README.html">Boston Dynamics Python Reference Guide</a> &raquo;</li>
-        
-          <li><a href="README.html">Python Client</a> &raquo;</li>
-        
-      <li>Area Callback Service Servicer</li>
-    
-    
+      <li><a href="../../../../../README.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../../docs/python/README.html">Python Library</a></li>
+          <li class="breadcrumb-item"><a href="../../../../README.html">Boston Dynamics Python Reference Guide</a></li>
+          <li class="breadcrumb-item"><a href="README.html">Python Client</a></li>
+      <li class="breadcrumb-item active">Area Callback Service Servicer</li>
       <li class="wy-breadcrumbs-aside">
-        
-            
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <section id="module-bosdyn.client.area_callback_service_servicer">
-<span id="area-callback-service-servicer"></span><h1>Area Callback Service Servicer<a class="headerlink" href="#module-bosdyn.client.area_callback_service_servicer" title="Permalink to this headline">¶</a></h1>
+<span id="area-callback-service-servicer"></span><h1>Area Callback Service Servicer<a class="headerlink" href="#module-bosdyn.client.area_callback_service_servicer" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer">
-<em class="property">class </em><code class="sig-prename descclassname">bosdyn.client.area_callback_service_servicer.</code><code class="sig-name descname">AreaCallbackServiceServicer</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">robot</span><span class="p">:</span> <span class="n"><a class="reference internal" href="robot.html#bosdyn.client.robot.Robot" title="bosdyn.client.robot.Robot">bosdyn.client.robot.Robot</a></span></em>, <em class="sig-param"><span class="n">config</span><span class="p">:</span> <span class="n"><a class="reference internal" href="area_callback_service_utils.html#bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig" title="bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig">bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig</a></span></em>, <em class="sig-param"><span class="n">area_callback_builder_fn</span><span class="p">:</span> <span class="n">Callable<span class="p">[</span><span class="p">[</span><a class="reference internal" href="area_callback_service_utils.html#bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig" title="bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig">bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig</a><span class="p">, </span><a class="reference internal" href="robot.html#bosdyn.client.robot.Robot" title="bosdyn.client.robot.Robot">bosdyn.client.robot.Robot</a><span class="p">]</span><span class="p">, </span><a class="reference internal" href="area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase" title="bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase">bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase</a><span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">bosdyn.api.graph_nav.area_callback_service_pb2_grpc.AreaCallbackServiceServicer</span></code></p>
+<dt class="sig sig-object py" id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.area_callback_service_servicer.</span></span><span class="sig-name descname"><span class="pre">AreaCallbackServiceServicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="robot.html#bosdyn.client.robot.Robot" title="bosdyn.client.robot.Robot"><span class="pre">Robot</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="area_callback_service_utils.html#bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig" title="bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig"><span class="pre">AreaCallbackServiceConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_callback_builder_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="area_callback_service_utils.html#bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig" title="bosdyn.client.area_callback_service_utils.AreaCallbackServiceConfig"><span class="pre">AreaCallbackServiceConfig</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="robot.html#bosdyn.client.robot.Robot" title="bosdyn.client.robot.Robot"><span class="pre">Robot</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="area_callback_region_handler_base.html#bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase" title="bosdyn.client.area_callback_region_handler_base.AreaCallbackRegionHandlerBase"><span class="pre">AreaCallbackRegionHandlerBase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AreaCallbackServiceServicer</span></code></p>
 <p>Implementation of area callback service.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>robot</strong> – The Robot object used to create service clients.</p></li>
 <li><p><strong>config</strong> – The AreaCallbackServiceConfig defining the data for the AreaCallbackInformation
@@ -695,52 +609,52 @@ implements the details of the callback.  Usually this will simply be the class i
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.SERVICE_TYPE">
-<code class="sig-name descname">SERVICE_TYPE</code><em class="property"> = 'bosdyn.api.graph_nav.AreaCallbackService'</em><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.SERVICE_TYPE" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.SERVICE_TYPE">
+<span class="sig-name descname"><span class="pre">SERVICE_TYPE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'bosdyn.api.graph_nav.AreaCallbackService'</span></em><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.SERVICE_TYPE" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.AreaCallbackInformation">
-<code class="sig-name descname">AreaCallbackInformation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.AreaCallbackInformation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.AreaCallbackInformation" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.AreaCallbackInformation">
+<span class="sig-name descname"><span class="pre">AreaCallbackInformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.AreaCallbackInformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.AreaCallbackInformation" title="Permalink to this definition"></a></dt>
 <dd><p>Return the configured AreaCallbackInformation.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginCallback">
-<code class="sig-name descname">BeginCallback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.BeginCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginCallback" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginCallback">
+<span class="sig-name descname"><span class="pre">BeginCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.BeginCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginCallback" title="Permalink to this definition"></a></dt>
 <dd><p>Begin the callback in a new region.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginControl">
-<code class="sig-name descname">BeginControl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.BeginControl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginControl" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginControl">
+<span class="sig-name descname"><span class="pre">BeginControl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.BeginControl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.BeginControl" title="Permalink to this definition"></a></dt>
 <dd><p>Receive robot control from GraphNav.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.UpdateCallback">
-<code class="sig-name descname">UpdateCallback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.UpdateCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.UpdateCallback" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.UpdateCallback">
+<span class="sig-name descname"><span class="pre">UpdateCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.UpdateCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.UpdateCallback" title="Permalink to this definition"></a></dt>
 <dd><p>Regular updates from GraphNav, with responses to update the policy.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.EndCallback">
-<code class="sig-name descname">EndCallback</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">request</span></em>, <em class="sig-param"><span class="n">context</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.EndCallback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.EndCallback" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.EndCallback">
+<span class="sig-name descname"><span class="pre">EndCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.EndCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.EndCallback" title="Permalink to this definition"></a></dt>
 <dd><p>Terminate handling of this region.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.Shutdown">
-<code class="sig-name descname">Shutdown</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">timeout</span><span class="o">=</span><span class="default_value">5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.Shutdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.Shutdown" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.Shutdown">
+<span class="sig-name descname"><span class="pre">Shutdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/area_callback_service_servicer.html#AreaCallbackServiceServicer.Shutdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.area_callback_service_servicer.AreaCallbackServiceServicer.Shutdown" title="Permalink to this definition"></a></dt>
 <dd><p>Call to force run thread to terminate.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>timeout</strong> (<em>float</em><em>, </em><em>optional</em>) – Time allowed to run thread to shutdown. Defaults to 5.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the thread correctly shut down within the allowed time.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -752,54 +666,41 @@ implements the details of the callback.  Usually this will simply be the class i
 
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-      
-      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
-      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
-      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+    <p>&#169; Copyright 2023 Boston Dynamics. All rights reserved..</p>
+  </div>
 
-    </p>
-  </div> 
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(false);
       });
   </script>
-
-  
-  
-    
     <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    ga('create', 'UA-XXXXXXX-1', 'auto');
-    ga('send', 'pageview');
-    </script>
-
-    
-   
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
 
 </body>
 </html>

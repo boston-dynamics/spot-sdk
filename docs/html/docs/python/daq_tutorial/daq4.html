@@ -1,99 +1,53 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Part 4: Deploying to the CORE I/O &mdash; Spot 3.3.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
-  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
-  
-  
-  
     <link rel="canonical" href="https:://dev.bostondynamics.com/docs/python/daq_tutorial/daq4.html"/>
-  
-
-  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
-
-    
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Part 5: Collecting Data" href="daq5.html" />
     <link rel="prev" title="Part 3: Capturing Other Data" href="daq3.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../../README.html">
           
-
-          
+          <a href="../../../README.html">
             
-            <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
-          
+              <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
               <div class="version">
                 3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/about_spot.html">About Spot</a></li>
@@ -249,6 +203,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_buffer/README.html">Data Buffer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_service/README.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/log_status/README.html">Log Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
@@ -609,71 +564,31 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../README.html">Spot</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../README.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../README.html">Python Library</a> &raquo;</li>
-        
-          <li><a href="daq1.html">Tutorial: Data Collection</a> &raquo;</li>
-        
-      <li>Part 4: Deploying to the CORE I/O</li>
-    
-    
+      <li><a href="../../../README.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../README.html">Python Library</a></li>
+          <li class="breadcrumb-item"><a href="daq1.html">Tutorial: Data Collection</a></li>
+      <li class="breadcrumb-item active">Part 4: Deploying to the CORE I/O</li>
       <li class="wy-breadcrumbs-aside">
-        
-            
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <!--
 Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
@@ -687,7 +602,7 @@ Development Kit License (20191101-BDSDK-SL).
 <a class="reference internal" href="daq5.html"><span class="doc">Next Page &gt;&gt;</span></a></p>
 <hr class="docutils" />
 <section id="part-4-deploying-to-the-core-i-o">
-<h1>Part 4: Deploying to the CORE I/O<a class="headerlink" href="#part-4-deploying-to-the-core-i-o" title="Permalink to this headline">¶</a></h1>
+<h1>Part 4: Deploying to the CORE I/O<a class="headerlink" href="#part-4-deploying-to-the-core-i-o" title="Permalink to this heading"></a></h1>
 <p>In this part of the tutorial, you will:</p>
 <ul class="simple">
 <li><p>Build docker images for the image service and data plugin.</p></li>
@@ -697,23 +612,23 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 <p>The instructions included use the CORE I/O payload, but docker images can be deployed to many different kinds of payload computers.</p>
 <section id="packaging-the-services-for-deployment">
-<h2>Packaging the services for deployment<a class="headerlink" href="#packaging-the-services-for-deployment" title="Permalink to this headline">¶</a></h2>
+<h2>Packaging the services for deployment<a class="headerlink" href="#packaging-the-services-for-deployment" title="Permalink to this heading"></a></h2>
 <p>The previous sections described how to test the <a class="reference internal" href="daq2.html"><span class="doc">image service</span></a> or the <a class="reference internal" href="daq3.html"><span class="doc">data acquisition plugin</span></a> on your laptop. The next step is to package the services for deployment. The suggested approach is to package everything as Docker containers and run them on a SpotCORE payload attached to the robot.</p>
 <section id="creating-docker-images">
-<h3>Creating Docker images<a class="headerlink" href="#creating-docker-images" title="Permalink to this headline">¶</a></h3>
+<h3>Creating Docker images<a class="headerlink" href="#creating-docker-images" title="Permalink to this heading"></a></h3>
 <p>A variety of Spot SDK examples include a <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> file with instructions to package the example as a docker image. An example <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> for the web_cam_image_service and battery_service examples are shown below.</p>
 <section id="creating-web-cam-image-service-docker-image">
-<h4>Creating web_cam_image_service Docker image<a class="headerlink" href="#creating-web-cam-image-service-docker-image" title="Permalink to this headline">¶</a></h4>
+<h4>Creating web_cam_image_service Docker image<a class="headerlink" href="#creating-web-cam-image-service-docker-image" title="Permalink to this heading"></a></h4>
 <p>The file contains instructions to start from the <code class="docutils literal notranslate"><span class="pre">python:3.7-slim</span></code> image with an additional command to install a few necessary system packages.</p>
-<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="s">python:3.7-slim</span>
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.7-slim</span>
 
 <span class="c"># Requirements for opencv to work.</span>
-<span class="k">RUN</span> apt-get update <span class="o">&amp;&amp;</span> apt-get install -y libsm6 libglib2.0-0 libxrender1 libxext6
+<span class="k">RUN</span><span class="w"> </span>apt-get<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>libsm6<span class="w"> </span>libglib2.0-0<span class="w"> </span>libxrender1<span class="w"> </span>libxext6
 </pre></div>
 </div>
 <p>It then uses the <code class="docutils literal notranslate"><span class="pre">docker-requirements.txt</span></code> file to install all the wheels necessary to run the example. We recommend keeping a separate <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file that specifies the range of dependencies that you require, and then use <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code> to lock those dependencies into a <code class="docutils literal notranslate"><span class="pre">docker-requirements.txt</span></code> file so that the docker builds are repeatable with known versions.</p>
-<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="k">COPY</span> docker-requirements.txt .
-<span class="k">RUN</span> python3 -m pip install -r docker-requirements.txt
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span class="k">COPY</span><span class="w"> </span>docker-requirements.txt<span class="w"> </span>.
+<span class="k">RUN</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>docker-requirements.txt
 </pre></div>
 </div>
 <p>Finally, it copies the rest of the files into the image and sets <code class="docutils literal notranslate"><span class="pre">web_cam_image_service.py</span></code> as the entrypoint when starting docker containers from this image. We also provide some default arguments designed for running on the CORE I/O. These can be overridden for local testing, but make deployment to a payload computer.</p>
@@ -726,8 +641,8 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <p>To build the docker image for the architecture of the computer being used, run the commands:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>docker build --tag web_cam_image_service .
-docker save web_cam_image_service <span class="p">|</span> pigz &gt; web_cam_image_service.tgz
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>build<span class="w"> </span>--tag<span class="w"> </span>web_cam_image_service<span class="w"> </span>.
+docker<span class="w"> </span>save<span class="w"> </span>web_cam_image_service<span class="w"> </span><span class="p">|</span><span class="w"> </span>pigz<span class="w"> </span>&gt;<span class="w"> </span>web_cam_image_service.tgz
 </pre></div>
 </div>
 <p>This will build the image and create a file to upload to the robot.
@@ -735,33 +650,33 @@ The above commands assume that your user is in the <code class="docutils literal
 <p>An example <code class="docutils literal notranslate"><span class="pre">docker_requirements.txt</span></code> for <a class="reference external" href="https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/web_cam_image_service/docker-requirements.txt">the web cam image service</a> and <a class="reference external" href="https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/data_acquisition_service/pointcloud_plugin/docker-requirements.txt">a point cloud data acquisition plugin</a> can be found in the examples directory. The main difference is the OpenCV dependency in image services.</p>
 </section>
 <section id="creating-battery-service-docker-image">
-<h4>Creating battery_service Docker image<a class="headerlink" href="#creating-battery-service-docker-image" title="Permalink to this headline">¶</a></h4>
+<h4>Creating battery_service Docker image<a class="headerlink" href="#creating-battery-service-docker-image" title="Permalink to this heading"></a></h4>
 <p>Instructions above can also be used to create the docker image for the <code class="docutils literal notranslate"><span class="pre">battery_service</span></code>, called <code class="docutils literal notranslate"><span class="pre">battery_service.tgx</span></code>. The main difference is the <code class="docutils literal notranslate"><span class="pre">ENTRYPOINT</span></code> set to the battery_service.py file and different docker-requirements.txt file.</p>
 </section>
 </section>
 </section>
 <section id="testing-docker-container-locally">
-<h2>Testing Docker container locally<a class="headerlink" href="#testing-docker-container-locally" title="Permalink to this headline">¶</a></h2>
+<h2>Testing Docker container locally<a class="headerlink" href="#testing-docker-container-locally" title="Permalink to this heading"></a></h2>
 <p>Now that we have a docker images, the next step is to test the docker image locally on your laptop. The Spot SDK documentation contains instructions how to do that <a class="reference external" href="../../payload/docker_containers.html#test-docker-images-locally">here</a>.</p>
 <p>Specifically, to test the image service and the data acquisition plugin docker images, you would run the following, if connected to the robot’s wifi:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">DEVICE_PATH</span><span class="o">=</span>/dev/video0
-<span class="nb">export</span> <span class="nv">WEBCAM_PORT</span><span class="o">=</span><span class="m">5000</span>
-<span class="nb">export</span> <span class="nv">BATTERY_PORT</span><span class="o">=</span><span class="m">5050</span>
-docker run --device<span class="o">=</span><span class="nv">$DEVICE_PATH</span> --network<span class="o">=</span>host --volume <span class="nv">$CRED_FILE</span>:/cred_file web_cam_image_service <span class="nv">$ROBOT_IP</span> --payload-credentials-file /cred_file --host-ip <span class="nv">$SELF_IP</span> --port <span class="nv">$WEBCAM_PORT</span> --device-name <span class="nv">$DEVICE_PATH</span>
-docker run --network<span class="o">=</span>host --volume <span class="nv">$CRED_FILE</span>:/cred_file  battery_service <span class="nv">$ROBOT_IP</span> --payload-credentials-file /cred_file --host-ip <span class="nv">$SELF_IP</span> --port <span class="nv">$BATTERY_PORT</span>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">DEVICE_PATH</span><span class="o">=</span>/dev/video0
+<span class="nb">export</span><span class="w"> </span><span class="nv">WEBCAM_PORT</span><span class="o">=</span><span class="m">5000</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">BATTERY_PORT</span><span class="o">=</span><span class="m">5050</span>
+docker<span class="w"> </span>run<span class="w"> </span>--device<span class="o">=</span><span class="nv">$DEVICE_PATH</span><span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>--volume<span class="w"> </span><span class="nv">$CRED_FILE</span>:/cred_file<span class="w"> </span>web_cam_image_service<span class="w"> </span><span class="nv">$ROBOT_IP</span><span class="w"> </span>--payload-credentials-file<span class="w"> </span>/cred_file<span class="w"> </span>--host-ip<span class="w"> </span><span class="nv">$SELF_IP</span><span class="w"> </span>--port<span class="w"> </span><span class="nv">$WEBCAM_PORT</span><span class="w"> </span>--device-name<span class="w"> </span><span class="nv">$DEVICE_PATH</span>
+docker<span class="w"> </span>run<span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>--volume<span class="w"> </span><span class="nv">$CRED_FILE</span>:/cred_file<span class="w">  </span>battery_service<span class="w"> </span><span class="nv">$ROBOT_IP</span><span class="w"> </span>--payload-credentials-file<span class="w"> </span>/cred_file<span class="w"> </span>--host-ip<span class="w"> </span><span class="nv">$SELF_IP</span><span class="w"> </span>--port<span class="w"> </span><span class="nv">$BATTERY_PORT</span>
 </pre></div>
 </div>
 <p>You will need to ensure that <code class="docutils literal notranslate"><span class="pre">$WEBCAM_PORT</span></code> and <code class="docutils literal notranslate"><span class="pre">$BATTERY_PORT</span></code> are accessible on your computer and not blocked by any firewall or networking rules.</p>
 </section>
 <section id="create-spot-extension-and-install-it-on-core-i-o">
-<h2>Create Spot Extension and Install it on CORE I/O<a class="headerlink" href="#create-spot-extension-and-install-it-on-core-i-o" title="Permalink to this headline">¶</a></h2>
+<h2>Create Spot Extension and Install it on CORE I/O<a class="headerlink" href="#create-spot-extension-and-install-it-on-core-i-o" title="Permalink to this heading"></a></h2>
 <p>Once you have tested and verified that the docker containers work correctly on your laptop, it is time to recreate the docker images for the <code class="docutils literal notranslate"><span class="pre">arm64</span></code> CORE I/O architecture and install them as an Extension. The Spot SDK documentation contains instructions how to do that <a class="reference external" href="../../payload/docker_containers.html#manage-payload-software-in-core-i-o">here</a>.</p>
 <section id="recreate-docker-images-for-arm64-architecture">
-<h3>Recreate Docker Images for ARM64 Architecture<a class="headerlink" href="#recreate-docker-images-for-arm64-architecture" title="Permalink to this headline">¶</a></h3>
+<h3>Recreate Docker Images for ARM64 Architecture<a class="headerlink" href="#recreate-docker-images-for-arm64-architecture" title="Permalink to this heading"></a></h3>
 <p>If you are using a development machine with an <code class="docutils literal notranslate"><span class="pre">x86</span></code> architecture, you need to run a few more steps to be able to create <code class="docutils literal notranslate"><span class="pre">arm64</span></code> docker images that can run on CORE I/O. Please follow the instructions in the SDK documentation <a class="reference external" href="../../payload/docker_containers.html#build-docker-images">here</a>. After installing the additional dependecies listed in that part of the documentation, you simply need to pass <code class="docutils literal notranslate"><span class="pre">--platform</span> <span class="pre">linux/arm64</span></code> to the <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">build</span></code> command you used earlier in order to create <code class="docutils literal notranslate"><span class="pre">arm64</span></code> docker images.</p>
 </section>
 <section id="create-docker-compose-yml-file">
-<h3>Create docker-compose.yml File<a class="headerlink" href="#create-docker-compose-yml-file" title="Permalink to this headline">¶</a></h3>
+<h3>Create docker-compose.yml File<a class="headerlink" href="#create-docker-compose-yml-file" title="Permalink to this heading"></a></h3>
 <p>Next, you need to create a docker-compose.yml file that contains instructions how to start the two docker images. The content of the file are shown below:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>services:
   web_cam_image_service:
@@ -787,7 +702,7 @@ docker run --network<span class="o">=</span>host --volume <span class="nv">$CRED
 <p>In this configuration, we use ports 5000 and 5050 that you used earlier for testing. The command fields for the two docker services in the file specify the additiona parameters to append to the <code class="docutils literal notranslate"><span class="pre">CMD</span></code> field specified in the <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> files. The <code class="docutils literal notranslate"><span class="pre">web_cam_image_service</span></code> contains the additional field <code class="docutils literal notranslate"><span class="pre">devices</span></code>, which is described in more details in the section below.</p>
 </section>
 <section id="create-udev-rules-files-for-web-cam-application">
-<h3>Create Udev Rules Files for Web Cam application<a class="headerlink" href="#create-udev-rules-files-for-web-cam-application" title="Permalink to this headline">¶</a></h3>
+<h3>Create Udev Rules Files for Web Cam application<a class="headerlink" href="#create-udev-rules-files-for-web-cam-application" title="Permalink to this heading"></a></h3>
 <p>The python script in the <code class="docutils literal notranslate"><span class="pre">web_cam_image_service</span></code> docker container pulls images from a web cam USB device. That device name is generated when the device is plugged in and it is usually <code class="docutils literal notranslate"><span class="pre">/dev/video0</span></code> when it is the first USB device plugged in (the <code class="docutils literal notranslate"><span class="pre">0</span></code> count increases afterwards). But, with that device name not being deterministic by default, we do not want to regenerate the <code class="docutils literal notranslate"><span class="pre">web_cam_image_service</span></code> docker image every time the web cam is mounted with a different device name. To solve this issue, we will add udev rules in the Extension that are automatically installed by the Extesion manager installed on the CORE I/O.</p>
 <p>The way we will structure the udev rule is as follows:</p>
 <ol class="simple">
@@ -816,7 +731,7 @@ sed &quot;s/@ORIG_VIDEO_DEV/$orig_device/&quot; $SCRIPT_DIR/.env.tpl &gt; $SCRIP
 <p>Then, the <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file mounts the original device name specified in the docker environment variable <code class="docutils literal notranslate"><span class="pre">ORIG_VIDEO_DEV</span></code> as device <code class="docutils literal notranslate"><span class="pre">/dev/video99</span></code> in the docker container, which is also passed as the <code class="docutils literal notranslate"><span class="pre">--device-name</span></code> to the python script. This method allows us create an Extension for this tutorial that works with any device name given to the USB web cam when it is plugged in.</p>
 </section>
 <section id="create-manifest-json-file">
-<h3>Create manifest.json File<a class="headerlink" href="#create-manifest-json-file" title="Permalink to this headline">¶</a></h3>
+<h3>Create manifest.json File<a class="headerlink" href="#create-manifest-json-file" title="Permalink to this heading"></a></h3>
 <p>The last step is to create a <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file with the Extension information. The contents of the file are shown below:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
     <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;DAQ Tutorial&quot;</span><span class="p">,</span>
@@ -828,7 +743,7 @@ sed &quot;s/@ORIG_VIDEO_DEV/$orig_device/&quot; $SCRIPT_DIR/.env.tpl &gt; $SCRIP
 </div>
 </section>
 <section id="create-extension-and-install-it-on-core-i-o">
-<h3>Create Extension and Install It on CORE I/O<a class="headerlink" href="#create-extension-and-install-it-on-core-i-o" title="Permalink to this headline">¶</a></h3>
+<h3>Create Extension and Install It on CORE I/O<a class="headerlink" href="#create-extension-and-install-it-on-core-i-o" title="Permalink to this heading"></a></h3>
 <p>Creating an Extension is very simple once we have the files created in the section above. Simply copy the files <code class="docutils literal notranslate"><span class="pre">battery_service.tgz</span></code>, <code class="docutils literal notranslate"><span class="pre">web_cam_image_service.tgz</span></code>, <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>, <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code>, <code class="docutils literal notranslate"><span class="pre">1-sdk.camera.rules</span></code>, <code class="docutils literal notranslate"><span class="pre">setup_device_name.sh</span></code>, <code class="docutils literal notranslate"><span class="pre">.env.tpl</span></code> in a folder and create the Extension, which is a zipped tar file, with the command <code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">zcfv</span> <span class="pre">daq_tutorial.spx</span> <span class="pre">*</span> <span class="pre">.env.tpl</span></code>. Then, follow these steps to install the Extension <code class="docutils literal notranslate"><span class="pre">daq_tutorial.spx</span></code> in the CORE I/O:</p>
 <ol class="simple">
 <li><p>Plug in USB web cam. This will execute the udev rule included in the Extension and create <code class="docutils literal notranslate"><span class="pre">/dev/video99</span></code> symlink and the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file.</p></li>
@@ -838,18 +753,18 @@ sed &quot;s/@ORIG_VIDEO_DEV/$orig_device/&quot; $SCRIPT_DIR/.env.tpl &gt; $SCRIP
 </section>
 </section>
 <section id="confirming-deployment">
-<h2>Confirming deployment<a class="headerlink" href="#confirming-deployment" title="Permalink to this headline">¶</a></h2>
+<h2>Confirming deployment<a class="headerlink" href="#confirming-deployment" title="Permalink to this heading"></a></h2>
 <p>Click on the logs icon of the installed Extension to verify that they are running correctly or to debug any errors that occur. Common problems at this stage are often typos in the volume configuration or command arguments.</p>
 <p>Now that the containers are deployed to the robot, use the tester programs again to verify that they are operating and responding correctly.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># In examples/tester_programs</span>
-$ python3 image_service_tester.py <span class="nv">$ROBOT_IP</span> --service-name web-cam-service --check-data-acquisition
+$<span class="w"> </span>python3<span class="w"> </span>image_service_tester.py<span class="w"> </span><span class="nv">$ROBOT_IP</span><span class="w"> </span>--service-name<span class="w"> </span>web-cam-service<span class="w"> </span>--check-data-acquisition
 
-$ python3 plugin_tester.py <span class="nv">$ROBOT_IP</span> --service-name data-acquisition-battery
+$<span class="w"> </span>python3<span class="w"> </span>plugin_tester.py<span class="w"> </span><span class="nv">$ROBOT_IP</span><span class="w"> </span>--service-name<span class="w"> </span>data-acquisition-battery
 </pre></div>
 </div>
 </section>
 <section id="head-over-to-part-5-collecting-data">
-<h2>Head over to <a class="reference internal" href="daq5.html"><span class="doc">Part 5: Collecting Data</span></a> &gt;&gt;<a class="headerlink" href="#head-over-to-part-5-collecting-data" title="Permalink to this headline">¶</a></h2>
+<h2>Head over to <a class="reference internal" href="daq5.html"><span class="doc">Part 5: Collecting Data</span></a> &gt;&gt;<a class="headerlink" href="#head-over-to-part-5-collecting-data" title="Permalink to this heading"></a></h2>
 <p><a class="reference internal" href="daq3.html"><span class="doc">&lt;&lt; Previous Page</span></a>
 |
 <a class="reference internal" href="daq5.html"><span class="doc">Next Page &gt;&gt;</span></a></p>
@@ -858,54 +773,41 @@ $ python3 plugin_tester.py <span class="nv">$ROBOT_IP</span> --service-name data
 
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-      
-      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
-      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
-      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+    <p>&#169; Copyright 2023 Boston Dynamics. All rights reserved..</p>
+  </div>
 
-    </p>
-  </div> 
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(false);
       });
   </script>
-
-  
-  
-    
     <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    ga('create', 'UA-XXXXXXX-1', 'auto');
-    ga('send', 'pageview');
-    </script>
-
-    
-   
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
 
 </body>
 </html>

@@ -1,99 +1,53 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Integrate a Payload with the Data Acquisition Pipeline &mdash; Spot 3.3.0 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
-  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-
-  
-  
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
-  
-  
-  
     <link rel="canonical" href="https:://dev.bostondynamics.com/docs/concepts/writing_services_for_data_acquisition.html"/>
-  
-
-  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
-    
-    <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
-    
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Data Buffer Overview" href="data_buffer_overview.html" />
     <link rel="prev" title="Data Acquisition Output" href="data_acquisition_output.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
 
           
-            <a href="../../README.html">
           
-
-          
+          <a href="../../README.html">
             
-            <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
-          
+              <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
-
-          
-            
-            
               <div class="version">
                 3.3.0
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
@@ -249,6 +203,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/data_buffer/README.html">Data Buffer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/data_service/README.html">Data Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/log_status/README.html">Log Status</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
@@ -609,71 +564,31 @@
 <li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../README.html">Spot</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../README.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="README.html">Concepts</a> &raquo;</li>
-        
-          <li><a href="data.html">Spot Data</a> &raquo;</li>
-        
-      <li>Integrate a Payload with the Data Acquisition Pipeline</li>
-    
-    
+      <li><a href="../../README.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="README.html">Concepts</a></li>
+          <li class="breadcrumb-item"><a href="data.html">Spot Data</a></li>
+      <li class="breadcrumb-item active">Integrate a Payload with the Data Acquisition Pipeline</li>
       <li class="wy-breadcrumbs-aside">
-        
-            
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
+             
   <!--
 Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 
@@ -681,18 +596,18 @@ Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="integrate-a-payload-with-the-data-acquisition-pipeline">
-<h1>Integrate a Payload with the Data Acquisition Pipeline<a class="headerlink" href="#integrate-a-payload-with-the-data-acquisition-pipeline" title="Permalink to this headline">¶</a></h1>
+<h1>Integrate a Payload with the Data Acquisition Pipeline<a class="headerlink" href="#integrate-a-payload-with-the-data-acquisition-pipeline" title="Permalink to this heading"></a></h1>
 <p>The 2.1 release focuses on simplifying the integration of sensing payloads with the robot by creating the data acquisition pipeline. This document provides an overview of how a developer can write the necessary API services to integrate their sensor. The data acquisition pipeline will work with any payload, however different development steps are taken for a payload which collects image data (e.g. a 360 camera) and a payload which collects other data types and formats (e.g. a lidar or gas sensor).</p>
 <p>To fully integrate the sensor, a payload needs to implement either the Boston Dynamics API <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> or the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code>, based on the type of data that will be collected and stored. These services will register with the directory service on robot, and the data acquisition service will automatically detect the new services and communicate with them for data acquisition requests. The following diagram shows the expected communication map.</p>
 <p><img alt="Communication Map Screenshot" src="../../_images/payload_communication_map.png" /></p>
 <section id="camera-payloads">
-<h2>Camera Payloads<a class="headerlink" href="#camera-payloads" title="Permalink to this headline">¶</a></h2>
+<h2>Camera Payloads<a class="headerlink" href="#camera-payloads" title="Permalink to this heading"></a></h2>
 <p>To integrate a camera payload which outputs image data in a known format (e.g. raw bytes or JPEG) with the data acquisition pipeline, a developer needs to implement an <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">ImageService</a>.</p>
 <p>The data acquisition service will automatically recognize any directory-registered image services, create <code class="docutils literal notranslate"><span class="pre">ImageAcquistionCapabilities</span></code> for the image sources, and be able to collect image data for each service using the standard <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> RPCs. For a camera payload, a developer will need to implement an image servicer class. To simplify the implementation of an image service, a set of base image service helper functions are provided in <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html"><span class="doc">image_service_helpers.py</span></a>.</p>
 <p>For each image source that will be available in the image service, a <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code> helper class should be created to create the necessary protos for responding to gRPC requests from an image service, request and decode image data from the specific image source, and create or clear faults specific to the image source. The constructor requires the image source name to be provided (as a string), and then a class inheriting from the <code class="docutils literal notranslate"><span class="pre">CameraInterface</span></code> and overriding the functions for capturing image data and decoding the data. Optionally, the number of pixel rows and columns in the image can be provided as integer values in the <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code> constructor. The gain and exposure time can be provided as either a function which dynamically determines the values or fixed float values in the <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code> constructor as well.</p>
 <p>The image service can be created with the <code class="docutils literal notranslate"><span class="pre">CameraBaseImageServicer</span></code> class, which is a helper class that will manage state and respond to the RPCs required of an image service (<code class="docutils literal notranslate"><span class="pre">ListImageSources</span></code> RPC and <code class="docutils literal notranslate"><span class="pre">GetImage</span></code> RPC). The constructor of the image service helper class requires a developer to provide the sdk robot instance, the service name, and a list of <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code>’s which will represent the image sources available for capture from this image service.</p>
 <section id="camerainterface">
-<h3>CameraInterface<a class="headerlink" href="#camerainterface" title="Permalink to this headline">¶</a></h3>
+<h3>CameraInterface<a class="headerlink" href="#camerainterface" title="Permalink to this heading"></a></h3>
 <p>Each image source should implement a class which inherits the parent class <code class="docutils literal notranslate"><span class="pre">CameraInterface</span></code> and overrides the virtual functions <code class="docutils literal notranslate"><span class="pre">blocking_capture</span></code> and <code class="docutils literal notranslate"><span class="pre">image_decode</span></code>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">blocking_capture</span></code> interface function should be a blocking function which calls out to a camera using the hardware’s api, and collects then returns the image data. The virtual function has the following signature:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">blocking_capture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="n">returns</span> <span class="p">(</span><span class="n">image_data</span><span class="p">:</span> <span class="s2">&quot;Any Data Format&quot;</span><span class="p">,</span> <span class="n">acquisition_time_seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span>
@@ -711,16 +626,16 @@ Development Kit License (20191101-BDSDK-SL).
 <p><strong>Note:</strong> Does your camera service require inputs or parameters?  Do you want controls or widgets for those parameters to show up on the SpotApp android application or on Scout?  Please refer to <a class="reference internal" href="service_customization.html"><span class="doc">this document</span></a> to learn how to add parameters to a camera service.</p>
 </section>
 <section id="using-background-capture-threads">
-<h3>Using Background Capture Threads<a class="headerlink" href="#using-background-capture-threads" title="Permalink to this headline">¶</a></h3>
+<h3>Using Background Capture Threads<a class="headerlink" href="#using-background-capture-threads" title="Permalink to this heading"></a></h3>
 <p>The image service’s <code class="docutils literal notranslate"><span class="pre">GetImage</span></code> RPC retrieves images, based on the image source requested, from the payload using the camera’s API (e.g. OpenCV) and converts them into the <code class="docutils literal notranslate"><span class="pre">bosdyn.api.Image</span></code> proto message to be returned by the service. This RPC is meant to complete “quickly” when communicating with the payload and returning the collected images. To enable a fast response to the RPC for slower captures, the <code class="docutils literal notranslate"><span class="pre">CameraBaseImageServicer</span></code> image service constructor has the argument <code class="docutils literal notranslate"><span class="pre">use_background_capture_thread</span></code>, which when set to True will create a background thread for each image source that will continuously fetch images from the camera payloads and keep a buffer of these images to reduce the latency when responding to the RPC. The <code class="docutils literal notranslate"><span class="pre">CameraBaseImageServicer</span></code> will then respond to a <code class="docutils literal notranslate"><span class="pre">GetImage</span></code> RPC with the most recent image stored in the buffer from the capture thread, instead of calling out to the service. By default, an image service will have <code class="docutils literal notranslate"><span class="pre">use_background_capture_thread</span></code> set to True and create threads for each image source.</p>
 <p>When <code class="docutils literal notranslate"><span class="pre">use_background_capture_thread</span></code> is set to False, the <code class="docutils literal notranslate"><span class="pre">CameraBaseImageServicer</span></code> will make the call to the <code class="docutils literal notranslate"><span class="pre">blocking_capture</span></code> function during the completion of the RPC.</p>
 </section>
 <section id="example-image-services">
-<h3>Example Image Services<a class="headerlink" href="#example-image-services" title="Permalink to this headline">¶</a></h3>
+<h3>Example Image Services<a class="headerlink" href="#example-image-services" title="Permalink to this heading"></a></h3>
 <p>There are two SDK examples showing <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> implementations using the helper functions: a <a class="reference internal" href="../../python/examples/web_cam_image_service/README.html"><span class="doc">USB web camera</span></a>, and the <a class="reference internal" href="../../python/examples/ricoh_theta/README.html"><span class="doc">Ricoh Theta camera</span></a>.</p>
 </section>
 <section id="tips-for-creating-an-image-service">
-<h3>Tips for Creating an Image Service<a class="headerlink" href="#tips-for-creating-an-image-service" title="Permalink to this headline">¶</a></h3>
+<h3>Tips for Creating an Image Service<a class="headerlink" href="#tips-for-creating-an-image-service" title="Permalink to this heading"></a></h3>
 <ul>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">image_decode</span></code> function should attempt to accurately fill out the PixelFormat and ImageFormat fields for the image proto in addition to the image data. This allows for end-user applications to more accurately decode the image data.</p></li>
 <li><p>The <code class="docutils literal notranslate"><span class="pre">image_decode</span></code> function should handle an input argument of <code class="docutils literal notranslate"><span class="pre">image_format=None</span></code>. Therefore, if the <code class="docutils literal notranslate"><span class="pre">image_format</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>, the <code class="docutils literal notranslate"><span class="pre">image_decode</span></code> function should choose the best/preferred format and respond with image data decoded into that format and set the ImageFormat field to the chosen format in the image proto.</p></li>
@@ -737,12 +652,12 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 </section>
 <section id="non-image-payloads">
-<h2>Non-image Payloads<a class="headerlink" href="#non-image-payloads" title="Permalink to this headline">¶</a></h2>
+<h2>Non-image Payloads<a class="headerlink" href="#non-image-payloads" title="Permalink to this heading"></a></h2>
 <p>To integrate a payload which outputs a different, non-image format of data with the data acquisition pipeline, a developer needs to implement a <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-plugin-service-proto">DataAcquisitionPluginService</a>.</p>
 <p>A directory-registered DataAcquisitionPluginService will be automatically recognized by the data acquisition service on robot. The plugin service will collect the necessary payload data to respond to requests for its specific data captures from the data acquisition service. To simplify the implementation of a plugin service, a set of base plugin service helper functions are provided in <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html"><span class="doc">data_acquisition_plugin_service.py</span></a>.</p>
 <p>The plugin service can be created with the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> class, which is a helper class that will manage state and respond to the RPCs required of a plugin service. The constructor of the plugin service helper class requires a developer to provide 1) a list of the data capabilities that the service can collect data, and 2) a function to collect this data.</p>
 <section id="data-capabilities-list">
-<h3>Data Capabilities List<a class="headerlink" href="#data-capabilities-list" title="Permalink to this headline">¶</a></h3>
+<h3>Data Capabilities List<a class="headerlink" href="#data-capabilities-list" title="Permalink to this heading"></a></h3>
 <p>For each piece of data that will be collected from the payload, the plugin service must specify:</p>
 <ul class="simple">
 <li><p>Name: uniquely identifies which piece of data will be collected.</p></li>
@@ -760,7 +675,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>This list of capabilities will be passed to the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> class’s constructor and be used to respond to the <code class="docutils literal notranslate"><span class="pre">GetServiceInfo</span></code> RPC.</p>
 </section>
 <section id="data-collection-function">
-<h3>Data Collection Function<a class="headerlink" href="#data-collection-function" title="Permalink to this headline">¶</a></h3>
+<h3>Data Collection Function<a class="headerlink" href="#data-collection-function" title="Permalink to this heading"></a></h3>
 <p>In addition to the capabilities, the plugin service must implement a data collection function, which will collect all requested data and store it in the data acquisition store service. This data collection function will run when the plugin service receives a <code class="docutils literal notranslate"><span class="pre">AcquirePluginData</span></code> RPC. The data collection function must have the following signature:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">data_collect_fn</span><span class="p">(</span><span class="n">request</span> <span class="p">:</span> <span class="n">AcquirePluginDataRequest</span><span class="p">,</span> <span class="n">store_helper</span> <span class="p">:</span>  <span class="n">DataAcquisitionStoreHelper</span><span class="p">)</span>
 </pre></div>
@@ -802,11 +717,11 @@ store_helper.store_metadata(message, data_id)
 <p>Note, the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> class will wait to respond to the <code class="docutils literal notranslate"><span class="pre">AcquirePluginData</span></code> RPC until all data is collected and all store calls have been completed.</p>
 </section>
 <section id="example-plugins">
-<h3>Example Plugins<a class="headerlink" href="#example-plugins" title="Permalink to this headline">¶</a></h3>
+<h3>Example Plugins<a class="headerlink" href="#example-plugins" title="Permalink to this heading"></a></h3>
 <p>There are a couple <a class="reference internal" href="../../python/examples/data_acquisition_service/README.html"><span class="doc">example plugin services</span></a> which show data collection, creating associated metadata, and storing the data for the following types of payloads: Piksi GPS, PointCloud services, and generic GPS metadata.</p>
 </section>
 <section id="error-reporting">
-<h3>Error Reporting<a class="headerlink" href="#error-reporting" title="Permalink to this headline">¶</a></h3>
+<h3>Error Reporting<a class="headerlink" href="#error-reporting" title="Permalink to this heading"></a></h3>
 <p>If a failure occurs in the plugin service, an error can be reported to the data acquisition service. If the collection of a specific piece of data fails, a <code class="docutils literal notranslate"><span class="pre">DataError</span></code> can be returned with the request’s specific <code class="docutils literal notranslate"><span class="pre">DataIdentifier</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>store_helper.state.add_errors([make_error(data_id, “Error Message!”)])
 </pre></div>
@@ -814,7 +729,7 @@ store_helper.store_metadata(message, data_id)
 <p>If the plugin service encounters an error that is unrelated to a specific piece of data, the data collection function can raise an <code class="docutils literal notranslate"><span class="pre">Exception</span></code>. This exception will be caught by the base <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> class and will cause the <code class="docutils literal notranslate"><span class="pre">AcquirePluginData</span></code> RPC to respond with a <code class="docutils literal notranslate"><span class="pre">STATUS_INTERNAL_ERROR</span></code>. The data acquisition service will create a <code class="docutils literal notranslate"><span class="pre">PluginError</span></code> for this acquisition failure, which will appear in a <code class="docutils literal notranslate"><span class="pre">GetStatus</span></code> RPC sent to the data acquisition service.</p>
 </section>
 <section id="tips-for-creating-a-data-acquisition-plugin">
-<h3>Tips for Creating a Data Acquisition Plugin<a class="headerlink" href="#tips-for-creating-a-data-acquisition-plugin" title="Permalink to this headline">¶</a></h3>
+<h3>Tips for Creating a Data Acquisition Plugin<a class="headerlink" href="#tips-for-creating-a-data-acquisition-plugin" title="Permalink to this heading"></a></h3>
 <ul>
 <li><p>Typically, a plugin will acquire all the requested data at once before storing any data with the <code class="docutils literal notranslate"><span class="pre">store_helper</span></code>. This allows a plugin to accurately set the status as <code class="docutils literal notranslate"><span class="pre">STATUS_SAVING</span></code> to indicate that all acquisitions are complete and provide feedback for the <code class="docutils literal notranslate"><span class="pre">GetStatus</span></code> RPC before beginning to store its data. As well, a plugin can check if it has been cancelled before saving any data to prevent accidentally storing data for a later cancelled request.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">store_helper</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">data_acquisition_pb2</span><span class="o">.</span><span class="n">GetStatusResponse</span><span class="o">.</span><span class="n">STATUS_SAVING</span><span class="p">)</span>
@@ -838,7 +753,7 @@ store_helper.store_metadata(message, data_id)
 </ul>
 </section>
 <section id="attaching-metadata-with-other-data-or-images">
-<h3>Attaching Metadata with other Data or Images<a class="headerlink" href="#attaching-metadata-with-other-data-or-images" title="Permalink to this headline">¶</a></h3>
+<h3>Attaching Metadata with other Data or Images<a class="headerlink" href="#attaching-metadata-with-other-data-or-images" title="Permalink to this heading"></a></h3>
 <p>Additional metadata, such as the robot state or sensor configuration information, can be stored in association with external data collected by a plugin or images from image services. To save metadata linked with each piece of data, a DataAcquisitionPluginService can be created to collect and save this metadata. This plugin will list capture actions representing each piece of additional metadata. The plugin will receive an <code class="docutils literal notranslate"><span class="pre">AcquirePluginData</span></code> request from the data acquisition service on robot, which will contain a repeated list of <code class="docutils literal notranslate"><span class="pre">DataIdentifiers</span></code> that the metadata plugin can use to store metadata associated to these identified pieces of data.</p>
 <p>The metadata will be configured as JSON data, and can be stored as an <code class="docutils literal notranslate"><span class="pre">AssociatedMetadata</span></code> proto. This proto contains a <code class="docutils literal notranslate"><span class="pre">reference_id</span></code> field, which will be the <code class="docutils literal notranslate"><span class="pre">DataIdentifier</span></code> from the data it should be associated with; if only the <code class="docutils literal notranslate"><span class="pre">action_id</span></code> of that identifier is filled out, than the metadata is associated with the entire action (all of the repeated data identifiers).</p>
 <p>A plugin can store this associated metadata using the store helper with the <code class="docutils literal notranslate"><span class="pre">AssociatedMetadata</span></code> proto and a new <code class="docutils literal notranslate"><span class="pre">DataIdentifier</span></code> which uniquely identifies the associated metadata (and not what the metadata is referencing):</p>
@@ -849,12 +764,12 @@ store_helper.store_metadata(message, data_id)
 </section>
 </section>
 <section id="directory-registration-and-running-the-new-service">
-<h2>Directory Registration and Running the New Service<a class="headerlink" href="#directory-registration-and-running-the-new-service" title="Permalink to this headline">¶</a></h2>
+<h2>Directory Registration and Running the New Service<a class="headerlink" href="#directory-registration-and-running-the-new-service" title="Permalink to this heading"></a></h2>
 <p>The new service, either a data acquisition plugin service or an image service, must be running and registered with the directory to communicate with the robot and the data acquisition service. This requires a unique service name, service type (“bosdyn.api.DataAcquisitionPluginService” or “bosdyn.api.ImageService”), and a service authority.</p>
 <p>The payload computer running the new service should perform payload authentication using the GUID/secret of the payload before registering the service with the directory.</p>
 </section>
 <section id="testing-the-new-service">
-<h2>Testing the New Service<a class="headerlink" href="#testing-the-new-service" title="Permalink to this headline">¶</a></h2>
+<h2>Testing the New Service<a class="headerlink" href="#testing-the-new-service" title="Permalink to this heading"></a></h2>
 <p>For DataAcquisitionPluginService and ImageService services, there are <a class="reference internal" href="../../python/examples/tester_programs/README.html"><span class="doc">tester programs</span></a> available which will check the communication and directory registration of the new service, as well as the API service’s specific functionalities. The plugin tester scripts should be run while the new service is also running and will print output to the terminal about any errors or warnings that occurred while running the tests.</p>
 <p>For other types of services, the general service checking helper functions are available within the tester_programs example and can be used to check directory registration, gRPC communication with the service, and if there are active service faults for the service. Other debugging tools include the different API examples that exercise a specific service type (e.g. the <a class="reference internal" href="../../python/examples/get_image/README.html"><span class="doc">get_image example</span></a>) or the command line, which can list the full set of options and actions available by running the command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="o">--</span><span class="n">help</span>
@@ -865,54 +780,41 @@ store_helper.store_metadata(message, data_id)
 
 
            </div>
-           
           </div>
           <footer>
-  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-      
-      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
-      <a href="https://www.bostondynamics.com/privacy-statement">Privacy Statement</a> | 
-      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+    <p>&#169; Copyright 2023 Boston Dynamics. All rights reserved..</p>
+  </div>
 
-    </p>
-  </div> 
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(false);
       });
   </script>
-
-  
-  
-    
     <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    ga('create', 'UA-XXXXXXX-1', 'auto');
-    ga('send', 'pageview');
-    </script>
-
-    
-   
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
 
 </body>
 </html>
