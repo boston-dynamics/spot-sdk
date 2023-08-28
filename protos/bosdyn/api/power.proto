@@ -148,7 +148,7 @@ message FanPowerCommandRequest {
 
     // How long the user wants control of the fans
     // May not be duration the command is actually in effect for if temperature gets too high
-    google.protobuf.Duration duration = 4; 
+    google.protobuf.Duration duration = 4;
 }
 
 message FanPowerCommandResponse {
@@ -208,19 +208,21 @@ message FanPowerCommandFeedbackResponse {
         // ERROR: Command stopped before finish due to temperature becoming too high
         STATUS_TEMPERATURE_STOP = 3;
 
-        // ERROR: A newer Fan Power Request took over before the full duration of this request was up.
+        // ERROR: A newer Fan Power Request took over before the full duration of this request was
+        // up.
         STATUS_OVERRIDDEN_BY_COMMAND = 4;
     }
 
     // Current status of specified command.
     Status status = 2;
 
-    // Based on duration, the time that this command was intended to stop being in effect. If 
+    // Based on duration, the time that this command was intended to stop being in effect. If
     // stopped/overriden prematurely, early_stop_time will reflect the actual time the command
     // stopped being in effect
     google.protobuf.Timestamp desired_end_time = 3;
 
-    // If the command was stopped or overridden before its desired end time, the time at which it 
+    // If the command was stopped or overridden before its desired end time, the time at which it
     // was stopped. If command succeeded, this time is empty.
     google.protobuf.Timestamp early_stop_time = 4;
 }
+

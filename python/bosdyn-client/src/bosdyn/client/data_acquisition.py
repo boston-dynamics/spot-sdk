@@ -18,7 +18,7 @@ from bosdyn.api import data_acquisition_service_pb2_grpc as data_acquisition_ser
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
                                   handle_common_header_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import Error, ResponseError
-from bosdyn.util import now_timestamp
+from bosdyn.util import now_timestamp, seconds_to_duration
 
 
 class DataAcquisitionResponseError(ResponseError):
@@ -58,7 +58,7 @@ class DataAcquisitionClient(BaseClient):
             pass  # other doesn't have a time_sync accessor
 
     def make_acquire_data_request(self, acquisition_requests, action_name, group_name,
-                                  data_timestamp=None, metadata=None):
+                                  data_timestamp=None, metadata=None, min_timeout=None):
         """Helper utility to generate an AcquireDataRequest."""
         if data_timestamp is None:
             if not self._timesync_endpoint:
@@ -68,9 +68,12 @@ class DataAcquisitionClient(BaseClient):
                     time.time())
         action_id = data_acquisition.CaptureActionId(action_name=action_name, group_name=group_name,
                                                      timestamp=data_timestamp)
-        return data_acquisition.AcquireDataRequest(acquisition_requests=acquisition_requests,
-                                                   action_id=action_id,
-                                                   metadata=metadata_to_proto(metadata))
+        req = data_acquisition.AcquireDataRequest(acquisition_requests=acquisition_requests,
+                                                  action_id=action_id,
+                                                  metadata=metadata_to_proto(metadata))
+        if min_timeout:
+            req.min_timeout.CopyFrom(seconds_to_duration(min_timeout))
+        return req
 
     def acquire_data(self, acquisition_requests, action_name, group_name, data_timestamp=None,
                      metadata=None, **kwargs):

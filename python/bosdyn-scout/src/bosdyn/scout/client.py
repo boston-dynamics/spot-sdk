@@ -334,6 +334,19 @@ class ScoutClient():
         """
         return self.get_resource(f'runs/{uuid}', **kwargs)
 
+    def get_run_archives_by_id(self, uuid, **kwargs):
+        """ Given a runUuid, returns run archives 
+            - Args:
+                - uuid(str): the ID associated with the run
+                - kwargs(**): a variable number of keyword arguments for the get request
+            - Raises:
+                - RequestExceptions: exceptions thrown by the Requests library 
+                - UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
+            - Returns 
+                - requests.Response(Response object): the response associated with the the get request
+        """
+        return self.get_resource(f'run_archives/{uuid}', **kwargs)
+
     def get_image(self, url, **kwargs):
         """ Given a data capture url, returns a raw image 
             - Args:

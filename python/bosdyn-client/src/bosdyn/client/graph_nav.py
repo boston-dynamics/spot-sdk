@@ -570,6 +570,7 @@ class GraphNavClient(BaseClient):
                          error_from_response=_download_edge_snapshot_stream_errors,
                          copy_request=False, **kwargs)
 
+
     def _write_bytes(self, filepath, filename, data):
         """Write data to a file."""
         os.makedirs(filepath, exist_ok=True)

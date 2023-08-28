@@ -17,7 +17,7 @@ import google.protobuf.text_format
 from bosdyn.api import data_acquisition_pb2, geometry_pb2, gripper_camera_param_pb2
 from bosdyn.api.autowalk import walks_pb2
 from bosdyn.api.docking import docking_pb2
-from bosdyn.api.graph_nav import graph_nav_pb2
+from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2
 from bosdyn.api.mission import mission_pb2, nodes_pb2, util_pb2
 from bosdyn.mission import constants
 
@@ -264,7 +264,8 @@ def result_constant_to_proto_enum(result):
 
 def most_restrictive_travel_params(travel_params, vel_limit=None,
                                    disable_directed_exploration=False,
-                                   disable_alternate_route_finding=False):
+                                   disable_alternate_route_finding=False, path_following_mode=None,
+                                   ground_clutter_mode=None):
     if travel_params is None:
         travel_params = graph_nav_pb2.TravelParams()
     else:
@@ -299,6 +300,12 @@ def most_restrictive_travel_params(travel_params, vel_limit=None,
 
     travel_params.disable_directed_exploration = travel_params.disable_directed_exploration or disable_directed_exploration
     travel_params.disable_alternate_route_finding = travel_params.disable_alternate_route_finding or disable_alternate_route_finding
+
+    if path_following_mode == map_pb2.Edge.Annotations.PATH_MODE_STRICT:
+        travel_params.path_following_mode = path_following_mode
+
+    if ground_clutter_mode == map_pb2.Edge.Annotations.GROUND_CLUTTER_FROM_FOOTFALLS:
+        travel_params.ground_clutter_mode = ground_clutter_mode
 
     return travel_params
 

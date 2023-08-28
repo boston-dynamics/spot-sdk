@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.spot_cam.audio &mdash; Spot 3.3.0 documentation</title>
+  <title>bosdyn.client.spot_cam.audio &mdash; Spot 3.3.1 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                3.3.0
+                3.3.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -67,11 +67,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav Map Structure</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#recording-and-modifying-maps">Recording and Modifying Maps</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">Map Processing</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">Anchorings and Anchoring Optimization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html#map-data-transfer">Map Data Transfer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/autonomy/localization.html">Localization</a></li>
@@ -238,6 +234,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/scout.html">Scout</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/scout/export_run_archives/README.html">Export Run Archives</a></li>
 </ul>
 </li>
 </ul>
@@ -417,142 +414,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../docs/protos/README.html">API Protocol</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../docs/protos/style_guide.html">Style Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html">alerts.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#arm-command-proto">arm_command.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#arm-surface-contact-proto">arm_surface_contact.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#arm-surface-contact-service-proto">arm_surface_contact_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auth-proto">auth.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auth-service-proto">auth_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-proto">auto_return/auto_return.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#auto-return-auto-return-service-proto">auto_return/auto_return_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-proto">autowalk/autowalk.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#autowalk-autowalk-service-proto">autowalk/autowalk_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#autowalk-walks-proto">autowalk/walks.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#basic-command-proto">basic_command.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#bddf-proto">bddf.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-proto">data_acquisition.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-plugin-service-proto">data_acquisition_plugin_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-service-proto">data_acquisition_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-proto">data_acquisition_store.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-acquisition-store-service-proto">data_acquisition_store_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-buffer-proto">data_buffer.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-buffer-service-proto">data_buffer_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-chunk-proto">data_chunk.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-index-proto">data_index.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#data-service-proto">data_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-proto">directory.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-registration-proto">directory_registration.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-registration-service-proto">directory_registration_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#directory-service-proto">directory_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#docking-docking-proto">docking/docking.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#docking-docking-service-proto">docking/docking_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#estop-proto">estop.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#estop-service-proto">estop_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#fault-service-proto">fault_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#full-body-command-proto">full_body_command.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#geometry-proto">geometry.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-proto">graph_nav/area_callback.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-data-proto">graph_nav/area_callback_data.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-area-callback-service-proto">graph_nav/area_callback_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-proto">graph_nav/graph_nav.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-graph-nav-service-proto">graph_nav/graph_nav_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-proto">graph_nav/map.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-processing-proto">graph_nav/map_processing.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-map-processing-service-proto">graph_nav/map_processing_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-nav-proto">graph_nav/nav.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-proto">graph_nav/recording.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#graph-nav-recording-service-proto">graph_nav/recording_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#gripper-camera-param-proto">gripper_camera_param.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#gripper-camera-param-service-proto">gripper_camera_param_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#gripper-command-proto">gripper_command.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#header-proto">header.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#image-proto">image.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#image-geometry-proto">image_geometry.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#image-service-proto">image_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-proto">ir_enable_disable.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#ir-enable-disable-service-proto">ir_enable_disable_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-proto">keepalive/keepalive.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#keepalive-keepalive-service-proto">keepalive/keepalive_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#lease-proto">lease.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#lease-service-proto">lease_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#license-proto">license.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#license-service-proto">license_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#local-grid-proto">local_grid.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#local-grid-service-proto">local_grid_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#log-annotation-proto">log_annotation.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#log-annotation-service-proto">log_annotation_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-proto">log_status/log_status.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#log-status-log-status-service-proto">log_status/log_status_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-proto">manipulation_api.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#manipulation-api-service-proto">manipulation_api_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto">mission/mission.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-mission-service-proto">mission/mission_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-nodes-proto">mission/nodes.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-remote-proto">mission/remote.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-remote-service-proto">mission/remote_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mission-util-proto">mission/util.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#mobility-command-proto">mobility_command.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-proto">network_compute_bridge.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#network-compute-bridge-service-proto">network_compute_bridge_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#network-stats-proto">network_stats.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#parameter-proto">parameter.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-estimation-proto">payload_estimation.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-registration-proto">payload_registration.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-registration-service-proto">payload_registration_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#payload-service-proto">payload_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#point-cloud-proto">point_cloud.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#point-cloud-service-proto">point_cloud_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#power-proto">power.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#power-service-proto">power_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#ray-cast-proto">ray_cast.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#ray-cast-service-proto">ray_cast_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-command-service-proto">robot_command_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-id-proto">robot_id.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-id-service-proto">robot_id_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-state-proto">robot_state.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#robot-state-service-proto">robot_state_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#service-customization-proto">service_customization.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#service-fault-proto">service_fault.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#sparse-features-proto">sparse_features.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-door-proto">spot/door.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-door-area-callback-proto">spot/door_area_callback.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-door-service-proto">spot/door_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-proto">spot/inverse_kinematics.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-inverse-kinematics-service-proto">spot/inverse_kinematics_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">spot/robot_command.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-proto">spot/spot_check.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-spot-check-service-proto">spot/spot_check_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-led-proto">spot_cam/LED.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-audio-proto">spot_cam/audio.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-camera-proto">spot_cam/camera.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-compositor-proto">spot_cam/compositor.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-health-proto">spot_cam/health.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-logging-proto">spot_cam/logging.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-network-proto">spot_cam/network.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-power-proto">spot_cam/power.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-ptz-proto">spot_cam/ptz.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-service-proto">spot_cam/service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-streamquality-proto">spot_cam/streamquality.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#spot-cam-version-proto">spot_cam/version.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#stairs-proto">stairs.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#synchronized-command-proto">synchronized_command.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#time-range-proto">time_range.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#time-sync-proto">time_sync.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#time-sync-service-proto">time_sync_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#trajectory-proto">trajectory.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#units-proto">units.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#world-object-proto">world_object.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#world-object-service-proto">world_object_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html#standard-types">Standard Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../protos/bosdyn/api/proto_reference.html">Protos</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/README.html">Choreography Proto Reference Guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html">spot/choreography_params.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-sequence-proto">spot/choreography_sequence.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html#spot-choreography-service-proto">spot/choreography_service.proto</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html#standard-types">Standard Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../choreography_protos/bosdyn/api/choreography_reference.html">Choreography Protos</a></li>
 </ul>
 </li>
 </ul>
@@ -816,17 +682,19 @@
            </div>
           </div>
           <footer>
+  
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023 Boston Dynamics. All rights reserved..</p>
-  </div>
+    <p>
+      
+      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    </p>
+  </div> 
 
 </footer>
         </div>

@@ -39,6 +39,8 @@ When playing any choreography sequence on a robot, always keep in mind basic saf
 
 7. **Cancel moves** - Stop a choreography sequence that is playing by pressing **CANCEL** in the center of the screen. If a move is canceled while it is playing, the robot will stop the move and come to a stand. A sequence can also be aborted by entering any other mode such as Sit, Stand, Walk, or Self Right.
 
+Take caution when stopping choreography sequences and playing choreography sequences when the robot is not in a neutral stance. Interrupting a dance in the middle of a dynamic movement, or starting a different dance before the previous dance finishes, may cause falls. For the best behavior avoid stopping a dance partway through unless necessary for safety reasons, and start dances from a stable stance or from seated. If a dance must be stopped partway through regardless of risk, try to pick a moment when Spot isn't moving too quickly, and has at least 3 feet on the ground. This will lower the risk of falls.
+
 ## Using the tablet to play your own Choreography sequences
 
 Spot comes with a small library of sequences. Some of these are intended for performance. Some gestures can be used to communicate intent through body language. These sequences are always available in the **Select Moves** dropdown. The Tablet can also play custom sequences uploaded by users. The easiest way to author choreography sequences and upload them to the robot is through the Choreographer application.

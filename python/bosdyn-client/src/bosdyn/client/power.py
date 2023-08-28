@@ -67,6 +67,10 @@ class FanControlTemperatureError(PowerResponseError):
     """Current measured robot temperatures are too high to accept user fan command."""
 
 
+
+
+
+
 class PowerClient(BaseClient):
     """A client for enabling / disabling robot motor power.
     Commands are non-blocking. Clients are expected to issue a power command and then periodically
@@ -132,6 +136,8 @@ class PowerClient(BaseClient):
         return self.call_async(self._stub.FanPowerCommandFeedback, req, None,
                                _fan_power_feedback_error_from_response, **kwargs)
 
+
+
     @staticmethod
     def _power_command_request(lease, request):
         return power_pb2.PowerCommandRequest(lease=lease, request=request)
@@ -148,6 +154,7 @@ class PowerClient(BaseClient):
     @staticmethod
     def _fan_power_command_feedback_request(command_id):
         return power_pb2.FanPowerCommandFeedbackRequest(command_id=command_id)
+
 
 
 def _handle_license_errors(func):
@@ -238,6 +245,8 @@ _FAN_STATUS_TO_ERROR.update({
                            statustype=power_pb2.FanPowerCommandFeedbackResponse)
 def _fan_power_feedback_error_from_response(response):
     return None
+
+
 
 
 @deprecated(reason='Replaced by the less ambiguous safe_power_off_motors function.',

@@ -98,7 +98,7 @@ def custom_params_error(response, status_value=None, status_field_name='status',
 
 def error_pair(error_message):
     """Creates a pair of an error class and the associated docstring as the error message
-    which can be used by the error_factory.
+       which can be used by the error_factory.
 
     Args:
         error_message: A class that inherits from the python Error class.

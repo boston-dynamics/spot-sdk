@@ -26,6 +26,8 @@ Examples:
 
 - [Fire Extinguisher Server](./fire_extinguisher_server/README.md): Example of a network compute bridge server for detecting fire extinguishers that uses Keras Retinanet instead of TensorFlow.
 
+- `simple_alert_server.py`: Registers a Network Compute Bridge alert-generating worker server and triggers a Data Acquisition request to generate captures with the alert.
+
 ## System Diagram
 
 ![System Diagram](../../../docs/concepts/network_compute_bridge_diagram.png)
@@ -40,17 +42,10 @@ The `tensorflow_server.py` example requires TensorFlow to be installed. You can 
 dependencies via:
 
 ```
-For non-GPU installations:
-
-python3 -m pip install -r requirements_server_cpu.txt
-
-For CUDA / NVIDIA GPU installations:
-
-python3 -m pip install -r requirements_server_gpu.txt
+python3 -m pip install -r requirements_server.txt
 ```
 
-Installation of NVIDIA drivers and CUDA is outside the scope of the document. There are
-many tutorials available such as [this one](https://www.pyimagesearch.com/2019/01/30/ubuntu-18-04-install-tensorflow-and-keras-for-deep-learning/).
+TensorFlow can use the GPU for better performance but installation of NVIDIA drivers and CUDA is outside the scope of the document. There are many tutorials available such as [this one](https://www.pyimagesearch.com/2019/01/30/ubuntu-18-04-install-tensorflow-and-keras-for-deep-learning/).
 
 ### Client
 
@@ -74,18 +69,18 @@ python3 tensorflow_server.py -d <MODEL DIRECTORY> <ROBOT ADDRESS>
 
 An example model directory can be obtained here: `https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/tf1_detection_zoo.md`. As an example, use the `frozen_inference_graph.pb` file from the `faster_rcnn_inception_v2_coco` model to detect people in the camera images.
 
-To associate numeric labels with names, the user may optionally provide a CSV file in the model directory with a matching file name, e.g. frozen_inference_graph.csv, with the following format:
+To associate numeric labels with names, the user may optionally provide a CSV file in the model directory with a matching file name, e.g. `frozen_inference_graph.csv`, with the following format:
 
 ```
 apples,1
 oranges,2
 ```
 
-Where `1` and `2` are possible label outputs for detections from the TensorFlow model and `apples` and `oranges` are their respective semantic names. The tensorflow_server.py example output indicates if a CSV has been loaded to associate label values with names.
+Where `1` and `2` are possible label outputs for detections from the TensorFlow model and `apples` and `oranges` are their respective semantic names. The `tensorflow_server.py` example output indicates if a CSV has been loaded to associate label values with names.
 
 An example CSV file for the Faster R-CNN model described above is included in this directory as `frozen_inference_graph.csv`.
 
-After launching tensorflow_server.py, the user may post requests to it using the `identify_object.py` client example. To run this example with the above example server and model, run:
+After launching `tensorflow_server.py`, the user may post requests to it using the `identify_object.py` client example. To run this example with the above example server and model, run:
 
 ```
 python3 identify_object.py --service <SERVICE_NAME>  --model <MODEL_NAME> <ROBOT_IP>
@@ -97,6 +92,16 @@ python3 identify_object.py --service tensorflow-server --confidence 0.5 --model 
 
 Note, the `USERNAME` and `PASSWORD` are your user credentials for your Spot.
 
+## Simple Alert Server Execution
+
+To run the `simple_alert_server.py` example:
+
+```
+python3 simple_alert_server.py <ROBOT ADDRESS>
+```
+
+Optionally, pass `-p <PORT>` to the command above to specify the port used by the server. This command generates a zip file with the captures from an acquisition request. The zip file contains two copies of an image captured from the robot back camera, and a `metadata.json` file that contains `alert_data`:`simple-alert-server_alert_model_alert_output` key with the alert values.
+
 ## Robot-independent Execution
 
 To run this example without a robot in the pipeline, first launch the server with the "-r" flag:
@@ -105,14 +110,14 @@ To run this example without a robot in the pipeline, first launch the server wit
 python3 tensorflow_server.py -r -d <MODEL DIRECTORY>
 ```
 
-After launching tensorflow_server.py, the user may post requests to it using the `identify_object_without_robot.py` client example. To run this example with the above example server and model, run:
+After launching `tensorflow_server.py`, the user may post requests to it using the `identify_object_without_robot.py` client example. To run this example with the above example server and model, run:
 
 ```
 python3 identify_object_without_robot.py --model <MODEL_NAME> --server <SERVER_IP:PORT> --confidence 0.5 --model frozen_inference_graph
 
 For example:
 
-python3 identify_object_without_robot.py --confidence 0.5 --model frozen_inference_graph --input-image-dir ~/Download/images/ -v
+python3 identify_object_without_robot.py --server localhost:50051 --confidence 0.5 --model frozen_inference_graph --input-image-dir ~/Download/images/ -v
 ```
 
 Example output:
@@ -142,7 +147,7 @@ sudo docker build -t ncb_client -f Dockerfile.client .
 sudo docker run -it --network=host --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD ncb_client --service tensorflow-server --confidence 0.5 --model frozen_inference_graph --image-source frontleft_fisheye_image <ROBOT_IP>
 ```
 
-When running ncb_server on CORE I/O, or another compute payload with GPU, pass the flag `--gpus all` to the `docker run` command to take advantage of the GPU.
+When running `ncb_server` on CORE I/O, or another compute payload with GPU, pass the flag `--gpus all` to the `docker run` command to take advantage of the GPU.
 
 ## Troubleshooting
 
