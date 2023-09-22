@@ -213,6 +213,35 @@ message ImageRequest {
     DictParam custom_params = 6;
 }
 
+// The image stream request specifying the image source and data format desired.
+message ImageStreamRequest {
+    // The string name of the image source to get image data from.
+    string image_source_name = 1;
+
+    // Image quality: a number from 0 (worst) to 100 (highest).
+    // Note that jpeg quality 100 is still lossy.
+    double quality_percent = 2;
+
+    // Specify the desired image encoding (e.g. JPEG, RAW). If no format is specified (e.g. FORMAT_UNKNOWN), the image
+    // service will choose the best format for the data.
+    Image.Format image_format = 3;
+
+    // Optional specification of the desired image dimensions.
+    // If the original image is 1920x1080, a resize_ratio of (2/3) will return an image with size 1280x720
+    // The range is clipped to [0.01, 1] while maintaining the original aspect ratio.
+    // For backwards compatibliity, a value of 0 means no resizing.
+    // Note: this field is not supported by the robot body cameras image service (`image`).
+    double resize_ratio = 4;
+
+    // Specify the desired pixel format (e.g. GREYSCALE_U8, RGB_U8). If no format is specified
+    // (e.g. PIXEL_FORMAT_UNKNOWN), the image service will choose the best format for the data.
+    Image.PixelFormat pixel_format = 5;
+
+    // Parameters unique to the servicer that do not match any of the above fields.
+    // Whether or not these are valid may depend on the values of the above fields.
+    DictParam custom_params = 6;
+}
+
 // The GetImage request message which can send multiple different image source requests at once.
 message GetImageRequest {
     // Common request header.
@@ -222,8 +251,71 @@ message GetImageRequest {
     repeated ImageRequest image_requests = 2;
 }
 
+// The GetImageStream request message which can send multiple different image source requests at once.
+message GetImageStreamRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The different image requests for this rpc call.
+    repeated ImageStreamRequest image_requests = 2;
+}
+
 // The image response for each request, that includes image data and image source information.
 message ImageResponse {
+    // The image capture contains the image data and information about the state of the camera and robot
+    // at the time the image was collected.
+    ImageCapture shot = 1;
+
+    // The source describes general information about the camera source the image data was collected from.
+    ImageSource source = 2;
+
+    enum Status {
+        // UNKNOWN should never be used.
+        // An internal ImageService issue has happened if UNKNOWN is set.
+        // None of the other fields are filled out.
+        STATUS_UNKNOWN = 0;
+
+        // Call succeeded at filling out all the fields.
+        STATUS_OK = 1;
+
+        // Image source name in request is unknown.  Other fields are not filled out.
+        STATUS_UNKNOWN_CAMERA = 2;
+
+        // Failed to fill out ImageSource.  All the other fields are not filled out.
+        STATUS_SOURCE_DATA_ERROR = 3;
+
+        // There was a problem with the image data.  Only the ImageSource is filled out.
+        STATUS_IMAGE_DATA_ERROR = 4;
+
+        // The requested image format is unsupported for the image-source named. The image data will
+        // not be filled out. Note, if an image request has "FORMAT_UNKNOWN", the service should choose the
+        // best format to provide the data in.
+        STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED = 5;
+
+        // The requested pixel format is unsupported for the image-source named. The image data will
+        // not be filled out. Note, if an image request has "PIXEL_FORMAT_UNKNOWN", the service
+        // should choose the best format to provide the data in.
+        STATUS_UNSUPPORTED_PIXEL_FORMAT_REQUESTED = 6;
+
+        // The requested ratio is out of bounds [0,1] or unsupported by the image service
+        STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED = 7;
+
+        // One or more keys or values in custom_params are unsupported by the image service.
+        // See the custom_param_error for details.
+        STATUS_CUSTOM_PARAMS_ERROR = 8;
+    }
+    // Return status of the request.
+    Status status = 4;
+
+    // Previous fields in the protobuf that are now reserved.
+    reserved 3, 5;
+
+    // Filled out if status is STATUS_CUSTOM_PARAMS_ERROR.
+    CustomParamError custom_param_error = 6;
+}
+
+// The image stream response for each request, that includes image data and image source information.
+message ImageStreamResponse {
     // The image capture contains the image data and information about the state of the camera and robot
     // at the time the image was collected.
     ImageCapture shot = 1;
@@ -298,5 +390,14 @@ message GetImageResponse {
 
     // The ordering of these image responses is defined by the order of the ImageRequests.
     repeated ImageResponse image_responses = 2;
+}
+
+// The GetImageStream response message which includes image data for all requested sources.
+message GetImageStreamResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // The ordering of these image responses is defined by the order of the ImageRequests.
+    repeated ImageStreamResponse image_responses = 2;
 }
 
