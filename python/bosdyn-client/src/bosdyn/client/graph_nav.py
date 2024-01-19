@@ -302,7 +302,8 @@ class GraphNavClient(BaseClient):
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
                                                   route_params, cmd_duration, leases, used_endpoint,
-                                                  command_id, destination_waypoint_tform_body_goal)
+                                                  command_id, destination_waypoint_tform_body_goal,
+                                                  route_blocked_behavior)
         return self.call_async(self._stub.NavigateTo, request,
                                value_from_response=_command_id_from_navigate_route_response,
                                error_from_response=_navigate_to_error, copy_request=False, **kwargs)
