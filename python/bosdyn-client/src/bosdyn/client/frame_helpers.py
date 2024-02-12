@@ -32,6 +32,7 @@ FOOT_FRAME_NAMES = [
     FRONT_LEFT_FOOT_FRAME_NAME, FRONT_RIGHT_FOOT_FRAME_NAME, HIND_LEFT_FOOT_FRAME_NAME,
     HIND_RIGHT_FOOT_FRAME_NAME
 ]
+WR1_FRAME_NAME = "arm0.link_wr1"
 
 
 class Error(Exception):
@@ -178,7 +179,7 @@ def get_se2_a_tform_b(frame_tree_snapshot, frame_a, frame_b, validate=True):
 
     Returns:
         math_helpers.SE2Pose between frame_a and frame_b if they exist in the tree and
-        frame a is a gravity aligned frame. None otherwise.
+        frame_a is a gravity aligned frame. None otherwise.
     """
     # Validate that the transform is in a gravity aligned frame based on the string name.
     if not is_gravity_aligned_frame_name(frame_a):
@@ -274,6 +275,7 @@ class ChildFrameInTree(GenerateTreeError):
 
 def add_edge_to_tree(frame_tree_snapshot, parent_tform_child, parent_frame_name, child_frame_name):
     """Appends a child/parent and the transform to the FrameTreeSnapshot.
+
        Args:
             frame_tree_snapshot (dict) dictionary representing the child_to_parent_edge_map
             parent_tform_child (SE3Pose proto)

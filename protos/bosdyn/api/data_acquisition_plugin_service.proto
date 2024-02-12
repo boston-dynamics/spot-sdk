@@ -29,4 +29,8 @@ service DataAcquisitionPluginService {
 
     // Cancel an in-progress data acquisition.
     rpc CancelAcquisition(CancelAcquisitionRequest) returns (CancelAcquisitionResponse);
+
+    // Request live data available from this plugin during teleoperation.
+    // Please use the other RPCs for typical data acquisition.
+    rpc GetLiveData(LiveDataRequest) returns (LiveDataResponse);
 }

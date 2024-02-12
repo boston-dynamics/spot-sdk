@@ -12,25 +12,30 @@ option java_outer_classname = "AreaCallbackServiceProto";
 import "bosdyn/api/graph_nav/area_callback.proto";
 
 service AreaCallbackService {
-    // Retreive information about how to operate the service, including what lease resources are
+    // Retrieve information about how to operate the service, including what lease resources are
     // required by the navigation callback.
-    rpc AreaCallbackInformation(AreaCallbackInformationRequest) returns (AreaCallbackInformationResponse) {}
+    rpc AreaCallbackInformation(AreaCallbackInformationRequest)
+        returns (AreaCallbackInformationResponse) {}
 
     // BeginCallback is called once as the robot enters a AreaCallback region of a map. This call
-    // initilizes the navigation callback for operation.
+    // initializes the navigation callback for operation.
     rpc BeginCallback(BeginCallbackRequest) returns (BeginCallbackResponse) {}
 
-    // BeginControl is called once after the area callback implementation requests control. Control is
-    // handed off (via a lease) from the caller to the area callback.
+    // BeginControl is called once after the area callback implementation requests control. Control
+    // is handed off (via a lease) from the caller to the area callback.
     rpc BeginControl(BeginControlRequest) returns (BeginControlResponse) {}
 
-    // UpdateCallback is called periodically while the callback is running. Area callback implementations
-    // use UpdateCallback to dictate how caller should operate while callback is running (pause,
-    // continue, etc.)
+    // UpdateCallback is called periodically while the callback is running. Area callback
+    // implementations use UpdateCallback to dictate how caller should operate while callback is
+    // running (pause, continue, etc.)
     rpc UpdateCallback(UpdateCallbackRequest) returns (UpdateCallbackResponse) {}
 
-    // EndCallback is called once when the caller decides the navagation callback is over. This might
-    // be because the robot exited the callback region or might be because the callback reported that it
-    // finished doing work.
+    // Called only if the route changes in the middle of the region (for example, if the robot is
+    // blocked by an obstacle and re-routes).
+    rpc RouteChange(RouteChangeRequest) returns (RouteChangeResponse) {}
+
+    // EndCallback is called once when the caller decides the navigation callback is over. This
+    // might be because the robot exited the callback region or might be because the callback
+    // reported that it finished doing work.
     rpc EndCallback(EndCallbackRequest) returns (EndCallbackResponse) {}
 }

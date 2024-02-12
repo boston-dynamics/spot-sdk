@@ -135,7 +135,7 @@ message SeriesDescriptor {
 }
 
 // If a data series contains a sequence of binary messages, the encoding and format of these
-//  messages is described by a MesssageTypeDescriptor.
+//  messages is described by a MessageTypeDescriptor.
 message MessageTypeDescriptor {
     // Description of the content type.
     // E.g., "application/protobuf", "image/jpeg", "text/csv", ...
@@ -174,7 +174,7 @@ message PodTypeDescriptor {
 // Struct series may reference other struct series, but the series structure must be a directed
 //  acyclic graph (DAG): no circular reference structures.
 message StructTypeDescriptor {
-    // A map of a name-reference to a series, identified by its series_identifer_hash.
+    // A map of a name-reference to a series, identified by its series_identifier_hash.
     map<string, uint64> key_to_series_identifier_hash = 1;
 }
 
@@ -201,7 +201,7 @@ enum PodTypeEnum {
 // E.g., for the series with series_index N, you can access its SeriesIdentifier by accessing
 //  element N the of the series_identifiers repeated field.
 message FileIndex {
-    // SeriesIdentifer for each series in this file.
+    // SeriesIdentifier for each series in this file.
     repeated SeriesIdentifier series_identifiers = 1;
 
     // The offset from the start of the file of the SeriesBlockIndex block for each series.

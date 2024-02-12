@@ -110,11 +110,11 @@ def arm_with_body_follow(config):
         robot.logger.info('Robot safely powered off.')
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     try:
         arm_with_body_follow(options)
         return True
@@ -125,5 +125,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

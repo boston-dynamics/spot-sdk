@@ -87,7 +87,7 @@ See the following examples for requesting ArmCartesianCommands:
 ### Joint Moves
 Users can specify a set of joint angles they want the arm to move to. Users can optionally set a maximum velocity and acceleration that each joint is allowed to travel at, and/or specify full trajectories with times that they want the robot to reach those joint angles.
 
-Joint moves can be especially useful when moving the arm to hard to reach places, or trying to make the arm wave through a set of predefined poses.
+Joint moves can be especially useful when moving the arm to hard-to-reach places, or trying to make the arm wave through a set of predefined poses.
 
 See the [**Joint Move**](../../../python/examples/arm_joint_move/README.md) example for requesting ArmJointMoveCommands.  
 ### Predefined Poses

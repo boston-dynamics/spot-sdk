@@ -15,6 +15,7 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/network_compute_bridge.proto";
 import "bosdyn/api/service_customization.proto";
+import "bosdyn/api/signals.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
@@ -39,6 +40,9 @@ message DataAcquisitionCapability {
 
     // Custom parameters supported by this instance of the service.
     DictParam.Spec custom_params = 5;
+
+    // Capability has live data available via GetLiveData RPC.
+    bool has_live_data = 6;
 }
 
 // Description of an image acquisition capability. The image acquisition capabilities will be
@@ -99,7 +103,7 @@ message CaptureActionId {
 
     // Time (in the robot's clock) at which this capture was triggered. If the timestamp is not
     // specified in the AcquireData RPC, the main data acquisition service on robot will populate
-    // the timestamp field with the timestamp of when the RPC was recieved.
+    // the timestamp field with the timestamp of when the RPC was received.
     google.protobuf.Timestamp timestamp = 3;
 
     reserved 4;
@@ -181,8 +185,8 @@ message ImageSourceCapture {
     Image.PixelFormat pixel_format = 3 [deprecated = true];
 }
 
-// An individual capture which can be specified in the AcquireData request to identify a piece of
-// non-image data to be collected.
+// An individual capture which can be specified in the AcquireData or LiveData request to identify
+// a piece of non-image data to be collected.
 message DataCapture {
     // Name of the data to be captured. This should match the uniquely identifying name from
     // the DataAcquisitionCapability.
@@ -450,4 +454,50 @@ message CancelAcquisitionResponse {
     // The status of the Cancellation RPC. Further monitoring on the success of the cancellation
     // request can be done using the GetStatus RPC.
     Status status = 2;
+}
+
+// Request live data from a DAQ plugin service by DataCapture capability name.
+message LiveDataRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Include capability name and parameter values.
+    repeated DataCapture data_captures = 3;
+
+    reserved 2;
+}
+
+// Live data response of a DAQ plugin service for a single capability.
+message LiveDataResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    message CapabilityLiveData {
+        // Map of signal id to signal specification and data.
+        map<string, Signal> signals = 1;
+
+        // Unique name of the data that is captured.
+        string name = 2;
+
+        enum Status {
+            STATUS_UNKNOWN = 0;
+            STATUS_OK = 1;
+            // The capability name is unknown.
+            STATUS_UNKNOWN_CAPTURE_TYPE = 2;
+            // See custom_param_error field for details.
+            STATUS_CUSTOM_PARAMS_ERROR = 3;
+            // Some other problem occurred.
+            STATUS_INTERNAL_ERROR = 4;
+        }
+
+        Status status = 3;
+
+        // Filled out if status is STATUS_CUSTOM_PARAMS_ERROR.
+        CustomParamError custom_param_error = 4;
+    }
+
+    // One entry for each data capture in the request. Order matches LiveDataRequest order.
+    repeated CapabilityLiveData live_data = 3;
+
+    reserved 2;
 }

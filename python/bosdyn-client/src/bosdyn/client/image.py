@@ -7,6 +7,7 @@
 """For clients to use the image service."""
 import collections
 import os
+import warnings
 
 import numpy as np
 
@@ -336,7 +337,8 @@ def pixel_to_camera_space(image_proto, pixel_x, pixel_y, depth=1.0):
     the (u,v) pixel coordinates.
 
     Args:
-        image_proto (image_pb2.Image): The image in which the pixel coordinates are from
+        image_proto (image_pb2.ImageSource): The image source proto which the pixel coordinates are from.
+            Use of image_pb2.ImageCaptureAndSource or image_pb2.ImageResponse types here have been deprecated.
         pixel_x (int): x-coordinate.
         pixel_y (int): y-coordinate.
         depth (double): The depth from the camera to the point of interest.
@@ -345,14 +347,25 @@ def pixel_to_camera_space(image_proto, pixel_x, pixel_y, depth=1.0):
         An (x,y,z) tuple representing the pixel point of interest now described as a point
         in the camera frame.
     """
-    if not image_proto.source.HasField('pinhole'):
+    if 'source' in image_proto.ListFields() or isinstance(
+            image_proto, image_pb2.ImageResponse) or isinstance(image_proto,
+                                                                image_pb2.ImageCaptureAndSource):
+        warnings.warn(
+            "Use of image_pb2.ImageCaptureAndSource or image_pb2.ImageResponse types for image_proto"
+            " argument have been deprecated, use image_pb2.ImageSource instead. version=4.0.0",
+            DeprecationWarning, stacklevel=2)
+        image_source = image_proto.source
+    else:
+        image_source = image_proto
+
+    if not image_source.HasField('pinhole'):
         raise ValueError('Requires a pinhole camera_model.')
 
-    focal_x = image_proto.source.pinhole.intrinsics.focal_length.x
-    principal_x = image_proto.source.pinhole.intrinsics.principal_point.x
+    focal_x = image_source.pinhole.intrinsics.focal_length.x
+    principal_x = image_source.pinhole.intrinsics.principal_point.x
 
-    focal_y = image_proto.source.pinhole.intrinsics.focal_length.y
-    principal_y = image_proto.source.pinhole.intrinsics.principal_point.y
+    focal_y = image_source.pinhole.intrinsics.focal_length.y
+    principal_y = image_source.pinhole.intrinsics.principal_point.y
 
     x_rt_camera = depth * (pixel_x - principal_x) / focal_x
     y_rt_camera = depth * (pixel_y - principal_y) / focal_y
@@ -403,7 +416,7 @@ def depth_image_to_pointcloud(image_response, min_dist=0, max_dist=1000):
     """Converts a depth image into a point cloud using the camera intrinsics. The point
     cloud is represented as a numpy array of (x,y,z) values.  Requests can optionally filter
     the results based on the points distance to the image plane. A depth image is represented
-    with an unsigned 16 bit integer and a scale factor to convert that distance to meters. In
+    with an unsigned 16-bit integer and a scale factor to convert that distance to meters. In
     addition, values of zero and 2^16 (uint 16 maximum) are used to represent invalid indices.
     A (min_dist * depth_scale) value that casts to an integer value <=0 will be assigned a
     value of 1 (the minimum representational distance). Similarly, a (max_dist * depth_scale)

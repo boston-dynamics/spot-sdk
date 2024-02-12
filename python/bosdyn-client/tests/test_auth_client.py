@@ -29,11 +29,10 @@ class MockAuthServicer(auth_service.AuthServiceServicer):
     INVALID_APP_TEST_TOKEN = 'invalid-app-token'
     EXPIRED_APP_TEST_TOKEN = 'expired-app-token'
 
-    def __init__(self, rpc_delay=0, use_app_token=False):
+    def __init__(self, rpc_delay=0):
         """Create mock that returns specific token after optional delay."""
         super(MockAuthServicer, self).__init__()
         self._rpc_delay = rpc_delay
-        self._use_app_token = use_app_token  # For testing compatibility
 
     def GetAuthToken(self, request, context):
         """Implement the GetAuthToken function of the service.
@@ -43,13 +42,6 @@ class MockAuthServicer(auth_service.AuthServiceServicer):
         """
         resp = bosdyn.api.auth_pb2.GetAuthTokenResponse()
         helpers.add_common_header(resp, request)
-
-        if self._use_app_token and request.application_token != self.VALID_APP_TEST_TOKEN:
-            if request.application_token == self.EXPIRED_APP_TEST_TOKEN:
-                resp.status = resp.STATUS_EXPIRED_APPLICATION_TOKEN
-            else:
-                resp.status = resp.STATUS_INVALID_APPLICATION_TOKEN
-            return resp
 
         if request.username:
             if request.username == self.USERNAME and request.password == self.PASSWORD:
@@ -71,9 +63,9 @@ class MockAuthServicer(auth_service.AuthServiceServicer):
         return resp
 
 
-def _setup(rpc_delay=0, use_app_token=False):
+def _setup(rpc_delay=0):
     client = bosdyn.client.AuthClient()
-    service = MockAuthServicer(rpc_delay, use_app_token)
+    service = MockAuthServicer(rpc_delay)
     server = helpers.setup_client_and_service(client, service,
                                               auth_service.add_AuthServiceServicer_to_server)
     return client, service, server
@@ -99,22 +91,6 @@ def test_async_timeout():
         fut.result()
 
 
-def test_async_expired_app_token():
-    client, service, server = _setup(use_app_token=True)
-    fut = client.auth_async(MockAuthServicer.USERNAME, MockAuthServicer.PASSWORD,
-                            MockAuthServicer.EXPIRED_APP_TEST_TOKEN)
-    with pytest.raises(bosdyn.client.ExpiredApplicationTokenError):
-        fut.result()
-
-
-def test_async_invalid_app_token():
-    client, service, server = _setup(use_app_token=True)
-    fut = client.auth_async(MockAuthServicer.USERNAME, MockAuthServicer.PASSWORD,
-                            MockAuthServicer.INVALID_APP_TEST_TOKEN)
-    with pytest.raises(bosdyn.client.InvalidApplicationTokenError):
-        fut.result()
-
-
 def test_async_token_valid():
     client, service, server = _setup()
     fut = client.auth_with_token_async(MockAuthServicer.TOKEN_TO_REMINT)
@@ -133,22 +109,6 @@ def test_async_token_timeout():
     client, service, server = _setup(rpc_delay=(timeout * 2))
     fut = client.auth_with_token_async(MockAuthServicer.TOKEN_TO_REMINT, timeout=timeout)
     with pytest.raises(TimedOutError):
-        fut.result()
-
-
-def test_async_token_expired_app_token():
-    client, service, server = _setup(use_app_token=True)
-    fut = client.auth_with_token_async(MockAuthServicer.TOKEN_TO_REMINT,
-                                       MockAuthServicer.EXPIRED_APP_TEST_TOKEN)
-    with pytest.raises(bosdyn.client.ExpiredApplicationTokenError):
-        fut.result()
-
-
-def test_async_token_invalid_app_token():
-    client, service, server = _setup(use_app_token=True)
-    fut = client.auth_with_token_async(MockAuthServicer.TOKEN_TO_REMINT,
-                                       MockAuthServicer.INVALID_APP_TEST_TOKEN)
-    with pytest.raises(bosdyn.client.InvalidApplicationTokenError):
         fut.result()
 
 
@@ -179,20 +139,6 @@ def test_sync_unset():
     assert isinstance(excinfo.value.response, bosdyn.api.auth_pb2.GetAuthTokenResponse)
 
 
-def test_sync_expired_app_token():
-    client, service, server = _setup(use_app_token=True)
-    with pytest.raises(bosdyn.client.ExpiredApplicationTokenError):
-        client.auth(MockAuthServicer.USERNAME, MockAuthServicer.PASSWORD,
-                    MockAuthServicer.EXPIRED_APP_TEST_TOKEN)
-
-
-def test_sync_invalid_app_token():
-    client, service, server = _setup(use_app_token=True)
-    with pytest.raises(bosdyn.client.InvalidApplicationTokenError):
-        client.auth(MockAuthServicer.USERNAME, MockAuthServicer.PASSWORD,
-                    MockAuthServicer.INVALID_APP_TEST_TOKEN)
-
-
 def test_sync_token_valid():
     client, service, server = _setup()
     token = client.auth_with_token(MockAuthServicer.TOKEN_TO_REMINT)
@@ -210,17 +156,3 @@ def test_sync_token_timeout():
     client, service, server = _setup(rpc_delay=(timeout * 2))
     with pytest.raises(TimedOutError):
         token = client.auth_with_token(MockAuthServicer.TOKEN_TO_REMINT, timeout=timeout)
-
-
-def test_sync_token_expired_app_token():
-    client, service, server = _setup(use_app_token=True)
-    with pytest.raises(bosdyn.client.ExpiredApplicationTokenError):
-        client.auth_with_token(MockAuthServicer.TOKEN_TO_REMINT,
-                               MockAuthServicer.EXPIRED_APP_TEST_TOKEN)
-
-
-def test_sync_token_invalid_app_token():
-    client, service, server = _setup(use_app_token=True)
-    with pytest.raises(bosdyn.client.InvalidApplicationTokenError):
-        client.auth_with_token(MockAuthServicer.TOKEN_TO_REMINT,
-                               MockAuthServicer.INVALID_APP_TEST_TOKEN)

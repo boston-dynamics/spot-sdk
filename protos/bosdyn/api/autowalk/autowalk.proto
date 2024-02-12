@@ -34,10 +34,14 @@ message NodeIdentifier {
 
 message ElementIdentifiers {
     // Identifiable data for the root node of the element.
-    NodeIdentifier root_id = 1;
+    // Deprecated as of 4.0. Please use navigation_id instead.
+    NodeIdentifier root_id = 1 [deprecated = true];
 
     // Identifiable data for action node of the element.
     NodeIdentifier action_id = 2;
+
+    // Identifiable data for the navigation node of the element.
+    NodeIdentifier navigation_id = 3;
 }
 
 message CompileAutowalkRequest {

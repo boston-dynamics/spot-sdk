@@ -18,13 +18,13 @@ message GetAuthTokenRequest {
     RequestHeader header = 1;
     // Username to authenticate with. Must be set if password is set.
     string username = 2;
-    // Password to authenticate with. Not neccessary if token is set.
+    // Password to authenticate with. Not necessary if token is set.
     string password = 3;
     // Token to authenticate with. Can be used in place of the password, to re-mint a token.
     string token = 4;
-    // Application Token for authenticating with robots on older releases.
-    // DEPRECATED as of 2.0.1. Will be removed in 4.0.
-    string application_token = 5 [deprecated = true];
+
+    // Application Token for authenticating with robots on older releases was removed in 4.0.
+    reserved 5;
 }
 
 // The GetAuthToken response message includes an authentication token if the login information
@@ -33,7 +33,7 @@ message GetAuthTokenResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        // STATUS_UNKNOWN should never be used. If used, an internal error has happend.
+        // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
         STATUS_UNKNOWN = 0;
 
         // STATUS_OK indicates that authentication has succeeded. The 'token' field field will
@@ -57,13 +57,9 @@ message GetAuthTokenResponse {
         // the lock out period ends.
         STATUS_TEMPORARILY_LOCKED_OUT = 4;
 
-        // STATUS_INVALID_APPLICATION_TOKEN indicates that the 'application_token' field in the
-        // request was invalid.
-        STATUS_INVALID_APPLICATION_TOKEN = 5;
-
-        // STATUS_EXPIRED_APPLICATION_TOKEN indicates that the 'application_token' field in the
-        // request was valid, but has expired.
-        STATUS_EXPIRED_APPLICATION_TOKEN = 6;
+        // STATUS_INVALID_APPLICATION_TOKEN and STATUS_EXPIRED_APPLICATION_TOKEN were removed
+        // in 4.0.
+        reserved 5, 6;
     }
     // The status of the grpc GetAuthToken request.
     Status status = 2;

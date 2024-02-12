@@ -15,7 +15,10 @@ import grpc
 import bosdyn.client.lease
 import bosdyn.client.util
 import bosdyn.mission.remote_client
-from bosdyn.api.mission import remote_pb2, util_pb2
+from bosdyn.api import service_customization_pb2
+from bosdyn.api.mission import remote_pb2
+
+_WHO_KEY = 'who'
 
 
 def main():
@@ -67,19 +70,10 @@ def main():
         # Create the remote mission client.
         client = robot.ensure_client(directory_name)
 
-    inputs = []
-    input_values = []
+    input_params = service_customization_pb2.DictParam()
 
     if options.user_string:
-        name = 'user-string'
-        inputs = [
-            util_pb2.VariableDeclaration(name=name, type=util_pb2.VariableDeclaration.TYPE_STRING)
-        ]
-        input_values = [
-            util_pb2.KeyValue(
-                key=name, value=util_pb2.Value(constant=util_pb2.ConstantValue(
-                    string_value=options.user_string)))
-        ]
+        input_params.values.get_or_create(_WHO_KEY).string_value.value = options.user_string
 
     # Use an ExitStack because we might or might not have a lease keep-alive
     # depending on command line arguments
@@ -92,17 +86,17 @@ def main():
         # Now run through a typical sequence of calls to the remote servicer.
         # Establish the session, telling the servicer to perform any one-time tasks.
         try:
-            session_id = client.establish_session(inputs=inputs, lease_resources=lease_resources)
+            session_id = client.establish_session(lease_resources=lease_resources)
         except bosdyn.client.UnimplementedError:
             # EstablishSession is optional, so we can ignore this error.
             print('EstablishSession is unimplemented.')
             session_id = None
 
         # Begin ticking, and tick until the server indicates something other than RUNNING.
-        response = client.tick(session_id, inputs=input_values, lease_resources=lease_resources)
+        response = client.tick(session_id, lease_resources=lease_resources, params=input_params)
         while response.status == remote_pb2.TickResponse.STATUS_RUNNING:
             time.sleep(0.1)
-            response = client.tick(session_id, inputs=input_values, lease_resources=lease_resources)
+            response = client.tick(session_id, lease_resources=lease_resources, params=input_params)
         print(
             f'Servicer stopped with status {remote_pb2.TickResponse.Status.Name(response.status)}')
         if response.error_message:

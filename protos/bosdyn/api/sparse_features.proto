@@ -37,8 +37,10 @@ message KeypointSet {
         // descriptors.
         KEYPOINT_SIMPLE = 1;
         // Keypoints detected by the ORB feature extraction algorithm (Oriented FAST and Rotated
-        // BRIEF.)
+        // BRIEF).
         KEYPOINT_ORB = 2;
+        // Keypoints detected by the DISK feature extraction algorithm (Discrete Keypoints).
+        KEYPOINT_DISK = 3;
     }
     // The algorithm used to compute this keypoint and its descriptor.
     KeypointType type = 3;
@@ -63,4 +65,15 @@ message KeypointMatches {
 
     // Indices of pairs of matches in the two KeypointSets and their distance measure.
     repeated Match matches = 4;
+
+    enum MatchType {
+        MATCH_UNKNOWN = 0;
+        // Keypoints matched by the ORB feature matching algorithm (Oriented FAST and Rotated
+        // BRIEF).
+        MATCH_ORB = 1;
+        // Keypoints matched by the LightGlue matching algorithm.
+        MATCH_LIGHTGLUE = 2;
+    }
+    // The algorithm used to compute these matches.
+    MatchType type = 5;
 }

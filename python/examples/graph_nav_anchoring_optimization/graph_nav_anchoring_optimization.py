@@ -86,7 +86,7 @@ def show_blueprint(path):
     :param path: the full path to the image file.
     """
     img = plt_img.imread(path)
-    # We want a coordinate system that is right handed, with y going up,
+    # We want a coordinate system that is right-handed, with y going up,
     # and x to the right, with z pointing out of the page. This requires us
     # to flip the image vertically, and set the origin of the plot to the lower
     # left corner. This is because images in matplotlib are plotted from the top
@@ -251,7 +251,7 @@ def optimize_anchoring(opt_info, client):
         stream_intermediate_results=False, initial_hint=initial_hint)
 
 
-def main(argv):
+def main():
     """Run the command-line interface."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-i', '--input-map', help='Full filepath of the map directory.',
@@ -283,7 +283,7 @@ def main(argv):
     )
 
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     opt_info = OptInfo(
         fiducial_id=options.fiducial_id, pixels_per_meter=options.pixels_per_meter,
@@ -331,4 +331,5 @@ def main(argv):
     plt.show()
 
 
-main(sys.argv[1:])
+if __name__ == '__main__':
+    main()

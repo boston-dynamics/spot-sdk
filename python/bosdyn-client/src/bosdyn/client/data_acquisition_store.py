@@ -255,6 +255,40 @@ class DataAcquisitionStoreClient(BaseClient):
                                error_from_response=common_header_errors, copy_request=False,
                                **kwargs)
 
+    def query_stored_captures(self, query=None, **kwargs):
+        """Query stored captures from the robot.
+
+        Args:
+            query (bosdyn.api.DataQueryParams) : Query parameters.
+        Raises:
+            RpcError: Problem communicating with the robot.
+        """
+        request = data_acquisition_store.QueryStoredCapturesRequest(query=query)
+        self._apply_request_processors(request, copy_request=False)
+        return self.call(self._stub.QueryStoredCaptures, request,
+                         error_from_response=common_header_errors,
+                         assemble_type=data_acquisition_store.QueryStoredCapturesResponse,
+                         copy_request=False, **kwargs)
+
+    def query_max_capture_id(self, **kwargs):
+        """Query max capture id from the robot.
+        Returns:
+            QueryMaxCaptureIdResult, which has a max_capture_id uint64, corresponding to the 
+            greatest capture id on the robot.  Used for skiping DAQ synchronization
+            on connect.
+        """
+        request = data_acquisition_store.QueryMaxCaptureIdRequest()
+        return self.call(self._stub.QueryMaxCaptureId, request,
+                         value_from_response=_get_max_capture_id,
+                         error_from_response=common_header_errors, copy_request=False, **kwargs)
+
+    def query_max_capture_id_async(self, **kwargs):
+        """Async version of the query_max_capture_id() RPC."""
+        request = data_acquisition_store.QueryMaxCaptureIdRequest(query=query)
+        return self.call_async(self._stub.QueryMaxCaptureId, request,
+                               value_from_response=_get_max_capture_id,
+                               error_from_response=common_header_errors, copy_request=False,
+                               **kwargs)
 
 
 def _get_action_ids(response):
@@ -271,3 +305,7 @@ def _get_image(response):
 
 def _get_metadata(response):
     return response.metadata
+
+
+def _get_max_capture_id(response):
+    return response.max_capture_id

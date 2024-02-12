@@ -21,13 +21,14 @@ import bosdyn.client.util
 from bosdyn.client.payload_registration import PayloadAlreadyExistsError, PayloadRegistrationClient
 
 
-def define_payload(guid, name, description):
+def define_payload(payload_credentials_file, name, description):
     """Return an arbitrary bosdyn.api.Payload object."""
 
     # Populate the fields specified by the input arguments.
     # Secret does not need to be human-readable.
     payload = payload_protos.Payload()
-    payload.GUID = guid
+    payload.GUID, secret = bosdyn.client.util.read_or_create_payload_credentials(
+        payload_credentials_file)
     payload.name = name
     # Payload description will be overwritten by preset description if a non-default preset is
     # selected at operator authorization time.
@@ -133,7 +134,7 @@ def define_payload(guid, name, description):
     preset_conf_rear.label_prefix.append('self registered')
     preset_conf_rear.label_prefix.append('preset #2')
 
-    return payload
+    return payload, secret
 
 
 def self_register_payload(config):
@@ -151,11 +152,12 @@ def self_register_payload(config):
     payload_registration_client = robot.ensure_client(
         PayloadRegistrationClient.default_service_name)
 
-    payload = define_payload(config.guid, config.name, config.description)
+    payload, secret = define_payload(config.payload_credentials_file, config.name,
+                                     config.description)
 
     # Register the payload.
     try:
-        payload_registration_client.register_payload(payload, secret=config.secret)
+        payload_registration_client.register_payload(payload, secret=secret)
     except PayloadAlreadyExistsError:
         print(
             f'Payload config for {payload.GUID} already exists. Continuing with pre-existing configuration.'
@@ -172,7 +174,7 @@ def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    bosdyn.client.util.add_payload_credentials_arguments(parser)
+    bosdyn.client.util.add_payload_credentials_file_argument(parser)
     parser.add_argument('--name', required=True, type=str, help='Name of the payload.')
     parser.add_argument('--description', required=True, type=str,
                         help='Description of the payload.')

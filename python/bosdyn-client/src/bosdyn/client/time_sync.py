@@ -18,7 +18,7 @@ from google.protobuf import duration_pb2
 
 from bosdyn.api import time_sync_pb2, time_sync_service_pb2_grpc
 from bosdyn.api.time_range_pb2 import TimeRange
-from bosdyn.util import (RobotTimeConverter, now_nsec, nsec_to_timestamp, parse_timespan,
+from bosdyn.util import (RobotTimeConverter, now_nsec, now_sec, nsec_to_timestamp, parse_timespan,
                          set_timestamp_from_nsec, timestamp_to_nsec)
 
 from .common import BaseClient, common_header_errors
@@ -342,8 +342,8 @@ class TimeSyncThread:
     # When time-sync service is not yet ready, poll it at this interval
     TIME_SYNC_SERVICE_NOT_READY_INTERVAL_SEC = 5
 
-    def __init__(self, time_sync_client):
-        self._time_sync_endpoint = TimeSyncEndpoint(time_sync_client)
+    def __init__(self, time_sync_client, time_sync_endpoint=None):
+        self._time_sync_endpoint = time_sync_endpoint or TimeSyncEndpoint(time_sync_client)
         self._lock = Lock()
         self._locked_time_sync_interval_sec = self.DEFAULT_TIME_SYNC_INTERVAL_SEC
         self._locked_should_exit = False  # Used to tell the thread to stop running.
@@ -412,11 +412,11 @@ class TimeSyncThread:
         """
         if self.has_established_time_sync:
             return
-        end_time_sec = time.time() + timeout_sec
+        end_time_sec = now_sec() + timeout_sec
         while not self.stopped:
             if self.endpoint.has_established_time_sync:
                 return
-            if time.time() > end_time_sec:
+            if now_sec() > end_time_sec:
                 raise TimedOutError
             time.sleep(0.1)
         thread_exc = self.thread_exception

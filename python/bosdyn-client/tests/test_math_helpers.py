@@ -27,20 +27,20 @@ def test_create_se2_pose():
     # Test creating an SE2Pose from a proto with from_obj()
     proto_se2 = geometry_pb2.SE2Pose(position=geometry_pb2.Vec2(x=1, y=2), angle=.2)
     se2 = SE2Pose.from_proto(proto_se2)
-    assert type(se2) == SE2Pose
+    assert isinstance(se2, SE2Pose)
     assert se2.x == proto_se2.position.x
     assert se2.y == proto_se2.position.y
     assert se2.angle == proto_se2.angle
 
     # Test proto-like attribute access properties
     pos = se2.position
-    assert type(pos) == geometry_pb2.Vec2
+    assert isinstance(pos, geometry_pb2.Vec2)
     assert pos.x == proto_se2.position.x
     assert pos.y == proto_se2.position.y
 
     # Test going back to a proto message with to_proto()
     new_proto_se2 = se2.to_proto()
-    assert type(new_proto_se2) == geometry_pb2.SE2Pose
+    assert isinstance(new_proto_se2, geometry_pb2.SE2Pose)
     assert new_proto_se2.position.x == proto_se2.position.x
     assert new_proto_se2.position.y == proto_se2.position.y
     assert new_proto_se2.angle == proto_se2.angle
@@ -206,7 +206,7 @@ def test_se2_conversions_se3_pose():
     # Test converting se2pose --> se3pose with no height input
     a = SE2Pose(x=1, y=2, angle=.5)
     se3_a = a.get_closest_se3_transform()
-    assert type(se3_a) == SE3Pose
+    assert isinstance(se3_a, SE3Pose)
     assert a.x == se3_a.x
     assert a.y == se3_a.y
     assert se3_a.z == 0
@@ -217,7 +217,7 @@ def test_se2_conversions_se3_pose():
 
     # Test converting se2pose --> se3pose with height input
     se3_a_with_height = a.get_closest_se3_transform(height_z=5)
-    assert type(se3_a_with_height) == SE3Pose
+    assert isinstance(se3_a_with_height, SE3Pose)
     assert a.x == se3_a_with_height.x
     assert a.y == se3_a_with_height.y
     assert se3_a_with_height.z == 5
@@ -229,7 +229,7 @@ def test_se2_conversions_se3_pose():
     # Test flattening an se3pose to se2pose
     b = SE3Pose(x=1, y=2, z=3, rot=Quat(w=1, x=0, y=.2, z=0))
     se2_b = SE2Pose.flatten(b)
-    assert type(se2_b) == SE2Pose
+    assert isinstance(se2_b, SE2Pose)
     assert se2_b.x == 1
     assert se2_b.y == 2
     assert se2_b.angle == 0
@@ -251,14 +251,14 @@ def test_se2_conversions_se3_pose():
     # Test converting se3pose --> se2pose
     c = SE3Pose(x=1, y=2, z=0, rot=Quat(w=.1, x=.3, y=.2, z=.2))
     se2_c = c.get_closest_se2_transform()
-    assert type(se2_c) == SE2Pose
+    assert isinstance(se2_c, SE2Pose)
     assert se2_c.x == 1
     assert se2_c.y == 2
     assert fabs(se2_c.angle - 2.214297435588181) < 1e-5
 
     # Test creating an se3pose using from_se2() with no z height
     se3_d = SE3Pose.from_se2(SE2Pose(x=1, y=2, angle=.5))
-    assert type(se3_d) == SE3Pose
+    assert isinstance(se3_d, SE3Pose)
     assert se3_d.x == 1
     assert se3_d.y == 2
     assert se3_d.z == 0
@@ -269,7 +269,7 @@ def test_se2_conversions_se3_pose():
 
     # Test creating an se3pose using from_se2() with z height
     se3_e = SE3Pose.from_se2(SE2Pose(x=1, y=2, angle=.5), z=2)
-    assert type(se3_e) == SE3Pose
+    assert isinstance(se3_e, SE3Pose)
     assert se3_e.x == 1
     assert se3_e.y == 2
     assert se3_e.z == 2
@@ -284,7 +284,7 @@ def test_create_se3_pose():
     proto_se3 = geometry_pb2.SE3Pose(position=geometry_pb2.Vec3(x=1, y=2, z=3),
                                      rotation=geometry_pb2.Quaternion(w=.1, x=.2, y=.2, z=.1))
     se3 = SE3Pose.from_proto(proto_se3)
-    assert type(se3) == SE3Pose
+    assert isinstance(se3, SE3Pose)
     assert se3.x == proto_se3.position.x
     assert se3.y == proto_se3.position.y
     assert se3.z == proto_se3.position.z
@@ -295,12 +295,12 @@ def test_create_se3_pose():
 
     # Test proto-like attribute access properties
     pos = se3.position
-    assert type(pos) == geometry_pb2.Vec3
+    assert isinstance(pos, geometry_pb2.Vec3)
     assert pos.x == proto_se3.position.x
     assert pos.y == proto_se3.position.y
     assert pos.z == proto_se3.position.z
     quat = se3.rotation
-    assert type(quat) == Quat
+    assert isinstance(quat, Quat)
     assert quat.w == proto_se3.rotation.w
     assert quat.x == proto_se3.rotation.x
     assert quat.y == proto_se3.rotation.y
@@ -308,7 +308,7 @@ def test_create_se3_pose():
 
     # Test going back to a proto message with to_proto()
     new_proto_se3 = se3.to_proto()
-    assert type(new_proto_se3) == geometry_pb2.SE3Pose
+    assert isinstance(new_proto_se3, geometry_pb2.SE3Pose)
     assert new_proto_se3.position.x == proto_se3.position.x
     assert new_proto_se3.position.y == proto_se3.position.y
     assert new_proto_se3.position.z == proto_se3.position.z
@@ -458,14 +458,14 @@ def test_create_se2_vel():
     # Test creating an SE2Velocity from a proto with from_obj()
     proto_se2 = geometry_pb2.SE2Velocity(linear=geometry_pb2.Vec2(x=1, y=2), angular=.2)
     se2 = SE2Velocity.from_proto(proto_se2)
-    assert type(se2) == SE2Velocity
+    assert isinstance(se2, SE2Velocity)
     assert se2.linear_velocity_x == proto_se2.linear.x
     assert se2.linear_velocity_y == proto_se2.linear.y
     assert se2.angular_velocity == proto_se2.angular
 
     # Test proto-like attribute access properties
     lin = se2.linear
-    assert type(lin) == geometry_pb2.Vec2
+    assert isinstance(lin, geometry_pb2.Vec2)
     assert lin.x == proto_se2.linear.x
     assert lin.y == proto_se2.linear.y
     ang = se2.angular
@@ -473,7 +473,7 @@ def test_create_se2_vel():
 
     # Test going back to a proto message with to_proto()
     new_proto_se2 = se2.to_proto()
-    assert type(new_proto_se2) == geometry_pb2.SE2Velocity
+    assert isinstance(new_proto_se2, geometry_pb2.SE2Velocity)
     assert new_proto_se2.linear.x == proto_se2.linear.x
     assert new_proto_se2.linear.y == proto_se2.linear.y
     assert new_proto_se2.angular == proto_se2.angular
@@ -487,7 +487,7 @@ def test_create_se2_vel():
 
     # Test creating the velocity vector
     vec = se2.to_vector()
-    assert type(vec) == numpy.ndarray
+    assert isinstance(vec, numpy.ndarray)
     assert vec[0] == proto_se2.linear.x
     assert vec[1] == proto_se2.linear.y
     assert vec[2] == proto_se2.angular
@@ -495,7 +495,7 @@ def test_create_se2_vel():
     # Test creating the SE2Velocity from a array
     vel_arr = numpy.array([1, 2, 3]).reshape((3, 1))
     se2 = SE2Velocity.from_vector(vel_arr)
-    assert type(se2) == SE2Velocity
+    assert isinstance(se2, SE2Velocity)
     assert se2.linear_velocity_x == 1
     assert se2.linear_velocity_y == 2
     assert se2.angular_velocity == 3
@@ -503,7 +503,7 @@ def test_create_se2_vel():
     # Test creating the SE2Velocity from a list
     vel_list = [1, 2, 3]
     se2 = SE2Velocity.from_vector(vel_list)
-    assert type(se2) == SE2Velocity
+    assert isinstance(se2, SE2Velocity)
     assert se2.linear_velocity_x == 1
     assert se2.linear_velocity_y == 2
     assert se2.angular_velocity == 3
@@ -514,7 +514,7 @@ def test_create_se3_vel():
     proto_se3 = geometry_pb2.SE3Velocity(linear=geometry_pb2.Vec3(x=1, y=2, z=3),
                                          angular=geometry_pb2.Vec3(x=1, y=2, z=3))
     se3 = SE3Velocity.from_proto(proto_se3)
-    assert type(se3) == SE3Velocity
+    assert isinstance(se3, SE3Velocity)
     assert se3.linear_velocity_x == proto_se3.linear.x
     assert se3.linear_velocity_y == proto_se3.linear.y
     assert se3.linear_velocity_z == proto_se3.linear.z
@@ -524,19 +524,19 @@ def test_create_se3_vel():
 
     # Test proto-like attribute access properties
     lin = se3.linear
-    assert type(lin) == geometry_pb2.Vec3
+    assert isinstance(lin, geometry_pb2.Vec3)
     assert lin.x == proto_se3.linear.x
     assert lin.y == proto_se3.linear.y
     assert lin.z == proto_se3.linear.z
     ang = se3.angular
-    assert type(ang) == geometry_pb2.Vec3
+    assert isinstance(ang, geometry_pb2.Vec3)
     assert ang.x == proto_se3.angular.x
     assert ang.y == proto_se3.angular.y
     assert ang.z == proto_se3.angular.z
 
     # Test going back to a proto message with to_proto()
     new_proto_se3 = se3.to_proto()
-    assert type(new_proto_se3) == geometry_pb2.SE3Velocity
+    assert isinstance(new_proto_se3, geometry_pb2.SE3Velocity)
     assert new_proto_se3.linear.x == proto_se3.linear.x
     assert new_proto_se3.linear.y == proto_se3.linear.y
     assert new_proto_se3.linear.z == proto_se3.linear.z
@@ -547,7 +547,7 @@ def test_create_se3_vel():
     # Test mutating an existing proto message to_obj()
     proto_mut_se3 = geometry_pb2.SE3Velocity()
     se3.to_obj(proto_mut_se3)
-    assert type(proto_mut_se3) == geometry_pb2.SE3Velocity
+    assert isinstance(proto_mut_se3, geometry_pb2.SE3Velocity)
     assert proto_mut_se3.linear.x == proto_se3.linear.x
     assert proto_mut_se3.linear.y == proto_se3.linear.y
     assert proto_mut_se3.linear.z == proto_se3.linear.z
@@ -557,7 +557,7 @@ def test_create_se3_vel():
 
     # Test creating the velocity vector
     vec = se3.to_vector()
-    assert type(vec) == numpy.ndarray
+    assert isinstance(vec, numpy.ndarray)
     assert vec[0] == proto_se3.linear.x
     assert vec[1] == proto_se3.linear.y
     assert vec[2] == proto_se3.linear.z
@@ -568,7 +568,7 @@ def test_create_se3_vel():
     # Test creating the SE3Velocity from a array
     vel_arr = numpy.array([1, 2, 3, 4, 5, 6]).reshape((6, 1))
     se3 = SE3Velocity.from_vector(vel_arr)
-    assert type(se3) == SE3Velocity
+    assert isinstance(se3, SE3Velocity)
     assert se3.linear_velocity_x == 1
     assert se3.linear_velocity_y == 2
     assert se3.linear_velocity_z == 3
@@ -579,7 +579,7 @@ def test_create_se3_vel():
     # Test creating the SE2Velocity from a list
     vel_list = [1, 2, 3, 4, 5, 6]
     se3 = SE3Velocity.from_vector(vel_list)
-    assert type(se3) == SE3Velocity
+    assert isinstance(se3, SE3Velocity)
     assert se3.linear_velocity_x == 1
     assert se3.linear_velocity_y == 2
     assert se3.linear_velocity_z == 3
@@ -617,7 +617,7 @@ def test_transform_velocity():
     vel_b = SE3Velocity(1, 2, 3, .1, .2, .3)
     adjoint_b = b.to_adjoint_matrix()
     print(type(vel_b))
-    print(type(vel_b) == SE3Velocity)
+    print(isinstance(vel_b, SE3Velocity))
     transformed_b = transform_se3velocity(adjoint_b, vel_b)
     print(transformed_b)
     compare_se3_velocity(vel_b, transformed_b)

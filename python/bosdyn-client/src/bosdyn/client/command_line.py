@@ -29,12 +29,13 @@ from bosdyn.util import duration_str, timestamp_to_datetime
 from .auth import InvalidLoginError, InvalidTokenError
 from .data_acquisition import DataAcquisitionClient
 from .data_acquisition_helpers import acquire_and_process_request
+from .data_acquisition_plugin import DataAcquisitionPluginClient
 from .data_buffer import DataBufferClient
 from .data_service import DataServiceClient
 from .directory import DirectoryClient, NonexistentServiceError
 from .directory_registration import DirectoryRegistrationClient, DirectoryRegistrationResponseError
 from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
-from .exceptions import Error, InvalidAppTokenError, InvalidRequestError, ProxyConnectionError
+from .exceptions import Error, InvalidRequestError, ProxyConnectionError
 from .image import (ImageClient, ImageResponseError, UnknownImageSourceError, build_image_request,
                     save_images_as_files)
 from .lease import LeaseClient
@@ -91,9 +92,6 @@ class Command(object, metaclass=abc.ABCMeta):
             return self._run(robot, options)
         except ProxyConnectionError:
             print('Could not contact robot with hostname "{}".'.format(options.hostname),
-                  file=sys.stderr)
-        except InvalidAppTokenError:
-            print('The provided app token "{}" is invalid.'.format(options.app_token),
                   file=sys.stderr)
         except InvalidTokenError:
             print('The provided user token is invalid.', file=sys.stderr)
@@ -719,6 +717,7 @@ class GetLogCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         """Get log status from robot
+
         Args:
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
@@ -728,9 +727,11 @@ class GetLogCommand(Command):
 
     def _run(self, robot, options):
         """Implementation of the command.
+
         Args:
             robot: Robot object on which to run the command.
             options: Parsed command-line arguments.
+
         Returns:
             True
         """
@@ -748,6 +749,7 @@ class GetActiveLogStatusesCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         """Retrieve active log statuses for robot.
+
         Args:
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
@@ -756,9 +758,11 @@ class GetActiveLogStatusesCommand(Command):
 
     def _run(self, robot, options):
         """Implementation of the command.
+
         Args:
             robot: Robot object on which to run the command.
             options: Parsed command-line arguments.
+
         Returns:
             True
         """
@@ -882,6 +886,7 @@ class StartRetroLogCommand(Command):
 
     def __init__(self, subparsers, command_dict):
         """Start a retro log
+
         Args:
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
@@ -891,9 +896,11 @@ class StartRetroLogCommand(Command):
 
     def _run(self, robot, options):
         """Implementation of the command.
+
         Args:
             robot: Robot object on which to run the command.
             options: Parsed command-line arguments.
+
         Returns:
             True
         """
@@ -1903,7 +1910,6 @@ class GetImageCommand(Command):
             print('Robot cannot generate the "{}" at this time.  Retry the command.'.format(
                 options.source_name))
             return False
-
         # Save the image files in the correct format (jpeg, pgm for raw/rle).
         save_images_as_files(response)
 
@@ -2027,7 +2033,7 @@ class DataAcquisitionCommand(Subcommands):
         """
         super(DataAcquisitionCommand, self).__init__(subparsers, command_dict, [
             DataAcquisitionServiceCommand, DataAcquisitionRequestCommand,
-            DataAcquisitionStatusCommand
+            DataAcquisitionStatusCommand, DataAcquisitionGetLiveDataCommand
         ])
 
 
@@ -2110,9 +2116,10 @@ class DataAcquisitionServiceCommand(Command):
         # Constants to describe width of columns for printing the data names and types
         self._data_type_width = 15
         self._data_name_width = 35
-        self._service_name_width = 30
+        self._service_name_width = 35
+        self._has_live_data_width = 30
 
-    def _format_and_print_capability(self, data_type, data_name, service_name=""):
+    def _format_and_print_capability(self, data_type, data_name, service_name="", has_live_data=""):
         """Print the data acquisition capability.
 
         Args:
@@ -2120,8 +2127,10 @@ class DataAcquisitionServiceCommand(Command):
             data_name (string): The name of the data acquisition capability
             service_name(string): For image capabilities, a service name is required.
         """
-        print(('{:' + str(self._data_type_width) + '} {:' + str(self._data_name_width) + '} {:' +
-               str(self._service_name_width) + '}').format(data_type, data_name, service_name))
+        print(
+            ('{:' + str(self._data_type_width) + '} {:' + str(self._data_name_width) + '} {:' +
+             str(self._service_name_width) + '} {:' + str(self._has_live_data_width) + '}').format(
+                 data_type, data_name, service_name, has_live_data))
 
     def _run(self, robot, options):
         """Implementation of the 'info' command.
@@ -2133,10 +2142,13 @@ class DataAcquisitionServiceCommand(Command):
         capabilities = robot.ensure_client(
             DataAcquisitionClient.default_service_name).get_service_info()
         print("Data Acquisition Service's Available Capabilities\n")
-        self._format_and_print_capability("Data Type", "Data Name", "(optional) Service Name")
-        print("-" * (self._data_type_width + self._data_name_width + self._service_name_width))
+        self._format_and_print_capability("Data Type", "Data Name", "(optional) Service Name",
+                                          "(optional) has_live_data")
+        print("-" * (self._data_type_width + self._data_name_width + self._service_name_width +
+                     self._has_live_data_width))
         for data_name in capabilities.data_sources:
-            self._format_and_print_capability("data", data_name.name, data_name.service_name)
+            self._format_and_print_capability("data", data_name.name, data_name.service_name,
+                                              str(data_name.has_live_data))
         for img_service in capabilities.image_sources:
             for img in img_service.image_source_names:
                 self._format_and_print_capability("image", img, img_service.service_name)
@@ -2174,6 +2186,41 @@ class DataAcquisitionStatusCommand(Command):
         """
         response = robot.ensure_client(DataAcquisitionClient.default_service_name).get_status(
             options.id)
+        print(response)
+        return True
+
+
+class DataAcquisitionGetLiveDataCommand(Command):
+    """Call GetLiveData based on service name."""
+
+    NAME = 'live'
+
+    def __init__(self, subparsers, command_dict):
+        """Call GetLiveData based on service name.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(DataAcquisitionGetLiveDataCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--data-source', metavar='DATA_SRC', default=[],
+                                  help='Data source name', action='append', required=True)
+
+    def _run(self, robot, options):
+        """Implementation of the 'live' command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True once complete.
+        """
+        daq_client = robot.ensure_client(DataAcquisitionClient.default_service_name)
+        request = data_acquisition_pb2.LiveDataRequest()
+        request.data_captures.extend(
+            [data_acquisition_pb2.DataCapture(name=data_name) for data_name in options.data_source])
+        response = daq_client.get_live_data(request)
         print(response)
         return True
 
@@ -2248,6 +2295,7 @@ class PowerRobotCommand(Command):
 
     def _run(self, robot, options):
         """
+
         Args:
             robot: Robot object on which to run the command.
             options: Parsed command-line arguments.
@@ -2282,6 +2330,7 @@ class PowerPayloadsCommand(Command):
 
     def _run(self, robot, options):
         """
+
         Args:
             robot: Robot object on which to run the command.
             options: Parsed command-line arguments.
@@ -2317,6 +2366,7 @@ class PowerWifiRadioCommand(Command):
 
     def _run(self, robot, options):
         """
+
         Args:
             robot: Robot object on which to run the command.
             options: Parsed command-line arguments.
@@ -2368,6 +2418,7 @@ def main(args=None):
 
     # Create robot object and authenticate.
     sdk = bosdyn.client.create_standard_sdk('BosdynClient')
+    sdk.register_service_client(DataAcquisitionPluginClient)
 
     robot = sdk.create_robot(options.hostname)
 

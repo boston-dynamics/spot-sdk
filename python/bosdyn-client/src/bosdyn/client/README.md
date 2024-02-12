@@ -45,6 +45,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 - [Frame Helpers](frame_helpers)
 - [Graph Nav](graph_nav)
 - [Gripper Camera Params](gripper_camera_param)
+- [GPS](gps/README)
 - [Image](image)
 - [Image Service Helpers](image_service_helpers)
 - [Inverse Kinematics](inverse_kinematics)
@@ -55,11 +56,11 @@ Client code and interfaces for the Boston Dynamics robot API.
 - [Lease Validator](lease_validator)
 - [License](license)
 - [Local Grid](local_grid)
-- [Log Annotation](log_annotation)
 - [Log Status](log_status)
 - [Math Helpers](math_helpers)
 - [Manipulation API](manipulation_api_client)
 - [Map Processing](map_processing)
+- [Metrics Logging](metrics_logging)
 - [Network Compute Bridge](network_compute_bridge_client)
 - [Payload Registration](payload_registration)
 - [Payload](payload)
@@ -74,12 +75,14 @@ Client code and interfaces for the Boston Dynamics robot API.
 - [Robot State](robot_state)
 - [SDK](sdk)
 - [Server Util](server_util)
-- [Service Parameterization Helpers](service_customization_helpers)
+- [Service Customization Helpers](service_customization_helpers)
+- [Signals Helpers](signals_helpers)
 - [Spot CAM](spot_cam/README)
 - [Spot Check](spot_check)
 - [Time Sync](time_sync)
 - [Token Cache](token_cache)
 - [Token Manager](token_manager)
+- [Units Helpers](units_helpers)
 - [Util](util)
 - [World Object](world_object)
 
@@ -114,7 +117,6 @@ The table below specifies the protobuf service definitions supported by each cli
 |                     [**Lease**](./lease.py)                      |                   [lease_service.proto](../../../../../protos/bosdyn/api/lease_service.proto)                   |
 |                   [**License**](./license.py)                    |                 [license_service.proto](../../../../../protos/bosdyn/api/license_service.proto)                 |
 |                [**Local Grid**](./local_grid.py)                 |              [local_grid_service.proto](../../../../../protos/bosdyn/api/local_grid_service.proto)              |
-|            [**Log Annotation**](./log_annotation.py)             |          [log_annotation_service.proto](../../../../../protos/bosdyn/api/log_annotation_service.proto)          |
 |                [**Log Status**](./log_status.py)                 |        [log_status_service.proto](../../../../../protos/bosdyn/api/log_status/log_status_service.proto)         |
 |       [**Manipulation API**](./manipulation_api_client.py)       |        [manipulation_api_service.proto](../../../../../protos/bosdyn/api/manipulation_api_service.proto)        |
 |            [**Map Processing**](./map_processing.py)             |     [map_processing_service.proto](../../../../../protos/bosdyn/api/graph_nav/map_processing_service.proto)     |

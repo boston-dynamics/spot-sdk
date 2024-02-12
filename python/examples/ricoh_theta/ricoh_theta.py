@@ -14,6 +14,7 @@ import os
 import shutil
 import time
 import webbrowser
+from re import sub
 
 import requests
 from requests.auth import HTTPDigestAuth
@@ -22,7 +23,7 @@ from requests.auth import HTTPDigestAuth
 class Theta:
     """Class for interacting with a Ricoh Theta camera"""
 
-    def __init__(self, theta_ssid=None, theta_pw=None, client_mode=True, static_ip='192.168.80.110',
+    def __init__(self, theta_ssid=None, theta_pw=None, client_mode=True, static_ip='192.168.80.200',
                  subnet_mask='255.255.255.0', default_gateway='192.168.80.1',
                  show_state_at_init=True):
         """Creates object instance for ricoh theta.
@@ -34,13 +35,13 @@ class Theta:
             static_ip(string): theta static ip address for client mode
             subnet_mask(string): subnet mask
             default_gateway(string): default gateway
-            show_state_at_init(bool): Make a HTTP request to show initial camera state at object creation time.
+            show_state_at_init(bool): Make an HTTP request to show initial camera state at object creation time.
         """
         # Camera Parameters:
         # Adjust the below default parameters for your specific use case.
         self.theta_ssid = theta_ssid
-        # Typical default password for the ricoh theta is the SSID without the first 7 letters
-        self.theta_pw = theta_pw or self.theta_ssid[7:]  # use custom password or default
+        # Typical default password for the ricoh theta is the numeric portion of the SSID
+        self.theta_pw = theta_pw or sub('[^0-9]', '', theta_ssid)  # use custom password or default
         self.client_ip = static_ip
         # Edit additional network settings here.
         self.client_subnet = subnet_mask

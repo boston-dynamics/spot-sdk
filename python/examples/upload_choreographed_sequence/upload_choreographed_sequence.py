@@ -21,7 +21,7 @@ from bosdyn.client.license import LicenseClient
 DEFAULT_DANCE = 'default_dance.csq'
 
 
-def main(argv):
+def main():
     # Parse args
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -29,7 +29,7 @@ def main(argv):
                         help='The filepath to load the choreographed sequence text file from.')
     parser.add_argument('--upload-only', action='store_true',
                         help='Only upload, without executing.')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Create robot object with the ability to access the ChoreographyClient
     sdk = bosdyn.client.create_standard_sdk('UploadChoreography')
@@ -74,7 +74,7 @@ def main(argv):
             return True
 
     # Once the choreography is loaded into a protobuf message, upload the routine to the robot. We set
-    # non_strict_parsing to true so that the robot will automatically correct any errors it find in the routine.
+    # non_strict_parsing to true so that the robot will automatically correct any errors it finds in the routine.
     try:
         upload_response = choreography_client.upload_choreography(choreography,
                                                                   non_strict_parsing=True)
@@ -107,7 +107,8 @@ def main(argv):
     # routine to perform.
     routine_name = choreography.name
     # Then, set a start time five seconds after the current time.
-    client_start_time = time.time() + 5.0
+    delayed_start = 5.0
+    client_start_time = time.time() + delayed_start
     # Specify the starting slice of the choreography. We will set this to slice=0 so that the routine begins at
     # the very beginning.
     start_slice = 0
@@ -116,12 +117,21 @@ def main(argv):
                                              client_start_time=client_start_time,
                                              choreography_starting_slice=start_slice)
 
-    # Estimate how long the choreographed sequence will take, and sleep that long.
+    # Estimate how long the choreographed sequence will take.
     total_choreography_slices = 0
     for move in choreography.moves:
-        total_choreography_slices += move.requested_slices
-    estimated_time_seconds = total_choreography_slices / choreography.slices_per_minute * 60.0
-    time.sleep(estimated_time_seconds)
+        # Calculate the slice when the move will end, by adding the duration of the
+        # move(requested_slices) to the slice when the move will start(start_slice).
+        end_slice = move.start_slice + move.requested_slices
+
+        # Store the highest end_slice value of all the moves. This is the last active slice of the dance.
+        if total_choreography_slices < end_slice:
+            total_choreography_slices = end_slice
+
+    estimated_time_seconds = delayed_start + total_choreography_slices / choreography.slices_per_minute * 60.0
+
+    # Sleep for the duration of the dance, plus an extra second.
+    time.sleep(estimated_time_seconds + 1.0)
 
     # Sit the robot down and power off the robot.
     robot.power_off()
@@ -129,5 +139,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

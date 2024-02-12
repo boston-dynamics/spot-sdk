@@ -31,7 +31,7 @@ from bosdyn.client.robot_command import RobotCommandClient, blocking_stand
 from bosdyn.client.robot_state import RobotStateClient
 
 
-def main(raw_args=None):
+def main():
     """Edit and replay stored autowalks with command-line interface"""
 
     body_lease = None
@@ -61,7 +61,7 @@ def main(raw_args=None):
         'Autowalk mission filename. Script assumes the path to this file is [walk_directory]/missions/[walk_filename]'
     )
 
-    args = parser.parse_args(raw_args)
+    args = parser.parse_args()
 
     path_following_mode = map_pb2.Edge.Annotations.PATH_MODE_UNKNOWN
     fail_on_question = args.fail_on_question

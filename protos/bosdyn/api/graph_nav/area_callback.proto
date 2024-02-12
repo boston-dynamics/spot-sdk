@@ -10,6 +10,7 @@ package bosdyn.api.graph_nav;
 option java_outer_classname = "AreaCallbackProto";
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
@@ -17,16 +18,15 @@ import "bosdyn/api/service_customization.proto";
 import "bosdyn/api/graph_nav/area_callback_data.proto";
 import "bosdyn/api/graph_nav/nav.proto";
 
-
 // Error reporting for things that can go wrong with calls.
 message AreaCallbackError {
     string service_name = 1;
 
-    enum CallError{
+    enum CallError {
         ERROR_UNKNOWN = 0;
-        ERROR_TRANSPORT = 1; // Unable to communicate with the callback.
-        ERROR_RESPONSE = 2; // The callback responded with an error.
-        ERROR_SERVICE = 3; // The service was not registered.
+        ERROR_TRANSPORT = 1;  // Unable to communicate with the callback.
+        ERROR_RESPONSE = 2;   // The callback responded with an error.
+        ERROR_SERVICE = 3;    // The service was not registered.
     }
     CallError error = 2;
 
@@ -45,7 +45,42 @@ message AreaCallbackInformationRequest {
     RequestHeader header = 1;
 }
 
+// Information about how the robot should behave when stopping at a location.
+message StopConfiguration {
+    // What direction robot should face.
+    enum FaceDirection {
+        FACE_DIRECTION_UNKNOWN = 0;
+        // (Default) Face along the direction of the next edges in the route,
+        // regardless of the waypoint orientation.
+        FACE_DIRECTION_ALONG_ROUTE = 1;
+        // Face in the direction of the recorded waypoint.
+        FACE_DIRECTION_WAYPOINT_EXACT = 2;
+        // Face in the direction of the recorded waypoint, but if traversing the region in the
+        // opposite direction to how it was recorded, flip the orientation 180 degrees.
+        FACE_DIRECTION_WAYPOINT_AUTO = 3;
+        // Face in the direction of the end of the region.
+        FACE_DIRECTION_REGION_END = 4;
+    }
+
+    // Which direction the robot should face when lining up at a waypoint.
+    FaceDirection face_direction = 3;
+
+    // If true, always align to stairs at the start of the callback.
+    // Overrides face_direction  if stairs are found.
+    bool face_stairs_if_present = 5;
+
+    // Offset applied to the above facing direction (radians).
+    google.protobuf.DoubleValue face_yaw_offset = 4;
+
+    // How close the robot needs to be to the desired pose (meters).
+    google.protobuf.DoubleValue max_distance = 1;
+    // How close the robot needs to be to the desired pose (radians).
+    google.protobuf.DoubleValue max_yaw = 2;
+}
+
 // Specific information about how a AreaCallback implementation should be called.
+// All fields are optional, and need only be filled out if the desired behavior is different
+// from the default.
 message AreaCallbackInformation {
     // A area callback can request to be in control of one or more resources at runtime.
     repeated string required_lease_resources = 1;
@@ -53,6 +88,54 @@ message AreaCallbackInformation {
     // Parameters this area callback supports that do not match any of the other fields.
     DictParam.Spec custom_params = 4;
 
+
+    // Specify what graph nav should expect to detect for blockages in this region.  For example, if
+    // the callback can open doors, the region may initially look blocked due to a closed door, but
+    // Graph Nav should still expect it to be traversable.
+    enum Blockage {
+        BLOCKAGE_UNKNOWN = 0;
+        // (Default) The region may appear blocked to Graph Nav, but the callback will still be able
+        // to traverse it.  If the region is blocked, Graph Nav should consider it passable unless
+        // it actually gets stuck trying to navigate it.
+        BLOCKAGE_SKIP = 1;
+        // Graph Nav should expect the region to be clear.  If the region is blocked, Graph Nav can
+        // treat that as impassable.
+        BLOCKAGE_CHECK = 2;
+    }
+    Blockage blockage = 5;
+
+    // Specify whether graph nav should check for impairment when the callback is in control of the
+    // robot.  Certain failures may make Graph Nav unable to navigate, but may not affect the
+    // callback.  If the callback is in control of the robot, it may be preferable to let it finish
+    // and return control to Graph Nav before reporting any impaired error instead of interrupting
+    // the callback.
+    enum Impairment {
+        IMPAIRMENT_UNKNOWN = 0;
+        // (Default) Do not check Graph Nav impairment when the callback is in control.
+        IMPAIRMENT_SKIP = 1;
+        // Continue to check Graph Nav impairment when the callback is in control.  If Graph Nav
+        // detects that it is impaired, it will stop the callback immediately.
+        IMPAIRMENT_CHECK = 2;
+    }
+    Impairment impairment_check = 6;
+
+    // Control whether Graph Nav will stop and wait for nearby entities when crossing the region.
+    // Entity waiting is normally on for regular Graph Nav, but is by default turned off inside Area
+    // callback regions.
+    enum EntityWaiting {
+        ENTITY_WAITING_UNKNOWN = 0;
+        // (Default) Disable waiting for entities when crossing the region.
+        ENTITY_WAITING_DISABLE = 1;
+        // Enable waiting for entities when crossing the region.
+        ENTITY_WAITING_ENABLE = 2;
+    }
+    EntityWaiting entity_waiting = 7;
+
+    // How the robot should stop at waypoints by default.
+    StopConfiguration default_stop = 8;
+
+    // Configuration to store in the map about how to treat the region edges.
+    AreaCallbackMapConfig map_config = 9;
 }
 
 // Message for providing information about a area callback implementation.
@@ -65,12 +148,12 @@ message AreaCallbackInformationResponse {
 }
 
 // Description of an Area Callback region at the time of crossing
-message RegionInformation{
+message RegionInformation {
     // The unique id of the region we are entering.
     string region_id = 1;
 
     // Human-readable description of the region we are entering.
-    string description = 2; 
+    string description = 2;
 
     // The planned route through the region.
     bosdyn.api.graph_nav.Route route = 3;
@@ -105,7 +188,8 @@ message BeginCallbackResponse {
         // The area callback successfully began.
         STATUS_OK = 1;
 
-        // The area callback failed to start due to some problem with the supplied configuration_data.
+        // The area callback failed to start due to some problem with the supplied
+        // configuration_data.
         STATUS_INVALID_CONFIGURATION = 2;
 
         // The area callback end time already expired.
@@ -119,8 +203,8 @@ message BeginCallbackResponse {
     // Return status for the request.
     Status status = 2;
 
-    // Unique identifier for the AreaCallback, used to update the callback in subsequent calls. If empty,
-    // the request was not accepted.
+    // Unique identifier for the AreaCallback, used to update the callback in subsequent calls. If
+    // empty, the request was not accepted.
     uint32 command_id = 3;
 
     // Filled out if status is STATUS_CUSTOM_PARAMS_ERROR.
@@ -168,7 +252,7 @@ message BeginControlResponse {
 }
 
 message UpdateCallbackRequest {
-    // Common response header.
+    // Common request header.
     RequestHeader header = 1;
 
     // The command id associated with a single execution of a navigation callback.
@@ -217,7 +301,8 @@ message UpdateCallbackResponse {
         // instructs graph nav to wait or continue on.
         NavPolicy policy = 3;
 
-        // An error has occurred. Graph Nav will stop calling UpdateCallback and will call EndCallback.
+        // An error has occurred. Graph Nav will stop calling UpdateCallback and will call
+        // EndCallback.
         Error error = 4;
 
         // The area callback is complete. Graph Nav will stop calling UpdateCallback and will call
@@ -225,35 +310,40 @@ message UpdateCallbackResponse {
         Complete complete = 5;
     }
 
-
-    // Localization changes inform Graph Nav when the callback has moved the robot, 
+    // Localization changes inform Graph Nav when the callback has moved the robot,
     // and are ignored unless callback has control of the robot.
     UpdateLocalization localization = 6;
 
-    message UpdateLocalization{
-        enum LocalizationChange{
+    message UpdateLocalization {
+        enum LocalizationChange {
             // When unset, Graph Nav will not change the localization.
             LOCALIZATION_UNKNOWN = 0;
             // The robot is now at the end of the region.
-            LOCALIZATION_AT_END = 1; 
+            LOCALIZATION_AT_END = 1;
         }
 
         // Change the localization within GraphNav.
         LocalizationChange change = 1;
     }
 
-
     message NavPolicy {
         enum Option {
             OPTION_UNKNOWN = 0;
-            OPTION_CONTINUE = 1; // Continue past the waypoint. If not already stopped at it, do not stop.
-            OPTION_STOP = 2;     // Stop at the waypoint.
-            OPTION_CONTROL = 3;  // Stop at the waypoint and transfer control to the callback.
+            // Continue past the waypoint. If not already stopped at it, do not stop.
+            OPTION_CONTINUE = 1;
+            // Stop at the waypoint.
+            OPTION_STOP = 2;
+            // Stop at the waypoint and transfer control to the callback.
+            OPTION_CONTROL = 3;
         }
         // Policy for what Graph Nav should do at the start of the region.
         Option at_start = 1;
+
         // Policy for what Graph Nav should do at the end of the region.
         Option at_end = 2;
+        // Override the default settings for how the robot should behave at the end.
+        // Does not apply for OPTION_CONTINUE.
+        StopConfiguration end_config = 4;
     }
 
     message Error {
@@ -284,7 +374,7 @@ message UpdateCallbackResponse {
 }
 
 message EndCallbackRequest {
-    // Common response header.
+    // Common request header.
     RequestHeader header = 1;
 
     // The command id associated with a single execution of a navigation callback.
@@ -314,5 +404,43 @@ message EndCallbackResponse {
     }
 
     // Return status for the request.
+    Status status = 2;
+}
+
+message RouteChangeRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The command id for which the route is changing.
+    uint32 command_id = 2;
+
+    // The route through the region was originally provided in the BeginCallbackRequest.
+    // The fields below affect how the route has changed as a result of being blocked along the
+    // original path.  For example, if the original route in BeginCallbackRequest was B⇨C⇨D⇨E, and
+    // the robot gets blocked on D⇨E, RouteChange would be called with route as D⇨C⇨B, with
+    // unfinished route being D⇨E.
+
+    // The new planned route through the region.
+    bosdyn.api.graph_nav.Route route = 3;
+
+    // The remaining old route that was not completed.
+    bosdyn.api.graph_nav.Route unfinished_route = 4;
+}
+
+message RouteChangeResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        // UNKNOWN should never be used.
+        STATUS_UNKNOWN = 0;
+
+        // The AreaCallback has acknowledged the route change.
+        STATUS_OK = 1;
+
+        // The request command id does not exist or is no longer executing.
+        STATUS_INVALID_COMMAND_ID = 2;
+    }
+
     Status status = 2;
 }

@@ -103,6 +103,46 @@ class CameraCalibrationTimedOutError(Exception):
     """Timed out waiting for SUCCESS response from calibration."""
 
 
+class GripperCameraCalibrationResponseError(SpotCheckError):
+    """General class of errors for gripper camera calibration routines."""
+
+
+class GripperCameraCalibrationUserCanceledError(GripperCameraCalibrationResponseError):
+    """API client canceled calibration."""
+
+
+class GripperCameraCalibrationPowerError(GripperCameraCalibrationResponseError):
+    """The robot is not powered on."""
+
+
+class GripperCameraCalibrationLeaseError(GripperCameraCalibrationResponseError):
+    """The Lease is invalid."""
+
+
+class GripperCameraCalibrationTargetNotCenteredError(GripperCameraCalibrationResponseError):
+    """Invalid starting configuration of robot."""
+
+
+class GripperCameraCalibrationTargetUpsideDownError(GripperCameraCalibrationResponseError):
+    """The target is incorrectly oriented."""
+
+
+class GripperCameraCalibrationCalibrationError(GripperCameraCalibrationResponseError):
+    """Calibration algorithm failure occurred."""
+
+
+class GripperCameraCalibrationInitializationError(GripperCameraCalibrationResponseError):
+    """Initialization error occurred ."""
+
+
+class GripperCameraCalibrationInternalError(GripperCameraCalibrationResponseError):
+    """Internal error occurred ."""
+
+
+class GripperCameraCalibrationStuckError(GripperCameraCalibrationResponseError):
+    """Timed out waiting for robot to reach goal pose."""
+
+
 class SpotCheckClient(BaseClient):
     """A client for verifying robot health and running calibration routines."""
     default_service_name = 'spot-check'
@@ -169,6 +209,42 @@ class SpotCheckClient(BaseClient):
         """Async version of camera_calibration_feedback()."""
         return self.call_async(self._stub.CameraCalibrationFeedback, request, None,
                                _calibration_feedback_error_from_response, **kwargs)
+
+    def gripper_camera_calibration_command(self, request, **kwargs):
+        """Issue a gripper camera calibration command to the robot.
+
+        Raises:
+            Error on header error or lease use result error.
+        """
+        return self.call(self._stub.GripperCameraCalibrationCommand, request, None,
+                         _gripper_calibration_command_error_from_response, **kwargs)
+
+    def gripper_camera_calibration_command_async(self, request, **kwargs):
+        """Async version of gripper_camera_calibration_command()
+
+        Raises:
+            Error on header error or lease use result error.
+        """
+        return self.call_async(self._stub.GripperCameraCalibrationCommand, request, None,
+                               _gripper_calibration_command_error_from_response, **kwargs)
+
+    def gripper_camera_calibration_feedback(self, request, **kwargs):
+        """Check the current status of gripper camera calibration.
+
+        Raises:
+            GripperCameraCalibrationResponseError on any feedback error.
+        """
+        return self.call(self._stub.GripperCameraCalibrationFeedback, request, None,
+                         _gripper_calibration_feedback_error_from_response, **kwargs)
+
+    def gripper_camera_calibration_feedback_async(self, request, **kwargs):
+        """Async version of gripper_camera_calibration_feedback()
+
+        Raises:
+            GripperCameraCalibrationResponseError on any feedback error.
+        """
+        return self.call_async(self._stub.GripperCameraCalibrationFeedback, request, None,
+                               _gripper_calibration_feedback_error_from_response, **kwargs)
 
 
 def run_spot_check(spot_check_client, lease, timeout_sec=212, update_frequency=0.25, verbose=False):
@@ -364,3 +440,87 @@ def _cal_status_error_from_response(response):
         status_to_error=_CAL_STATUS_TO_ERROR)
 
 
+
+
+# Gripper Camera calibration error handlers.
+@handle_common_header_errors
+@handle_lease_use_result_errors
+def _gripper_calibration_command_error_from_response(response):
+    return None
+
+
+@handle_common_header_errors
+def _gripper_calibration_feedback_error_from_response(response):
+    # Special handling of lease case.
+    if response.status == spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_LEASE_ERROR:
+        return LeaseUseError(response, None)
+    return _gcal_status_error_from_response(response)
+
+
+_GCAL_STATUS_TO_ERROR = collections.defaultdict(lambda:
+                                                (GripperCameraCalibrationResponseError, None))
+_GCAL_STATUS_TO_ERROR.update({  # noqa
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_SUCCESS: (
+            None,
+            None,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_PROCESSING: (
+            None,
+            None,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_USER_CANCELED: (
+            GripperCameraCalibrationUserCanceledError,
+            GripperCameraCalibrationUserCanceledError.__doc__,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_NEVER_RUN: (
+            None,
+            None,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_POWER_ERROR: (
+            GripperCameraCalibrationPowerError,
+            GripperCameraCalibrationPowerError.__doc__,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_LEASE_ERROR: (
+            GripperCameraCalibrationLeaseError,
+            GripperCameraCalibrationLeaseError.__doc__,
+        ),
+
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_TARGET_NOT_CENTERED: (
+            GripperCameraCalibrationTargetNotCenteredError,
+            GripperCameraCalibrationTargetNotCenteredError.__doc__,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_TARGET_NOT_IN_VIEW: (
+            GripperCameraCalibrationTargetNotCenteredError,
+            GripperCameraCalibrationTargetNotCenteredError.__doc__,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_TARGET_UPSIDE_DOWN: (
+            GripperCameraCalibrationTargetUpsideDownError,
+            GripperCameraCalibrationTargetUpsideDownError.__doc__,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_INITIALIZATION_ERROR: (
+            GripperCameraCalibrationInitializationError,
+            GripperCameraCalibrationInitializationError.__doc__,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_INTERNAL_ERROR: (
+            GripperCameraCalibrationInternalError,
+            GripperCameraCalibrationInternalError.__doc__,
+        ),
+        spot_check_pb2.GripperCameraCalibrationFeedbackResponse.STATUS_STUCK: (
+            GripperCameraCalibrationStuckError,
+            GripperCameraCalibrationStuckError.__doc__,
+        ),
+})
+
+
+@handle_unset_status_error(
+    unset="STATUS_UNKNOWN",
+    statustype=spot_check_pb2.GripperCameraCalibrationFeedbackResponse,
+)
+def _gcal_status_error_from_response(response):
+    """Return a custom exception based on response, None if no error."""
+    return error_factory(
+        response,
+        response.status,
+        status_to_string=spot_check_pb2.GripperCameraCalibrationFeedbackResponse.Status.Name,
+        status_to_error=_GCAL_STATUS_TO_ERROR,
+    )

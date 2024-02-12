@@ -21,11 +21,11 @@ Point cloud data is captured at each waypoint. These data depict features that t
 
 The viewer also shows fiducials that were detected during the map recording process. Fiducials are shown as blue squares labeled with the fiducial ID. If multiple fiducials with the same ID are displayed near each other, this represents multiple detections taken at different times during recording.
 
-Maps do not have a global coordinate system (like GPS coordinates, for example). Only the relative transformations between waypoints are known.
+Maps do not require a global coordinate system (like GPS coordinates, for example). However, maps can be recorded with global coordinates or later updated with global coordinates.
 
 ## Recording and Modifying Maps
 
-The GraphNav map recording service is used to create and modify maps using robot data. Using the `StartRecording` RPC, you can tell the map recording service to begin creating a new map. You may then drive the robot around a site, and it will record a map. Afterwards (or at intervals during recording), you may download map data.
+The GraphNav map recording service is used to create and modify maps using robot data. Using the `StartRecording` RPC, you can tell the map recording service to begin creating a new map. You may then drive the robot around a site, and it will record a map. Afterward (or at intervals during recording), you may download map data.
 
 The [`recording_command_line` example](../../../python/examples/graph_nav_command_line/README.md#recording-service-command-line) in the Spot SDK shows how to record and modify maps at runtime, and how to download map data from the recording service.
 

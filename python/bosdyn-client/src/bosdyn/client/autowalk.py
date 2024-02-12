@@ -41,6 +41,7 @@ class AutowalkClient(BaseClient):
 
     def update_from(self, other):
         """Update instance from another object.
+
         Args:
             other: The object where to copy from.
         """
@@ -50,6 +51,7 @@ class AutowalkClient(BaseClient):
 
     def compile_autowalk(self, walk, data_chunk_byte_size=1000 * 1000, **kwargs):
         """Send the input walk file to the autowalk service for compilation.
+
         Args:
             walk: a walks_pb2.Walk input to be compiled by the autowalk service
             data_chunk_byte_size: max size of each streamed message
@@ -69,6 +71,7 @@ class AutowalkClient(BaseClient):
     def load_autowalk(self, walk, leases=[], data_chunk_byte_size=1000 * 1000, **kwargs):
         """Send the input walk file to the autowalk service for compilation and
         load resulting mission to the Mission Service on the robot.
+
         Args:
             walk: a walks_pb2.Walk input to be loaded onto the robot by the autowalk service
             leases: Leases the autowalk service will need to use. Unlike other clients, these MUST

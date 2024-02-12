@@ -55,7 +55,6 @@ class DirectoryRegistrationClient(BaseClient):
             host_ip,
             port,
             user_token_required=True,
-            application_token_required=False,
             liveness_timeout_secs=0,
             **kwargs):
         """Register a service routing with the robot.
@@ -72,7 +71,6 @@ class DirectoryRegistrationClient(BaseClient):
           host_ip: The ip address of the system that the service is being hosted on.
           port: The port number the service can be accessed through on the host system.
           user_token_required: If a user token should be verified to access the service.
-          application_token_required: Deprecated - Do not use.
           liveness_timeout_secs: Number of seconds without directory heartbeat before timeout fault.
 
         Raises:
@@ -80,11 +78,6 @@ class DirectoryRegistrationClient(BaseClient):
           ServiceAlreadyExistsError: The service already exists.
           DirectoryRegistrationResponseError: Something went wrong during the directory registration.
         """
-        if (application_token_required):
-            _LOGGER.warning(
-                'The application_token_required parameter has been deprecated and will have no effect.'
-            )
-
         service_entry = directory_pb2.ServiceEntry(
             name=name,
             type=service_type,
@@ -125,7 +118,6 @@ class DirectoryRegistrationClient(BaseClient):
             host_ip,
             port,
             user_token_required=True,
-            application_token_required=False,
             liveness_timeout_secs=0,
             **kwargs):
         """Update a service definition of an existing service that matches the service name.
@@ -142,7 +134,6 @@ class DirectoryRegistrationClient(BaseClient):
           host_ip: The ip address of the system that the service is being hosted on.
           port: The port number the service can be accessed through on the host system.
           user_token_required: If a user token should be verified to access the service.
-          application_token_required Deprecated - Do not use.
           liveness_timeout_secs: Number of seconds without directory heartbeat before timeout fault.
 
         Raises:
@@ -150,10 +141,6 @@ class DirectoryRegistrationClient(BaseClient):
           ServiceDoesNotExistError: The service does not exist.
           DirectoryRegistrationResponseError: Something went wrong during the directory registration.
         """
-        if (application_token_required):
-            _LOGGER.warning(
-                'The application_token_required parameter has been deprecated and will have no effect.'
-            )
 
         service_entry = directory_pb2.ServiceEntry(
             name=name,
@@ -274,7 +261,7 @@ def reset_service_registration(
 
     This is useful when a program wants to register a new service but there may be an old entry
     in the robot directory from a previous instance of the program. If the service
-    does not already exists, the exception will be suppressed and a new registration will
+    does not already exist, the exception will be suppressed and a new registration will
     still be performed. Unregistering the service has the advantage of clearing all service
     faults, if any existed.
     """

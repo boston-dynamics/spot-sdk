@@ -111,6 +111,14 @@ To see the servicer actually power the robot off, you will have to perform the f
 
 You must run the client within 3 seconds of returning wasd's lease, otherwise the normal comms loss policy will kick in. To avoid Lease errors when triggering the callback via the tablet, select the "3rd Party" option before confirming the action.
 
+### Incorporating Service Customization
+
+To customize what you see on the tablet, you can incorporate service customization as shown below. When configuring the Hello World callback on the tablet, you are able to provide the name that Spot uses in its greeting. You can provide specific options or allow it to be entirely up to the user, and you can also specify whether the input should be coerced to a valid option or instead raise an error.
+
+```
+python3 hello_world_mission_service.py --display-name "Hello to:" --default-name World --hello-option World --hello-option Everyone --hello-option Scout --coerce robot --host-ip {YOUR_IP} --port {OPEN_PORT} 192.168.80.3
+```
+
 ## Using the example as part of an Autowalk mission
 
 The mission service examples will work as part of an Autowalk mission, performing its action when Spot reaches a callback.
@@ -139,12 +147,15 @@ Note that both commands target the robot, but also inform the robot of the ip ad
 
 You must start the server (Step one) prior to recording the Autowalk mission.
 
-1. On the Tablet, select Actions from the hamburger menu. You should see the callback listed, such as "Hello World Callback". Note that if you did not do Step one, this does not appear!
-2. If you click on Callback Default, you can name the callback and configure any user variables you'd like to send to the server.
-3. Stand up Spot and select Autowalk.
-4. Move the robot a bit and then select the + sign to create an action waypoint.
-5. Select your callback.
-6. Finish the recording and playback, you should see your server print out something like:
+1. On the Tablet, select Settings > Actions from the hamburger menu.
+2. Under "Custom Inspections" at the bottom of the screen, select "Create New Action".
+3. Select "Empty Inspection" as the template action, then press "Create".
+4. Switch from "Daq" to "Remote GRPC". You should see the callback listed, such as "Hello World Callback", under "Service". Note that if you did not do Step one, this does not appear!
+5. You can rename the callback and configure any user variables you'd like to send to the server, and save the action once your configuration is complete.
+6. Stand up Spot and select Autowalk.
+7. Move the robot a bit and then select the + sign to create an action waypoint.
+8. Select your callback.
+9. Finish the recording and playback, you should see your server print out something like:
 
 ```
 2020-11-04 14:00:24,695 - INFO - EstablishSession unimplemented!

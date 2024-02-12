@@ -26,6 +26,23 @@ message Route {
     repeated Edge.Id edge_id = 3;
 }
 
+// Information about the route that a robot has followed during a command.
+message CompletedRoute {
+    // List of waypoints reached in the order they were reached.
+    repeated string waypoint_ids = 1;
+
+    message CompletedEdge {
+        Edge.Id edge_id = 1;
+
+        // If true, this edge was specially constructed to bypass a blockage, and does not exist
+        // in the map.
+        bool not_in_map = 2;
+
+    }
+    // Information about the completed edges, in the order they were completed.
+    repeated CompletedEdge edges = 2;
+}
+
 // The localization state of the robot. This reports the pose of the robot relative
 // to a particular waypoint on the graph nav map.
 message Localization {

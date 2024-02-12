@@ -11,11 +11,14 @@ import getpass
 import glob
 import logging
 import os
+import pathlib
 import signal
 import sys
 import threading
 import time
 from concurrent import futures
+from secrets import token_urlsafe
+from uuid import uuid4
 
 import google.protobuf.descriptor
 import grpc
@@ -25,6 +28,7 @@ import bosdyn.client.server_util
 from bosdyn.client.auth import InvalidLoginError, InvalidTokenError
 from bosdyn.client.channel import generate_channel_options
 from bosdyn.client.exceptions import Error
+from bosdyn.deprecated import moved_to
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -254,7 +258,7 @@ def add_common_arguments(parser, credentials_no_warn=False):
 
 
 def read_payload_credentials(filename):
-    """Read the guid and secret from a file.  The file should have the guid and secret
+    """Read the guid and secret from a file that already exists.  The file should have the guid and secret
     as the first and second lines in the file.
 
     Args:
@@ -275,6 +279,40 @@ def read_payload_credentials(filename):
     return guid, secret
 
 
+def read_or_create_payload_credentials(filename):
+    """
+    Only for use when attempting to register a payload. If simply trying to authenticate,
+    use get_guid_or_secret or read_payload_credentials instead.
+
+    When registering, attempt to read the payload's guid and secret from the specified file.
+    If this file exists, it should have the guid and secret as the first and second lines in the
+    file. If the file does not exist, this function creates a valid credentials file at filename.
+
+    Args:
+        filename: Name of the file to read. Its parent directories should already exist and
+                  it should have the right permissions to be read by the payload registration
+                  service. If running on a CORE I/O, also ensure that this location is mounted
+                  as a volume to the CORE I/O's /data or /persist locations.
+
+    Returns:
+        Tuple of (guid, secret)
+
+    Raises:
+         OSError if the credential file cannot be read.
+         ValueError if the guid or secret are missing from the file.
+    """
+    try:
+        return read_payload_credentials(filename)
+    except (OSError, ValueError):
+        # If we can't read the credentials, write them assuming that parent directories exist.
+        guid = str(uuid4())
+        secret = token_urlsafe(16)
+        with open(filename, 'w') as credentials_file:
+            credentials_file.write(guid + "\n")
+            credentials_file.write(secret)
+        return guid, secret
+
+
 def get_guid_and_secret(parsed_options):
     """Get the guid and secret for a payload, based on the options that were added
     via add_payload_credentials_arguments().
@@ -289,12 +327,30 @@ def get_guid_and_secret(parsed_options):
          OSError if the credential file cannot be read.
          Exception if no applicable arguments are given.
     """
-    if parsed_options.guid or parsed_options.secret:
+    if (hasattr(parsed_options, "guid") and
+            parsed_options.guid) or (hasattr(parsed_options, "secret") and parsed_options.secret):
         return parsed_options.guid, parsed_options.secret
     if parsed_options.payload_credentials_file:
         return read_payload_credentials(parsed_options.payload_credentials_file)
     raise Exception('No payload credentials provided. Use --guid and --secret'
-                    ' or --payload-credentials-file.')
+                    ' or --payload-credentials-file. The latter in conjunction with'
+                    ' read_or_create_payload_credentials is recommended for easy'
+                    ' management of unique per-robot credentials')
+
+
+def add_payload_credentials_file_argument(parser):
+    """Add argument for payload_credentials_file to an ArgumentParser or argument group.
+       This file is where the payload's GUID and secret are stored. The GUID and secret can
+       be securely generated on a per-robot basis and written to this file with
+       read_or_create_payload_credentials(filename).
+
+    Args:
+        parser: Argument parser object
+    """
+    parser.add_argument(
+        '--payload-credentials-file', help=
+        'File from which to read payload guid and secret. Preferred in conjunction with read_or_create_payload_credentials for easy management of unique per-robot credentials'
+    )
 
 
 def add_payload_credentials_arguments(parser, required=True):
@@ -308,8 +364,7 @@ def add_payload_credentials_arguments(parser, required=True):
     group = parser.add_mutually_exclusive_group(required=required)
     group.add_argument('--guid', help='Unique GUID of the payload.')
     parser.add_argument('--secret', help='Secret of the payload.')
-    group.add_argument('--payload-credentials-file',
-                       help='File from which to read payload guid and secret')
+    add_payload_credentials_file_argument(group)
 
 
 def add_service_hosting_arguments(parser):
@@ -336,11 +391,19 @@ def add_service_endpoint_arguments(parser):
         ' e.g. "192.168.50.5"')
 
 
-@deprecated(reason='App tokens are no longer in use. Authorization is now handled via licenses.',
-            version='2.0.1', action="always")
-def default_app_token_path():
-    """Do nothing, this method is kept only to maintain backwards compatibility."""
-    return
+def safe_pb_enum_to_string(value, pb_enum_obj):
+    """Safe wrapper to convert a protobuf enum object to its string representation.
+    Avoids throughing an exception if the status is unknown by the enum object.
+
+    Args:
+        value: The enum value to convert
+        pb_enum_obj: The protobuf enum object to decode the value
+    """
+    try:
+        return pb_enum_obj.Name(value)
+    except ValueError:
+        pass
+    return '<unknown> (value: {})'.format(value)
 
 
 @deprecated(reason='The GrpcServiceRunner class helper has moved to server_util.py. Please use '
@@ -408,57 +471,30 @@ class GrpcServiceRunner(object):
 
 
 
-populate_response_header = deprecated(
-    reason='The populate_response_header helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.populate_response_header.',
-    version='3.0.0', action="always")(bosdyn.client.server_util.populate_response_header)
+populate_response_header = moved_to(bosdyn.client.server_util.populate_response_header,
+                                    version='3.0.0')
 
-strip_large_bytes_fields = deprecated(
-    reason='The strip_large_bytes_fields helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.strip_large_bytes_fields.',
-    version='3.0.0', action="always")(bosdyn.client.server_util.strip_large_bytes_fields)
+strip_large_bytes_fields = moved_to(bosdyn.client.server_util.strip_large_bytes_fields,
+                                    version='3.0.0')
 
-get_bytes_field_whitelist = deprecated(
-    reason='The get_bytes_field_whitelist helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.get_bytes_field_allowlist.',
-    version='3.0.0', action="always")(bosdyn.client.server_util.get_bytes_field_allowlist)
+get_bytes_field_whitelist = moved_to(bosdyn.client.server_util.get_bytes_field_allowlist,
+                                     version='3.0.0')
 
-strip_image_response = deprecated(
-    reason='The strip_image_response helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.strip_image_response.', version='3.0.0',
-    action="always")(bosdyn.client.server_util.strip_image_response)
+strip_image_response = moved_to(bosdyn.client.server_util.strip_image_response, version='3.0.0')
 
-strip_get_image_response = deprecated(
-    reason='The strip_get_image_response helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.strip_get_image_response.',
-    version='3.0.0', action="always")(bosdyn.client.server_util.strip_get_image_response)
+strip_get_image_response = moved_to(bosdyn.client.server_util.strip_get_image_response,
+                                    version='3.0.0')
 
-strip_local_grid_responses = deprecated(
-    reason='The strip_local_grid_responses helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.strip_local_grid_responses.',
-    version='3.0.0', action="always")(bosdyn.client.server_util.strip_local_grid_responses)
+strip_local_grid_responses = moved_to(bosdyn.client.server_util.strip_local_grid_responses,
+                                      version='3.0.0')
 
-strip_store_image_request = deprecated(
-    reason='The strip_store_image_request helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.strip_store_image_request.',
-    version='3.0.0', action="always")(bosdyn.client.server_util.strip_store_image_request)
+strip_store_image_request = moved_to(bosdyn.client.server_util.strip_store_image_request,
+                                     version='3.0.0')
 
-strip_store_data_request = deprecated(
-    reason='The strip_store_data_request helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.strip_store_data_request.',
-    version='3.0.0', action="always")(bosdyn.client.server_util.strip_store_data_request)
+strip_store_data_request = moved_to(bosdyn.client.server_util.strip_store_data_request,
+                                    version='3.0.0')
 
-strip_record_signal_tick = deprecated(
-    reason='The strip_record_signal_tick helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.strip_record_signal_tick.',
-    version='3.0.0', action="always")(bosdyn.client.server_util.strip_record_signal_tick)
+strip_record_signal_tick = moved_to(bosdyn.client.server_util.strip_record_signal_tick,
+                                    version='3.0.0')
 
-strip_record_data_blob = deprecated(
-    reason='The strip_record_data_blob helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.strip_record_data_blob.', version='3.0.0',
-    action="always")(bosdyn.client.server_util.strip_record_data_blob)
-
-strip_log_annotation = deprecated(
-    reason='The strip_log_annotation helper has moved to '
-    'server_util.py. Please use bosdyn.client.server_util.strip_log_annotation.', version='3.0.0',
-    action="always")(bosdyn.client.server_util.strip_log_annotation)
+strip_record_data_blob = moved_to(bosdyn.client.server_util.strip_record_data_blob, version='3.0.0')

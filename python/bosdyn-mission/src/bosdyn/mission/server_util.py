@@ -8,6 +8,7 @@ from deprecated.sphinx import deprecated
 
 import bosdyn.util
 from bosdyn.api import header_pb2
+from bosdyn.deprecated import moved_to
 
 
 
@@ -34,7 +35,4 @@ class ResponseContext(object):
             self.rpc_logger.add_protobuf_async(self.response)
 
 
-set_response_header = deprecated(
-    reason='The bosdyn.mission.set_response_header helper class has moved to a common '
-    'location. Please use bosdyn.client.server_util.populate_response_header.', version='3.0.0',
-    action="always")(bosdyn.client.server_util.populate_response_header)
+set_response_header = moved_to(bosdyn.client.server_util.populate_response_header, version='3.0.0')

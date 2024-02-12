@@ -11,18 +11,17 @@ import sys
 
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.api import service_customization_pb2
 from bosdyn.api.mission import remote_pb2, remote_service_pb2_grpc
-from bosdyn.client.auth import AuthResponseError
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
-from bosdyn.client.lease import Lease, LeaseClient
-from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
 from bosdyn.client.server_util import GrpcServiceRunner, ResponseContext
-from bosdyn.client.service_customization_helpers import (InvalidCustomParamSpecError,
+from bosdyn.client.service_customization_helpers import (create_value_validator,
+                                                         dict_param_coerce_to, make_dict_child_spec,
+                                                         make_dict_param_spec,
+                                                         make_string_param_spec,
+                                                         make_user_interface_info,
                                                          validate_dict_spec)
 from bosdyn.client.util import setup_logging
-from bosdyn.mission import util
 
 DIRECTORY_NAME = 'hello-world-callback'
 AUTHORITY = 'remote-mission'
@@ -37,38 +36,42 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
 
     Shows an example of these concepts:
      - Ticking.
-     - Using inputs.
+     - Using parameter dictionaries.
     """
 
-    def __init__(self, logger=None):
+    def __init__(self, logger=None, default_name=None, display_name=None, hello_options=None,
+                 coerce=False):
         self.logger = logger or _LOGGER
-        # Create the custom parameters.
-        self.custom_params = service_customization_pb2.DictParam.Spec()
-        who_param = service_customization_pb2.StringParam.Spec()
-        who_param.default_value = "World"
-        who_param.editable = True
-        who_ui_info = service_customization_pb2.UserInterfaceInfo()
-        who_ui_info.display_name = "Name"
-        who_ui_info.description = "Who Spot will say hello to"
-        dict_spec = service_customization_pb2.DictParam.Spec()
-        dict_spec.specs[_WHO_KEY].spec.string_spec.CopyFrom(who_param)
-        dict_spec.specs[_WHO_KEY].ui_info.CopyFrom(who_ui_info)
-        self.custom_params.CopyFrom(dict_spec)
-        try:
-            # Validate the custom parameters.
-            validate_dict_spec(self.custom_params)
-        except InvalidCustomParamSpecError as e:
-            self.logger.info(e)
-            # Clear the custom parameters if they are invalid.
-            self.custom_params.Clear()
+        self.coerce = coerce
+
+        # Create the custom parameters. If no hello_options are provided, allow the text to be edited.
+        who_param = make_string_param_spec(options=hello_options, default_value=default_name)
+        who_ui_info = make_user_interface_info(display_name, 'Who Spot will say hello to')
+        dict_spec = make_dict_param_spec({_WHO_KEY: make_dict_child_spec(who_param, who_ui_info)},
+                                         is_hidden_by_default=False)
+
+        # validate spec, error will be raised if invalid
+        validate_dict_spec(dict_spec)
+        self.custom_params = dict_spec
 
     def Tick(self, request, context):
         """Logs text, then provides a valid response."""
         response = remote_pb2.TickResponse()
         # This utility context manager will fill out some fields in the message headers.
         with ResponseContext(response, request):
-            # Default to saying hello to 'World'.
-            name = 'World'
+            # Default to saying hello to the default.
+            name = self.custom_params.specs[_WHO_KEY].spec.string_spec.default_value
+
+            valid_param = create_value_validator(self.custom_params)(request.params)
+            if valid_param is not None:
+                if self.coerce:
+                    dict_param_coerce_to(request.params, self.custom_params)
+                else:
+                    self.logger.error('Invalid parameter, not saying hello!')
+                    response.status = remote_pb2.TickResponse.STATUS_CUSTOM_PARAMS_ERROR
+                    response.custom_param_error.CopyFrom(valid_param)
+                    return response
+
             who = request.params.values.get(_WHO_KEY)
             if who is not None:
                 name = who.string_value.value
@@ -104,16 +107,19 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         return response
 
 
-def run_service(port, logger=None):
+def run_service(port, logger=None, default_name=None, display_name=None, hello_options=None,
+                coerce=False):
     # Proto service specific function used to attach a servicer to a server.
     add_servicer_to_server_fn = remote_service_pb2_grpc.add_RemoteMissionServiceServicer_to_server
 
     # Instance of the servicer to be run.
-    service_servicer = HelloWorldServicer(logger=logger)
+    service_servicer = HelloWorldServicer(logger=logger, default_name=default_name,
+                                          display_name=display_name, hello_options=hello_options,
+                                          coerce=coerce)
     return GrpcServiceRunner(service_servicer, add_servicer_to_server_fn, port, logger=logger)
 
 
-if __name__ == '__main__':
+def main():
     # Define all arguments used by this service.
     import argparse
 
@@ -131,14 +137,27 @@ if __name__ == '__main__':
     bosdyn.client.util.add_base_arguments(robot_parser)
     bosdyn.client.util.add_service_endpoint_arguments(robot_parser)
 
+    # Create the parser for UI customization
+    parser.add_argument('--display-name', help='Title of field that is shown in the display.')
+    parser.add_argument('--default-name', default='World',
+                        help='Default option for to whom Spot will say hello')
+    parser.add_argument('--hello-options', help='Options to whom Spot can say hello.',
+                        action='append')
+    parser.add_argument(
+        '--coerce', help='If parameter does not match spec, coerce the parameter to match spec.',
+        action='store_true')
+
     options = parser.parse_args()
 
-    # If using the example without a robot in the loop, start up the service, which can be
+    # If using the example without a robot in the loop, start up the service, which can
     # be accessed directly at localhost:options.port.
     if options.host_type == 'local':
         # Setup logging to use INFO level.
         setup_logging()
-        service_runner = run_service(options.port, logger=_LOGGER)
+        service_runner = run_service(options.port, logger=_LOGGER,
+                                     default_name=options.default_name,
+                                     display_name=options.display_name,
+                                     hello_options=options.hello_options, coerce=options.coerce)
         print(f'{DIRECTORY_NAME} service running.\nCtrl + C to shutdown.')
         service_runner.run_until_interrupt()
         sys.exit(f'Shutting down {DIRECTORY_NAME} service')
@@ -155,7 +174,9 @@ if __name__ == '__main__':
     bosdyn.client.util.authenticate(robot)
 
     # Create a service runner to start and maintain the service on background thread.
-    service_runner = run_service(options.port, logger=_LOGGER)
+    service_runner = run_service(options.port, logger=_LOGGER, default_name=options.default_name,
+                                 display_name=options.display_name,
+                                 hello_options=options.hello_options, coerce=options.coerce)
 
     # Use a keep alive to register the service with the robot directory.
     dir_reg_client = robot.ensure_client(DirectoryRegistrationClient.default_service_name)
@@ -165,3 +186,7 @@ if __name__ == '__main__':
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:
         service_runner.run_until_interrupt()
+
+
+if __name__ == '__main__':
+    main()

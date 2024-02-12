@@ -9,7 +9,7 @@ Development Kit License (20191101-BDSDK-SL).
 # Spot CORE VNC
 VNC allows users to launch and interact with graphical applications on remote machines.
 
-This document details how to setup TigerVNC on the Spot CORE. We will also use the GNOME desktop environment, port forwarding, and systemd .service files in the content below.
+This document details how to set up TigerVNC on the Spot CORE. We will also use the GNOME desktop environment, port forwarding, and systemd .service files in the content below.
 
 ## Overview
 Spot CORE now comes preconfigured with TigerVNC. The following sections outline the steps necessary for enabling the service before use. 
@@ -74,7 +74,7 @@ Install software required for the TigerVNC server on the Spot CORE using apt:
 sudo apt install tigervnc-standalone-server tigervnc-common tigervnc-xorg-extension tigervnc-viewer
 ```
 
-If the user has not setup a VNC password, please see the earlier instructions on how to [create a vnc password](#create-a-vnc-password).
+If the user has not set up a VNC password, please see the earlier instructions on how to [create a vnc password](#create-a-vnc-password).
 
 ### Prepare vncserver
 To configure the GNOME desktop, create a xstartup file in `~/.vnc/xstartup` and add the following contents.

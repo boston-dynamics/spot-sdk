@@ -286,6 +286,8 @@ class DataAcquisitionPluginService(
             the data collection function or saving any data. Ordered input arguments (to acquire_response_fn):
             data_acquisition_pb2.AcquirePluginDataRequest, data_acquisition_pb2.AcquirePluginDataResponse. Output (to
             data_collect_fn): Boolean
+        live_response_fn: Optional function that sends signals data to the robot for purposes of displaying it on the tablet and Orbit during teleoperation. Input argument (to live_response_fn):
+            data_acquisition_pb2.LiveDataRequest.
         executor: Optional thread pool.
 
     Attributes:
@@ -294,6 +296,7 @@ class DataAcquisitionPluginService(
             this plugin can do.
         data_collect_fn: Function that performs the data collection and storage.
         acquire_response_fn: Function that can validate a request and provide a timeout deadline.
+        live_response_fn: Function that sends signals data to the robot for purposes of displaying it on the tablet and Orbit during teleoperation.
         request_manager (RequestManager): Helper class which manages the RequestStates created with
             each acquisition RPC.
         executor (ThreadPoolExecutor): Thread pool to run the plugin service on.
@@ -303,7 +306,7 @@ class DataAcquisitionPluginService(
     service_type = 'bosdyn.api.DataAcquisitionPluginService'
 
     def __init__(self, robot, capabilities, data_collect_fn, acquire_response_fn=None,
-                 executor=None, logger=None):
+                 executor=None, logger=None, live_response_fn=None):
         super(DataAcquisitionPluginService, self).__init__()
         self.logger = logger or _LOGGER
         self.capabilities = capabilities
@@ -313,6 +316,7 @@ class DataAcquisitionPluginService(
         }
         self.data_collect_fn = data_collect_fn
         self.acquire_response_fn = acquire_response_fn
+        self.live_response_fn = live_response_fn
         self.request_manager = RequestManager()
         self.executor = executor or ThreadPoolExecutor(max_workers=2)
         self.robot = robot
@@ -320,7 +324,7 @@ class DataAcquisitionPluginService(
         self.data_buffer_client = robot.ensure_client(DataBufferClient.default_service_name)
 
     def validate_params(self, request, response):
-        """Validate that any parameters set in the request are valid according the the spec."""
+        """Validate that any parameters set in the request are valid according the spec."""
         for capture in request.acquisition_requests.data_captures:
             try:
                 error = self.value_validators[capture.name](capture.custom_params)
@@ -466,6 +470,33 @@ class DataAcquisitionPluginService(
             else:
                 response.status = response.STATUS_OK
             populate_response_header(response, request)
+        return response
+
+    def GetLiveData(self, request, context):
+        """Get the live data available from this plugin.
+
+        Args:
+            request (data_acquisition_pb2.LiveDataRequest): The live data request with params.
+            context (GRPC ClientContext): tracks internal grpc statuses and information (unused).
+        Returns:
+            response (data_acquisition_pb2.LiveDataResponse): Result of live_response_fn.
+        """
+        response = data_acquisition_pb2.LiveDataResponse()
+        with ResponseContext(response, request, self.data_buffer_client):
+            try:
+                if self.live_response_fn is not None:
+                    response = self.live_response_fn(request)
+                    populate_response_header(response, request)
+                else:
+                    populate_response_header(
+                        response, request,
+                        error_code=header_pb2.CommonError.CODE_INTERNAL_SERVER_ERROR,
+                        error_msg="live_response_fn is None")
+            except Exception as general_error:  # pylint: disable=broad-exception-caught
+                self.logger.exception("Failed during call to user live response function")
+                populate_response_header(
+                    response, request, error_code=header_pb2.CommonError.CODE_INTERNAL_SERVER_ERROR,
+                    error_msg=str(general_error))
         return response
 
 

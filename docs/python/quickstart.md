@@ -68,7 +68,7 @@ or
 > py.exe
 ```
 
-The former will directly call the `python.exe` that is highest priority in the PATH environment variable. (Note you could also supply a full pathname `c:\path\to\install\python.exe` to directly call the executable).
+The former will directly call the `python.exe` that is the highest priority in the PATH environment variable. (Note you could also supply a full pathname `c:\path\to\install\python.exe` to directly call the executable).
 
 The latter uses the Python launcher, which by default starts the most recent version of Python
 installed.  You can also optionally pass arguments to the launcher to control what version of
@@ -164,10 +164,10 @@ $ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreogra
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 3.3.2, use the following command.
+example 4.0.0, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==3.3.2 bosdyn-mission==3.3.2 bosdyn-choreography-client==3.3.2
+$ python3 -m pip install bosdyn-client==4.0.0 bosdyn-mission==4.0.0 bosdyn-choreography-client==4.0.0
 ```
 
 **Version incompatibility:**
@@ -176,7 +176,7 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 3.3.2 which is incompatible.
+have bosdyn-api 4.0.0 which is incompatible.
 ```
 
 Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:
@@ -191,12 +191,12 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    3.3.2
-bosdyn-choreography-client    3.3.2
-bosdyn-choreography-protos    3.3.2
-bosdyn-client                 3.3.2
-bosdyn-core                   3.3.2
-bosdyn-mission                3.3.2
+bosdyn-api                    4.0.0
+bosdyn-choreography-client    4.0.0
+bosdyn-choreography-protos    4.0.0
+bosdyn-client                 4.0.0
+bosdyn-core                   4.0.0
+bosdyn-mission                4.0.0
 ```
 **Windows users:**
 ```shell

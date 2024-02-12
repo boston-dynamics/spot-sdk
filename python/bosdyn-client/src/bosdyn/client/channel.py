@@ -9,53 +9,47 @@ import warnings
 
 import grpc
 
-from .exceptions import (ClientCancelledOperationError, InvalidAppTokenError,
-                         InvalidClientCertificateError, NonexistentAuthorityError, NotFoundError,
-                         PermissionDeniedError, ProxyConnectionError, ResponseTooLargeError,
-                         RetryableUnavailableError, RpcError, ServiceFailedDuringExecutionError,
-                         ServiceUnavailableError, TimedOutError, TooManyRequestsError,
-                         TransientFailureError, UnableToConnectToRobotError, UnauthenticatedError,
-                         UnimplementedError, UnknownDnsNameError)
+from .exceptions import (ClientCancelledOperationError, InvalidClientCertificateError,
+                         NonexistentAuthorityError, NotFoundError, PermissionDeniedError,
+                         ProxyConnectionError, ResponseTooLargeError, RetryableUnavailableError,
+                         RpcError, ServiceFailedDuringExecutionError, ServiceUnavailableError,
+                         TimedOutError, TooManyRequestsError, TransientFailureError,
+                         UnableToConnectToRobotError, UnauthenticatedError, UnimplementedError,
+                         UnknownDnsNameError)
 
 TransportError = grpc.RpcError
 
 _LOGGER = logging.getLogger(__name__)
 
-# Set default max message length for sending and receiving to 100MB. This value is used when
+# Set default max message length for sending and receiving. This value is used when
 # creating channels in the bosdyn.client.Robot class.
 DEFAULT_MAX_MESSAGE_LENGTH = 100 * (1024**2)
+
+# Period in milliseconds after which a keepalive ping is sent on the transport.
+DEFAULT_KEEP_ALIVE_TIME_MS = 5000
 
 
 class RefreshingAccessTokenAuthMetadataPlugin(grpc.AuthMetadataPlugin):
     """Plugin to refresh access token.
 
     Args:
-        token_cb: Callable that returns a tuple of (app_token, user_token)
-        add_app_token (bool): Deprecated
+        token_cb: a callback to provide a valid user token.
     """
 
-    def __init__(self, token_cb, add_app_token=None):
+    def __init__(self, token_cb):
         self._token_cb = token_cb
-        if add_app_token is not None:
-            warnings.warn(
-                'add_app_token is deprecated for RefreshingAccessTokenAuthMetadataPlugin. '
-                'Do not set it', DeprecationWarning)
 
     def __call__(self, context, callback):
-        app_token, user_token = self._token_cb()
-        user_token_metadata = ('authorization', 'Bearer {}'.format(user_token))
+        user_token_metadata = ('authorization', 'Bearer {}'.format(self._token_cb()))
         metadata = (user_token_metadata,)
         error = None
         callback(metadata, error)
 
 
-def create_secure_channel_creds(cert, token_cb, add_app_token=None):
+def create_secure_channel_creds(cert, token_cb):
     """Returns credentials for establishing a secure channel.
     Uses previously set values on the linked Sdk and self.
     """
-    if add_app_token is not None:
-        warnings.warn('add_app_token is deprecated for create_secure_channel_creds. Do not set it.',
-                      DeprecationWarning)
 
     transport_creds = grpc.ssl_channel_credentials(root_certificates=cert)
     plugin = RefreshingAccessTokenAuthMetadataPlugin(token_cb)
@@ -126,8 +120,6 @@ def translate_exception(rpc_error):
     if code is grpc.StatusCode.CANCELLED:
         if str(401) in details:
             return UnauthenticatedError(rpc_error, UnauthenticatedError.__doc__)
-        elif str(403) in details:
-            return InvalidAppTokenError(rpc_error, InvalidAppTokenError.__doc__)
         elif str(404) in details:
             return NotFoundError(rpc_error, NotFoundError.__doc__)
         elif str(429) in details:
@@ -183,15 +175,19 @@ def translate_exception(rpc_error):
     return RpcError(rpc_error, RpcError.__doc__)
 
 
-def generate_channel_options(max_send_message_length=None, max_receive_message_length=None):
+def generate_channel_options(max_send_message_length=None, max_receive_message_length=None,
+                             keep_alive_ping_time_ms=None):
     """Generate the array of options to specify in the creation of a client channel or server.
 
     The list contains the values for max allowed message length for both sending and
-    receiving. If no values are provided, the default values of 100 MB are used.
+    receiving. If no values are provided, the default values of 100 MB are used. It also contains a
+    value for time between keep_alive pings, which default to 5s.
 
     Args:
         max_send_message_length (int): Max message length allowed for message to send.
         max_receive_message_length (int):  Max message length allowed for message to receive.
+        keep_alive_ping_time_ms (int):  Period in milliseconds after which a keepalive ping is sent
+        on the transport.
 
     Returns:
         Array with values for channel options.
@@ -199,4 +195,5 @@ def generate_channel_options(max_send_message_length=None, max_receive_message_l
 
     return [('grpc.max_send_message_length', max_send_message_length or DEFAULT_MAX_MESSAGE_LENGTH),
             ('grpc.max_receive_message_length', max_receive_message_length or
-             DEFAULT_MAX_MESSAGE_LENGTH)]
+             DEFAULT_MAX_MESSAGE_LENGTH),
+            ('grpc.keepalive_time_ms', keep_alive_ping_time_ms or DEFAULT_KEEP_ALIVE_TIME_MS)]

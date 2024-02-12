@@ -15,7 +15,7 @@ Spot tracks knowledge about multiple sources of state, including the robot's cur
 *  Local Grid Service
 *  World Object Service
 
-To command and operate Spot, a client must take additional steps beyond authentication.  The client establishes application-layer time synchronization and acquires a lease; both processes are streamlined by the the SDK.  Once fully in control of the robot, the client will need to maintain the software stop, enable motor power and send commands.
+To command and operate Spot, a client must take additional steps beyond authentication.  The client establishes application-layer time synchronization and acquires a lease; both processes are streamlined by the SDK.  Once fully in control of the robot, the client will need to maintain the software stop, enable motor power and send commands.
 
 *  E-Stop Service
 *  Power Service
@@ -63,12 +63,16 @@ The full robot state includes information about the batteries and power status, 
 *  **SystemFaultState**: The system faults can inform a user about a perception fault with a certain camera or if a battery is overheating. The robot state services track both active faults that could affect robot operation, as well as historical faults that have occurred, which can be used to diagnose unexpected robot behavior. A fault can be related to both software and hardware for the robot, and is described with an error code and message, and a level of severity. An application can use this information to monitor the health of the robot and respond appropriately if a fault appears. For example, the tablet application will warn a user when there's a perception fault since this can significantly impact how well the robot navigates the terrain.
 *  **BehaviorFaultState**: Similar to a system fault, the behavior faults track errors related to behavior commands and issue warnings if a certain behavior fault will prevent execution of subsequent commands. The fault is described through an id, the potential cause of the fault, and if it can be cleared. An application can monitor these faults and respond to clearable faults; often times a behavior fault can be cleared and the application can continue its normal execution.
 *  **KinematicState**: The kinematic state of the robot describes the current estimated positions of the robot body and joints throughout the world. It includes a transform snapshot of the robot’s current known frames as well as joint states and the velocity of the body.
+*  **SystemState**: The system state can be used to determine if the robot's motors are running hot.
 
 
 The robot state service also tracks different parameters for the robot and this information can be accessed with the `GetRobotMetrics` RPC. These metrics can be useful for monitoring the system status and health of the robot.
 
 ## log-status
 The log status service provides users access to files Spot generates that contains data about its performance during operation. Files can be generated with data from the past, such files are known as retro logs. Files can also be generated with present data and into the future, such files are called experiment logs. The `LogStatus` object in the response of each API displays the status of the requested file and the id that can be provided to BD support for assistance in debugging issues. The steps for sending logs to our support team are outlined [here](https://support.bostondynamics.com/s/article/Spot-robot-logging#DownloadSendLog).
+
+## metrics_logging
+The metrics logging service aggregates internal operation and usability metrics to help Boston Dynamics improve performance and user experience. You can retrieve metrics by using the RPCs defined in the [service definition](../../../../proto/public_api/bosdyn/protos/bosdyn/api/metrics_logging/metrics_logging_robot_service.proto). For a working example, see `Metrics over CORE I/O` from [Payloads Examples](../../python/examples/docs/payloads_examples.md), which uses the [MetricsLoggingClient](../../python/bosdyn-client/src/bosdyn/client/metrics_logging.py).
 
 ## image
 

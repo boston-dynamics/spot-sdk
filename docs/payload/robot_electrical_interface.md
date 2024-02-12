@@ -67,7 +67,7 @@ MH1, MH2 |	P_GND |	Connector Shell and Mounting Hardware is connected to payload
 
 ## Payload power requirements
 
-Payloads require a battery to be installed in the robot to operate. The robot is powered by a 600W-hr Lithium Ion battery pack that also provides power to payloads through a dedicated enable circuit. Battery voltage ranges from 35V for a fully discharged battery to 58.8V for a full charge.
+Payloads require a battery to be installed in the robot to operate. The robot is powered by a 600W-hr Lithium-ion battery pack that also provides power to payloads through a dedicated enable circuit. Battery voltage ranges from 35V for a fully discharged battery to 58.8V for a full charge.
 
 Regenerative energy from the robot’s motors can cause the robot’s bus voltage to exceed the normal battery voltage range for short durations. The robot contains a clamping circuit to ensure the battery voltage bus never exceeds 72V.
 

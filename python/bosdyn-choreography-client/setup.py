@@ -34,9 +34,9 @@ setuptools.setup(
     package_dir={'': 'src'},
     package_data={'': ['*.pem']},
     install_requires=[
-        'bosdyn-api=={}'.format(SDK_VERSION), 'bosdyn-core=={}'.format(SDK_VERSION),
+        'bosdyn-api=={}'.format(SDK_VERSION),
+        'bosdyn-core=={}'.format(SDK_VERSION),
         'bosdyn-client=={}'.format(SDK_VERSION),
-        'bosdyn-choreography-protos=={}'.format(SDK_VERSION)
     ],
     classifiers=[
         "Programming Language :: Python :: 3.6",

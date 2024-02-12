@@ -26,4 +26,5 @@ Following are dependent libraries:
 - [Core](bosdyn-core/src/bosdyn/README.md)
 - [Mission](bosdyn-mission/src/bosdyn/mission/README.md)
 - [Choreography](bosdyn-choreography-client/src/bosdyn/choreography/client/README.md)
-- [Scout](bosdyn-scout/src/bosdyn/scout/README.md)
+- [Orbit (formerly Scout)](bosdyn-orbit/src/bosdyn/orbit/README.md)
+- [Scout (deprecated)](bosdyn-scout/src/bosdyn/scout/README.md)

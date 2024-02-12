@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.robot_command &mdash; Spot 3.3.2 documentation</title>
+  <title>bosdyn.client.robot_command &mdash; Spot 4.0.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
-    <link rel="canonical" href="https:://dev.bostondynamics.com/_modules/bosdyn/client/robot_command.html"/>
+    <link rel="canonical" href="https://dev.bostondynamics.com/_modules/bosdyn/client/robot_command.html" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                3.3.2
+                4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,7 +48,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_scout.html">About Scout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit(formerly Scout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -57,7 +57,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Customization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -77,6 +77,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/gps.html">GPS</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
@@ -89,6 +90,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/arm/README.html">Spot Arm</a><ul>
@@ -124,6 +126,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/time_sync/README.html">Time Sync</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_test/README.html">Comms Test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/disable_ir_emission/README.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/reset_safety_stop/README.html">Reset Safety Stop</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
@@ -143,10 +146,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_simple/README.html">Simple Arm Motion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_stow_unstow/README.html">Stow/unstow Arm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_freeze/README.html">Arm Freeze</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_and_mobility_command/README.html">Arm and Mobility Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_with_body_follow/README.html">Arm Command with Body Following</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_constrained_manipulation/README.html">Arm Constrained Manipulation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html">Arm Trajectory Motion Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html">Arm Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html#long-trajectory">Long Trajectory</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
@@ -159,6 +164,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">Arm WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -167,6 +174,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html#components">Components</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html#recommended-debugging">Recommended debugging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extensions/README.html">Extensions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -177,7 +189,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
@@ -189,6 +202,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gps_service/README.html">GPS</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -200,17 +214,22 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.html">Modem Signals</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/tester_programs/README.html">Tester Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_mapping/README.html">Comms image service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_mapping/README.html#how-to-use">How to use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.html">CoreIO Modem Signals Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/tester_programs/README.html">Tester Programs</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
@@ -219,6 +238,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Answerer</a></li>
@@ -228,13 +248,19 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/scout.html">Scout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/hello_scout/README.html">Hello Scout</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/scout/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
 </ul>
 </li>
 </ul>
@@ -274,6 +300,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -284,11 +317,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
@@ -303,7 +336,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Customization Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/signals_helpers.html">Signals Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -322,6 +356,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -350,6 +385,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/deprecated.html">Deprecated</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
@@ -367,7 +403,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/README.html">Orbit (formerly Scout)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout (deprecated)</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
@@ -417,10 +459,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">Protos</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/README.html">Choreography Proto Reference Guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../choreography_protos/bosdyn/api/choreography_reference.html">Choreography Protos</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
@@ -462,7 +500,6 @@
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">any_pb2</span><span class="p">,</span> <span class="n">wrappers_pb2</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn</span> <span class="kn">import</span> <span class="n">geometry</span>
@@ -470,6 +507,9 @@
                         <span class="n">gripper_command_pb2</span><span class="p">,</span> <span class="n">mobility_command_pb2</span><span class="p">,</span> <span class="n">payload_estimation_pb2</span><span class="p">,</span>
                         <span class="n">robot_command_pb2</span><span class="p">,</span> <span class="n">robot_command_service_pb2_grpc</span><span class="p">,</span> <span class="n">synchronized_command_pb2</span><span class="p">,</span>
                         <span class="n">trajectory_pb2</span><span class="p">)</span>
+
+<span class="c1"># isort: off</span>
+<span class="c1"># isort: on</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span> <span class="k">as</span> <span class="n">spot_command_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">error_pair</span><span class="p">,</span>
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">,</span>
@@ -480,7 +520,7 @@
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">TimedOutError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
 <span class="kn">from</span> <span class="nn">.frame_helpers</span> <span class="kn">import</span> <span class="n">BODY_FRAME_NAME</span><span class="p">,</span> <span class="n">ODOM_FRAME_NAME</span><span class="p">,</span> <span class="n">get_se2_a_tform_b</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">add_lease_wallet_processors</span>
-<span class="kn">from</span> <span class="nn">.math_helpers</span> <span class="kn">import</span> <span class="n">SE2Pose</span><span class="p">,</span> <span class="n">SE3Pose</span>
+<span class="kn">from</span> <span class="nn">.math_helpers</span> <span class="kn">import</span> <span class="n">SE2Pose</span><span class="p">,</span> <span class="n">SE3Pose</span><span class="p">,</span> <span class="n">SE3Velocity</span>
 
 <span class="c1"># The angles (in radians) that represent the claw gripper open and closed positions.</span>
 <span class="n">_CLAW_GRIPPER_OPEN_ANGLE</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5708</span>
@@ -618,19 +658,6 @@
                 <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;mobility_command&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;@command&#39;</span><span class="p">:</span> <span class="p">{</span>  <span class="c1"># &#39;command&#39; is a oneof submessage</span>
-            <span class="s1">&#39;se2_velocity_request&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;end_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
-            <span class="p">},</span>
-            <span class="s1">&#39;se2_trajectory_request&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;end_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
-            <span class="p">},</span>
-            <span class="s1">&#39;stance_request&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;end_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -685,15 +712,6 @@
                     <span class="s1">&#39;task_tform_desired_tool&#39;</span><span class="p">:</span> <span class="p">{</span>
                         <span class="s1">&#39;reference_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
                     <span class="p">},</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;mobility_command&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;@command&#39;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s1">&#39;se2_trajectory_request&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;trajectory&#39;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s1">&#39;reference_time&#39;</span><span class="p">:</span> <span class="kc">None</span>
                 <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
@@ -996,6 +1014,23 @@
                                                            <span class="n">behavior_fault_id</span><span class="o">=</span><span class="n">behavior_fault_id</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="RobotCommandStreamingClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandStreamingClient">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandStreamingClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for calling RobotCommand services.</span>
+
+<span class="sd">    This client is in BETA and may undergo changes in future releases.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot-command-streaming&#39;</span>
+    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.RobotCommandStreamingService&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RobotCommandStreamingClient</span><span class="p">,</span>
+              <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">robot_command_service_pb2_grpc</span><span class="o">.</span><span class="n">RobotCommandStreamingServiceStub</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="RobotCommandStreamingClient.send_joint_control_commands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandStreamingClient.send_joint_control_commands">[docs]</a>    <span class="k">def</span> <span class="nf">send_joint_control_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_iterator</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">JointControlStream</span><span class="p">(</span><span class="n">command_iterator</span><span class="p">)</span></div></div>
+
+
 <span class="k">def</span> <span class="nf">_robot_command_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the command id from a RobotCommandResponse.</span>
 
@@ -1048,9 +1083,7 @@
 <span class="k">def</span> <span class="nf">_robot_command_feedback_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
     <span class="c1"># Write custom handling unset errors here. Only one of these statuses needs to be set.</span>
     <span class="n">field</span> <span class="o">=</span> <span class="s1">&#39;status&#39;</span>
-    <span class="n">code</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">((</span><span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span> <span class="o">!=</span> <span class="n">code</span><span class="p">)</span> <span class="ow">or</span>
-        <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">full_body_feedback</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span> <span class="ow">or</span>
+    <span class="k">if</span> <span class="p">((</span><span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">full_body_feedback</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span> <span class="ow">or</span>
         <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">synchronized_feedback</span><span class="o">.</span><span class="n">mobility_command_feedback</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span> <span class="ow">or</span>
         <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">synchronized_feedback</span><span class="o">.</span><span class="n">arm_command_feedback</span><span class="p">,</span> <span class="n">field</span><span class="p">))</span> <span class="ow">or</span>
         <span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">feedback</span><span class="o">.</span><span class="n">synchronized_feedback</span><span class="o">.</span><span class="n">gripper_command_feedback</span><span class="p">,</span> <span class="n">field</span><span class="p">))):</span>
@@ -1230,138 +1263,10 @@
         <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">full_body_command</span><span class="o">=</span><span class="n">full_body_command</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
-    <span class="c1">###################################</span>
-    <span class="c1"># Mobility commands  - DEPRECATED #</span>
-    <span class="c1">###################################</span>
-
-<div class="viewcode-block" id="RobotCommandBuilder.trajectory_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.trajectory_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Mobility commands are now sent as a part of synchronized commands. &#39;</span>
-                <span class="s1">&#39;Use synchro_se2_trajectory_command instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.1.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">trajectory_command</span><span class="p">(</span><span class="n">goal_x</span><span class="p">,</span> <span class="n">goal_y</span><span class="p">,</span> <span class="n">goal_heading</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                           <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Command robot to move to pose along a 2D plane. Pose can be specified in the world</span>
-<span class="sd">        (kinematic odometry) frame or the robot body frame. The arguments body_height and</span>
-<span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
-
-<span class="sd">        A trajectory command requires an end time. End time is not set in this function, but rather</span>
-<span class="sd">        is set externally before call to RobotCommandService.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            goal_x: Position X coordinate.</span>
-<span class="sd">            goal_y: Position Y coordinate.</span>
-<span class="sd">            goal_heading: Pose heading in radians.</span>
-<span class="sd">            frame_name: Name of the frame to use.</span>
-<span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,</span>
-<span class="sd">                this will be constructed using other args.</span>
-<span class="sd">            body_height: Height, meters, relative to a nominal stand height.</span>
-<span class="sd">            locomotion_hint: Locomotion hint to use for the trajectory command.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">mobility_params</span><span class="p">(</span><span class="n">body_height</span><span class="o">=</span><span class="n">body_height</span><span class="p">,</span>
-                                                         <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">locomotion_hint</span><span class="p">)</span>
-        <span class="n">any_params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">_to_any</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">position</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">goal_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">goal_y</span><span class="p">)</span>
-        <span class="n">pose</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Pose</span><span class="p">(</span><span class="n">position</span><span class="o">=</span><span class="n">position</span><span class="p">,</span> <span class="n">angle</span><span class="o">=</span><span class="n">goal_heading</span><span class="p">)</span>
-        <span class="n">point</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE2TrajectoryPoint</span><span class="p">(</span><span class="n">pose</span><span class="o">=</span><span class="n">pose</span><span class="p">)</span>
-        <span class="n">traj</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">SE2Trajectory</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="p">[</span><span class="n">point</span><span class="p">])</span>
-        <span class="n">traj_command</span> <span class="o">=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SE2TrajectoryCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">trajectory</span><span class="o">=</span><span class="n">traj</span><span class="p">,</span>
-                                                                      <span class="n">se2_frame_name</span><span class="o">=</span><span class="n">frame_name</span><span class="p">)</span>
-        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">mobility_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">se2_trajectory_request</span><span class="o">=</span><span class="n">traj_command</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">mobility_command</span><span class="o">=</span><span class="n">mobility_command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">command</span></div>
-
-<div class="viewcode-block" id="RobotCommandBuilder.velocity_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.velocity_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Mobility commands are now sent as a part of synchronized commands. &#39;</span>
-                <span class="s1">&#39;Use synchro_velocity_command instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.1.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">velocity_command</span><span class="p">(</span><span class="n">v_x</span><span class="p">,</span> <span class="n">v_y</span><span class="p">,</span> <span class="n">v_rot</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                         <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span> <span class="n">frame_name</span><span class="o">=</span><span class="n">BODY_FRAME_NAME</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Command robot to move along 2D plane. Velocity should be specified in the robot body</span>
-<span class="sd">        frame. Other frames are currently not supported. The arguments body_height and</span>
-<span class="sd">        locomotion_hint are ignored if params argument is passed.</span>
-
-<span class="sd">        A velocity command requires an end time. End time is not set in this function, but rather</span>
-<span class="sd">        is set externally before call to RobotCommandService.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            v_x: Velocity in X direction.</span>
-<span class="sd">            v_y: Velocity in Y direction.</span>
-<span class="sd">            v_rot: Velocity heading in radians.</span>
-<span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,</span>
-<span class="sd">                this will be constructed using other args.</span>
-<span class="sd">            body_height: Height, meters, relative to a nominal stand height.</span>
-<span class="sd">            locomotion_hint: Locomotion hint to use for the velocity command.</span>
-<span class="sd">            frame_name: Name of the frame to use.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">mobility_params</span><span class="p">(</span><span class="n">body_height</span><span class="o">=</span><span class="n">body_height</span><span class="p">,</span>
-                                                         <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">locomotion_hint</span><span class="p">)</span>
-        <span class="n">any_params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">_to_any</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">linear</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">v_x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">v_y</span><span class="p">)</span>
-        <span class="n">vel</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Velocity</span><span class="p">(</span><span class="n">linear</span><span class="o">=</span><span class="n">linear</span><span class="p">,</span> <span class="n">angular</span><span class="o">=</span><span class="n">v_rot</span><span class="p">)</span>
-        <span class="n">slew_rate_limit</span> <span class="o">=</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE2Velocity</span><span class="p">(</span><span class="n">linear</span><span class="o">=</span><span class="n">geometry_pb2</span><span class="o">.</span><span class="n">Vec2</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span> <span class="n">angular</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
-        <span class="n">vel_command</span> <span class="o">=</span> <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SE2VelocityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">velocity</span><span class="o">=</span><span class="n">vel</span><span class="p">,</span>
-                                                                   <span class="n">se2_frame_name</span><span class="o">=</span><span class="n">frame_name</span><span class="p">,</span>
-                                                                   <span class="n">slew_rate_limit</span><span class="o">=</span><span class="n">slew_rate_limit</span><span class="p">)</span>
-        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">mobility_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">se2_velocity_request</span><span class="o">=</span><span class="n">vel_command</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">mobility_command</span><span class="o">=</span><span class="n">mobility_command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">command</span></div>
-
-<div class="viewcode-block" id="RobotCommandBuilder.stand_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.stand_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Mobility commands are now sent as a part of synchronized commands. &#39;</span>
-                <span class="s1">&#39;Use synchro_stand_command instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.1.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">stand_command</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">geometry</span><span class="o">.</span><span class="n">EulerZXY</span><span class="p">()):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Command robot to stand. If the robot is sitting, it will stand up. If the robot is</span>
-<span class="sd">        moving, it will come to a stop. Params can specify a trajectory for the body to follow</span>
-<span class="sd">        while standing. In the simplest case, this can be a specific position+orientation which the</span>
-<span class="sd">        body will hold at. The arguments body_height and footprint_R_body are ignored if params</span>
-<span class="sd">        argument is passed.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,</span>
-<span class="sd">                this will be constructed using other args.</span>
-<span class="sd">            body_height(float): Height, meters, to stand at relative to a nominal stand height.</span>
-<span class="sd">            footprint_R_body(EulerZXY): The orientation of the body frame with respect to the</span>
-<span class="sd">                footprint frame (gravity aligned framed with yaw computed from the stance feet)</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">mobility_params</span><span class="p">(</span><span class="n">body_height</span><span class="o">=</span><span class="n">body_height</span><span class="p">,</span>
-                                                         <span class="n">footprint_R_body</span><span class="o">=</span><span class="n">footprint_R_body</span><span class="p">)</span>
-        <span class="n">any_params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">_to_any</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">mobility_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">stand_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">StandCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">mobility_command</span><span class="o">=</span><span class="n">mobility_command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">command</span></div>
-
-<div class="viewcode-block" id="RobotCommandBuilder.sit_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.sit_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="nd">@deprecated</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Mobility commands are now sent as a part of synchronized commands. &#39;</span>
-                <span class="s1">&#39;Use synchro_sit_command instead.&#39;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="s1">&#39;2.1.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">sit_command</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Command the robot to sit.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            params(spot.MobilityParams): Spot specific parameters for mobility commands.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            RobotCommand, which can be issued to the robot command service.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">params</span><span class="p">:</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">mobility_params</span><span class="p">()</span>
-        <span class="n">any_params</span> <span class="o">=</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">_to_any</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
-        <span class="n">mobility_command</span> <span class="o">=</span> <span class="n">mobility_command_pb2</span><span class="o">.</span><span class="n">MobilityCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
-            <span class="n">sit_request</span><span class="o">=</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SitCommand</span><span class="o">.</span><span class="n">Request</span><span class="p">(),</span> <span class="n">params</span><span class="o">=</span><span class="n">any_params</span><span class="p">)</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">(</span><span class="n">mobility_command</span><span class="o">=</span><span class="n">mobility_command</span><span class="p">)</span>
+<div class="viewcode-block" id="RobotCommandBuilder.joint_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.joint_command">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">joint_command</span><span class="p">():</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
+        <span class="n">command</span><span class="o">.</span><span class="n">full_body_command</span><span class="o">.</span><span class="n">joint_request</span><span class="o">.</span><span class="n">SetInParent</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">command</span></div>
 
     <span class="c1">#########################</span>
@@ -1446,10 +1351,9 @@
         <span class="k">return</span> <span class="n">robot_command</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.synchro_trajectory_command_in_body_frame"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.synchro_trajectory_command_in_body_frame">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">synchro_trajectory_command_in_body_frame</span><span class="p">(</span><span class="n">goal_x_rt_body</span><span class="p">,</span> <span class="n">goal_y_rt_body</span><span class="p">,</span>
-                                                 <span class="n">goal_heading_rt_body</span><span class="p">,</span> <span class="n">frame_tree_snapshot</span><span class="p">,</span>
-                                                 <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-                                                 <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">synchro_trajectory_command_in_body_frame</span><span class="p">(</span>
+            <span class="n">goal_x_rt_body</span><span class="p">,</span> <span class="n">goal_y_rt_body</span><span class="p">,</span> <span class="n">goal_heading_rt_body</span><span class="p">,</span> <span class="n">frame_tree_snapshot</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">locomotion_hint</span><span class="o">=</span><span class="n">spot_command_pb2</span><span class="o">.</span><span class="n">HINT_AUTO</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Command robot to move to pose described relative to the robots body along a 2D plane. For example,</span>
 <span class="sd">        a command to move forward 2 meters at the same heading will have goal_x_rt_body=2.0, goal_y_rt_body=0.0,</span>
 <span class="sd">        goal_heading_rt_body=0.0.</span>
@@ -1481,7 +1385,8 @@
         <span class="n">odom_tform_goto</span> <span class="o">=</span> <span class="n">odom_tform_body</span> <span class="o">*</span> <span class="n">goto_rt_body</span>
         <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">synchro_se2_trajectory_command</span><span class="p">(</span><span class="n">odom_tform_goto</span><span class="o">.</span><span class="n">to_proto</span><span class="p">(),</span>
                                                                   <span class="n">ODOM_FRAME_NAME</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span>
-                                                                  <span class="n">body_height</span><span class="p">,</span> <span class="n">locomotion_hint</span><span class="p">)</span></div>
+                                                                  <span class="n">body_height</span><span class="p">,</span> <span class="n">locomotion_hint</span><span class="p">,</span>
+                                                                  <span class="n">build_on_command</span><span class="o">=</span><span class="n">build_on_command</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.synchro_velocity_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.synchro_velocity_command">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">synchro_velocity_command</span><span class="p">(</span><span class="n">v_x</span><span class="p">,</span> <span class="n">v_y</span><span class="p">,</span> <span class="n">v_rot</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">body_height</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
@@ -1705,7 +1610,7 @@
                                                        <span class="n">frame1_name</span><span class="o">=</span><span class="n">frame_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">frame2_tform_desired_hand</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">frame2_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">frame2_tform_desired_hand</span><span class="p">)</span> <span class="o">==</span> <span class="n">SE3Pose</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame2_tform_desired_hand</span><span class="p">,</span> <span class="n">SE3Pose</span><span class="p">):</span>
                 <span class="c1"># Convert input argument from math_helpers class to protobuf message.</span>
                 <span class="n">frame2_tform_desired_hand</span> <span class="o">=</span> <span class="n">frame2_tform_desired_hand</span><span class="o">.</span><span class="n">to_proto</span><span class="p">()</span>
 
@@ -1809,25 +1714,109 @@
         <span class="k">return</span> <span class="n">robot_command</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.claw_gripper_open_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_open_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">claw_gripper_open_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
-        <span class="n">command</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">gripper_command</span><span class="o">.</span><span class="n">claw_gripper_command</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">_CLAW_GRIPPER_OPEN_ANGLE</span>
+    <span class="k">def</span> <span class="nf">claw_gripper_open_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Builds a command to open the gripper.  Wraps it in SynchronizedCommand.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An</span>
+<span class="sd">                arm_command and mobility_command from this incoming RobotCommand will be added</span>
+<span class="sd">                to the returned RobotCommand.</span>
+<span class="sd">            max_acc: Optional maximum allowable gripper acceleration. Not setting this will lead to the</span>
+<span class="sd">                        robot using a relatively safe low default. If the user is sure their gripper</span>
+<span class="sd">                        trajectory is safe and achievable, this can be set to a large value so it</span>
+<span class="sd">                        doesn&#39;t get in the way.</span>
+<span class="sd">            max_vel: Optional maximum allowable gripper velocity. Same thing about defaults as max_acc.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">robot_cmd</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
+        <span class="n">gripper_cmd</span> <span class="o">=</span> <span class="n">robot_cmd</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">gripper_command</span><span class="o">.</span><span class="n">claw_gripper_command</span>
+        <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">_CLAW_GRIPPER_OPEN_ANGLE</span>
+
+        <span class="k">if</span> <span class="n">max_acc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint acceleration if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_acceleration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_acc</span>
+        <span class="k">if</span> <span class="n">max_vel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint velocity if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_vel</span>
+
         <span class="k">if</span> <span class="n">build_on_command</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">command</span></div>
+            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">robot_cmd</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.claw_gripper_close_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_close_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">claw_gripper_close_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
-        <span class="n">command</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">gripper_command</span><span class="o">.</span><span class="n">claw_gripper_command</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">_CLAW_GRIPPER_CLOSED_ANGLE</span>
+    <span class="k">def</span> <span class="nf">claw_gripper_close_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">disable_force_on_contact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">max_torque</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Builds a command to close the gripper.  Wraps it in SynchronizedCommand.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An</span>
+<span class="sd">                arm_command and mobility_command from this incoming RobotCommand will be added</span>
+<span class="sd">                to the returned RobotCommand.</span>
+<span class="sd">            max_acc: Optional maximum allowable gripper acceleration. Not setting this will lead to the</span>
+<span class="sd">                        robot using a relatively safe low default. If the user is sure their gripper</span>
+<span class="sd">                        trajectory is safe and achievable, this can be set to a large value so it</span>
+<span class="sd">                        doesn&#39;t get in the way.</span>
+<span class="sd">            max_vel: Optional maximum allowable gripper velocity. Same thing about defaults as max_acc.</span>
+<span class="sd">            disable_force_on_contact: Whether to switch the gripper to force control on contact detection.</span>
+<span class="sd">            max_torque: Optional Maximum torque applied if contact detected closing the gripper. If</span>
+<span class="sd">                unspecified, a default value of 5.5 (Nm) will be used.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">robot_cmd</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
+        <span class="n">gripper_cmd</span> <span class="o">=</span> <span class="n">robot_cmd</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">gripper_command</span><span class="o">.</span><span class="n">claw_gripper_command</span>
+        <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">_CLAW_GRIPPER_CLOSED_ANGLE</span>
+
+        <span class="k">if</span> <span class="n">max_acc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint acceleration if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_acceleration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_acc</span>
+        <span class="k">if</span> <span class="n">max_vel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint velocity if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_vel</span>
+        <span class="k">if</span> <span class="n">max_torque</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Maximum torque applied if contact detected closing the gripper.</span>
+            <span class="c1"># If unspecified, a default value of 5.5 (Nm) will be used.</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_torque</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_torque</span>
+
+        <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">disable_force_on_contact</span> <span class="o">=</span> <span class="n">disable_force_on_contact</span>
+
         <span class="k">if</span> <span class="n">build_on_command</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">command</span></div>
+            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">robot_cmd</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.claw_gripper_open_fraction_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_open_fraction_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">claw_gripper_open_fraction_command</span><span class="p">(</span><span class="n">open_fraction</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">claw_gripper_open_fraction_command</span><span class="p">(</span><span class="n">open_fraction</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                           <span class="n">max_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">disable_force_on_contact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                           <span class="n">max_torque</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Builds a command to set the gripper using a fractional input.  Wraps it in SynchronizedCommand.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            open_fraction: Percentage [0, 1] to open the gripper.  0 fully closed, 1 fully open.</span>
+<span class="sd">            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An</span>
+<span class="sd">                arm_command and mobility_command from this incoming RobotCommand will be added</span>
+<span class="sd">                to the returned RobotCommand.</span>
+<span class="sd">            max_acc: Optional maximum allowable gripper acceleration. Not setting this will lead to the</span>
+<span class="sd">                        robot using a relatively safe low default. If the user is sure their gripper</span>
+<span class="sd">                        trajectory is safe and achievable, this can be set to a large value so it</span>
+<span class="sd">                        doesn&#39;t get in the way.</span>
+<span class="sd">            max_vel: Optional maximum allowable gripper velocity. Same thing about defaults as max_acc.</span>
+<span class="sd">            disable_force_on_contact: Whether to switch the gripper to force control on contact detection.</span>
+<span class="sd">            max_torque: Optional Maximum torque applied if contact detected closing the gripper. If</span>
+<span class="sd">                unspecified, a default value of 5.5 (Nm) will be used.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="n">gripper_q</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">open_fraction</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">gripper_q</span> <span class="o">=</span> <span class="n">_CLAW_GRIPPER_CLOSED_ANGLE</span>
@@ -1837,21 +1826,75 @@
             <span class="n">gripper_q</span> <span class="o">=</span> <span class="p">((</span><span class="n">_CLAW_GRIPPER_OPEN_ANGLE</span> <span class="o">-</span> <span class="n">_CLAW_GRIPPER_CLOSED_ANGLE</span><span class="p">)</span> <span class="o">*</span>
                          <span class="n">open_fraction</span><span class="p">)</span> <span class="o">+</span> <span class="n">_CLAW_GRIPPER_CLOSED_ANGLE</span>
 
-        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
-        <span class="n">command</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">gripper_command</span><span class="o">.</span><span class="n">claw_gripper_command</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">gripper_q</span>
+        <span class="n">robot_cmd</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
+        <span class="n">gripper_cmd</span> <span class="o">=</span> <span class="n">robot_cmd</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">gripper_command</span><span class="o">.</span><span class="n">claw_gripper_command</span>
+        <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">gripper_q</span>
+
+        <span class="k">if</span> <span class="n">max_acc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint acceleration if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_acceleration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_acc</span>
+        <span class="k">if</span> <span class="n">max_vel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint velocity if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_vel</span>
+        <span class="k">if</span> <span class="n">max_torque</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Maximum torque applied if contact detected closing the gripper.</span>
+            <span class="c1"># If unspecified, a default value of 5.5 (Nm) will be used.</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_torque</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_torque</span>
+
+        <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">disable_force_on_contact</span> <span class="o">=</span> <span class="n">disable_force_on_contact</span>
+
         <span class="k">if</span> <span class="n">build_on_command</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">command</span></div>
+            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">robot_cmd</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.claw_gripper_open_angle_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_open_angle_command">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">claw_gripper_open_angle_command</span><span class="p">(</span><span class="n">gripper_q</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
-        <span class="n">command</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">gripper_command</span><span class="o">.</span><span class="n">claw_gripper_command</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">gripper_q</span>
+    <span class="k">def</span> <span class="nf">claw_gripper_open_angle_command</span><span class="p">(</span><span class="n">gripper_q</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                        <span class="n">max_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">disable_force_on_contact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                        <span class="n">max_torque</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Builds a command to set the gripper open angle.  Wraps it in SynchronizedCommand.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            gripper_q: [-1.5708, 0] where -1.5708 is fully open and 0 is fully closed.</span>
+<span class="sd">            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An</span>
+<span class="sd">                arm_command and mobility_command from this incoming RobotCommand will be added</span>
+<span class="sd">                to the returned RobotCommand.</span>
+<span class="sd">            max_acc: Optional maximum allowable gripper acceleration. Not setting this will lead to the</span>
+<span class="sd">                        robot using a relatively safe low default. If the user is sure their gripper</span>
+<span class="sd">                        trajectory is safe and achievable, this can be set to a large value so it</span>
+<span class="sd">                        doesn&#39;t get in the way.</span>
+<span class="sd">            max_vel: Optional maximum allowable gripper velocity. Same thing about defaults as max_acc.</span>
+<span class="sd">            disable_force_on_contact: Whether to switch the gripper to force control on contact detection.</span>
+<span class="sd">            max_torque: Optional Maximum torque applied if contact detected closing the gripper. If</span>
+<span class="sd">                unspecified, a default value of 5.5 (Nm) will be used.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">robot_cmd</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
+        <span class="n">gripper_cmd</span> <span class="o">=</span> <span class="n">robot_cmd</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">gripper_command</span><span class="o">.</span><span class="n">claw_gripper_command</span>
+        <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">point</span> <span class="o">=</span> <span class="n">gripper_q</span>
+
+        <span class="k">if</span> <span class="n">max_acc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint acceleration if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_acceleration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_acc</span>
+        <span class="k">if</span> <span class="n">max_vel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable joint velocity if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_vel</span>
+        <span class="k">if</span> <span class="n">max_torque</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Maximum torque applied if contact detected closing the gripper.</span>
+            <span class="c1"># If unspecified, a default value of 5.5 (Nm) will be used.</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_torque</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_torque</span>
+
+        <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">disable_force_on_contact</span> <span class="o">=</span> <span class="n">disable_force_on_contact</span>
+
         <span class="k">if</span> <span class="n">build_on_command</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">command</span></div>
+            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">robot_cmd</span></div>
 
 <div class="viewcode-block" id="RobotCommandBuilder.create_arm_joint_trajectory_point"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.create_arm_joint_trajectory_point">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">create_arm_joint_trajectory_point</span><span class="p">(</span><span class="n">sh0</span><span class="p">,</span> <span class="n">sh1</span><span class="p">,</span> <span class="n">el0</span><span class="p">,</span> <span class="n">el1</span><span class="p">,</span> <span class="n">wr0</span><span class="p">,</span> <span class="n">wr1</span><span class="p">,</span>
@@ -1987,10 +2030,132 @@
             <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">robot_cmd</span></div>
 
+<div class="viewcode-block" id="RobotCommandBuilder.arm_cartesian_move_helper"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.arm_cartesian_move_helper">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">arm_cartesian_move_helper</span><span class="p">(</span><span class="n">se3_poses</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="n">root_frame_name</span><span class="p">,</span> <span class="n">wrist_tform_tool</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">root_tform_task</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">se3_velocities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ref_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_linear_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_angular_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                  <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Given a set of SE3Poses, times, and optional velocities, create a synchro command</span>
+<span class="sd">            containing an arm_cartesian_command.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            se3_poses (geometry_pb2.SE3Pose): A list of length N with SE3 transforms at each knot point in our</span>
+<span class="sd">                        trajectory.</span>
+<span class="sd">            times: A list of length N with the corresponding time_since_reference for</span>
+<span class="sd">                each of our knots.</span>
+<span class="sd">            root_frame_name: The name of the root frame. It must be a valid frame name in the</span>
+<span class="sd">                frame_tree.</span>
+<span class="sd">            wrist_tform_tool (geometry_pb2.SE3Pose): The optional tool pose to use during the move. If unset, defaults to</span>
+<span class="sd">                a pose slightly in front of the gripper&#39;s palm plate aligned with the wrist&#39;s</span>
+<span class="sd">                orientation.</span>
+<span class="sd">            root_tform_task (geometry_pb2.SE3Pose): The SE3 transform between the root and the task frame.</span>
+<span class="sd">                If unset, it will treat the root frame as the task frame.</span>
+<span class="sd">            se3_velocities (geometry_pb2.SE3Velocity): An optional list of length N with SE3 velocities at each knot point in</span>
+<span class="sd">                our trajectory.</span>
+<span class="sd">            ref_time: Optional reference time for the trajectory gotten from the computer. If unset, we&#39;ll use the current</span>
+<span class="sd">                robot-synchronized time</span>
+<span class="sd">            max_acc: Optional maximum allowable linear acceleration (m/s^2).</span>
+<span class="sd">            max_linear_vel: Optional maximum allowable linear velocity (m/s).</span>
+<span class="sd">            max_angular_vel: Optional maximum allowable angular velocity (rad/s).</span>
+<span class="sd">            build_on_command: Option to input a RobotCommand for synchronous commands.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            robot_command_pb2.RobotCommand with an arm_cartesian_command filled out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">se3_poses</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Must pass in a list of SE3Poses&quot;</span>
+        <span class="k">assert</span> <span class="n">times</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Must pass in a list of times&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">se3_poses</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">times</span><span class="p">),</span> <span class="s2">&quot;Number of poses must match number of times&quot;</span>
+        <span class="k">if</span> <span class="n">se3_velocities</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">se3_velocities</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">times</span><span class="p">),</span> <span class="s2">&quot;Number of SE3Velocities must match number of times&quot;</span>
+
+        <span class="c1"># Create an arm_cartesian_command, and set the trajectory</span>
+        <span class="n">robot_cmd</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
+        <span class="n">arm_cartesian_command</span> <span class="o">=</span> <span class="n">robot_cmd</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">arm_command</span><span class="o">.</span><span class="n">arm_cartesian_command</span>
+        <span class="n">arm_cartesian_traj</span> <span class="o">=</span> <span class="n">arm_cartesian_command</span><span class="o">.</span><span class="n">pose_trajectory_in_task</span>
+        <span class="n">arm_cartesian_traj</span><span class="o">.</span><span class="n">pos_interpolation</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">POS_INTERP_CUBIC</span>
+        <span class="n">arm_cartesian_traj</span><span class="o">.</span><span class="n">ang_interpolation</span> <span class="o">=</span> <span class="n">trajectory_pb2</span><span class="o">.</span><span class="n">ANG_INTERP_CUBIC_EULER</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">time</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">times</span><span class="p">):</span>
+            <span class="c1"># Add a new trajectory point to our trajectory</span>
+            <span class="n">traj_point</span> <span class="o">=</span> <span class="n">arm_cartesian_traj</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+
+            <span class="n">se3pose</span> <span class="o">=</span> <span class="n">se3_poses</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="c1"># If it is not a geometry_pb2.SE3Pose, throw an error.</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">se3pose</span><span class="p">,</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE3Pose</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;All poses must be of type geometry_pb2.SE3Pose&#39;</span><span class="p">)</span>
+
+            <span class="n">traj_point</span><span class="o">.</span><span class="n">pose</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">se3pose</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">se3_velocities</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">se3_velocity</span> <span class="o">=</span> <span class="n">se3_velocities</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+                <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">se3_velocity</span><span class="p">,</span> <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE3Velocity</span><span class="p">),</span> <span class="p">(</span>
+                    <span class="s1">&#39;All Velocities must be of type geometry_pb2.SE3Velocity&#39;</span><span class="p">)</span>
+
+                <span class="n">traj_point</span><span class="o">.</span><span class="n">velocity</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">se3_velocity</span><span class="p">)</span>
+
+            <span class="c1"># Set our time_since_reference for this trajectory point</span>
+            <span class="n">traj_point</span><span class="o">.</span><span class="n">time_since_reference</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+
+        <span class="k">if</span> <span class="n">ref_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a reference time if desired. If not, we&#39;ll automatically set the reference time</span>
+            <span class="c1"># to be the current robot-synchronized time</span>
+            <span class="n">arm_cartesian_traj</span><span class="o">.</span><span class="n">reference_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">ref_time</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">max_acc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable linear acceleration if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">arm_cartesian_command</span><span class="o">.</span><span class="n">maximum_acceleration</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_acc</span>
+
+        <span class="k">if</span> <span class="n">max_linear_vel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable linear velocity if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">arm_cartesian_command</span><span class="o">.</span><span class="n">max_linear_velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_linear_vel</span>
+
+        <span class="k">if</span> <span class="n">max_angular_vel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set a maximum allowable angular velocity if desired.</span>
+            <span class="c1"># If unset, a safe default will be used</span>
+            <span class="n">arm_cartesian_command</span><span class="o">.</span><span class="n">max_angular_velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_angular_vel</span>
+
+        <span class="k">if</span> <span class="n">wrist_tform_tool</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set the gripper position if it is a valid SE3Pose.</span>
+            <span class="c1"># If unset, defaults to a pose slightly in front of the gripper&#39;s palm plate aligned</span>
+            <span class="c1"># with the wrist&#39;s orientation.</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">wrist_tform_tool</span><span class="p">,</span>
+                <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE3Pose</span><span class="p">),</span> <span class="s1">&#39;All poses must be of type geometry_pb2.SE3Pose&#39;</span>
+
+            <span class="n">arm_cartesian_command</span><span class="o">.</span><span class="n">wrist_tform_tool</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">wrist_tform_tool</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">root_tform_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Set the transformation from the root frame to the task frame if it is a valid SE3Pose</span>
+            <span class="c1"># If unset, it will be assumed that the root frame is the task frame</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">root_tform_task</span><span class="p">,</span>
+                <span class="n">geometry_pb2</span><span class="o">.</span><span class="n">SE3Pose</span><span class="p">),</span> <span class="s1">&#39;All poses must be of type geometry_pb2.SE3Pose&#39;</span>
+
+            <span class="n">arm_cartesian_command</span><span class="o">.</span><span class="n">root_tform_task</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">root_tform_task</span><span class="p">)</span>
+
+        <span class="c1"># If the root frame name is invalid the command will be rejected</span>
+        <span class="n">arm_cartesian_command</span><span class="o">.</span><span class="n">root_frame_name</span> <span class="o">=</span> <span class="n">root_frame_name</span>
+
+        <span class="k">if</span> <span class="n">build_on_command</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">robot_cmd</span></div>
+
 <div class="viewcode-block" id="RobotCommandBuilder.claw_gripper_command_helper"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.claw_gripper_command_helper">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">claw_gripper_command_helper</span><span class="p">(</span><span class="n">gripper_positions</span><span class="p">,</span> <span class="n">times</span><span class="p">,</span> <span class="n">gripper_velocities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                    <span class="n">ref_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                    <span class="n">disable_force_on_contact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">claw_gripper_command_helper</span><span class="p">(</span>
+        <span class="n">gripper_positions</span><span class="p">,</span>
+        <span class="n">times</span><span class="p">,</span>
+        <span class="n">gripper_velocities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ref_time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_acc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_vel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">disable_force_on_contact</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">max_torque</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Given a set of gripper positions, times, and optional velocities, create a synchro command.</span>
 
 <span class="sd">        Args:</span>
@@ -2010,6 +2175,8 @@
 <span class="sd">            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An</span>
 <span class="sd">                arm_command and mobility_command from this incoming RobotCommand will be added</span>
 <span class="sd">                to the returned RobotCommand.</span>
+<span class="sd">            max_torque: Optional Maximum torque applied if contact detected closing the gripper. If</span>
+<span class="sd">                unspecified, a default value of 5.5 (Nm) will be used.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.</span>
@@ -2050,8 +2217,32 @@
             <span class="c1"># Set a maximum allowable joint velocity if desired.</span>
             <span class="c1"># If unset, a safe default will be used</span>
             <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_open_close_velocity</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_vel</span>
+        <span class="k">if</span> <span class="n">max_torque</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Maximum torque applied if contact detected closing the gripper.</span>
+            <span class="c1"># If unspecified, a default value of 5.5 (Nm) will be used.</span>
+            <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">maximum_torque</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">max_torque</span>
 
         <span class="n">gripper_cmd</span><span class="o">.</span><span class="n">disable_force_on_contact</span> <span class="o">=</span> <span class="n">disable_force_on_contact</span>
+
+        <span class="k">if</span> <span class="n">build_on_command</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">robot_cmd</span></div>
+
+<div class="viewcode-block" id="RobotCommandBuilder.arm_joint_freeze_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandBuilder.arm_joint_freeze_command">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">arm_joint_freeze_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a RobotCommand with an ArmCommand that will freeze the arm&#39;s joints in place.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An</span>
+<span class="sd">                arm_command and mobility_command from this incoming RobotCommand will be added</span>
+<span class="sd">                to the returned RobotCommand.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            robot_command_pb2.RobotCommand</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">robot_cmd</span> <span class="o">=</span> <span class="n">robot_command_pb2</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">()</span>
+        <span class="n">robot_cmd</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">arm_command</span><span class="o">.</span><span class="n">arm_joint_move_command</span><span class="o">.</span><span class="n">trajectory</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">build_on_command</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">RobotCommandBuilder</span><span class="o">.</span><span class="n">build_synchro_command</span><span class="p">(</span><span class="n">build_on_command</span><span class="p">,</span> <span class="n">robot_cmd</span><span class="p">)</span>
@@ -2165,18 +2356,18 @@
     <span class="k">def</span> <span class="nf">build_synchro_command</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Combines multiple commands into one command. There&#39;s no intelligence here on</span>
 <span class="sd">        duplicate commands.</span>
-<span class="sd">        Args: RobotCommand containing only either mobility commands or synchro commands</span>
-<span class="sd">        Returns: RobotCommand containing a synchro command &quot;&quot;&quot;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            RobotCommand containing only either mobility commands or synchro commands</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            RobotCommand containing a synchro command &quot;&quot;&quot;</span>
         <span class="n">mobility_request</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">arm_request</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">gripper_request</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">command</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;full_body_command&#39;</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                    <span class="s1">&#39;this function only takes RobotCommands containing mobility or synchro cmds&#39;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">command</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;mobility_command&#39;</span><span class="p">):</span>
-                <span class="n">mobility_request</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">mobility_command</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;this function only takes RobotCommands containing synchro cmds&#39;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">command</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;synchronized_command&#39;</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">command</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;mobility_command&#39;</span><span class="p">):</span>
                     <span class="n">mobility_request</span> <span class="o">=</span> <span class="n">command</span><span class="o">.</span><span class="n">synchronized_command</span><span class="o">.</span><span class="n">mobility_command</span>
@@ -2204,13 +2395,13 @@
 
 <span class="sd">    Blocks until check_status_fn return true, or raises an exception if the command times out or fails.</span>
 <span class="sd">    This helper checks the main full_body/synchronized command status (RobotCommandFeedbackStatus), but</span>
-<span class="sd">    the caller should check the status of the specific commands (stand, stow, selfright, etc) in the callback.</span>
+<span class="sd">    the caller should check the status of the specific commands (stand, stow, selfright, etc.) in the callback.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        command_client: RobotCommand client.</span>
 <span class="sd">        command: The robot command to issue to the robot.</span>
 <span class="sd">        check_status_fn: A callback that accepts RobotCommandFeedbackResponse and returns True when the</span>
-<span class="sd">                         correct status&#39;s are achieved for the specific requested command and throws </span>
+<span class="sd">                         correct statuses are achieved for the specific requested command and throws</span>
 <span class="sd">                         CommandFailedErrorWithFeedback if an error state occurs.</span>
 <span class="sd">        end_time_sec: The local end time of the command (will be converted to robot time)</span>
 <span class="sd">        timeout_sec: Timeout for the rpc in seconds.</span>
@@ -2376,7 +2567,7 @@
 
 <span class="sd">       Return values:</span>
 <span class="sd">        True if successfully got to the end of the trajectory, False if the arm stalled or</span>
-<span class="sd">        the move was canceled (the arm failed to reach the goal). See the proto definitions in </span>
+<span class="sd">        the move was canceled (the arm failed to reach the goal). See the proto definitions in</span>
 <span class="sd">        arm_command.proto for more information about why a trajectory would succeed or fail.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">timeout_sec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2421,7 +2612,7 @@
 
 <div class="viewcode-block" id="block_for_trajectory_cmd"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.block_for_trajectory_cmd">[docs]</a><span class="k">def</span> <span class="nf">block_for_trajectory_cmd</span><span class="p">(</span>
         <span class="n">command_client</span><span class="p">,</span> <span class="n">cmd_id</span><span class="p">,</span>
-        <span class="n">trajectory_end_statuses</span><span class="o">=</span><span class="p">(</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SE2TrajectoryCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_AT_GOAL</span><span class="p">,),</span>
+        <span class="n">trajectory_end_statuses</span><span class="o">=</span><span class="p">(</span><span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">SE2TrajectoryCommand</span><span class="o">.</span><span class="n">Feedback</span><span class="o">.</span><span class="n">STATUS_STOPPED</span><span class="p">,),</span>
         <span class="n">body_movement_statuses</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">feedback_interval_secs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper that blocks until a trajectory command reaches a desired goal state or a timeout is reached.</span>
 
@@ -2430,7 +2621,7 @@
 <span class="sd">        cmd_id (int): command ID returned by the robot when the trajectory command was sent</span>
 <span class="sd">        trajectory_end_statuses (set of SE2TrajectoryCommand.Feedback.Status): the feedback must have a</span>
 <span class="sd">            status which is included in this set of statuses to be considered successfully complete.</span>
-<span class="sd">            By default, this includes only the &quot;STATUS_AT_GOAL&quot; end condition.</span>
+<span class="sd">            By default, this includes only the &quot;STATUS_STOPPED&quot; end condition.</span>
 <span class="sd">        body_movement_statuses (set of SE2TrajectoryCommand.Feedback.BodyMovementStatus): the body</span>
 <span class="sd">            movement status must be one of these statuses to be considered successfully complete. By</span>
 <span class="sd">            default, this is &quot;None&quot;, which means any body movement status will be accepted.</span>
@@ -2442,7 +2633,7 @@
 <span class="sd">            will be sent.</span>
 
 <span class="sd">       Return values:</span>
-<span class="sd">        True if reaches STATUS_AT_GOAL, False otherwise.</span>
+<span class="sd">        True if reaches STATUS_STOPPED, False otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">timeout_sec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2492,7 +2683,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

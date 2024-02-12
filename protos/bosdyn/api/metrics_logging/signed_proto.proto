@@ -1,0 +1,35 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.metrics_logging;
+
+option java_outer_classname = "SignedProtoProto";
+
+/**
+ * A custom signed format.  Sequentially laid out:
+ *
+ *   4 bytes header
+ *   20 bytes fingerprint
+ *   512 bytes signature
+ *   X bytes data.
+ *
+ * header -> When this format changes, we'll use the header to delminate which
+ * format was used to generate this data.
+ *
+ * fingerprint -> The fingerprint of public key corresponding to the private key
+ * that was used to generate the signature.  As keys rotate, this will allow
+ * the signature verifier to know what key to use to verify the signature.
+ *
+ * signature -> singnature of the data field.
+ *
+ * data -> Contents specified by parent container.  Usually contains a serialized
+ * protobuf.
+ */
+message SignedProto {
+    bytes data = 1;
+}

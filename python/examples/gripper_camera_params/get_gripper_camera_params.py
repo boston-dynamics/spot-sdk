@@ -17,12 +17,12 @@ from bosdyn.api import gripper_camera_param_pb2, header_pb2
 from bosdyn.client.gripper_camera_param import GripperCameraParamClient
 
 
-def main(argv):
+def main():
     # Parse args
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Create robot object
     sdk = bosdyn.client.create_standard_sdk('get_gripper_camera_params')
@@ -44,16 +44,20 @@ def print_response_from_robot(response):
         print(response.header.error)
     else:
         params = response.params
+
         print_line('Resolution', mode_to_resolution_str(params.camera_mode))
         print_line('Brightness', f'{params.brightness.value:.2f}')
         print_line('Contrast', f'{params.contrast.value:.2f}')
         print_line('Saturation', f'{params.saturation.value:.2f}')
         print_line('Gain', f'{params.gain.value:.2f}')
 
-        if params.HasField('focus_absolute'):
-            print_line('Focus', f'manual ({params.focus_absolute.value:.2f})')
-        else:
+        if params.HasField('focus_auto') and params.focus_auto.value is True:
             print_line('Focus', 'auto')
+        else:
+            print_line('Focus', 'manual')
+
+        if params.HasField('focus_absolute'):
+            print_line('Focus', f'value ({params.focus_absolute.value:.2f})')
 
         if params.HasField('exposure_absolute'):
             print_line('Exposure', f'manual ({params.exposure_absolute.value:.2f})')
@@ -145,5 +149,5 @@ def mode_to_resolution_str(mode):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

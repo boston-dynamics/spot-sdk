@@ -1,0 +1,17 @@
+FROM arm64v8/python:3.10
+# Need for psutil install on arm64
+RUN apt-get update && apt-get install -y \
+    gcc \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app/
+
+COPY spot_cam_video_requirements.txt .
+RUN pip3 install --no-cache-dir -r spot_cam_video_requirements.txt
+
+COPY spot_cam_video_service.py webrtc_client.py /app/
+ENV PYTHONPATH=${PYTHONPATH}:/app
+
+ENTRYPOINT ["python3", "/app/spot_cam_video_service.py"]
+CMD [ "192.168.50.3", "--host-ip=192.168.50.5", "--payload-credentials-file=/creds/payload_guid_and_secret"]

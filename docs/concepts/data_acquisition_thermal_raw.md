@@ -27,7 +27,7 @@ Raw data captured using the SDK is captured as `.pgm` while the same data captur
 Some image viewers can natively open .pgm files as a grayscale image. To instead show with a particular color palette, a lookup-table can be referenced to map from temperature to a color. For example, the lookup tables used by matplotlib can be referenced at this [link](https://github.com/matplotlib/matplotlib/blob/main/lib/matplotlib/_cm_listed.py)
 
 ### Scaling the color mapping
-The left image is a render using the min and max temperatures mapping directly to the the min and max values in the color map. The image on the right shows the same image but with the mapping adjusted so that the lower temperature values are less prominent. This allows for more contrast and improved visibility of the hotter areas.
+The left image is a render using the min and max temperatures mapping directly to the min and max values in the color map. The image on the right shows the same image but with the mapping adjusted so that the lower temperature values are less prominent. This allows for more contrast and improved visibility of the hotter areas.
 ![Thermal Ironbow Example](./images/thermal_example_contrast.png)
 
 ### Color palettes:
@@ -43,15 +43,20 @@ import numpy
 height = 512
 width = 640
 filename = "/path/to/pgm/or/raw/file"
+endianness = '>' # '>' For big-endian and '<' for little-endian
 with open(filename, 'rb') as f:
     buffer = f.read()
-    split_buffer = buffer.splitlines()
 
-    # the last element for both .pgm and .raw files is the data after splitting by newline
-    data = split_buffer[len(split_buffer) - 1] 
-    
-    # '>' for big endian and '<' for little endian
-    processed_data = numpy.frombuffer(data, dtype='>u2').reshape((int(height), int(width)))
+    try:
+        # For .pgm and .raw files transferred from the tablet or downloaded from Scout
+        processed_data = numpy.frombuffer(buffer, dtype=f'{endianness}u2')
+    except ValueError:
+        # For .pgm and .raw files from the SpotCam+IR itself (using the Media Log service)
+        # The last element for both .pgm and .raw files is the data after splitting by newline
+        split_buffer = buffer.splitlines()
+        processed_data = numpy.frombuffer(split_buffer[len(split_buffer) - 1], dtype=f'{endianness}u2')
+
+    processed_data = processed_data.reshape((int(height), int(width)))
 
     image = list(processed_data) 
     plt.imshow(image, plt.cm.inferno) # some alternate colormaps: inferno, plasma, viridis, ocean, cubehelix, rainbow

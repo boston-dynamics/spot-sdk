@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Data Acquisition Overview
 
-Spot 2.1 release features a new system for acquiring, storing, and retrieving sensor data. These features are available in teleop mode, where users are controlling the robot from a client, such as the tablet, and in `Autowalk` mode, where the tablet is controlling the robot by replaying a recorded mission. This data acquisition functionality comprises of several new services and their associated clients.
+Spot 2.1 release features a new system for acquiring, storing, and retrieving sensor data. These features are available in teleop mode, where users are controlling the robot from a client, such as the tablet, and in `Autowalk` mode, where the tablet is controlling the robot by replaying a recorded mission. This data acquisition functionality consists of several new services and their associated clients.
 
 - `Data Acquisition` service: The coordinating service that will capture images, robot metadata, and delegate to plugins to capture custom sensor data.
 - `Data Acquisition Plugin` services: User-implemented services that can capture data from sensors and save it into the store.
@@ -68,6 +68,7 @@ The Data Acquisition service provides the following RPCs:
 2. `AcquireData` - This RPC commands the `Data Acquisition` service to acquire and store data. It contains a subset of the capabilities reported by the `GetServiceInfo` RPC. The Data Acquisition service breaks down the request into `GetImage` RPC requests to the corresponding `Image` services, `NetworkCompute` RPC request to the `NetworkComputeBridge` service and `AcquirePluginData` RPC requests to the corresponding `Data Acquisition Plugin` services. The `AcquirePluginData` `Data Acquisition Plugin` RPC is very similar to this RPC.
 3. `GetStatus` - This RPC is defined in the `Data Acquisition` service, as well as `Data Acquisition Plugin` services. It reports the status of a particular `AcquireData` or `AcquirePluginData` request.
 4. `CancelAcquisition` - This RPC is defined in the `Data Acquisition` service, as well as `Data Acquisition Plugin` services. It cancels a particular `AcquireData` request or `AcquirePluginData` request.
+5. `GetLiveData` - This RPC is used to request live data from DAQ plugins during teleoperation. This RPC is defined in the `Data Acquisition` service, as well as `Data Acquisition Plugin` services. It contains a subset of the capabilities reported by the `GetServiceInfo` RPC. The Data Acquisition service breaks down the request into `GetLiveData` RPC requests to the corresponding `Data Acquisition Plugin` services. The `GetLiveData` `Data Acquisition Plugin` RPC is very similar to this RPC. This RPC was added in the 4.0 release.
 
 ## Implementing Data Acquisition services
 

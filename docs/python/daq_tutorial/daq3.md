@@ -63,7 +63,7 @@ mkdir ~/data_capture
 cd ~/data_capture
 ```
 
-Copy (or <a href="../../../../../python/examples/data_acquisition_service/battery_service/battery_service.py">download</a> the script below into a file called `battery_service.py` in the `~/data_capture` folder. This is the same as the [battery_service data acquisition example](../../../python/examples/data_acquisition_service/README.md).
+Copy (or <a href="../../../../../python/examples/data_acquisition_service/battery_service/battery_service.py">download</a>) the script below into a file called `battery_service.py` in the `~/data_capture` folder. This is the same as the [battery_service data acquisition example](../../../python/examples/data_acquisition_service/README.md).
 
 #### Data Acquisition Plugin Service
 

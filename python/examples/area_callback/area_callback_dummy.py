@@ -68,6 +68,19 @@ def main():
     # Configure the area callback service.
     service_name = 'area-callback-dummy'
     config = AreaCallbackServiceConfig(service_name)
+    info = config.area_callback_information
+
+    # This callback does not do anything special to get past obstacles, so we should allow
+    # Graph Nav to identify blockages in the region.
+    info.blockage = info.BLOCKAGE_CHECK
+    # This callback does not control the robot, but if it did Graph Nav should still check for
+    # impairment and be able to interrupt this callback.
+    info.impairment_check = info.IMPAIRMENT_CHECK
+    # Graph Nav should still wait for entities as normal when crossing this region.
+    info.entity_waiting = info.ENTITY_WAITING_ENABLE
+    # The robot should face along the route it is going to cross.
+    info.default_stop.face_direction = info.default_stop.FACE_DIRECTION_ALONG_ROUTE
+
     servicer = AreaCallbackServiceServicer(robot, config, AreaCallbackDummy)
 
     # Run the area callback service.

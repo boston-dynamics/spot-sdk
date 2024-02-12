@@ -12,7 +12,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 ## Zip file structure
 
-An example zip file with data from both a teleoperation session and a run of an mission named "Inspection":
+An example zip file with data from both a teleoperation session and a run of a mission named "Inspection":
 ```
 downloaded_file.zip
 └───teleop_2020-10-29T183020Z

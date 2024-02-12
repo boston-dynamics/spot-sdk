@@ -69,7 +69,7 @@ def gripper_state_override_example(config):
     the carry state is set to CARRY_STATE_NOT_CARRIABLE and CARRY_STATE_CARRIABLE. However, if the
     user tries to stow the arm, the arm won't move. In the event of a comms loss, if the robot is
     holding something with carry state CARRY_STATE_NOT_CARRIABLE, the robot will first release the
-    item, and then stow the arm. If the the gripper is holding something with carry state
+    item, and then stow the arm. If the gripper is holding something with carry state
     CARRY_STATE_CARRIABLE, the robot will not release the item before stowing. See the comments in
     robot_state.proto for more detail.
     """

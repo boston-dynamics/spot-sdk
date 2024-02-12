@@ -34,31 +34,14 @@ from StateMachine import StateMachine, StateMachineFollow, StateMachineSit, Stat
 import bosdyn.client
 import bosdyn.client.util
 
-#===================================================================================================
-# Local Helpers
 
-
-def _parse_arguments(argv):
-    """
-    This function defines the arguments used for this module.
-
-    @param[in]  argv  The argument string to parse
-    """
+def main():
+    # Parse arguments given
     import argparse
     parser = argparse.ArgumentParser(description='Spot API Test')
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
-    return options
+    options = parser.parse_args()
 
-
-#===================================================================================================
-# Main entry
-
-
-def main(argv):
-
-    # Parse arguments given
-    options = _parse_arguments(argv)
     try:
         # Create spot
         my_spot = MySpot()
@@ -94,5 +77,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

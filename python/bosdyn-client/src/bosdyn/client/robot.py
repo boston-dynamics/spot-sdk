@@ -8,10 +8,11 @@
 import copy
 import logging
 import time
+from typing import Optional
 
 import bosdyn.api.data_buffer_pb2 as data_buffer_protos
 import bosdyn.client.channel
-from bosdyn.util import timestamp_to_sec
+from bosdyn.util import now_sec, timestamp_to_sec
 
 from .auth import AuthClient
 from .channel import DEFAULT_MAX_MESSAGE_LENGTH
@@ -27,9 +28,9 @@ from .payload_registration import (PayloadAlreadyExistsError, PayloadNotAuthoriz
                                    PayloadRegistrationClient)
 from .power import PowerClient
 from .power import is_powered_on as pkg_is_powered_on
-from .power import power_off as pkg_power_off
-from .power import power_on as pkg_power_on
-from .power import safe_power_off as pkg_safe_power_off
+from .power import power_off_motors as pkg_power_off
+from .power import power_on_motors as pkg_power_on
+from .power import safe_power_off_motors as pkg_safe_power_off
 from .robot_command import RobotCommandClient
 from .robot_id import RobotIdClient
 from .robot_state import RobotStateClient
@@ -125,7 +126,6 @@ class Robot(object):
         self.service_type_by_name = {}
         self.request_processors = []
         self.response_processors = []
-        self.app_token = None
         self.cert = None
         self.lease_wallet = LeaseWallet()
         self._time_sync_thread = None
@@ -261,7 +261,7 @@ class Robot(object):
     def get_cached_hardware_hardware_configuration(self):
         """Return the HardwareConfiguration proto for this robot, querying it from the robot if not
         yet cached.
-        
+
         Raises:
             RpcError: There as a problem communicating with the robot.
         """
@@ -301,10 +301,9 @@ class Robot(object):
         if not authority:
             raise UnregisteredServiceNameError(service_name)
 
-        skip_app_token_check = service_name == 'robot-id'
-        return self.ensure_secure_channel(authority, skip_app_token_check, options=options)
+        return self.ensure_secure_channel(authority, options=options)
 
-    def ensure_secure_channel(self, authority, skip_app_token_check=False, options=[]):
+    def ensure_secure_channel(self, authority, options=[]):
         """Get the channel to access the given authority, creating it if it doesn't exist."""
         if authority in self.channels_by_authority:
             return self.channels_by_authority[authority]
@@ -316,8 +315,8 @@ class Robot(object):
             options.append(('grpc.max_send_message_length', self.max_send_message_length))
 
         # Channel doesn't exist, so create it.
-        creds = bosdyn.client.channel.create_secure_channel_creds(
-            self.cert, lambda: (self.app_token, self.user_token))
+        creds = bosdyn.client.channel.create_secure_channel_creds(self.cert,
+                                                                  lambda: self.user_token)
         channel = bosdyn.client.channel.create_secure_channel(self.address,
                                                               self._secure_channel_port, creds,
                                                               authority, options=options)
@@ -346,7 +345,7 @@ class Robot(object):
         auth_channel = self.ensure_secure_channel(
             Robot._bootstrap_service_authorities[AuthClient.default_service_name])
         auth_client = self.ensure_client(AuthClient.default_service_name, auth_channel)
-        user_token = auth_client.auth(username, password, self.app_token, timeout=timeout)
+        user_token = auth_client.auth(username, password, timeout=timeout)
 
         self.update_user_token(user_token, username)
 
@@ -362,7 +361,7 @@ class Robot(object):
         # We cannot use the directory for the auth service until we are authenticated, so hard-code
         # the authority name.
         auth_client = self.ensure_client(AuthClient.default_service_name)
-        user_token = auth_client.auth_with_token(token, self.app_token, timeout=timeout)
+        user_token = auth_client.auth_with_token(token, timeout=timeout)
 
         self.update_user_token(user_token)
 
@@ -379,7 +378,7 @@ class Robot(object):
         # We cannot use the directory for the auth service until we are authenticated, so hard-code
         # the authority name.
         auth_client = self.ensure_client(AuthClient.default_service_name)
-        user_token = auth_client.auth_with_token(token, self.app_token, timeout=timeout)
+        user_token = auth_client.auth_with_token(token, timeout=timeout)
 
         self.update_user_token(user_token, username)
 
@@ -519,7 +518,7 @@ class Robot(object):
         Returns:
             double: Current robot time, seconds.
         """
-        robot_timestamp = self.time_sync.robot_timestamp_from_local_secs(time.time())
+        robot_timestamp = self.time_sync.robot_timestamp_from_local_secs(now_sec())
         return timestamp_to_sec(robot_timestamp)
 
     def operator_comment(self, comment, timestamp_secs=None, timeout=None):
@@ -542,7 +541,7 @@ class Robot(object):
         client = self.ensure_client(DataBufferClient.default_service_name)
         if timestamp_secs is None:
             try:
-                robot_timestamp = self.time_sync.robot_timestamp_from_local_secs(time.time())
+                robot_timestamp = self.time_sync.robot_timestamp_from_local_secs(now_sec())
             except TimeSyncError:
                 robot_timestamp = None  # Timestamp will be set when robot receives the request msg.
         else:

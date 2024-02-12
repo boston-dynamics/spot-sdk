@@ -40,12 +40,13 @@ message WalkToObjectInImage {
     // Walk to an object that is at a pixel location in an image.
     Vec2 pixel_xy = 1;
 
-    // A tree-based collection of transformations, which will include the transformations to each image's
-    // sensor in addition to transformations to the common frames ("vision", "body", "odom").
-    // All transforms within the snapshot are at the acquistion time of the image.
+    // A tree-based collection of transformations, which will include the transformations to each
+    // image's sensor in addition to transformations to the common frames ("vision", "body",
+    // "odom"). All transforms within the snapshot are at the acquisition time of the image.
     FrameTreeSnapshot transforms_snapshot_for_camera = 2;
 
-    // The frame name for the image's sensor source. This will be included in the transform snapshot.
+    // The frame name for the image's sensor source. This will be included in the transform
+    // snapshot.
     string frame_name_image_sensor = 3;
 
     // Camera model.
@@ -113,12 +114,13 @@ message PickObjectInImage {
     // Pickup an object that is at a pixel location in an image.
     Vec2 pixel_xy = 1;
 
-    // A tree-based collection of transformations, which will include the transformations to each image's
-    // sensor in addition to transformations to the common frames ("vision", "body", "odom").
-    // All transforms within the snapshot are at the acquistion time of the image.
+    // A tree-based collection of transformations, which will include the transformations to each
+    // image's sensor in addition to transformations to the common frames ("vision", "body",
+    // "odom"). All transforms within the snapshot are at the acquistion time of the image.
     FrameTreeSnapshot transforms_snapshot_for_camera = 2;
 
-    // The frame name for the image's sensor source. This must be included in the transform snapshot.
+    // The frame name for the image's sensor source. This must be included in the transform
+    // snapshot.
     string frame_name_image_sensor = 3;
 
     // Camera model.
@@ -209,8 +211,8 @@ message RotationWithTolerance {
 
 message VectorAlignmentWithTolerance {
     // Axis on the gripper that you want to align.  For example, to align the front of the gripper
-    // to be straight down, you'd use: \
-    //      axis_on_gripper_ewrt_gripper = Vec3(1, 0, 0) \
+    // to be straight down, you'd use:
+     //      axis_on_gripper_ewrt_gripper = Vec3(1, 0, 0) \
     //      axis_to_align_with_ewrt_frame = Vec3(0, 0, -1)   (in the "vision" frame) \
     Vec3 axis_on_gripper_ewrt_gripper = 1;
     Vec3 axis_to_align_with_ewrt_frame = 2;
@@ -270,7 +272,7 @@ message ManipulationApiFeedbackResponse {
     //      If the range camera in the hand senses an object, this frame will have the position of
     //      the nearest object.  This is useful for getting a ballpark range measurement.
     FrameTreeSnapshot transforms_snapshot_manipulation_data = 3;
- }
+}
 
 message ManipulationApiResponse {
     /// Common response header.

@@ -36,6 +36,16 @@ The red lines are the anchoring of the map before optimization (this is the defa
 
 After the example runs, a new map will have been saved to the data folder containing the optimized anchoring associated with the blueprint.
 
+### Troubleshooting
+
+If you are using Windows and the example fails due to the following error:
+
+```
+ImportError: DLL load failed while importing _cext: The specified module could not be found.
+```
+
+Please install [msvc-runtime](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170), then try again.
+
 ## Understanding the Example Code
 
 ### Background on Anchorings and Metric Consistency

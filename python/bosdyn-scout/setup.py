@@ -32,7 +32,11 @@ setuptools.setup(
     },
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
-    install_requires=['requests', 'Deprecated~=1.2.10'],
+    install_requires=[
+        'requests',
+        'Deprecated~=1.2.10',
+        'bosdyn-orbit=={}'.format(SDK_VERSION),
+    ],
     python_requires=">=3.6",
     classifiers=[
         "Programming Language :: Python :: 3.6",

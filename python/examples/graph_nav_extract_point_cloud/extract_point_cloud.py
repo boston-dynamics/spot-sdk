@@ -134,12 +134,12 @@ def write_ply(data, output):
             f.write(f'{x} {y} {z}\n')
 
 
-def main(argv):
+def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--path', type=str, help='Map to extract.', required=True)
     parser.add_argument('--output', type=str, help='Output PLY file.', required=True)
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     # Load the map from the given file.
     (current_graph, current_waypoints, current_waypoint_snapshots, current_edge_snapshots,
      current_anchors, current_anchored_world_objects) = load_map(options.path)
@@ -160,4 +160,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

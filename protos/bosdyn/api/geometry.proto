@@ -266,32 +266,33 @@ message Vector {
 // y   yrx   yry  yrz   yx   yy   yz                                 \
 // z   zrx   zry  zrz   zx   zy   zz                                 \
 // where x, y, z are translations in meters, and rx, ry, rz are rotations around
-// the x, y and z axes in radians.                                   \
+ // the x, y and z axes in radians.                                   \
 // The matrix is symmetric, so, for example, xy = yx.                \
 message SE3Covariance {
 // Row-major order representation of the covariance matrix.
 Matrix matrix = 1;
 // Variance of the yaw component of the SE3 Pose.
 // Warning: DEPRECATED as of 2.1. This should equal cov_rzrz, inside `matrix`. Will be removed
-// in 4.0.
+// in a future release.
+// FIXME(sberard): https://bostondynamics.atlassian.net/browse/SPOT-12523
 double yaw_variance = 2 [deprecated = true];
-// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_xx = 3 [deprecated = true];
-// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_xy = 4 [deprecated = true];
-// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_xz = 5 [deprecated = true];
-// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_yx = 6 [deprecated = true];
-// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_yy = 7 [deprecated = true];
-// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_yz = 8 [deprecated = true];
-// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_zx = 9 [deprecated = true];
-// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_zy = 10 [deprecated = true];
-// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0.
+// Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_zz = 11 [deprecated = true];
 }
 

@@ -22,6 +22,7 @@ import bosdyn.mission.util
 import bosdyn.util
 from bosdyn.api import lease_pb2
 from bosdyn.client.robot_command import RobotCommandBuilder
+from bosdyn.mission.util import create_value, define_blackboard, set_blackboard
 
 CONSTANT_TIMESTAMP = timestamp_pb2.Timestamp(seconds=12345, nanos=6789)
 
@@ -66,22 +67,6 @@ def add_common_header(response, request, error_code=HeaderProto.CommonError.CODE
     response.header.CopyFrom(header)
 
 
-def build_stand_command(deprecated, **kwargs):
-    if (deprecated):
-        cmd = RobotCommandBuilder.stand_command(**kwargs)
-    else:
-        cmd = RobotCommandBuilder.synchro_stand_command(**kwargs)
-    return cmd
-
-
-def build_sit_command(deprecated):
-    if (deprecated):
-        cmd = RobotCommandBuilder.sit_command()
-    else:
-        cmd = RobotCommandBuilder.synchro_sit_command()
-    return cmd
-
-
 def set_converted_timestamp_skew(client, skew_sec):
     """Set the timestamp returned by the client's timesync endpoint."""
 
@@ -108,23 +93,3 @@ def build_lease(sequence, epoch='foo', resource='bar'):
     lease = lease_pb2.Lease(resource=resource, epoch=epoch)
     lease.sequence.extend(sequence)
     return lease
-
-
-def create_value(v):
-    return bosdyn.api.mission.util_pb2.Value(constant=bosdyn.mission.util.python_var_to_value(v))
-
-
-def define_blackboard(dict_values):
-    node_to_return = nodes_pb2.DefineBlackboard()
-    for (key, value) in dict_values.items():
-        node_to_return.blackboard_variables.add().CopyFrom(
-            bosdyn.api.mission.util_pb2.KeyValue(key=key, value=value))
-    return node_to_return
-
-
-def set_blackboard(dict_values):
-    node_to_return = nodes_pb2.SetBlackboard()
-    for (key, value) in dict_values.items():
-        node_to_return.blackboard_variables.add().CopyFrom(
-            bosdyn.api.mission.util_pb2.KeyValue(key=key, value=value))
-    return node_to_return

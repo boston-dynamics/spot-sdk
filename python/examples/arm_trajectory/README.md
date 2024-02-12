@@ -10,6 +10,10 @@ Development Kit License (20191101-BDSDK-SL).
 
 An example of commanding a simple trajectory with Spot's arm. The example initializes the SDK to talk to robot and then requests Spot to stand before executing the trajectory.
 
+# Long Trajectory
+
+A more advanced example of commanding a continuous trajectory with Spot's arm. The example initializes the SDK to talk to robot and then requests Spot to stand before executing the trajectory. This example shows a contionus trajectory mainly by using an approach trajectory, knot overlapping, and not limiting the arm's acceleration or velocity.
+
 ## Understanding Spot Programming
 
 For your best learning experience, please use the [Quickstart Guide](../../../docs/python/quickstart.md)
@@ -29,10 +33,18 @@ This example requires the bosdyn API and client to be installed, and must be run
 python3 -m pip install -r requirements.txt
 ```
 
-## Run the Example
+## Run the Basic Example
 
 To run the example:
 
 ```
 python3 arm_trajectory.py ROBOT_IP
+```
+
+## Running the Long Trajectory Example
+
+To run the example:
+
+```
+python3 arm_long_cartesian_trajectory.py ROBOT_IP
 ```

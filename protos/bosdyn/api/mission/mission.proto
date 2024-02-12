@@ -19,6 +19,7 @@ import "bosdyn/api/mission/nodes.proto";
 import "bosdyn/api/mission/util.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
+import "bosdyn/api/service_customization.proto";
 
 // Get the state of the mission.
 message GetStateRequest {
@@ -54,8 +55,13 @@ message State {
     message AnsweredQuestion {
         // The question that this state information is related to.
         Question question = 1;
-        // The answer that was provided.
-        int64 accepted_answer_code = 2;
+
+        oneof accepted_answer {
+            // The code corresponding to the option answered for this prompt.
+            int64 accepted_answer_code = 2;
+            // Custom parameter values answered for this prompt.
+            DictParam custom_params = 3;
+        }
     }
     // History of questions that have been answered.
     // The server will set some limit on the available history.
@@ -100,7 +106,8 @@ message State {
         STATUS_SUCCESS = 3;
         // Execution has been paused.
         STATUS_PAUSED = 4;
-        // The mission service itself encountered an unexpected error, outside of a node failing.
+        // The mission service itself or the behavior tree encountered an unexpected error, outside
+        // of a node failing.
         STATUS_ERROR = 5;
         // No mission has been loaded.
         STATUS_NONE = 6;
@@ -139,6 +146,9 @@ message Question {
     // Uses the submessage from the "prompt" node message.
     repeated Prompt.Option options = 4;
 
+    // Custom parameter specification for the answer expected for this question.
+    DictParam.Spec custom_params = 7;
+
     // Set to true if this question was meant to be answered by some automated system, not a
     // human. Clients should usually avoid generating a UI element to ask such a question.
     bool for_autonomous_processing = 5;
@@ -154,8 +164,12 @@ message AnswerQuestionRequest {
     RequestHeader header = 1;
     // Identifier of the question being answered.
     int64 question_id = 2;
-    // The answer_code from the Question, corresponding to the user's choice.
-    int64 code = 3;
+    oneof answer {
+        // The answer_code from the Question corresponding to the user's choice.
+        int64 code = 3;
+        // The answers for the Question corresponding to custom_params specification from the Question.
+        DictParam custom_params = 4;
+    }
 }
 
 // Response from the server after a client has answered one of its questions.
@@ -175,9 +189,16 @@ message AnswerQuestionResponse {
         STATUS_INVALID_CODE = 3;
         // Question was already answered.
         STATUS_ALREADY_ANSWERED = 4;
+        // One or more keys or values in custom_params are unsupported by the question.
+        // See the custom_param_error for details.
+        STATUS_CUSTOM_PARAMS_ERROR = 5;
+        // Answer format is not applicable for the question indicated.
+        STATUS_INCOMPATIBLE_ANSWER = 6;
     }
     // The result of the AnswerQuestionRequest.
     Status status = 2;
+    // Filled out if status is STATUS_CUSTOM_PARAMS_ERROR.
+    CustomParamError custom_param_error = 3;
 }
 
 

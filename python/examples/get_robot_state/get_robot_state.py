@@ -16,7 +16,7 @@ from bosdyn.client.robot_state import RobotStateClient
 def main():
     import argparse
 
-    commands = set(['state', 'hardware', 'metrics'])
+    commands = {'state', 'hardware', 'metrics'}
 
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)

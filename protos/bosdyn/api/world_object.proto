@@ -16,6 +16,7 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/sparse_features.proto";
 import "bosdyn/api/stairs.proto";
+import "bosdyn/api/gps/registration.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";
@@ -68,6 +69,8 @@ message WorldObject {
     BoundingBoxProperties bounding_box_properties = 12;
     // The staircase properties provide information that helps the robot traverse or see a staircase.
     StaircaseProperties staircase_properties = 15;
+    // Information about the Earth relative to the robot, localized by GPS.
+    GpsProperties gps_properties = 16;
     // An extra field for application-specific object properties.
     google.protobuf.Any additional_properties = 100;
 }
@@ -212,6 +215,7 @@ message ImageProperties {
 
         // A set of keypoints and their associated metadata.
         KeypointSet keypoints = 4;
+
     }
 
     // Camera parameters.
@@ -347,6 +351,11 @@ message DrawableProperties {
 
 message StaircaseProperties {
     Staircase staircase = 1;
+}
+
+// Properties related to GPS measurements of our location with respect to the Earth.
+message GpsProperties {
+    bosdyn.api.gps.Registration registration = 1;
 }
 
 // A coordinate frame drawing object, describing how large to render the arrows.

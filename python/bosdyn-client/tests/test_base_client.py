@@ -19,7 +19,7 @@ def method_wrapper(func):
         pass
 
     func.future = _future
-    func._method = "MockStub.rpc_method"
+    func._method = b"MockStub.rpc_method"
     return func
 
 

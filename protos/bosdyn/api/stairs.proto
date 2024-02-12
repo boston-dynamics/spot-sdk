@@ -71,7 +71,8 @@ message Staircase {
     // Provided for convenience.
 
     // Number of vertical risers.
-    int32 number_of_steps = 3;
+    // DEPRECATED as of 4.0. Use the length of the steps field instead.
+    int32 number_of_steps = 3 [deprecated = true];
     // Average vertical height of each step in meters.
     double average_rise = 4;
     // Average horizontal distance between risers in meters.
@@ -90,6 +91,10 @@ message Staircase {
 
     // The individual steps ordered from lowest to highest.
     repeated Step steps = 7;
+
+    // Unique identifier used to equate staircases shared across edges and externally. This should
+    // be randomly generated.
+    string id = 8;
 }
 
 message StraightStaircase {

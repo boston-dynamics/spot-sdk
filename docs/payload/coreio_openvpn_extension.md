@@ -101,7 +101,7 @@ sudo apt-get install qemu binfmt-support qemu-user-static
 docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 ```
 
-Installing and running qemu will allow us to build ARM binaries on an x86 machine without needing a cross compiler.
+Installing and running qemu will allow us to build ARM binaries on an x86 machine without needing a cross-compiler.
 
 ### Run the following from the folder containing all of the above files to build and output the OpenVPN extension
 
@@ -130,7 +130,7 @@ rm openvpn_client.tar.gz
 
 ## Running the Extension
 
-The output file will be called openvpn_client.spx and can be uploaded to a CORE I/O. See [extension documention](docker_containers#install-extension-using-web-portal) for directions on uploading extension to the CORE I/O using the web portal.
+The output file will be called openvpn_client.spx and can be uploaded to a CORE I/O. See [extension documentation](docker_containers#install-extension-using-web-portal) for directions on uploading extension to the CORE I/O using the web portal.
 **The cred.ovpn file must be provided by the user and placed under /persist/openvpn/\*.ovpn to work.**
 
 To copy over the cred file to the robot over ethernet or wifi run the following.

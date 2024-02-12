@@ -38,6 +38,7 @@ Implementing the GraphNav service APIs requires four phases:
 | SetLocalization |	Trigger a manual localization. Typically done to provide the initial localization.
 | NavigateRoute |	Tell GraphNav to navigate/traverse a given route.
 | NavigateTo |	Tell GraphNav to navigate to a waypoint along a route it chooses.
+| NavigateToAnchor | Tell GraphNav to navigate to a goal with respect to the current anchoring.
 | NavigationFeedback |	Get feedback on the active navigation command.
 | GetLocalizationState |	Get the localization status, pose, and optionally, current sensor data.
 | ClearGraph |	Clears the graph structure. Also the localization.
@@ -47,6 +48,7 @@ Implementing the GraphNav service APIs requires four phases:
 | UploadEdgeSnapshot |	Uploads large edge snapshot as a stream for a particular edge.
 | DownloadWaypointSnapshot |	Download waypoint data from the server.
 | DownloadEdgeSnapshot |	Download edge data from the server.
+| ValidateGraph | Verify that the graph is still valid and all required external services are still available.
 
 
 
@@ -62,6 +64,7 @@ Map recording is provided by the GraphNavRecordingService RPC.
 | CreateWaypoint  |	Create a waypoint at the current location.
 | CreateEdge |	Create an edge between two waypoints.
 | StopRecording |	Pause the recording service.
+| GetRecordStatus| Tells the client the internal state of the record service, and the structure of the map that has been recorded so far.
 
 
 Once StartRecording is called, the recording service starts creating waypoints, edges, and associated snapshots.

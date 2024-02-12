@@ -66,7 +66,7 @@ class FollowFiducial(object):
 
         # Indicator if fiducial detection's should be from the world object service using
         # spot's perception system or detected with the apriltag library. If the software version
-        # does not include the world object service, than default to april tag library.
+        # does not include the world object service, then default to april tag library.
         self._use_world_object_service = (options.use_world_objects and
                                           self.check_if_version_has_world_objects(self._robot_id))
 
@@ -232,7 +232,7 @@ class FollowFiducial(object):
         for i in range(len(self._source_names) + 1):
             # Get the image from the source camera.
             if i == 0:
-                if self._previous_source != None:
+                if self._previous_source is not None:
                     # Prioritize the camera the fiducial was last detected in.
                     source_name = self._previous_source
                 else:

@@ -32,7 +32,7 @@ from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient,
 from bosdyn.client.robot_state import RobotStateClient
 
 
-def main(raw_args=None):
+def main():
     """Replay stored mission"""
 
     body_lease = None
@@ -83,7 +83,7 @@ def main(raw_args=None):
         'Autowalk mission filename. Script assumes the path to this file is [walk_directory]/missions/[walk_filename]'
     )
 
-    args = parser.parse_args(raw_args)
+    args = parser.parse_args()
 
     path_following_mode = map_pb2.Edge.Annotations.PATH_MODE_UNKNOWN
 
@@ -225,15 +225,16 @@ def init_clients(robot, mission_file, walk_directory, do_map_load, disable_alter
         upload_graph_and_snapshots(robot, graph_nav_client, walk_directory,
                                    disable_alternate_route_finding, upload_timeout)
 
-        # If this is a .node file, use the mission service to load the mission.
-        if mission_file.endswith(".node"):
-            robot.logger.warn(
-                'Detected .node file. Boston Dynamics recommends using .walk files to load autowalk missions.'
+        # Here we assume the input file is an autowalk file so we parse it as a walk proto
+        # and upload through the autowalk service.
+        # If that fails we try parsing as a node and uploading through the mission service.
+        try:
+            upload_autowalk(robot, autowalk_client, mission_file, upload_timeout)
+        except google.protobuf.message.DecodeError:
+            robot.logger.warning(
+                f'Failed to parse autowalk proto from {mission_file}. Attempting to parse as node proto.'
             )
             upload_mission(robot, mission_client, mission_file, upload_timeout)
-        # For any other file, use the autowalk service to load the mission.
-        else:
-            upload_autowalk(robot, autowalk_client, mission_client, mission_file, upload_timeout)
 
     else:
         # Upload mission to robot
@@ -324,21 +325,24 @@ def upload_graph_and_snapshots(robot, client, path, disable_alternate_route_find
         robot.logger.info(f'Uploaded {edge_snapshot.id}')
 
 
-def upload_autowalk(robot, autowalk_client, mission_client, filename, upload_timeout):
+def upload_autowalk(robot, autowalk_client, filename, upload_timeout):
     """Upload the autowalk mission to the robot"""
 
     # Load the autowalk from disk
     robot.logger.info(f'Loading autowalk from {filename}')
 
     autowalk_proto = walks_pb2.Walk()
-    with open(filename, 'rb') as mission_file:
-        data = mission_file.read()
-        autowalk_proto.ParseFromString(data)
+    with open(filename, 'rb') as walk_file:
+        data = walk_file.read()
+        try:
+            autowalk_proto.ParseFromString(data)
+        except google.protobuf.message.DecodeError as exc:
+            raise exc
 
     # Upload the mission to the robot
-    robot.logger.info('Uploading the mission to the robot...')
+    robot.logger.info('Uploading the autowalk to the robot...')
     autowalk_client.load_autowalk(autowalk_proto, timeout=upload_timeout)
-    robot.logger.info('Uploaded mission to robot.')
+    robot.logger.info('Uploaded autowalk to robot.')
 
 
 def upload_mission(robot, client, filename, upload_timeout):

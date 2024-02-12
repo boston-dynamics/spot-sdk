@@ -33,5 +33,5 @@ py.exe -3 -m pip install -r requirements.txt
 To run the examples:
 
 ```
-python client.py ROBOT_HOSTNAME
+python client.py ROBOT_IP
 ```

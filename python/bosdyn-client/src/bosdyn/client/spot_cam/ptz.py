@@ -160,8 +160,18 @@ class PtzClient(BaseClient):
             SetPtzFocusStateResponse indicating whether the call was successful
         """
 
-        request = self._make_set_ptz_focus_state_request(focus_mode, distance, focus_position)
+        if focus_position is not None:
+            focus_position_val = Int32Value(value=focus_position)
+            approx_distance = None
+        elif distance is not None:
+            approx_distance = FloatValue(value=distance)
+            focus_position_val = None
+        else:
+            raise ValueError("One of distance or focus_position must be specified.")
 
+        ptz_focus_state = ptz_pb2.PtzFocusState(mode=focus_mode, approx_distance=approx_distance,
+                                                focus_position=focus_position_val)
+        request = ptz_pb2.SetPtzFocusStateRequest(focus_state=ptz_focus_state)
         return self.call(self._stub.SetPtzFocusState, request,
                          self._set_ptz_focus_state_from_response, common_header_errors,
                          copy_request=False, **kwargs)
@@ -169,21 +179,21 @@ class PtzClient(BaseClient):
     def set_ptz_focus_state_async(self, focus_mode, distance=None, focus_position=None, **kwargs):
         """Async version of set_ptz_focus_state()"""
 
-        request = self._make_set_ptz_focus_state_request(focus_mode, distance, focus_position)
+        if focus_position is not None:
+            focus_position_val = Int32Value(value=focus_position)
+            approx_distance = None
+        elif distance is not None:
+            approx_distance = FloatValue(value=distance)
+            focus_position_val = None
+        else:
+            raise ValueError("One of distance or focus_position must be specified.")
 
+        ptz_focus_state = ptz_pb2.PtzFocusState(mode=focus_mode, approx_distance=approx_distance,
+                                                focus_position=focus_position_val)
+        request = ptz_pb2.SetPtzFocusStateRequest(focus_state=ptz_focus_state)
         return self.call_async(self._stub.SetPtzFocusState, request,
                                self._set_ptz_focus_state_from_response, common_header_errors,
                                copy_request=False, **kwargs)
-
-    @staticmethod
-    def _make_set_ptz_focus_state_request(focus_mode, distance, focus_position):
-        request = ptz_pb2.SetPtzFocusStateRequest()
-        request.focus_state.mode = focus_mode
-        if focus_position is not None:
-            request.focus_state.focus_position.value = focus_position
-        elif distance is not None:
-            request.focus_state.approx_distance.value = distance
-        return request
 
     @staticmethod
     def _list_ptz_from_response(response):

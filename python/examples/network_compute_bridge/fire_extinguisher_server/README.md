@@ -78,13 +78,18 @@ sudo docker run -d \
 
 ## Spot Extension for CORE I/O
 
-This example also provides a script for building the fire extinguisher detector into a Spot Extension.
-This script requires the same prerequisites as listed above for building a docker image for CORE I/O.
-Additionally, this script requires that the current user be added to the `docker` user group.
-If this is not the case, the script needs to be run with root privileges.
+This example can also be built into a [Spot Extension](../../../../docs/payload/docker_containers.md) using a provided [convenience script](../../extensions/README.md)
 
-```
-./create_extension.sh
+```sh
+cd {/path/to/python/examples/network_compute_bridge/fire_extinguisher_server/}
+
+python3 ../../extensions/build_extension.py \
+    --arm \
+    --dockerfile-paths Dockerfile.l4t \
+    --build-image-tags fire_ext_detector:l4t \
+    -i fire_ext_detector_image.tar.gz \
+    --package-dir . \
+    --spx fire_extinguisher_detector.spx
 ```
 
 The output file will be called fire_ext_detector.spx and can be uploaded to a CORE I/O.

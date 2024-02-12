@@ -41,6 +41,7 @@ setuptools.setup(
         'numpy',
         'Deprecated~=1.2.10',
         'requests>=2.26.0',
+        'pynmea2>=1.16.0',
     ],
     classifiers=[
         "Programming Language :: Python :: 3.6",

@@ -260,6 +260,11 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
                 response.status = remote_pb2.TeardownSessionResponse.STATUS_INVALID_SESSION_ID
         return response
 
+    def GetRemoteMissionServiceInfo(self, request, context):
+        response = remote_pb2.GetRemoteMissionServiceInfoResponse()
+        with ResponseContext(request, response):
+            return response
+
 
 def run_service(bosdyn_sdk_robot, options, logger=None):
     # Proto service specific function used to attach a servicer to a server.
@@ -271,8 +276,7 @@ def run_service(bosdyn_sdk_robot, options, logger=None):
                              logger=logger)
 
 
-if __name__ == '__main__':
-
+def main():
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_service_endpoint_arguments(parser)
@@ -324,3 +328,7 @@ if __name__ == '__main__':
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:
         service_runner.run_until_interrupt()
+
+
+if __name__ == '__main__':
+    main()

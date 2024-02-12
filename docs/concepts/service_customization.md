@@ -13,7 +13,7 @@ Spot 3.3 release features a new system for parameterizing 3rd party services.  I
 - UI on Scout for editing any autowalk action with parameters.
 
 
-The following services support parameterization:
+The following services support service customization:
 
 
 * `Image` services.
@@ -23,13 +23,13 @@ The following services support parameterization:
 * `Area Callback` services.
 
 
-The parameterization system supports several different primitive types, and hierarchical containers - it's powerful.  All first class Boston Dynamics inspections, including our 3.3 thermal inspection (shown below), are built using the same parameterization system that's available to developers:
+The service customization system supports several different primitive types, and hierarchical containers - it's powerful.  All first class Boston Dynamics inspections, including our 3.3 thermal inspection (shown below), are built using the same service customization system that's available to developers:
 
 
-![Tablet Screenshot](./images/parameterization_thermal.jpg)
+![Tablet Screenshot](./images/service_customization_thermal.jpg)
 
 
-## Parameterization Language
+## Service Customization Language
 
 
 ### Spec
@@ -55,7 +55,7 @@ The int parameter is identical to the double parameter, but everything is an int
 Both int and double allow developers to specify units.  Units will show up on the UI next to the specified value; a units string of "%" will cause the UI to render "32%".  If developers specify one of the first class unit enums, temperature or pressure, clients will automatically convert units to match the users preference, and do the conversion for the service.
 
 
-For example, imagine a service that wants a temperature parameter between 0&deg;C and 100&deg;C.  If the service specified the limits of 0 - 100, and the units as TEMPERATURE_CELSIUS, clients will either show that as 32&deg;F to 212&deg;F or 0&deg;C to 100&deg;C, depending on the users unit preferences.  Either way, the client will pack in the specified value as celsius.  **The service can assume all values are in celsius, because they will be.**  Also note that the units proto includes an *is_relative* flag, which allows developers to specify if they want the client to respect a zero point offset between units.  This mostly helps differentiating absolute and relative temperatures.  If ensuring an object is no hotter than a specific temperature, 0&deg;C - 100&deg;C should map to 32&deg;F to 212&deg;F (what happens when *is_relative* is set to false).  If ensuring that two objects are no more than X degrees apart, 0&deg;C - 100&deg;C should map to 0&deg;F to 180&deg;F  (what happens when *is_relative* is set to true).  Note that 0 C now maps to 0 F.
+For example, imagine a service that wants a temperature parameter between 0&deg;C and 100&deg;C.  If the service specified the limits of 0 - 100, and the units as `TEMPERATURE_CELSIUS`, clients will either show that as 32&deg;F to 212&deg;F or 0&deg;C to 100&deg;C, depending on the users unit preferences.  Either way, the client will pack in the specified value as Celsius.  **The service can assume all values are in Celsius, because they will be.**  Also note that the units proto includes an *is_relative* flag, which allows developers to specify if they want the client to respect a zero point offset between units.  This mostly helps to differentiate absolute and relative temperatures.  If ensuring an object is no hotter than a specific temperature, 0&deg;C - 100&deg;C should map to 32&deg;F to 212&deg;F (what happens when *is_relative* is set to false).  If ensuring that two objects are no more than X degrees apart, 0&deg;C - 100&deg;C should map to 0&deg;F to 180&deg;F  (what happens when *is_relative* is set to true).  Note that 0 C now maps to 0 F.
 
 
 ### String
@@ -196,7 +196,7 @@ specs {
 Let's take another look at the 3.3 boston dynamic thermal inspection:
 
 
-![Tablet Screenshot](./images/parameterization_thermal.jpg)
+![Tablet Screenshot](./images/service_customization_thermal.jpg)
 
 
 The UI on the left is generated with service customization.  The spec provided for the thermal NCB worker looks like this:
@@ -216,7 +216,7 @@ The UI on the left is generated with service customization.  The spec provided f
                    - "Threshold" - a double param with temperature units and *is_relative* set to false.
            - "Min Alarm Threshold", a one-of with two children:
                - "Off" - a dictionary with no child parameters
-               - "On" - a dictionary with with child parameters:
+               - "On" - a dictionary with child parameters:
                    - "Threshold" - a double param with temperature units and *is_relative* set to false.
 
 
@@ -226,19 +226,19 @@ The UI on the left is generated with service customization.  The spec provided f
 ### **Image** services
 - Specs: specs need to be returned by the `ListImageSourcesResponse` rpc, inside the `ImageSource` protobuf message.
 - Parameters: parameters are sent to the service as part of the `GetImage` rpc, inside the `ImageRequest` protobuf message.
-- Example: see the [custom_parameter_image_server] python example.
+- Example: see the [custom_parameter_image_server](../../python/examples/service_customization/custom_parameter_image_server/README.md) python example.
 
 
 ### **Network Compute Bridge Worker** services
 - Specs: specs need to be returned by the `ListAvailableModels` rpc, inside the `ModelData` protobuf message.
 - Parameters: parameters are sent to the service as part of the `WorkerCompute` rpc, inside the `ComputeParameters` protobuf message.
-- Example: see the [custom_parameter_ncb_worker] python example.
+- Example: see the [custom_parameter_ncb_worker](../../python/examples/service_customization/custom_parameter_ncb_worker/README.md) python example.
 
 
 ### **Remote Mission** services
 - Specs: specs need to be returned by the `GetRemoteMissionServiceInfo` rpc, inside the `GetRemoteMissionServiceInfoResponse` protobuf message.
 - Parameters: parameters are sent to the service as part of the `Tick` rpc, inside the `TickRequest` protobuf message.
-- Example: see the [hello_world_mission_service] python example.
+- Example: see the [hello_world_mission_service](../../python/examples/remote_mission_service/README.md) python example.
 
 
 ### **Area Callback** services
@@ -246,3 +246,30 @@ The UI on the left is generated with service customization.  The spec provided f
 - Parameters: parameters are sent to the service as part of the `BeginCallback` rpc, inside the `BeginCallbackRequest` protobuf message.
 - No example available.
 
+## Parameter Coercion
+Coercion allows you to gracefully handle errors in your parameters. If the parameter provided from the server is out of spec, it can be coerced to be in spec.
+
+Given a `StringSpec`:
+```
+string_spec {
+    options: "A"
+    options: "B"
+    options: "C"
+}
+```
+If the parameter came back with a value `D`, this would be considered out of spec.
+```python
+>>> from bosdyn.client.service_customization_helpers import string_param_coerce_to, make_string_param_spec
+>>> from bosdyn.api.service_customization_pb2 import StringParam
+>>> spec = make_string_param_spec(options=['A', 'B', 'C'], default_value='B')
+>>> param = StringParam(value='D')
+>>> param
+value: 'D'
+>>> string_param_coerce_to(spec, param)
+True
+>>> param
+value: 'B'
+```
+The parameter is modified in-place - a new parameter does not get returned. An example demonstrating coercion can be found in the [hello_world_mission_service](../../python/examples/remote_mission_service/README.md) python example.
+
+Each coercion function returns a boolean indicating whether any field was modified to be in spec. It is not specified which precise field(s) may have been modified.

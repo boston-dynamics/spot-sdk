@@ -10,7 +10,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 Choreographer supports animations that are parsed from a specific file format into an `Animation` protobuf message and uploaded to the robot using the `UploadAnimation` RPC.
 
-Animation files are human readable/editable text files with a `*.cha` extension. The animation file consists of three sections separated by a single empty line:
+Animation files are human-readable/editable text files with a `*.cha` extension. The animation file consists of three sections separated by a single empty line:
 
 - Options
 - Parameters
@@ -114,7 +114,7 @@ The `controls` tracks keyword is mandatory; all other keywords in the Options se
 
 `no_looping`: If the animation completes before the move's duration, freeze rather than looping. Without this option, the animation might loop because either the move duration was extended or because the `speed` parameter was set to a value greater than 1.
 
-`starts_sitting`: Specified that this cha is assumed to start from a sitting pose. Otherwise default is to starts from stand.
+`starts_sitting`: Specified that this cha is assumed to start from a sitting pose. Otherwise, the default is to start from stand.
 
 `custom_gait_cycle`: Enables custom gait to use this animation as a direct style input rather than defining the gait style through parameters. For Custom Gait to use an animation as input there are some requirements to the animation: 1) It should be a cycle meaning that first and last frame should be the same. 2) Spot should have all 4 feet on the ground at the start and end. 3) All feet should have at least 1 swing phase. 4) No feet should have more than 2 swing phases.
 
@@ -192,7 +192,7 @@ Note: If no parameters are needed, put the keywords “no parameters” as the p
 
 ## Body keyframe file section
 
-The body keyframe section defines the actual animated move through keyframes describing either the pose or joint angles at each keyframe timestamp. Each keyframe is a single line consisting of a number of fields determined by the number of columns specified. The first line will specify what value is in each column and how many columns there will be; it is written as a series of key words (space separated) where each keyword has an fixed number of columns that the parser expects.
+The body keyframe section defines the actual animated move through keyframes describing either the pose or joint angles at each keyframe timestamp. Each keyframe is a single line consisting of a number of fields determined by the number of columns specified. The first line will specify what value is in each column and how many columns there will be; it is written as a series of keywords (space separated) where each keyword has a fixed number of columns that the parser expects.
 
 Columns defined by keywords can either be an individual definition, or a group definition describing a fixed number of values. For example, “body_pos” describes a group of three columns, and “body_x body_y body_z” describes those same three columns using the individual column keywords.
 
@@ -218,7 +218,7 @@ The field gripper is required.
 
 `hand_quat_wxyz`: Grouping of [hand_quat_w hand_quat_x hand_quat_y hand_quat_z]. Mutually exclusive with other orientation specifications.
 
-`hand_quat_xyzw`: Grouping of hand_quat_x hand_quat_y hand_quat_z hand_quat_w]. Mutually exclusive with other orientation specifications.
+`hand_quat_xyzw`: Grouping of [hand_quat_x hand_quat_y hand_quat_z hand_quat_w]. Mutually exclusive with other orientation specifications.
 
 `hand_euler_rpy`: Grouping of [hand_roll hand_pitch hand_yaw] Mutually exclusive with other orientation specifications.
 

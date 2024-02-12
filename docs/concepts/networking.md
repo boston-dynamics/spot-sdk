@@ -14,10 +14,10 @@ All applications speak to Spot's API over a network connection. Understanding ne
 
 Spot offers a variety of networking options to support a diverse set of applications and environments. Options include:
 
-*  **Spot as a connected peer**. Applications can be deployed on computers that physically connect to Spot via the rear RJ-45 port, the DB-25 payload port, or the RJ-45 port on a Spot GXP payload. This provides a reliable, high-rate communications link without infrastructure requirements, but limits where the application can be run.
-*  **Spot as a WiFi access point**. Applications with physical proximity to Spot can connect to the WiFi access point and communicate directly without any networking infrastructure.
-*  **Spot as a WiFi client**. Spot can join an existing WiFi network, and applications can also join the same WiFi network to talk to Spot. This approach increases the possible range between application and Spot, but attention needs to be paid to dead zones in the network, handoff times between access points, and other considerations.
-*  **Spot via custom communications links**. Custom communication links such as cell modems and Persistent Systems radios can act as a bridge between Spot and applications. These can be useful when the above cases are insufficient for network design.
+- **Spot as a connected peer**. Applications can be deployed on computers that physically connect to Spot via the rear RJ-45 port, the DB-25 payload port, or the RJ-45 port on a Spot GXP payload. This provides a reliable, high-rate communications link without infrastructure requirements, but limits where the application can be run.
+- **Spot as a WiFi access point**. Applications with physical proximity to Spot can connect to the WiFi access point and communicate directly without any networking infrastructure.
+- **Spot as a WiFi client**. Spot can join an existing WiFi network, and applications can also join the same WiFi network to talk to Spot. This approach increases the possible range between application and Spot, but attention needs to be paid to dead zones in the network, handoff times between access points, and other considerations.
+- **Spot via custom communications links**. Custom communication links such as cell modems and Persistent Systems radios can act as a bridge between Spot and applications. These can be useful when the above cases are insufficient for network design.
 
 While the application-layer protocol for the Spot API works across any IP-based network connection, the examples above show that networking choice can have a significant impact on the performance and reliability of an application as well as deployment strategies.
 
@@ -52,10 +52,9 @@ message GetAuthTokenRequest {
 }
 ```
 
-Although the `AuthService` example shows the common RPC paradigm of single request/single response, gRPC also supports more advanced RPC paradigms such as streaming requests, streaming responses, or full bidirectional streaming.  The Spot API uses some of the more advanced paradigms in select locations. For example, gRPC limits responses to 4MB by default, which is too small for large amounts of data, such as the complete GraphNav map. The GraphNav service's upload and download requests provides a streaming response RPC to work around this limitation.
+Although the `AuthService` example shows the common RPC paradigm of single request/single response, gRPC also supports more advanced RPC paradigms such as streaming requests, streaming responses, or full bidirectional streaming. The Spot API uses some of the more advanced paradigms in select locations. For example, gRPC limits responses to 4MB by default, which is too small for large amounts of data, such as the complete GraphNav map. The GraphNav service's upload and download requests provides a streaming response RPC to work around this limitation.
 
 ## Using gRPC and Protocol Buffers
-
 
 The Python library included in the SDK hides the use of gRPC and Protocol Buffers and provides a simpler abstraction. For example, the `AuthClient` class, which speaks to the `AuthService` interface described above, has a method called `auth` demonstrated below.
 
@@ -80,7 +79,6 @@ The Python library included in the SDK hides the use of gRPC and Protocol Buffer
                          **kwargs)
 ```
 
-
 This method takes `username`, `password`, and `app_token` strings and generates a `GetAuthTokenRequest` message from those using `_build_auth_request`. The RPC is then sent to the `AuthService` and a `GetAuthTokenResponse` is received. If the authentication attempt is valid, the session token is returned to the caller of the auth function. If there were networking issues or the username/password combination was invalid, an exception is raised.
 
 This layer of abstraction simplifies common use cases, but developers will occasionally need to interact with Protocol Buffer messages directly, even when using the Python library. For example, the `RobotState` message includes many nested sub-messages and detailed information. Rather than convert into primitive types or other data structures, developers need to directly operate on the protocol buffer itself. The message definition and comments in [protos/bosdyn/api/robot_state.proto](../../protos/bosdyn/api/robot_state.proto) are key to understanding what is included and how to interpret the data.
@@ -91,9 +89,9 @@ Developers who wish to support another language or environment are also able to 
 
 Robust applications need to handle errors when communicating with the Spot API. There are three general classes of errors:
 
-*  **Networking errors**. Examples: network timeouts, inability to reach Spot, or security issues. The workaround is typically networking configuration specific.
-*  **Common RPC errors**. Examples: invalid input or internal server errors. Typically the root cause is buggy application code and the only workaround is to fix the bug.
-*  **Specific RPC errors**. Examples: service specific errors based on the returned `Status` messages, such as a bad username/password combination for the `AuthService` above. Application code should handle these errors gracefully.
+- **Networking errors**. Examples: network timeouts, inability to reach Spot, or security issues. The workaround is typically networking configuration specific.
+- **Common RPC errors**. Examples: invalid input or internal server errors. Typically the root cause is buggy application code and the only workaround is to fix the bug.
+- **Specific RPC errors**. Examples: service specific errors based on the returned `Status` messages, such as a bad username/password combination for the `AuthService` above. Application code should handle these errors gracefully.
 
 More detail can be seen in the `GetAuthTokenResponse` Protocol Buffer message below:
 
@@ -125,13 +123,7 @@ message GetAuthTokenResponse {
         // the lock out period ends.
         STATUS_TEMPORARILY_LOCKED_OUT = 4;
 
-        // STATUS_INVALID_APPLICATION_TOKEN indicates that the |application_token| in the
-        // request was invalid.
-        STATUS_INVALID_APPLICATION_TOKEN = 5;
-
-        // STATUS_EXPIRED_APPLICATION_TOKEN indicates that the |application_token| in the
-        // request was valid, but has expired.
-        STATUS_EXPIRED_APPLICATION_TOKEN = 6;
+        // STATUS_INVALID_APPLICATION_TOKEN and STATUS_EXPIRED_APPLICATION_TOKEN were removed in 4.0.
     }
     Status status = 2;
 
@@ -177,18 +169,18 @@ gRPC is built on top of other networking protocols, as shown in the diagram belo
 
 This protocol stack has a few implications:
 
-*  HTTP/2 supports multiplexing multiple gRPC calls over the same network connection. Responses can come back in a different order than received, and a low priority response can be interrupted by a higher priority response and then resumed later. gRPC requests map directly to HTTP/2 requests.
-*  All communication is over a secure, encrypted TLS channel (TLS1.2 or TLS1.3 are supported). Network attackers can not read or manipulate data between the application and Spot. Client libraries should also verify that the certificate presented by a server chains up to a Boston Dynamics root certificate to prevent active MITM attacks. The Python client library automatically does this certificate verification approach.
-*  Communication is over a reliable transport layer with TCP. Reliable transport is a good approach for non-real-time RPCs such as authenticating to Spot, and is also not problematic for real-time cases where there is a strong networking link such as through the RJ45 or DB-25 connectors. However, it can be problematic when handling real-time RPCs over a spotty network connection. There are some short-term mitigation approaches around this such as maintaining a socket pool to round-robin requests over. In the longer term, Boston Dynamics is exploring other approaches (such as gRPC over QUIC or HTTP/3) to improve communications over poor network links.
-*  The protocol stack is a very common one for the Internet at large. This has two benefits. First, Spot is able to use battle-tested implementations of the protocols which can withstand adversarial attackers. Second, there is a very high likelihood that an application can reach Spot over a diverse set of networks without being blocked by intermediate firewalls.
+- HTTP/2 supports multiplexing multiple gRPC calls over the same network connection. Responses can come back in a different order than received, and a low priority response can be interrupted by a higher priority response and then resumed later. gRPC requests map directly to HTTP/2 requests.
+- All communication is over a secure, encrypted TLS channel (TLS1.2 or TLS1.3 are supported). Network attackers can not read or manipulate data between the application and Spot. Client libraries should also verify that the certificate presented by a server chains up to a Boston Dynamics root certificate to prevent active MITM attacks. The Python client library automatically does this certificate verification approach.
+- Communication is over a reliable transport layer with TCP. Reliable transport is a good approach for non-real-time RPCs such as authenticating to Spot, and is also not problematic for real-time cases where there is a strong networking link such as through the RJ45 or DB-25 connectors. However, it can be problematic when handling real-time RPCs over a spotty network connection. There are some short-term mitigation approaches around this such as maintaining a socket pool to round-robin requests over. In the longer term, Boston Dynamics is exploring other approaches (such as gRPC over QUIC or HTTP/3) to improve communications over poor network links.
+- The protocol stack is a very common one for the Internet at large. This has two benefits. First, Spot is able to use battle-tested implementations of the protocols which can withstand adversarial attackers. Second, there is a very high likelihood that an application can reach Spot over a diverse set of networks without being blocked by intermediate firewalls.
 
 ## Robot Discovery
 
 To talk to Spot, a client application needs to specify an IP address where a Spot is running. There are a number of possible options for doing this sort of robot discovery.
 
-*  **Fixed IP address**. This approach can be used reliably when connecting directly to Spot as a WiFi access point, or over ethernet. No name lookup infrastructure is required.
-*  **DNS name**. A DNS server (or HOSTS file) can be configured to statically point to a fixed IP address that Spot listens on, and the application specifies a DNS name to reach.
-*  **mDNS discovery**. Spot will send mDNS/DNS-SD broadcasts starting with the Spot 2.0 release. Clients on the same network can listen for these packets and discover robots that are available via the announcements.
-*  **Custom Discovery mechanism**. Applications can develop custom approaches to map a specific Spot to an IP address, such as using a cloud-based discovery endpoint.
+- **Fixed IP address**. This approach can be used reliably when connecting directly to Spot as a WiFi access point, or over ethernet. No name lookup infrastructure is required.
+- **DNS name**. A DNS server (or HOSTS file) can be configured to statically point to a fixed IP address that Spot listens on, and the application specifies a DNS name to reach.
+- **mDNS discovery**. Spot will send mDNS/DNS-SD broadcasts starting with the Spot 2.0 release. Clients on the same network can listen for these packets and discover robots that are available via the announcements.
+- **Custom Discovery mechanism**. Applications can develop custom approaches to map a specific Spot to an IP address, such as using a cloud-based discovery endpoint.
 
 Client applications do not use the symbolic name of the robot (if any) when verifying the certificate during the TLS handshake to the robot. This supports a variety of discovery mechanisms without requiring new certificates to be provisioned.

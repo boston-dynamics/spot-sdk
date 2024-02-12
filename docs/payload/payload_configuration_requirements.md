@@ -44,7 +44,7 @@ Do not overhang the front or rear of the robot as this will reduce maneuverabili
 
 ### Payload height
 
-The height of the payload impacts the robot’s ability to self-right and increases the height of the center of mass. Keep the center of mass low, as the robot may not self-right if top heavy.
+The height of the payload impacts the robot’s ability to self-right and increases the height of the center of mass. Keep the center of mass low, as the robot may not self-right if top-heavy.
 
 
 ![top clearance][config-image4]

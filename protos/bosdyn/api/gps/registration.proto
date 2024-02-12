@@ -1,0 +1,92 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.gps;
+
+option java_outer_classname = "RegistrationProto";
+
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/gps/gps.proto";
+import "bosdyn/api/header.proto";
+
+import "google/protobuf/timestamp.proto";
+
+message GpsState {
+    // Latest data from the GPS device.
+    GpsDataPoint latest_data = 2;
+
+    // What GPS device generated the latest data
+    GpsDevice gps_device = 3;
+
+    // Estimate of where the robot's body is in the ECEF frame given this measurement. Note this must be a position
+    // and not a pose because of the lack of orientation data.
+    bosdyn.api.Vec3 ecef_p_body = 4;
+
+    // Collection of all GPS data received by this device within some window.
+    repeated GpsDataPoint historical_data = 5;
+}
+
+message Registration {
+    // Quality of registration status.
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_NEED_DATA = 2;      // No data has been reported to perform registration.
+        STATUS_NEED_MORE_DATA = 3; // Data has been reported, but not enough to get a fix.
+        STATUS_STALE = 4;          // We have a registration, but it is based on old data.
+    }
+
+    Status status = 1;
+
+    reserved 2, 3;
+
+    // Time stamp of latest registration.
+    google.protobuf.Timestamp timestamp = 4;
+
+    // Includes all normal robots frames ("body", "odom", etc) AND
+    // "ecef" frame, which you can read about here: https://wikipedia.org/wiki/ECEF
+    FrameTreeSnapshot transforms_snapshot = 5;
+
+    // The estimated position of the robot's body frame in LLH form. This position is filtered.
+    LLH robot_body_location = 6;
+
+    // Most recent data from each GPS.  Note that the LLH the GPS is reporting
+    // won't exactly match robot_body_location, because robot_body_location is
+    // filtered, and the GPS might have some offset relative to the robot's body.
+    repeated GpsState gps_states = 7;
+}
+
+message GetLocationRequest {
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message GetLocationResponse {
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+
+    // Quality of registration status.
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_NEED_DEVICE = 2;
+    }
+
+    Status status = 2;
+    Registration registration = 3;
+}
+
+message ResetRegistrationRequest {
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+}
+
+message ResetRegistrationResponse {
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+}

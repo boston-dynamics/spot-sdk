@@ -33,7 +33,7 @@ For displaying the data, we are going to use the [anchoring](../../concepts/auto
 
 ## Writing the processing script
 
-Copy (or <a href="files/process_data.py">download</a>)) the script below into a file called `process_data.py` in the `~/data_capture` folder.
+Copy (or <a href="files/process_data.py">download</a>) the script below into a file called `process_data.py` in the `~/data_capture` folder.
 
 Initial imports. We will use matplotlib to draw the data.
 

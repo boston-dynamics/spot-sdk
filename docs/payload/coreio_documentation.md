@@ -12,7 +12,7 @@ This section describes how to develop and deploy applications on the CORE I/O an
 
 ## File System and Release System
 
-One of the signficant differences between the CORE I/O and original Spot CORE is that the root filesystem on the CORE I/O is read-only.
+One of the significant differences between the CORE I/O and original Spot CORE is that the root filesystem on the CORE I/O is read-only.
 The read-only root filesystem of the CORE I/O allows the system to be more secure and reliable.
 It also enables the system to perform updates more easily and roll back to previous releases when updates fail.
 While the root filesystem is read-only, the CORE I/O also has read-write partitions for storage of user data and applications.
@@ -29,7 +29,7 @@ High level partition scheme:
 - The CORE I/O has the following partitions:
 - Credential (`/cred`) partition (100MB): contains credential and serial related information, read-only
 - Persistent (`/persist`) (5GB): contains other data that may be relevant across reboots and updates, read-write
-- Root (`/`) partition (4GB): contains most of files and structures needed, read-only
+- Root (`/`) partition (4GB): contains most of the files and structures needed, read-only
 - Data (`/data`) partition (400GB): contains persistent user data, including docker images and containers, read-write
 
 ## System Configuration
@@ -181,7 +181,7 @@ In table form:
 | 10         | GND               | GND            | GND          | GND          |
 | 11         |                   |                | GND          | GND          |
 
-All loop backs must ensure continuity to like-named loop back connections ie. jumpered. 
+All loop backs must ensure continuity to like-named loop back connections i.e. jumpered. 
 
 The easiest way to control the voltage output pins in CN3 and CN4 is through the GPIO page in the web server. At this time, PWM control has not yet been built into the web server.
 
@@ -230,7 +230,7 @@ Working with other devices (e.g. USB devices, SD cards, etc.) is similar. The co
 
 ### Working with i2c
 
-i2c is a serial communication protocol that can be used to daisy chain many devices (provided they have different addresses) to a single bus.
+i2c is a serial communication protocol that can be used to daisy-chain many devices (provided they have different addresses) to a single bus.
 Communication happens across 2 pins SCL and SDA (clock and data) and chip power and ground are also required, 4 wires total for dozens of sensors and devices.
 
 The CORE I/O CN2 connector has i2c in pins 5 (SDA) and 6 (SCL)

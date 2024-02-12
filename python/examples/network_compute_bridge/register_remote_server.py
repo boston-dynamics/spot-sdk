@@ -19,12 +19,8 @@ import bosdyn.client.directory_registration
 import bosdyn.client.util
 
 
-def main(argv):
-    """Command line interface.
-
-    Args:
-        argv: List of command-line arguments passed to the program.
-    """
+def main():
+    """Command line interface."""
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--server-ip', help='IP address of the server to register',
@@ -39,7 +35,7 @@ def main(argv):
 
     bosdyn.client.util.add_base_arguments(parser)
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     kServiceAuthority = options.authority or 'remote-server-worker.spot.robot'
 
@@ -83,5 +79,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

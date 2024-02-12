@@ -15,6 +15,7 @@ from bosdyn.client.directory import NonexistentServiceError
 from bosdyn.client.exceptions import RpcError
 from bosdyn.client.fault import (FaultResponseError, ServiceFaultAlreadyExistsError,
                                  ServiceFaultDoesNotExistError)
+from bosdyn.client.service_customization_helpers import dict_params_to_dict
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -43,42 +44,11 @@ class AreaCallbackServiceConfig:
 
     def parse_params(self, params: DictParam):
         """ Parse params and validate they agree with the spec stored in area_callback_information.
-        
+
         Args:
             params (DictParam): The parameters being validated.
         """
-
-        spec = self.area_callback_information.custom_params
-        values = {}
-        for (key, param) in params.values.items():
-            if key not in spec.specs:
-                raise ValueError(f"No spec provided for parameter {key}.")
-
-            param_spec = spec.specs[key].spec
-            spec_field = param_spec.WhichOneof("spec")
-            value_field = spec_field.replace("spec", "value")
-            if not param.HasField(value_field):
-                raise ValueError(f"Param {key} has a {spec_field}, but has no {value_field}.")
-
-            type_spec = getattr(param_spec, spec_field)
-            param_value = getattr(param, value_field)
-
-            # For numerical values, check bounds.
-            if hasattr(type_spec, "min_value") and \
-                type_spec.HasField("min_value") and \
-                param_value.value < type_spec.min_value.value:
-                raise ValueError(f"Value for {key} too low; minimum is {type_spec.min_value.value} " \
-                                f"but passed value of {param_value.value}")
-
-            if hasattr(type_spec, "max_value") and \
-                type_spec.HasField("max_value") and \
-                param_value.value > type_spec.max_value.value:
-                raise ValueError(f"Value for {key} too high; maximum is {type_spec.max_value.value} " \
-                                f"but passed value of {param_value.value}")
-
-            values[key] = param_value.value
-
-        return values
+        return dict_params_to_dict(params, self.area_callback_information.custom_params)
 
 
 # Helper to raise service faults when other services are unavailable.

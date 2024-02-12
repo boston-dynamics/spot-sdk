@@ -93,10 +93,10 @@ $ ${DOWNLOAD_BDDF}
 
 ### Operator comments
 
-Download all operator comments sent to the data-buffer in last day and save to `comments.bddf`.
+Download all operator comments sent to the data-buffer in last hour and save to `comments.bddf`.
 
 ```
-$ ${DOWNLOAD_BDDF} --timespan 1d --type bosdyn.api.OperatorComment -o comments.bddf
+$ ${DOWNLOAD_BDDF} --timespan 1h --type bosdyn.api.OperatorComment -o comments.bddf
 ```
 
 Print the comments:

@@ -286,6 +286,11 @@ class FanOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         else:
             response.status = remote_pb2.TeardownSessionResponse.STATUS_INVALID_SESSION_ID
 
+    def GetRemoteMissionServiceInfo(self, request, context):
+        response = remote_pb2.GetRemoteMissionServiceInfoResponse()
+        with ResponseContext(request, response):
+            return response
+
 
 def run_service(bosdyn_sdk_robot, port, fan_off_secs=10, logger=None):
     # Proto service specific function used to attach a servicer to a server.
@@ -296,7 +301,7 @@ def run_service(bosdyn_sdk_robot, port, fan_off_secs=10, logger=None):
     return GrpcServiceRunner(service_servicer, add_servicer_to_server_fn, port, logger=logger)
 
 
-if __name__ == '__main__':
+def main():
     import argparse
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -327,3 +332,7 @@ if __name__ == '__main__':
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:
         service_runner.run_until_interrupt()
+
+
+if __name__ == '__main__':
+    main()

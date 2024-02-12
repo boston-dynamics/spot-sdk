@@ -36,7 +36,7 @@ def pixel_format_string_to_enum(enum_string):
     return dict(image_pb2.Image.PixelFormat.items()).get(enum_string)
 
 
-def main(argv):
+def main():
     # Parse args
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -50,7 +50,7 @@ def main(argv):
         '--pixel-format', choices=pixel_format_type_strings(),
         help='Requested pixel format of image. If supplied, will be used for all sources.')
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Create robot object with an image client.
     sdk = bosdyn.client.create_standard_sdk('image_capture')
@@ -102,7 +102,7 @@ def main(argv):
             img = np.frombuffer(image.shot.image.data, dtype=dtype)
             if image.shot.image.format == image_pb2.Image.FORMAT_RAW:
                 try:
-                    # Attempt to reshape array into a RGB rows X cols shape.
+                    # Attempt to reshape array into an RGB rows X cols shape.
                     img = img.reshape((image.shot.image.rows, image.shot.image.cols, num_bytes))
                 except ValueError:
                     # Unable to reshape the image data, trying a regular decode.
@@ -123,5 +123,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

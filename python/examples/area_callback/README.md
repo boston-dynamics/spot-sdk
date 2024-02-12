@@ -26,7 +26,7 @@ Let's take a look at the example to see how that can be done. We will go over so
 
 ### Initialization
 
-Below two lines lets the user to specify the area callback **policy** at the start and the end of the region.
+Below two lines lets the user specify the area callback **policy** at the start and the end of the region.
 
 ```python
 self.stop_at_start()
@@ -36,7 +36,7 @@ self.continue_past_end()
 These policies determine the type of behavior that robot will be executing at the start and the end of the area callback region. Available policies are listed below:
 
 - `continue_past_start()` / `continue_past_end()`: Setting the policy to `continue` means that the robot will not pause to complete an action at the start/end of the area callback region.
-- `stop_at_start()` / `start_at_end()`: Setting the policy to `stop` means that the robot will pause at the start/end of the area callback region until the user switches the policy to `continue`. Normally, `stop` mode will be used to execute an action that does not require robot body lease (i.e. searching for forklift, connecting to bluetooth device)
+- `stop_at_start()` / `stop_at_end()`: Setting the policy to `stop` means that the robot will pause at the start/end of the area callback region until the user switches the policy to `continue`. Normally, `stop` mode will be used to execute an action that does not require robot body lease (i.e. searching for forklift, connecting to bluetooth device)
 - `control_at_start()` / `control_at_end()`: Setting the policy to `control` means that robot will pause at the start/end of the area callback region until the user switches the policy to `continue`. The difference of `control` mode will be used to execute an action that does require robot body lease (i.e. look both ways, using robot arm to open/close the door). Note that `control_at_<LOCATION>()` methods can be used with the `block_until_control()` if the robot has nothing to do until it gets the control. Once you are done with robot action, calling the `continue_past_<LOCATION>()` will automatically return the lease back to the robot.
 
 Below is an example for initiating the thread for Spot CAM LED lights. We have provided the `LightsHelper` class that can be used to run different lighting modes for when the robot is waiting to cross the road versus when the robot is crossing the road. This helper is a context manager that will run a separate thread to control the lights while the main thread continues inside the context.
@@ -140,11 +140,11 @@ $ sudo ufw delete <number-of-rule-to-delete>
 
 For this example, you can either run the area callback client code on your laptop, or on the Spot CORE or CORE I/O.
 
-If you are to run this example on your laptop, you need to have at least release 3.2 installed on your laptop. Once installed on your system (or virtual environment), connect to robot's wifi, then run the callback client code using steps 1-3 above. We recommend that you run your example this way before dockerizing the custom area callback and loading it onto the Spot CORE or CORE I/O.
+If you are to run this example on your laptop, you need to have at least release 4.0.0 installed on your laptop. Once installed on your system (or virtual environment), connect to robot's wifi, then run the callback client code using steps 1-3 above. We recommend that you run your example this way before dockerizing the custom area callback and loading it onto the Spot CORE or CORE I/O.
 
 For Spot CORE or CORE I/O, it is recommended that you dockerize your customized area callback code. The Dockerfile example is included in the `look_both_ways` and `crosswalk_lights` folder.
 
-We will use the graph nav as the client, using the map you recorded using the tablet. Adding a area callback region / action works the same way as adding remote mission callback service. During an autowalk, press the red plus button on the bottom right corner of the recording screen.
+We will use the graph nav as the client, using the map you recorded using the tablet. Adding an area callback region / action works the same way as adding remote mission callback service. During an autowalk, press the red plus button in the bottom right corner of the recording screen.
 ![Recording Action Menu](./figures/recording_action_menu.png)
 
 Find and click on your custom area callback action to define your area callback region.

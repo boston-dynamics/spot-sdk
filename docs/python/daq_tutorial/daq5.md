@@ -23,7 +23,7 @@ In this part of the tutorial, you will:
 
 - Create an action on the tablet to capture data from the services we wrote.
 - Record a mission using those actions around your environment.
-- Play back the mission to autonomously capture data a the recorded locations.
+- Play back the mission to autonomously capture data to the recorded locations.
 - Download the data from the robot.
 - Configure the robot to automatically upload its data to the cloud.
 

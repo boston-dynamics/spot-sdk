@@ -380,7 +380,8 @@ def build_wheel(wheel, srcdir=None, dry_run=False, verbose=False, skip_git=False
     if not remove_built_wheel(wheel, dry_run=dry_run):
         return False
 
-    cmd = [sys.executable, 'setup.py']
+    # setup.py is deprecated.  For now we'll just suppress the warnings from that.
+    cmd = [sys.executable, '-W', 'ignore::Warning', 'setup.py']
     if not verbose:
         cmd.append('-q')
     cmd += ['bdist_wheel', '-b', BUILD_DIR, '-d', DIST_DIR]

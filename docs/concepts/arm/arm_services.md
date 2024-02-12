@@ -59,7 +59,7 @@ The inverse kinmatics (IK) service allows users to request robot configurations 
   - **Body-Mounted Tool**: The tool frame is fixed at a specified pose relative to the body frame. If that pose is unspecified, the tool frame defaults to the [body frame](../geometry_and_frames.md#frames-in-the-spot-robot-world).
 - **Task Specifications**
   - **Tool Pose Task**: A valid solution must place the tool frame at a specified pose.
-  - **Tool Pose Task**: A valid solution must place the tool frame such that the specified target lies on the tool frames's x-axis.
+  - **Tool Pose Task**: A valid solution must place the tool frame such that the specified target lies on the tool frame's x-axis.
 
 The service responds with a robot configuration that meets those specifications or a status indicating that it was unable to find a solution.
 

@@ -18,6 +18,7 @@ import "bosdyn/api/alerts.proto";
 import "bosdyn/api/docking/docking.proto";
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/gripper_camera_param.proto";
+import "bosdyn/api/spot/choreography_sequence.proto";
 import "bosdyn/api/spot_cam/camera.proto";
 import "bosdyn/api/spot_cam/logging.proto";
 import "bosdyn/api/spot_cam/ptz.proto";
@@ -43,11 +44,56 @@ message Node {
     string reference_id = 3;
 
     oneof type {
+        // DEPRECATED as of 4.0.
         // Implementation of this node. For example, this may be a Sequence.
-        google.protobuf.Any impl = 4;
+        google.protobuf.Any impl = 4 [deprecated = true];
         // Unique identifier of another node. If this is filled out, rather than the "impl", then
         // the referenced node will be used in place of this one.
         string node_reference = 5;
+
+        Condition condition = 9;
+        Sequence sequence = 10;
+        Selector selector = 11;
+        Repeat repeat = 12;
+        RetainLease retain_lease = 13;
+        Retry retry = 14;
+        ForDuration for_duration = 15;
+        BosdynDockState bosdyn_dock_state = 16;
+        BosdynPowerRequest bosdyn_power_request = 17;
+        BosdynRobotState bosdyn_robot_state = 18;
+        BosdynRobotCommand bosdyn_robot_command = 19;
+        RemoteGrpc remote_grpc = 20;
+        Sleep sleep = 21;
+        Prompt prompt = 22;
+        SetBlackboard set_blackboard = 23;
+        DateToBlackboard date_to_blackboard = 24;
+        DefineBlackboard define_blackboard = 25;
+        FormatBlackboard format_blackboard = 26;
+        ConstantResult constant_result = 27;
+        BosdynNavigateRoute bosdyn_navigate_route = 29;
+        BosdynNavigateTo bosdyn_navigate_to = 30;
+        BosdynGraphNavState bosdyn_graph_nav_state = 31;
+        BosdynGraphNavLocalize bosdyn_graph_nav_localize = 32;
+        BosdynRecordEvent bosdyn_record_event = 33;
+        SimpleParallel simple_parallel = 34;
+        SpotCamPtz spot_cam_ptz = 35;
+        SpotCamStoreMedia spot_cam_store_media = 36;
+        SpotCamLed spot_cam_led = 37;
+        SpotCamFocusState spot_cam_focus_state = 58;
+        SpotCamResetAutofocus spot_cam_reset_autofocus = 38;
+        StoreMetadata store_metadata = 39;
+        Switch switch = 40;
+        DataAcquisition data_acquisition = 41;
+        DataAcquisitionOnInterruption data_acquisition_on_interruption = 42;
+        Dock dock = 43;
+        RestartWhenPaused restart_when_paused = 49;
+        ClearBehaviorFaults clear_behavior_faults = 50;
+        BosdynGripperCameraParamsState bosdyn_gripper_camera_params_state = 51;
+        SetGripperCameraParams set_gripper_camera_params = 52;
+        ParallelAnd parallel_and = 54;
+        SetGraspOverride set_grasp_override = 55;
+        ExecuteChoreography execute_choreography = 56;
+        MissionUploadChoreography mission_upload_choreography = 57;
     }
 
     // Defines parameters, used by this node or its children.
@@ -449,6 +495,29 @@ message Sleep {
     bool restart_after_stop = 2;
 }
 
+// Sends a request to play a choreography sequence with the given name, and then monitors
+// the state of the dancing robot.
+message ExecuteChoreography {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+    // The name of the sequence to play.
+    string sequence_name = 3;
+}
+
+// Uploads the given set of animations and choreography sequences to the robot.
+message MissionUploadChoreography {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+    // Choreography sequences to be loaded (required by the mission).
+    repeated bosdyn.api.spot.ChoreographySequence choreography_sequences = 3;
+    // Any animations we need to load if we want to play the sequences.
+    repeated bosdyn.api.spot.Animation animated_moves = 4;
+}
+
 // Prompt the world at large to answer a question.
 // This node represents a request for information from ANY listeners that may be out there.
 message Prompt {
@@ -476,8 +545,21 @@ message Prompt {
         // Numeric code corresponding to this option. Passed as part of the answer.
         int64 answer_code = 2;
     }
+
+    message OptionsList {
+        repeated Prompt.Option options = 1;
+    }
+
     // The set of options that can be chosen for this prompt.
-    repeated Option options = 4;
+    repeated Option options = 4 [deprecated = true];
+
+
+    oneof answer_spec {
+        // The set of options that can be chosen for this prompt.
+        OptionsList options_list = 9;
+        // Custom parameter specification for the answer expected for this prompt.
+        DictParam.Spec custom_params = 10;
+    }
 
     // Child node, run after the prompt has been responded to.
     // Children will have access to the answer code provided by the response.
@@ -603,6 +685,18 @@ message SpotCamLed {
 
     // Brightnesses of the LEDs, from SetLEDBrightnessRequest
     map<int32, float> brightnesses = 3;
+}
+
+// Set the focus on the Spot CAM PTZ
+message SpotCamFocusState {
+    // Name of the service to use.
+    string service_name = 1;
+
+    // Host machine of the directory server that the Spot CAM registered with.
+    string host = 2;
+
+    // Focus State to set the Spot CAM PTZ to, from SetPtzFocusStateRequest
+    bosdyn.api.spot_cam.PtzFocusState focus_state = 3;
 }
 
 // Reset the autofocus on the Spot CAM PTZ
@@ -746,6 +840,11 @@ message DataAcquisition {
     // AcquireDataReqeust.
     bool disable_cancel_on_pause_or_stop = 8;
 
+    // If true, metadata string values may contain formatted blackboard variables.
+    // Please see the documentation in FormatBlackboard for more information about supported string
+    // formats.
+    bool format_metadata = 10;
+
 }
 
 // Send RetainLease for every Lease the mission service is given via PlayMissionRequest.
@@ -854,7 +953,8 @@ message DataAcquisitionOnInterruption {
 
     // Data acquisition request that will be sent if the mission is interrupted.
     // This is not an actual node. It will only be used for the data acquisition request details.
-    // The completion_behavior and request_name_in_blackboard fields will not be used.
+    // The completion_behavior, request_name_in_blackboard, metadata_name_in_blackboard, and
+    // format_metadata fields will not be used.
     DataAcquisition request_when_interrupted = 2;
 
     reserved 3;

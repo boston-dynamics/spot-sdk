@@ -126,7 +126,7 @@ def run_constrained_manipulation(config):
         time.sleep(2 * task_duration)
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -146,10 +146,10 @@ def main(argv):
                         type=float, default=None)
     parser.add_argument('--vel-lim-pos-move', help='Velocity limit for position moves', type=float,
                         default=None)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     run_constrained_manipulation(options)
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

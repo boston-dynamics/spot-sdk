@@ -21,7 +21,7 @@ from bosdyn.client.spot_cam.lights_helper import LightsHelper
 
 
 class AreaCallbackCrossWalkService(AreaCallbackRegionHandlerBase):
-    """An example implementation which lets the robot to check for forklift while crossing the road.
+    """An example implementation which lets the robot check for forklifts while crossing the road.
     """
 
     def __init__(self, config: AreaCallbackServiceConfig, robot: Robot):
@@ -88,6 +88,16 @@ def main():
     service_name = 'crosswalk-lights'
     # required_lease_resources = ['body'] # we do not need body lease for forklift detection & spotcam lights
     config = AreaCallbackServiceConfig(service_name)
+    info = config.area_callback_information
+
+    # This callback does not do anything special to get past obstacles, so we should allow
+    # Graph Nav to identify blockages in the region.
+    info.blockage = info.BLOCKAGE_CHECK
+    # Graph Nav should still wait for entities as normal when crossing this region.
+    info.entity_waiting = info.ENTITY_WAITING_ENABLE
+    # The robot should face along the route it is going to cross.
+    info.default_stop.face_direction = info.default_stop.FACE_DIRECTION_ALONG_ROUTE
+
     servicer = AreaCallbackServiceServicer(robot, config, AreaCallbackCrossWalkService)
 
     # Run the area callback service.

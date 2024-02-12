@@ -8,8 +8,7 @@
 
 RobotIdClient -- Wrapper around service stub.
 """
-
-from distutils.version import StrictVersion
+from deprecated.sphinx import deprecated
 
 from bosdyn.api import robot_id_pb2, robot_id_service_pb2_grpc
 from bosdyn.client.common import BaseClient, common_header_errors
@@ -49,13 +48,15 @@ def version_tuple(version):
     return version.major_version, version.minor_version, version.patch_level
 
 
+@deprecated(reason='distutils is deprecated. Use version_tuple() instead.', version='4.0.0')
 def create_strict_version(robot_id):
     """Create and return a StrictVersion object, from a robot_id, which can be compared easily."""
-    if robot_id == None:
+    if robot_id is None:
         return None
 
     version_string = str(robot_id.software_release.version.major_version) + '.' + \
-                            str(robot_id.software_release.version.minor_version) + '.' + \
-                            str(robot_id.software_release.version.patch_level)
+                     str(robot_id.software_release.version.minor_version) + '.' + \
+                     str(robot_id.software_release.version.patch_level)
 
+    from distutils.version import StrictVersion
     return StrictVersion(version_string)

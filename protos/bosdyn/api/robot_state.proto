@@ -18,7 +18,6 @@ import "google/protobuf/duration.proto";
 import "google/protobuf/wrappers.proto";
 
 
-
 // Kinematic model of the robot skeleton.
 message Skeleton {
     // Each link of the robot skeleton.
@@ -53,12 +52,14 @@ message HardwareConfiguration {
     // Set of power features that are compatible with the robot hardware.
     // See power.proto for the associated requests.
 
-    bool can_power_command_request_off_robot = 2;        // Turn off the robot. Same as physical switch.
-    bool can_power_command_request_cycle_robot = 3;      // Power cycle the robot. Same as physical switch.
-    bool can_power_command_request_payload_ports = 4;    // Control power to the payload ports.
-    bool can_power_command_request_wifi_radio = 5;       // Control power to the hardware Wi-Fi radio.
+    bool can_power_command_request_off_robot = 2;  // Turn off the robot. Same as physical switch.
+    bool can_power_command_request_cycle_robot =
+        3;  // Power cycle the robot. Same as physical switch.
+    bool can_power_command_request_payload_ports = 4;  // Control power to the payload ports.
+    bool can_power_command_request_wifi_radio = 5;     // Control power to the hardware Wi-Fi radio.
 
-    bool has_audio_visual_system = 7;                    // Robot has audio visual system installed.
+    bool has_audio_visual_system = 7;        // Robot has audio visual system installed.
+    bool redundant_safety_stop_enabled = 8;  // Robot is configured with redundant safety stop.
 }
 
 // The current state of the robot.
@@ -94,6 +95,9 @@ message RobotState {
     // Relevant terrain data beneath and around the robot
     TerrainState terrain_state = 12;
 
+    // Temperature data for the motors.
+    SystemState system_state = 13;
+
 
     reserved 9;
 }
@@ -107,7 +111,7 @@ message PowerState {
 
     enum MotorPowerState {
         option allow_alias = true;
-        
+
         // Unknown motor power state. Do not use this field.
         STATE_UNKNOWN = 0 [deprecated = true];
         MOTOR_POWER_STATE_UNKNOWN = 0;
@@ -134,12 +138,12 @@ message PowerState {
     }
     // The motor power state of the robot.
     MotorPowerState motor_power_state = 2;
-    
+
     // State describing if robot is connected to shore (wall) power. Robot can't be powered on
     // while on shore power
     enum ShorePowerState {
         option allow_alias = true;
-        
+
         // Unknown shore power state. Do not use.
         STATE_UNKNOWN_SHORE_POWER = 0 [deprecated = true];
         SHORE_POWER_STATE_UNKNOWN = 0;
@@ -375,8 +379,14 @@ message BatteryState {
 
 }
 
-// The kinematic state of the robot describes the current estimated positions of the robot body and joints throughout the world.
-// It includes a transform snapshot of the robot’s current known frames as well as joint states and the velocity of the body.
+message SystemState {
+    // Temperature of the robot motors.
+    repeated MotorTemperature motor_temperatures = 1;
+}
+
+// The kinematic state of the robot describes the current estimated positions of the robot body and
+// joints throughout the world. It includes a transform snapshot of the robot’s current known frames
+// as well as joint states and the velocity of the body.
 message KinematicState {
     // Joint state of all robot joints.
     repeated JointState joint_states = 2;
@@ -384,9 +394,39 @@ message KinematicState {
     // Robot clock timestamp corresponding to these readings.
     google.protobuf.Timestamp acquisition_timestamp = 30;
 
-    // A tree-based collection of transformations, which will include the transformations to the
-    // robot body ("body") in addition to transformations to the common frames ("world", "dr") and
-    // ground plane estimate "gpe".
+    // A tree-based collection of transformations.  See
+    // https://dev.bostondynamics.com/docs/concepts/geometry_and_frames for conceptual
+    // documentation on frames.  The snapshop will include the following frames:
+    // “odom”: An inertial frame that estimates the fixed location in the world (relative to where
+    // the robot is booted up) using the kinematics of the robot.
+    //
+    // “vision”: An inertial frame that estimates the fixed location in the world (relative to where
+    // the robot is booted up), and is calculated using visual analysis of the world and the robot’s
+    // odometry.
+    //
+    // “body”: A frame describing the robot body’s position and orientation. The frame’s origin is
+    // at the geometric center of the hips with the x-axis pointing from the hip center to the
+    // middle of the front hips.
+    //
+    // “flat_body”: A gravity-aligned frame describing the robot body’s position and orientation.
+    // The position is at the robot’s center, and the x/y-axes lie flat in the “odom” frame x-y
+    // plane. Specifically, the x-axis is the normalized projection of the robot’s “body” frame
+    // x-axis to the “odom” x-y plane.
+    //
+    // "gpe”: A frame that represents the robot’s ground plane estimate. The full SE(3) pose can be
+    // converted into a plane (a point and normal).
+    //
+    // For robots with a SpotArm attached, see
+    // https://support.bostondynamics.com/s/article/Spot-Arm-specifications-and-concepts conceptual
+    // documentation on SpotArm specific frames. The snaphot will also include the following frames:
+    // "hand":  The hand frame is used by many of the ArmCommand requests available in the API.  The
+    // origin is slightly in front of the gripper's palm plate and its oreination is aligned with
+    // 'arm0.link_wr1'.
+    //
+    // "arm0.link_wr1": A frame describing the robot's distal wrist link's position and orientation.
+    // The origin of the frame is at the end of the link on its rotational axis.  It's x-axis is
+    // aligned with the rotational axis.
+    //
     // All transforms within the snapshot are at the acquisition time of kinematic state.
     FrameTreeSnapshot transforms_snapshot = 31;
 
@@ -417,6 +457,14 @@ message JointState {
     // This is typically a torque in Newton meters as joints are typically revolute. However, for
     // translational joints this could be a force in Newtons.
     google.protobuf.DoubleValue load = 5;
+}
+
+message MotorTemperature {
+    // Name of the affected motor of the robot, specified by the joint name and degree of freedom.
+    string name = 1;
+
+    // Measured temperature of the motor, in Celsius.
+    double temperature = 2;
 }
 
 // This describes any current behaviror faults on the robot, which would block any robot commands
@@ -619,7 +667,7 @@ message ServiceFaultState {
 
 // Relevant terrain data beneath and around the robot
 message TerrainState {
-    // Is the terrain immediately under the robot such that sitting or powering off 
+    // Is the terrain immediately under the robot such that sitting or powering off
     // the robot may cause the robot to be in an unstable position?
     bool is_unsafe_to_sit = 1;
 }
@@ -672,8 +720,8 @@ message RobotHardwareConfigurationResponse {
     HardwareConfiguration hardware_configuration = 2;
 }
 
-// The RobotLinkModel request message uses a link name returned by the RobotHardwareConfiguration response to
-// get the associated OBJ file.
+// The RobotLinkModel request message uses a link name returned by the RobotHardwareConfiguration
+// response to get the associated OBJ file.
 message RobotLinkModelRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -704,7 +752,8 @@ message RobotImpairedState {
         IMPAIRED_STATUS_SYSTEM_FAULT = 3;
         // The robot's motors are not powered on.
         IMPAIRED_STATUS_NO_MOTOR_POWER = 4;
-        // The autonomous system is expected to have a remote point cloud (e.g. a LIDAR), but this is not working.
+        // The autonomous system is expected to have a remote point cloud (e.g. a LIDAR), but this
+        // is not working.
         IMPAIRED_STATUS_REMOTE_CLOUDS_NOT_WORKING = 5;
         // A remote service the autonomous system depends on is not working.
         IMPAIRED_STATUS_SERVICE_FAULT = 6;
@@ -718,7 +767,8 @@ message RobotImpairedState {
     // If the status is ROBOT_IMPAIRED, this is specifically why the robot is impaired.
     ImpairedStatus impaired_status = 1;
 
-    // If impaired_status is STATUS_SYSTEM_FAULT, these are the faults which caused the robot to stop.
+    // If impaired_status is STATUS_SYSTEM_FAULT, these are the faults which caused the robot to
+    // stop.
     repeated bosdyn.api.SystemFault system_faults = 2;
 
     // If impaired_status is STATUS_SERVICE_FAULT, these are the service faults which caused
@@ -728,5 +778,71 @@ message RobotImpairedState {
     // If impaired_status is STATUS_BEHAVIOR_FAULT, these are the behavior faults which caused
     // the robot to stop.
     repeated bosdyn.api.BehaviorFault behavior_faults = 4;
+}
+
+message CombinedJointStates {
+    // Robot clock timestamp corresponding to these readings.
+    google.protobuf.Timestamp acquisition_timestamp = 1;
+
+    // The ordering of joints in these repeated fields are the same as (TODO  where)
+    repeated float position = 2;
+    repeated float velocity = 3;
+    repeated float load = 4;
+}
+
+message ImuState {
+    // Frequency at which IMU packets are expected to arrive.
+    double packet_rate = 2;
+
+    message Packet {
+        // Linear acceleration of the imu relative to the odom frame expressed in the mounting
+        // link's frame (m/s^2).
+        Vec3 acceleration_rt_odom_in_link_frame = 1;
+        // Angular velocity of the imu relative to the odom frame expressed in the mounting link's
+        // frame (rad/s).
+        Vec3 angular_velocity_rt_odom_in_link_frame = 2;
+        // Rotation from mounting link to odom frame as reported by the IMU.
+        Quaternion odom_rot_link = 3;
+        // Packet timestamp. Note that a given state update may contain many imu packets so
+        // this timestamp will be different than the header timestamp for the state message.
+        google.protobuf.Timestamp timestamp = 4;
+    }
+
+    // A set of data packets since the last message.
+    repeated Packet packets = 3;
+
+    // Name for this imu.
+    string identifier = 7;
+
+    // Name of the link the IMU is mounted on.
+    // This name matches a link listed in RobotState.kinematic_state.transforms_snapshot.
+    string mounting_link_name = 9;
+
+    // Position of the IMU in the mounting link frame expressed in the mounting link's frame (m).
+    Vec3 position_imu_rt_link = 10;
+}
+
+// The RobotStateStream request message to get the current state of the robot.
+message RobotStateStreamRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message RobotStateStreamResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Joint state of all robot joints.
+    CombinedJointStates joint_states = 2;
+
+    // IMU state
+    ImuState inertial_state = 3;
+
+    message CommandState {
+        uint32 user_command_key = 1;
+        google.protobuf.Timestamp received_timestamp = 2;
+    }
+    // For determining latency information about the last command received is provided.
+    CommandState last_command = 4;
 }
 

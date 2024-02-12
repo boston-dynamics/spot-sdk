@@ -1,0 +1,119 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.gps;
+
+option java_outer_classname = "LocationProto";
+
+import "bosdyn/api/geometry.proto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+// Latitude/longitude location representation.
+message LLH {
+    // Latitude value in degrees.
+    double latitude = 1;
+    // Longitude value in degrees.
+    double longitude = 2;
+    // Height value in meters. The reference system from where the height is
+    // calculated is controlled by the application generating this structure.
+    double height = 3;
+}
+
+message GpsDataPoint {
+    // The GPS measurement as Latitude, Longitude, Height.
+    LLH llh = 1;
+    // The GPS measurement with respect to the Earth Centered Earth Fixed frame
+    bosdyn.api.Vec3 ecef = 13;
+    // Magnetometer yaw.  0 is north.  Processes counter clockwise.  We did this to match Spot's
+    // body coordinate system, where Z is up.
+    google.protobuf.DoubleValue yaw = 2;
+    // Movement heading.  0 is north.  Processes counter clockwise.  We did this to match Spot's
+    // body coordinate system, where Z is up.
+    google.protobuf.DoubleValue heading = 3;
+    // Estimated accuracy is measured in meters
+    message Accuracy {
+        double horizontal = 1;
+        double vertical = 2;
+    }
+    Accuracy accuracy = 4;
+    // Information about a GNSS satellite measurement.
+    message Satellite {
+        uint32 prn=1; //satellite identifier
+        float elevation=2; //Degrees from -90 to 90
+        float azimuth=3; //Degrees from true north
+        float snr=4; //in dB
+        enum Constellation{
+            UNKNOWN=0;
+            GPS_L1CA=1;
+            GPS_L2CM=2;
+            SBAS_L1CA=3;
+            GLONASS_L1CA=4;
+            GLONASS_L2CA=5;
+            GPS_L1P=6;
+            GPS_L2P=7;
+            //BDS stands for the BeiDou Navigation Satellite System
+            BDS2_B1=8;
+            BDS2_B2=9;
+            GALILEO_E1B=10;
+            GALILEO_E7I=11;
+        }
+        Constellation constellation=5;
+    }
+    // Satellites used in the location solution.
+    repeated Satellite satellites = 5;
+    message FixMode {
+        // Types of fixes possible.
+        enum Mode {
+            Invalid = 0;
+            SPP = 1; //Single Point Positioning
+            DGNSS = 2; //Differential Global Navigation Satellite System
+            PPS = 3; //Precise Positioning System Fix
+            FIXED_RTK = 4; //Fixed-Point Real-Time Kinematics
+            FLOAT_RTK = 5; //Floating-Point Real-Time Kinematics
+            DEAD_RECKONING = 6;
+            FIXED_POSITION = 7;
+            SIMULATED = 8;
+            SBAS = 9; //Satellite Based Augmentation System
+        }
+        // The current type of fix.
+        Mode value = 1;
+    }
+    // The current fix, if any.
+    FixMode mode = 6;
+    // GPS timestamp.  This will *not* match robot time.
+    google.protobuf.Timestamp timestamp_gps = 7;
+    enum Filter {
+        FILTER_UNKNOWN = 0;
+        FILTER_NONE = 1;
+        FILTER_DURO_INS = 2;
+    };
+    Filter filter = 8;
+
+    // Optional field corresponding the timestamp of the computer the GPS is connected
+    // to (if any).
+    google.protobuf.Timestamp timestamp_client = 9;
+
+    // Robot timestamp.
+    google.protobuf.Timestamp timestamp_robot = 10;
+
+
+    // How the GPS is mounted relative to the robots body.
+    bosdyn.api.SE3Pose body_tform_gps = 12;
+}
+
+message GpsDevice {
+    // A human readable name for this GPS unit.  "Piksi" or "Duro" or "Microstrain"
+    string name = 1;
+}
+
+message LocationAndGpsDevice {
+    GpsDataPoint data_point = 1;
+    GpsDevice device = 2;
+}

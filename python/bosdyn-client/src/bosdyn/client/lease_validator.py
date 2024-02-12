@@ -268,13 +268,13 @@ class LeaseValidator:
 
 class LeaseValidatorResponseProcessor:  # pylint: disable=too-few-public-methods
     """LeaseValidatorResponseProcessor updates the lease validator using the
-    latest_known_lease from the response's LeaseUseResult."""
+    latest_known_lease from the response's LeaseUseResult.
+
+    Args:
+        lease_validator (LeaseValidator): validator for a specific robot to be updated.
+    """
 
     def __init__(self, lease_validator):
-        """
-        Args:
-            lease_validator (LeaseValidator): validator for a specific robot to be updated.
-        """
         self.lease_validator = lease_validator
 
     def mutate(self, response):

@@ -24,7 +24,7 @@ The custom gait move can also be driven through the tablet's choreograpy drive s
 
 ## Gait Diagram
 
-A Hildebrand-style gait diagram (see [wikipedia](https://en.wikipedia.org/wiki/Gait) is provided for Custom Gait as currently configured in the left panel of the Move Configuration tab in Choreographer.  For each foot in the diagram (FL, FR, HL, HR), black regions of the diagram indicate periods of time where a foot is in contact with the ground, and white regions indicate periods of time when a foot is in the air.  The phase sliders control the beginning and end of the white region.  Some types of configuration errors will be indicated in red on the diagram.
+A Hildebrand-style gait diagram (see [wikipedia](https://en.wikipedia.org/wiki/Gait) is provided for Custom Gait as currently configured in the left panel of the Move Configuration tab in Choreographer.  For each foot in the diagram (FL, FR, HL, HR), black regions of the diagram indicate periods of time when a foot is in contact with the ground, and white regions indicate periods of time when a foot is in the air.  The phase sliders control the beginning and end of the white region.  Some types of configuration errors will be indicated in red on the diagram.
 
 ## Presets
 

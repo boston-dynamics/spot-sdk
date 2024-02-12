@@ -70,7 +70,7 @@ class StateMachine(object):
 
     def _state_look_for_light(self):
         """
-        Grab an image from one of the forward looking camera and look for a saturated spot near center
+        Grab an image from one of the forward-looking camera and look for a saturated spot near center
         """
 
         try:
@@ -96,7 +96,7 @@ class StateMachine(object):
 
     def _detect_blob(self, img, min_area=2500):
         """
-        Detect largest blob in the given image with area greater than the given minimum
+        Detect the largest blob in the given image with area greater than the given minimum
 
         @param[in]  img       The image to analysis
         @param[in]  min_area  The minimum area to look for [pixel^2]

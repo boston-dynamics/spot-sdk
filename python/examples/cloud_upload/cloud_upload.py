@@ -55,7 +55,7 @@ def upload_to_aws(bucket_name, source_file, destination_file):
                 bucket_name)
 
 
-def main(argv):
+def main():
     """Upload to AWS Example"""
 
     # Setting up logger for informational print statements.
@@ -73,4 +73,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

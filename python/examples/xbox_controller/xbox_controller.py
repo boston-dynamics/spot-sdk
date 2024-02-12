@@ -637,12 +637,8 @@ class XboxController:
             self._shutdown()
 
 
-def main(argv):
-    """Parses command line args.
-
-    Args:
-        argv: List of command-line arguments.
-    """
+def main():
+    """Parses command line args."""
 
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawTextHelpFormatter, description=('''
@@ -656,7 +652,7 @@ def main(argv):
     parser.add_argument('--logging', action='store_true', help='Turn on logging output')
 
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     if options.logging:
         bosdyn.client.util.setup_logging(options.verbose)
 
@@ -670,5 +666,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    import sys
-    main(sys.argv[1:])
+    main()

@@ -183,6 +183,16 @@ class ChoreographyClient(BaseClient):
             self, self.timesync_endpoint).local_seconds_from_robot_timestamp(status.validity_time)
         return (status, client_time)
 
+    def get_choreography_status_async(self, **kwargs):
+        """Async version of get_choreography_status."""
+        request = choreography_sequence_pb2.ChoreographyStatusRequest()
+        status = self.call_async(self._stub.ChoreographyStatus, request, value_from_response=None,
+                                 error_from_response=None, copy_request=False, **kwargs)
+        client_time = _TimeConverter(self,
+                                     self.timesync_endpoint).local_seconds_from_robot_timestamp(
+                                         status.result().validity_time)
+        return (status, client_time)
+
     def choreography_log_to_animation_file(self, name, fpath, has_arm, *args):
         """Turn the choreography log from the proto into an animation `cha` file type.
 
@@ -342,6 +352,49 @@ class ChoreographyClient(BaseClient):
         print("Animation *.cha file downloaded to: %s" % file_path)
         return name + ".cha"
 
+    def choreography_time_adjust(self, override_client_start_time, time_difference=None,
+                                 validity_time=None, **kwargs):
+        """Provide a time to execute the choreography sequence instead the value passed in by
+        execute_choreography. Useful for when multiple robots are performing a synced
+        performance, and all robots should begin dancing at the same time.
+
+        Args:
+            override_client_start_time (float): The time (in seconds) that the dance should start. This time
+                should be provided in the local clock's timeframe and the client will convert it
+                to the required robot's clock timeframe.
+            time_difference (float): The acceptable time difference in seconds between an ExecuteChoreographyRequest start
+                time and the override time where the override_client_start_time will be used instead of the start time
+                specified by the ExecuteChoreographyRequest. If not set will default to 20s. Maximum time_difference is
+                2 minutes.
+            validity_time (float): How far in the future, in seconds from the current time, can the
+                override_client_start_time be. If not set will default to 60s. Maximum validity_time is
+                5 minutes.
+        """
+
+        req = self.build_choreography_time_adjust_request(override_client_start_time,
+                                                          time_difference, validity_time)
+        return self.call(
+            self._stub.ChoreographyTimeAdjust,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
+    def choreography_time_adjust_async(self, override_client_start_time, time_difference=None,
+                                       validity_time=None, **kwargs):
+        """Async version of choreography_time_adjust()"""
+
+        req = self.build_choreography_time_adjust_request(override_client_start_time,
+                                                          time_difference, validity_time)
+        return self.call_async(
+            self._stub.ChoreographyTimeAdjust,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
     def execute_choreography(self, choreography_name, client_start_time,
                              choreography_starting_slice, lease=None, **kwargs):
         """Execute the current choreography sequence loaded on the robot by name.
@@ -389,7 +442,7 @@ class ChoreographyClient(BaseClient):
         """Sends commands to interact with individual choreography moves.
 
         Args:
-            command_list(list of choreography_sequence_pb2.MoveCommand protobuf): The commands.  Each 
+            command_list(list of choreography_sequence_pb2.MoveCommand protobuf): The commands.  Each
                 command interacts with a single individual move.
             client_end_time (float): The time (in seconds) that the command stops being valid. This time
                 should be provided in the local clock's timeframe and the client will convert it
@@ -480,10 +533,44 @@ class ChoreographyClient(BaseClient):
             copy_request=False,
             **kwargs)
 
+    def get_choreography_sequence(self, seq_name, **kwargs):
+        """Get a sequence currently known by the robot, response includes
+            the full ChoreographySequence with the given name and any
+            Animations used in the sequence.
+
+            Args:
+                seq_name (string): the name of the sequence to return.
+
+        Returns:
+            The full GetChoreographySequenceResponse proto.
+        """
+
+        req = choreography_sequence_pb2.GetChoreographySequenceRequest()
+        req.sequence_name = seq_name
+        return self.call(
+            self._stub.GetChoreographySequence,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
+    def get_choreography_sequence_async(self, seq_name, **kwargs):
+        """Async version of get_choreography_sequence()."""
+        req = choreography_sequence_pb2.GetChoreographySequenceRequest()
+        req.sequence_name = seq_name
+        return self.call_async(
+            self._stub.GetChoreographySequence,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
     def save_sequence(self, seq_name, labels=[], **kwargs):
-        """Save an uploaded sequence to the robot. Saved sequences are 
-        automatically uploaded to the robot when it boots. 
-        
+        """Save an uploaded sequence to the robot. Saved sequences are
+        automatically uploaded to the robot when it boots.
+
         Returns:
             The full SaveSequenceResponse proto."""
         request = self.build_save_sequence_request(seq_name, labels)
@@ -498,9 +585,9 @@ class ChoreographyClient(BaseClient):
                                **kwargs)
 
     def delete_sequence(self, seq_name, **kwargs):
-        """Delete a sequence from temporary robot memory and 
-        delete any copies of the sequence saved to disk. 
-        
+        """Delete a sequence from temporary robot memory and
+        delete any copies of the sequence saved to disk.
+
         Returns:
             The full DeleteSequenceResponse proto."""
         request = choreography_sequence_pb2.DeleteSequenceRequest(sequence_name=seq_name)
@@ -515,9 +602,9 @@ class ChoreographyClient(BaseClient):
                                **kwargs)
 
     def modify_choreography_info(self, seq_name, add_labels=[], remove_labels=[], **kwargs):
-        """Modifies a sequence's ChoreographyInfo field to remove or 
+        """Modifies a sequence's ChoreographyInfo field to remove or
         add any labels attached to the sequence.
-        
+
         Returns:
             The full ModifyChoreographyInfoResponse proto."""
         request = self.build_modify_choreography_info_request(seq_name, add_labels, remove_labels)
@@ -533,8 +620,8 @@ class ChoreographyClient(BaseClient):
 
     def clear_all_sequence_files(self, **kwargs):
         """Completely clears all choreography files that are saved on the robot,
-        including animation proto files. 
-        
+        including animation proto files.
+
         Returns:
             The full ClearAllSequenceFilesResponse proto."""
         request = choreography_sequence_pb2.ClearAllSequenceFilesRequest()
@@ -587,6 +674,20 @@ class ChoreographyClient(BaseClient):
             error_from_response=_download_robot_state_log_stream_errors,
             copy_request=False,
             **kwargs)
+
+    def build_choreography_time_adjust_request(self, override_client_start_time, time_difference,
+                                               validity_time):
+        """Generate the ChoreographyTimeAdjustRequest rpc with the timestamp converted into robot time."""
+        # Note the client_start_time is a time expressed in the client's clock for when the choreography sequence should begin.
+        request = choreography_sequence_pb2.ChoreographyTimeAdjustRequest()
+        if override_client_start_time:
+            request.override_start_time.CopyFrom(
+                self._update_timestamp_filter(override_client_start_time, self.timesync_endpoint))
+        if time_difference:
+            request.acceptable_time_difference.CopyFrom(seconds_to_duration(time_difference))
+        if validity_time:
+            request.validity_time.CopyFrom(seconds_to_duration(validity_time))
+        return request
 
     def build_execute_choreography_request(self, choreography_name, client_start_time,
                                            choreography_starting_slice, lease=None):

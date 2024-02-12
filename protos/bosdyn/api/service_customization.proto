@@ -146,7 +146,7 @@ message OneOfParam {
 
     string key = 1;
 
-    // The values of the chosen spec will is guaraunteed to be at value[key].
+    // The values of the chosen spec will is guaranteed to be at value[key].
     // The values of the other specs might at value[that_specs_key], but no guarantees.
     map<string, DictParam> values = 3;
 
@@ -191,8 +191,6 @@ message Int64Param {
         // A value sent by the client must be within this minimum and maximum (inclusive).
         // If unset, only limited by system representation.
         // ERROR: It is an error to specify a min_value larger than the max_value.
-        //
-        // ADVICE: If a client sends a value outside these bounds, reject, rather than clamp it.
         google.protobuf.Int64Value min_value = 4;
         google.protobuf.Int64Value max_value = 5;
     }
@@ -217,8 +215,6 @@ message DoubleParam {
         // A value sent by the client must be within this minimum and maximum (inclusive).
         // If unset, only limited by system representation.
         // ERROR: It is an error to specify a min_value larger than the max_value.
-        //
-        // ADVICE: If a client sends a value outside these bounds, reject, rather than clamp, it.
         google.protobuf.DoubleValue min_value = 4;
         google.protobuf.DoubleValue max_value = 5;
     }
@@ -306,7 +302,7 @@ message RegionOfInterestParam {
 // Errors specific to the use of custom parameters.
 message CustomParamError {
     reserved 2, 3;
-    
+
     enum Status {
         // Invalid, do not use.
         STATUS_UNKNOWN = 0;
@@ -325,7 +321,7 @@ message CustomParamError {
     }
 
     Status status = 4;
-    
+
     // List of error messages from this parameter and its children
     repeated string error_messages = 5;
 

@@ -34,7 +34,7 @@ class InvalidGraphError(MapProcessingServiceResponseError):
 
 
 class InvalidParamsError(MapProcessingServiceResponseError):
-    """The parameters passed to the optimizer do not make sense (e.g negative weights)."""
+    """The parameters passed to the optimizer do not make sense (e.g. negative weights)."""
 
 
 class MaxIterationsError(MapProcessingServiceResponseError):
@@ -167,11 +167,13 @@ class MapProcessingServiceClient(BaseClient):
 
     @staticmethod
     def _build_process_anchoring_request(params, modify_anchoring_on_server,
-                                         stream_intermediate_results, initial_hint):
+                                         stream_intermediate_results, initial_hint,
+                                         apply_gps_results):
         return map_processing_pb2.ProcessAnchoringRequest(
             params=params, initial_hint=initial_hint,
             modify_anchoring_on_server=modify_anchoring_on_server,
-            stream_intermediate_results=stream_intermediate_results)
+            stream_intermediate_results=stream_intermediate_results,
+            apply_gps_result_to_waypoints_on_server=apply_gps_results)
 
     def process_topology(self, params, modify_map_on_server, **kwargs):
         """Process the topology of the map on the server, closing loops and producing a
@@ -196,7 +198,7 @@ class MapProcessingServiceClient(BaseClient):
                          **kwargs)
 
     def process_anchoring(self, params, modify_anchoring_on_server, stream_intermediate_results,
-                          initial_hint=None, **kwargs):
+                          initial_hint=None, apply_gps_results=False, **kwargs):
         """Process the anchoring of the map on the server, producing a metrically consistent anchoring.
 
         Args:
@@ -208,13 +210,16 @@ class MapProcessingServiceClient(BaseClient):
             iterations may be included in the response. If false, only the last iteration will be returned.
             initial_hint: Initial guess at some number of waypoints and world objects and their anchorings.
             This field is an AnchoringHint object (see map_processing.proto)
+            apply_gps_results: if true, the annotations of waypoints in the graph will be modified to include
+            the pose of each waypoint in a GPS centered frame, if the map has GPS (see map_processing.proto)
         Returns:
             The ProcessAnchoringResponse containing a new optimized anchoring.
         Raises:
             RpcError: Problem communicating with the robot
         """
         request = self._build_process_anchoring_request(params, modify_anchoring_on_server,
-                                                        stream_intermediate_results, initial_hint)
+                                                        stream_intermediate_results, initial_hint,
+                                                        apply_gps_results)
 
         return self.call(self._stub.ProcessAnchoring, request,
                          value_from_response=_get_streamed_anchoring_response,

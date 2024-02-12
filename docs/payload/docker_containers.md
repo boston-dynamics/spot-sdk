@@ -18,7 +18,7 @@ Spot's computing power can be extended through additional computation payloads m
 The purpose of computation payloads is to run custom software applications on the robot that interact with the robot software system and the other payloads attached to Spot. For CORE I/O, we suggest using the provided Extensions framework to install, configure and run custom software. The suggested approach to develop, test and deploy software on computation payloads is as follows:
 
 1. Implement and test application in a development environment, such as a development computer. In this case, the development computer connected to Spot's WiFi acts as the computation payload for the robot. Testing in the development environment allows for quick iterations and updating of the application code.
-2. Dockerize the application and test the docker image with the application on the development environment. The change in this step compared to the previous one is to run the application inside a docker container, rather than on the host OS of the development environment. This step verifies that the application works correctly in an containerized environment, and it acts as a stepping stone to the final step below. The section [Create Docker Images](#create-docker-images) described how to create and test the docker images in the local development environment.
+2. Dockerize the application and test the docker image with the application on the development environment. The change in this step compared to the previous one is to run the application inside a docker container, rather than on the host OS of the development environment. This step verifies that the application works correctly in a containerized environment, and it acts as a stepping stone to the final step below. The section [Create Docker Images](#create-docker-images) described how to create and test the docker images in the local development environment.
 3. If targetting the CORE I/O payload, combine all docker containers with a docker-compose configuration file and package everything into a Spot Extension, as described in the [Manage Payload Software in CORE I/O](#manage-payload-software-in-core-i-o) section.
 4. Deploy and manage the Spot Extension in the CORE I/O payload (also described in the section linked above). Running the dockerized application on a computation payload attached to Spot removes the need for WiFi connectivity between Spot and a stationary computation environment, improving Spot's autonomy.
 
@@ -131,7 +131,7 @@ UDP: 21000-22000
 
 ## Manage Payload Software in CORE I/O
 
-This section describes two ways to manage docker containers on a computation payload, using CORE I/O extensions or command-line tools.
+This section describes two ways to manage docker containers on a computation payload, using CORE I/O extensions or command-line tools. Using CORE I/O Extensions is the recommended approach for any release software intended to be used on multiple CORE I/O's.
 
 ### CORE I/O Extensions Configuration
 
@@ -143,6 +143,10 @@ Extensions can also simply be static files that developers need to upload into C
 
 1. It allows the developers to split their Extensions into a smaller Extension with the software components that needs to be updated frequently and one or more larger Extensions with static files needed by the Extension with the software component. This configuration simplifies the process of updating Extensions by decoupling static large files from the frequently-updatable files and installing them once, or less frequently.
 2. It allows the developers to split their Extensions into a generic software package that is identical for all customers, and separate Extensions with configuration files that are applicable to one of a subset of customers. This configuration simplifies the process of installing customer-specific Extensions by maintaining the common part of the package in one Extension and the customer-specific configuration in another Extension.
+
+#### Helper Scripts
+
+In v4.0, two scripts were added to the [Extensions](../../python/examples/extensions/README.md) example to help with creating software package extensions in the structure described below. The `generate_extension_data.py` script takes in a saved Docker image and generates basic `manifest.json` and `docker-compose.yml` files described below. The `build_extension.py` script takes in all of the files in the structure below and outputs a valid Extension file that can be installed onto the CORE I/O.
 
 #### Extension Structure
 

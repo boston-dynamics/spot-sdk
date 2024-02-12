@@ -226,3 +226,46 @@ message FanPowerCommandFeedbackResponse {
     google.protobuf.Timestamp early_stop_time = 4;
 }
 
+message ResetSafetyStopRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The Lease to show ownership of the robot.
+    Lease lease = 2;
+
+    // Types of safety stop commands the robot can execute.
+    enum SafetyStopType {
+        SAFETY_STOP_UNKNOWN = 0;    // Invalid request; do not use.
+        SAFETY_STOP_PRIMARY = 1;    // Primary safety stop.
+        SAFETY_STOP_REDUNDANT = 2;  // Redundant safety stop.
+    }
+    SafetyStopType safety_stop_type = 3;
+}
+
+message ResetSafetyStopResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Details about how the lease was used.
+    LeaseUseResult lease_use_result = 2;
+
+    // Feedback on the reset safety stop command.
+    enum Status {
+        // Status is not specified.
+        STATUS_UNKNOWN = 0;
+
+        // Reset safety stop command succeeded.
+        STATUS_OK = 1;
+
+        // ERROR: Reset safety stop command failed due to incompatible hardware.
+        STATUS_INCOMPATIBLE_HARDWARE_ERROR = 2;
+
+        // ERROR: Reset safety stop command was run and failed.
+        STATUS_FAILED = 3;
+
+        // ERROR: Reset safety stop command failed due to unknown stop type.
+        STATUS_UNKNOWN_STOP_TYPE = 4;
+    }
+    // Current feedback of specified command.
+    Status status = 3;
+}

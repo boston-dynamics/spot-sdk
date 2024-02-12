@@ -15,10 +15,11 @@ from google.protobuf import json_format
 
 from bosdyn.api import data_acquisition_pb2 as data_acquisition
 from bosdyn.api import data_acquisition_service_pb2_grpc as data_acquisition_service
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
-                                  handle_common_header_errors, handle_unset_status_error)
-from bosdyn.client.exceptions import Error, ResponseError
-from bosdyn.util import now_timestamp, seconds_to_duration
+from bosdyn.client.common import (BaseClient, common_header_errors, custom_params_error,
+                                  error_factory, error_pair, handle_common_header_errors,
+                                  handle_custom_params_errors, handle_unset_status_error)
+from bosdyn.client.exceptions import Error, InternalServerError, ResponseError
+from bosdyn.util import now_nsec, now_sec, now_timestamp, seconds_to_duration
 
 
 class DataAcquisitionResponseError(ResponseError):
@@ -64,8 +65,7 @@ class DataAcquisitionClient(BaseClient):
             if not self._timesync_endpoint:
                 data_timestamp = now_timestamp()
             else:
-                data_timestamp = self._timesync_endpoint.robot_timestamp_from_local_secs(
-                    time.time())
+                data_timestamp = self._timesync_endpoint.robot_timestamp_from_local_secs(now_sec())
         action_id = data_acquisition.CaptureActionId(action_name=action_name, group_name=group_name,
                                                      timestamp=data_timestamp)
         req = data_acquisition.AcquireDataRequest(acquisition_requests=acquisition_requests,
@@ -174,6 +174,7 @@ class DataAcquisitionClient(BaseClient):
 
     def cancel_acquisition(self, request_id, **kwargs):
         """Cancel a data acquisition based on the request id.
+
         Args:
           request_id (int): The request id associated with an AcquireData request.
         Raises:
@@ -197,6 +198,16 @@ class DataAcquisitionClient(BaseClient):
                                error_from_response=_cancel_acquisition_error, copy_request=False,
                                **kwargs)
 
+    def get_live_data(self, request):
+        """Call the GetLiveData RPC of the plugin service."""
+        return self.call(self._stub.GetLiveData, request, error_from_response=_get_live_data_error,
+                         copy_request=True)
+
+    def get_live_data_async(self, request):
+        """Async version of the get_live_data() RPC."""
+        return self.call_async(self._stub.GetLiveData, request,
+                               error_from_response=_get_live_data_error, copy_request=True)
+
 
 _ACQUIRE_DATA_STATUS_TO_ERROR = collections.defaultdict(lambda:
                                                         (DataAcquisitionResponseError, None))
@@ -219,6 +230,17 @@ _CANCEL_ACQUISITION_STATUS_TO_ERROR.update({
         error_pair(RequestIdDoesNotExistError),
     data_acquisition.CancelAcquisitionResponse.STATUS_FAILED_TO_CANCEL:
         error_pair(CancellationFailedError)
+})
+
+_CAPABILITY_LIVE_DATA_STATUS_TO_ERROR = collections.defaultdict(lambda: (None, None))
+_CAPABILITY_LIVE_DATA_STATUS_TO_ERROR.update({
+    # STATUS_UNKNOWN is not handled directly.
+    data_acquisition.LiveDataResponse.CapabilityLiveData.STATUS_OK: (None, None),
+    data_acquisition.LiveDataResponse.CapabilityLiveData.STATUS_UNKNOWN_CAPTURE_TYPE:
+        error_pair(UnknownCaptureTypeError),
+    # STATUS_CUSTOM_PARAMS_ERROR is handled separately.
+    data_acquisition.LiveDataResponse.CapabilityLiveData.STATUS_INTERNAL_ERROR:
+        error_pair(InternalServerError),
 })
 
 
@@ -276,6 +298,25 @@ def _cancel_acquisition_error(response):
     return error_factory(response, response.status,
                          status_to_string=data_acquisition.CancelAcquisitionResponse.Status.Name,
                          status_to_error=_CANCEL_ACQUISITION_STATUS_TO_ERROR)
+
+
+@handle_common_header_errors
+def _get_live_data_error(response):
+    """Return a custom exception based on the first invalid CapabilityLiveData, None if no error."""
+    for capability_live_data in response.live_data:
+        result = custom_params_error(capability_live_data, total_response=response)
+        if result is not None:
+            return result
+
+        result = error_factory(
+            response, capability_live_data.status,
+            status_to_string=data_acquisition.LiveDataResponse.CapabilityLiveData.Status.Name,
+            status_to_error=_CAPABILITY_LIVE_DATA_STATUS_TO_ERROR)
+        if result is not None:
+            # The exception is using the capability_live_data. Replace it with the full response.
+            result.response = response
+            return result
+    return None
 
 
 def _get_service_info_capabilities(response):

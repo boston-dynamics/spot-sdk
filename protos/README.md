@@ -14,6 +14,6 @@ Development Kit License (20191101-BDSDK-SL).
 
 The bosdyn-api wheel contains the Python implementation for the Protobuf definitions in the Boston 
 Dynamics Spot API. The message and service types defined in this wheel are used by the clients in 
-[bosdyn-client](https://pypi.org/project/bosdyn-client/) and 
-[bosdyn-mission](https://pypi.org/project/bosdyn-mission/) wheels to communicate with the services 
+[bosdyn-client](https://pypi.org/project/bosdyn-client/), 
+[bosdyn-mission](https://pypi.org/project/bosdyn-mission/) and [bosdyn-choreography-client](https://pypi.org/project/bosdyn-choreography-client/) wheels to communicate with the services 
 running on the Spot robots.

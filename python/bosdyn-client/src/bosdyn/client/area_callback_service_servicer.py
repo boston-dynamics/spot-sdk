@@ -159,6 +159,34 @@ class AreaCallbackServiceServicer(area_callback_service_pb2_grpc.AreaCallbackSer
             self.area_callback_region_handler = None
         return response
 
+    def RouteChange(self, request, context):
+        """Called when we re-route within the callback.  Most callbacks do not need to know about
+        changes in the route, and can ignore this."""
+        _LOGGER.info('Received RouteChange for command %d', request.command_id)
+        response = area_callback_pb2.RouteChangeResponse()
+        with ResponseContext(response, request, self._rpc_logger):
+            if (not self.area_callback_region_handler or
+                    not self._is_active_command_id(request.command_id)):
+                response.status = area_callback_pb2.EndCallbackResponse.STATUS_INVALID_COMMAND_ID
+                return response
+            try:
+                route_changed_result = self.area_callback_region_handler.route_changed(request)
+                if (route_changed_result.rerun_if_stopped and
+                        not self.area_callback_active_thread.is_alive()):
+                    self.area_callback_active_thread_event = Event()
+                    self.area_callback_active_thread = Thread(
+                        target=self.area_callback_region_handler.internal_run_wrapper,
+                        args=[self.area_callback_active_thread_event])
+                    self.area_callback_active_thread.start()
+                    _LOGGER.info('Re-created thread for command id %d', self._active_command_id)
+                response.status = response.STATUS_OK
+            except Exception as exc:
+                _LOGGER.exception("Failed route_changed_call")
+                response.header.error.code = response.header.error.CODE_INTERNAL_SERVER_ERROR
+                response.header.error.message = str(exc)
+
+        return response
+
     def _is_expired(self, end_time):
         current_robot_time_secs = self.robot.time_sec()
         end_time_secs = timestamp_to_sec(end_time)
@@ -213,7 +241,7 @@ class AreaCallbackServiceServicer(area_callback_service_pb2_grpc.AreaCallbackSer
         """Call to force run thread to terminate.
 
         Args:
-            timeout (float, optional): Time allowed to run thread to shutdown. Defaults to 5.
+            timeout (float, optional): Time allowed to run thread to shut down. Defaults to 5.
 
         Returns:
             bool: True if the thread correctly shut down within the allowed time.

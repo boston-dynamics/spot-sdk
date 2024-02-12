@@ -1,0 +1,11 @@
+services:
+  app:
+    image: "signals_lte:arm64"
+    network_mode: "host"
+    volumes:
+      - "/opt/payload_credentials:/creds"
+    restart: unless-stopped
+    command: >
+      192.168.50.3
+      --payload-credentials-file /creds/payload_guid_and_secret
+      --host-ip=192.168.50.5

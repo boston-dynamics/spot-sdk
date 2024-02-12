@@ -85,11 +85,11 @@ def log_spot_data(config):
 
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     LOGGER.setLevel(logging.DEBUG)
 
@@ -99,5 +99,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

@@ -4,23 +4,31 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-'''Utility functions for Scout web API'''
+"""Utility functions for Scout web API"""
 import datetime
 import getpass
 import os
-import shutil
 import sys
+
+from deprecated.sphinx import deprecated
+
+from bosdyn.orbit.exceptions import WebhookSignatureVerificationError
+from bosdyn.orbit.utils import (datetime_from_isostring, get_action_names_from_run_events,
+                                get_api_token, validate_webhook_payload, write_image)
 
 SCOUT_USER_ENV_VAR = "BOSDYN_SCOUT_CLIENT_USERNAME"
 SCOUT_PASS_ENV_VAR = "BOSDYN_SCOUT_CLIENT_PASSWORD"
+DEFAULT_MAX_MESSAGE_AGE_MS = 5 * 60 * 1000
 
 
-def get_credentials():
-    ''' Obtains credentials from either environment variables or terminal inputs
-        - Returns 
-            - username(str): the username for the Scout instance
-            - password(str): the password for the Scout instance
-    '''
+@deprecated(reason='Please, use get_api_token instead.', version='4.0.0', action="always")
+def get_credentials() -> [str, str]:
+    """ Obtains credentials from either environment variables or terminal inputs
+
+        Returns
+            username(str): the username for the Scout instance
+            password(str): the password for the Scout instance
+    """
     username = os.environ.get(SCOUT_USER_ENV_VAR)
     password = os.environ.get(SCOUT_PASS_ENV_VAR)
     if not username or not password:
@@ -32,17 +40,23 @@ def get_credentials():
     return username, password
 
 
-def get_latest_created_at_for_run_events(scout_client, params={}):
-    ''' Given a dictionary of query params, returns the max created at time for run events
-        - Args:
-            - scout_client(ScoutClient object): the client for Scout web API
-            - params(dict): the query params associated with the get request
-        - Raises:
-            - RequestExceptions: exceptions thrown by the Requests library 
-            - UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
-        - Returns:
-            - datetime.datetime(datetime representation): the max created at time for run events in datetime
-    '''
+@deprecated(
+    reason=
+    'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
+    version='4.0.0', action="always")
+def get_latest_created_at_for_run_events(scout_client: 'bosdyn.scout.client.ScoutClient',
+                                         params: dict = {}) -> datetime.datetime:
+    """ Given a dictionary of query params, returns the max created at time for run events
+
+        Args:
+            scout_client: the client for Scout web API
+            params: the query params associated with the get request
+        Raises:
+            RequestExceptions: exceptions thrown by the Requests library
+            UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
+        Returns:
+            The max created at time for run events in datetime
+    """
     base_params = {'limit': 1, 'orderBy': '-created_at'}
     base_params.update(params)
     latest_resource = scout_client.get_run_events(params=base_params).json()
@@ -53,34 +67,46 @@ def get_latest_created_at_for_run_events(scout_client, params={}):
     return datetime_from_isostring(latest_resource["resources"][0]["createdAt"])
 
 
-def get_latest_run_capture_resources(scout_client, params={}):
-    ''' Given a dictionary of query params, returns the latest run capture resources in json format
-        - Args:
-            - scout_client(ScoutClient object): the client for Scout web API
-            - params(dict): the query params associated with the get request
-        - Raises:
-            - RequestExceptions: exceptions thrown by the Requests library 
-            - UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
-        - Returns:
-            - Run Capture Resources(list): a list of resources obtained from Scout's RESTful endpoint
-    '''
+@deprecated(
+    reason=
+    'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
+    version='4.0.0', action="always")
+def get_latest_run_capture_resources(scout_client: 'bosdyn.scout.client.ScoutClient',
+                                     params: dict = {}) -> list:
+    """ Given a dictionary of query params, returns the latest run capture resources in json format
+
+        Args:
+            scout_client: the client for Scout web API
+            params: the query params associated with the get request
+        Raises:
+            RequestExceptions: exceptions thrown by the Requests library
+            UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
+        Returns:
+            A list of resources obtained from Scout's RESTful endpoint
+    """
     base_params = {'orderBy': '-created_at'}
     base_params.update(params)
     run_captures = scout_client.get_run_captures(params=base_params).json()
     return run_captures["resources"]
 
 
-def get_latest_created_at_for_run_captures(scout_client, params={}):
-    ''' Given a dictionary of query params, returns the max created at time for run captures
-        - Args:
-            - scout_client(ScoutClient object): the client for Scout web API
-            - params(dict): the query params associated with the get request
-        - Raises:
-            - RequestExceptions: exceptions thrown by the Requests library 
-            - UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
-        - Returns:
-            - datetime.datetime(datetime representation): the max created at time for run captures in datetime
-    '''
+@deprecated(
+    reason=
+    'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
+    version='4.0.0', action="always")
+def get_latest_created_at_for_run_captures(scout_client: 'bosdyn.scout.client.ScoutClient',
+                                           params: dict = {}) -> datetime.datetime:
+    """ Given a dictionary of query params, returns the max created at time for run captures
+
+        Args:
+            scout_client: the client for Scout web API
+            params: the query params associated with the get request
+        Raises:
+            RequestExceptions: exceptions thrown by the Requests library
+            UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
+        Returns:
+            The max created at time for run captures in datetime
+    """
     base_params = {'limit': 1, 'orderBy': '-created_at'}
     base_params.update(params)
     latest_resource = scout_client.get_run_captures(params=base_params).json()
@@ -91,17 +117,23 @@ def get_latest_created_at_for_run_captures(scout_client, params={}):
     return datetime_from_isostring(latest_resource["resources"][0]["createdAt"])
 
 
-def get_latest_run_resource(scout_client, params={}):
-    ''' Given a dictionary of query params, returns the latest run resource in json format
-        - Args:
-            - scout_client(ScoutClient object): the client for Scout web API
-            - params(dict): the query params associated with the get request
-        - Raises:
-            - RequestExceptions: exceptions thrown by the Requests library 
-            - UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
-        - Returns:
-            - Run Resource(json): a resource obtained from Scout's RESTful endpoint in json
-    '''
+@deprecated(
+    reason=
+    'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
+    version='4.0.0', action="always")
+def get_latest_run_resource(scout_client: 'bosdyn.scout.client.ScoutClient',
+                            params: dict = {}) -> list:
+    """ Given a dictionary of query params, returns the latest run resource in json format
+
+        Args:
+            scout_client: the client for Scout web API
+            params: the query params associated with the get request
+        Raises:
+            RequestExceptions: exceptions thrown by the Requests library
+            UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
+        Returns:
+            A list corresponding to a run resource obtained from Scout's RESTful endpoint in json
+    """
     base_params = {'limit': 1, 'orderBy': 'newest'}
     base_params.update(params)
     latest_run_json = scout_client.get_runs(params=base_params).json()
@@ -110,17 +142,23 @@ def get_latest_run_resource(scout_client, params={}):
     return latest_run_json['resources'][0]
 
 
-def get_latest_run_in_progress(scout_client, params={}):
-    ''' Given a dictionary of query params, returns the latest running resource in json format
-        - Args:
-            - scout_client(ScoutClient object): the client for Scout web API
-            - params(dict): the query params associated with the get request
-        - Raises:
-            - RequestExceptions: exceptions thrown by the Requests library 
-            - UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
-        - Returns:
-            - Run(json): a run obtained from Scout's RESTful endpoint in json
-    '''
+@deprecated(
+    reason=
+    'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
+    version='4.0.0', action="always")
+def get_latest_run_in_progress(scout_client: 'bosdyn.scout.client.ScoutClient',
+                               params: dict = {}) -> list:
+    """ Given a dictionary of query params, returns the latest running resource in json format
+
+        Args:
+            scout_client: the client for Scout web API
+            params: the query params associated with the get request
+        Raises:
+            RequestExceptions: exceptions thrown by the Requests library
+            UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
+        Returns:
+            A list corresponding to a run obtained from Scout's RESTful endpoint in json
+    """
     base_params = {'orderBy': 'newest'}
     base_params.update(params)
     latest_resources = scout_client.get_runs(params=base_params).json()["resources"]
@@ -132,47 +170,51 @@ def get_latest_run_in_progress(scout_client, params={}):
     return None
 
 
-def get_latest_end_time_for_runs(scout_client, params={}):
-    ''' Given a dictionary of query params, returns the max end time for runs
-        - Args:
-            - scout_client(ScoutClient object): the client for Scout web API
-            - params(dict): the query params associated with the get request
-        - Raises:
-            - RequestExceptions: exceptions thrown by the Requests library 
-            - UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
-        - Returns:
-            - datetime.datetime(datetime representation): the max end for runs in datetime
-    '''
+@deprecated(
+    reason=
+    'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
+    version='4.0.0', action="always")
+def get_latest_end_time_for_runs(scout_client: 'bosdyn.scout.client.ScoutClient',
+                                 params: dict = {}) -> datetime.datetime:
+    """ Given a dictionary of query params, returns the max end time for runs
+
+        Args:
+            scout_client: the client for Scout web API
+            params: the query params associated with the get request
+        Raises:
+            RequestExceptions: exceptions thrown by the Requests library
+            UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly
+        Returns:
+            The max end time for runs in datetime
+    """
     base_params = {'limit': 1, 'orderBy': 'newest'}
     base_params.update(params)
     latest_resource = scout_client.get_runs(params=base_params).json()
-    if not latest_resource["resources"]:
-        scout_client_timestamp_response = scout_client.get_scout_system_time()
-        ms_since_epoch = int(scout_client_timestamp_response.json()["msSinceEpoch"])
-        return datetime.datetime.utcfromtimestamp(ms_since_epoch / 1000)
-    return datetime_from_isostring(latest_resource["resources"][0]["endTime"])
+    if latest_resource.get("resources"):
+        latest_end_time = latest_resource.get("resources")[0]["endTime"]
+        if latest_end_time:
+            return datetime_from_isostring(latest_end_time)
+    scout_client_timestamp_response = scout_client.get_scout_system_time()
+    ms_since_epoch = int(scout_client_timestamp_response.json()["msSinceEpoch"])
+    return datetime.datetime.utcfromtimestamp(ms_since_epoch / 1000)
 
 
-def write_image(img_raw, image_fp):
-    ''' Given a raw image and a desired output directory, writes the image to a file
-        - Args:
-            - img_raw(Raw image object): the input raw image
-            - image_fp(str): the output filepath for the image
-    '''
-    os.makedirs(os.path.dirname(image_fp), exist_ok=True)
-    with open(image_fp, 'wb') as out_file:
-        shutil.copyfileobj(img_raw, out_file)
+@deprecated(
+    reason=
+    'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
+    version='4.0.0', action="always")
+def data_capture_urls_from_run_events(scout_client: 'bosdyn.scout.client.ScoutClient',
+                                      run_events: list, list_of_channel_names: list = None) -> list:
+    """ Given run events and list of desired channel names, returns the list of data capture urls
 
-
-def data_capture_urls_from_run_events(scout_client, run_events, list_of_channel_names=None):
-    ''' Given run events and list of desired channel names, returns the a list data capture urls
-        - Args:
-            - run_events(json): a json representation of run events obtained from Scout's RESTful endpoint
-            - list_of_channel_names(list): a list of channel names associated with the desired data captures. 
-                                           Defaults to None which returns all the available channels. 
-        - Returns:
-            - data_urls(list): a list of urls
-    '''
+        Args:
+            scout_client: the client for Scout web API
+            run_events: a json representation of run events obtained from Scout's RESTful endpoint
+            list_of_channel_names: a list of channel names associated with the desired data captures.
+                                           Defaults to None which returns all the available channels.
+        Returns:
+            data_urls: a list of urls
+    """
     all_run_events_resources = run_events["resources"]
     data_urls = []
     for resource in all_run_events_resources:
@@ -189,16 +231,23 @@ def data_capture_urls_from_run_events(scout_client, run_events, list_of_channel_
     return data_urls
 
 
-def data_capture_url_from_run_capture_resources(scout_client, run_capture_resources,
-                                                list_of_channel_names=None):
-    ''' Given run capture resources and list of desired channel names, returns the a list data capture urls
-        - Args:
-            - run_capture_resources(list): a list of resources obtained from Scout's RESTful endpoint
-            - list_of_channel_names(list): a list of channel names associated with the desired data captures. 
-                                           Defaults to None which returns all the available channels. 
-        - Returns:
-            - data_urls(list): a list of urls
-    '''
+@deprecated(
+    reason=
+    'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
+    version='4.0.0', action="always")
+def data_capture_url_from_run_capture_resources(scout_client: 'bosdyn.scout.client.ScoutClient',
+                                                run_capture_resources: list,
+                                                list_of_channel_names: list = None) -> list:
+    """ Given run capture resources and list of desired channel names, returns the list of data capture urls
+
+        Args:
+            scout_client: the client for Scout web API
+            run_capture_resources: a list of resources obtained from Scout's RESTful endpoint
+            list_of_channel_names: a list of channel names associated with the desired data captures.
+                                           Defaults to None which returns all the available channels.
+        Returns:
+            data_urls: a list of urls
+    """
     data_urls = []
     for data_capture in run_capture_resources:
         if list_of_channel_names is None:
@@ -210,31 +259,3 @@ def data_capture_url_from_run_capture_resources(scout_client, run_capture_resour
             if list_of_channel_names not in data_urls:
                 data_urls.append(f'https://{scout_client._hostname}' + data_capture["dataUrl"])
     return data_urls
-
-
-def get_action_names_from_run_events(run_events):
-    ''' Given run events, returns a list of action names 
-        - Args:
-            - run_events(json): a json representation of run events obtained from Scout's RESTful endpoint 
-        - Returns:
-            - action_names(list): a list of action names 
-    '''
-    all_run_events_resources = run_events["resources"]
-    action_names = []
-    for resource in all_run_events_resources:
-        action_names.append(resource["actionName"])
-    return action_names
-
-
-def datetime_from_isostring(datetime_isostring):
-    ''' Returns the datetime representation of the iso string representation of time
-        - Args:
-            - datetime_isostring(str): the iso string representation of time
-        - Returns:
-            - datetime.datetime(datetime representation): the datetime representation of the iso string representation of time
-    '''
-    if "Z" in datetime_isostring:
-        return datetime.datetime.strptime(datetime_isostring, "%Y-%m-%dT%H:%M:%S.%fZ")
-    if "+" in datetime_isostring:
-        return datetime.datetime.strptime(datetime_isostring[0:datetime_isostring.index("+")],
-                                          "%Y-%m-%dT%H:%M:%S.%f")

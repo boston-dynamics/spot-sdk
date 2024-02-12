@@ -12,4 +12,4 @@ Development Kit License (20191101-BDSDK-SL).
 <img src="https://www.bostondynamics.com/sites/default/files/2020-05/spot.png" style="max-width:50%;">
 </p>
 
-The bosdyn-choreography-protos wheel contains the Protobuf definitions in the Boston Dynamics Choreography API. The message and service types defined in this wheel are used by the clients in [bosdyn-choreography-client](https://pypi.org/project/bosdyn-choreography-client/) wheel to communicate with the services running on the Spot robots.
+The bosdyn-choreography-protos wheel has been deprecated. The Python implementation for the Protobuf definitions previously stored in this build has been integrated with the [bosdyn-api wheel](https://pypi.org/project/bosdyn-api/).

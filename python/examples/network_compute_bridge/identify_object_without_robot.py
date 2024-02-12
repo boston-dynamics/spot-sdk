@@ -96,7 +96,7 @@ def _send_request(server, image_path, model, confidence, verbose=False):
     return latency
 
 
-def main(argv):
+def main():
     """An example using the API to list and get specific objects."""
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--server', help='IP address of external machine learning server.',
@@ -110,7 +110,7 @@ def main(argv):
     parser.add_argument('-l', '--model-list', help='List of models to be used.',
                         action='store_true')
     parser.add_argument('-v', '--verbose', help='Print verbose output', action='store_true')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     if options.input_image_dir is None and not options.model_list:
         print('Error: must provide an input image.')
@@ -157,5 +157,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

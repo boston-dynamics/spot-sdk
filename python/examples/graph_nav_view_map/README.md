@@ -20,7 +20,7 @@ python3 -m pip install -r requirements.txt
 
 ## Running the Example
 
-1. Record a map using AutoWalk or the Command Line interface. (If using Autowalk, transfer the map from Documents/bosdyn/autowalk/your_map.walk to your local machine using a USB cable). The map should be a directory of the form:
+1. Record a map using AutoWalk or the [Command Line Interface](../graph_nav_command_line/README.md). (If using Autowalk, transfer the map from Documents/bosdyn/autowalk/your_map.walk to your local machine using a USB cable). The map should be a directory of the form:
 
 ```
 - /your_map.walk

@@ -78,19 +78,19 @@ estop                       bosdyn.api.EstopService                   estop.spot
 graph-nav-service           bosdyn.api.graph_nav.GraphNavService      graph-nav.spot.robot    user
 ```
 
-The `name` of the service is a user friendly name which provides some semantic information about what the service can do. The name must be unique across all services. For example, `auth` is the name of the service which provides authentication.
+The `name` of the service is a user-friendly name which provides some semantic information about what the service can do. The name must be unique across all services. For example, `auth` is the name of the service which provides authentication.
 
 The `type` of the service is the gRPC service interface that the service implements. For example, `bosdyn.api.AuthService` is the `type` of the `auth` service. Multiple services can exist for the same type (although with different names and authorities). For example, a camera payload could host a `bosdyn.api.ImageService` which shares the same interface as the one built into Spot.
 
 The `authority` is used to direct the RPC request to the correct service. The combination of the `authority` and the `type` of the service creates a URL. For example, the `auth` service has the URL: `https://auth.spot.robot/bosdyn.api.AuthService` This naming scheme is defined by gRPC itself. All authorities must be of the form `<authority-name>.spot.robot`. Multiple services of different types can share the same authority.
 
-Services specify whether a user token is needed to access the service. This is demonstrated in the `tokens` column in the example above. Most services require a signed in user, but a few do not.
+Services specify whether a user token is needed to access the service. This is demonstrated in the `tokens` column in the example above. Most services require a signed-in user, but a few do not.
 
 Note that not all services register with the `directory` service at Spot startup. Applications may need to periodically poll the `directory` service to catch changes that have been made. Built-in services may take a few seconds to register at system startup. Payload-provided services may register significantly later.
 
 ## time-sync
 
-Time is critical for both interpreting when sensor data was recorded as well as for commanding Spot. The Spot API uses a single clock known as “Robot Time” as a basis for time commands.
+Time is critical both for interpreting when sensor data was recorded as well as for commanding Spot. The Spot API uses a single clock known as “Robot Time” as a basis for time commands.
 
 Spot’s clock may not be the same as the application’s clock. For example, at a single point in time Spot may think it is 16:01, whereas the application’s clock may be an hour behind at 15:01. If the application treated Spot’s clock as being at the same time as its own clock, problems may result. Fresh sensor data from Spot would be interpreted as being generated in the future. Commands that are issued to expire in 10 seconds would be rejected by Spot since they would appear to have expired.
 

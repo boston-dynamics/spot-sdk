@@ -28,6 +28,8 @@ Developers getting acquainted with the SDK may find it easier to start with cert
 - [Data Acquisition Service](data_acquisition_service/README.md)
 - [Self Registration](self_registration/README.md)
 - [Graph Nav View Map](graph_nav_view_map/README.md)
+- [Graph Nav View GPS Data](graph_nav_view_gps/README.md)
+- [GPS Service](gps_service/README.md)
 
 ### Advanced Examples
 
@@ -45,4 +47,4 @@ Developers getting acquainted with the SDK may find it easier to start with cert
 - [Logging Examples](docs/logging_examples.md)
 - [Data Acquisition Examples](docs/data_acquisition_examples.md)
 - [Autonomy and Missions Examples](docs/autonomy_and_missions_examples.md)
-- [Scout](docs/scout.md)
+- [Orbit](docs/orbit.md)

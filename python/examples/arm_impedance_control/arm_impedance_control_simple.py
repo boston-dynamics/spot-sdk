@@ -161,11 +161,11 @@ def move_to_cartesian_pose_rt_task(robot, command_client, task_T_desired, root_T
     block_until_arm_arrives(command_client, cmd_id, 3.0)
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     try:
         impedance_command(options)
         return True
@@ -176,5 +176,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

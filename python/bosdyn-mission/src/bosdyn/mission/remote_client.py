@@ -64,7 +64,7 @@ class RemoteClient(BaseClient):
 
         Args:
             leases (Iterable[Lease]): List of lease protobufs to establish session with.
-            inputs (Iterable[bosdyn.api.mission.KeyValue]): any inputs needed by by the remote node.
+            inputs (Iterable[bosdyn.api.mission.KeyValue]): any inputs needed by the remote node.
             lease_resources (Iterable[str]): List of resource names to use from the lease wallet.
                 Only applied if no leases are provided.
         """
@@ -92,7 +92,7 @@ class RemoteClient(BaseClient):
         Args:
             session_id: session
             leases (Iterable[Lease]): List of lease protobufs to use during the tick.
-            inputs (Iterable[bosdyn.api.mission.KeyValue]): any inputs needed by by the remote node.
+            inputs (Iterable[bosdyn.api.mission.KeyValue]): any inputs needed by the remote node.
             lease_resources (Iterable[str]): List of resource names to use from the lease wallet.
                 Only applied if no leases are provided.
         """

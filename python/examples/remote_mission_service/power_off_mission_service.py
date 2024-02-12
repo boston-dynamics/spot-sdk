@@ -106,6 +106,8 @@ class PowerOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
 
         Builds the response in-place, depending on how the power off command is going.
         """
+        response.status = remote_pb2.TickResponse.STATUS_SUCCESS
+
         # Grab the Future for the original command and the feedback.
         command_future, feedback_future = self.sessions_by_id[session_id]
         # If the original command has not been sent...
@@ -296,6 +298,11 @@ class PowerOffServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         else:
             response.status = remote_pb2.TeardownSessionResponse.STATUS_INVALID_SESSION_ID
 
+    def GetRemoteMissionServiceInfo(self, request, context):
+        response = remote_pb2.GetRemoteMissionServiceInfoResponse()
+        with ResponseContext(request, response):
+            return response
+
 
 def run_service(bosdyn_sdk_robot, port, logger=None):
     # Proto service specific function used to attach a servicer to a server.
@@ -306,7 +313,7 @@ def run_service(bosdyn_sdk_robot, port, logger=None):
     return GrpcServiceRunner(service_servicer, add_servicer_to_server_fn, port, logger=logger)
 
 
-if __name__ == '__main__':
+def main():
     # Define all arguments used by this service.
     import argparse
     parser = argparse.ArgumentParser()
@@ -333,3 +340,7 @@ if __name__ == '__main__':
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:
         service_runner.run_until_interrupt()
+
+
+if __name__ == '__main__':
+    main()

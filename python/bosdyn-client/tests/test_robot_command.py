@@ -8,7 +8,8 @@
 import pytest
 from google.protobuf import timestamp_pb2
 
-from bosdyn.api import arm_command_pb2, geometry_pb2, robot_command_pb2, synchronized_command_pb2
+from bosdyn.api import (arm_command_pb2, basic_command_pb2, geometry_pb2, robot_command_pb2,
+                        synchronized_command_pb2)
 from bosdyn.client import InternalServerError, LeaseUseError, ResponseError, UnsetStatusError
 from bosdyn.client.frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME
 from bosdyn.client.robot_command import (EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME,
@@ -49,21 +50,19 @@ def test_robot_command_feedback_error():
     # Test unset status error
     response.header.error.code = response.header.error.CODE_OK
     assert isinstance(_robot_command_feedback_error(response), UnsetStatusError)
-    # Test status error.
-    response.status = response.STATUS_COMMAND_OVERRIDDEN
-    assert not _robot_command_feedback_error(response)
-    # Test OK unset status error via deprecated route
-    response.status = response.STATUS_PROCESSING
-    assert not _robot_command_feedback_error(response)
+
     # Test OK unset status error via full body command route
-    response.status = response.STATUS_UNKNOWN
-    assert isinstance(_robot_command_feedback_error(response), UnsetStatusError)
-    response.feedback.full_body_feedback.status = response.STATUS_PROCESSING
+    response.feedback.full_body_feedback.status = basic_command_pb2.RobotCommandFeedbackStatus.STATUS_PROCESSING
     assert not _robot_command_feedback_error(response)
     # Test OK unset status error via synchro command route
-    response.feedback.full_body_feedback.status = response.STATUS_UNKNOWN
+    response.feedback.synchronized_feedback.mobility_command_feedback.status = basic_command_pb2.RobotCommandFeedbackStatus.STATUS_UNKNOWN
     assert isinstance(_robot_command_feedback_error(response), UnsetStatusError)
-    response.feedback.synchronized_feedback.mobility_command_feedback.status = response.STATUS_PROCESSING
+    # Test OK unset status error via synchro command route
+    response.feedback.full_body_feedback.status = basic_command_pb2.RobotCommandFeedbackStatus.STATUS_UNKNOWN
+    assert isinstance(_robot_command_feedback_error(response), UnsetStatusError)
+    response.feedback.synchronized_feedback.mobility_command_feedback.status = basic_command_pb2.RobotCommandFeedbackStatus.STATUS_PROCESSING
+    assert not _robot_command_feedback_error(response)
+    response.feedback.synchronized_feedback.mobility_command_feedback.status = basic_command_pb2.RobotCommandFeedbackStatus.STATUS_COMMAND_OVERRIDDEN
     assert not _robot_command_feedback_error(response)
 
 
@@ -92,7 +91,6 @@ def test_behavior_fault_clear_error():
 def _test_has_full_body(command):
     assert isinstance(command, robot_command_pb2.RobotCommand)
     assert command.HasField("full_body_command")
-    assert not command.HasField("mobility_command")
     assert not command.HasField("synchronized_command")
 
 
@@ -100,16 +98,10 @@ def _test_has_synchronized(command):
     assert isinstance(command, robot_command_pb2.RobotCommand)
     assert command.HasField("synchronized_command")
     assert not command.HasField("full_body_command")
-    assert not command.HasField("mobility_command")
 
 
 def _test_has_mobility(command):
     assert isinstance(command, synchronized_command_pb2.SynchronizedCommand.Request)
-    assert command.HasField("mobility_command")
-
-
-def _test_has_mobility_deprecated(command):
-    assert isinstance(command, robot_command_pb2.RobotCommand)
     assert command.HasField("mobility_command")
 
 
@@ -145,48 +137,6 @@ def test_safe_power_off_command():
     command = RobotCommandBuilder.safe_power_off_command()
     _test_has_full_body(command)
     assert command.full_body_command.HasField("safe_power_off_request")
-
-
-def test_trajectory_command():
-    goal_x = 1.0
-    goal_y = 2.0
-    goal_heading = 3.0
-    frame = ODOM_FRAME_NAME
-    command = RobotCommandBuilder.trajectory_command(goal_x, goal_y, goal_heading, frame)
-    _test_has_mobility_deprecated(command)
-    assert command.mobility_command.HasField("se2_trajectory_request")
-    traj = command.mobility_command.se2_trajectory_request.trajectory
-    assert len(traj.points) == 1
-    assert traj.points[0].pose.position.x == goal_x
-    assert traj.points[0].pose.position.y == goal_y
-    assert traj.points[0].pose.angle == goal_heading
-    assert command.mobility_command.se2_trajectory_request.se2_frame_name == ODOM_FRAME_NAME
-
-
-def test_velocity_command():
-    v_x = 1.0
-    v_y = 2.0
-    v_rot = 3.0
-    command = RobotCommandBuilder.velocity_command(v_x, v_y, v_rot)
-    _test_has_mobility_deprecated(command)
-    assert command.mobility_command.HasField("se2_velocity_request")
-    vel_cmd = command.mobility_command.se2_velocity_request
-    assert vel_cmd.velocity.linear.x == v_x
-    assert vel_cmd.velocity.linear.y == v_y
-    assert vel_cmd.velocity.angular == v_rot
-    assert vel_cmd.se2_frame_name == BODY_FRAME_NAME
-
-
-def test_stand_command():
-    command = RobotCommandBuilder.stand_command()
-    _test_has_mobility_deprecated(command)
-    assert command.mobility_command.HasField("stand_request")
-
-
-def test_sit_command():
-    command = RobotCommandBuilder.sit_command()
-    _test_has_mobility_deprecated(command)
-    assert command.mobility_command.HasField("sit_request")
 
 
 def _check_se2_traj_command(command, goal_x, goal_y, goal_heading, frame_name, n_points):
@@ -416,14 +366,6 @@ def test_build_synchro_command():
     assert command.synchronized_command.mobility_command.HasField("stand_request")
     command_position = command.synchronized_command.arm_command.named_arm_position_command.position
     assert command_position == arm_command_pb2.NamedArmPositionsCommand.POSITIONS_READY
-
-    # one synchro command and one deprecated mobility command:
-    deprecated_mobility_command = RobotCommandBuilder.sit_command()
-    command = RobotCommandBuilder.build_synchro_command(mobility_command,
-                                                        deprecated_mobility_command)
-    _test_has_synchronized(command)
-    _test_has_mobility(command.synchronized_command)
-    assert command.synchronized_command.mobility_command.HasField("sit_request")
 
     # fullbody command is rejected
     full_body_command = RobotCommandBuilder.selfright_command()

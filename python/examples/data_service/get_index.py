@@ -75,7 +75,7 @@ def get_comments(options):
     print(run_query(options, query))
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -99,7 +99,7 @@ def main(argv):
     comment_parser = subparsers.add_parser('comment', help='Get operator-comment pages')
     _add_common_args(comment_parser)
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     print(options)
 
     try:
@@ -122,5 +122,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

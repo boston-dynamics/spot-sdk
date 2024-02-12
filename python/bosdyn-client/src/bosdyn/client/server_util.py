@@ -16,7 +16,7 @@ import grpc
 
 import bosdyn.util
 from bosdyn.api import (data_acquisition_store_pb2, data_buffer_pb2, header_pb2, image_pb2,
-                        local_grid_pb2, log_annotation_pb2)
+                        local_grid_pb2)
 from bosdyn.client.channel import generate_channel_options
 
 _LOGGER = logging.getLogger(__name__)
@@ -91,7 +91,7 @@ class GrpcServiceRunner(object):
         max_send_message_length (int): Max message length (bytes) allowed for messages sent.
         max_receive_message_length (int): Max message length (bytes) allowed for messages received.
         timeout_secs (int): Number of seconds to wait for a clean server shutdown.
-        force_sigint_capture (bool): Re-assign the SIGINT handler to default in order to prevent
+        force_sigint_capture (bool): Re-assign the termination signal handlers to default in order to prevent
             other scripts from blocking a clean exit. Defaults to True.
         logger (logging.Logger): Logger to log with.
     """
@@ -127,12 +127,15 @@ class GrpcServiceRunner(object):
         shutdown_complete.wait(self.timeout_secs)
 
     def run_until_interrupt(self):
-        """Spin the thread until a SIGINT is received and then shut down cleanly."""
+        """Spin the thread until a SIGINT, SIGTERM, or SIGQUIT is received and then shut down cleanly."""
         if self.force_sigint_capture:
             # Ensure that KeyboardInterrupt is raised on a SIGINT.
             signal.signal(signal.SIGINT, signal.default_int_handler)
+            # Included SIGTERM for "docker stop". See https://docs.docker.com/engine/reference/commandline/stop/
+            signal.signal(signal.SIGTERM, signal.default_int_handler)
+            signal.signal(signal.SIGQUIT, signal.default_int_handler)
 
-        # Monitor for SIGINT and shut down cleanly.
+        # Monitor for SIGINT, SIGTERM, or SIGQUIT and shut down cleanly.
         try:
             while True:
                 time.sleep(1)
@@ -144,6 +147,7 @@ class GrpcServiceRunner(object):
 def populate_response_header(response, request, error_code=header_pb2.CommonError.CODE_OK,
                              error_msg=None):
     """Sets the ResponseHeader header in the response.
+
     Args:
         response (bosdyn.api Response message): The GRPC response message to be populated.
         request (bosdyn.api Request message): The header from the request is added to the response.
@@ -181,7 +185,6 @@ def get_bytes_field_allowlist():
         data_acquisition_store_pb2.StoreImageRequest: strip_store_image_request,
         data_buffer_pb2.RecordSignalTicksRequest: strip_record_signal_tick,
         data_buffer_pb2.RecordDataBlobsRequest: strip_record_data_blob,
-        log_annotation_pb2.AddLogAnnotationRequest: strip_log_annotation
     }
     return allowlist_map
 
@@ -222,10 +225,4 @@ def strip_record_signal_tick(proto_message):
 def strip_record_data_blob(proto_message):
     """Removes bytes from the data_buffer_pb2.RecordDataBlobsRequest proto."""
     for blob in proto_message.blob_data:
-        blob.ClearField("data")
-
-
-def strip_log_annotation(proto_message):
-    """Removes bytes from the log_annotation_pb2.AddLogAnnotationRequest proto."""
-    for blob in proto_message.annotations.blob_data:
         blob.ClearField("data")

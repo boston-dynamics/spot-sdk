@@ -10,6 +10,7 @@ package bosdyn.api;
 
 option java_outer_classname = "DataAcquisitionStoreServiceProto";
 
+import "bosdyn/api/data_chunk.proto";
 import "bosdyn/api/data_acquisition_store.proto";
 
 // The DataAcquisitionStoreService is used to store data (images, data, metadata) on the robot
@@ -46,4 +47,19 @@ service DataAcquisitionStoreService {
     // Store AlertData associated with a DataIdentifier.
     rpc StoreAlertData(StoreAlertDataRequest) returns (StoreAlertDataResponse);
 
+    // Query the Data Acquisition Store for captured data. This streaming RPC returns a single
+    // QueryStoredCapturesResponse message, encoded as a list of DataChunk messages.
+    //
+    // If the first capture matching the query is larger than an internal size limit set in the
+    // service, the QueryStoredCapturesResponse message contains only that first capture matching
+    // the query.
+    //
+    // Otherwise, the QueryStoredCapturesResponse message contains as many matching captures as can
+    // fit within the internal size limit, without breaking the results order.
+    //
+    // To get all captures that match a query, you must make this RPC until it returns an empty
+    // QueryStoredCapturesResponse with no elements in its "results" field.
+    rpc QueryStoredCaptures(QueryStoredCapturesRequest) returns (stream DataChunk);
+
+    rpc QueryMaxCaptureId(QueryMaxCaptureIdRequest) returns (QueryMaxCaptureIdResponse);
 }

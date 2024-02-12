@@ -285,7 +285,8 @@ message NetworkComputeResponse {
 
     // Detection information. May include bounding boxes, image coordinates, 3D pose information,
     // etc.
-    repeated WorldObject object_in_image = 2;
+    // DEPRECATED as of 4.0. Use object_in_image field in OutputImage instead.
+    repeated WorldObject object_in_image = 2 [deprecated = true];
 
     // The image we computed the data on. If the input image itself was provided in the request,
     // this field is not populated.  This field is not set for non-image input.
@@ -373,6 +374,10 @@ enum NetworkComputeStatus {
     // One or more keys or values in the input custom_params are unsupported by the service.
     // See the custom_param_error for details.
     NETWORK_COMPUTE_STATUS_CUSTOM_PARAMS_ERROR = 5;
+
+    // Transient error to indicate that the model failed to analyze the set of input images, but a
+    // retry might work.
+    NETWORK_COMPUTE_STATUS_ANALYSIS_FAILED = 6;
 }
 
 enum ListAvailableModelsStatus {

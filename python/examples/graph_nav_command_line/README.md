@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # GraphNav and Recording Service Command Line Interfaces
 
-These example programs demonstrate how to use the GraphNav API to record GraphNav Maps, localize against them, and command the robot to navigate to waypoints. See the [Autonomy API documentation](https://dev.bostondynamics.com/docs/concepts/autonomy/readme) for more details about what is available in the SDK.
+These example programs demonstrate how to use the GraphNav API to record GraphNav Maps, localize against them, and command the robot to navigate to waypoints. See the [Autonomy API documentation](../../../docs/concepts/autonomy/README.md) for more details about what is available in the SDK.
 
 There are two examples in this directory: `graph_nav_command_line.py`, which is used to localize against a Graph Nav map and navigate on it, and `recording_command_line.py`, which is used to record new Graph Nav maps.
 
@@ -90,9 +90,9 @@ To manually create an edge, use option _7_. This will prompt you for two waypoin
 
 You can also create an edge between the start and end of a chain by using option _8_. This is commonly used when a robot returns back to the location it started recording in.
 
-Option _9_ allows the recording service to automatically identify and close loops (including at the start and end of the map), using fiducials, odometry, and other methods (see [here](https://dev.bostondynamics.com/docs/concepts/autonomy/graphnav_map_structure#map-processing) for details.)
+Option _9_ allows the recording service to automatically identify and close loops (including at the start and end of the map), using fiducials, odometry, and other methods (see [here](../../../docs/concepts/autonomy/graphnav_map_structure#map-processing) for details.)
 
-Option _a_ creates an _anchoring_ for the map, which allows it to be more accurately drawn and used for data export (see [here](https://dev.bostondynamics.com/docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details.)
+Option _a_ creates an _anchoring_ for the map, which allows it to be more accurately drawn and used for data export (see [here](../../../docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details.)
 
 ## GraphNav Service Command Line
 
@@ -140,6 +140,11 @@ After running the example, you will see the following options:
         When a value for z is not specified, we use the current z height.
         When only yaw is specified, the quaternion is constructed from the yaw.
         When yaw is not specified, an identity quaternion is used.
+    (g) Navigate to in the GPS frame. Your robot must have a GPS payload installed, and must
+        have already recorded a map with GPS data in it.
+        The following options are accepted for arguments:
+        [latitude_degrees, longitude_degrees],
+        [latitude_degrees, longitude_degrees, yaw_around_up_radians]
     (9) Clear the current graph.
     (q) Exit.
 ```
@@ -170,7 +175,7 @@ To issue a _navigate route_ (option _7_) command, the listed waypoints must be i
 
 In this example, there would also be a known edge (from waypoint id: `hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg==`, to waypoint id: `unread-beagle-vQfl7NrKVhHPOUoos+ffIg==`) and a second edge (from waypoint id: `unread-beagle-vQfl7NrKVhHPOUoos+ffIg==`, to waypoint id: `zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==`). Note that you would likely be able to simplify this with short codes to `7 hs ub zf`.
 
-To issue a _navigate to anchor_ (option _8_) command, you must first know where you want the robot to go in absolute (x, y) meter coordinates relative to the _seed frame_ (see [here](https://dev.bostondynamics.com/docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details). This allows the robot to navigate to a position on the map without necessarily knowing which waypoint is near that location.
+To issue a _navigate to anchor_ (option _8_) command, you must first know where you want the robot to go in absolute (x, y) meter coordinates relative to the _seed frame_ (see [here](../../../docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details). This allows the robot to navigate to a position on the map without necessarily knowing which waypoint is near that location.
 
 For example, this command:
 

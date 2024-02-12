@@ -465,16 +465,16 @@ def open_door_main(options):
     return True
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser(description=__doc__)
     add_base_arguments(parser)
     parser.add_argument('--debug', action='store_true', help='Show intermediate debug data.')
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     return open_door_main(options)
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

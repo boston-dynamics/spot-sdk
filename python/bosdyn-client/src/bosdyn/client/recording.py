@@ -158,7 +158,7 @@ class GraphNavRecordingServiceClient(BaseClient):
                                **kwargs)
 
     def create_edge(self, lease=None, edge=None, **kwargs):
-        """Create a edge in the map between two existing waypoints.
+        """Create an edge in the map between two existing waypoints.
 
         Args:
             lease: Leases to show ownership of necessary resources. Will use the client's leases by default.
@@ -276,7 +276,7 @@ class GraphNavRecordingServiceClient(BaseClient):
     def make_edge_environment(
             vel_limit=None, direction_constraint=map_pb2.Edge.Annotations.DIRECTION_CONSTRAINT_NONE,
             require_alignment=False, flat_ground=False, ground_mu_hint=.8, grated_floor=False):
-        """Create a edge environment.
+        """Create an edge environment.
 
         Args:
             vel_limit: A SE2VelocityLimit to use while traversing the edge. Note this is not a target speed, just a max/min.
@@ -373,7 +373,7 @@ class RemoteCloudFailureNoDataError(RecordingServiceResponseError):
 
 
 class NotReadyYetError(RecordingServiceResponseError):
-    """The service is processing the map at it's current position. Try again in 1-2 seconds."""
+    """The service is processing the map at its current position. Try again in 1-2 seconds."""
 
 
 class MapTooLargeLicenseError(RecordingServiceResponseError):

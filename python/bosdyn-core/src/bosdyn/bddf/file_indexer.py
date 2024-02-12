@@ -83,7 +83,7 @@ class FileIndexer:
 
         Args:
          series_type:   the kind of spec, corresponding to the set of keys expected in series_spec.
-         series_spec:   dict of {key (string) -> value (string)| describing the series.
+         series_spec:   dict of {key (string) -> value (string)} describing the series.
          message_type:  MessageTypeDescriptor (need EITHER this OR pod_type)
          pod_type:      PodTypeDescriptor (need EITHER this OR pod_type)
          annotations:   optional dict of key (string) -> value (string) pairs to
@@ -138,7 +138,7 @@ class FileIndexer:
 
     def index_data_block(  # pylint: disable=too-many-arguments
             self, series_index, timestamp_nsec, file_offset, nbytes, additional_indexes):
-        """Add a an entry to the data block index of the series identified by series_index."""
+        """Add an entry to the data block index of the series identified by series_index."""
         series_block_index = self._series_block_indexes[series_index]
         block_entry = series_block_index.block_entries.add(file_offset=file_offset)
         block_entry.timestamp.FromNanoseconds(timestamp_nsec)

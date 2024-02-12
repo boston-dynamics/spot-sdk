@@ -63,7 +63,7 @@ There are two SDK examples showing `ImageService` implementations using the help
 ### Tips for Creating an Image Service
 - The `image_decode` function should attempt to accurately fill out the PixelFormat and ImageFormat fields for the image proto in addition to the image data. This allows for end-user applications to more accurately decode the image data.
 - The `image_decode` function should handle an input argument of `image_format=None`. Therefore, if the `image_format` is `None`, the `image_decode` function should choose the best/preferred format and respond with image data decoded into that format and set the ImageFormat field to the chosen format in the image proto.
-- To have a specific camera source run a background thread, but other sources in the same service run the `blocking_capture` function at RPC time, provide `use_background_capture_thread` as False to the `CameraBaseImageServicer` constructor. Separately, for the `VisualImageSource` object, start the thread using the `create_capture_thread()` function before passing the list of sources to the image service constructor. The following is pseudo code demonstrating the process:
+- To have a specific camera source run a background thread, but other sources in the same service run the `blocking_capture` function at RPC time, provide `use_background_capture_thread` as False to the `CameraBaseImageServicer` constructor. Separately, for the `VisualImageSource` object, start the thread using the `create_capture_thread()` function before passing the list of sources to the image service constructor. The following is pseudocode demonstrating the process:
     ```
     visual_source1 = VisualImageSource("source1", camera_interface_object)
     visual_source2_not_threaded = VisualImageSource2("source2", camera_interface_object)
@@ -71,7 +71,7 @@ There are two SDK examples showing `ImageService` implementations using the help
     CameraBaseImageServicer(robot, "image-service-name", [visual_source1, visual_source2_not_threaded], use_background_capture_thread=False)
 
     ```
-- While developing an image service, if the service is not behaving as expected or failing unexpectedly, a image service tester program (`python/examples/tester_programs/image_service_tester.py`) is available to help test and debug common failure modes through detailed display of the system's outputs.
+- While developing an image service, if the service is not behaving as expected or failing unexpectedly, an image service tester program (`python/examples/tester_programs/image_service_tester.py`) is available to help test and debug common failure modes through detailed display of the system's outputs.
 
 ## Non-image Payloads
 
@@ -163,7 +163,7 @@ If the plugin service encounters an error that is unrelated to a specific piece 
 
     The acquire response function can verify the request header and check if the acquisition request is valid. If it is not, the `response` argument should be modified to set the `status` field. As well, the timeout can be extended for valid functions by updating the response’s `timeout_deadline` field. Note, the timeout should be set in the robot’s clock. Ultimately, the acquire response function will respond with a boolean indicating if the acquisition request is valid, and if so, the data collection will continue.
 
-- If a plugin’s data collection is slow, it should periodically check if the RPC is ever cancelled so that it can immediately stop the no longer necessary data collection. Within the data collection function, to check if a acquisition is cancelled:
+- If a plugin’s data collection is slow, it should periodically check if the RPC is ever cancelled so that it can immediately stop the no longer necessary data collection. Within the data collection function, to check if an acquisition is cancelled:
     ```
     store_helper.state.cancel_check()
     ```

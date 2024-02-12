@@ -1,0 +1,14 @@
+FROM arm64v8/python:3.10-slim
+
+# Install the API wheels and other requirements.
+COPY docker-requirements.txt prebuilt/*.whl ./
+
+RUN python3 -m pip install -r docker-requirements.txt --find-links .
+
+COPY build_signal.py /app/
+COPY core_io_helpers.py /app/
+COPY core_io_auth.py /app/
+COPY modem_service.py /app/
+WORKDIR /app
+
+ENTRYPOINT ["python3", "/app/modem_service.py", "--port", "54321"]

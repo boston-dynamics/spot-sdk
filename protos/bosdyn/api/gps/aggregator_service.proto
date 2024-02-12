@@ -1,0 +1,26 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.gps;
+
+option java_outer_classname = "AggregatorServiceProto";
+
+import "bosdyn/api/gps/aggregator.proto";
+
+/*
+ * The AggregatorService is an endpoint that clients should send GPS data too.
+ * Data dumped into the AggregatorService is used by the RegistrationService.
+ * In practice:
+ *     - A GPS will be connected to a peripheral computer
+ *     - The peripheral computer should establish timesync with the robot
+ *     - The peripheral computer should read data from the GPS hardware
+ *     - The peripheral computer should send timestamped data to the AggregatorService
+ */
+service AggregatorService {
+    rpc NewGpsData (NewGpsDataRequest) returns (NewGpsDataResponse) {}
+}

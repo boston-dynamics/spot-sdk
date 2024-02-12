@@ -11,8 +11,11 @@ import time
 import pytest
 
 from bosdyn.api import data_acquisition_store_pb2 as daq_store
+from bosdyn.api import lease_pb2
 from bosdyn.api import local_grid_pb2 as grid
+from bosdyn.api import power_pb2
 from bosdyn.client.server_util import populate_response_header, strip_large_bytes_fields
+from bosdyn.client.util import safe_pb_enum_to_string
 
 
 def test_strip_large_bytes():
@@ -68,3 +71,17 @@ def test_stripped_headers():
     assert len(req_unpacked.image.image.data) == 0
     # check that the original request is unchanged.
     assert len(request.image.image.data) > 0
+
+
+def test_safe_pb_enum_to_string():
+    assert safe_pb_enum_to_string(power_pb2.STATUS_SUCCESS,
+                                  power_pb2.PowerCommandStatus) == 'STATUS_SUCCESS'
+    assert safe_pb_enum_to_string(power_pb2.STATUS_UNKNOWN,
+                                  power_pb2.PowerCommandStatus) == 'STATUS_UNKNOWN'
+    assert safe_pb_enum_to_string(lease_pb2.LeaseUseResult.STATUS_INVALID_LEASE,
+                                  lease_pb2.LeaseUseResult.Status) == 'STATUS_INVALID_LEASE'
+
+    error_value = 12345
+    error_case = safe_pb_enum_to_string(error_value, power_pb2.PowerCommandStatus)
+    assert 'unknown' in error_case
+    assert str(error_value) in error_case

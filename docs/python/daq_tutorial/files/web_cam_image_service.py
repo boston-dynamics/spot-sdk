@@ -9,18 +9,18 @@
 import logging
 import os
 import time
+
 import cv2
 import numpy as np
 
 import bosdyn.util
+from bosdyn.api import image_pb2, image_service_pb2_grpc
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
-from bosdyn.client.util import setup_logging
+from bosdyn.client.image_service_helpers import (CameraBaseImageServicer, CameraInterface,
+                                                 VisualImageSource, convert_RGB_to_grayscale)
 from bosdyn.client.server_util import GrpcServiceRunner
-from bosdyn.api import image_pb2
-from bosdyn.api import image_service_pb2_grpc
-from bosdyn.client.image_service_helpers import (VisualImageSource, CameraBaseImageServicer,
-                                                 CameraInterface, convert_RGB_to_grayscale)
+from bosdyn.client.util import setup_logging
 
 DIRECTORY_NAME = 'web-cam-service'
 AUTHORITY = 'robot-web-cam'
@@ -35,7 +35,7 @@ class WebCam(CameraInterface):
     def __init__(self, device_name):
         # Check if the user is passing an index to a camera port, i.e. "0" to get the first
         # camera in the operating system's enumeration of available devices. The VideoCapture
-        # takes either a filepath to the device (as a string), or a index to the device (as an
+        # takes either a filepath to the device (as a string), or an index to the device (as an
         # int). Attempt to see if the device name can be cast to an integer before initializing
         # the video capture instance.
         # Someone may pass just the index because on certain operating systems (like Windows),
@@ -114,8 +114,9 @@ class WebCam(CameraInterface):
         if resize_ratio != 1.0 and resize_ratio != 0:
             image_proto.rows = int(image_proto.rows * resize_ratio)
             image_proto.cols = int(image_proto.cols * resize_ratio)
-            converted_image_data = cv2.resize(converted_image_data, (image_proto.cols, image_proto.rows),
-                                              interpolation = cv2.INTER_AREA)
+            converted_image_data = cv2.resize(converted_image_data,
+                                              (image_proto.cols, image_proto.rows),
+                                              interpolation=cv2.INTER_AREA)
 
         # Set the image data.
         image_format = image_req.image_format
@@ -141,7 +142,7 @@ class WebCam(CameraInterface):
 
 
 def device_name_to_source_name(device_name):
-    if type(device_name) == int:
+    if isinstance(device_name, int):
         return "video" + str(device_name)
     else:
         return os.path.basename(device_name)
@@ -153,11 +154,11 @@ def make_webcam_image_service(bosdyn_sdk_robot, service_name, device_names, logg
         web_cam = WebCam(device)
         # Hard-code supported pixel formats in this tutorial file. Please refer to SDK example on
         # how to determine correct list of supported pixel formats.
-        img_src = VisualImageSource(web_cam.image_source_name, web_cam, rows=web_cam.rows,
-                                    cols=web_cam.cols, gain=web_cam.camera_gain,
-                                    exposure=web_cam.camera_exposure,
-                                    pixel_formats=[image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8,
-                                                   image_pb2.Image.PIXEL_FORMAT_RGB_U8])
+        img_src = VisualImageSource(
+            web_cam.image_source_name, web_cam, rows=web_cam.rows, cols=web_cam.cols,
+            gain=web_cam.camera_gain, exposure=web_cam.camera_exposure, pixel_formats=[
+                image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8, image_pb2.Image.PIXEL_FORMAT_RGB_U8
+            ])
         image_sources.append(img_src)
     return CameraBaseImageServicer(bosdyn_sdk_robot, service_name, image_sources, logger)
 

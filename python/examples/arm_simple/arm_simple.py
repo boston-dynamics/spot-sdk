@@ -164,11 +164,11 @@ def block_until_arm_arrives_with_prints(robot, command_client, cmd_id):
         time.sleep(0.1)
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     try:
         hello_arm(options)
         return True
@@ -179,5 +179,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

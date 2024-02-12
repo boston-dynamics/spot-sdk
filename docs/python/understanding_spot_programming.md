@@ -363,7 +363,7 @@ There's one more step before powering on Spot's motors, and that's to acquire ow
 
 To gain control of the robot, a client needs to acquire a `Lease`. A valid lease must be presented with every mobility command to the robot. Leases can be returned when the client no longer wants to control the robot.
 
-Like the E-Stop, lease holders need to periodically check in with Spot to indicate that they are still actively controlling the robot.  If it has been too long since a check-in, the robot will commence a Comms Loss Procedure - sitting down if it can, and then powering off.
+Like the E-Stop, lease-holders need to periodically check in with Spot to indicate that they are still actively controlling the robot.  If it has been too long since a check-in, the robot will commence a Comms Loss Procedure - sitting down if it can, and then powering off.
 
 Let's make a `LeaseClient` for the `lease` service and list the current leases:
 
@@ -480,7 +480,7 @@ Timesync is required to coordinate clock skew between your device and Spot.   Fr
 
 The RobotCommandService is the primary interface for commanding mobility. Mobility and mobility-related commands include `stand`, `sit`, `selfright`, `safe_power_off`, `velocity`, and `trajectory`. For this tutorial, we will just issue stand and safe power off commands.
 
-The API provides a helper function to stand Spot. This command wraps several RobotCommand RPC calls. First a stand command is issued. The robot checks some basic pre conditions (powered on, not faulted, not E-Stopped) and returns a command id. This command id can then be passed to the robot command feedback RPC. This call returns both high level feedback ("is the robot still processing the command?") as well as command specific feedback (in the case of stand, "is the robot standing?").
+The API provides a helper function to stand Spot. This command wraps several RobotCommand RPC calls. First a stand command is issued. The robot checks some basic pre-conditions (powered on, not faulted, not E-Stopped) and returns a command id. This command id can then be passed to the robot command feedback RPC. This call returns both high level feedback ("is the robot still processing the command?") as well as command specific feedback (in the case of stand, "is the robot standing?").
 
 ```python
 >>> from bosdyn.client.robot_command import RobotCommandClient, blocking_stand

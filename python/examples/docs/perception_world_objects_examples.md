@@ -31,3 +31,4 @@ The following examples show how to use Spot's perception system, through image s
 - [Fire Extinguisher Detector with the Network Compute Bridge](../network_compute_bridge/fire_extinguisher_server/README.md)
 - [Ray Cast](../ray_cast/README.md)
 - [No-Go Regions](../user_nogo_regions/README.md)
+- [GPS](../gps_service/README.md)

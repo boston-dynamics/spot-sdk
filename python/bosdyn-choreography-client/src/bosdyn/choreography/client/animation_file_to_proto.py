@@ -142,7 +142,7 @@ COMMENT_DELIMITERS = ["//", "#"]
 
 
 class AnimationFileFormatError(Exception):
-    """Specific Exception raised when we identify a issue with an animation (*.cha) file."""
+    """Specific Exception raised when we identify an issue with an animation (*.cha) file."""
     pass
 
 

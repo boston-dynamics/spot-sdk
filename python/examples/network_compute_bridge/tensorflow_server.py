@@ -335,12 +335,8 @@ def register_with_robot(options):
                                            kServiceAuthority, ip, int(options.port))
 
 
-def main(argv):
-    """Command line interface.
-
-    Args:
-        argv: List of command-line arguments passed to the program.
-    """
+def main():
+    """Command line interface."""
 
     default_port = '50051'
     model_extension = '.pb'
@@ -364,7 +360,7 @@ def main(argv):
     parser.add_argument('hostname', nargs='?', help='Hostname or address of robot,'
                         ' e.g. "beta25-p" or "192.168.80.3"')
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Either we need a hostname to talk to the robot or the --no-registration argument.
     if not options.no_registration and (options.hostname is None or len(options.hostname) < 1):
@@ -418,5 +414,5 @@ def main(argv):
 
 if __name__ == '__main__':
     logging.basicConfig()
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

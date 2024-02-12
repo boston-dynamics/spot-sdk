@@ -108,6 +108,7 @@
 - [bosdyn/api/autowalk/walks.proto](#bosdyn_api_autowalk_walks-proto)
     - [Action](#bosdyn-api-autowalk-Action)
     - [Action.DataAcquisition](#bosdyn-api-autowalk-Action-DataAcquisition)
+    - [Action.ExecuteChoreography](#bosdyn-api-autowalk-Action-ExecuteChoreography)
     - [Action.RemoteGrpc](#bosdyn-api-autowalk-Action-RemoteGrpc)
     - [Action.Sleep](#bosdyn-api-autowalk-Action-Sleep)
     - [ActionWrapper](#bosdyn-api-autowalk-ActionWrapper)
@@ -122,6 +123,7 @@
     - [ActionWrapper.SpotCamLed.BrightnessesEntry](#bosdyn-api-autowalk-ActionWrapper-SpotCamLed-BrightnessesEntry)
     - [ActionWrapper.SpotCamPtz](#bosdyn-api-autowalk-ActionWrapper-SpotCamPtz)
     - [BatteryMonitor](#bosdyn-api-autowalk-BatteryMonitor)
+    - [ChoreographyItems](#bosdyn-api-autowalk-ChoreographyItems)
     - [Dock](#bosdyn-api-autowalk-Dock)
     - [Element](#bosdyn-api-autowalk-Element)
     - [FailureBehavior](#bosdyn-api-autowalk-FailureBehavior)
@@ -140,6 +142,8 @@
     - [Target.Relocalize](#bosdyn-api-autowalk-Target-Relocalize)
     - [Walk](#bosdyn-api-autowalk-Walk)
   
+    - [Target.TargetStowBehavior](#bosdyn-api-autowalk-Target-TargetStowBehavior)
+  
 - [bosdyn/api/basic_command.proto](#bosdyn_api_basic_command-proto)
     - [ArmDragCommand](#bosdyn-api-ArmDragCommand)
     - [ArmDragCommand.Feedback](#bosdyn-api-ArmDragCommand-Feedback)
@@ -156,6 +160,11 @@
     - [FreezeCommand](#bosdyn-api-FreezeCommand)
     - [FreezeCommand.Feedback](#bosdyn-api-FreezeCommand-Feedback)
     - [FreezeCommand.Request](#bosdyn-api-FreezeCommand-Request)
+    - [JointCommand](#bosdyn-api-JointCommand)
+    - [JointCommand.Feedback](#bosdyn-api-JointCommand-Feedback)
+    - [JointCommand.Request](#bosdyn-api-JointCommand-Request)
+    - [JointCommand.UpdateRequest](#bosdyn-api-JointCommand-UpdateRequest)
+    - [JointCommand.UpdateRequest.Gains](#bosdyn-api-JointCommand-UpdateRequest-Gains)
     - [RobotCommandFeedbackStatus](#bosdyn-api-RobotCommandFeedbackStatus)
     - [SE2TrajectoryCommand](#bosdyn-api-SE2TrajectoryCommand)
     - [SE2TrajectoryCommand.Feedback](#bosdyn-api-SE2TrajectoryCommand-Feedback)
@@ -190,8 +199,10 @@
     - [ConstrainedManipulationCommand.Feedback.Status](#bosdyn-api-ConstrainedManipulationCommand-Feedback-Status)
     - [ConstrainedManipulationCommand.Request.ControlMode](#bosdyn-api-ConstrainedManipulationCommand-Request-ControlMode)
     - [ConstrainedManipulationCommand.Request.TaskType](#bosdyn-api-ConstrainedManipulationCommand-Request-TaskType)
+    - [JointCommand.Feedback.Status](#bosdyn-api-JointCommand-Feedback-Status)
     - [RobotCommandFeedbackStatus.Status](#bosdyn-api-RobotCommandFeedbackStatus-Status)
     - [SE2TrajectoryCommand.Feedback.BodyMovementStatus](#bosdyn-api-SE2TrajectoryCommand-Feedback-BodyMovementStatus)
+    - [SE2TrajectoryCommand.Feedback.FinalGoalStatus](#bosdyn-api-SE2TrajectoryCommand-Feedback-FinalGoalStatus)
     - [SE2TrajectoryCommand.Feedback.Status](#bosdyn-api-SE2TrajectoryCommand-Feedback-Status)
     - [SafePowerOffCommand.Feedback.Status](#bosdyn-api-SafePowerOffCommand-Feedback-Status)
     - [SafePowerOffCommand.Request.UnsafeAction](#bosdyn-api-SafePowerOffCommand-Request-UnsafeAction)
@@ -244,6 +255,10 @@
     - [GetStatusResponse](#bosdyn-api-GetStatusResponse)
     - [ImageAcquisitionCapability](#bosdyn-api-ImageAcquisitionCapability)
     - [ImageSourceCapture](#bosdyn-api-ImageSourceCapture)
+    - [LiveDataRequest](#bosdyn-api-LiveDataRequest)
+    - [LiveDataResponse](#bosdyn-api-LiveDataResponse)
+    - [LiveDataResponse.CapabilityLiveData](#bosdyn-api-LiveDataResponse-CapabilityLiveData)
+    - [LiveDataResponse.CapabilityLiveData.SignalsEntry](#bosdyn-api-LiveDataResponse-CapabilityLiveData-SignalsEntry)
     - [Metadata](#bosdyn-api-Metadata)
     - [NetworkComputeCapability](#bosdyn-api-NetworkComputeCapability)
     - [NetworkComputeCapture](#bosdyn-api-NetworkComputeCapture)
@@ -254,6 +269,7 @@
     - [AcquirePluginDataResponse.Status](#bosdyn-api-AcquirePluginDataResponse-Status)
     - [CancelAcquisitionResponse.Status](#bosdyn-api-CancelAcquisitionResponse-Status)
     - [GetStatusResponse.Status](#bosdyn-api-GetStatusResponse-Status)
+    - [LiveDataResponse.CapabilityLiveData.Status](#bosdyn-api-LiveDataResponse-CapabilityLiveData-Status)
     - [NetworkComputeError.ErrorCode](#bosdyn-api-NetworkComputeError-ErrorCode)
     - [PluginServiceError.ErrorCode](#bosdyn-api-PluginServiceError-ErrorCode)
   
@@ -276,6 +292,12 @@
     - [ListStoredImagesResponse](#bosdyn-api-ListStoredImagesResponse)
     - [ListStoredMetadataRequest](#bosdyn-api-ListStoredMetadataRequest)
     - [ListStoredMetadataResponse](#bosdyn-api-ListStoredMetadataResponse)
+    - [QueryMaxCaptureIdRequest](#bosdyn-api-QueryMaxCaptureIdRequest)
+    - [QueryMaxCaptureIdResponse](#bosdyn-api-QueryMaxCaptureIdResponse)
+    - [QueryParameters](#bosdyn-api-QueryParameters)
+    - [QueryStoredCaptureResult](#bosdyn-api-QueryStoredCaptureResult)
+    - [QueryStoredCapturesRequest](#bosdyn-api-QueryStoredCapturesRequest)
+    - [QueryStoredCapturesResponse](#bosdyn-api-QueryStoredCapturesResponse)
     - [StoreAlertDataRequest](#bosdyn-api-StoreAlertDataRequest)
     - [StoreAlertDataResponse](#bosdyn-api-StoreAlertDataResponse)
     - [StoreDataRequest](#bosdyn-api-StoreDataRequest)
@@ -284,6 +306,7 @@
     - [StoreImageResponse](#bosdyn-api-StoreImageResponse)
     - [StoreMetadataRequest](#bosdyn-api-StoreMetadataRequest)
     - [StoreMetadataResponse](#bosdyn-api-StoreMetadataResponse)
+    - [StoredCapturedData](#bosdyn-api-StoredCapturedData)
     - [TimeRangeQuery](#bosdyn-api-TimeRangeQuery)
   
 - [bosdyn/api/data_acquisition_store_service.proto](#bosdyn_api_data_acquisition_store_service-proto)
@@ -489,6 +512,40 @@
     - [Volume](#bosdyn-api-Volume)
     - [Wrench](#bosdyn-api-Wrench)
   
+- [bosdyn/api/gps/aggregator.proto](#bosdyn_api_gps_aggregator-proto)
+    - [NewGpsDataRequest](#bosdyn-api-gps-NewGpsDataRequest)
+    - [NewGpsDataResponse](#bosdyn-api-gps-NewGpsDataResponse)
+  
+- [bosdyn/api/gps/aggregator_service.proto](#bosdyn_api_gps_aggregator_service-proto)
+    - [AggregatorService](#bosdyn-api-gps-AggregatorService)
+  
+- [bosdyn/api/gps/gps.proto](#bosdyn_api_gps_gps-proto)
+    - [GpsDataPoint](#bosdyn-api-gps-GpsDataPoint)
+    - [GpsDataPoint.Accuracy](#bosdyn-api-gps-GpsDataPoint-Accuracy)
+    - [GpsDataPoint.FixMode](#bosdyn-api-gps-GpsDataPoint-FixMode)
+    - [GpsDataPoint.Satellite](#bosdyn-api-gps-GpsDataPoint-Satellite)
+    - [GpsDevice](#bosdyn-api-gps-GpsDevice)
+    - [LLH](#bosdyn-api-gps-LLH)
+    - [LocationAndGpsDevice](#bosdyn-api-gps-LocationAndGpsDevice)
+  
+    - [GpsDataPoint.Filter](#bosdyn-api-gps-GpsDataPoint-Filter)
+    - [GpsDataPoint.FixMode.Mode](#bosdyn-api-gps-GpsDataPoint-FixMode-Mode)
+    - [GpsDataPoint.Satellite.Constellation](#bosdyn-api-gps-GpsDataPoint-Satellite-Constellation)
+  
+- [bosdyn/api/gps/registration.proto](#bosdyn_api_gps_registration-proto)
+    - [GetLocationRequest](#bosdyn-api-gps-GetLocationRequest)
+    - [GetLocationResponse](#bosdyn-api-gps-GetLocationResponse)
+    - [GpsState](#bosdyn-api-gps-GpsState)
+    - [Registration](#bosdyn-api-gps-Registration)
+    - [ResetRegistrationRequest](#bosdyn-api-gps-ResetRegistrationRequest)
+    - [ResetRegistrationResponse](#bosdyn-api-gps-ResetRegistrationResponse)
+  
+    - [GetLocationResponse.Status](#bosdyn-api-gps-GetLocationResponse-Status)
+    - [Registration.Status](#bosdyn-api-gps-Registration-Status)
+  
+- [bosdyn/api/gps/registration_service.proto](#bosdyn_api_gps_registration_service-proto)
+    - [RegistrationService](#bosdyn-api-gps-RegistrationService)
+  
 - [bosdyn/api/graph_nav/area_callback.proto](#bosdyn_api_graph_nav_area_callback-proto)
     - [AreaCallbackError](#bosdyn-api-graph_nav-AreaCallbackError)
     - [AreaCallbackInformation](#bosdyn-api-graph_nav-AreaCallbackInformation)
@@ -501,6 +558,9 @@
     - [EndCallbackRequest](#bosdyn-api-graph_nav-EndCallbackRequest)
     - [EndCallbackResponse](#bosdyn-api-graph_nav-EndCallbackResponse)
     - [RegionInformation](#bosdyn-api-graph_nav-RegionInformation)
+    - [RouteChangeRequest](#bosdyn-api-graph_nav-RouteChangeRequest)
+    - [RouteChangeResponse](#bosdyn-api-graph_nav-RouteChangeResponse)
+    - [StopConfiguration](#bosdyn-api-graph_nav-StopConfiguration)
     - [UpdateCallbackRequest](#bosdyn-api-graph_nav-UpdateCallbackRequest)
     - [UpdateCallbackResponse](#bosdyn-api-graph_nav-UpdateCallbackResponse)
     - [UpdateCallbackResponse.Complete](#bosdyn-api-graph_nav-UpdateCallbackResponse-Complete)
@@ -509,9 +569,14 @@
     - [UpdateCallbackResponse.UpdateLocalization](#bosdyn-api-graph_nav-UpdateCallbackResponse-UpdateLocalization)
   
     - [AreaCallbackError.CallError](#bosdyn-api-graph_nav-AreaCallbackError-CallError)
+    - [AreaCallbackInformation.Blockage](#bosdyn-api-graph_nav-AreaCallbackInformation-Blockage)
+    - [AreaCallbackInformation.EntityWaiting](#bosdyn-api-graph_nav-AreaCallbackInformation-EntityWaiting)
+    - [AreaCallbackInformation.Impairment](#bosdyn-api-graph_nav-AreaCallbackInformation-Impairment)
     - [BeginCallbackResponse.Status](#bosdyn-api-graph_nav-BeginCallbackResponse-Status)
     - [BeginControlResponse.Status](#bosdyn-api-graph_nav-BeginControlResponse-Status)
     - [EndCallbackResponse.Status](#bosdyn-api-graph_nav-EndCallbackResponse-Status)
+    - [RouteChangeResponse.Status](#bosdyn-api-graph_nav-RouteChangeResponse-Status)
+    - [StopConfiguration.FaceDirection](#bosdyn-api-graph_nav-StopConfiguration-FaceDirection)
     - [UpdateCallbackRequest.Stage](#bosdyn-api-graph_nav-UpdateCallbackRequest-Stage)
     - [UpdateCallbackResponse.Error.ErrorType](#bosdyn-api-graph_nav-UpdateCallbackResponse-Error-ErrorType)
     - [UpdateCallbackResponse.NavPolicy.Option](#bosdyn-api-graph_nav-UpdateCallbackResponse-NavPolicy-Option)
@@ -520,9 +585,15 @@
   
 - [bosdyn/api/graph_nav/area_callback_data.proto](#bosdyn_api_graph_nav_area_callback_data-proto)
     - [AreaCallbackData](#bosdyn-api-graph_nav-AreaCallbackData)
+    - [AreaCallbackMapConfig](#bosdyn-api-graph_nav-AreaCallbackMapConfig)
   
 - [bosdyn/api/graph_nav/area_callback_service.proto](#bosdyn_api_graph_nav_area_callback_service-proto)
     - [AreaCallbackService](#bosdyn-api-graph_nav-AreaCallbackService)
+  
+- [bosdyn/api/graph_nav/gps.proto](#bosdyn_api_graph_nav_gps-proto)
+    - [GPSLocalization](#bosdyn-api-graph_nav-GPSLocalization)
+  
+    - [GPSLocalization.State](#bosdyn-api-graph_nav-GPSLocalization-State)
   
 - [bosdyn/api/graph_nav/graph_nav.proto](#bosdyn_api_graph_nav_graph_nav-proto)
     - [AreaCallbackServiceError](#bosdyn-api-graph_nav-AreaCallbackServiceError)
@@ -534,6 +605,7 @@
     - [DownloadGraphResponse](#bosdyn-api-graph_nav-DownloadGraphResponse)
     - [DownloadWaypointSnapshotRequest](#bosdyn-api-graph_nav-DownloadWaypointSnapshotRequest)
     - [DownloadWaypointSnapshotResponse](#bosdyn-api-graph_nav-DownloadWaypointSnapshotResponse)
+    - [GPSNavigationParams](#bosdyn-api-graph_nav-GPSNavigationParams)
     - [GetLocalizationStateRequest](#bosdyn-api-graph_nav-GetLocalizationStateRequest)
     - [GetLocalizationStateResponse](#bosdyn-api-graph_nav-GetLocalizationStateResponse)
     - [LostDetectorState](#bosdyn-api-graph_nav-LostDetectorState)
@@ -573,6 +645,7 @@
     - [DownloadWaypointSnapshotResponse.Status](#bosdyn-api-graph_nav-DownloadWaypointSnapshotResponse-Status)
     - [ModifyNavigationResponse.Status](#bosdyn-api-graph_nav-ModifyNavigationResponse-Status)
     - [NavigateRouteResponse.Status](#bosdyn-api-graph_nav-NavigateRouteResponse-Status)
+    - [NavigateToAnchorResponse.GPSStatus](#bosdyn-api-graph_nav-NavigateToAnchorResponse-GPSStatus)
     - [NavigateToAnchorResponse.Status](#bosdyn-api-graph_nav-NavigateToAnchorResponse-Status)
     - [NavigateToResponse.Status](#bosdyn-api-graph_nav-NavigateToResponse-Status)
     - [NavigationFeedbackResponse.ActiveRegionInformation.AreaCallbackStatus](#bosdyn-api-graph_nav-NavigationFeedbackResponse-ActiveRegionInformation-AreaCallbackStatus)
@@ -613,6 +686,7 @@
     - [MapStats.Stat](#bosdyn-api-graph_nav-MapStats-Stat)
     - [Waypoint](#bosdyn-api-graph_nav-Waypoint)
     - [Waypoint.Annotations](#bosdyn-api-graph_nav-Waypoint-Annotations)
+    - [Waypoint.Annotations.GPSSettings](#bosdyn-api-graph_nav-Waypoint-Annotations-GPSSettings)
     - [Waypoint.Annotations.LocalizeRegion](#bosdyn-api-graph_nav-Waypoint-Annotations-LocalizeRegion)
     - [Waypoint.Annotations.LocalizeRegion.Circle2D](#bosdyn-api-graph_nav-Waypoint-Annotations-LocalizeRegion-Circle2D)
     - [Waypoint.Annotations.LocalizeRegion.Default](#bosdyn-api-graph_nav-Waypoint-Annotations-LocalizeRegion-Default)
@@ -624,6 +698,7 @@
     - [Edge.Annotations.DirectionConstraint](#bosdyn-api-graph_nav-Edge-Annotations-DirectionConstraint)
     - [Edge.Annotations.GroundClutterAvoidanceMode](#bosdyn-api-graph_nav-Edge-Annotations-GroundClutterAvoidanceMode)
     - [Edge.Annotations.PathFollowingMode](#bosdyn-api-graph_nav-Edge-Annotations-PathFollowingMode)
+    - [Edge.Annotations.StairData.DescentPreference](#bosdyn-api-graph_nav-Edge-Annotations-StairData-DescentPreference)
     - [Edge.EdgeSource](#bosdyn-api-graph_nav-Edge-EdgeSource)
     - [Waypoint.WaypointSource](#bosdyn-api-graph_nav-Waypoint-WaypointSource)
   
@@ -637,6 +712,7 @@
     - [ProcessAnchoringRequest.Params.OptimizerParams](#bosdyn-api-graph_nav-ProcessAnchoringRequest-Params-OptimizerParams)
     - [ProcessAnchoringRequest.Params.Weights](#bosdyn-api-graph_nav-ProcessAnchoringRequest-Params-Weights)
     - [ProcessAnchoringResponse](#bosdyn-api-graph_nav-ProcessAnchoringResponse)
+    - [ProcessAnchoringResponse.GPSResult](#bosdyn-api-graph_nav-ProcessAnchoringResponse-GPSResult)
     - [ProcessTopologyRequest](#bosdyn-api-graph_nav-ProcessTopologyRequest)
     - [ProcessTopologyRequest.CollisionCheckingParams](#bosdyn-api-graph_nav-ProcessTopologyRequest-CollisionCheckingParams)
     - [ProcessTopologyRequest.FiducialLoopClosureParams](#bosdyn-api-graph_nav-ProcessTopologyRequest-FiducialLoopClosureParams)
@@ -647,6 +723,7 @@
     - [WaypointAnchorHint](#bosdyn-api-graph_nav-WaypointAnchorHint)
     - [WorldObjectAnchorHint](#bosdyn-api-graph_nav-WorldObjectAnchorHint)
   
+    - [ProcessAnchoringResponse.GPSResult.GPSStatus](#bosdyn-api-graph_nav-ProcessAnchoringResponse-GPSResult-GPSStatus)
     - [ProcessAnchoringResponse.Status](#bosdyn-api-graph_nav-ProcessAnchoringResponse-Status)
     - [ProcessTopologyResponse.Status](#bosdyn-api-graph_nav-ProcessTopologyResponse-Status)
   
@@ -654,6 +731,8 @@
     - [MapProcessingService](#bosdyn-api-graph_nav-MapProcessingService)
   
 - [bosdyn/api/graph_nav/nav.proto](#bosdyn_api_graph_nav_nav-proto)
+    - [CompletedRoute](#bosdyn-api-graph_nav-CompletedRoute)
+    - [CompletedRoute.CompletedEdge](#bosdyn-api-graph_nav-CompletedRoute-CompletedEdge)
     - [Localization](#bosdyn-api-graph_nav-Localization)
     - [Route](#bosdyn-api-graph_nav-Route)
   
@@ -830,19 +909,6 @@
 - [bosdyn/api/local_grid_service.proto](#bosdyn_api_local_grid_service-proto)
     - [LocalGridService](#bosdyn-api-LocalGridService)
   
-- [bosdyn/api/log_annotation.proto](#bosdyn_api_log_annotation-proto)
-    - [AddLogAnnotationRequest](#bosdyn-api-AddLogAnnotationRequest)
-    - [AddLogAnnotationResponse](#bosdyn-api-AddLogAnnotationResponse)
-    - [LogAnnotationLogBlob](#bosdyn-api-LogAnnotationLogBlob)
-    - [LogAnnotationOperatorMessage](#bosdyn-api-LogAnnotationOperatorMessage)
-    - [LogAnnotationTextMessage](#bosdyn-api-LogAnnotationTextMessage)
-    - [LogAnnotations](#bosdyn-api-LogAnnotations)
-  
-    - [LogAnnotationTextMessage.Level](#bosdyn-api-LogAnnotationTextMessage-Level)
-  
-- [bosdyn/api/log_annotation_service.proto](#bosdyn_api_log_annotation_service-proto)
-    - [LogAnnotationService](#bosdyn-api-LogAnnotationService)
-  
 - [bosdyn/api/log_status/log_status.proto](#bosdyn_api_log_status_log_status-proto)
     - [GetActiveLogStatusesRequest](#bosdyn-api-log_status-GetActiveLogStatusesRequest)
     - [GetActiveLogStatusesResponse](#bosdyn-api-log_status-GetActiveLogStatusesResponse)
@@ -899,6 +965,23 @@
   
 - [bosdyn/api/manipulation_api_service.proto](#bosdyn_api_manipulation_api_service-proto)
     - [ManipulationApiService](#bosdyn-api-ManipulationApiService)
+  
+- [bosdyn/api/metrics_logging/absolute_metrics.proto](#bosdyn_api_metrics_logging_absolute_metrics-proto)
+    - [AbsoluteMetricsSnapshot](#bosdyn-api-metrics_logging-AbsoluteMetricsSnapshot)
+  
+- [bosdyn/api/metrics_logging/metrics_logging_robot.proto](#bosdyn_api_metrics_logging_metrics_logging_robot-proto)
+    - [GetAbsoluteMetricSnapshotRequest](#bosdyn-api-metrics_logging-GetAbsoluteMetricSnapshotRequest)
+    - [GetAbsoluteMetricSnapshotResponse](#bosdyn-api-metrics_logging-GetAbsoluteMetricSnapshotResponse)
+    - [GetMetricsRequest](#bosdyn-api-metrics_logging-GetMetricsRequest)
+    - [GetMetricsResponse](#bosdyn-api-metrics_logging-GetMetricsResponse)
+    - [GetStoreSequenceRangeRequest](#bosdyn-api-metrics_logging-GetStoreSequenceRangeRequest)
+    - [GetStoreSequenceRangeResponse](#bosdyn-api-metrics_logging-GetStoreSequenceRangeResponse)
+  
+- [bosdyn/api/metrics_logging/metrics_logging_robot_service.proto](#bosdyn_api_metrics_logging_metrics_logging_robot_service-proto)
+    - [MetricsLoggingRobotService](#bosdyn-api-metrics_logging-MetricsLoggingRobotService)
+  
+- [bosdyn/api/metrics_logging/signed_proto.proto](#bosdyn_api_metrics_logging_signed_proto-proto)
+    - [SignedProto](#bosdyn-api-metrics_logging-SignedProto)
   
 - [bosdyn/api/mission/mission.proto](#bosdyn_api_mission_mission-proto)
     - [AnswerQuestionRequest](#bosdyn-api-mission-AnswerQuestionRequest)
@@ -962,12 +1045,15 @@
     - [DateToBlackboard](#bosdyn-api-mission-DateToBlackboard)
     - [DefineBlackboard](#bosdyn-api-mission-DefineBlackboard)
     - [Dock](#bosdyn-api-mission-Dock)
+    - [ExecuteChoreography](#bosdyn-api-mission-ExecuteChoreography)
     - [ForDuration](#bosdyn-api-mission-ForDuration)
     - [FormatBlackboard](#bosdyn-api-mission-FormatBlackboard)
+    - [MissionUploadChoreography](#bosdyn-api-mission-MissionUploadChoreography)
     - [Node](#bosdyn-api-mission-Node)
     - [ParallelAnd](#bosdyn-api-mission-ParallelAnd)
     - [Prompt](#bosdyn-api-mission-Prompt)
     - [Prompt.Option](#bosdyn-api-mission-Prompt-Option)
+    - [Prompt.OptionsList](#bosdyn-api-mission-Prompt-OptionsList)
     - [RemoteGrpc](#bosdyn-api-mission-RemoteGrpc)
     - [Repeat](#bosdyn-api-mission-Repeat)
     - [RestartWhenPaused](#bosdyn-api-mission-RestartWhenPaused)
@@ -980,6 +1066,7 @@
     - [SetGripperCameraParams](#bosdyn-api-mission-SetGripperCameraParams)
     - [SimpleParallel](#bosdyn-api-mission-SimpleParallel)
     - [Sleep](#bosdyn-api-mission-Sleep)
+    - [SpotCamFocusState](#bosdyn-api-mission-SpotCamFocusState)
     - [SpotCamLed](#bosdyn-api-mission-SpotCamLed)
     - [SpotCamLed.BrightnessesEntry](#bosdyn-api-mission-SpotCamLed-BrightnessesEntry)
     - [SpotCamPtz](#bosdyn-api-mission-SpotCamPtz)
@@ -1138,11 +1225,15 @@
     - [PowerCommandFeedbackResponse](#bosdyn-api-PowerCommandFeedbackResponse)
     - [PowerCommandRequest](#bosdyn-api-PowerCommandRequest)
     - [PowerCommandResponse](#bosdyn-api-PowerCommandResponse)
+    - [ResetSafetyStopRequest](#bosdyn-api-ResetSafetyStopRequest)
+    - [ResetSafetyStopResponse](#bosdyn-api-ResetSafetyStopResponse)
   
     - [FanPowerCommandFeedbackResponse.Status](#bosdyn-api-FanPowerCommandFeedbackResponse-Status)
     - [FanPowerCommandResponse.Status](#bosdyn-api-FanPowerCommandResponse-Status)
     - [PowerCommandRequest.Request](#bosdyn-api-PowerCommandRequest-Request)
     - [PowerCommandStatus](#bosdyn-api-PowerCommandStatus)
+    - [ResetSafetyStopRequest.SafetyStopType](#bosdyn-api-ResetSafetyStopRequest-SafetyStopType)
+    - [ResetSafetyStopResponse.Status](#bosdyn-api-ResetSafetyStopResponse-Status)
   
 - [bosdyn/api/power_service.proto](#bosdyn_api_power_service-proto)
     - [PowerService](#bosdyn-api-PowerService)
@@ -1161,6 +1252,8 @@
 - [bosdyn/api/robot_command.proto](#bosdyn_api_robot_command-proto)
     - [ClearBehaviorFaultRequest](#bosdyn-api-ClearBehaviorFaultRequest)
     - [ClearBehaviorFaultResponse](#bosdyn-api-ClearBehaviorFaultResponse)
+    - [JointControlStreamRequest](#bosdyn-api-JointControlStreamRequest)
+    - [JointControlStreamResponse](#bosdyn-api-JointControlStreamResponse)
     - [RobotCommand](#bosdyn-api-RobotCommand)
     - [RobotCommandFeedback](#bosdyn-api-RobotCommandFeedback)
     - [RobotCommandFeedbackRequest](#bosdyn-api-RobotCommandFeedbackRequest)
@@ -1169,11 +1262,12 @@
     - [RobotCommandResponse](#bosdyn-api-RobotCommandResponse)
   
     - [ClearBehaviorFaultResponse.Status](#bosdyn-api-ClearBehaviorFaultResponse-Status)
-    - [RobotCommandFeedbackResponse.Status](#bosdyn-api-RobotCommandFeedbackResponse-Status)
+    - [JointControlStreamResponse.Status](#bosdyn-api-JointControlStreamResponse-Status)
     - [RobotCommandResponse.Status](#bosdyn-api-RobotCommandResponse-Status)
   
 - [bosdyn/api/robot_command_service.proto](#bosdyn_api_robot_command_service-proto)
     - [RobotCommandService](#bosdyn-api-RobotCommandService)
+    - [RobotCommandStreamingService](#bosdyn-api-RobotCommandStreamingService)
   
 - [bosdyn/api/robot_id.proto](#bosdyn_api_robot_id-proto)
     - [RobotId](#bosdyn-api-RobotId)
@@ -1189,14 +1283,18 @@
     - [BatteryState](#bosdyn-api-BatteryState)
     - [BehaviorFault](#bosdyn-api-BehaviorFault)
     - [BehaviorFaultState](#bosdyn-api-BehaviorFaultState)
+    - [CombinedJointStates](#bosdyn-api-CombinedJointStates)
     - [CommsState](#bosdyn-api-CommsState)
     - [EStopState](#bosdyn-api-EStopState)
     - [FootState](#bosdyn-api-FootState)
     - [FootState.TerrainState](#bosdyn-api-FootState-TerrainState)
     - [HardwareConfiguration](#bosdyn-api-HardwareConfiguration)
+    - [ImuState](#bosdyn-api-ImuState)
+    - [ImuState.Packet](#bosdyn-api-ImuState-Packet)
     - [JointState](#bosdyn-api-JointState)
     - [KinematicState](#bosdyn-api-KinematicState)
     - [ManipulatorState](#bosdyn-api-ManipulatorState)
+    - [MotorTemperature](#bosdyn-api-MotorTemperature)
     - [PowerState](#bosdyn-api-PowerState)
     - [RobotHardwareConfigurationRequest](#bosdyn-api-RobotHardwareConfigurationRequest)
     - [RobotHardwareConfigurationResponse](#bosdyn-api-RobotHardwareConfigurationResponse)
@@ -1209,6 +1307,9 @@
     - [RobotState](#bosdyn-api-RobotState)
     - [RobotStateRequest](#bosdyn-api-RobotStateRequest)
     - [RobotStateResponse](#bosdyn-api-RobotStateResponse)
+    - [RobotStateStreamRequest](#bosdyn-api-RobotStateStreamRequest)
+    - [RobotStateStreamResponse](#bosdyn-api-RobotStateStreamResponse)
+    - [RobotStateStreamResponse.CommandState](#bosdyn-api-RobotStateStreamResponse-CommandState)
     - [ServiceFaultState](#bosdyn-api-ServiceFaultState)
     - [ServiceFaultState.AggregatedEntry](#bosdyn-api-ServiceFaultState-AggregatedEntry)
     - [Skeleton](#bosdyn-api-Skeleton)
@@ -1217,6 +1318,7 @@
     - [SystemFault](#bosdyn-api-SystemFault)
     - [SystemFaultState](#bosdyn-api-SystemFaultState)
     - [SystemFaultState.AggregatedEntry](#bosdyn-api-SystemFaultState-AggregatedEntry)
+    - [SystemState](#bosdyn-api-SystemState)
     - [TerrainState](#bosdyn-api-TerrainState)
     - [WiFiState](#bosdyn-api-WiFiState)
   
@@ -1239,6 +1341,7 @@
   
 - [bosdyn/api/robot_state_service.proto](#bosdyn_api_robot_state_service-proto)
     - [RobotStateService](#bosdyn-api-RobotStateService)
+    - [RobotStateStreamingService](#bosdyn-api-RobotStateStreamingService)
   
 - [bosdyn/api/service_customization.proto](#bosdyn_api_service_customization-proto)
     - [BoolParam](#bosdyn-api-BoolParam)
@@ -1284,13 +1387,162 @@
     - [ServiceFault.Severity](#bosdyn-api-ServiceFault-Severity)
     - [TriggerServiceFaultResponse.Status](#bosdyn-api-TriggerServiceFaultResponse-Status)
   
+- [bosdyn/api/signals.proto](#bosdyn_api_signals-proto)
+    - [AlertConditionSpec](#bosdyn-api-AlertConditionSpec)
+    - [SensorOutputSpec](#bosdyn-api-SensorOutputSpec)
+    - [Signal](#bosdyn-api-Signal)
+    - [SignalData](#bosdyn-api-SignalData)
+    - [SignalData.Data](#bosdyn-api-SignalData-Data)
+    - [SignalDisplayInfo](#bosdyn-api-SignalDisplayInfo)
+    - [SignalSpec](#bosdyn-api-SignalSpec)
+  
 - [bosdyn/api/sparse_features.proto](#bosdyn_api_sparse_features-proto)
     - [Keypoint](#bosdyn-api-Keypoint)
     - [KeypointMatches](#bosdyn-api-KeypointMatches)
     - [KeypointSet](#bosdyn-api-KeypointSet)
     - [Match](#bosdyn-api-Match)
   
+    - [KeypointMatches.MatchType](#bosdyn-api-KeypointMatches-MatchType)
     - [KeypointSet.KeypointType](#bosdyn-api-KeypointSet-KeypointType)
+  
+- [bosdyn/api/spot/choreography_params.proto](#bosdyn_api_spot_choreography_params-proto)
+    - [AnimateParams](#bosdyn-api-spot-AnimateParams)
+    - [AnimatedCycleParams](#bosdyn-api-spot-AnimatedCycleParams)
+    - [ArmMoveParams](#bosdyn-api-spot-ArmMoveParams)
+    - [BodyHoldParams](#bosdyn-api-spot-BodyHoldParams)
+    - [BourreeParams](#bosdyn-api-spot-BourreeParams)
+    - [ButtCircleParams](#bosdyn-api-spot-ButtCircleParams)
+    - [ChickenHeadParams](#bosdyn-api-spot-ChickenHeadParams)
+    - [ClapParams](#bosdyn-api-spot-ClapParams)
+    - [Color](#bosdyn-api-spot-Color)
+    - [CrawlParams](#bosdyn-api-spot-CrawlParams)
+    - [CustomGaitCommand](#bosdyn-api-spot-CustomGaitCommand)
+    - [CustomGaitCommandLimits](#bosdyn-api-spot-CustomGaitCommandLimits)
+    - [CustomGaitParams](#bosdyn-api-spot-CustomGaitParams)
+    - [EulerRateZYXValue](#bosdyn-api-spot-EulerRateZYXValue)
+    - [EulerZYX](#bosdyn-api-spot-EulerZYX)
+    - [EulerZYXValue](#bosdyn-api-spot-EulerZYXValue)
+    - [FadeColorParams](#bosdyn-api-spot-FadeColorParams)
+    - [FidgetStandParams](#bosdyn-api-spot-FidgetStandParams)
+    - [Figure8Params](#bosdyn-api-spot-Figure8Params)
+    - [FrameSnapshotParams](#bosdyn-api-spot-FrameSnapshotParams)
+    - [FrontUpParams](#bosdyn-api-spot-FrontUpParams)
+    - [GotoParams](#bosdyn-api-spot-GotoParams)
+    - [GripperParams](#bosdyn-api-spot-GripperParams)
+    - [HopParams](#bosdyn-api-spot-HopParams)
+    - [IndependentColorParams](#bosdyn-api-spot-IndependentColorParams)
+    - [JumpParams](#bosdyn-api-spot-JumpParams)
+    - [KneelCircleParams](#bosdyn-api-spot-KneelCircleParams)
+    - [KneelLegMove2Params](#bosdyn-api-spot-KneelLegMove2Params)
+    - [KneelLegMoveParams](#bosdyn-api-spot-KneelLegMoveParams)
+    - [LegJointParams](#bosdyn-api-spot-LegJointParams)
+    - [Pace2StepParams](#bosdyn-api-spot-Pace2StepParams)
+    - [RandomRotateParams](#bosdyn-api-spot-RandomRotateParams)
+    - [RippleColorParams](#bosdyn-api-spot-RippleColorParams)
+    - [RotateBodyParams](#bosdyn-api-spot-RotateBodyParams)
+    - [RunningManParams](#bosdyn-api-spot-RunningManParams)
+    - [SetColorParams](#bosdyn-api-spot-SetColorParams)
+    - [SideParams](#bosdyn-api-spot-SideParams)
+    - [StanceShape](#bosdyn-api-spot-StanceShape)
+    - [StepParams](#bosdyn-api-spot-StepParams)
+    - [SwayParams](#bosdyn-api-spot-SwayParams)
+    - [SwingParams](#bosdyn-api-spot-SwingParams)
+    - [SwingPhases](#bosdyn-api-spot-SwingPhases)
+    - [TurnParams](#bosdyn-api-spot-TurnParams)
+    - [TwerkParams](#bosdyn-api-spot-TwerkParams)
+    - [WorkspaceArmMoveParams](#bosdyn-api-spot-WorkspaceArmMoveParams)
+  
+    - [ArmMoveFrame](#bosdyn-api-spot-ArmMoveFrame)
+    - [Easing](#bosdyn-api-spot-Easing)
+    - [FidgetStandParams.FidgetPreset](#bosdyn-api-spot-FidgetStandParams-FidgetPreset)
+    - [FrameSnapshotParams.Inclusion](#bosdyn-api-spot-FrameSnapshotParams-Inclusion)
+    - [JumpParams.Lead](#bosdyn-api-spot-JumpParams-Lead)
+    - [LedLight](#bosdyn-api-spot-LedLight)
+    - [Leg](#bosdyn-api-spot-Leg)
+    - [Pivot](#bosdyn-api-spot-Pivot)
+    - [RippleColorParams.LightSide](#bosdyn-api-spot-RippleColorParams-LightSide)
+    - [RippleColorParams.Pattern](#bosdyn-api-spot-RippleColorParams-Pattern)
+    - [SideParams.Side](#bosdyn-api-spot-SideParams-Side)
+    - [SwayParams.SwayStyle](#bosdyn-api-spot-SwayParams-SwayStyle)
+  
+- [bosdyn/api/spot/choreography_sequence.proto](#bosdyn_api_spot_choreography_sequence-proto)
+    - [ActiveMove](#bosdyn-api-spot-ActiveMove)
+    - [AnimateArm](#bosdyn-api-spot-AnimateArm)
+    - [AnimateArm.HandPose](#bosdyn-api-spot-AnimateArm-HandPose)
+    - [AnimateBody](#bosdyn-api-spot-AnimateBody)
+    - [AnimateGripper](#bosdyn-api-spot-AnimateGripper)
+    - [AnimateLegs](#bosdyn-api-spot-AnimateLegs)
+    - [AnimateSingleLeg](#bosdyn-api-spot-AnimateSingleLeg)
+    - [Animation](#bosdyn-api-spot-Animation)
+    - [AnimationKeyframe](#bosdyn-api-spot-AnimationKeyframe)
+    - [ArmJointAngles](#bosdyn-api-spot-ArmJointAngles)
+    - [ChoreographerDisplayInfo](#bosdyn-api-spot-ChoreographerDisplayInfo)
+    - [ChoreographerDisplayInfo.Color](#bosdyn-api-spot-ChoreographerDisplayInfo-Color)
+    - [ChoreographerSave](#bosdyn-api-spot-ChoreographerSave)
+    - [ChoreographyCommandRequest](#bosdyn-api-spot-ChoreographyCommandRequest)
+    - [ChoreographyCommandResponse](#bosdyn-api-spot-ChoreographyCommandResponse)
+    - [ChoreographyInfo](#bosdyn-api-spot-ChoreographyInfo)
+    - [ChoreographySequence](#bosdyn-api-spot-ChoreographySequence)
+    - [ChoreographyStateLog](#bosdyn-api-spot-ChoreographyStateLog)
+    - [ChoreographyStatusRequest](#bosdyn-api-spot-ChoreographyStatusRequest)
+    - [ChoreographyStatusResponse](#bosdyn-api-spot-ChoreographyStatusResponse)
+    - [ChoreographyTimeAdjustRequest](#bosdyn-api-spot-ChoreographyTimeAdjustRequest)
+    - [ChoreographyTimeAdjustResponse](#bosdyn-api-spot-ChoreographyTimeAdjustResponse)
+    - [ClearAllSequenceFilesRequest](#bosdyn-api-spot-ClearAllSequenceFilesRequest)
+    - [ClearAllSequenceFilesResponse](#bosdyn-api-spot-ClearAllSequenceFilesResponse)
+    - [DeleteSequenceRequest](#bosdyn-api-spot-DeleteSequenceRequest)
+    - [DeleteSequenceResponse](#bosdyn-api-spot-DeleteSequenceResponse)
+    - [DownloadRobotStateLogRequest](#bosdyn-api-spot-DownloadRobotStateLogRequest)
+    - [DownloadRobotStateLogResponse](#bosdyn-api-spot-DownloadRobotStateLogResponse)
+    - [ExecuteChoreographyRequest](#bosdyn-api-spot-ExecuteChoreographyRequest)
+    - [ExecuteChoreographyResponse](#bosdyn-api-spot-ExecuteChoreographyResponse)
+    - [GetChoreographySequenceRequest](#bosdyn-api-spot-GetChoreographySequenceRequest)
+    - [GetChoreographySequenceResponse](#bosdyn-api-spot-GetChoreographySequenceResponse)
+    - [LegJointAngles](#bosdyn-api-spot-LegJointAngles)
+    - [ListAllMovesRequest](#bosdyn-api-spot-ListAllMovesRequest)
+    - [ListAllMovesResponse](#bosdyn-api-spot-ListAllMovesResponse)
+    - [ListAllSequencesRequest](#bosdyn-api-spot-ListAllSequencesRequest)
+    - [ListAllSequencesResponse](#bosdyn-api-spot-ListAllSequencesResponse)
+    - [LoggedFootContacts](#bosdyn-api-spot-LoggedFootContacts)
+    - [LoggedJoints](#bosdyn-api-spot-LoggedJoints)
+    - [LoggedStateKeyFrame](#bosdyn-api-spot-LoggedStateKeyFrame)
+    - [ModifyChoreographyInfoRequest](#bosdyn-api-spot-ModifyChoreographyInfoRequest)
+    - [ModifyChoreographyInfoResponse](#bosdyn-api-spot-ModifyChoreographyInfoResponse)
+    - [MoveCommand](#bosdyn-api-spot-MoveCommand)
+    - [MoveInfo](#bosdyn-api-spot-MoveInfo)
+    - [MoveParams](#bosdyn-api-spot-MoveParams)
+    - [SaveSequenceRequest](#bosdyn-api-spot-SaveSequenceRequest)
+    - [SaveSequenceResponse](#bosdyn-api-spot-SaveSequenceResponse)
+    - [SequenceInfo](#bosdyn-api-spot-SequenceInfo)
+    - [StartRecordingStateRequest](#bosdyn-api-spot-StartRecordingStateRequest)
+    - [StartRecordingStateResponse](#bosdyn-api-spot-StartRecordingStateResponse)
+    - [StopRecordingStateRequest](#bosdyn-api-spot-StopRecordingStateRequest)
+    - [StopRecordingStateResponse](#bosdyn-api-spot-StopRecordingStateResponse)
+    - [UploadAnimatedMoveRequest](#bosdyn-api-spot-UploadAnimatedMoveRequest)
+    - [UploadAnimatedMoveResponse](#bosdyn-api-spot-UploadAnimatedMoveResponse)
+    - [UploadChoreographyRequest](#bosdyn-api-spot-UploadChoreographyRequest)
+    - [UploadChoreographyResponse](#bosdyn-api-spot-UploadChoreographyResponse)
+  
+    - [Animation.ArmPlayback](#bosdyn-api-spot-Animation-ArmPlayback)
+    - [ChoreographerDisplayInfo.Category](#bosdyn-api-spot-ChoreographerDisplayInfo-Category)
+    - [ChoreographyCommandResponse.Status](#bosdyn-api-spot-ChoreographyCommandResponse-Status)
+    - [ChoreographyStatusResponse.Status](#bosdyn-api-spot-ChoreographyStatusResponse-Status)
+    - [ChoreographyTimeAdjustResponse.Status](#bosdyn-api-spot-ChoreographyTimeAdjustResponse-Status)
+    - [ClearAllSequenceFilesResponse.Status](#bosdyn-api-spot-ClearAllSequenceFilesResponse-Status)
+    - [DeleteSequenceResponse.Status](#bosdyn-api-spot-DeleteSequenceResponse-Status)
+    - [DownloadRobotStateLogRequest.LogType](#bosdyn-api-spot-DownloadRobotStateLogRequest-LogType)
+    - [DownloadRobotStateLogResponse.Status](#bosdyn-api-spot-DownloadRobotStateLogResponse-Status)
+    - [ExecuteChoreographyResponse.Status](#bosdyn-api-spot-ExecuteChoreographyResponse-Status)
+    - [GetChoreographySequenceResponse.Status](#bosdyn-api-spot-GetChoreographySequenceResponse-Status)
+    - [ModifyChoreographyInfoResponse.Status](#bosdyn-api-spot-ModifyChoreographyInfoResponse-Status)
+    - [MoveInfo.TransitionState](#bosdyn-api-spot-MoveInfo-TransitionState)
+    - [SaveSequenceResponse.Status](#bosdyn-api-spot-SaveSequenceResponse-Status)
+    - [SequenceInfo.SavedState](#bosdyn-api-spot-SequenceInfo-SavedState)
+    - [StartRecordingStateResponse.Status](#bosdyn-api-spot-StartRecordingStateResponse-Status)
+    - [UploadAnimatedMoveResponse.Status](#bosdyn-api-spot-UploadAnimatedMoveResponse-Status)
+  
+- [bosdyn/api/spot/choreography_service.proto](#bosdyn_api_spot_choreography_service-proto)
+    - [ChoreographyService](#bosdyn-api-spot-ChoreographyService)
   
 - [bosdyn/api/spot/door.proto](#bosdyn_api_spot_door-proto)
     - [DoorCommand](#bosdyn-api-spot-DoorCommand)
@@ -1355,6 +1607,10 @@
     - [CameraCalibrationFeedbackResponse](#bosdyn-api-spot-CameraCalibrationFeedbackResponse)
     - [DepthPlaneSpotCheckResult](#bosdyn-api-spot-DepthPlaneSpotCheckResult)
     - [FootHeightCheckResult](#bosdyn-api-spot-FootHeightCheckResult)
+    - [GripperCameraCalibrationCommandRequest](#bosdyn-api-spot-GripperCameraCalibrationCommandRequest)
+    - [GripperCameraCalibrationCommandResponse](#bosdyn-api-spot-GripperCameraCalibrationCommandResponse)
+    - [GripperCameraCalibrationFeedbackRequest](#bosdyn-api-spot-GripperCameraCalibrationFeedbackRequest)
+    - [GripperCameraCalibrationFeedbackResponse](#bosdyn-api-spot-GripperCameraCalibrationFeedbackResponse)
     - [HipRangeOfMotionResult](#bosdyn-api-spot-HipRangeOfMotionResult)
     - [JointKinematicCheckResult](#bosdyn-api-spot-JointKinematicCheckResult)
     - [LegPairCheckResult](#bosdyn-api-spot-LegPairCheckResult)
@@ -1365,16 +1621,16 @@
     - [SpotCheckFeedbackRequest](#bosdyn-api-spot-SpotCheckFeedbackRequest)
     - [SpotCheckFeedbackResponse](#bosdyn-api-spot-SpotCheckFeedbackResponse)
     - [SpotCheckFeedbackResponse.CameraResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-CameraResultsEntry)
-    - [SpotCheckFeedbackResponse.FootHeightResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-FootHeightResultsEntry)
     - [SpotCheckFeedbackResponse.HipRangeOfMotionResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-HipRangeOfMotionResultsEntry)
     - [SpotCheckFeedbackResponse.KinematicCalResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-KinematicCalResultsEntry)
-    - [SpotCheckFeedbackResponse.LegPairResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-LegPairResultsEntry)
     - [SpotCheckFeedbackResponse.LoadCellResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-LoadCellResultsEntry)
   
     - [CameraCalibrationCommandRequest.Command](#bosdyn-api-spot-CameraCalibrationCommandRequest-Command)
     - [CameraCalibrationFeedbackResponse.Status](#bosdyn-api-spot-CameraCalibrationFeedbackResponse-Status)
     - [DepthPlaneSpotCheckResult.Status](#bosdyn-api-spot-DepthPlaneSpotCheckResult-Status)
     - [FootHeightCheckResult.Status](#bosdyn-api-spot-FootHeightCheckResult-Status)
+    - [GripperCameraCalibrationCommandRequest.Command](#bosdyn-api-spot-GripperCameraCalibrationCommandRequest-Command)
+    - [GripperCameraCalibrationFeedbackResponse.Status](#bosdyn-api-spot-GripperCameraCalibrationFeedbackResponse-Status)
     - [HipRangeOfMotionResult.Error](#bosdyn-api-spot-HipRangeOfMotionResult-Error)
     - [JointKinematicCheckResult.Error](#bosdyn-api-spot-JointKinematicCheckResult-Error)
     - [LegPairCheckResult.Status](#bosdyn-api-spot-LegPairCheckResult-Status)
@@ -1649,6 +1905,7 @@
     - [DrawableProperties](#bosdyn-api-DrawableProperties)
     - [DrawableProperties.Color](#bosdyn-api-DrawableProperties-Color)
     - [DrawableSphere](#bosdyn-api-DrawableSphere)
+    - [GpsProperties](#bosdyn-api-GpsProperties)
     - [ImageProperties](#bosdyn-api-ImageProperties)
     - [ListWorldObjectRequest](#bosdyn-api-ListWorldObjectRequest)
     - [ListWorldObjectResponse](#bosdyn-api-ListWorldObjectResponse)
@@ -1788,6 +2045,7 @@ example, Z to be in force control with X and Y in position control.
 | ry_axis | [ArmCartesianCommand.Request.AxisMode](#bosdyn-api-ArmCartesianCommand-Request-AxisMode) |  |  |
 | rz_axis | [ArmCartesianCommand.Request.AxisMode](#bosdyn-api-ArmCartesianCommand-Request-AxisMode) |  |  |
 | wrench_trajectory_in_task | [WrenchTrajectory](#bosdyn-api-WrenchTrajectory) |  | A force/torque trajectory for the tool expressed in the task frame.<br>This trajectory is optional if requesting a pure pose at the end-effector,<br>otherwise required for force or mixed force/position end-effector requests. |
+| disable_velocity_limiting | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Disables protection that prevents the arm from moving unexpectedly fast. If you are<br>commanding an especially aggressive arm trajectory, you may need to disable this<br>protection.<br>WARNING: setting `disable_velocity_limiting` to true may result in fast arm motions! |
 
 
 
@@ -1855,9 +2113,9 @@ The arm request must be one of the basic command primitives.
 <a name="bosdyn-api-ArmImpedanceCommand"></a>
 
 ### ArmImpedanceCommand
-Specify impedance about the end-effector. Users can set up frames along with stiffness and damping
-parameters to control how the end-effector will respond to external contact as it moves along a 
-specified trajectory
+Specify impedance about the end-effector. Users can set up frames along with stiffness and
+damping parameters to control how the end-effector will respond to external contact as it moves
+along a specified trajectory
 
 
 
@@ -1873,7 +2131,7 @@ specified trajectory
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | status | [ArmImpedanceCommand.Feedback.Status](#bosdyn-api-ArmImpedanceCommand-Feedback-Status) |  | Current status of the pose trajectory. |
-| transforms_snapshot | [FrameTreeSnapshot](#bosdyn-api-FrameTreeSnapshot) |  | A tree-based collection of transformations relevant to the current impedance operation.<br>In addition to the common frames ("vision", "body", "odom"), this snapshot contains the<br>following:<br>"task": The task frame that the impedance action is specified in.<br>"desired_tool": The pose of the desired_tool frame at the current time.<br>"tool": The current measured pose of the tool.<br>"desired_tool_at_end": The desired tool pose at the end of the requested trajectory.<br>"measured_tool_at_start": The measured pose of the tool when this command was first sent.<br><br>While these poses can be used in any way the user sees fit, here are some useful ideas:<br>desired_tool_tform_tool: The current measured tool pose relative to the `desired_tool`<br> frame [meters, quaternion]. This is our "tracking error". <br> Multiplying this error by `diagonal_stiffness_matrix` should<br> yield `commanded_wrench_from_stiffness_at_tool_in_desired_tool`.<br>desired_tool_at_end_tform_tool: The current measured tool pose relative to the<br> `desired_tool` frame at the end of the user trajectory<br> [meters, quaternion]. This is our "distance to goal",<br> and can be used for checking when an impedance move is<br> "complete".<br>measured_tool_at_start_tform_tool_in_task: The current measured tool pose relative to<br> the measured tool frame at the start,<br> expressed in the task frame<br> [meters, quaternion]. This can be used to<br> see how far the tool has moved since the<br> beginning of the command. |
+| transforms_snapshot | [FrameTreeSnapshot](#bosdyn-api-FrameTreeSnapshot) |  | A tree-based collection of transformations relevant to the current impedance operation.<br>In addition to the common frames ("vision", "body", "odom"), this snapshot contains the<br>following:<br>"task": The task frame that the impedance action is specified in.<br>"desired_tool": The pose of the desired_tool frame at the current time.<br>"tool": The current measured pose of the tool.<br>"desired_tool_at_end": The desired tool pose at the end of the requested trajectory.<br>"measured_tool_at_start": The measured pose of the tool when this command was first sent.<br><br>While these poses can be used in any way the user sees fit, here are some useful ideas:<br>desired_tool_tform_tool: The current measured tool pose relative to the `desired_tool`<br> frame [meters, quaternion]. This is our "tracking error".<br> Multiplying this error by `diagonal_stiffness_matrix` should<br> yield `commanded_wrench_from_stiffness_at_tool_in_desired_tool`.<br>desired_tool_at_end_tform_tool: The current measured tool pose relative to the<br> `desired_tool` frame at the end of the user trajectory<br> [meters, quaternion]. This is our "distance to goal",<br> and can be used for checking when an impedance move is<br> "complete".<br>measured_tool_at_start_tform_tool_in_task: The current measured tool pose relative to<br> the measured tool frame at the start,<br> expressed in the task frame<br> [meters, quaternion]. This can be used to<br> see how far the tool has moved since the<br> beginning of the command. |
 | commanded_wrench_from_stiffness_at_tool_in_desired_tool | [Wrench](#bosdyn-api-Wrench) |  | The component of our commanded wrench at the tool expressed with respect to the<br>`desired_tool` frame from our stiffness matrix [Newtons / Nm] |
 | commanded_wrench_from_damping_at_tool_in_desired_tool | [Wrench](#bosdyn-api-Wrench) |  | The component of our commanded wrench at the tool expressed with respect to the<br>`desired_tool` frame from our damping matrix [Newtons / Nm] |
 | commanded_wrench_from_feed_forward_at_tool_in_desired_tool | [Wrench](#bosdyn-api-Wrench) |  | The component of our commanded wrench at the tool expressed with respect to the<br>`desired_tool` frame from our feed forward wrench [Newtons / Nm] |
@@ -1893,15 +2151,16 @@ specified trajectory
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| root_frame_name | [string](#string) |  | Name of the frame relative to which the task frame is defined for this command. <br>Common frames for this include "odom", "vision", "body", and "flat_body". |
-| root_tform_task | [SE3Pose](#bosdyn-api-SE3Pose) |  | This transform specifies the pose of the task frame relative to the root frame.<br>If unset, it defaults to identity, and the task frame coincides with the root frame.<br>The `desired_tool` frame will be specified relative to the task frame. For peg in <br>hole tasks for example, the task frame could be a frame attached to the top of the<br>hole with z-axis aligned with the hole axis, and the `desired_tool` frame could<br>move in z to direct the peg deeper into the hole. |
+| root_frame_name | [string](#string) |  | Name of the frame relative to which the task frame is defined for this command.<br>Common frames for this include "odom", "vision", "body", and "flat_body". |
+| root_tform_task | [SE3Pose](#bosdyn-api-SE3Pose) |  | This transform specifies the pose of the task frame relative to the root frame.<br>If unset, it defaults to identity, and the task frame coincides with the root frame.<br>The `desired_tool` frame will be specified relative to the task frame. For peg in<br>hole tasks for example, the task frame could be a frame attached to the top of the<br>hole with z-axis aligned with the hole axis, and the `desired_tool` frame could<br>move in z to direct the peg deeper into the hole. |
 | wrist_tform_tool | [SE3Pose](#bosdyn-api-SE3Pose) |  | The tool pose relative to the parent link (link_wr1). This can also be thought of as the<br>"remote center" frame. For peg in hole tasks for example, one might put the tool frame<br>at the tip of the peg, or slightly below the tip floating in space, at the point on which<br>we want our virtual springs to pull.<br>Defaults to<br> [0.19557 0 0]<br> [1 0 0 0]<br>which is a frame aligned with the wrist frame, with its origin slightly in front of<br>the gripper's palm plate. |
-| task_tform_desired_tool | [SE3Trajectory](#bosdyn-api-SE3Trajectory) |  | Trajectory of where we want the tool to be relative to the task frame. Note that this `desired_tool` <br>frame is not the same as the tool frame attached to the wrist link. If our tool deviates from this <br>`desired_tool` pose, it will be subject to a wrench determined by our stiffness and damping matrices. |
-| feed_forward_wrench_at_tool_in_desired_tool | [Wrench](#bosdyn-api-Wrench) |  | Feed forward wrench to apply at the tool, expressed with respect to the `desired_tool` frame |
-| diagonal_stiffness_matrix | [Vector](#bosdyn-api-Vector) |  | Stiffness matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6 doubles,<br>representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (N/m, N/m, N/m, Nm/rad, Nm/rad, Nm/rad).<br>All other entries will be set to 0. All stiffness values along the diagonal should be non-negative. |
-| diagonal_damping_matrix | [Vector](#bosdyn-api-Vector) |  | Damping matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6 doubles,<br>representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (Ns/m, Ns/m, Ns/m, Nms/rad, Nms/rad, Nms/rad)<br>All other entries will be set to 0. All damping values along the diagonal should be non-negative. |
-| max_force_mag | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Maximum force magnitude in Newtons we're allowed to exert. If the tool deviates such that the<br>magnitude of the requested force would exceed this threshold, saturate the requested force.<br>If this value is not set, a default of 60N will be used. |
-| max_torque_mag | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Maximum torque magnitude in Newton meters we're allowed to exert. If the tool deviates such<br>that the magnitude of the requested torque would exceed this threshold, saturate the<br>requested torque. If this value is not set, a default of 15Nm will be used. |
+| task_tform_desired_tool | [SE3Trajectory](#bosdyn-api-SE3Trajectory) |  | Trajectory of where we want the tool to be relative to the task frame. Note that this<br>`desired_tool` frame is not the same as the tool frame attached to the wrist link. If our<br>tool deviates from this `desired_tool` pose, it will be subject to a wrench determined by<br>our stiffness and damping matrices. |
+| feed_forward_wrench_at_tool_in_desired_tool | [Wrench](#bosdyn-api-Wrench) |  | Feed forward wrench to apply at the tool, expressed with respect to the `desired_tool`<br>frame |
+| diagonal_stiffness_matrix | [Vector](#bosdyn-api-Vector) |  | Stiffness matrix in the `desired_tool` frame. The matrix is parameterized by a vector of<br>6 doubles, representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (N/m, N/m, N/m,<br>Nm/rad, Nm/rad, Nm/rad). All other entries will be set to 0. All stiffness values along<br>the diagonal should be non-negative. |
+| diagonal_damping_matrix | [Vector](#bosdyn-api-Vector) |  | Damping matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6<br>doubles, representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (Ns/m, Ns/m,<br>Ns/m, Nms/rad, Nms/rad, Nms/rad) All other entries will be set to 0. All damping values<br>along the diagonal should be non-negative. |
+| max_force_mag | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Maximum force magnitude in Newtons we're allowed to exert. If the tool deviates such that<br>the magnitude of the requested force would exceed this threshold, saturate the requested<br>force. If this value is not set, a default of 60N will be used. |
+| max_torque_mag | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Maximum torque magnitude in Newton meters we're allowed to exert. If the tool deviates<br>such that the magnitude of the requested torque would exceed this threshold, saturate the<br>requested torque. If this value is not set, a default of 15Nm will be used. |
+| disable_safety_check | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Set to True to disable cancelling the trajectory for unsafe behaviors. NOTE: If<br>disable_safety_check is set to True, the robot may damage itself or the environment.<br>Extreme caution should be used when setting disable_safety_check to True. |
 
 
 
@@ -1928,7 +2187,7 @@ Specify a set of joint angles to move the arm.
 | ----- | ---- | ----- | ----------- |
 | status | [ArmJointMoveCommand.Feedback.Status](#bosdyn-api-ArmJointMoveCommand-Feedback-Status) |  | Current status of the request. |
 | planner_status | [ArmJointMoveCommand.Feedback.PlannerStatus](#bosdyn-api-ArmJointMoveCommand-Feedback-PlannerStatus) |  | Current status of the trajectory planner. |
-| planned_points | [ArmJointTrajectoryPoint](#bosdyn-api-ArmJointTrajectoryPoint) | repeated | Based on the user trajectory, the planned knot points that obey acceleration and <br>velocity constraints. If these knot points don't match the requested knot points, <br>consider increasing velocity/acceleration limits, and/or staying further away from <br>joint position limits. In situations where we've modified you last point, we append<br>a minimum time trajectory (that obeys the velocity and acceleration limits) from the<br>planner's final point to the requested final point. This means that the length of<br>planned_points may be one point larger than the requested. |
+| planned_points | [ArmJointTrajectoryPoint](#bosdyn-api-ArmJointTrajectoryPoint) | repeated | Based on the user trajectory, the planned knot points that obey acceleration and<br>velocity constraints. If these knot points don't match the requested knot points,<br>consider increasing velocity/acceleration limits, and/or staying further away from<br>joint position limits. In situations where we've modified you last point, we append<br>a minimum time trajectory (that obeys the velocity and acceleration limits) from the<br>planner's final point to the requested final point. This means that the length of<br>planned_points may be one point larger than the requested. The planner works on a<br>moving window of up to 10 points from the input trajectory, so the length of planned<br>points will be at most 10, and its contents will change over time for long trajectories. |
 | time_to_goal | [google.protobuf.Duration](#google-protobuf-Duration) |  | Returns amount of time remaining until the joints are at the goal position. For<br>multiple point trajectories, this is the time remaining to the final point. |
 
 
@@ -2054,7 +2313,7 @@ Parameters common across arm commands.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| disable_body_force_limiter | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Whether or not to disable the body force limiter running on the robot. By default, this is<br>/ on, and the chance that the body falls over because the arm makes contact in the world is<br>/ low. If this is purposely disabled (by setting disable_body_force_limiter to True), the arm<br>/ may be able to accelerate faster, and apply more force to the world and to objects than usual,<br>/ but there is also added risk of the robot falling over. |
+| disable_body_force_limiter | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Whether or not to disable the body force limiter running on the robot. By default, this is<br>/ on, and the chance that the body falls over because the arm makes contact in the world is<br>/ low. If this is purposely disabled (by setting disable_body_force_limiter to True), the arm<br>/ may be able to accelerate faster, and apply more force to the world and to objects than<br>/ usual, but there is also added risk of the robot falling over. |
 
 
 
@@ -2304,6 +2563,7 @@ the same task_frame as the trajectories.
 | STATUS_TRAJECTORY_COMPLETE | 1 | Tool frame has reached the end of the trajectory, and is close to the `desired_tool`<br>in directions with high stiffness and no feed forwards |
 | STATUS_IN_PROGRESS | 2 | Robot is moving along the `desired_tool` trajectory |
 | STATUS_TRAJECTORY_STALLED | 3 | The arm has stopped making progress to the goal and the measured tool frame is far<br>from the `desired_tool` along directions where we expect good tracking |
+| STATUS_TRAJECTORY_CANCELLED | 4 | Detected an arm instability, so the commanded motion was cancelled. Consider lowering<br>stiffness or lowering both stiffness and damping to improve stability. |
 
 
 
@@ -2316,7 +2576,7 @@ the same task_frame as the trajectories.
 | ---- | ------ | ----------- |
 | PLANNER_STATUS_UNKNOWN | 0 | PLANNER_STATUS_UNKNOWN should never be used. If used, an internal error has happened. |
 | PLANNER_STATUS_SUCCESS | 1 | A solution passing through the desired points and obeying the constraints was found. |
-| PLANNER_STATUS_MODIFIED | 2 | The planner had to modify the desired points in order to obey the constraints. For<br>example, if you specify a 1 point trajectory, and tell it to get there in a really short<br>amount of time, but haven't set a high allowable max velocity / acceleration, the planner<br>will do its best to get as close as possible to the final point, but won't reach it. In<br>situations where we've modified you last point, we append a minimum time trajectory (that<br>obeys the velocity and acceleration limits) from the planner's final point to the requested<br>final point. |
+| PLANNER_STATUS_MODIFIED | 2 | The planner had to modify the desired points in order to obey the constraints. For<br>example, if you specify a 1 point trajectory, and tell it to get there in a really<br>short amount of time, but haven't set a high allowable max velocity / acceleration,<br>the planner will do its best to get as close as possible to the final point, but<br>won't reach it. In situations where we've modified you last point, we append a<br>minimum time trajectory (that obeys the velocity and acceleration limits) from the<br>planner's final point to the requested final point. |
 | PLANNER_STATUS_FAILED | 3 | Failed to compute a valid trajectory, will go to first point instead. It is possible<br>that our optimizer till fail to solve the problem instead of returning a sub-optimal<br>solution. This is un-likely to occur. |
 
 
@@ -2331,7 +2591,7 @@ the same task_frame as the trajectories.
 | STATUS_UNKNOWN | 0 | STATUS_UNKNOWN should never be used. If used, an internal error has happened |
 | STATUS_COMPLETE | 1 | The arm is at the desired configuration. |
 | STATUS_IN_PROGRESS | 2 | Robot is re-configuring arm to get to desired configuration. |
-| STATUS_STALLED | 3 | The arm has stopped making progress towards the goal. This could be because it is <br>avoiding a collision or joint limit. |
+| STATUS_STALLED | 3 | The arm has stopped making progress towards the goal. This could be because it is<br>avoiding a collision or joint limit. |
 
 
 
@@ -2359,7 +2619,7 @@ the same task_frame as the trajectories.
 | STATUS_UNKNOWN | 0 | STATUS_UNKNOWN should never be used. If used, an internal error has happened. |
 | STATUS_COMPLETE | 1 | The arm is at the desired configuration. |
 | STATUS_IN_PROGRESS | 2 | Robot is re-configuring arm to get to desired configuration. |
-| STATUS_STALLED_HOLDING_ITEM | 3 | Some positions may refuse to execute if the gripper is holding an item, for example<br>stow. |
+| STATUS_STALLED_HOLDING_ITEM | 3 | Some requests may not execute if the gripper is holding an item declared not<br>stowable, e.g. POSITIONS_STOW with carry_state == CARRY_STATE_CARRIABLE. In these<br>situations, Spot will instead run an ArmStopCommand request while the blocking<br>condition remains true. Clearing the condition will cause the request to proceed and<br>the arm will start moving. |
 
 
 
@@ -2565,9 +2825,8 @@ The GetAuthToken request message includes login information for the robot.
 | ----- | ---- | ----- | ----------- |
 | header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
 | username | [string](#string) |  | Username to authenticate with. Must be set if password is set. |
-| password | [string](#string) |  | Password to authenticate with. Not neccessary if token is set. |
+| password | [string](#string) |  | Password to authenticate with. Not necessary if token is set. |
 | token | [string](#string) |  | Token to authenticate with. Can be used in place of the password, to re-mint a token. |
-| application_token | [string](#string) |  | **Deprecated.** Application Token for authenticating with robots on older releases.<br>DEPRECATED as of 2.0.1. Will be removed in 4.0. |
 
 
 
@@ -2601,13 +2860,11 @@ is correct and succeeds.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| STATUS_UNKNOWN | 0 | STATUS_UNKNOWN should never be used. If used, an internal error has happend. |
+| STATUS_UNKNOWN | 0 | STATUS_UNKNOWN should never be used. If used, an internal error has happened. |
 | STATUS_OK | 1 | STATUS_OK indicates that authentication has succeeded. The 'token' field field will<br>be populated with a session token that can be used to authenticate the user. |
 | STATUS_INVALID_LOGIN | 2 | STATUS_INVALID_LOGIN indicates that authentication has failed since an invalid<br>username and/or password were provided. |
 | STATUS_INVALID_TOKEN | 3 | STATUS_INVALID_TOKEN indicates that authentication has failed since the 'token'<br>provided in the request is invalid. Reasons for the token being invalid could be<br>because it has expired, because it is improperly formed, for the wrong robot, the<br>user that the token is for has changed a password, or many other reasons. Clients<br>should use username/password-based authentication when refreshing the token fails. |
 | STATUS_TEMPORARILY_LOCKED_OUT | 4 | STATUS_TEMPORARILY_LOCKED_OUT indicates that authentication has failed since<br>authentication for the user is temporarily locked out due to too many unsuccessful<br>attempts. Any new authentication attempts should be delayed so they may happen after<br>the lock out period ends. |
-| STATUS_INVALID_APPLICATION_TOKEN | 5 | STATUS_INVALID_APPLICATION_TOKEN indicates that the 'application_token' field in the<br>request was invalid. |
-| STATUS_EXPIRED_APPLICATION_TOKEN | 6 | STATUS_EXPIRED_APPLICATION_TOKEN indicates that the 'application_token' field in the<br>request was valid, but has expired. |
 
 
  <!-- end enums -->
@@ -2903,8 +3160,9 @@ Start AutoReturn behavior now.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| root_id | [NodeIdentifier](#bosdyn-api-autowalk-NodeIdentifier) |  | Identifiable data for the root node of the element. |
+| root_id | [NodeIdentifier](#bosdyn-api-autowalk-NodeIdentifier) |  | **Deprecated.** Identifiable data for the root node of the element.<br>Deprecated as of 4.0. Please use navigation_id instead. |
 | action_id | [NodeIdentifier](#bosdyn-api-autowalk-NodeIdentifier) |  | Identifiable data for action node of the element. |
+| navigation_id | [NodeIdentifier](#bosdyn-api-autowalk-NodeIdentifier) |  | Identifiable data for the navigation node of the element. |
 
 
 
@@ -3082,6 +3340,7 @@ may desire that the robot perform a laser scan at a given waypoint.
 | sleep | [Action.Sleep](#bosdyn-api-autowalk-Action-Sleep) |  |  |
 | data_acquisition | [Action.DataAcquisition](#bosdyn-api-autowalk-Action-DataAcquisition) |  |  |
 | remote_grpc | [Action.RemoteGrpc](#bosdyn-api-autowalk-Action-RemoteGrpc) |  |  |
+| execute_choreography | [Action.ExecuteChoreography](#bosdyn-api-autowalk-Action-ExecuteChoreography) |  |  |
 | node | [bosdyn.api.mission.Node](#bosdyn-api-mission-Node) |  | This field can be used to specify a behavior tree as an action. If the user had<br>two callbacks they would like to run simultaneously at the waypoint this action<br>is associated with, they could use create a behavior tree inside Node with both<br>callbacks embedded in a simple parallel.<br>The downside of using node, is that editors might not support editing parameters<br>directly. |
 
 
@@ -3101,6 +3360,21 @@ For actions associated with the Data Acquisition Service.
 | completion_behavior | [bosdyn.api.mission.DataAcquisition.CompletionBehavior](#bosdyn-api-mission-DataAcquisition-CompletionBehavior) |  |  |
 | last_known_capabilities | [bosdyn.api.AcquisitionCapabilityList](#bosdyn-api-AcquisitionCapabilityList) |  | Last known Data Acquisition capabilities. |
 | record_time_images | [bosdyn.api.ImageCaptureAndSource](#bosdyn-api-ImageCaptureAndSource) | repeated | Any images taken at action creation time. For DataAcquisition actions, this includes:<br> - Any images in the Data Acquisition capture.<br> - Any images that are inputs to NCB workers that are in the Data Acquisition capture.<br> - Any images that a Data Acquisition plugin in the Data Acquisition capture requests a<br> region of interest for.<br><br>Note that both this message and AcquisitionCapabilityList will contain the<br>Spec for images sources. This message will contain the spec at record time,<br>while last_known_capabilities should be updated as time progresses and services<br>evolve.<br><br>This data is meant to allow UI's to give users context about their actions, AND<br>provide them a canvas to edit region of interests with after the fact. It is<br>not used at mission playback time. |
+
+
+
+
+
+
+<a name="bosdyn-api-autowalk-Action-ExecuteChoreography"></a>
+
+### Action.ExecuteChoreography
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| sequence_name | [string](#string) |  | The name of the sequence to play. |
 
 
 
@@ -3184,7 +3458,7 @@ Position the body and perform a joint move and cartesian command in target frame
 | pose_trajectory_rt_target | [bosdyn.api.SE3Trajectory](#bosdyn-api-SE3Trajectory) |  | A 3D pose trajectory for the tool expressed in target frame, |
 | target_tform_measured_offset | [bosdyn.api.SE2Pose](#bosdyn-api-SE2Pose) |  | Robot desired stance relative to waypoint<br>This is taken by measuring the average of the footprints<br>in body frame at the time of waypoint creation.<br>This is used to generate the stance command.<br>Target == waypoint.<br>This assumes the waypoint is gravity aligned. |
 | body_assist_params | [bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation](#bosdyn-api-spot-BodyControlParams-BodyAssistForManipulation) |  | Body mobility params during cartesian move |
-| force_stow_override | [bool](#bool) |  |  |
+| force_stow_override | [bool](#bool) |  | If true, the arm will stow after this action no matter what.<br>If false, the arm will only stow if the next action is far away. |
 
 
 
@@ -3215,6 +3489,7 @@ Set the camera params of the gripper camera
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | request | [bosdyn.api.GripperCommand.Request](#bosdyn-api-GripperCommand-Request) |  |  |
+| disable_post_action_close | [bool](#bool) |  | By default, any action that includes a GripperCommand action wrapper will run<br>the specified command BEFORE the action is run. By default, after the action<br>is run the gripper will be closed. This behavior can be turned off by setting<br>this flag to true. |
 
 
 
@@ -3276,6 +3551,7 @@ Align SpotCam to a waypoint. Cannot be used with SpotCamPtz or RobotBodyPose
 | sensor_id | [string](#string) |  | Sensor to use for alignment |
 | scene_object_id | [string](#string) |  |  |
 | is_skipped | [bool](#bool) |  | If true, this alignment will be skipped during playback |
+| focus_state | [bosdyn.api.spot_cam.PtzFocusState](#bosdyn-api-spot_cam-PtzFocusState) |  | Focus state used during alignment. Defaults to auto-focus. |
 
 
 
@@ -3340,6 +3616,22 @@ when this behavior happens.
 | ----- | ---- | ----- | ----------- |
 | battery_start_threshold | [float](#float) |  | Once charging, the robot will continue to charge until the battery<br>level is greater than or equal to this threshold, at which point in<br>time, the mission will start. |
 | battery_stop_threshold | [float](#float) |  | If the battery level is less than or equal to this threshold, the<br>robot will stop what it is currently doing and return to the dock.<br>Once the battery level is greater than or equal to the battery start<br>threshold, the mission will resume. |
+
+
+
+
+
+
+<a name="bosdyn-api-autowalk-ChoreographyItems"></a>
+
+### ChoreographyItems
+Choreography elements required for the mission.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| choreography_sequences | [bosdyn.api.spot.ChoreographySequence](#bosdyn-api-spot-ChoreographySequence) | repeated | Any sequences we need to play the mission. |
+| animated_moves | [bosdyn.api.spot.Animation](#bosdyn-api-spot-Animation) | repeated | Any animations we need if we want to play the sequence. |
 
 
 
@@ -3560,6 +3852,7 @@ A Target is the location the robot should navigate to.
 | navigate_to | [Target.NavigateTo](#bosdyn-api-autowalk-Target-NavigateTo) |  |  |
 | navigate_route | [Target.NavigateRoute](#bosdyn-api-autowalk-Target-NavigateRoute) |  |  |
 | relocalize | [Target.Relocalize](#bosdyn-api-autowalk-Target-Relocalize) |  | If set, upon reaching the target the robot will perform an explicit relocalization.<br>This should increase the accuracy of the robots belief of it's position on the map.<br>After relocalizing, the robot will re-navigate to the target. |
+| target_stow_behavior | [Target.TargetStowBehavior](#bosdyn-api-autowalk-Target-TargetStowBehavior) |  |  |
 
 
 
@@ -3630,12 +3923,27 @@ Tell the robot to navigate to a waypoint. It will choose its route.
 | elements | [Element](#bosdyn-api-autowalk-Element) | repeated | The list of actions and their associated locations. |
 | docks | [Dock](#bosdyn-api-autowalk-Dock) | repeated | The docks the mission can dock at.<br>AT THE MOMENT AUTOWALK ONLY SUPPORTS A SINGLE DOCK.<br>However, this is subject to change. |
 | id | [string](#string) |  | Unique identifier for this walk. This will be embedded in various Data Acquisition captures<br>and various logging bundles. This should be globally unique across all walks. |
+| choreography_items | [ChoreographyItems](#bosdyn-api-autowalk-ChoreographyItems) |  | Choreography related dependencies (any sequences and animations a robot needs to play this walk). |
 
 
 
 
 
  <!-- end messages -->
+
+
+<a name="bosdyn-api-autowalk-Target-TargetStowBehavior"></a>
+
+### Target.TargetStowBehavior
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TARGET_STOW_BEHAVIOR_UNKNOWN | 0 | Will default to TARGET_STOW_BEHAVIOR_AUTO |
+| TARGET_STOW_BEHAVIOR_AUTO | 1 | Compiler will do some heuristics to figure out if we should stow.<br>Headed back to dock = stow<br>Headed to another action that doesn't use arm sensor pointing = stow<br>Headed to another action that uses arm sensor pointing and is far away = stow<br>Headed to another action that uses arm sensor pointing and is close = don't stow |
+| TARGET_STOW_BEHAVIOR_NEVER | 2 | Never ever stow the arm on the way to this action. |
+| TARGET_STOW_BEHAVIOR_ALWAYS | 3 | Always stow the arm on the way to this action. |
+
 
  <!-- end enums -->
 
@@ -3850,6 +4158,81 @@ Freeze command request takes no additional arguments.
 
 
 
+<a name="bosdyn-api-JointCommand"></a>
+
+### JointCommand
+
+
+
+
+
+
+
+<a name="bosdyn-api-JointCommand-Feedback"></a>
+
+### JointCommand.Feedback
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| status | [JointCommand.Feedback.Status](#bosdyn-api-JointCommand-Feedback-Status) |  |  |
+| num_messages_received | [uint64](#uint64) |  | Number of UpdateRequest messages received through the stream |
+
+
+
+
+
+
+<a name="bosdyn-api-JointCommand-Request"></a>
+
+### JointCommand.Request
+Empty message, no paramaters required to activate.
+
+
+
+
+
+
+<a name="bosdyn-api-JointCommand-UpdateRequest"></a>
+
+### JointCommand.UpdateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| end_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp (in robot time) when the command will stop executing. This is a<br>required field and used to prevent runaway commands. |
+| reference_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | (Optional) joint trajectory reference time. See extrapolation_time for detailed<br>explanation. If unspecified, this will default to the time the command is received.<br>If the time is in the future, no extrapolation will be performed until that time<br>(extrapolation never goes backwards in time) |
+| extrapolation_duration | [google.protobuf.Duration](#google-protobuf-Duration) |  | (Optional) joint trajectory extrapolation time. If specified, the robot will extrapolate<br>desired position based on desired velocity, starting at reference_time for at most<br>extrapolation_duration (or until end_time, whichever is sooner) |
+| position | [float](#float) | repeated | Commanded joint details |
+| velocity | [float](#float) | repeated |  |
+| load | [float](#float) | repeated |  |
+| gains | [JointCommand.UpdateRequest.Gains](#bosdyn-api-JointCommand-UpdateRequest-Gains) |  | Gains are required to be specified on the first message. After that can be optionally<br>updated by filling out the gains message again. Partial updates of gains are not<br>supported, a full gain set must be specified each time. |
+| user_command_key | [uint32](#uint32) |  | user_command_key is optional, but it can be used for tracking when commands take effect<br>on the robot and calculating latencies. Avoid using 0 |
+| velocity_safety_limit | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | (Optional) Joint velocity safety limit. Possibly useful during initial development or<br>gain tuning. If the magnitude of any joint velocity passes the threshold the robot will<br>trigger a behavior fault and go into a safety state. Client must power down the robot or<br>clear the behavior fault via the Robot Command Service. Values less than or equal to 0<br>will be considered invalid and must be sent in every UpdateRequest for use. |
+
+
+
+
+
+
+<a name="bosdyn-api-JointCommand-UpdateRequest-Gains"></a>
+
+### JointCommand.UpdateRequest.Gains
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| k_q_p | [float](#float) | repeated | position error proportional coefficient |
+| k_qd_p | [float](#float) | repeated | velocity error proportional coefficient |
+
+
+
+
+
+
 <a name="bosdyn-api-RobotCommandFeedbackStatus"></a>
 
 ### RobotCommandFeedbackStatus
@@ -3881,6 +4264,7 @@ the final point of the trajectory.
 | ----- | ---- | ----- | ----------- |
 | status | [SE2TrajectoryCommand.Feedback.Status](#bosdyn-api-SE2TrajectoryCommand-Feedback-Status) |  | Current status of the command. |
 | body_movement_status | [SE2TrajectoryCommand.Feedback.BodyMovementStatus](#bosdyn-api-SE2TrajectoryCommand-Feedback-BodyMovementStatus) |  | Current status of how the body is moving |
+| final_goal_status | [SE2TrajectoryCommand.Feedback.FinalGoalStatus](#bosdyn-api-SE2TrajectoryCommand-Feedback-FinalGoalStatus) |  | Flag indicating if the final requested position was achievable. |
 
 
 
@@ -4265,7 +4649,7 @@ Stop command request takes no additional arguments.
 | ---- | ------ | ----------- |
 | CONTROL_MODE_UNKNOWN | 0 |  |
 | CONTROL_MODE_POSITION | 1 | Position control mode, either a linear or angular position is specified<br>and constrained manipulation moves to that position with a trapezoidal<br>trajectory that has the max velocity specified in task_speed |
-| CONTROL_MODE_VELOCITY | 2 | Velocity control mode where constrained manipulation applies forces to <br>maintain the velocity specified in task_speed |
+| CONTROL_MODE_VELOCITY | 2 | Velocity control mode where constrained manipulation applies forces to<br>maintain the velocity specified in task_speed |
 
 
 
@@ -4285,6 +4669,19 @@ to lever type objects.
 | TASK_TYPE_R3_CIRCLE_FORCE | 4 | This task type corresponds to circular tasks where<br>the end-effector position and orientation rotate about a circle<br>but the orientation does always strictly follow the circle due to slips.<br>The constrained manipulation logic will generate translational forces in this case.<br>Example tasks are: manipulating a cabinet where the grasp on handle is not very rigid<br>or can often slip.<br>This task type will require an initial force vector specified<br>in init_wrench_direction_in_frame_name. |
 | TASK_TYPE_R3_LINEAR_FORCE | 5 | This task type corresponds to linear tasks where<br>the end-effector position moves in a line<br>but the orientation does not need to change.<br>The constrained manipulation logic will generate a force in this case.<br>Example tasks are: A crank that has a loose handle, or manipulating<br>a cabinet where the grasp of the handle is loose and the end-effector is free<br>to rotate about the handle in one direction.<br>This task type will require an initial force vector specified<br>in init_wrench_direction_in_frame_name. |
 | TASK_TYPE_HOLD_POSE | 6 | This option simply holds the hand in place with stiff impedance control.<br>You can use this mode at the beginning of a constrained manipulation task or to<br>hold position while transitioning between two different constrained manipulation<br>tasks. The target pose to hold will be the measured hand pose upon transitioning to<br>constrained manipulation or upon switching to this task type. This mode should only<br>be used during constrained manipulation tasks, since it uses impedance control to<br>hold the hand in place. This is not intended to stop the arm during position control<br>moves. |
+
+
+
+<a name="bosdyn-api-JointCommand-Feedback-Status"></a>
+
+### JointCommand.Feedback.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_ACTIVE | 1 | Command is still active and processing incoming joint requests |
+| STATUS_ERROR | 2 | An error has occurred and joint requests are no longer being processed |
 
 
 
@@ -4317,6 +4714,20 @@ to lever type objects.
 
 
 
+<a name="bosdyn-api-SE2TrajectoryCommand-Feedback-FinalGoalStatus"></a>
+
+### SE2TrajectoryCommand.Feedback.FinalGoalStatus
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| FINAL_GOAL_STATUS_UNKNOWN | 0 | FINAL_GOAL_STATUS_UNKNOWN should never be used. If used, an internal error has<br>happened. |
+| FINAL_GOAL_STATUS_IN_PROGRESS | 1 | Robot is not stopped or stopping. |
+| FINAL_GOAL_STATUS_ACHIEVABLE | 2 | Final position was achievable. |
+| FINAL_GOAL_STATUS_BLOCKED | 3 | Final position was not achievable. |
+
+
+
 <a name="bosdyn-api-SE2TrajectoryCommand-Feedback-Status"></a>
 
 ### SE2TrajectoryCommand.Feedback.Status
@@ -4325,9 +4736,12 @@ to lever type objects.
 | Name | Number | Description |
 | ---- | ------ | ----------- |
 | STATUS_UNKNOWN | 0 | STATUS_UNKNOWN should never be used. If used, an internal error has happened. |
-| STATUS_AT_GOAL | 1 | The robot has arrived and is standing at the goal. |
-| STATUS_NEAR_GOAL | 3 | The robot has arrived at the goal and is doing final positioning. |
-| STATUS_GOING_TO_GOAL | 2 | The robot is attempting to go to a goal. |
+| STATUS_STOPPED | 1 | The robot has stopped. Either the robot has reached the end of the trajectory or it<br>believes that it cannot reach the desired position. Robot may start to move again if<br>a blocked path clears. |
+| STATUS_STOPPING | 3 | The robot is nearing the end of the requested trajectory and is doing final<br>positioning. |
+| STATUS_IN_PROGRESS | 2 | The robot is actively following the requested trajectory. |
+| STATUS_AT_GOAL | 1 | The following enum values were possibly confusing in situations where the robot<br>cannot achieve the requested trajectory and are now deprecated. |
+| STATUS_NEAR_GOAL | 3 |  |
+| STATUS_GOING_TO_GOAL | 2 |  |
 
 
 
@@ -4547,7 +4961,7 @@ E.g., for the series with series_index N, you can access its SeriesIdentifier by
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| series_identifiers | [SeriesIdentifier](#bosdyn-api-SeriesIdentifier) | repeated | SeriesIdentifer for each series in this file. |
+| series_identifiers | [SeriesIdentifier](#bosdyn-api-SeriesIdentifier) | repeated | SeriesIdentifier for each series in this file. |
 | series_block_index_offsets | [uint64](#uint64) | repeated | The offset from the start of the file of the SeriesBlockIndex block for each series. |
 | series_identifier_hashes | [uint64](#uint64) | repeated | The hash of the series_identifier for each series. |
 
@@ -4560,7 +4974,7 @@ E.g., for the series with series_index N, you can access its SeriesIdentifier by
 
 ### MessageTypeDescriptor
 If a data series contains a sequence of binary messages, the encoding and format of these
- messages is described by a MesssageTypeDescriptor.
+ messages is described by a MessageTypeDescriptor.
 
 
 | Field | Type | Label | Description |
@@ -4727,7 +5141,7 @@ Struct series may reference other struct series, but the series structure must b
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| key_to_series_identifier_hash | [StructTypeDescriptor.KeyToSeriesIdentifierHashEntry](#bosdyn-api-StructTypeDescriptor-KeyToSeriesIdentifierHashEntry) | repeated | A map of a name-reference to a series, identified by its series_identifer_hash. |
+| key_to_series_identifier_hash | [StructTypeDescriptor.KeyToSeriesIdentifierHashEntry](#bosdyn-api-StructTypeDescriptor-KeyToSeriesIdentifierHashEntry) | repeated | A map of a name-reference to a series, identified by its series_identifier_hash. |
 
 
 
@@ -4986,7 +5400,7 @@ used to uniquely identify that full request's set of stored data.
 | ----- | ---- | ----- | ----------- |
 | action_name | [string](#string) |  | The action name is used to group all pieces of data associated with a single AcquireData<br>request. The action name must be unique for the given group name, meaning no two actions<br>with the same group name can have the same action name. |
 | group_name | [string](#string) |  | The group name is used to group a "session" of data, such as a mission or a teleop capture<br>session, which includes multiple capture actions (from multiple AcquireData RPCs). |
-| timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Time (in the robot's clock) at which this capture was triggered. If the timestamp is not<br>specified in the AcquireData RPC, the main data acquisition service on robot will populate<br>the timestamp field with the timestamp of when the RPC was recieved. |
+| timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Time (in the robot's clock) at which this capture was triggered. If the timestamp is not<br>specified in the AcquireData RPC, the main data acquisition service on robot will populate<br>the timestamp field with the timestamp of when the RPC was received. |
 
 
 
@@ -5007,6 +5421,7 @@ set of capabilities for which it can acquire and save the appropriate data.
 | channel_name | [string](#string) |  | Channel name that will be associated with all data stored in the data buffer through<br>each data acquisition plugin. Metadata acquirers do not specify this field. |
 | service_name | [string](#string) |  | The data acquisition plugin service's service name used in directory registration. |
 | custom_params | [DictParam.Spec](#bosdyn-api-DictParam-Spec) |  | Custom parameters supported by this instance of the service. |
+| has_live_data | [bool](#bool) |  | Capability has live data available via GetLiveData RPC. |
 
 
 
@@ -5016,8 +5431,8 @@ set of capabilities for which it can acquire and save the appropriate data.
 <a name="bosdyn-api-DataCapture"></a>
 
 ### DataCapture
-An individual capture which can be specified in the AcquireData request to identify a piece of
-non-image data to be collected.
+An individual capture which can be specified in the AcquireData or LiveData request to identify
+a piece of non-image data to be collected.
 
 
 | Field | Type | Label | Description |
@@ -5164,6 +5579,72 @@ image data to be collected.
 | image_request | [ImageRequest](#bosdyn-api-ImageRequest) |  | Options for requesting this particular image. |
 | image_source | [string](#string) |  | **Deprecated.** DEPRECATED as of 3.2.0. Use image_request instead.<br>Specific image source to use from the list reported by the image service within the<br>ImageAcquisitionCapability message. |
 | pixel_format | [Image.PixelFormat](#bosdyn-api-Image-PixelFormat) |  | **Deprecated.** DEPRECATED as of 3.2.0. Use image_request instead.<br>Specific pixel format to capture reported by the ImageAcquisitionCapability message. |
+
+
+
+
+
+
+<a name="bosdyn-api-LiveDataRequest"></a>
+
+### LiveDataRequest
+Request live data from a DAQ plugin service by DataCapture capability name.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| data_captures | [DataCapture](#bosdyn-api-DataCapture) | repeated | Include capability name and parameter values. |
+
+
+
+
+
+
+<a name="bosdyn-api-LiveDataResponse"></a>
+
+### LiveDataResponse
+Live data response of a DAQ plugin service for a single capability.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| live_data | [LiveDataResponse.CapabilityLiveData](#bosdyn-api-LiveDataResponse-CapabilityLiveData) | repeated | One entry for each data capture in the request. Order matches LiveDataRequest order. |
+
+
+
+
+
+
+<a name="bosdyn-api-LiveDataResponse-CapabilityLiveData"></a>
+
+### LiveDataResponse.CapabilityLiveData
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| signals | [LiveDataResponse.CapabilityLiveData.SignalsEntry](#bosdyn-api-LiveDataResponse-CapabilityLiveData-SignalsEntry) | repeated | Map of signal id to signal specification and data. |
+| name | [string](#string) |  | Unique name of the data that is captured. |
+| status | [LiveDataResponse.CapabilityLiveData.Status](#bosdyn-api-LiveDataResponse-CapabilityLiveData-Status) |  |  |
+| custom_param_error | [CustomParamError](#bosdyn-api-CustomParamError) |  | Filled out if status is STATUS_CUSTOM_PARAMS_ERROR. |
+
+
+
+
+
+
+<a name="bosdyn-api-LiveDataResponse-CapabilityLiveData-SignalsEntry"></a>
+
+### LiveDataResponse.CapabilityLiveData.SignalsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [Signal](#bosdyn-api-Signal) |  |  |
 
 
 
@@ -5320,6 +5801,21 @@ An error associated with a particular data acquisition plugin service that was
 
 
 
+<a name="bosdyn-api-LiveDataResponse-CapabilityLiveData-Status"></a>
+
+### LiveDataResponse.CapabilityLiveData.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_UNKNOWN_CAPTURE_TYPE | 2 | The capability name is unknown. |
+| STATUS_CUSTOM_PARAMS_ERROR | 3 | See custom_param_error field for details. |
+| STATUS_INTERNAL_ERROR | 4 | Some other problem occurred. |
+
+
+
 <a name="bosdyn-api-NetworkComputeError-ErrorCode"></a>
 
 ### NetworkComputeError.ErrorCode
@@ -5381,6 +5877,7 @@ that data on the robot via the DataAcquisitionStore service.
 | GetStatus | [GetStatusRequest](#bosdyn-api-GetStatusRequest) | [GetStatusResponse](#bosdyn-api-GetStatusResponse) | Query the status of a data acquisition. |
 | GetServiceInfo | [GetServiceInfoRequest](#bosdyn-api-GetServiceInfoRequest) | [GetServiceInfoResponse](#bosdyn-api-GetServiceInfoResponse) | Get information from a Data Acquisition service; lists acquisition capabilities. |
 | CancelAcquisition | [CancelAcquisitionRequest](#bosdyn-api-CancelAcquisitionRequest) | [CancelAcquisitionResponse](#bosdyn-api-CancelAcquisitionResponse) | Cancel an in-progress data acquisition. |
+| GetLiveData | [LiveDataRequest](#bosdyn-api-LiveDataRequest) | [LiveDataResponse](#bosdyn-api-LiveDataResponse) | Request live data available from this plugin during teleoperation.<br>Please use the other RPCs for typical data acquisition. |
 
  <!-- end services -->
 
@@ -5402,7 +5899,7 @@ that data on the robot via the DataAcquisitionStore service.
 <a name="bosdyn-api-DataAcquisitionService"></a>
 
 ### DataAcquisitionService
-The DataAcquisitionService is the main data acquisition service run on robot, which recieves
+The DataAcquisitionService is the main data acquisition service run on robot, which receives
 incoming requests and sends queries to all directory-registered DataAcquisitionPluginServices.
 
 | Method Name | Request Type | Response Type | Description |
@@ -5411,6 +5908,7 @@ incoming requests and sends queries to all directory-registered DataAcquisitionP
 | GetStatus | [GetStatusRequest](#bosdyn-api-GetStatusRequest) | [GetStatusResponse](#bosdyn-api-GetStatusResponse) | Query the status of a data acquisition. |
 | GetServiceInfo | [GetServiceInfoRequest](#bosdyn-api-GetServiceInfoRequest) | [GetServiceInfoResponse](#bosdyn-api-GetServiceInfoResponse) | Get information from a Data Acquisition service; lists acquisition capabilities. |
 | CancelAcquisition | [CancelAcquisitionRequest](#bosdyn-api-CancelAcquisitionRequest) | [CancelAcquisitionResponse](#bosdyn-api-CancelAcquisitionResponse) | Cancel an in-progress data acquisition. |
+| GetLiveData | [LiveDataRequest](#bosdyn-api-LiveDataRequest) | [LiveDataResponse](#bosdyn-api-LiveDataResponse) | Request live data available from DAQ plugins during teleoperation.<br>Please use the other RPCs for typical data acquisition. |
 
  <!-- end services -->
 
@@ -5426,7 +5924,7 @@ incoming requests and sends queries to all directory-registered DataAcquisitionP
 <a name="bosdyn-api-ActionIdQuery"></a>
 
 ### ActionIdQuery
-A query parameter which filters the possible set of data identifiters to those
+A query parameter which filters the possible set of data identifiers to those
 which contain the same action/group names matching any of the names in the
 set of CaptureActionIds.
 
@@ -5617,6 +6115,114 @@ the ListData requests.
 
 
 
+<a name="bosdyn-api-QueryMaxCaptureIdRequest"></a>
+
+### QueryMaxCaptureIdRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| query | [QueryParameters](#bosdyn-api-QueryParameters) |  | Query parameters for finding data. |
+
+
+
+
+
+
+<a name="bosdyn-api-QueryMaxCaptureIdResponse"></a>
+
+### QueryMaxCaptureIdResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| max_capture_id | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-QueryParameters"></a>
+
+### QueryParameters
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| time_range | [TimeRangeQuery](#bosdyn-api-TimeRangeQuery) |  | Time range to query. |
+| action_ids | [CaptureActionId](#bosdyn-api-CaptureActionId) | repeated | List of action ids to query. The constructed query statement will have an OR relation<br>between the action_ids specified in this list, with an AND relation for the fields inside<br>each action_id. For example, specifying<br>[{action_name="action1", group_name="group1"}, {action_name="action2", group_name="group2"}]<br>will insert the following in the WHERE part of the query:<br>(action_name="action1" AND group_name="group1") OR (action_name="action2" AND<br>group_name="group2"). |
+| channels | [string](#string) | repeated | Channels to include in the query results. The constructed query statement will have an OR<br>relation for all the channel values listed in this field. |
+| captures_from_id | [uint64](#uint64) |  | Query for captures with id higher or equal to this value. Specifying 0 means that the<br>Data Acquisition Store will return all captured data it has. Otherwise, it will return new<br>captures stored with an id greater than the value specified in this field. |
+| only_include_identifiers | [bool](#bool) |  | Setting this field to true only returns the DataIdentifiers in the response and not the<br>actual captures. |
+| include_images | [bool](#bool) |  | The following fields specify which capture types to include in the results. If none of the<br>following fields is specified, then all capture types will be included in the results. |
+| include_data | [bool](#bool) |  |  |
+| include_metadata | [bool](#bool) |  |  |
+| include_alerts | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-QueryStoredCaptureResult"></a>
+
+### QueryStoredCaptureResult
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| data_id | [DataIdentifier](#bosdyn-api-DataIdentifier) |  |  |
+| image | [ImageCapture](#bosdyn-api-ImageCapture) |  |  |
+| metadata | [AssociatedMetadata](#bosdyn-api-AssociatedMetadata) |  |  |
+| alert_data | [AssociatedAlertData](#bosdyn-api-AssociatedAlertData) |  |  |
+| data | [StoredCapturedData](#bosdyn-api-StoredCapturedData) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-QueryStoredCapturesRequest"></a>
+
+### QueryStoredCapturesRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| query | [QueryParameters](#bosdyn-api-QueryParameters) |  | Query parameters for finding data. |
+
+
+
+
+
+
+<a name="bosdyn-api-QueryStoredCapturesResponse"></a>
+
+### QueryStoredCapturesResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| action_ids | [CaptureActionId](#bosdyn-api-CaptureActionId) | repeated | CaptureActionIds that match the query parameters and are included in the results. |
+| results | [QueryStoredCaptureResult](#bosdyn-api-QueryStoredCaptureResult) | repeated | Results that match the query parameters. |
+| max_capture_id | [uint64](#uint64) |  | Max capture_id in the database matching the query parameters. |
+
+
+
+
+
+
 <a name="bosdyn-api-StoreAlertDataRequest"></a>
 
 ### StoreAlertDataRequest
@@ -5750,6 +6356,22 @@ the ListData requests.
 
 
 
+<a name="bosdyn-api-StoredCapturedData"></a>
+
+### StoredCapturedData
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| data | [bytes](#bytes) |  |  |
+| file_extension | [string](#string) |  | File extension to use for writing the data to a file. |
+
+
+
+
+
+
 <a name="bosdyn-api-TimeRangeQuery"></a>
 
 ### TimeRangeQuery
@@ -5808,6 +6430,8 @@ entire capture actions which match query parameters, such as time ranges or acti
 | StoreMetadata | [StoreMetadataRequest](#bosdyn-api-StoreMetadataRequest) | [StoreMetadataResponse](#bosdyn-api-StoreMetadataResponse) | Type-safe to JSON metadata: store metadata associated with a DataIdentifier. |
 | ListStoredAlertData | [ListStoredAlertDataRequest](#bosdyn-api-ListStoredAlertDataRequest) | [ListStoredAlertDataResponse](#bosdyn-api-ListStoredAlertDataResponse) | List data identifiers (which identify specific AlertData from<br>an action) for stored AlertData that satisfy the query parameters in the request. |
 | StoreAlertData | [StoreAlertDataRequest](#bosdyn-api-StoreAlertDataRequest) | [StoreAlertDataResponse](#bosdyn-api-StoreAlertDataResponse) | Store AlertData associated with a DataIdentifier. |
+| QueryStoredCaptures | [QueryStoredCapturesRequest](#bosdyn-api-QueryStoredCapturesRequest) | [DataChunk](#bosdyn-api-DataChunk) stream | Query the Data Acquisition Store for captured data. This streaming RPC returns a single<br>QueryStoredCapturesResponse message, encoded as a list of DataChunk messages.<br><br>If the first capture matching the query is larger than an internal size limit set in the<br>service, the QueryStoredCapturesResponse message contains only that first capture matching<br>the query.<br><br>Otherwise, the QueryStoredCapturesResponse message contains as many matching captures as can<br>fit within the internal size limit, without breaking the results order.<br><br>To get all captures that match a query, you must make this RPC until it returns an empty<br>QueryStoredCapturesResponse with no elements in its "results" field. |
+| QueryMaxCaptureId | [QueryMaxCaptureIdRequest](#bosdyn-api-QueryMaxCaptureIdRequest) | [QueryMaxCaptureIdResponse](#bosdyn-api-QueryMaxCaptureIdResponse) |  |
 
  <!-- end services -->
 
@@ -6257,8 +6881,8 @@ Level, or similarly "visibility," "importance," or "weight" of event.
  - Higher level events will increase the visibility on the event timeline, relative to other
    events.
  - In general, higher level events should be more consequential with respect to the robot
-   operation on a per-occurence basis.
- - Lower level events should be less consequential on a per occurence basis.
+   operation on a per-occurrence basis.
+ - Lower level events should be less consequential on a per-occurrence basis.
  - Non-critical events may be one of LOW, MEDIUM, or HIGH.  UNSET is logically equivalent to
    LOW level.
  - Critical events may be either mission or system critical.
@@ -6291,7 +6915,7 @@ to be used in a service log to send to Boston Dynamics.
 | ---- | ------ | ----------- |
 | LOG_PRESERVE_HINT_UNSET | 0 | If this this is unset, it is equivalent to LOG_PRESERVE_HINT_NORMAL. |
 | LOG_PRESERVE_HINT_NORMAL | 1 | Do not change the robot's default log data preservation behavior in response to this<br>event. |
-| LOG_PRESERVE_HINT_PRESERVE | 2 | Request that the robot try to preserve data near the time of this event.<br>Log space on the robot is limited, so this does not guarentee that the data will be<br>preserved. |
+| LOG_PRESERVE_HINT_PRESERVE | 2 | Request that the robot try to preserve data near the time of this event.<br>Log space on the robot is limited, so this does not guarantee that the data will be<br>preserved. |
 
 
 
@@ -6390,7 +7014,7 @@ to be used in a service log to send to Boston Dynamics.
 | Name | Number | Description |
 | ---- | ------ | ----------- |
 | ENCODING_UNKNOWN | 0 |  |
-| ENCODING_RAW | 1 | Bytes array is a concatination of little-endian machine representations of<br> the variables from the SignalSchema, in order listed in that schema. |
+| ENCODING_RAW | 1 | Bytes array is a concatenation of little-endian machine representations of<br> the variables from the SignalSchema, in order listed in that schema. |
 
 
 
@@ -8132,6 +8756,7 @@ of the robot command.
 | battery_change_pose_feedback | [BatteryChangePoseCommand.Feedback](#bosdyn-api-BatteryChangePoseCommand-Feedback) |  | Feedback for the battery change pose command request. |
 | payload_estimation_feedback | [PayloadEstimationCommand.Feedback](#bosdyn-api-PayloadEstimationCommand-Feedback) |  | Feedback for the payload estimation command request. |
 | constrained_manipulation_feedback | [ConstrainedManipulationCommand.Feedback](#bosdyn-api-ConstrainedManipulationCommand-Feedback) |  | Feedback for the constrained manipulation command request |
+| joint_feedback | [JointCommand.Feedback](#bosdyn-api-JointCommand-Feedback) |  | Feedback for joint level control |
 | status | [RobotCommandFeedbackStatus.Status](#bosdyn-api-RobotCommandFeedbackStatus-Status) |  |  |
 
 
@@ -8154,6 +8779,7 @@ The full body request must be one of the basic command primitives.
 | battery_change_pose_request | [BatteryChangePoseCommand.Request](#bosdyn-api-BatteryChangePoseCommand-Request) |  | Command to put the robot in a position to easily change the battery. |
 | payload_estimation_request | [PayloadEstimationCommand.Request](#bosdyn-api-PayloadEstimationCommand-Request) |  | Command to perform payload mass property estimation |
 | constrained_manipulation_request | [ConstrainedManipulationCommand.Request](#bosdyn-api-ConstrainedManipulationCommand-Request) |  | Command to perform full body constrained manipulation moves |
+| joint_request | [JointCommand.Request](#bosdyn-api-JointCommand-Request) |  | Activate joint level control |
 | params | [google.protobuf.Any](#google-protobuf-Any) |  | Robot specific command parameters. |
 
 
@@ -8675,16 +9301,16 @@ The matrix is symmetric, so, for example, xy = yx.                \
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | matrix | [Matrix](#bosdyn-api-Matrix) |  | Row-major order representation of the covariance matrix. |
-| yaw_variance | [double](#double) |  | **Deprecated.** Variance of the yaw component of the SE3 Pose.<br>Warning: DEPRECATED as of 2.1. This should equal cov_rzrz, inside `matrix`. Will be removed<br>in 4.0. |
-| cov_xx | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0. |
-| cov_xy | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0. |
-| cov_xz | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0. |
-| cov_yx | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0. |
-| cov_yy | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0. |
-| cov_yz | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0. |
-| cov_zx | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0. |
-| cov_zy | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0. |
-| cov_zz | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in 4.0. |
+| yaw_variance | [double](#double) |  | **Deprecated.** Variance of the yaw component of the SE3 Pose.<br>Warning: DEPRECATED as of 2.1. This should equal cov_rzrz, inside `matrix`. Will be removed<br>in a future release.<br>FIXME(sberard): https://bostondynamics.atlassian.net/browse/SPOT-12523 |
+| cov_xx | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release. |
+| cov_xy | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release. |
+| cov_xz | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release. |
+| cov_yx | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release. |
+| cov_yy | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release. |
+| cov_yz | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release. |
+| cov_zx | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release. |
+| cov_zy | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release. |
+| cov_zz | [double](#double) |  | **Deprecated.** Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release. |
 
 
 
@@ -8844,6 +9470,453 @@ Geometric primitive used to specify forces and torques.
 
 
 
+<a name="bosdyn_api_gps_aggregator-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/gps/aggregator.proto
+
+
+
+<a name="bosdyn-api-gps-NewGpsDataRequest"></a>
+
+### NewGpsDataRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| data_points | [GpsDataPoint](#bosdyn-api-gps-GpsDataPoint) | repeated | GPS Measurements. GPS units that generate data at a high rate<br>can bundle multiple measurements together in a single message. |
+| gps_device | [GpsDevice](#bosdyn-api-gps-GpsDevice) |  | Describer for what device is generating GPS data. |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-NewGpsDataResponse"></a>
+
+### NewGpsDataResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_gps_aggregator_service-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/gps/aggregator_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn-api-gps-AggregatorService"></a>
+
+### AggregatorService
+The AggregatorService is an endpoint that clients should send GPS data too.
+Data dumped into the AggregatorService is used by the RegistrationService.
+In practice:
+    - A GPS will be connected to a peripheral computer
+    - The peripheral computer should establish timesync with the robot
+    - The peripheral computer should read data from the GPS hardware
+    - The peripheral computer should send timestamped data to the AggregatorService
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| NewGpsData | [NewGpsDataRequest](#bosdyn-api-gps-NewGpsDataRequest) | [NewGpsDataResponse](#bosdyn-api-gps-NewGpsDataResponse) |  |
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_gps_gps-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/gps/gps.proto
+
+
+
+<a name="bosdyn-api-gps-GpsDataPoint"></a>
+
+### GpsDataPoint
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| llh | [LLH](#bosdyn-api-gps-LLH) |  | The GPS measurement as Latitude, Longitude, Height. |
+| ecef | [bosdyn.api.Vec3](#bosdyn-api-Vec3) |  | The GPS measurement with respect to the Earth Centered Earth Fixed frame |
+| yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Magnetometer yaw. 0 is north. Processes counter clockwise. We did this to match Spot's<br>body coordinate system, where Z is up. |
+| heading | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Movement heading. 0 is north. Processes counter clockwise. We did this to match Spot's<br>body coordinate system, where Z is up. |
+| accuracy | [GpsDataPoint.Accuracy](#bosdyn-api-gps-GpsDataPoint-Accuracy) |  |  |
+| satellites | [GpsDataPoint.Satellite](#bosdyn-api-gps-GpsDataPoint-Satellite) | repeated | Satellites used in the location solution. |
+| mode | [GpsDataPoint.FixMode](#bosdyn-api-gps-GpsDataPoint-FixMode) |  | The current fix, if any. |
+| timestamp_gps | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | GPS timestamp. This will *not* match robot time. |
+| filter | [GpsDataPoint.Filter](#bosdyn-api-gps-GpsDataPoint-Filter) |  |  |
+| timestamp_client | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Optional field corresponding the timestamp of the computer the GPS is connected<br>to (if any). |
+| timestamp_robot | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Robot timestamp. |
+| body_tform_gps | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | How the GPS is mounted relative to the robots body. |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-GpsDataPoint-Accuracy"></a>
+
+### GpsDataPoint.Accuracy
+Estimated accuracy is measured in meters
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| horizontal | [double](#double) |  |  |
+| vertical | [double](#double) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-GpsDataPoint-FixMode"></a>
+
+### GpsDataPoint.FixMode
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| value | [GpsDataPoint.FixMode.Mode](#bosdyn-api-gps-GpsDataPoint-FixMode-Mode) |  | The current type of fix. |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-GpsDataPoint-Satellite"></a>
+
+### GpsDataPoint.Satellite
+Information about a GNSS satellite measurement.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| prn | [uint32](#uint32) |  | satellite identifier |
+| elevation | [float](#float) |  | Degrees from -90 to 90 |
+| azimuth | [float](#float) |  | Degrees from true north |
+| snr | [float](#float) |  | in dB |
+| constellation | [GpsDataPoint.Satellite.Constellation](#bosdyn-api-gps-GpsDataPoint-Satellite-Constellation) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-GpsDevice"></a>
+
+### GpsDevice
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | A human readable name for this GPS unit. "Piksi" or "Duro" or "Microstrain" |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-LLH"></a>
+
+### LLH
+Latitude/longitude location representation.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| latitude | [double](#double) |  | Latitude value in degrees. |
+| longitude | [double](#double) |  | Longitude value in degrees. |
+| height | [double](#double) |  | Height value in meters. The reference system from where the height is<br>calculated is controlled by the application generating this structure. |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-LocationAndGpsDevice"></a>
+
+### LocationAndGpsDevice
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| data_point | [GpsDataPoint](#bosdyn-api-gps-GpsDataPoint) |  |  |
+| device | [GpsDevice](#bosdyn-api-gps-GpsDevice) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn-api-gps-GpsDataPoint-Filter"></a>
+
+### GpsDataPoint.Filter
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| FILTER_UNKNOWN | 0 |  |
+| FILTER_NONE | 1 |  |
+| FILTER_DURO_INS | 2 |  |
+
+
+
+<a name="bosdyn-api-gps-GpsDataPoint-FixMode-Mode"></a>
+
+### GpsDataPoint.FixMode.Mode
+Types of fixes possible.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| Invalid | 0 |  |
+| SPP | 1 | Single Point Positioning |
+| DGNSS | 2 | Differential Global Navigation Satellite System |
+| PPS | 3 | Precise Positioning System Fix |
+| FIXED_RTK | 4 | Fixed-Point Real-Time Kinematics |
+| FLOAT_RTK | 5 | Floating-Point Real-Time Kinematics |
+| DEAD_RECKONING | 6 |  |
+| FIXED_POSITION | 7 |  |
+| SIMULATED | 8 |  |
+| SBAS | 9 | Satellite Based Augmentation System |
+
+
+
+<a name="bosdyn-api-gps-GpsDataPoint-Satellite-Constellation"></a>
+
+### GpsDataPoint.Satellite.Constellation
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| UNKNOWN | 0 |  |
+| GPS_L1CA | 1 |  |
+| GPS_L2CM | 2 |  |
+| SBAS_L1CA | 3 |  |
+| GLONASS_L1CA | 4 |  |
+| GLONASS_L2CA | 5 |  |
+| GPS_L1P | 6 |  |
+| GPS_L2P | 7 |  |
+| BDS2_B1 | 8 | BDS stands for the BeiDou Navigation Satellite System |
+| BDS2_B2 | 9 |  |
+| GALILEO_E1B | 10 |  |
+| GALILEO_E7I | 11 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_gps_registration-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/gps/registration.proto
+
+
+
+<a name="bosdyn-api-gps-GetLocationRequest"></a>
+
+### GetLocationRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-GetLocationResponse"></a>
+
+### GetLocationResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [GetLocationResponse.Status](#bosdyn-api-gps-GetLocationResponse-Status) |  |  |
+| registration | [Registration](#bosdyn-api-gps-Registration) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-GpsState"></a>
+
+### GpsState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| latest_data | [GpsDataPoint](#bosdyn-api-gps-GpsDataPoint) |  | Latest data from the GPS device. |
+| gps_device | [GpsDevice](#bosdyn-api-gps-GpsDevice) |  | What GPS device generated the latest data |
+| ecef_p_body | [bosdyn.api.Vec3](#bosdyn-api-Vec3) |  | Estimate of where the robot's body is in the ECEF frame given this measurement. Note this must be a position<br>and not a pose because of the lack of orientation data. |
+| historical_data | [GpsDataPoint](#bosdyn-api-gps-GpsDataPoint) | repeated | Collection of all GPS data received by this device within some window. |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-Registration"></a>
+
+### Registration
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| status | [Registration.Status](#bosdyn-api-gps-Registration-Status) |  |  |
+| timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Time stamp of latest registration. |
+| transforms_snapshot | [bosdyn.api.FrameTreeSnapshot](#bosdyn-api-FrameTreeSnapshot) |  | Includes all normal robots frames ("body", "odom", etc) AND<br>"ecef" frame, which you can read about here: https://wikipedia.org/wiki/ECEF |
+| robot_body_location | [LLH](#bosdyn-api-gps-LLH) |  | The estimated position of the robot's body frame in LLH form. This position is filtered. |
+| gps_states | [GpsState](#bosdyn-api-gps-GpsState) | repeated | Most recent data from each GPS. Note that the LLH the GPS is reporting<br>won't exactly match robot_body_location, because robot_body_location is<br>filtered, and the GPS might have some offset relative to the robot's body. |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-ResetRegistrationRequest"></a>
+
+### ResetRegistrationRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+
+
+
+
+
+
+<a name="bosdyn-api-gps-ResetRegistrationResponse"></a>
+
+### ResetRegistrationResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn-api-gps-GetLocationResponse-Status"></a>
+
+### GetLocationResponse.Status
+Quality of registration status.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_NEED_DEVICE | 2 |  |
+
+
+
+<a name="bosdyn-api-gps-Registration-Status"></a>
+
+### Registration.Status
+Quality of registration status.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_NEED_DATA | 2 | No data has been reported to perform registration. |
+| STATUS_NEED_MORE_DATA | 3 | Data has been reported, but not enough to get a fix. |
+| STATUS_STALE | 4 | We have a registration, but it is based on old data. |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_gps_registration_service-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/gps/registration_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn-api-gps-RegistrationService"></a>
+
+### RegistrationService
+The RegistrationService consumes data sent to the Gps/AggregatorService.
+It calculates where the robot is in the world, and the transfroms from
+the robots internal frames to the world frame.
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| GetLocation | [GetLocationRequest](#bosdyn-api-gps-GetLocationRequest) | [GetLocationResponse](#bosdyn-api-gps-GetLocationResponse) |  |
+| ResetRegistration | [ResetRegistrationRequest](#bosdyn-api-gps-ResetRegistrationRequest) | [ResetRegistrationResponse](#bosdyn-api-gps-ResetRegistrationResponse) |  |
+
+ <!-- end services -->
+
+
+
 <a name="bosdyn_api_graph_nav_area_callback-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -8875,12 +9948,19 @@ Error reporting for things that can go wrong with calls.
 
 ### AreaCallbackInformation
 Specific information about how a AreaCallback implementation should be called.
+All fields are optional, and need only be filled out if the desired behavior is different
+from the default.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | required_lease_resources | [string](#string) | repeated | A area callback can request to be in control of one or more resources at runtime. |
 | custom_params | [bosdyn.api.DictParam.Spec](#bosdyn-api-DictParam-Spec) |  | Parameters this area callback supports that do not match any of the other fields. |
+| blockage | [AreaCallbackInformation.Blockage](#bosdyn-api-graph_nav-AreaCallbackInformation-Blockage) |  |  |
+| impairment_check | [AreaCallbackInformation.Impairment](#bosdyn-api-graph_nav-AreaCallbackInformation-Impairment) |  |  |
+| entity_waiting | [AreaCallbackInformation.EntityWaiting](#bosdyn-api-graph_nav-AreaCallbackInformation-EntityWaiting) |  |  |
+| default_stop | [StopConfiguration](#bosdyn-api-graph_nav-StopConfiguration) |  | How the robot should stop at waypoints by default. |
+| map_config | [AreaCallbackMapConfig](#bosdyn-api-graph_nav-AreaCallbackMapConfig) |  | Configuration to store in the map about how to treat the region edges. |
 
 
 
@@ -8947,7 +10027,7 @@ Message for providing information about a area callback implementation.
 | ----- | ---- | ----- | ----------- |
 | header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
 | status | [BeginCallbackResponse.Status](#bosdyn-api-graph_nav-BeginCallbackResponse-Status) |  | Return status for the request. |
-| command_id | [uint32](#uint32) |  | Unique identifier for the AreaCallback, used to update the callback in subsequent calls. If empty,<br>the request was not accepted. |
+| command_id | [uint32](#uint32) |  | Unique identifier for the AreaCallback, used to update the callback in subsequent calls. If<br>empty, the request was not accepted. |
 | custom_param_error | [bosdyn.api.CustomParamError](#bosdyn-api-CustomParamError) |  | Filled out if status is STATUS_CUSTOM_PARAMS_ERROR. |
 
 
@@ -8997,7 +10077,7 @@ Message for providing information about a area callback implementation.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common response header. |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
 | command_id | [uint32](#uint32) |  | The command id associated with a single execution of a navigation callback. |
 
 
@@ -9038,6 +10118,59 @@ Description of an Area Callback region at the time of crossing
 
 
 
+<a name="bosdyn-api-graph_nav-RouteChangeRequest"></a>
+
+### RouteChangeRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| command_id | [uint32](#uint32) |  | The command id for which the route is changing. |
+| route | [Route](#bosdyn-api-graph_nav-Route) |  | The new planned route through the region. |
+| unfinished_route | [Route](#bosdyn-api-graph_nav-Route) |  | The remaining old route that was not completed. |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-RouteChangeResponse"></a>
+
+### RouteChangeResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [RouteChangeResponse.Status](#bosdyn-api-graph_nav-RouteChangeResponse-Status) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-StopConfiguration"></a>
+
+### StopConfiguration
+Information about how the robot should behave when stopping at a location.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| face_direction | [StopConfiguration.FaceDirection](#bosdyn-api-graph_nav-StopConfiguration-FaceDirection) |  | Which direction the robot should face when lining up at a waypoint. |
+| face_stairs_if_present | [bool](#bool) |  | If true, always align to stairs at the start of the callback.<br>Overrides face_direction if stairs are found. |
+| face_yaw_offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Offset applied to the above facing direction (radians). |
+| max_distance | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How close the robot needs to be to the desired pose (meters). |
+| max_yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How close the robot needs to be to the desired pose (radians). |
+
+
+
+
+
+
 <a name="bosdyn-api-graph_nav-UpdateCallbackRequest"></a>
 
 ### UpdateCallbackRequest
@@ -9046,7 +10179,7 @@ Description of an Area Callback region at the time of crossing
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common response header. |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
 | command_id | [uint32](#uint32) |  | The command id associated with a single execution of a navigation callback. |
 | end_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | If set, update the end time (in robot time) by which a command must finish executing. |
 | stage | [UpdateCallbackRequest.Stage](#bosdyn-api-graph_nav-UpdateCallbackRequest-Stage) |  |  |
@@ -9067,9 +10200,9 @@ Description of an Area Callback region at the time of crossing
 | header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
 | status | [UpdateCallbackResponse.Status](#bosdyn-api-graph_nav-UpdateCallbackResponse-Status) |  | Return status for the request. |
 | policy | [UpdateCallbackResponse.NavPolicy](#bosdyn-api-graph_nav-UpdateCallbackResponse-NavPolicy) |  | Set the control policy that Graph Nav should use when crossing this region, and<br>how and when Graph Nav should delegate control to or wait for the callback.<br>This is the expected way to respond, and changing the policy is how a callback<br>instructs graph nav to wait or continue on. |
-| error | [UpdateCallbackResponse.Error](#bosdyn-api-graph_nav-UpdateCallbackResponse-Error) |  | An error has occurred. Graph Nav will stop calling UpdateCallback and will call EndCallback. |
+| error | [UpdateCallbackResponse.Error](#bosdyn-api-graph_nav-UpdateCallbackResponse-Error) |  | An error has occurred. Graph Nav will stop calling UpdateCallback and will call<br>EndCallback. |
 | complete | [UpdateCallbackResponse.Complete](#bosdyn-api-graph_nav-UpdateCallbackResponse-Complete) |  | The area callback is complete. Graph Nav will stop calling UpdateCallback and will call<br>EndCallback. |
-| localization | [UpdateCallbackResponse.UpdateLocalization](#bosdyn-api-graph_nav-UpdateCallbackResponse-UpdateLocalization) |  | Localization changes inform Graph Nav when the callback has moved the robot, <br>and are ignored unless callback has control of the robot. |
+| localization | [UpdateCallbackResponse.UpdateLocalization](#bosdyn-api-graph_nav-UpdateCallbackResponse-UpdateLocalization) |  | Localization changes inform Graph Nav when the callback has moved the robot,<br>and are ignored unless callback has control of the robot. |
 
 
 
@@ -9112,6 +10245,7 @@ Description of an Area Callback region at the time of crossing
 | ----- | ---- | ----- | ----------- |
 | at_start | [UpdateCallbackResponse.NavPolicy.Option](#bosdyn-api-graph_nav-UpdateCallbackResponse-NavPolicy-Option) |  | Policy for what Graph Nav should do at the start of the region. |
 | at_end | [UpdateCallbackResponse.NavPolicy.Option](#bosdyn-api-graph_nav-UpdateCallbackResponse-NavPolicy-Option) |  | Policy for what Graph Nav should do at the end of the region. |
+| end_config | [StopConfiguration](#bosdyn-api-graph_nav-StopConfiguration) |  | Override the default settings for how the robot should behave at the end.<br>Does not apply for OPTION_CONTINUE. |
 
 
 
@@ -9149,6 +10283,53 @@ Description of an Area Callback region at the time of crossing
 
 
 
+<a name="bosdyn-api-graph_nav-AreaCallbackInformation-Blockage"></a>
+
+### AreaCallbackInformation.Blockage
+Specify what graph nav should expect to detect for blockages in this region.  For example, if
+the callback can open doors, the region may initially look blocked due to a closed door, but
+Graph Nav should still expect it to be traversable.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| BLOCKAGE_UNKNOWN | 0 |  |
+| BLOCKAGE_SKIP | 1 | (Default) The region may appear blocked to Graph Nav, but the callback will still be able<br>to traverse it. If the region is blocked, Graph Nav should consider it passable unless<br>it actually gets stuck trying to navigate it. |
+| BLOCKAGE_CHECK | 2 | Graph Nav should expect the region to be clear. If the region is blocked, Graph Nav can<br>treat that as impassable. |
+
+
+
+<a name="bosdyn-api-graph_nav-AreaCallbackInformation-EntityWaiting"></a>
+
+### AreaCallbackInformation.EntityWaiting
+Control whether Graph Nav will stop and wait for nearby entities when crossing the region.
+Entity waiting is normally on for regular Graph Nav, but is by default turned off inside Area
+callback regions.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ENTITY_WAITING_UNKNOWN | 0 |  |
+| ENTITY_WAITING_DISABLE | 1 | (Default) Disable waiting for entities when crossing the region. |
+| ENTITY_WAITING_ENABLE | 2 | Enable waiting for entities when crossing the region. |
+
+
+
+<a name="bosdyn-api-graph_nav-AreaCallbackInformation-Impairment"></a>
+
+### AreaCallbackInformation.Impairment
+Specify whether graph nav should check for impairment when the callback is in control of the
+robot.  Certain failures may make Graph Nav unable to navigate, but may not affect the
+callback.  If the callback is in control of the robot, it may be preferable to let it finish
+and return control to Graph Nav before reporting any impaired error instead of interrupting
+the callback.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| IMPAIRMENT_UNKNOWN | 0 |  |
+| IMPAIRMENT_SKIP | 1 | (Default) Do not check Graph Nav impairment when the callback is in control. |
+| IMPAIRMENT_CHECK | 2 | Continue to check Graph Nav impairment when the callback is in control. If Graph Nav<br>detects that it is impaired, it will stop the callback immediately. |
+
+
+
 <a name="bosdyn-api-graph_nav-BeginCallbackResponse-Status"></a>
 
 ### BeginCallbackResponse.Status
@@ -9158,7 +10339,7 @@ Description of an Area Callback region at the time of crossing
 | ---- | ------ | ----------- |
 | STATUS_UNKNOWN | 0 | UNKNOWN should never be used. |
 | STATUS_OK | 1 | The area callback successfully began. |
-| STATUS_INVALID_CONFIGURATION | 2 | The area callback failed to start due to some problem with the supplied configuration_data. |
+| STATUS_INVALID_CONFIGURATION | 2 | The area callback failed to start due to some problem with the supplied<br>configuration_data. |
 | STATUS_EXPIRED_END_TIME | 3 | The area callback end time already expired. |
 | STATUS_CUSTOM_PARAMS_ERROR | 8 | One or more keys or values in custom_params are unsupported by the area callback.<br>See the custom_param_error for details. |
 
@@ -9190,6 +10371,34 @@ Description of an Area Callback region at the time of crossing
 | STATUS_OK | 1 | The AreaCallback has cleanly ended. |
 | STATUS_INVALID_COMMAND_ID | 2 | The request command id does not exist or is no longer executing. |
 | STATUS_SHUTDOWN_CALLBACK_FAILED | 3 | Shutting down the callback failed. The callback worker thread did not respond to shutdown<br>signal. |
+
+
+
+<a name="bosdyn-api-graph_nav-RouteChangeResponse-Status"></a>
+
+### RouteChangeResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | UNKNOWN should never be used. |
+| STATUS_OK | 1 | The AreaCallback has acknowledged the route change. |
+| STATUS_INVALID_COMMAND_ID | 2 | The request command id does not exist or is no longer executing. |
+
+
+
+<a name="bosdyn-api-graph_nav-StopConfiguration-FaceDirection"></a>
+
+### StopConfiguration.FaceDirection
+What direction robot should face.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| FACE_DIRECTION_UNKNOWN | 0 |  |
+| FACE_DIRECTION_ALONG_ROUTE | 1 | (Default) Face along the direction of the next edges in the route,<br>regardless of the waypoint orientation. |
+| FACE_DIRECTION_WAYPOINT_EXACT | 2 | Face in the direction of the recorded waypoint. |
+| FACE_DIRECTION_WAYPOINT_AUTO | 3 | Face in the direction of the recorded waypoint, but if traversing the region in the<br>opposite direction to how it was recorded, flip the orientation 180 degrees. |
+| FACE_DIRECTION_REGION_END | 4 | Face in the direction of the end of the region. |
 
 
 
@@ -9287,6 +10496,17 @@ Data for a AreaCallback to be stored in the map
 | ----- | ---- | ----- | ----------- |
 | config_data | [google.protobuf.Any](#google-protobuf-Any) |  | Custom config data used by the service to do its job. |
 | custom_params | [bosdyn.api.DictParam](#bosdyn-api-DictParam) |  | Any other custom parameters to the callback. This will be copied into<br>custom_params inside the BeginCallback RPC if it exists. |
+| map_config | [AreaCallbackMapConfig](#bosdyn-api-graph_nav-AreaCallbackMapConfig) |  | Configuration data for how this area callback should be treated in the map. |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-AreaCallbackMapConfig"></a>
+
+### AreaCallbackMapConfig
+Configuration data for how an area callback should be treated in a map.
 
 
 
@@ -9322,11 +10542,67 @@ Data for a AreaCallback to be stored in the map
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| AreaCallbackInformation | [AreaCallbackInformationRequest](#bosdyn-api-graph_nav-AreaCallbackInformationRequest) | [AreaCallbackInformationResponse](#bosdyn-api-graph_nav-AreaCallbackInformationResponse) | Retreive information about how to operate the service, including what lease resources are<br>required by the navigation callback. |
-| BeginCallback | [BeginCallbackRequest](#bosdyn-api-graph_nav-BeginCallbackRequest) | [BeginCallbackResponse](#bosdyn-api-graph_nav-BeginCallbackResponse) | BeginCallback is called once as the robot enters a AreaCallback region of a map. This call<br>initilizes the navigation callback for operation. |
-| BeginControl | [BeginControlRequest](#bosdyn-api-graph_nav-BeginControlRequest) | [BeginControlResponse](#bosdyn-api-graph_nav-BeginControlResponse) | BeginControl is called once after the area callback implementation requests control. Control is<br>handed off (via a lease) from the caller to the area callback. |
-| UpdateCallback | [UpdateCallbackRequest](#bosdyn-api-graph_nav-UpdateCallbackRequest) | [UpdateCallbackResponse](#bosdyn-api-graph_nav-UpdateCallbackResponse) | UpdateCallback is called periodically while the callback is running. Area callback implementations<br>use UpdateCallback to dictate how caller should operate while callback is running (pause,<br>continue, etc.) |
-| EndCallback | [EndCallbackRequest](#bosdyn-api-graph_nav-EndCallbackRequest) | [EndCallbackResponse](#bosdyn-api-graph_nav-EndCallbackResponse) | EndCallback is called once when the caller decides the navagation callback is over. This might<br>be because the robot exited the callback region or might be because the callback reported that it<br>finished doing work. |
+| AreaCallbackInformation | [AreaCallbackInformationRequest](#bosdyn-api-graph_nav-AreaCallbackInformationRequest) | [AreaCallbackInformationResponse](#bosdyn-api-graph_nav-AreaCallbackInformationResponse) | Retrieve information about how to operate the service, including what lease resources are<br>required by the navigation callback. |
+| BeginCallback | [BeginCallbackRequest](#bosdyn-api-graph_nav-BeginCallbackRequest) | [BeginCallbackResponse](#bosdyn-api-graph_nav-BeginCallbackResponse) | BeginCallback is called once as the robot enters a AreaCallback region of a map. This call<br>initializes the navigation callback for operation. |
+| BeginControl | [BeginControlRequest](#bosdyn-api-graph_nav-BeginControlRequest) | [BeginControlResponse](#bosdyn-api-graph_nav-BeginControlResponse) | BeginControl is called once after the area callback implementation requests control. Control<br>is handed off (via a lease) from the caller to the area callback. |
+| UpdateCallback | [UpdateCallbackRequest](#bosdyn-api-graph_nav-UpdateCallbackRequest) | [UpdateCallbackResponse](#bosdyn-api-graph_nav-UpdateCallbackResponse) | UpdateCallback is called periodically while the callback is running. Area callback<br>implementations use UpdateCallback to dictate how caller should operate while callback is<br>running (pause, continue, etc.) |
+| RouteChange | [RouteChangeRequest](#bosdyn-api-graph_nav-RouteChangeRequest) | [RouteChangeResponse](#bosdyn-api-graph_nav-RouteChangeResponse) | Called only if the route changes in the middle of the region (for example, if the robot is<br>blocked by an obstacle and re-routes). |
+| EndCallback | [EndCallbackRequest](#bosdyn-api-graph_nav-EndCallbackRequest) | [EndCallbackResponse](#bosdyn-api-graph_nav-EndCallbackResponse) | EndCallback is called once when the caller decides the navigation callback is over. This<br>might be because the robot exited the callback region or might be because the callback<br>reported that it finished doing work. |
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_graph_nav_gps-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/graph_nav/gps.proto
+
+
+
+<a name="bosdyn-api-graph_nav-GPSLocalization"></a>
+
+### GPSLocalization
+Info about GPS localization if the robot has this capability.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| live_gps_state | [GPSLocalization.State](#bosdyn-api-graph_nav-GPSLocalization-State) |  | State of the live GPS data. |
+| map_gps_state | [GPSLocalization.State](#bosdyn-api-graph_nav-GPSLocalization-State) |  | State of GPS data at the current waypoint. |
+| ecef_tform_body | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | Estimate of where the robot body is in the Earth-Centered-Earth-Fixed (ECEF) frame at the time<br>of localization. |
+| latitude_longitude_height | [bosdyn.api.gps.LLH](#bosdyn-api-gps-LLH) |  | Estimate of the latitude/longitude/height of the robot at the time of localization. |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn-api-graph_nav-GPSLocalization-State"></a>
+
+### GPSLocalization.State
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATE_UNKNOWN | 0 |  |
+| STATE_OK | 1 | Using GPS. |
+| STATE_BAD_FRAMES | 2 | Error getting frames (ko, etc.) |
+| STATE_NO_GPS_OBJECTS | 3 | No GPS available. |
+| STATE_REGISTRATION_NOT_OK | 4 | GPS registration isn't ready. |
+| STATE_NO_GPS_STATES | 5 | No GPS state measurements. |
+| STATE_NOT_ENOUGH_SATELLITES | 6 | Too few satellites to localize. |
+| STATE_NO_ECEF_FRAME | 7 | GPS registration is missing a frame. |
+| STATE_HIGH_ERROR | 8 | The GPS data exists, but is high error. |
+| STATE_STALE | 9 | The GPS data exists, and we have not used it yet, but it is too old to use. |
+| STATE_INTERNAL_ERROR | 10 | Internal error (e.g. missing waypoints). |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 
@@ -9504,6 +10780,23 @@ to stream these data to avoid overwhelming gRPC with large http requests.
 
 
 
+<a name="bosdyn-api-graph_nav-GPSNavigationParams"></a>
+
+### GPSNavigationParams
+Parameters controlling how the robot will navigate to a GPS coordinate.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| goal_llh | [bosdyn.api.gps.LLH](#bosdyn-api-gps-LLH) |  | The goal position as latitude/longitude. Height is ignored. |
+| goal_yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Counter-clockwise rotation in radians around the "up" axis that the robot will try to achieve at the goal. This is a bearing<br>around the "up" axis such that East points to zero yaw, and West is pi radians yaw. If not provided, the robot will try to<br>achieve any allowable orientation at the goal. |
+| max_distance_from_map | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The maximum distance we are willing to accept for the LLH coordinate from the mapped data in meters. This<br>is a 2 dimensional measurement (height is not considered). If not filled out, Spot will decide based on<br>internal defaults. |
+
+
+
+
+
+
 <a name="bosdyn-api-graph_nav-GetLocalizationStateRequest"></a>
 
 ### GetLocalizationStateRequest
@@ -9522,6 +10815,7 @@ pose of the robot with respect to that waypoint.
 | request_live_world_objects | [bool](#bool) |  | If true, reqeuest the live world objects at the time of localization. |
 | request_live_robot_state | [bool](#bool) |  | If true, requests the full live robot state at the time of localization. |
 | compress_live_point_cloud | [bool](#bool) |  | If true, the smallest available encoding will be used for the live point cloud<br>data. If false, three 32 bit floats will be used per point in the point cloud. |
+| request_gps_state | [bool](#bool) |  | If true, request data about the robot's GPS localization. |
 
 
 
@@ -9543,6 +10837,7 @@ as any requested live data information.
 | remote_cloud_status | [RemotePointCloudStatus](#bosdyn-api-graph_nav-RemotePointCloudStatus) | repeated | Status of one or more remote point cloud services (such as velodyne). |
 | live_data | [WaypointSnapshot](#bosdyn-api-graph_nav-WaypointSnapshot) |  | Contains live data at the time of localization, with elements only filled out<br>if requested. |
 | lost_detector_state | [LostDetectorState](#bosdyn-api-graph_nav-LostDetectorState) |  | If the robot drives around without a good localization for a while, eventually<br>it becomes "lost." I.E. it has a localization, but it no longer trusts<br>that the localization it has is accurate. Lost detector state is<br>available through this message. |
+| gps | [GPSLocalization](#bosdyn-api-graph_nav-GPSLocalization) |  | If the robot has GPS capability and the map was recorded with GPS, this message will show graph nav's estimate of<br>the robot location in earth-centered frames. To see the raw GPS data, look at the WorldObject list. |
 
 
 
@@ -9653,6 +10948,7 @@ of the NavigateToAnchor command using the NavigationFeedbackRequest RPC.
 | header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
 | leases | [bosdyn.api.Lease](#bosdyn-api-Lease) | repeated | The Leases to show ownership of the robot and the graph. |
 | seed_tform_goal | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | The goal, expressed with respect to the seed frame of the current anchoring.<br>The robot will use the z value to find the goal waypoint, but the final z height the robot<br>achieves will depend on the terrain height at the offset from the goal. |
+| gps_navigation_params | [GPSNavigationParams](#bosdyn-api-graph_nav-GPSNavigationParams) |  | If given, the NavigateToAnchor request will instead be interpreted as a command to navigate to GPS coordinates.<br>When given, the seed_tform_goal will be ignored,and instead the parameters in this message will be used. Otherwise,<br>the NavigateToAnchorRequest works identically to when seed_tform_goal is used instead. For example, the TravelParams<br>will be respected for this kind of goal. |
 | goal_waypoint_rt_seed_ewrt_seed_tolerance | [bosdyn.api.Vec3](#bosdyn-api-Vec3) |  | These parameters control selection of the goal waypoint. In seed frame, they are the x, y,<br>and z tolerances with respect to the goal pose within which waypoints will be considered.<br>If these values are negative, or too small, reasonable defaults will be used. |
 | route_params | [RouteGenParams](#bosdyn-api-graph_nav-RouteGenParams) |  | Preferences on how to pick the route. |
 | travel_params | [TravelParams](#bosdyn-api-graph_nav-TravelParams) |  | Parameters that define how to traverse and end the route. |
@@ -9682,6 +10978,7 @@ for feedback on the NavigateTo command.
 | command_id | [uint32](#uint32) |  | Unique identifier for the command, If 0, command was not accepted. |
 | error_waypoint_ids | [string](#string) | repeated | On a relevant error status code, these fields contain the waypoint/edge IDs that caused the error. |
 | area_callback_error | [AreaCallbackServiceError](#bosdyn-api-graph_nav-AreaCallbackServiceError) |  | Errors about Area Callbacks in the map. |
+| gps_status | [NavigateToAnchorResponse.GPSStatus](#bosdyn-api-graph_nav-NavigateToAnchorResponse-GPSStatus) |  | Result of the GPS command. |
 
 
 
@@ -9772,6 +11069,8 @@ progress and current status for the command.
 | impaired_state | [bosdyn.api.RobotImpairedState](#bosdyn-api-RobotImpairedState) |  | If the status is ROBOT_IMPAIRED, this is why the robot is impaired. |
 | area_callback_errors | [NavigationFeedbackResponse.AreaCallbackErrorsEntry](#bosdyn-api-graph_nav-NavigationFeedbackResponse-AreaCallbackErrorsEntry) | repeated | If the status is AREA_CALLBACK_ERROR, this map will be filled out with the error.<br>The key of the map is the region id. |
 | remaining_route | [Route](#bosdyn-api-graph_nav-Route) |  | Remaining part of current route. |
+| completed_route | [CompletedRoute](#bosdyn-api-graph_nav-CompletedRoute) |  | The completed route taken for this command. Intended primarily for visualization<br>of route progress.<br>Do not use this to determine if the route is finished, as under certain conditions<br>edges can be reported as completed before the route is done. Check the status for<br>STATUS_REACHED_GOAL to determine if the robot has finished the route. |
+| remaining_route_length | [double](#double) |  | Estimated length of remaining route. |
 | command_id | [uint32](#uint32) |  | ID of the command this feedback corresponds to. |
 | last_ko_tform_goal | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | The most recent transform describing the robot's pose relative to the navigation goal. |
 | body_movement_status | [bosdyn.api.SE2TrajectoryCommand.Feedback.BodyMovementStatus](#bosdyn-api-SE2TrajectoryCommand-Feedback-BodyMovementStatus) |  | Indicates whether the robot's body is currently in motion. |
@@ -9946,7 +11245,7 @@ The SetLocalization response message contains the resulting localization to the 
 | localization | [Localization](#bosdyn-api-graph_nav-Localization) |  | Result of localization. |
 | suspected_ambiguity | [SetLocalizationResponse.SuspectedAmbiguity](#bosdyn-api-graph_nav-SetLocalizationResponse-SuspectedAmbiguity) |  | Alternative information if the localization is ambiguous. |
 | impaired_state | [bosdyn.api.RobotImpairedState](#bosdyn-api-RobotImpairedState) |  | If the status is ROBOT_IMPAIRED, this is why the robot is impaired. |
-| sensor_status | [SensorCompatibilityStatus](#bosdyn-api-graph_nav-SensorCompatibilityStatus) |  | This status determines whether the robot has compatible sensors for the<br>map that was recorded. Note that if sensors aren't working, STATUS_IMPARIED<br>will be returned, rather than STATUS_INCOMPATIBLE_SENSORS. |
+| sensor_status | [SensorCompatibilityStatus](#bosdyn-api-graph_nav-SensorCompatibilityStatus) |  | This status determines whether the robot has compatible sensors for the<br>map that was recorded. Note that if sensors aren't working, STATUS_IMPAIRED<br>will be returned, rather than STATUS_INCOMPATIBLE_SENSORS. |
 | quality_check_result | [SetLocalizationResponse.QualityCheckResult](#bosdyn-api-graph_nav-SetLocalizationResponse-QualityCheckResult) |  | Graph Nav will check the quality of the resulting localization and report the status<br>here. Note that to preserve backwards compatability with 3.2 and earlier, a poor quality check<br>does not result in this RPC failing. |
 
 
@@ -10103,6 +11402,7 @@ contain information if the UploadGraph request could not be validated.
 | has_empty_edge_ids | [bool](#bool) |  | At least one edge in the graph references a waypoint with an empty ID.<br>This is an error. Fix the graph and re-upload. |
 | has_empty_waypoint_anchor_ids | [bool](#bool) |  | At least one waypoint anchor in the anchoring has an empty ID. This is a warning. Empty anchors will be ignored. |
 | has_empty_object_anchor_ids | [bool](#bool) |  | At least one object anchor in the anchoring has an empty ID. This is a warning. Empty anchors will be ignored. |
+| malformed_staircase_edge_ids | [Edge.Id](#bosdyn-api-graph_nav-Edge-Id) | repeated | One or more edges had a malformed staircase annotation. This is an error. Remove, rerecord, or fix the annotation. |
 
 
 
@@ -10280,6 +11580,20 @@ Report possible errors with the loaded map.
 
 
 
+<a name="bosdyn-api-graph_nav-NavigateToAnchorResponse-GPSStatus"></a>
+
+### NavigateToAnchorResponse.GPSStatus
+The result of the GPS command, if relevant.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| GPS_STATUS_UNKNOWN | 0 | An unknown/unexpected error occurred. |
+| GPS_STATUS_OK | 1 | The GPS command was valid and can be executed. |
+| GPS_STATUS_NO_COORDS_IN_MAP | 2 | The GPS command could not be completed because the map does not have GPS coordinates, neither in<br>waypoint annotations nor in the waypoint snapshot data. Please record the map using a GPS-enabled robot,<br>or annotate the waypoints with custom GPS coordinates. |
+| GPS_STATUS_TOO_FAR_FROM_MAP | 3 | The GPS command could not be completed because the coordinates passed in were too far from any mapped GPS<br>data. |
+
+
+
 <a name="bosdyn-api-graph_nav-NavigateToAnchorResponse-Status"></a>
 
 ### NavigateToAnchorResponse.Status
@@ -10304,6 +11618,7 @@ Report possible errors with the loaded map.
 | STATUS_UNRECOGNIZED_COMMAND | 15 | [Request Error] Happens when you try to continue a command that was either expired, or had an unrecognized id. |
 | STATUS_INVALID_POSE | 16 | [Route Error] The pose is invalid, or known to be unachievable (upside-down, etc). |
 | STATUS_AREA_CALLBACK_ERROR | 17 | [Route Error] Happens when you try to navigate along a route and a needed callback is no longer available. |
+| STATUS_INVALID_GPS_COMMAND | 18 | [Route Error] The command contained an invalid GPS request. See gps_status for more details. |
 
 
 
@@ -10489,6 +11804,7 @@ final-waypoint-offset), and command_id indicates a new command.
 | QUALITY_CHECK_POOR_POINT_CLOUD_MATCH | 2 | After applying the localization, a poor point cloud match to the map was detected.<br>This can happen if, for example, the map has changed, or the starting location<br>of the robot is now very different than it was at recording time. |
 | QUALITY_CHECK_POOR_GRAVITY_ALIGNMENT | 3 | After applying the localization, Graph Nav checked the localization, and found that<br>the robot's gravity vector does not align with the map's. This can happen if a fiducial<br>being used to align to the map was detected wrongly during recording, or if the robot's<br>IMU is miscalibrated. It can also occur when the inital guess passed in to the SetLocalization<br>RPC is in the incorrect reference frame. |
 | QUALITY_CHECK_SKIPPED | 4 | There wasn't enough data to make a determination about quality. |
+| QUALITY_CHECK_BAD_HEIGHT | 5 | The prior passed in is too different from the expected height of the robot e.w.r.t the waypoint. |
 
 
 
@@ -10737,13 +12053,10 @@ Annotations understood by BostonDynamics systems.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| vel_limit | [bosdyn.api.SE2VelocityLimit](#bosdyn-api-SE2VelocityLimit) |  | **Deprecated.** Velocity limits to use while traversing the edge.<br>These are maxima and minima, NOT target speeds.<br>DEPRECATED as of 2.4 and will be removed in 4.0. Please use mobility_params.vel_limit. |
 | stairs | [Edge.Annotations.StairData](#bosdyn-api-graph_nav-Edge-Annotations-StairData) |  | Stairs information/parameters specific to the edge. |
 | direction_constraint | [Edge.Annotations.DirectionConstraint](#bosdyn-api-graph_nav-Edge-Annotations-DirectionConstraint) |  | Direction constraints for how the robot must move and the directions it can face<br>when traversing the edge. |
 | require_alignment | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | If true, the robot must be aligned with the edge in yaw before traversing it. |
 | flat_ground | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | **Deprecated.** If true, the edge crosses flat ground and the robot shouldn't try to climb over<br>obstacles.<br>DEPRECATED as of 3.3. Replaced by ground_clutter_mode. |
-| ground_mu_hint | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | **Deprecated.** Terrain coefficient of friction user hint. This value must be postive and will clamped if<br>necessary on the robot side. Best suggested values lie in the range between 0.4 and 0.8<br>(which is the robot's default.)<br>DEPRECATED as of 2.1 and will be removed in 4.0. Use mobility_params instead, which<br>includes ground_mu_hint as part of the terrain_params. |
-| grated_floor | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | **Deprecated.** If true, the edge crosses over grated metal. This changes some parameters of the robot's<br>perception system to allow it to see grated floors bettter.<br>DEPRECATED as of 2.1 and will be removed in 4.0. Use mobility_params instead, which<br>includes grated_floor as part of the terrain_params. |
 | override_mobility_params | [google.protobuf.FieldMask](#google-protobuf-FieldMask) |  | Overrides the following fields of the mobility parameters to whatever is<br>stored in the map. For example, if this FieldMask contains "stairs_mode" and<br>"terrain_params.enable_grated_floor", then the map will be<br>annotated with "stairs_mode" and "enable_grated_floor" settings. An empty FieldMask means<br>all fields are active annotations. Note that the more conservative of the velocity limit<br>stored in the mobility parameters and the TravelParams of the entire route will be used<br>for this edge (regardless of what override_mobility_params says). |
 | mobility_params | [bosdyn.api.spot.MobilityParams](#bosdyn-api-spot-MobilityParams) |  | Contains terrain parameters, swing height, obstacle avoidance parameters, etc.<br>When the robot crosses this edge, it will use the mobility parameters here. |
 | cost | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Assign edges a cost; used when finding the "shortest" (lowest cost) path. |
@@ -10786,6 +12099,7 @@ Defines any parameters of the stairs
 | state | [AnnotationState](#bosdyn-api-graph_nav-AnnotationState) |  | Check this before reading other fields. |
 | straight_staircase | [bosdyn.api.StraightStaircase](#bosdyn-api-StraightStaircase) |  | **Deprecated.** Parameters describing a straight staircase.<br>DEPRECATED as of 3.3. Please use staircase_with_landings. |
 | staircase_with_landings | [bosdyn.api.StaircaseWithLandings](#bosdyn-api-StaircaseWithLandings) |  | Parameters describing an arbitrary staircase. |
+| descent_preference | [Edge.Annotations.StairData.DescentPreference](#bosdyn-api-graph_nav-Edge-Annotations-StairData-DescentPreference) |  |  |
 
 
 
@@ -10958,6 +12272,25 @@ Annotations understood by BostonDynamics systems.
 | waypoint_source | [Waypoint.WaypointSource](#bosdyn-api-graph_nav-Waypoint-WaypointSource) |  | How this waypoint was made. |
 | client_metadata | [ClientMetadata](#bosdyn-api-graph_nav-ClientMetadata) |  | Information about the state of the client when this waypoint was created. |
 | loop_closure_settings | [Waypoint.Annotations.LoopClosureSettings](#bosdyn-api-graph_nav-Waypoint-Annotations-LoopClosureSettings) |  | This waypoint may have specific settings to help with loop closure. This<br>Is useful for example when trying to ensure that a loop closure occurs at<br>a particular intersection or near a dock. |
+| gps_settings | [Waypoint.Annotations.GPSSettings](#bosdyn-api-graph_nav-Waypoint-Annotations-GPSSettings) |  | Optional GPS navigation settings for this waypoint. |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-Waypoint-Annotations-GPSSettings"></a>
+
+### Waypoint.Annotations.GPSSettings
+Waypoints can optionally define where they are in an Earth-Centered-Earth-Fixed (ECEF) frame, which
+can aid in localization.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| state | [AnnotationState](#bosdyn-api-graph_nav-AnnotationState) |  | If the annotation state is set, the GPS settings will be applied. Otherwise, they will be ignored.<br>If ignored, GPS will only be used at this waypoint if data from a GPS exists in the waypoint snapshot, and the<br>robot has a GPS payload installed and running. Set the annotation state to override this behavior. |
+| ecef_tform_waypoint | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | This defines the pose of the waypoint in the Earth-Centered-Earth-Fixed (ECEF) frame. |
+| disable_gps_localization | [bool](#bool) |  | If true, GPS localization will be disabled at this waypoint. If false, the robot will use GPS when available<br>to localize to this waypoint. |
 
 
 
@@ -11128,6 +12461,20 @@ Path following mode
 
 
 
+<a name="bosdyn-api-graph_nav-Edge-Annotations-StairData-DescentPreference"></a>
+
+### Edge.Annotations.StairData.DescentPreference
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| DESCENT_PREFERENCE_UNKNOWN | 0 | Unknown value, default to DESCENT_PREFERENCE_ALWAYS_REVERSE. |
+| DESCENT_PREFERENCE_PREFER_REVERSE | 1 | Robot will prefer to descend in reverse, but may descend forwards if the route<br>could not otherwise be executed. This could be due to conflicting constraints<br>created by an annotation or by another staircase. |
+| DESCENT_PREFERENCE_ALWAYS_REVERSE | 2 | Robot will always attempt to descend stairs in reverse, even if it causes<br>navigation to fail. |
+| DESCENT_PREFERENCE_NONE | 3 | Robot may descend in any order. The exact order it chooses will be decided by<br>the lowest cost path found by the local trajectory optimizer and adjacent<br>constraints, if they exist.<br>NOTE: If a staircase which is difficult for the robot to descend in the forward<br>direction is marked with this option, it may cause the robot to fall. |
+
+
+
 <a name="bosdyn-api-graph_nav-Edge-EdgeSource"></a>
 
 ### Edge.EdgeSource
@@ -11243,6 +12590,7 @@ The new anchoring will be streamed back to the client, or modified on the server
 | initial_hint | [AnchoringHint](#bosdyn-api-graph_nav-AnchoringHint) |  | Initial guess at some number of waypoints and world objects and their anchorings. |
 | modify_anchoring_on_server | [bool](#bool) |  | If true, the map currently uploaded to the server will have its anchoring modified.<br>Otherwise, the user is expected to re-upload the anchoring. |
 | stream_intermediate_results | [bool](#bool) |  | If true, the anchoring will be streamed back to the user after every iteration.<br>This is useful for debug visualization. |
+| apply_gps_result_to_waypoints_on_server | [bool](#bool) |  | If true, the GPSSettings inside waypoint annotations will be modified based on the optimization.<br>Every waypoint will have waypoint.gps_settings set, with ecef_tform_waypoint applied form this<br>optimization. To get these results, call the DownloadGraph RPC. Alternatively, the ecef_tform_waypoint<br>can be found using: response.gps_result.ecef_tform_seed * seed_tform_waypoint[waypoint_id].<br>Note that after this operation completes successfully, all waypoints in the graph can be used to navigate<br>using GPS, even if they didn't have GPS data in their waypoint snapshots. |
 
 
 
@@ -11281,6 +12629,7 @@ Parameters which affect the measurements the optimzier uses to process the ancho
 | use_gyroscope_measurements | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | If true, waypoints will be constrained so that the apparent pose of the<br>robot w.r.t the waypoint at the time of recording is consistent with gravity. |
 | use_loop_closures | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | If true, edges which were created by topology processing via loop closures will<br>be used as constraints. |
 | use_world_objects | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | If true, world object measurements will be used to constrain waypoints to one another<br>when those waypoints co-observe the same world object. |
+| use_gps | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | If true, GPS measurements stored in waypoint snapshots will be used to<br>help constrain the anchoring. |
 
 
 
@@ -11319,6 +12668,7 @@ the optimizer will care about that particular measurement.
 | hint_weight | [double](#double) |  |  |
 | gyroscope_weight | [double](#double) |  |  |
 | loop_closure_weight | [double](#double) |  |  |
+| gps_weight | [double](#double) |  |  |
 
 
 
@@ -11348,6 +12698,24 @@ New anchorings will be streamed as they become available.
 | missing_waypoint_ids | [string](#string) | repeated | When there are missing waypoints, these are the IDs of the missing waypoints. Upload them<br>to continue. |
 | invalid_hints | [string](#string) | repeated | Unorganized list of waypoints and object IDs which were invalid (missing from the map). |
 | inconsistent_edges | [Edge.Id](#bosdyn-api-graph_nav-Edge-Id) | repeated | List of edges that are inconsistent with the optimized result. This can happen when incorrect<br>loop closures have been made before optimization, when inconsistent anchoring hints were passed in,<br>or because the optmizer ended up in a local minimum. |
+| gps_result | [ProcessAnchoringResponse.GPSResult](#bosdyn-api-graph_nav-ProcessAnchoringResponse-GPSResult) |  | If GPS embedding optimzation was enabled, this is the result of that process. |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-ProcessAnchoringResponse-GPSResult"></a>
+
+### ProcessAnchoringResponse.GPSResult
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| status | [ProcessAnchoringResponse.GPSResult.GPSStatus](#bosdyn-api-graph_nav-ProcessAnchoringResponse-GPSResult-GPSStatus) |  | Overall status of the GPS embedding optimization. |
+| ecef_tform_seed | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | Pose of the "seed" frame of this optimization in the Earth-Centered-Earth-Fixed (ECEF) frame.<br>This can be used to estimate the pose of every waypoint in the ECEF frame via:<br>ecef_tform_waypoint = ecef_tform_seed * anchoring.waypoints[waypoint_id].seed_tform_waypoint |
+| num_measurements_used | [int32](#int32) |  | This is the number of GPS measurements actually used to compute the GPS embedding. |
 
 
 
@@ -11566,6 +12934,19 @@ positive Z.
  <!-- end messages -->
 
 
+<a name="bosdyn-api-graph_nav-ProcessAnchoringResponse-GPSResult-GPSStatus"></a>
+
+### ProcessAnchoringResponse.GPSResult.GPSStatus
+Status of the GPS embedding optimization.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| GPS_STATUS_UNKNOWN | 0 |  |
+| GPS_STATUS_OK | 1 | Managed to find an ECEF transform. |
+| GPS_STATUS_NOT_ENOUGH_MEASUREMENTS | 2 | Not enough high quality GPS measurements in the map. |
+
+
+
 <a name="bosdyn-api-graph_nav-ProcessAnchoringResponse-Status"></a>
 
 ### ProcessAnchoringResponse.Status
@@ -11641,6 +13022,38 @@ Defines services for processing an existing GraphNav map.
 <p align="right"><a href="#top">Top</a></p>
 
 ## bosdyn/api/graph_nav/nav.proto
+
+
+
+<a name="bosdyn-api-graph_nav-CompletedRoute"></a>
+
+### CompletedRoute
+Information about the route that a robot has followed during a command.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| waypoint_ids | [string](#string) | repeated | List of waypoints reached in the order they were reached. |
+| edges | [CompletedRoute.CompletedEdge](#bosdyn-api-graph_nav-CompletedRoute-CompletedEdge) | repeated | Information about the completed edges, in the order they were completed. |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-CompletedRoute-CompletedEdge"></a>
+
+### CompletedRoute.CompletedEdge
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| edge_id | [Edge.Id](#bosdyn-api-graph_nav-Edge-Id) |  |  |
+| not_in_map | [bool](#bool) |  | If true, this edge was specially constructed to bypass a blockage, and does not exist<br>in the map. |
+
+
+
 
 
 
@@ -11829,7 +13242,7 @@ changed or updated
 | ----- | ---- | ----- | ----------- |
 | name_prefix | [string](#string) |  | This will be prepended to the start of every waypoint name. |
 | waypoint_environment | [Waypoint.Annotations](#bosdyn-api-graph_nav-Waypoint-Annotations) |  | Persistent waypoint annotation that will be merged in<br>to all waypoints in this recording. |
-| edge_environment | [Edge.Annotations](#bosdyn-api-graph_nav-Edge-Annotations) |  | Persistent edge annotation that will be merged in to all<br>waypoints in this recording. |
+| edge_environment | [Edge.Annotations](#bosdyn-api-graph_nav-Edge-Annotations) |  | Persistent edge annotation that will be merged in to all<br>edges in this recording. |
 
 
 
@@ -12192,7 +13605,7 @@ parameters do not persist across reboots.
 | exposure_absolute | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | Manually set the image exposure level. This value is only used if exposure_auto is false.<br>Min 0, max 1 |
 | exposure_roi | [RoiParameters](#bosdyn-api-RoiParameters) |  | Region of interest for exposure. Specify a spot exposure on a<br>certain part of the image. Only used in auto-exposure mode. |
 | focus_auto | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Whether the camera should automatically focus the image.<br>Unset is equivalent to setting focus_auto = true |
-| focus_absolute | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | Manually set the image focus. This value is only used if focus_auto is false.<br>Min 0, max 1<br>0 corresponds to focus at infinity, 1 corresponds to a focal point close to the camera. |
+| focus_absolute | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | Manually set the image focus. This value is only used if focus_auto is false.<br>If focus_auto is true, this value will be populated with the current focus value.<br>Min 0, max 1<br>0 corresponds to focus at infinity, 1 corresponds to a focal point close to the camera. |
 | focus_roi | [RoiParameters](#bosdyn-api-RoiParameters) |  | Region of interest for focus. Only used when in auto-focus mode. |
 | draw_focus_roi_rectangle | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Set to true to draw a rectangle in the image where the focus ROI is.<br>Unset is equivalent to setting draw_focus_roi_rectangle = false |
 | hdr | [HdrParameters](#bosdyn-api-HdrParameters) |  | High dynamic range (HDR) mode sets the camera to take multiple frames to get exposure<br>in a large range. HDR will reduce framerate in high-framerate modes. |
@@ -14124,176 +15537,6 @@ and supports requesting a set of the latest local grids by map type name.
 
 
 
-<a name="bosdyn_api_log_annotation-proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## bosdyn/api/log_annotation.proto
-
-
-
-<a name="bosdyn-api-AddLogAnnotationRequest"></a>
-
-### AddLogAnnotationRequest
-The AddLogAnnotation request sends the information that should be added into the log.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request/response header. |
-| annotations | [LogAnnotations](#bosdyn-api-LogAnnotations) |  | The annotations to be aded into the log (can be text messages, blobs or robot operator<br>messages). |
-
-
-
-
-
-
-<a name="bosdyn-api-AddLogAnnotationResponse"></a>
-
-### AddLogAnnotationResponse
-The AddLogAnnotation response message, which is empty except for any potential header
-errors/warnings.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common request/response header. |
-
-
-
-
-
-
-<a name="bosdyn-api-LogAnnotationLogBlob"></a>
-
-### LogAnnotationLogBlob
-A unit of binary data to be entered in a log.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Required timestamp of data in robot clock time. |
-| channel | [string](#string) |  | A general label for this blob.<br>This is distinct from type_id, which identifies how the blob is to be parsed. |
-| type_id | [string](#string) |  | A description of the data's content and its encoding.<br>This should be sufficient for deciding how to deserialize the data.<br>For example, this could be the full name of a protobuf message type. |
-| data | [bytes](#bytes) |  | Raw data to be included as the blob log. |
-| timestamp_client | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Optional timestamp of data in client clock time. |
-
-
-
-
-
-
-<a name="bosdyn-api-LogAnnotationOperatorMessage"></a>
-
-### LogAnnotationOperatorMessage
-An operator message to be added to the robot's logs.
-These are notes especially intended to mark when logs should be preserved and reviewed
-to ensure that robot hardware and/or software is working as intended.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| message | [string](#string) |  | String annotation message to add to the log. |
-| timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Required timestamp of data in robot clock time. |
-| timestamp_client | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Optional timestamp of data in client clock time. |
-
-
-
-
-
-
-<a name="bosdyn-api-LogAnnotationTextMessage"></a>
-
-### LogAnnotationTextMessage
-A text message to add to the robot's logs.
-These could be internal text-log messages from a client for use in debugging, for
-example.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| message | [string](#string) |  | String annotation message to add to the log. |
-| timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Required timestamp of data in robot clock time. |
-| service | [string](#string) |  | The service responsible for the annotation. May be omitted. |
-| level | [LogAnnotationTextMessage.Level](#bosdyn-api-LogAnnotationTextMessage-Level) |  | Level of significance of the text message. |
-| tag | [string](#string) |  | Optional tag to identify from what code/module this message originated from. |
-| filename | [string](#string) |  | Optional source file name originating the log message. |
-| line_number | [int32](#int32) |  | Optional source file line number originating the log message. |
-| timestamp_client | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Optional timestamp of data in client clock time. |
-
-
-
-
-
-
-<a name="bosdyn-api-LogAnnotations"></a>
-
-### LogAnnotations
-A container for elements to be added to the robot's logs.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| text_messages | [LogAnnotationTextMessage](#bosdyn-api-LogAnnotationTextMessage) | repeated | Text messages to be added to the log. |
-| operator_messages | [LogAnnotationOperatorMessage](#bosdyn-api-LogAnnotationOperatorMessage) | repeated | Messages from the robot operator to be added to the log. |
-| blob_data | [LogAnnotationLogBlob](#bosdyn-api-LogAnnotationLogBlob) | repeated | One or more binary blobs to add to the log. |
-
-
-
-
-
- <!-- end messages -->
-
-
-<a name="bosdyn-api-LogAnnotationTextMessage-Level"></a>
-
-### LogAnnotationTextMessage.Level
-
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| LEVEL_UNKNOWN | 0 | Invalid, do not use. |
-| LEVEL_DEBUG | 1 | Events likely of interest only in a debugging context. |
-| LEVEL_INFO | 2 | Informational message during normal operation. |
-| LEVEL_WARN | 3 | Information about an unexpected but recoverable condition. |
-| LEVEL_ERROR | 4 | Information about an operation which did not succeed. |
-
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
- <!-- end services -->
-
-
-
-<a name="bosdyn_api_log_annotation_service-proto"></a>
-<p align="right"><a href="#top">Top</a></p>
-
-## bosdyn/api/log_annotation_service.proto
-
-
- <!-- end messages -->
-
- <!-- end enums -->
-
- <!-- end HasExtensions -->
-
-
-<a name="bosdyn-api-LogAnnotationService"></a>
-
-### LogAnnotationService
-DEPRECATED as of 2.1.0 and will be removed in 4.0. Please use the DataBufferService instead of
-the LogAnnotationService. LogAnnotationService allows adding information to the robot's log
-files. This service is a mechanism for adding information to the robot's log files.
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| AddLogAnnotation | [AddLogAnnotationRequest](#bosdyn-api-AddLogAnnotationRequest) | [AddLogAnnotationResponse](#bosdyn-api-AddLogAnnotationResponse) | Add the specified information to the robot's log files. |
-
- <!-- end services -->
-
-
-
 <a name="bosdyn_api_log_status_log_status-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -14919,8 +16162,8 @@ No data
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | pixel_xy | [Vec2](#bosdyn-api-Vec2) |  | Pickup an object that is at a pixel location in an image. |
-| transforms_snapshot_for_camera | [FrameTreeSnapshot](#bosdyn-api-FrameTreeSnapshot) |  | A tree-based collection of transformations, which will include the transformations to each image's<br>sensor in addition to transformations to the common frames ("vision", "body", "odom").<br>All transforms within the snapshot are at the acquistion time of the image. |
-| frame_name_image_sensor | [string](#string) |  | The frame name for the image's sensor source. This must be included in the transform snapshot. |
+| transforms_snapshot_for_camera | [FrameTreeSnapshot](#bosdyn-api-FrameTreeSnapshot) |  | A tree-based collection of transformations, which will include the transformations to each<br>image's sensor in addition to transformations to the common frames ("vision", "body",<br>"odom"). All transforms within the snapshot are at the acquistion time of the image. |
+| frame_name_image_sensor | [string](#string) |  | The frame name for the image's sensor source. This must be included in the transform<br>snapshot. |
 | camera_model | [ImageSource.PinholeModel](#bosdyn-api-ImageSource-PinholeModel) |  | Camera model. |
 | grasp_params | [GraspParams](#bosdyn-api-GraspParams) |  | Optional parameters for the grasp. |
 | walk_gaze_mode | [WalkGazeMode](#bosdyn-api-WalkGazeMode) |  | Automatic walking / gazing configuration.<br>See detailed comment in the PickObjectRayInWorld message. |
@@ -15006,7 +16249,7 @@ If you specify a SqueezeGrasp as:
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| axis_on_gripper_ewrt_gripper | [Vec3](#bosdyn-api-Vec3) |  | Axis on the gripper that you want to align. For example, to align the front of the gripper<br>to be straight down, you'd use: \<br> axis_on_gripper_ewrt_gripper = Vec3(1, 0, 0) \<br> axis_to_align_with_ewrt_frame = Vec3(0, 0, -1) (in the "vision" frame) \ |
+| axis_on_gripper_ewrt_gripper | [Vec3](#bosdyn-api-Vec3) |  | Axis on the gripper that you want to align. For example, to align the front of the gripper<br>to be straight down, you'd use:<br> axis_on_gripper_ewrt_gripper = Vec3(1, 0, 0) \<br> axis_to_align_with_ewrt_frame = Vec3(0, 0, -1) (in the "vision" frame) \ |
 | axis_to_align_with_ewrt_frame | [Vec3](#bosdyn-api-Vec3) |  |  |
 | threshold_radians | [float](#float) |  |  |
 
@@ -15024,8 +16267,8 @@ If you specify a SqueezeGrasp as:
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | pixel_xy | [Vec2](#bosdyn-api-Vec2) |  | Walk to an object that is at a pixel location in an image. |
-| transforms_snapshot_for_camera | [FrameTreeSnapshot](#bosdyn-api-FrameTreeSnapshot) |  | A tree-based collection of transformations, which will include the transformations to each image's<br>sensor in addition to transformations to the common frames ("vision", "body", "odom").<br>All transforms within the snapshot are at the acquistion time of the image. |
-| frame_name_image_sensor | [string](#string) |  | The frame name for the image's sensor source. This will be included in the transform snapshot. |
+| transforms_snapshot_for_camera | [FrameTreeSnapshot](#bosdyn-api-FrameTreeSnapshot) |  | A tree-based collection of transformations, which will include the transformations to each<br>image's sensor in addition to transformations to the common frames ("vision", "body",<br>"odom"). All transforms within the snapshot are at the acquisition time of the image. |
+| frame_name_image_sensor | [string](#string) |  | The frame name for the image's sensor source. This will be included in the transform<br>snapshot. |
 | camera_model | [ImageSource.PinholeModel](#bosdyn-api-ImageSource-PinholeModel) |  | Camera model. |
 | offset_distance | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | Optional offset distance for the robot to stand from the object's location. The robot will<br>walk forwards or backwards from where it is so that its center of mass is this distance from<br>the object. \<br>If unset, we use a reasonable default value. |
 
@@ -15171,6 +16414,235 @@ Configure automatic walking and gazing at the target.
 
 
 
+<a name="bosdyn_api_metrics_logging_absolute_metrics-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/metrics_logging/absolute_metrics.proto
+
+
+
+<a name="bosdyn-api-metrics_logging-AbsoluteMetricsSnapshot"></a>
+
+### AbsoluteMetricsSnapshot
+Stores a collection of AbsoluteMetrics.  The scalar values stored in this structure
+are meant to be cumulative.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| timestamp_start | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Assume two snapshots. One at time=t, and one at time=t-1. If we subtract the metrics<br>of snapshot t-1 from the metrics of snapshot t, we'll get change in metrics. That change<br>in metrics corresponds to the bounding time given by the following two timestamps.<br>Note, when the user transitions from opt out to opt in, or the robot starts up for the first<br>time, timestamp_start will be empty! |
+| timestamp_end | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
+| sequence_number | [int32](#int32) |  | Monotonic number. Every time the robot creates a snapshot, this number will increment. It<br>will be how the robot reports what snapshots are available, and how the client & proxy track<br>what snapshots they have & still need. |
+| robot_serial_number | [string](#string) |  |  |
+| robot_species | [string](#string) |  |  |
+| parameters | [bosdyn.api.Parameter](#bosdyn-api-Parameter) | repeated |  |
+| events | [bosdyn.api.Event](#bosdyn-api-Event) | repeated | Robot events |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_metrics_logging_metrics_logging_robot-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/metrics_logging/metrics_logging_robot.proto
+
+
+
+<a name="bosdyn-api-metrics_logging-GetAbsoluteMetricSnapshotRequest"></a>
+
+### GetAbsoluteMetricSnapshotRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| sequence_numbers | [int32](#int32) | repeated | The robot will respond with the corresponding Snapshot for these<br>sequence_numbers, if it has them. |
+
+
+
+
+
+
+<a name="bosdyn-api-metrics_logging-GetAbsoluteMetricSnapshotResponse"></a>
+
+### GetAbsoluteMetricSnapshotResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| snapshots | [SignedProto](#bosdyn-api-metrics_logging-SignedProto) | repeated | Signed AbsoluteMetricsSnapshot messages corresponding to the request timestamps.<br>The robot will exclude snapshots if:<br> * They don't exist on the robot<br> * If included, the snapshot would push the total response message size over the GRPC limit. |
+
+
+
+
+
+
+<a name="bosdyn-api-metrics_logging-GetMetricsRequest"></a>
+
+### GetMetricsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| keys | [string](#string) | repeated | If keys are specified, the GetMetricsResponse will only include parameters<br>which match the keys. If no keys are specified, all parameters will be returned. |
+| include_events | [bool](#bool) |  | Include events in the GetMetricsResponse. By default events will not be included. |
+
+
+
+
+
+
+<a name="bosdyn-api-metrics_logging-GetMetricsResponse"></a>
+
+### GetMetricsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| parameters | [bosdyn.api.Parameter](#bosdyn-api-Parameter) | repeated | Current parameters for metrics. |
+| missing_keys | [string](#string) | repeated | If any keys specified in the GetMetricsRequest are not present in the database,<br>they'll be reported here. |
+| events | [bosdyn.api.Event](#bosdyn-api-Event) | repeated | Events included in the metrics. |
+
+
+
+
+
+
+<a name="bosdyn-api-metrics_logging-GetStoreSequenceRangeRequest"></a>
+
+### GetStoreSequenceRangeRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+
+
+
+
+
+
+<a name="bosdyn-api-metrics_logging-GetStoreSequenceRangeResponse"></a>
+
+### GetStoreSequenceRangeResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| first_sequence_number | [int32](#int32) |  | The inclusive sequence_number of the first entry in the store. |
+| last_sequence_number | [int32](#int32) |  | The inclusive sequence_number of the last entry in the store. |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_metrics_logging_metrics_logging_robot_service-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/metrics_logging/metrics_logging_robot_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn-api-metrics_logging-MetricsLoggingRobotService"></a>
+
+### MetricsLoggingRobotService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| GetStoreSequenceRange | [GetStoreSequenceRangeRequest](#bosdyn-api-metrics_logging-GetStoreSequenceRangeRequest) | [GetStoreSequenceRangeResponse](#bosdyn-api-metrics_logging-GetStoreSequenceRangeResponse) |  |
+| GetAbsoluteMetricSnapshot | [GetAbsoluteMetricSnapshotRequest](#bosdyn-api-metrics_logging-GetAbsoluteMetricSnapshotRequest) | [GetAbsoluteMetricSnapshotResponse](#bosdyn-api-metrics_logging-GetAbsoluteMetricSnapshotResponse) |  |
+| GetMetrics | [GetMetricsRequest](#bosdyn-api-metrics_logging-GetMetricsRequest) | [GetMetricsResponse](#bosdyn-api-metrics_logging-GetMetricsResponse) |  |
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_metrics_logging_signed_proto-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/metrics_logging/signed_proto.proto
+
+
+
+<a name="bosdyn-api-metrics_logging-SignedProto"></a>
+
+### SignedProto
+A custom signed format.  Sequentially laid out:
+
+  4 bytes header
+  20 bytes fingerprint
+  512 bytes signature
+  X bytes data.
+
+header -> When this format changes, we'll use the header to delminate which
+format was used to generate this data.
+
+fingerprint -> The fingerprint of public key corresponding to the private key
+that was used to generate the signature.  As keys rotate, this will allow
+the signature verifier to know what key to use to verify the signature.
+
+signature -> singnature of the data field.
+
+data -> Contents specified by parent container.  Usually contains a serialized
+protobuf.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| data | [bytes](#bytes) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="bosdyn_api_mission_mission-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -15188,7 +16660,8 @@ Answer one of the outstanding questions.
 | ----- | ---- | ----- | ----------- |
 | header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
 | question_id | [int64](#int64) |  | Identifier of the question being answered. |
-| code | [int64](#int64) |  | The answer_code from the Question, corresponding to the user's choice. |
+| code | [int64](#int64) |  | The answer_code from the Question corresponding to the user's choice. |
+| custom_params | [bosdyn.api.DictParam](#bosdyn-api-DictParam) |  | The answers for the Question corresponding to custom_params specification from the Question. |
 
 
 
@@ -15205,6 +16678,7 @@ Response from the server after a client has answered one of its questions.
 | ----- | ---- | ----- | ----------- |
 | header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
 | status | [AnswerQuestionResponse.Status](#bosdyn-api-mission-AnswerQuestionResponse-Status) |  | The result of the AnswerQuestionRequest. |
+| custom_param_error | [bosdyn.api.CustomParamError](#bosdyn-api-CustomParamError) |  | Filled out if status is STATUS_CUSTOM_PARAMS_ERROR. |
 
 
 
@@ -15499,6 +16973,7 @@ A question posed by a Prompt node, or by the internal operation of another node.
 | source | [string](#string) |  | What's asking the question. Should be unique in the active mission. |
 | text | [string](#string) |  | The text of the question itself. |
 | options | [Prompt.Option](#bosdyn-api-mission-Prompt-Option) | repeated | Options to choose from.<br>Uses the submessage from the "prompt" node message. |
+| custom_params | [bosdyn.api.DictParam.Spec](#bosdyn-api-DictParam-Spec) |  | Custom parameter specification for the answer expected for this question. |
 | for_autonomous_processing | [bool](#bool) |  | Set to true if this question was meant to be answered by some automated system, not a<br>human. Clients should usually avoid generating a UI element to ask such a question. |
 | severity | [bosdyn.api.AlertData.SeverityLevel](#bosdyn-api-AlertData-SeverityLevel) |  | Severity for this question. See comment in Prompt message in nodes.proto for a better understanding<br>of what levels mean. |
 
@@ -15573,7 +17048,8 @@ A question that has been answered already.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | question | [Question](#bosdyn-api-mission-Question) |  | The question that this state information is related to. |
-| accepted_answer_code | [int64](#int64) |  | The answer that was provided. |
+| accepted_answer_code | [int64](#int64) |  | The code corresponding to the option answered for this prompt. |
+| custom_params | [bosdyn.api.DictParam](#bosdyn-api-DictParam) |  | Custom parameter values answered for this prompt. |
 
 
 
@@ -15677,6 +17153,8 @@ Possible results for answering a question.
 | STATUS_INVALID_QUESTION_ID | 2 | Question ID is not valid / unknown by the mission service. |
 | STATUS_INVALID_CODE | 3 | Answer code is not applicable for the question indicated. |
 | STATUS_ALREADY_ANSWERED | 4 | Question was already answered. |
+| STATUS_CUSTOM_PARAMS_ERROR | 5 | One or more keys or values in custom_params are unsupported by the question.<br>See the custom_param_error for details. |
+| STATUS_INCOMPATIBLE_ANSWER | 6 | Answer format is not applicable for the question indicated. |
 
 
 
@@ -15746,7 +17224,7 @@ Possible overall status states of the mission.
 | STATUS_RUNNING | 2 | The mission is still running. |
 | STATUS_SUCCESS | 3 | The mission succeeded! |
 | STATUS_PAUSED | 4 | Execution has been paused. |
-| STATUS_ERROR | 5 | The mission service itself encountered an unexpected error, outside of a node failing. |
+| STATUS_ERROR | 5 | The mission service itself or the behavior tree encountered an unexpected error, outside<br>of a node failing. |
 | STATUS_NONE | 6 | No mission has been loaded. |
 | STATUS_STOPPED | 7 | The mission was stopped before completion. |
 
@@ -16113,6 +17591,7 @@ Trigger the acquisition and storage of data.
 | metadata_name_in_blackboard | [string](#string) |  | The name of the metadata object in the blackboard to be stored.<br>The metadata object can be any protobuf message.<br>The metadata will be merged with the AcquireDataRequest's metadata field. |
 | action_name_format | [string](#string) |  | Define a format string that will be used together with the blackboard to generate<br>an action_name. If a value is specified in this field, it will override the action_name<br>value specified in the CaptureActionId of the AcquireDataRequest. Values from the blackboard<br>will replace the keys in braces {}.<br>Example: "element 0 attempt {loop_counter}", where "loop_counter" is a blackboard variable<br>from a Retry. |
 | disable_cancel_on_pause_or_stop | [bool](#bool) |  | If set to false (default), this node will cancel an outgoing AcquireDataRequest when the node<br>is paused / stopped. When the node is resumed, it will restart the AcquireDataRequest.<br><br>If set to true, this node will NOT cancel outgoing AcquireDataRequest's when the node is<br>paused / stopped. When the node is resumed, it will check feedback on the original outgoing<br>AcquireDataReqeust. |
+| format_metadata | [bool](#bool) |  | If true, metadata string values may contain formatted blackboard variables.<br>Please see the documentation in FormatBlackboard for more information about supported string<br>formats. |
 
 
 
@@ -16129,7 +17608,7 @@ Interuptions are anything that causes the mission to stop ticking automatically.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | child | [Node](#bosdyn-api-mission-Node) |  | Child to run when node starts. If mission is interrupted while the child is still running,<br>the mission service will send an AcquireDataRequest to the data acquisition service. The<br>child will resume when the mission resumes. The DataAcquisitionOnInterruption node will<br>always return the status of this child node. |
-| request_when_interrupted | [DataAcquisition](#bosdyn-api-mission-DataAcquisition) |  | Data acquisition request that will be sent if the mission is interrupted.<br>This is not an actual node. It will only be used for the data acquisition request details.<br>The completion_behavior and request_name_in_blackboard fields will not be used. |
+| request_when_interrupted | [DataAcquisition](#bosdyn-api-mission-DataAcquisition) |  | Data acquisition request that will be sent if the mission is interrupted.<br>This is not an actual node. It will only be used for the data acquisition request details.<br>The completion_behavior, request_name_in_blackboard, metadata_name_in_blackboard, and<br>format_metadata fields will not be used. |
 | pause_mission_metadata | [bosdyn.api.Metadata](#bosdyn-api-Metadata) |  | Interruption reason: PauseMission RPC called. |
 | restart_mission_metadata | [bosdyn.api.Metadata](#bosdyn-api-Metadata) |  | Interruption reason: RestartMission RPC called. |
 | load_mission_metadata | [bosdyn.api.Metadata](#bosdyn-api-Metadata) |  | Interruption reason: LoadMission RPC called. |
@@ -16202,6 +17681,24 @@ variables in the parent scope.
 
 
 
+<a name="bosdyn-api-mission-ExecuteChoreography"></a>
+
+### ExecuteChoreography
+Sends a request to play a choreography sequence with the given name, and then monitors
+the state of the dancing robot.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| service_name | [string](#string) |  | Name of the service to use. |
+| host | [string](#string) |  | Host machine the service is running on. |
+| sequence_name | [string](#string) |  | The name of the sequence to play. |
+
+
+
+
+
+
 <a name="bosdyn-api-mission-ForDuration"></a>
 
 ### ForDuration
@@ -16240,6 +17737,24 @@ Sets a blackboard variable to a formatted string, reading from other blackboard 
 
 
 
+<a name="bosdyn-api-mission-MissionUploadChoreography"></a>
+
+### MissionUploadChoreography
+Uploads the given set of animations and choreography sequences to the robot.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| service_name | [string](#string) |  | Name of the service to use. |
+| host | [string](#string) |  | Host machine the service is running on. |
+| choreography_sequences | [bosdyn.api.spot.ChoreographySequence](#bosdyn-api-spot-ChoreographySequence) | repeated | Choreography sequences to be loaded (required by the mission). |
+| animated_moves | [bosdyn.api.spot.Animation](#bosdyn-api-spot-Animation) | repeated | Any animations we need to load if we want to play the sequences. |
+
+
+
+
+
+
 <a name="bosdyn-api-mission-Node"></a>
 
 ### Node
@@ -16252,8 +17767,51 @@ Specifics of what the node does are contained in the "impl" field.
 | name | [string](#string) |  | Human-readable name of this node, e.g. "Goto waypoint 1", or "Power On". |
 | user_data | [UserData](#bosdyn-api-mission-UserData) |  | Collection of user data associated with this node. |
 | reference_id | [string](#string) |  | Reference identifier of this node.<br>Set iff another node references this one. |
-| impl | [google.protobuf.Any](#google-protobuf-Any) |  | Implementation of this node. For example, this may be a Sequence. |
+| impl | [google.protobuf.Any](#google-protobuf-Any) |  | **Deprecated.** DEPRECATED as of 4.0.<br>Implementation of this node. For example, this may be a Sequence. |
 | node_reference | [string](#string) |  | Unique identifier of another node. If this is filled out, rather than the "impl", then<br>the referenced node will be used in place of this one. |
+| condition | [Condition](#bosdyn-api-mission-Condition) |  |  |
+| sequence | [Sequence](#bosdyn-api-mission-Sequence) |  |  |
+| selector | [Selector](#bosdyn-api-mission-Selector) |  |  |
+| repeat | [Repeat](#bosdyn-api-mission-Repeat) |  |  |
+| retain_lease | [RetainLease](#bosdyn-api-mission-RetainLease) |  |  |
+| retry | [Retry](#bosdyn-api-mission-Retry) |  |  |
+| for_duration | [ForDuration](#bosdyn-api-mission-ForDuration) |  |  |
+| bosdyn_dock_state | [BosdynDockState](#bosdyn-api-mission-BosdynDockState) |  |  |
+| bosdyn_power_request | [BosdynPowerRequest](#bosdyn-api-mission-BosdynPowerRequest) |  |  |
+| bosdyn_robot_state | [BosdynRobotState](#bosdyn-api-mission-BosdynRobotState) |  |  |
+| bosdyn_robot_command | [BosdynRobotCommand](#bosdyn-api-mission-BosdynRobotCommand) |  |  |
+| remote_grpc | [RemoteGrpc](#bosdyn-api-mission-RemoteGrpc) |  |  |
+| sleep | [Sleep](#bosdyn-api-mission-Sleep) |  |  |
+| prompt | [Prompt](#bosdyn-api-mission-Prompt) |  |  |
+| set_blackboard | [SetBlackboard](#bosdyn-api-mission-SetBlackboard) |  |  |
+| date_to_blackboard | [DateToBlackboard](#bosdyn-api-mission-DateToBlackboard) |  |  |
+| define_blackboard | [DefineBlackboard](#bosdyn-api-mission-DefineBlackboard) |  |  |
+| format_blackboard | [FormatBlackboard](#bosdyn-api-mission-FormatBlackboard) |  |  |
+| constant_result | [ConstantResult](#bosdyn-api-mission-ConstantResult) |  |  |
+| bosdyn_navigate_route | [BosdynNavigateRoute](#bosdyn-api-mission-BosdynNavigateRoute) |  |  |
+| bosdyn_navigate_to | [BosdynNavigateTo](#bosdyn-api-mission-BosdynNavigateTo) |  |  |
+| bosdyn_graph_nav_state | [BosdynGraphNavState](#bosdyn-api-mission-BosdynGraphNavState) |  |  |
+| bosdyn_graph_nav_localize | [BosdynGraphNavLocalize](#bosdyn-api-mission-BosdynGraphNavLocalize) |  |  |
+| bosdyn_record_event | [BosdynRecordEvent](#bosdyn-api-mission-BosdynRecordEvent) |  |  |
+| simple_parallel | [SimpleParallel](#bosdyn-api-mission-SimpleParallel) |  |  |
+| spot_cam_ptz | [SpotCamPtz](#bosdyn-api-mission-SpotCamPtz) |  |  |
+| spot_cam_store_media | [SpotCamStoreMedia](#bosdyn-api-mission-SpotCamStoreMedia) |  |  |
+| spot_cam_led | [SpotCamLed](#bosdyn-api-mission-SpotCamLed) |  |  |
+| spot_cam_focus_state | [SpotCamFocusState](#bosdyn-api-mission-SpotCamFocusState) |  |  |
+| spot_cam_reset_autofocus | [SpotCamResetAutofocus](#bosdyn-api-mission-SpotCamResetAutofocus) |  |  |
+| store_metadata | [StoreMetadata](#bosdyn-api-mission-StoreMetadata) |  |  |
+| switch | [Switch](#bosdyn-api-mission-Switch) |  |  |
+| data_acquisition | [DataAcquisition](#bosdyn-api-mission-DataAcquisition) |  |  |
+| data_acquisition_on_interruption | [DataAcquisitionOnInterruption](#bosdyn-api-mission-DataAcquisitionOnInterruption) |  |  |
+| dock | [Dock](#bosdyn-api-mission-Dock) |  |  |
+| restart_when_paused | [RestartWhenPaused](#bosdyn-api-mission-RestartWhenPaused) |  |  |
+| clear_behavior_faults | [ClearBehaviorFaults](#bosdyn-api-mission-ClearBehaviorFaults) |  |  |
+| bosdyn_gripper_camera_params_state | [BosdynGripperCameraParamsState](#bosdyn-api-mission-BosdynGripperCameraParamsState) |  |  |
+| set_gripper_camera_params | [SetGripperCameraParams](#bosdyn-api-mission-SetGripperCameraParams) |  |  |
+| parallel_and | [ParallelAnd](#bosdyn-api-mission-ParallelAnd) |  |  |
+| set_grasp_override | [SetGraspOverride](#bosdyn-api-mission-SetGraspOverride) |  |  |
+| execute_choreography | [ExecuteChoreography](#bosdyn-api-mission-ExecuteChoreography) |  |  |
+| mission_upload_choreography | [MissionUploadChoreography](#bosdyn-api-mission-MissionUploadChoreography) |  |  |
 | parameter_values | [KeyValue](#bosdyn-api-mission-KeyValue) | repeated | Defines parameters, used by this node or its children.<br>The "key" in KeyValue is the name of the parameter being defined.<br>The value can be a constant or another parameter value. |
 | overrides | [KeyValue](#bosdyn-api-mission-KeyValue) | repeated | Overwrites a protobuf field in this node's implementation.<br>The "key" in KeyValue is the name of the field to override.<br>The value to write can be sourced from a constant, or a parameter value. |
 | parameters | [VariableDeclaration](#bosdyn-api-mission-VariableDeclaration) | repeated | Declares parameters needed at compile time by this node, or children of this node.<br>This is a way for a node to communicate what parameters its implementation and/or children<br>require, without unpacking the entire subtree. |
@@ -16292,7 +17850,9 @@ This node represents a request for information from ANY listeners that may be ou
 | always_reprompt | [bool](#bool) |  | Should we always re-prompt when this node is started?<br>If false, this node will only ever prompt if it is started and its question is unanswered.<br>This may be used, for example, to ask the user to check the robot after any self-right.<br>If true, this node will prompt whenever it is started.<br>This may be used, for example, to tell the user to perform some one-time action, like open a<br>door for the robot. |
 | text | [string](#string) |  | The text of the question itself. The question text may contain formatted blackboard<br>variables. Please see the documentation in FormatBlackboard for more information<br>about supported string formats. |
 | source | [string](#string) |  | Metadata describing the source of the question.<br>The answer will be written into the state blackboard with this as the variable name. |
-| options | [Prompt.Option](#bosdyn-api-mission-Prompt-Option) | repeated | The set of options that can be chosen for this prompt. |
+| options | [Prompt.Option](#bosdyn-api-mission-Prompt-Option) | repeated | **Deprecated.** The set of options that can be chosen for this prompt. |
+| options_list | [Prompt.OptionsList](#bosdyn-api-mission-Prompt-OptionsList) |  | The set of options that can be chosen for this prompt. |
+| custom_params | [bosdyn.api.DictParam.Spec](#bosdyn-api-DictParam-Spec) |  | Custom parameter specification for the answer expected for this prompt. |
 | child | [Node](#bosdyn-api-mission-Node) |  | Child node, run after the prompt has been responded to.<br>Children will have access to the answer code provided by the response. |
 | for_autonomous_processing | [bool](#bool) |  | Hint that Question posed by this Prompt is meant to be answered by some automated system.<br>See the Question message for details. |
 | severity | [bosdyn.api.AlertData.SeverityLevel](#bosdyn-api-AlertData-SeverityLevel) |  | Severity for this prompt. Used to determine what sort of alerting<br>this prompt will trigger.<br>Here are guidelines for severity as it pertains to missions:<br>INFO: Normal operation. For example, waiting for charge; waiting on the dock for logs to<br>download. WARN: Something went wrong, but the mission will try to recover autonomously.<br>ERROR: Something went wrong, and the mission can't recover without human intervention.<br>Intervention is not time sensitive and can be resolved when convenient.<br>CRITICAL: Something went wrong, and the mission can't recover without human intervention.<br>Human needs to rescue the robot before battery runs out because it's not charging. |
@@ -16313,6 +17873,21 @@ Data about the options to choose from.
 | ----- | ---- | ----- | ----------- |
 | text | [string](#string) |  | Text associated with this option. Should be displayed to the user. |
 | answer_code | [int64](#int64) |  | Numeric code corresponding to this option. Passed as part of the answer. |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-Prompt-OptionsList"></a>
+
+### Prompt.OptionsList
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| options | [Prompt.Option](#bosdyn-api-mission-Prompt-Option) | repeated |  |
 
 
 
@@ -16520,6 +18095,23 @@ When started, begins a sleep timer for X seconds. Returns "success" after the ti
 | ----- | ---- | ----- | ----------- |
 | seconds | [float](#float) |  | Number of seconds to sleep for. |
 | restart_after_stop | [bool](#bool) |  | If this node is stopped, should it restart the timer? |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-SpotCamFocusState"></a>
+
+### SpotCamFocusState
+Set the focus on the Spot CAM PTZ
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| service_name | [string](#string) |  | Name of the service to use. |
+| host | [string](#string) |  | Host machine of the directory server that the Spot CAM registered with. |
+| focus_state | [bosdyn.api.spot_cam.PtzFocusState](#bosdyn-api-spot_cam-PtzFocusState) |  | Focus State to set the Spot CAM PTZ to, from SetPtzFocusStateRequest |
 
 
 
@@ -17441,7 +19033,7 @@ The network compute bridge worker will receive this input data.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
-| object_in_image | [WorldObject](#bosdyn-api-WorldObject) | repeated | Detection information. May include bounding boxes, image coordinates, 3D pose information,<br>etc. |
+| object_in_image | [WorldObject](#bosdyn-api-WorldObject) | repeated | **Deprecated.** Detection information. May include bounding boxes, image coordinates, 3D pose information,<br>etc.<br>DEPRECATED as of 4.0. Use object_in_image field in OutputImage instead. |
 | image_response | [ImageResponse](#bosdyn-api-ImageResponse) |  | **Deprecated.** The image we computed the data on. If the input image itself was provided in the request,<br>this field is not populated. This field is not set for non-image input.<br>DEPRECATED as of 3.3. Use image_responses instead. |
 | image_responses | [ImageCaptureAndSource](#bosdyn-api-ImageCaptureAndSource) | repeated | The image we computed the data on. This field is not set for non-image input. |
 | image_rotation_angle | [double](#double) |  | **Deprecated.** If the image was rotated for processing, this field will contain the amount it was rotated by<br>(counter-clockwise, in radians).<br><br>Note that the image returned is *not* rotated, regardless of if it was rotated<br>for processing. This ensures that all other calibration and metadata remains valid.<br>DEPRECATED as of 3.3. Please rotate the image client-side before passing it to NCB worker. |
@@ -17650,6 +19242,7 @@ Information about the output of an NCB worker.
 | NETWORK_COMPUTE_STATUS_EXTERNAL_SERVER_ERROR | 3 | The call to the external server did not succeed. |
 | NETWORK_COMPUTE_STATUS_ROTATION_ERROR | 4 | The robot failed to rotate the image as requested. |
 | NETWORK_COMPUTE_STATUS_CUSTOM_PARAMS_ERROR | 5 | One or more keys or values in the input custom_params are unsupported by the service.<br>See the custom_param_error for details. |
+| NETWORK_COMPUTE_STATUS_ANALYSIS_FAILED | 6 | Transient error to indicate that the model failed to analyze the set of input images, but a<br>retry might work. |
 
 
  <!-- end enums -->
@@ -18776,6 +20369,40 @@ get feedback on the progress of a power command from the power service.
 
 
 
+
+<a name="bosdyn-api-ResetSafetyStopRequest"></a>
+
+### ResetSafetyStopRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| lease | [Lease](#bosdyn-api-Lease) |  | The Lease to show ownership of the robot. |
+| safety_stop_type | [ResetSafetyStopRequest.SafetyStopType](#bosdyn-api-ResetSafetyStopRequest-SafetyStopType) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-ResetSafetyStopResponse"></a>
+
+### ResetSafetyStopResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| lease_use_result | [LeaseUseResult](#bosdyn-api-LeaseUseResult) |  | Details about how the lease was used. |
+| status | [ResetSafetyStopResponse.Status](#bosdyn-api-ResetSafetyStopResponse-Status) |  | Current feedback of specified command. |
+
+
+
+
+
  <!-- end messages -->
 
 
@@ -18852,6 +20479,34 @@ Feedback on the current state of a power command on the robot.
 | STATUS_KEEPALIVE_MOTORS_OFF | 12 | ERROR: Cannot power on while a Keepalive policy with a motors-off action is active.<br>See the Keepalive API service for more details. |
 
 
+
+<a name="bosdyn-api-ResetSafetyStopRequest-SafetyStopType"></a>
+
+### ResetSafetyStopRequest.SafetyStopType
+Types of safety stop commands the robot can execute.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| SAFETY_STOP_UNKNOWN | 0 | Invalid request; do not use. |
+| SAFETY_STOP_PRIMARY | 1 | Primary safety stop. |
+| SAFETY_STOP_REDUNDANT | 2 | Redundant safety stop. |
+
+
+
+<a name="bosdyn-api-ResetSafetyStopResponse-Status"></a>
+
+### ResetSafetyStopResponse.Status
+Feedback on the reset safety stop command.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Status is not specified. |
+| STATUS_OK | 1 | Reset safety stop command succeeded. |
+| STATUS_INCOMPATIBLE_HARDWARE_ERROR | 2 | ERROR: Reset safety stop command failed due to incompatible hardware. |
+| STATUS_FAILED | 3 | ERROR: Reset safety stop command was run and failed. |
+| STATUS_UNKNOWN_STOP_TYPE | 4 | ERROR: Reset safety stop command failed due to unknown stop type. |
+
+
  <!-- end enums -->
 
  <!-- end HasExtensions -->
@@ -18884,6 +20539,7 @@ The power service for the robot that can power on/off the robot's motors.
 | PowerCommandFeedback | [PowerCommandFeedbackRequest](#bosdyn-api-PowerCommandFeedbackRequest) | [PowerCommandFeedbackResponse](#bosdyn-api-PowerCommandFeedbackResponse) | Check the status of a power command. |
 | FanPowerCommand | [FanPowerCommandRequest](#bosdyn-api-FanPowerCommandRequest) | [FanPowerCommandResponse](#bosdyn-api-FanPowerCommandResponse) | Separate RPC for toggling fan power due to need for time/percent power parameters |
 | FanPowerCommandFeedback | [FanPowerCommandFeedbackRequest](#bosdyn-api-FanPowerCommandFeedbackRequest) | [FanPowerCommandFeedbackResponse](#bosdyn-api-FanPowerCommandFeedbackResponse) | Check the status of a fan power command. |
+| ResetSafetyStop | [ResetSafetyStopRequest](#bosdyn-api-ResetSafetyStopRequest) | [ResetSafetyStopResponse](#bosdyn-api-ResetSafetyStopResponse) | Reset the safety stop bit on SRSF-configured robots. |
 
  <!-- end services -->
 
@@ -19061,6 +20717,39 @@ the fault or not.
 
 
 
+<a name="bosdyn-api-JointControlStreamRequest"></a>
+
+### JointControlStreamRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| joint_command | [JointCommand.UpdateRequest](#bosdyn-api-JointCommand-UpdateRequest) |  | Joint command details |
+
+
+
+
+
+
+<a name="bosdyn-api-JointControlStreamResponse"></a>
+
+### JointControlStreamResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [JointControlStreamResponse.Status](#bosdyn-api-JointControlStreamResponse-Status) |  | Return status for the stream. |
+| message | [string](#string) |  | Human-readable error description. Not for programmatic analysis. |
+
+
+
+
+
+
 <a name="bosdyn-api-RobotCommand"></a>
 
 ### RobotCommand
@@ -19072,7 +20761,6 @@ The server decides if a set of commands is valid for a given robot and configura
 | ----- | ---- | ----- | ----------- |
 | full_body_command | [FullBodyCommand.Request](#bosdyn-api-FullBodyCommand-Request) |  | Commands which require control of entire robot. |
 | synchronized_command | [SynchronizedCommand.Request](#bosdyn-api-SynchronizedCommand-Request) |  | A synchronized command, for partial or full control of robot. |
-| mobility_command | [MobilityCommand.Request](#bosdyn-api-MobilityCommand-Request) |  | **Deprecated.** DEPRECATED as of 2.1.0, will be removed in 4.0. Please use synchronized_command instead.<br>A mobility command for a robot to execute. |
 
 
 
@@ -19090,7 +20778,6 @@ success, etc. Note that the feedback should directly mirror the command request.
 | ----- | ---- | ----- | ----------- |
 | full_body_feedback | [FullBodyCommand.Feedback](#bosdyn-api-FullBodyCommand-Feedback) |  | Commands which require control of entire robot. |
 | synchronized_feedback | [SynchronizedCommand.Feedback](#bosdyn-api-SynchronizedCommand-Feedback) |  | A synchronized command, for partial or full control of robot. |
-| mobility_feedback | [MobilityCommand.Feedback](#bosdyn-api-MobilityCommand-Feedback) |  | **Deprecated.** DEPRECATED as of 2.1.0. Will be removed in 4.0. Please use<br>RobotCommand.synchronized_command and synchronized_feedback instead.<br>Command to control mobility system of a robot. |
 
 
 
@@ -19124,8 +20811,6 @@ The RobotCommandFeedback response message, which contains the progress of the ro
 | ----- | ---- | ----- | ----------- |
 | header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
 | lease_use_result | [LeaseUseResult](#bosdyn-api-LeaseUseResult) |  | Details about how the lease was used. |
-| status | [RobotCommandFeedbackResponse.Status](#bosdyn-api-RobotCommandFeedbackResponse-Status) |  | **Deprecated.** DEPRECATED as of 2.1.0. Will be removed in 4.0. Please use RobotCommandResponse.status.<br>General status whether or not command is still processing. |
-| message | [string](#string) |  | **Deprecated.** DEPRECATED as of 2.1.0. Will be removed in 4.0. RobotCommandResponse.message.<br>Human-readable status message. Not for programmatic analysis. |
 | feedback | [RobotCommandFeedback](#bosdyn-api-RobotCommandFeedback) |  | Command specific feedback. |
 
 
@@ -19187,18 +20872,19 @@ robot command service for feedback on the state of the command.
 
 
 
-<a name="bosdyn-api-RobotCommandFeedbackResponse-Status"></a>
+<a name="bosdyn-api-JointControlStreamResponse-Status"></a>
 
-### RobotCommandFeedbackResponse.Status
+### JointControlStreamResponse.Status
 
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| STATUS_UNKNOWN | 0 | Behavior execution is in an unknown / unexpected state. |
-| STATUS_PROCESSING | 1 | The robot is actively working on the command |
-| STATUS_COMMAND_OVERRIDDEN | 2 | The command was replaced by a new command |
-| STATUS_COMMAND_TIMED_OUT | 3 | The command expired |
-| STATUS_ROBOT_FROZEN | 4 | The robot is in an unsafe state, and will only respond to known safe commands. |
+| STATUS_UNKNOWN | 0 | An unknown / unexpected error occurred. |
+| STATUS_OK | 1 | Steam was accepted and ended normally |
+| STATUS_INVALID_REQUEST | 2 | [Programming Error]<br><br>Request was invalid / malformed in some way. |
+| STATUS_INACTIVE | 3 | The robot is not in joint control mode. |
+| STATUS_EXPIRED | 4 | [Timesync Error]<br><br>The command was received after its end_time had already passed. |
+| STATUS_TOO_DISTANT | 5 | The command end time was too far in the future. |
 
 
 
@@ -19251,8 +20937,20 @@ The robot command service allows a client application to control and move the ro
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | RobotCommand | [RobotCommandRequest](#bosdyn-api-RobotCommandRequest) | [RobotCommandResponse](#bosdyn-api-RobotCommandResponse) | Starts a behavior command on the robot. Issuing a new command overrides the active command.<br>Each command is issued a UID for feedback retrieval. |
-| RobotCommandFeedback | [RobotCommandFeedbackRequest](#bosdyn-api-RobotCommandFeedbackRequest) | [RobotCommandFeedbackResponse](#bosdyn-api-RobotCommandFeedbackResponse) | A client queries this RPC to determine a robot's progress towards completion of a command.<br>This updates the client with metrics like "distance to goal."<br>The client should use this feedback to determine whether the current command has<br>succeeeded or failed, and thus send the next command. |
+| RobotCommandFeedback | [RobotCommandFeedbackRequest](#bosdyn-api-RobotCommandFeedbackRequest) | [RobotCommandFeedbackResponse](#bosdyn-api-RobotCommandFeedbackResponse) | A client queries this RPC to determine a robot's progress towards completion of a command.<br>This updates the client with metrics like "distance to goal."<br>The client should use this feedback to determine whether the current command has<br>succeeded or failed, and thus send the next command. |
 | ClearBehaviorFault | [ClearBehaviorFaultRequest](#bosdyn-api-ClearBehaviorFaultRequest) | [ClearBehaviorFaultResponse](#bosdyn-api-ClearBehaviorFaultResponse) | Clear robot behavior fault. |
+
+
+<a name="bosdyn-api-RobotCommandStreamingService"></a>
+
+### RobotCommandStreamingService
+This service is used to stream high rate commands to the robot once they have been activated
+using RobotCommandService.RobotCommand
+This service is in BETA and may undergo changes in future releases.
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| JointControlStream | [JointControlStreamRequest](#bosdyn-api-JointControlStreamRequest) stream | [JointControlStreamResponse](#bosdyn-api-JointControlStreamResponse) | Command updates for joint control |
 
  <!-- end services -->
 
@@ -19459,6 +21157,24 @@ service.
 
 
 
+<a name="bosdyn-api-CombinedJointStates"></a>
+
+### CombinedJointStates
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| acquisition_timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Robot clock timestamp corresponding to these readings. |
+| position | [float](#float) | repeated | The ordering of joints in these repeated fields are the same as (TODO where) |
+| velocity | [float](#float) | repeated |  |
+| load | [float](#float) | repeated |  |
+
+
+
+
+
+
 <a name="bosdyn-api-CommsState"></a>
 
 ### CommsState
@@ -19550,6 +21266,44 @@ Robot Hardware Configuration, described with the robot skeleton.
 | can_power_command_request_payload_ports | [bool](#bool) |  | Control power to the payload ports. |
 | can_power_command_request_wifi_radio | [bool](#bool) |  | Control power to the hardware Wi-Fi radio. |
 | has_audio_visual_system | [bool](#bool) |  | Robot has audio visual system installed. |
+| redundant_safety_stop_enabled | [bool](#bool) |  | Robot is configured with redundant safety stop. |
+
+
+
+
+
+
+<a name="bosdyn-api-ImuState"></a>
+
+### ImuState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| packet_rate | [double](#double) |  | Frequency at which IMU packets are expected to arrive. |
+| packets | [ImuState.Packet](#bosdyn-api-ImuState-Packet) | repeated | A set of data packets since the last message. |
+| identifier | [string](#string) |  | Name for this imu. |
+| mounting_link_name | [string](#string) |  | Name of the link the IMU is mounted on.<br>This name matches a link listed in RobotState.kinematic_state.transforms_snapshot. |
+| position_imu_rt_link | [Vec3](#bosdyn-api-Vec3) |  | Position of the IMU in the mounting link frame expressed in the mounting link's frame (m). |
+
+
+
+
+
+
+<a name="bosdyn-api-ImuState-Packet"></a>
+
+### ImuState.Packet
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| acceleration_rt_odom_in_link_frame | [Vec3](#bosdyn-api-Vec3) |  | Linear acceleration of the imu relative to the odom frame expressed in the mounting<br>link's frame (m/s^2). |
+| angular_velocity_rt_odom_in_link_frame | [Vec3](#bosdyn-api-Vec3) |  | Angular velocity of the imu relative to the odom frame expressed in the mounting link's<br>frame (rad/s). |
+| odom_rot_link | [Quaternion](#bosdyn-api-Quaternion) |  | Rotation from mounting link to odom frame as reported by the IMU. |
+| timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Packet timestamp. Note that a given state update may contain many imu packets so<br>this timestamp will be different than the header timestamp for the state message. |
 
 
 
@@ -19579,15 +21333,16 @@ update the current view of the robot.
 <a name="bosdyn-api-KinematicState"></a>
 
 ### KinematicState
-The kinematic state of the robot describes the current estimated positions of the robot body and joints throughout the world.
-It includes a transform snapshot of the robot’s current known frames as well as joint states and the velocity of the body.
+The kinematic state of the robot describes the current estimated positions of the robot body and
+joints throughout the world. It includes a transform snapshot of the robot’s current known frames
+as well as joint states and the velocity of the body.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | joint_states | [JointState](#bosdyn-api-JointState) | repeated | Joint state of all robot joints. |
 | acquisition_timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Robot clock timestamp corresponding to these readings. |
-| transforms_snapshot | [FrameTreeSnapshot](#bosdyn-api-FrameTreeSnapshot) |  | A tree-based collection of transformations, which will include the transformations to the<br>robot body ("body") in addition to transformations to the common frames ("world", "dr") and<br>ground plane estimate "gpe".<br>All transforms within the snapshot are at the acquisition time of kinematic state. |
+| transforms_snapshot | [FrameTreeSnapshot](#bosdyn-api-FrameTreeSnapshot) |  | A tree-based collection of transformations. See<br>https://dev.bostondynamics.com/docs/concepts/geometry_and_frames for conceptual<br>documentation on frames. The snapshop will include the following frames:<br>“odom”: An inertial frame that estimates the fixed location in the world (relative to where<br>the robot is booted up) using the kinematics of the robot.<br><br>“vision”: An inertial frame that estimates the fixed location in the world (relative to where<br>the robot is booted up), and is calculated using visual analysis of the world and the robot’s<br>odometry.<br><br>“body”: A frame describing the robot body’s position and orientation. The frame’s origin is<br>at the geometric center of the hips with the x-axis pointing from the hip center to the<br>middle of the front hips.<br><br>“flat_body”: A gravity-aligned frame describing the robot body’s position and orientation.<br>The position is at the robot’s center, and the x/y-axes lie flat in the “odom” frame x-y<br>plane. Specifically, the x-axis is the normalized projection of the robot’s “body” frame<br>x-axis to the “odom” x-y plane.<br><br>"gpe”: A frame that represents the robot’s ground plane estimate. The full SE(3) pose can be<br>converted into a plane (a point and normal).<br><br>For robots with a SpotArm attached, see<br>https://support.bostondynamics.com/s/article/Spot-Arm-specifications-and-concepts conceptual<br>documentation on SpotArm specific frames. The snaphot will also include the following frames:<br>"hand": The hand frame is used by many of the ArmCommand requests available in the API. The<br>origin is slightly in front of the gripper's palm plate and its oreination is aligned with<br>'arm0.link_wr1'.<br><br>"arm0.link_wr1": A frame describing the robot's distal wrist link's position and orientation.<br>The origin of the frame is at the end of the link on its rotational axis. It's x-axis is<br>aligned with the rotational axis.<br><br>All transforms within the snapshot are at the acquisition time of kinematic state. |
 | velocity_of_body_in_vision | [SE3Velocity](#bosdyn-api-SE3Velocity) |  | Velocity of the body frame with respect to vision frame and expressed in vision frame.<br>The linear velocity is applied at the origin of the body frame. |
 | velocity_of_body_in_odom | [SE3Velocity](#bosdyn-api-SE3Velocity) |  | Velocity of the body frame with respect to odom frame and expressed in odom frame.<br>Again, the linear velocity is applied at the origin of the body frame. |
 
@@ -19611,6 +21366,22 @@ Additional state published if an arm is attached to the robot.
 | velocity_of_hand_in_vision | [SE3Velocity](#bosdyn-api-SE3Velocity) |  | Velocity of the hand frame with respect to vision frame and expressed in vision frame.<br>The linear velocity is applied at the origin of the hand frame. |
 | velocity_of_hand_in_odom | [SE3Velocity](#bosdyn-api-SE3Velocity) |  | Velocity of the hand frame with respect to odom frame and expressed in odom frame.<br>Again, the linear velocity is applied at the origin of the hand frame. |
 | carry_state | [ManipulatorState.CarryState](#bosdyn-api-ManipulatorState-CarryState) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-MotorTemperature"></a>
+
+### MotorTemperature
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | Name of the affected motor of the robot, specified by the joint name and degree of freedom. |
+| temperature | [double](#double) |  | Measured temperature of the motor, in Celsius. |
 
 
 
@@ -19683,7 +21454,7 @@ Keeps track of why the robot is not able to drive autonomously.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | impaired_status | [RobotImpairedState.ImpairedStatus](#bosdyn-api-RobotImpairedState-ImpairedStatus) |  | If the status is ROBOT_IMPAIRED, this is specifically why the robot is impaired. |
-| system_faults | [SystemFault](#bosdyn-api-SystemFault) | repeated | If impaired_status is STATUS_SYSTEM_FAULT, these are the faults which caused the robot to stop. |
+| system_faults | [SystemFault](#bosdyn-api-SystemFault) | repeated | If impaired_status is STATUS_SYSTEM_FAULT, these are the faults which caused the robot to<br>stop. |
 | service_faults | [ServiceFault](#bosdyn-api-ServiceFault) | repeated | If impaired_status is STATUS_SERVICE_FAULT, these are the service faults which caused<br>the robot to stop. |
 | behavior_faults | [BehaviorFault](#bosdyn-api-BehaviorFault) | repeated | If impaired_status is STATUS_BEHAVIOR_FAULT, these are the behavior faults which caused<br>the robot to stop. |
 
@@ -19695,8 +21466,8 @@ Keeps track of why the robot is not able to drive autonomously.
 <a name="bosdyn-api-RobotLinkModelRequest"></a>
 
 ### RobotLinkModelRequest
-The RobotLinkModel request message uses a link name returned by the RobotHardwareConfiguration response to
-get the associated OBJ file.
+The RobotLinkModel request message uses a link name returned by the RobotHardwareConfiguration
+response to get the associated OBJ file.
 
 
 | Field | Type | Label | Description |
@@ -19792,6 +21563,7 @@ The current state of the robot.
 | manipulator_state | [ManipulatorState](#bosdyn-api-ManipulatorState) |  | State of the manipulator, only populated if an arm is attached to the robot. |
 | service_fault_state | [ServiceFaultState](#bosdyn-api-ServiceFaultState) |  | Service faults for services registered with the robot. |
 | terrain_state | [TerrainState](#bosdyn-api-TerrainState) |  | Relevant terrain data beneath and around the robot |
+| system_state | [SystemState](#bosdyn-api-SystemState) |  | Temperature data for the motors. |
 
 
 
@@ -19824,6 +21596,55 @@ the request was received.
 | ----- | ---- | ----- | ----------- |
 | header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
 | robot_state | [RobotState](#bosdyn-api-RobotState) |  | The requested RobotState. |
+
+
+
+
+
+
+<a name="bosdyn-api-RobotStateStreamRequest"></a>
+
+### RobotStateStreamRequest
+The RobotStateStream request message to get the current state of the robot.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+
+
+
+
+
+
+<a name="bosdyn-api-RobotStateStreamResponse"></a>
+
+### RobotStateStreamResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| joint_states | [CombinedJointStates](#bosdyn-api-CombinedJointStates) |  | Joint state of all robot joints. |
+| inertial_state | [ImuState](#bosdyn-api-ImuState) |  | IMU state |
+| last_command | [RobotStateStreamResponse.CommandState](#bosdyn-api-RobotStateStreamResponse-CommandState) |  | For determining latency information about the last command received is provided. |
+
+
+
+
+
+
+<a name="bosdyn-api-RobotStateStreamResponse-CommandState"></a>
+
+### RobotStateStreamResponse.CommandState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| user_command_key | [uint32](#uint32) |  |  |
+| received_timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
 
 
 
@@ -19977,6 +21798,21 @@ Historical faults are useful to diagnose robot behavior subject to intermittent 
 
 
 
+<a name="bosdyn-api-SystemState"></a>
+
+### SystemState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| motor_temperatures | [MotorTemperature](#bosdyn-api-MotorTemperature) | repeated | Temperature of the robot motors. |
+
+
+
+
+
+
 <a name="bosdyn-api-TerrainState"></a>
 
 ### TerrainState
@@ -19985,7 +21821,7 @@ Relevant terrain data beneath and around the robot
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| is_unsafe_to_sit | [bool](#bool) |  | Is the terrain immediately under the robot such that sitting or powering off <br>the robot may cause the robot to be in an unstable position? |
+| is_unsafe_to_sit | [bool](#bool) |  | Is the terrain immediately under the robot such that sitting or powering off<br>the robot may cause the robot to be in an unstable position? |
 
 
 
@@ -20216,7 +22052,7 @@ If the robot is stopped due to being impaired, this is the reason why.
 | IMPAIRED_STATUS_NO_ROBOT_DATA | 2 | The autonomous system does not have any data from the robot state service. |
 | IMPAIRED_STATUS_SYSTEM_FAULT | 3 | There is a system fault which caused the robot to stop. See system_fault for details. |
 | IMPAIRED_STATUS_NO_MOTOR_POWER | 4 | The robot's motors are not powered on. |
-| IMPAIRED_STATUS_REMOTE_CLOUDS_NOT_WORKING | 5 | The autonomous system is expected to have a remote point cloud (e.g. a LIDAR), but this is not working. |
+| IMPAIRED_STATUS_REMOTE_CLOUDS_NOT_WORKING | 5 | The autonomous system is expected to have a remote point cloud (e.g. a LIDAR), but this<br>is not working. |
 | IMPAIRED_STATUS_SERVICE_FAULT | 6 | A remote service the autonomous system depends on is not working. |
 | IMPAIRED_STATUS_BEHAVIOR_FAULT | 7 | A behavior fault caused the robot to stop. See behavior_faults for details. |
 | IMPAIRED_STATUS_ENTITY_DETECTOR_NOT_WORKING | 8 | The autonomous system expected to have a payload providing an entity detector.<br>The detector is either not present, or not working. Note that if the detector<br>exists but is throwing a system fault, the status will be IMPAIRED_STATUS_SYSTEM_FAULT. |
@@ -20273,7 +22109,8 @@ If the robot is stopped due to being impaired, this is the reason why.
 <a name="bosdyn-api-RobotStateService"></a>
 
 ### RobotStateService
-The robot state service tracks all information about the measured and computed states of the robot at the current time.
+The robot state service tracks all information about the measured and computed states of the
+robot at the current time.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
@@ -20281,6 +22118,16 @@ The robot state service tracks all information about the measured and computed s
 | GetRobotMetrics | [RobotMetricsRequest](#bosdyn-api-RobotMetricsRequest) | [RobotMetricsResponse](#bosdyn-api-RobotMetricsResponse) | Get different robot metrics and parameters from the robot. |
 | GetRobotHardwareConfiguration | [RobotHardwareConfigurationRequest](#bosdyn-api-RobotHardwareConfigurationRequest) | [RobotHardwareConfigurationResponse](#bosdyn-api-RobotHardwareConfigurationResponse) | Get the hardware configuration of the robot, which describes the robot skeleton and urdf. |
 | GetRobotLinkModel | [RobotLinkModelRequest](#bosdyn-api-RobotLinkModelRequest) | [RobotLinkModelResponse](#bosdyn-api-RobotLinkModelResponse) | Returns the OBJ file for a specifc robot link. Intended to be called after<br>GetRobotHardwareConfiguration, using the link names returned by that call. |
+
+
+<a name="bosdyn-api-RobotStateStreamingService"></a>
+
+### RobotStateStreamingService
+This service is in BETA and may undergo changes in future releases.
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| GetRobotStateStream | [RobotStateStreamRequest](#bosdyn-api-RobotStateStreamRequest) | [RobotStateStreamResponse](#bosdyn-api-RobotStateStreamResponse) stream | Lightweight Streaming version of RobotState |
 
  <!-- end services -->
 
@@ -20506,7 +22353,7 @@ Wraps specification-related messages, and contains fields for the value sent by 
 | ----- | ---- | ----- | ----------- |
 | default_value | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Default value. If unspecified, UIs can pick their own default OR force user to make a<br>selection.<br><br>Units of value, default_value, and min_max. |
 | units | [Units](#bosdyn-api-Units) |  |  |
-| min_value | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | A value sent by the client must be within this minimum and maximum (inclusive).<br>If unset, only limited by system representation.<br>ERROR: It is an error to specify a min_value larger than the max_value.<br><br>ADVICE: If a client sends a value outside these bounds, reject, rather than clamp, it. |
+| min_value | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | A value sent by the client must be within this minimum and maximum (inclusive).<br>If unset, only limited by system representation.<br>ERROR: It is an error to specify a min_value larger than the max_value. |
 | max_value | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
 
 
@@ -20540,7 +22387,7 @@ Wraps specification-related messages, and contains fields for the value sent by 
 | ----- | ---- | ----- | ----------- |
 | default_value | [google.protobuf.Int64Value](#google-protobuf-Int64Value) |  | Default value. If unspecified, UIs can pick their own default OR force user to make a<br>selection. |
 | units | [Units](#bosdyn-api-Units) |  | Units of value, default_value, min_value, min_value. |
-| min_value | [google.protobuf.Int64Value](#google-protobuf-Int64Value) |  | A value sent by the client must be within this minimum and maximum (inclusive).<br>If unset, only limited by system representation.<br>ERROR: It is an error to specify a min_value larger than the max_value.<br><br>ADVICE: If a client sends a value outside these bounds, reject, rather than clamp it. |
+| min_value | [google.protobuf.Int64Value](#google-protobuf-Int64Value) |  | A value sent by the client must be within this minimum and maximum (inclusive).<br>If unset, only limited by system representation.<br>ERROR: It is an error to specify a min_value larger than the max_value. |
 | max_value | [google.protobuf.Int64Value](#google-protobuf-Int64Value) |  |  |
 
 
@@ -20604,7 +22451,7 @@ of the OneOf they want, and then the UI lets the user specify any child specific
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
-| values | [OneOfParam.ValuesEntry](#bosdyn-api-OneOfParam-ValuesEntry) | repeated | The values of the chosen spec will is guaraunteed to be at value[key].<br>The values of the other specs might at value[that_specs_key], but no guarantees. |
+| values | [OneOfParam.ValuesEntry](#bosdyn-api-OneOfParam-ValuesEntry) | repeated | The values of the chosen spec will is guaranteed to be at value[key].<br>The values of the other specs might at value[that_specs_key], but no guarantees. |
 
 
 
@@ -20976,6 +22823,146 @@ The TriggerServiceFault response message contains a header indicating success.
 
 
 
+<a name="bosdyn_api_signals-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/signals.proto
+
+
+
+<a name="bosdyn-api-AlertConditionSpec"></a>
+
+### AlertConditionSpec
+Ex 3: "Critical Condition" (boolean signal)
+- alert_data.severity: SEVERITY_LEVEL_CRITICAL
+- condition: false
+If the value is false, then SEVERITY_LEVEL_CRITICAL.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| alert_data | [AlertData](#bosdyn-api-AlertData) |  | Indicate severity if thresholds are met or exceeded. |
+| min | [double](#double) |  | If the signal value is <= the min, the condition is met. |
+| max | [double](#double) |  | If the signal value is >= the max, the condition is met. |
+| bounds | [Bounds](#bosdyn-api-Bounds) |  | If the signal value is >= the lower bound and <= the upper bound, the condition is met. |
+| condition | [bool](#bool) |  | If boolean signal value is false, and the condition is false, the condition is met. |
+
+
+
+
+
+
+<a name="bosdyn-api-SensorOutputSpec"></a>
+
+### SensorOutputSpec
+Sensor output specification.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| bounds | [Bounds](#bosdyn-api-Bounds) |  | Min and max (lower and upper) range of the sensor.<br><br>Ex: 0.0 - 100.0 psia |
+| resolution | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Ex: 0.02 (+/-) |
+| units | [Units](#bosdyn-api-Units) |  | The units of the sensor data.<br><br>Ex: "psia" |
+| sample_rate | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The sample rate of the sensor.<br><br>Ex: 0.5 Hz |
+
+
+
+
+
+
+<a name="bosdyn-api-Signal"></a>
+
+### Signal
+The signal specification and the recorded data.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| signal_spec | [SignalSpec](#bosdyn-api-SignalSpec) |  |  |
+| signal_data | [SignalData](#bosdyn-api-SignalData) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-SignalData"></a>
+
+### SignalData
+The recorded signal data.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| data | [SignalData.Data](#bosdyn-api-SignalData-Data) |  |  |
+| timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Optional timestamp for when the data was collected. If unset, the RPC time will be used. |
+
+
+
+
+
+
+<a name="bosdyn-api-SignalData-Data"></a>
+
+### SignalData.Data
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| double | [double](#double) |  |  |
+| int | [int64](#int64) |  |  |
+| string | [string](#string) |  |  |
+| bool | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-SignalDisplayInfo"></a>
+
+### SignalDisplayInfo
+Signal display information.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | Optional display name typically used for signal acronyms or abbreviations.<br>Ex: "PT1" (short name)<br>If unset, no name will be displayed. |
+| description | [string](#string) |  | An optional description that provides additional information about the signal.<br>Ex: "Pressure Transducer 1" (long name)<br>If unset, no description will be displayed. |
+| order | [int64](#int64) |  | This is an optional sorting hint for how to display a set of signals.<br>If unset, the list will be sorted alphabetically by name or id. |
+
+
+
+
+
+
+<a name="bosdyn-api-SignalSpec"></a>
+
+### SignalSpec
+The signal specification.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| info | [SignalDisplayInfo](#bosdyn-api-SignalDisplayInfo) |  |  |
+| sensor | [SensorOutputSpec](#bosdyn-api-SensorOutputSpec) |  |  |
+| alerts | [AlertConditionSpec](#bosdyn-api-AlertConditionSpec) | repeated | A signal can have multiple alert conditions.<br>If multiple conditions are simultaneously met,<br>the higher severity condition or first in the list will be the accepted alert state. |
+
+
+
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
 <a name="bosdyn_api_sparse_features-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -21013,6 +23000,7 @@ A pair of keypoint sets containing only features in common that have been matche
 | reference_keypoints | [KeypointSet](#bosdyn-api-KeypointSet) |  | The set of common keypoints in a first ("reference") image. |
 | live_keypoints | [KeypointSet](#bosdyn-api-KeypointSet) |  | The set of common keypoints in a second ("live") image. |
 | matches | [Match](#bosdyn-api-Match) | repeated | Indices of pairs of matches in the two KeypointSets and their distance measure. |
+| type | [KeypointMatches.MatchType](#bosdyn-api-KeypointMatches-MatchType) |  | The algorithm used to compute these matches. |
 
 
 
@@ -21054,6 +23042,19 @@ A set of keypoints detected in a single image.
  <!-- end messages -->
 
 
+<a name="bosdyn-api-KeypointMatches-MatchType"></a>
+
+### KeypointMatches.MatchType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| MATCH_UNKNOWN | 0 |  |
+| MATCH_ORB | 1 | Keypoints matched by the ORB feature matching algorithm (Oriented FAST and Rotated<br>BRIEF). |
+| MATCH_LIGHTGLUE | 2 | Keypoints matched by the LightGlue matching algorithm. |
+
+
+
 <a name="bosdyn-api-KeypointSet-KeypointType"></a>
 
 ### KeypointSet.KeypointType
@@ -21063,12 +23064,2507 @@ A set of keypoints detected in a single image.
 | ---- | ------ | ----------- |
 | KEYPOINT_UNKNOWN | 0 |  |
 | KEYPOINT_SIMPLE | 1 | Keypoints that consist only of image coordinates. Simple keypoints do not have<br>descriptors. |
-| KEYPOINT_ORB | 2 | Keypoints detected by the ORB feature extraction algorithm (Oriented FAST and Rotated<br>BRIEF.) |
+| KEYPOINT_ORB | 2 | Keypoints detected by the ORB feature extraction algorithm (Oriented FAST and Rotated<br>BRIEF). |
+| KEYPOINT_DISK | 3 | Keypoints detected by the DISK feature extraction algorithm (Discrete Keypoints). |
 
 
  <!-- end enums -->
 
  <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_spot_choreography_params-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/spot/choreography_params.proto
+
+
+
+<a name="bosdyn-api-spot-AnimateParams"></a>
+
+### AnimateParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| animation_name | [string](#string) |  | The name of the animated move. There are no default values/bounds associated with this field. |
+| body_entry_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How many slices to smoothly transition from previous pose to animation. |
+| body_exit_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How many slices to return from animation to nominal pose. Zero indicates to keep final<br>animated pose. |
+| translation_multiplier | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | Multiplier for animated translation by axis to exaggerate or suppress motion along specific<br>axes. |
+| rotation_multiplier | [EulerZYXValue](#bosdyn-api-spot-EulerZYXValue) |  | Multiplier for the animated orientation by axis to exaggerate or suppress motion along<br>specific axes. |
+| arm_entry_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How many slices to smoothly transition from previous pose to animation. |
+| shoulder_0_offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Joint angle offsets in radians for the arm joints. |
+| shoulder_1_offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| elbow_0_offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| elbow_1_offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| wrist_0_offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| wrist_1_offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| gripper_offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| speed | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How fast to playback. 1.0 is normal speed. larger is faster. |
+| offset_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How late into the nominal script to start. |
+| gripper_multiplier | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Multiply all gripper angles by this value. |
+| gripper_strength_fraction | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How hard the gripper can squeeze. Fraction of full strength. |
+| arm_dance_frame_id | [google.protobuf.Int32Value](#google-protobuf-Int32Value) |  | Which dance frame to use as a reference for workspace arm moves. Including this parameter<br>overrides the animation frame. |
+| body_tracking_stiffness | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How hard to try to track the animated body motion.<br>Only applicable to animations that control both the body and the legs.<br>On a scale of 1 to 10 (11 for a bit extra).<br>Higher will result in more closely tracking the animated body motion, but possibly at the<br>expense of balance for more difficult animations. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-AnimatedCycleParams"></a>
+
+### AnimatedCycleParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| animation_name | [google.protobuf.StringValue](#google-protobuf-StringValue) |  |  |
+| enable_animation_duration | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| enable_leg_timing | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| enable_stance_shape | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ArmMoveParams"></a>
+
+### ArmMoveParams
+Parameters specific to ArmMove move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| shoulder_0 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Joint angles in radians for the arm joints. |
+| shoulder_1 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| elbow_0 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| elbow_1 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| wrist_0 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| wrist_1 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| easing | [Easing](#bosdyn-api-spot-Easing) |  | How the motion should be paced. |
+| gripper | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Movement for the gripper. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-BodyHoldParams"></a>
+
+### BodyHoldParams
+Parameters specific to the BodyHold move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| rotation | [EulerZYXValue](#bosdyn-api-spot-EulerZYXValue) |  | The robot will rotate its body to the specified orientation (roll/pitch/yaw) [rad]. |
+| translation | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | The positional offset to the robot's current location [m]. |
+| entry_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How many "slices" (beats or sub-beats) are allowed before reaching the desired pose. |
+| exit_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How many "slices" (beats or sub-beats) are allowed for the robot to return to the original<br>pose. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-BourreeParams"></a>
+
+### BourreeParams
+Parameters for the Bourree move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| velocity | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | The speed at which we should bourree [m/s]. X is forward. Y is left. |
+| yaw_rate | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How fast the bourree should turn [rad/s]. |
+| stance_length | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far apart front and hind feet should be. [m] |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ButtCircleParams"></a>
+
+### ButtCircleParams
+Parameters specific to the ButtCircle DanceMove.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| radius | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How big a circle the robutt will move in. Described in meters. |
+| beats_per_circle | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The number of beats that elapse while performing the butt circle. |
+| number_of_circles | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The number of circles that will be performed. If non-zero, takes precedence over<br>beats_per_circle. |
+| pivot | [Pivot](#bosdyn-api-spot-Pivot) |  | The pivot point the butt circles should be centered around. |
+| clockwise | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Which way to rotate. |
+| starting_angle | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Where to start. Zero is up. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChickenHeadParams"></a>
+
+### ChickenHeadParams
+Parameters specific to the chicken head move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| bob_magnitude | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | Bobs the head in this direction in the robot footprint frame. |
+| beats_per_cycle | [google.protobuf.Int32Value](#google-protobuf-Int32Value) |  | How fast to bob the head. |
+| follow | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we move the frame when the robot steps? |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ClapParams"></a>
+
+### ClapParams
+Parameters specific to clapping.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| direction | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | Direction in a gravity-aligned body frame of clapping motion. A typical value for the<br>location is (0, 1, 0). |
+| location | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | Location in body frame of the clap. A typical value for the location is (0.4, 0, -0.5). |
+| speed | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Speed of the clap [m/s]. |
+| clap_distance | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far apart the limbs are before clapping [m]. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-Color"></a>
+
+### Color
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| red | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| green | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| blue | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-CrawlParams"></a>
+
+### CrawlParams
+Parameters for the robot's crawling gait.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| swing_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The number of slices (beats/sub-beats) the duration of a leg swing in the crawl gait should<br>be. |
+| velocity | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | The speed at which we should crawl [m/s]. X is forward. Y is left. |
+| stance_width | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The distance between the robot's left and right feet [m]. |
+| stance_length | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The distance between the robot's front and back feet [m]. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-CustomGaitCommand"></a>
+
+### CustomGaitCommand
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| drive_velocity_body | [bosdyn.api.SE2Velocity](#bosdyn-api-SE2Velocity) |  | Locomotion velocity in the horizontal plane in robot body frame. (m/s, m/s, rad/s) |
+| finished | [bool](#bool) |  | When true, robot will transition to a stand, then continue the sequence.<br>Until then, the sequence will keep looping through this move. |
+| body_translation_offset | [bosdyn.api.Vec3](#bosdyn-api-Vec3) |  | How much to offset the body pose. Additive with other offsets.<br><br>Meters. |
+| body_orientation_offset | [EulerZYX](#bosdyn-api-spot-EulerZYX) |  | Radians. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-CustomGaitCommandLimits"></a>
+
+### CustomGaitCommandLimits
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| maximum_drive_velocity_body | [bosdyn.api.SE2Velocity](#bosdyn-api-SE2Velocity) |  | Maximum absolute value of locomotion velocity in the horizontal plane in robot body frame.<br>(m/s, m/s, rad/s) |
+| maximum_body_translation_offset | [bosdyn.api.Vec3](#bosdyn-api-Vec3) |  | Maximum absolute value of the body offsets.<br><br>Meters. |
+| maximum_body_orientation_offset | [EulerZYX](#bosdyn-api-spot-EulerZYX) |  | Radians. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-CustomGaitParams"></a>
+
+### CustomGaitParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| max_velocity | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | Maximum steering commands that will be accepted. |
+| max_yaw_rate | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| acceleration_scaling | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How much to limit steering acceleration. 1 is normal. Smaller is less acceleration. |
+| cycle_duration | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Gait pattern. When to liftoff and touchdown each leg. |
+| fl_swing | [SwingPhases](#bosdyn-api-spot-SwingPhases) |  |  |
+| two_fl_swings | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| second_fl_swing | [SwingPhases](#bosdyn-api-spot-SwingPhases) |  |  |
+| fr_swing | [SwingPhases](#bosdyn-api-spot-SwingPhases) |  |  |
+| two_fr_swings | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| second_fr_swing | [SwingPhases](#bosdyn-api-spot-SwingPhases) |  |  |
+| hl_swing | [SwingPhases](#bosdyn-api-spot-SwingPhases) |  |  |
+| two_hl_swings | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| second_hl_swing | [SwingPhases](#bosdyn-api-spot-SwingPhases) |  |  |
+| hr_swing | [SwingPhases](#bosdyn-api-spot-SwingPhases) |  |  |
+| two_hr_swings | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| second_hr_swing | [SwingPhases](#bosdyn-api-spot-SwingPhases) |  |  |
+| show_stance_shape | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Relative positions of feet. |
+| stance_shape | [StanceShape](#bosdyn-api-spot-StanceShape) |  |  |
+| com_height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Constant posture.<br>For a phase-dependent posture, combine with a Body move. |
+| body_translation_offset | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  |  |
+| body_rotation_offset | [EulerZYXValue](#bosdyn-api-spot-EulerZYXValue) |  |  |
+| low_speed_body_fraction | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| general_swing_params | [SwingParams](#bosdyn-api-spot-SwingParams) |  | Modify the path the foot takes between liftoff and touchdown.<br>General swing parameters apply to legs that are not configured to have their own parameter<br>set. |
+| use_fl_swing_params | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Individual legs can have their own parameters or use the general swing parameters. |
+| fl_swing_params | [SwingParams](#bosdyn-api-spot-SwingParams) |  |  |
+| use_fr_swing_params | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| fr_swing_params | [SwingParams](#bosdyn-api-spot-SwingParams) |  |  |
+| use_hl_swing_params | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| hl_swing_params | [SwingParams](#bosdyn-api-spot-SwingParams) |  |  |
+| use_hr_swing_params | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| hr_swing_params | [SwingParams](#bosdyn-api-spot-SwingParams) |  |  |
+| stand_in_place | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Stand rather than stepping in place when not moving. |
+| standard_final_stance | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Go back to a standard rectangular stance when ending the gait.<br>Otherwise maintains the customized stance shape. |
+| show_stability_params | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Parameters that impact the stability of the gait rather than its appearance. |
+| mu | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Friction coefficient between the feet and the ground. |
+| timing_stiffness | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How much the robot is allowed to deviate from the specified timing.<br>0 means no deviation.<br>Otherwise: large values mean less deviation and small values mean more is acceptable.<br>Too much timing adjustment (low, non-zero values) may make the gait unstable.<br>At least a little timing adjustment is recommended for gaits with flight phases (periods with<br>0 feet on the ground). |
+| step_position_stiffness | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How much the robot is allowed to deviate from the specified stance shape.<br>0 means no deviation.<br>Otherwise: large values mean less deviation and small values mean more is acceptable.<br>Too much position adjustment (low, non-zero values) may make the gait unstable. |
+| enable_perception_obstacle_avoidance | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Enable/disable various aspects of perception. |
+| obstacle_avoidance_padding | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| enable_perception_terrain_height | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| enable_perception_step_placement | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| maximum_stumble_distance | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far the robot should stumble before giving up and freezing. |
+| trip_sensitivity | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How sensitive we should be to trip detection.<br>On the range [0, 1], where 1 is normal sensitivity and 0 is ignoring all trips.<br>Useful for very aggressive gaits or when a costume is restricting leg motion. |
+| animated_cycle_params | [AnimatedCycleParams](#bosdyn-api-spot-AnimatedCycleParams) |  | Using an animated cycle to define the gait style |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-EulerRateZYXValue"></a>
+
+### EulerRateZYXValue
+Euler Angle rates (yaw->pitch->roll) vector that uses wrapped values so we can tell which
+elements are set.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| roll | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| pitch | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-EulerZYX"></a>
+
+### EulerZYX
+Euler Angle (yaw->pitch->roll) vector.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| roll | [double](#double) |  |  |
+| pitch | [double](#double) |  |  |
+| yaw | [double](#double) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-EulerZYXValue"></a>
+
+### EulerZYXValue
+Euler Angle (yaw->pitch->roll) vector that uses wrapped values so we can tell which elements are
+set.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| roll | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| pitch | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-FadeColorParams"></a>
+
+### FadeColorParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| top_color | [Color](#bosdyn-api-spot-Color) |  |  |
+| bottom_color | [Color](#bosdyn-api-spot-Color) |  |  |
+| fade_in_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| fade_out_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-FidgetStandParams"></a>
+
+### FidgetStandParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| preset | [FidgetStandParams.FidgetPreset](#bosdyn-api-spot-FidgetStandParams-FidgetPreset) |  |  |
+| min_gaze_pitch | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| max_gaze_pitch | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| gaze_mean_period | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| gaze_center_cfp | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  |  |
+| shift_mean_period | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| shift_max_transition_time | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| breath_min_z | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| breath_max_z | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| breath_max_period | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| leg_gesture_mean_period | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| gaze_slew_rate | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| gaze_position_generation_gain | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  |  |
+| gaze_roll_generation_gain | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-Figure8Params"></a>
+
+### Figure8Params
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| width | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| beats_per_cycle | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-FrameSnapshotParams"></a>
+
+### FrameSnapshotParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| frame_id | [google.protobuf.Int32Value](#google-protobuf-Int32Value) |  |  |
+| fiducial_number | [google.protobuf.Int32Value](#google-protobuf-Int32Value) |  |  |
+| include_front_left_leg | [FrameSnapshotParams.Inclusion](#bosdyn-api-spot-FrameSnapshotParams-Inclusion) |  |  |
+| include_front_right_leg | [FrameSnapshotParams.Inclusion](#bosdyn-api-spot-FrameSnapshotParams-Inclusion) |  |  |
+| include_hind_left_leg | [FrameSnapshotParams.Inclusion](#bosdyn-api-spot-FrameSnapshotParams-Inclusion) |  |  |
+| include_hind_right_leg | [FrameSnapshotParams.Inclusion](#bosdyn-api-spot-FrameSnapshotParams-Inclusion) |  |  |
+| compensated | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-FrontUpParams"></a>
+
+### FrontUpParams
+Parameters specific to FrontUp move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| mirror | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we raise the hind feet instead. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-GotoParams"></a>
+
+### GotoParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| absolute_position | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  |  |
+| absolute_yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| step_position_stiffness | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| duty_cycle | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| link_to_next | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we combine with the next move into a smooth trajectory. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-GripperParams"></a>
+
+### GripperParams
+Parameters for open/close of gripper.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| angle | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Angle in radians at which the gripper is open. Note that a 0 radian angle correlates to<br>completely closed. |
+| speed | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Speed in m/s at which the gripper should open/close to achieve the desired angle. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-HopParams"></a>
+
+### HopParams
+Parameters specific to Hop move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| velocity | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | The velocity of the hop gait (X is forward; y is left)[m/s]. |
+| yaw_rate | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How fast the hop gait should turn [rad/s]. |
+| stand_time | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How long the robot should stand in between each hop. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-IndependentColorParams"></a>
+
+### IndependentColorParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| top_left | [Color](#bosdyn-api-spot-Color) |  |  |
+| upper_mid_left | [Color](#bosdyn-api-spot-Color) |  |  |
+| lower_mid_left | [Color](#bosdyn-api-spot-Color) |  |  |
+| bottom_left | [Color](#bosdyn-api-spot-Color) |  |  |
+| top_right | [Color](#bosdyn-api-spot-Color) |  |  |
+| upper_mid_right | [Color](#bosdyn-api-spot-Color) |  |  |
+| lower_mid_right | [Color](#bosdyn-api-spot-Color) |  |  |
+| bottom_right | [Color](#bosdyn-api-spot-Color) |  |  |
+| fade_in_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| fade_out_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-JumpParams"></a>
+
+### JumpParams
+Parameters for the robot making a jump.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The amount in radians that the robot will turn while in the air. |
+| flight_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The amount of time in slices (beats) that the robot will be in the air. |
+| stance_width | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The distance between the robot's left and right feet [m]. |
+| stance_length | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The distance between the robot's front and back feet [m]. |
+| translation | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | How far the robot should jump [m]. |
+| split_fraction | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How much it should lo/td the first pair of lets ahead of the other pair. In fraction of<br>flight time. |
+| lead_leg_pair | [JumpParams.Lead](#bosdyn-api-spot-JumpParams-Lead) |  |  |
+| yaw_is_absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we turn to a yaw in choreography sequence frame? |
+| translation_is_absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we translate in choreography sequence frame? |
+| absolute_yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The direction the robot should face upon landing relative to pose at the start of the dance.<br>[rad] |
+| absolute_translation | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | Where the robot should land relative to the pose at the start of the dance. [m] |
+| swing_height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | **Deprecated.** Deprecation Warning ***<br>DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the<br>yaw_is_absolute and translation_is_absolute fields. The following field will be deprecated<br>and moved to 'reserved' in a future release. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-KneelCircleParams"></a>
+
+### KneelCircleParams
+Parameters specific to the kneel_circles move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| location | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | Location in body frame of the circle center. A typical value for the location is (0.4, 0,<br>-0.5). |
+| beats_per_circle | [google.protobuf.Int32Value](#google-protobuf-Int32Value) |  | How beats per circle. One or two are reasonable values. |
+| number_of_circles | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How many circles to perform. Mutually exclusive with beats_per_circle. |
+| offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far apart the feet are when circling [m]. |
+| radius | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Size of the circles [m]. |
+| reverse | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Which way to circle. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-KneelLegMove2Params"></a>
+
+### KneelLegMove2Params
+Parameters specific to KneelLegMove2 move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| left_hip_x | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Joint angles of the front left leg in radians. |
+| left_hip_y | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| left_knee | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| right_hip_x | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Joint angles of the front right leg in radians. |
+| right_hip_y | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| right_knee | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| easing | [Easing](#bosdyn-api-spot-Easing) |  | How the motion should be paced. |
+| link_to_next | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we combine with the next move into a smooth trajectory. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-KneelLegMoveParams"></a>
+
+### KneelLegMoveParams
+Parameters specific to KneelLegMove move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| hip_x | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Joint angles of the left front leg in radians.<br>If mirrored, the joints will be flipped for the other leg. |
+| hip_y | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| knee | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| mirror | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | If mirrored is true, the joints will be flipped for the leg on the other side (right vs left)<br>of the body. |
+| easing | [Easing](#bosdyn-api-spot-Easing) |  | How the motion should be paced. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-LegJointParams"></a>
+
+### LegJointParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fl_hx | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| fl_hy | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| fl_kn | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| fr_hx | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| fr_hy | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| fr_kn | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| hl_hx | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| hl_hy | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| hl_kn | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| hr_hx | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| hr_hy | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| hr_kn | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-Pace2StepParams"></a>
+
+### Pace2StepParams
+Parameters specific to pace translation.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| motion | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | How far to move relative to starting position. [m] |
+| absolute_motion | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | Where to move relative to position at start of script. [m] |
+| motion_is_absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Is motion specified relative to pose at start of dance? |
+| swing_height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Swing parameters to describe the footstep pattern during the pace translation gait. Note, a<br>zero (or nearly zero) value will be considered as an unspecified parameter. |
+| swing_velocity | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far to turn, described in radians with a positive value representing a turn to the left. |
+| absolute_yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Orientation to turn to, relative to the orientation at the start of the script. [rad] |
+| yaw_is_absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we turn to a yaw in choreography sequence frame? |
+| absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Deprecation Warning ***<br>DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the<br>yaw_is_absolute and translation_is_absolute fields. The following field will be deprecated<br>and moved to 'reserved' in a future release. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-RandomRotateParams"></a>
+
+### RandomRotateParams
+Parameters specific to the RandomRotate move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| amplitude | [EulerZYXValue](#bosdyn-api-spot-EulerZYXValue) |  | The amplitude [rad] of the rotation in each axis. |
+| speed | [EulerRateZYXValue](#bosdyn-api-spot-EulerRateZYXValue) |  | The speed [rad/s] of the motion in each axis. |
+| speed_variation | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The amount of variation allowed in the speed of the random rotations [m/s]. Note,<br>this must be a positive value. |
+| num_speed_tiers | [google.protobuf.Int32Value](#google-protobuf-Int32Value) |  | The specified speed values will be split into this many number of tiers between<br>the bounds of [speed - speed_variation, speed + speed variation]. Then a tier (with<br>a specified speed) will be randomly chosen and performed for each axis. |
+| tier_variation | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How much can the output speed vary from the chosen tiered speed. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-RippleColorParams"></a>
+
+### RippleColorParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| main | [Color](#bosdyn-api-spot-Color) |  |  |
+| secondary | [Color](#bosdyn-api-spot-Color) |  |  |
+| pattern | [RippleColorParams.Pattern](#bosdyn-api-spot-RippleColorParams-Pattern) |  |  |
+| light_side | [RippleColorParams.LightSide](#bosdyn-api-spot-RippleColorParams-LightSide) |  |  |
+| increment_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-RotateBodyParams"></a>
+
+### RotateBodyParams
+Parameters for the robot rotating the body.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| rotation | [EulerZYXValue](#bosdyn-api-spot-EulerZYXValue) |  | The robot will rotate its body to the specified orientation (roll/pitch/yaw). |
+| return_to_start_pose | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | If true, the robot will transition back to the initial pose we started at before this<br>choreography sequence move begin execution, and otherwise it will remain in whatever pose it<br>is in after completing the choreography sequence move. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-RunningManParams"></a>
+
+### RunningManParams
+Parameters specific to RunningMan move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| velocity | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  |  |
+| swing_height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How high to pick up the forward-moving feet [m]. |
+| spread | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far to spread the contralateral pair of feet [m]. |
+| reverse | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we reverse the motion? |
+| pre_move_cycles | [google.protobuf.Int32Value](#google-protobuf-Int32Value) |  | How many full running man cycles should the robot complete in place before starting to move<br>with the desired velocity. |
+| speed_multiplier | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Do the move at some multiple of the dance cadence. |
+| duty_cycle | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | What fraction of the time to have feet on the ground. |
+| com_height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How high to hold the center of mass above the ground on average. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-SetColorParams"></a>
+
+### SetColorParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| left_color | [Color](#bosdyn-api-spot-Color) |  |  |
+| right_same_as_left | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| right_color | [Color](#bosdyn-api-spot-Color) |  |  |
+| fade_in_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| fade_out_slices | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-SideParams"></a>
+
+### SideParams
+Parameters for moves that can go to either side.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| side | [SideParams.Side](#bosdyn-api-spot-SideParams-Side) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-StanceShape"></a>
+
+### StanceShape
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| length | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| width | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| front_wider_than_hind | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| left_longer_than_right | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| left_forward_of_right | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-StepParams"></a>
+
+### StepParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| foot | [Leg](#bosdyn-api-spot-Leg) |  | Which foot to use (FL = 1, FR = 2, HL = 3, HR = 4). |
+| offset | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | Offset of the foot from it's nominal position, in meters. |
+| second_foot | [Leg](#bosdyn-api-spot-Leg) |  | Should we use a second foot? (None = 0, FL = 1, FR = 2, HL = 3, HR = 4). |
+| swing_waypoint | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | Where should the swing foot go? This vector should be described in a gravity-aligned body<br>frame relative to the centerpoint of the swing. If set to {0,0,0}, uses the default swing<br>path. |
+| swing_height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Parameters for altering swing.<br>Note that these will have no effect if swing_waypoint is specified. As well, a zero (or<br>nearly zero) value will be considered as an unspecified parameter.<br><br>meters |
+| liftoff_velocity | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | m/s |
+| touchdown_velocity | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | m/s |
+| mirror_x | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we mirror the offset for the second foot?<br>Ignored if second_foot is set to None |
+| mirror_y | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  |  |
+| mirror | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | **Deprecated.** Deprecation Warning ***<br>DEPRECATED as of 2.3.0: The mirror field has been deprecated in favor for a more descriptive<br> break down to mirror_x and mirror_y.<br>The following field will be deprecated and moved to 'reserved' in a future release. |
+| waypoint_dwell | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | What fraction of the swing should be spent near the waypoint. |
+| touch | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we touch the ground and come back rather than stepping to a new place? |
+| touch_offset | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-SwayParams"></a>
+
+### SwayParams
+Parameters specific to Sway move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| vertical | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far to move up/down [m]. |
+| horizontal | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far to move left/right [m]. |
+| roll | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How much to roll [rad]. |
+| pivot | [Pivot](#bosdyn-api-spot-Pivot) |  | What point on the robot's body should the swaying be centered at. For example, should the<br>head move instead of the butt? |
+| style | [SwayParams.SwayStyle](#bosdyn-api-spot-SwayParams-SwayStyle) |  | What style motion should we use? |
+| pronounced | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How pronounced should the sway-style be? The value is on a scale from [0,1.0]. |
+| hold_zero_axes | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should the robot hold previous values for the vertical, horizontal, and roll axes if the<br>value is left unspecified (value of zero). |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-SwingParams"></a>
+
+### SwingParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| liftoff_speed | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| vertical_speed | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| vertical_acceleration | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| overlay_outside | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| overlay_forward | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| low_speed_fraction | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-SwingPhases"></a>
+
+### SwingPhases
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| liftoff_phase | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| touchdown_phase | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-TurnParams"></a>
+
+### TurnParams
+Parameters specific to turning.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far to turn, described in radians with a positive value representing a turn to the left. |
+| absolute_yaw | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Orientation to turn to, relative to the orientation at the start of the script. [rad] |
+| yaw_is_absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Should we turn to a yaw in choreography sequence frame? |
+| swing_height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Swing parameters to describe the footstep pattern during the turning [height in meters].<br>Note, a zero (or nearly zero) value will be considered as an unspecified parameter. |
+| swing_velocity | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Swing parameter to describe the foot's swing velocity during the turning [m/s]. Note, a zero<br>(or nearly zero) value will be considered as an unspecified parameter. |
+| motion | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | How far to move relative to starting position. [m] |
+| absolute_motion | [bosdyn.api.Vec2Value](#bosdyn-api-Vec2Value) |  | Where to move relative to position at start of script. [m] |
+| motion_is_absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Is motion specified relative to pose at start of dance? |
+| absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | **Deprecated.** Deprecation Warning ***<br>DEPRECATED as of 3.0.0: The absolute field has been deprecated and split into the<br>yaw_is_absolute and translation_is_absolute fields. The following field will be deprecated<br>and moved to 'reserved' in a future release. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-TwerkParams"></a>
+
+### TwerkParams
+Parameters specific to twerking
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| height | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How far the robot should twerk in meters. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-WorkspaceArmMoveParams"></a>
+
+### WorkspaceArmMoveParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| rotation | [EulerZYXValue](#bosdyn-api-spot-EulerZYXValue) |  | The robot will rotate its body to the specified orientation (roll/pitch/yaw) [rad]. |
+| translation | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | The positional offset to the robot's current location [m]. |
+| absolute | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | Go to an absolute position/orientation? Otherwise, relative to starting pose. |
+| frame | [ArmMoveFrame](#bosdyn-api-spot-ArmMoveFrame) |  | What frame is the motion specified in. |
+| easing | [Easing](#bosdyn-api-spot-Easing) |  | How the motion should be paced. |
+| dance_frame_id | [google.protobuf.Int32Value](#google-protobuf-Int32Value) |  | If we're using the dance frame, which one? |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn-api-spot-ArmMoveFrame"></a>
+
+### ArmMoveFrame
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ARM_MOVE_FRAME_UNKNOWN | 0 |  |
+| ARM_MOVE_FRAME_CENTER_OF_FOOTPRINT | 1 |  |
+| ARM_MOVE_FRAME_HAND | 2 |  |
+| ARM_MOVE_FRAME_BODY | 3 |  |
+| ARM_MOVE_FRAME_SHOULDER | 4 |  |
+| ARM_MOVE_FRAME_SHADOW | 5 |  |
+| ARM_MOVE_FRAME_DANCE | 6 |  |
+
+
+
+<a name="bosdyn-api-spot-Easing"></a>
+
+### Easing
+Enum to describe the type of easing to perform for the slices at either (or both) the
+beginning and end of a move.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| EASING_UNKNOWN | 0 |  |
+| EASING_LINEAR | 1 |  |
+| EASING_QUADRATIC_INPUT | 2 |  |
+| EASING_QUADRATIC_OUTPUT | 3 |  |
+| EASING_QUADRATIC_IN_OUT | 4 |  |
+| EASING_CUBIC_INPUT | 5 |  |
+| EASING_CUBIC_OUTPUT | 6 |  |
+| EASING_CUBIC_IN_OUT | 7 |  |
+| EASING_EXPONENTIAL_INPUT | 8 |  |
+| EASING_EXPONENTIAL_OUTPUT | 9 |  |
+| EASING_EXPONENTIAL_IN_OUT | 10 |  |
+
+
+
+<a name="bosdyn-api-spot-FidgetStandParams-FidgetPreset"></a>
+
+### FidgetStandParams.FidgetPreset
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PRESET_UNKNOWN | 0 |  |
+| PRESET_CUSTOM | 1 |  |
+| PRESET_INTEREST | 2 |  |
+| PRESET_PLAYFUL | 3 |  |
+| PRESET_FEAR | 4 |  |
+| PRESET_NERVOUS | 5 |  |
+| PRESET_EXHAUSTED | 6 |  |
+
+
+
+<a name="bosdyn-api-spot-FrameSnapshotParams-Inclusion"></a>
+
+### FrameSnapshotParams.Inclusion
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| INCLUSION_UNKNOWN | 0 |  |
+| INCLUSION_IF_STANCE | 1 |  |
+| INCLUSION_INCLUDED | 2 |  |
+| INCLUSION_EXCLUDED | 3 |  |
+
+
+
+<a name="bosdyn-api-spot-JumpParams-Lead"></a>
+
+### JumpParams.Lead
+If split_fraction is non-zero, which legs to lift first.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LEAD_UNKNOWN | 0 |  |
+| LEAD_AUTO | 1 |  |
+| LEAD_FRONT | 2 |  |
+| LEAD_HIND | 3 |  |
+| LEAD_LEFT | 4 |  |
+| LEAD_RIGHT | 5 |  |
+
+
+
+<a name="bosdyn-api-spot-LedLight"></a>
+
+### LedLight
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LED_LIGHT_UNKNOWN | 0 |  |
+| LED_LIGHT_LEFT1 | 1 |  |
+| LED_LIGHT_LEFT2 | 2 |  |
+| LED_LIGHT_LEFT3 | 3 |  |
+| LED_LIGHT_LEFT4 | 4 |  |
+| LED_LIGHT_RIGHT1 | 5 |  |
+| LED_LIGHT_RIGHT2 | 6 |  |
+| LED_LIGHT_RIGHT3 | 7 |  |
+| LED_LIGHT_RIGHT4 | 8 |  |
+
+
+
+<a name="bosdyn-api-spot-Leg"></a>
+
+### Leg
+Enum to describe which leg is being referenced in specific choreography sequence moves.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LEG_UNKNOWN | 0 |  |
+| LEG_FRONT_LEFT | 1 |  |
+| LEG_FRONT_RIGHT | 2 |  |
+| LEG_HIND_LEFT | 3 |  |
+| LEG_HIND_RIGHT | 4 |  |
+| LEG_NO_LEG | -1 |  |
+
+
+
+<a name="bosdyn-api-spot-Pivot"></a>
+
+### Pivot
+Enum for the pivot point for certain choreography sequence moves.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PIVOT_UNKNOWN | 0 |  |
+| PIVOT_FRONT | 1 |  |
+| PIVOT_HIND | 2 |  |
+| PIVOT_CENTER | 3 |  |
+
+
+
+<a name="bosdyn-api-spot-RippleColorParams-LightSide"></a>
+
+### RippleColorParams.LightSide
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LIGHT_SIDE_UNKNOWN | 0 |  |
+| LIGHT_SIDE_LEFT | 1 |  |
+| LIGHT_SIDE_RIGHT | 2 |  |
+| LIGHT_SIDE_BOTH_IN_SEQUENCE | 3 |  |
+| LIGHT_SIDE_BOTH_MATCHING | 4 |  |
+
+
+
+<a name="bosdyn-api-spot-RippleColorParams-Pattern"></a>
+
+### RippleColorParams.Pattern
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PATTERN_UNKNOWN | 0 |  |
+| PATTERN_FLASHING | 1 |  |
+| PATTERN_SNAKE | 2 |  |
+| PATTERN_ALTERNATE_COLORS | 3 |  |
+| PATTERN_FINE_GRAINED_ALTERNATE_COLORS | 4 |  |
+
+
+
+<a name="bosdyn-api-spot-SideParams-Side"></a>
+
+### SideParams.Side
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| SIDE_UNKNOWN | 0 |  |
+| SIDE_LEFT | 1 |  |
+| SIDE_RIGHT | 2 |  |
+
+
+
+<a name="bosdyn-api-spot-SwayParams-SwayStyle"></a>
+
+### SwayParams.SwayStyle
+The type of motion used by the Sway sequence move.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| SWAY_STYLE_UNKNOWN | 0 |  |
+| SWAY_STYLE_STANDARD | 1 |  |
+| SWAY_STYLE_FAST_OUT | 2 |  |
+| SWAY_STYLE_FAST_RETURN | 3 |  |
+| SWAY_STYLE_SQUARE | 4 |  |
+| SWAY_STYLE_SPIKE | 5 |  |
+| SWAY_STYLE_PLATEAU | 6 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_spot_choreography_sequence-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/spot/choreography_sequence.proto
+
+
+
+<a name="bosdyn-api-spot-ActiveMove"></a>
+
+### ActiveMove
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| move | [MoveParams](#bosdyn-api-spot-MoveParams) |  | Any parameters that had to be adjusted into the legal range will have their adjusted values. |
+| custom_gait_command_limits | [CustomGaitCommandLimits](#bosdyn-api-spot-CustomGaitCommandLimits) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-AnimateArm"></a>
+
+### AnimateArm
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| joint_angles | [ArmJointAngles](#bosdyn-api-spot-ArmJointAngles) |  | Full arm joint angle specification. |
+| hand_pose | [AnimateArm.HandPose](#bosdyn-api-spot-AnimateArm-HandPose) |  | The hand position in the animation frame |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-AnimateArm-HandPose"></a>
+
+### AnimateArm.HandPose
+An SE3 Pose for the hand where orientation is specified using either a quaternion or
+euler angles
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| position | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  |  |
+| euler_angles | [EulerZYXValue](#bosdyn-api-spot-EulerZYXValue) |  | The hand's orientation described with euler angles (yaw, pitch, roll). |
+| quaternion | [bosdyn.api.Quaternion](#bosdyn-api-Quaternion) |  | The hand's orientation described with a quaternion. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-AnimateBody"></a>
+
+### AnimateBody
+The AnimateBody keyframe describes the body's position and orientation. At least
+one dimension of the body must be specified.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| body_pos | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | The body position in the animation frame. |
+| com_pos | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | The body's center of mass position in the animation frame. |
+| euler_angles | [EulerZYXValue](#bosdyn-api-spot-EulerZYXValue) |  | The body's orientation described with euler angles (yaw, pitch, roll). |
+| quaternion | [bosdyn.api.Quaternion](#bosdyn-api-Quaternion) |  | The body's orientation described with a quaternion. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-AnimateGripper"></a>
+
+### AnimateGripper
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| gripper_angle | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-AnimateLegs"></a>
+
+### AnimateLegs
+The AnimateLegs keyframe describes each leg using either joint angles or the foot position.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fl | [AnimateSingleLeg](#bosdyn-api-spot-AnimateSingleLeg) |  | Front left leg. |
+| fr | [AnimateSingleLeg](#bosdyn-api-spot-AnimateSingleLeg) |  | Front right leg. |
+| hl | [AnimateSingleLeg](#bosdyn-api-spot-AnimateSingleLeg) |  | Hind left leg. |
+| hr | [AnimateSingleLeg](#bosdyn-api-spot-AnimateSingleLeg) |  | Hind right leg. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-AnimateSingleLeg"></a>
+
+### AnimateSingleLeg
+A single leg keyframe to describe the leg motion.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| joint_angles | [LegJointAngles](#bosdyn-api-spot-LegJointAngles) |  | Full leg joint angle specification. |
+| foot_pos | [bosdyn.api.Vec3Value](#bosdyn-api-Vec3Value) |  | The foot position of the leg in the animation frame. |
+| stance | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | If true, the foot is in contact with the ground and standing. If false, the<br>foot is in swing. If unset, the contact will be inferred from the leg joint angles<br>or foot position. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-Animation"></a>
+
+### Animation
+Represents an animated dance move that can be used within choreographies after uploading.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | The name of the animated move, which is how it will be referenced in choreographies. |
+| animation_keyframes | [AnimationKeyframe](#bosdyn-api-spot-AnimationKeyframe) | repeated | The animated move is composed of animation keyframes, which specify the duration of<br>each frame. The keyframe describes the position of the body/arms/gripper. |
+| controls_arm | [bool](#bool) |  | Indicators as to which parts of the robot that the move controls. |
+| controls_legs | [bool](#bool) |  |  |
+| controls_body | [bool](#bool) |  |  |
+| controls_gripper | [bool](#bool) |  |  |
+| track_swing_trajectories | [bool](#bool) |  | Track animated swing trajectories. Otherwise, takes standard swings between animated liftoff<br>and touchdown locations. |
+| assume_zero_roll_and_pitch | [bool](#bool) |  | For moves that control the legs, but not the body.<br>If legs are specified by joint angles, we still need body roll and pitch to know the foot<br>height. If `assume_zero_roll_and_pitch` is true, they needn't be explicitly specified. |
+| arm_playback | [Animation.ArmPlayback](#bosdyn-api-spot-Animation-ArmPlayback) |  |  |
+| bpm | [double](#double) |  | Optional bpm that the animation is successful at. |
+| retime_to_integer_slices | [bool](#bool) |  | When true, rescales the time of each keyframe slightly such that the move takes an<br>integer number of slices. If false/absent, the move will be padded or truncated slightly<br>to fit an integer number of slices. |
+| minimum_parameters | [AnimateParams](#bosdyn-api-spot-AnimateParams) |  | The different parameters (minimum, default, and maximum) that can change the move.<br>The min/max bounds are used by Choreographer to constrain the parameter widget, and will<br>also be used when uploading a ChoreographySequence containing the animation to validate<br>that the animated move is allowed. |
+| default_parameters | [AnimateParams](#bosdyn-api-spot-AnimateParams) |  |  |
+| maximum_parameters | [AnimateParams](#bosdyn-api-spot-AnimateParams) |  |  |
+| truncatable | [bool](#bool) |  | Indicates if the animated moves can be shortened (the animated move will be cut off). Not<br>supported for leg moves. |
+| extendable | [bool](#bool) |  | Indicates if the animated moves can be stretched (animated move will loop). Not supported for<br>leg moves. |
+| neutral_start | [bool](#bool) |  | Indicates if the move should start in a neutral stand position. |
+| precise_steps | [bool](#bool) |  | Step exactly at the animated locations, even at the expense of balance.<br>By default, the optimizer may adjust step locations slightly. |
+| precise_timing | [bool](#bool) |  | **Deprecated.** DEPRECATED as of 3.3.0: The boolean field has been replaced by the more fine-grained control<br>of timing_adjustability. The following field will be deprecated and moved to 'reserved' in a<br>future release. |
+| timing_adjustability | [double](#double) |  | How much the optimizer is allowed to adjust the timing.<br>On the range [-1, 1].<br>-1: Everything will be timed exactly as animated, even at the expense of balance.<br>0: Default value: some timing adjust allowed.<br>1: Timing can be adjusted drastically. |
+| arm_required | [bool](#bool) |  | If set true, this animation will not run unless the robot has an arm. |
+| arm_prohibited | [bool](#bool) |  | If set true, this animation will not run unless the robot has no arm. |
+| no_looping | [bool](#bool) |  | If the animation completes before the move's duration, freeze rather than looping. |
+| starts_sitting | [bool](#bool) |  | If the animation starts from a sit pose. Default starting pose is stand. |
+| custom_gait_cycle | [bool](#bool) |  | If true, this animation can be used as direct input to custom gait<br>to define the gait style |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-AnimationKeyframe"></a>
+
+### AnimationKeyframe
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| time | [double](#double) |  | Time from the start of the animation for this frame. |
+| gripper | [AnimateGripper](#bosdyn-api-spot-AnimateGripper) |  | Different body parts the animated move can control.<br>It can control multiple body parts at once. |
+| arm | [AnimateArm](#bosdyn-api-spot-AnimateArm) |  |  |
+| body | [AnimateBody](#bosdyn-api-spot-AnimateBody) |  |  |
+| legs | [AnimateLegs](#bosdyn-api-spot-AnimateLegs) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ArmJointAngles"></a>
+
+### ArmJointAngles
+The AnimateArm keyframe describes the joint angles of the arm joints in radians.
+Any joint not specified, will hold the previous angle it was at when the keyframe
+begins. At least one arm joint must be specified.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| shoulder_0 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| shoulder_1 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| elbow_0 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| elbow_1 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| wrist_0 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+| wrist_1 | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographerDisplayInfo"></a>
+
+### ChoreographerDisplayInfo
+Information for the Choreographer to display.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| color | [ChoreographerDisplayInfo.Color](#bosdyn-api-spot-ChoreographerDisplayInfo-Color) |  |  |
+| markers | [int32](#int32) | repeated | For the GUI, these are marked events in steps. For example if the move puts a foot down, the<br>mark might be exactly when the foot is placed on the ground, relative to the start of the<br>move. |
+| description | [string](#string) |  | Textual description to be displayed in the GUI. |
+| image | [string](#string) |  | Image path (local to the UI) to display as an icon. May be an animated gif. |
+| category | [ChoreographerDisplayInfo.Category](#bosdyn-api-spot-ChoreographerDisplayInfo-Category) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographerDisplayInfo-Color"></a>
+
+### ChoreographerDisplayInfo.Color
+Color of the object. Set it to override the default category color.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| r | [int32](#int32) |  | RGB values for color ranging from [0,255]. |
+| g | [int32](#int32) |  |  |
+| b | [int32](#int32) |  |  |
+| a | [double](#double) |  | Alpha value for the coloration ranges from [0,1]. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographerSave"></a>
+
+### ChoreographerSave
+Describes the metadata and information only used by the Choreographer GUI, which isn't used in
+the API
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| choreography_sequence | [ChoreographySequence](#bosdyn-api-spot-ChoreographySequence) |  | The main ChoreographySequence that makes up the dance and is sent to the robot. |
+| music_file | [string](#string) |  | If specified this is the UI local path of the music to load. |
+| music_start_slice | [double](#double) |  | UI specific member that describes exactly when the music should start, in slices. This is for<br>time sync issues. |
+| choreography_start_slice | [double](#double) |  | The start slice for the choreographer save. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographyCommandRequest"></a>
+
+### ChoreographyCommandRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| commands | [MoveCommand](#bosdyn-api-spot-MoveCommand) | repeated | Commands intended for individual moves.<br>Repeated because multiple moves may be playing simultaneously and we may want to command<br>multiple of them. |
+| lease | [bosdyn.api.Lease](#bosdyn-api-Lease) |  | The Lease to show ownership of the robot body. |
+| command_end_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | When the commands expire. In the robot's clock. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographyCommandResponse"></a>
+
+### ChoreographyCommandResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header |
+| lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn-api-LeaseUseResult) |  |  |
+| status | [ChoreographyCommandResponse.Status](#bosdyn-api-spot-ChoreographyCommandResponse-Status) | repeated | One status for each command sent. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographyInfo"></a>
+
+### ChoreographyInfo
+Describes metadata for the Choreography sequence that can be used for a number of different UIs
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| labels | [string](#string) | repeated | the list of user assigned categories that the sequence belongs to |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographySequence"></a>
+
+### ChoreographySequence
+Represents a particular choreography sequence, made up of MoveParams.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | Display name or file name associated with the choreography sequence. |
+| slices_per_minute | [double](#double) |  | Number of slices per minute in the choreography sequence. Typically a slice will correspond<br>to 1/4 a beat. |
+| moves | [MoveParams](#bosdyn-api-spot-MoveParams) | repeated | All of the moves in this choreography sequence. |
+| choreography_info | [ChoreographyInfo](#bosdyn-api-spot-ChoreographyInfo) |  | Metadata associated with the sequence. |
+| entrance_state | [MoveInfo.TransitionState](#bosdyn-api-spot-MoveInfo-TransitionState) |  | Can be used to specify an explicit entrance_state in the case where the first legs-track move<br>accepts multiple entrance_states.<br>Will also be used if the sequence contains no legs-track moves.<br>Can otherwise be left unset.<br>If set and not within the set of acceptable entrance_states for the first legs-track move,<br>the Sequence will be considered invalid. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographyStateLog"></a>
+
+### ChoreographyStateLog
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key_frames | [LoggedStateKeyFrame](#bosdyn-api-spot-LoggedStateKeyFrame) | repeated | A set of key frames recorded at a high rate. The key frames can be for the duration of an<br>executing choreography or for the duration of a manual recorded log (triggered by the<br>StartRecordingState and StopRecordingState RPCs). The specific set of keyframes is specified<br>by the LogType when requesting to download the data. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographyStatusRequest"></a>
+
+### ChoreographyStatusRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographyStatusResponse"></a>
+
+### ChoreographyStatusResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header |
+| status | [ChoreographyStatusResponse.Status](#bosdyn-api-spot-ChoreographyStatusResponse-Status) |  |  |
+| execution_id | [int32](#int32) |  | If dancing (or preparing to dance), the unique execution_id matching the one from<br>ExecuteChoreographyResponse. If not dancing, 0. |
+| current_slice | [double](#double) |  | Where we are in the script. (slice = 1/4 beat; standard unit of "time" within Choreography) |
+| active_moves | [ActiveMove](#bosdyn-api-spot-ActiveMove) | repeated | All of the moves currently executing. |
+| sequence_slices | [int32](#int32) |  | Length of the current sequence. |
+| sequence_slices_per_minute | [double](#double) |  | Cadence of the current sequence. |
+| validity_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | When this was true in robot time. |
+| sequence_name | [string](#string) |  | Name of the active sequence, None if the robot is not in a dance state. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographyTimeAdjustRequest"></a>
+
+### ChoreographyTimeAdjustRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| override_start_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The absolute time to start the choreography at. This start time will override the start time<br>defined in an ExecuteChoreographyRequest if it fits within the limits defined by the<br>acceptable_time_difference and the override_validity_time. This should be in the robot's<br>clock. |
+| acceptable_time_difference | [google.protobuf.Duration](#google-protobuf-Duration) |  | The maximum difference in time, in seconds, between an ExecuteChoreography start time and the<br>override time where the override start time will used instead of the ExecuteChoreography<br>start time. If the difference between the override time and the ExecuteChoreographyRequest<br>time is bigger than the acceptable_time_difference value, the override time will not be used.<br>When specified the acceptable_time_difference can be at most 2 minutes. If not specified, the<br>acceptable_time_difference will be 20 seconds. |
+| validity_time | [google.protobuf.Duration](#google-protobuf-Duration) |  | For what period of time, in seconds from the current moment, should this override start time<br>be considered valid. override start times that are further in the future than the override<br>validity period won't be accepted when received. When specified, override_validity_time can<br>be at most 5 minutes past the current time. If not specified override_validity_time will be<br>60 seconds. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ChoreographyTimeAdjustResponse"></a>
+
+### ChoreographyTimeAdjustResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header |
+| status | [ChoreographyTimeAdjustResponse.Status](#bosdyn-api-spot-ChoreographyTimeAdjustResponse-Status) |  |  |
+| warnings | [string](#string) | repeated | If certain parameters didn't fall within the correct limits warning messages describing those<br>issues will be populated here to indicate those problems. If there were issues with<br>parameters other than the override_start_time there may be warnings even if the response<br>status was STATUS_OK. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ClearAllSequenceFilesRequest"></a>
+
+### ClearAllSequenceFilesRequest
+Reset to a clean slate with no retained files by deleting all non-permanent
+choreography related files
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ClearAllSequenceFilesResponse"></a>
+
+### ClearAllSequenceFilesResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [ClearAllSequenceFilesResponse.Status](#bosdyn-api-spot-ClearAllSequenceFilesResponse-Status) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-DeleteSequenceRequest"></a>
+
+### DeleteSequenceRequest
+Delete the retained file for a choreography sequence so the sequence will be forgotten on reboot
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| sequence_name | [string](#string) |  | Name of the sequence to delete. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-DeleteSequenceResponse"></a>
+
+### DeleteSequenceResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [DeleteSequenceResponse.Status](#bosdyn-api-spot-DeleteSequenceResponse-Status) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-DownloadRobotStateLogRequest"></a>
+
+### DownloadRobotStateLogRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| log_type | [DownloadRobotStateLogRequest.LogType](#bosdyn-api-spot-DownloadRobotStateLogRequest-LogType) |  | Which data should we download. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-DownloadRobotStateLogResponse"></a>
+
+### DownloadRobotStateLogResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header |
+| status | [DownloadRobotStateLogResponse.Status](#bosdyn-api-spot-DownloadRobotStateLogResponse-Status) |  | Return status for the request. |
+| chunk | [bosdyn.api.DataChunk](#bosdyn-api-DataChunk) |  | Chunk of data to download. Responses are sent in sequence until the<br>data chunk is complete. After receiving all chunks, concatenate them<br>into a single byte string. Then, deserialize the byte string into an<br>ChoreographyStateLog object. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ExecuteChoreographyRequest"></a>
+
+### ExecuteChoreographyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| choreography_sequence_name | [string](#string) |  | The string name of the ChoreographySequence to use. |
+| start_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The absolute time to start the choreography at. This should be in the robot's clock so we can<br>synchronize music playing and the robot's choreography. |
+| choreography_starting_slice | [double](#double) |  | The slice (betas/sub-beats) that the choreography should begin execution at. |
+| lease | [bosdyn.api.Lease](#bosdyn-api-Lease) |  | The Lease to show ownership of the robot body. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ExecuteChoreographyResponse"></a>
+
+### ExecuteChoreographyResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header |
+| lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn-api-LeaseUseResult) |  |  |
+| status | [ExecuteChoreographyResponse.Status](#bosdyn-api-spot-ExecuteChoreographyResponse-Status) |  |  |
+| execution_id | [int32](#int32) |  | Unique ID for the execution.<br>Will increment whenever an ExecuteChoreographyRequest is received.<br>Will reset upon robot boot. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-GetChoreographySequenceRequest"></a>
+
+### GetChoreographySequenceRequest
+Request all the information needed to play a choreography sequence, this includes the sequence
+itself and any animations the sequence uses.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| sequence_name | [string](#string) |  | Name of the requested sequence. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-GetChoreographySequenceResponse"></a>
+
+### GetChoreographySequenceResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [GetChoreographySequenceResponse.Status](#bosdyn-api-spot-GetChoreographySequenceResponse-Status) |  |  |
+| choreography_sequence | [ChoreographySequence](#bosdyn-api-spot-ChoreographySequence) |  | ChoreographySequence with the name of the requested sequence. |
+| animated_moves | [Animation](#bosdyn-api-spot-Animation) | repeated | All Animations used in the returned ChoreographySequence. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-LegJointAngles"></a>
+
+### LegJointAngles
+Description of each leg joint angle (hip x/y and knee) in radians.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| hip_x | [double](#double) |  |  |
+| hip_y | [double](#double) |  |  |
+| knee | [double](#double) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ListAllMovesRequest"></a>
+
+### ListAllMovesRequest
+Request a list of all possible moves and the associated parameters (min/max values).
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ListAllMovesResponse"></a>
+
+### ListAllMovesResponse
+Response for ListAllMoves that defines the list of available moves and their parameter types.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header |
+| moves | [MoveInfo](#bosdyn-api-spot-MoveInfo) | repeated | List of moves that the robot knows about. |
+| move_param_config | [string](#string) |  | A copy of the MoveParamsConfig.txt that the robot is using. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ListAllSequencesRequest"></a>
+
+### ListAllSequencesRequest
+Request a list of all playable choreography sequences that the robot knows about
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ListAllSequencesResponse"></a>
+
+### ListAllSequencesResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| known_sequences | [string](#string) | repeated | **Deprecated.** DEPRECATED as of 3.2.0: The string list of known sequence names has been<br>deprecated and replaced by the repeated field sequence_info. |
+| sequence_info | [SequenceInfo](#bosdyn-api-spot-SequenceInfo) | repeated | List of choreography sequences the robot knows about. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-LoggedFootContacts"></a>
+
+### LoggedFootContacts
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fr_contact | [bool](#bool) |  | Boolean indicating whether or not the robot's foot is in contact with the ground. |
+| fl_contact | [bool](#bool) |  |  |
+| hr_contact | [bool](#bool) |  |  |
+| hl_contact | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-LoggedJoints"></a>
+
+### LoggedJoints
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fl | [LegJointAngles](#bosdyn-api-spot-LegJointAngles) |  | front left leg joint angles. |
+| fr | [LegJointAngles](#bosdyn-api-spot-LegJointAngles) |  | front right leg joint angles. |
+| hl | [LegJointAngles](#bosdyn-api-spot-LegJointAngles) |  | hind left leg joint angles. |
+| hr | [LegJointAngles](#bosdyn-api-spot-LegJointAngles) |  | hind right leg joint angles. |
+| arm | [ArmJointAngles](#bosdyn-api-spot-ArmJointAngles) |  | Full set of joint angles for the arm and gripper. |
+| gripper_angle | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-LoggedStateKeyFrame"></a>
+
+### LoggedStateKeyFrame
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| joint_angles | [LoggedJoints](#bosdyn-api-spot-LoggedJoints) |  | Full set of joint angles for the robot. |
+| foot_contact_state | [LoggedFootContacts](#bosdyn-api-spot-LoggedFootContacts) |  | Foot contacts for the robot. |
+| animation_tform_body | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | The current pose of the robot body in animation frame. The animation frame is defined<br>based on the robot's footprint when the log first started recording. |
+| timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp (in robot time) for the key frame. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ModifyChoreographyInfoRequest"></a>
+
+### ModifyChoreographyInfoRequest
+Edit the metadata of a choreography sequence and update any retained files for
+that sequence with the new metadata
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| sequence_name | [string](#string) |  | Name of the sequence to be modified |
+| add_labels | [string](#string) | repeated | Labels to be added to the sequence's metadata |
+| remove_labels | [string](#string) | repeated | Labels to be removed from the sequence's metadata |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-ModifyChoreographyInfoResponse"></a>
+
+### ModifyChoreographyInfoResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [ModifyChoreographyInfoResponse.Status](#bosdyn-api-spot-ModifyChoreographyInfoResponse-Status) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-MoveCommand"></a>
+
+### MoveCommand
+Either, both, or neither of move_type and move_id can be used to specify which move this
+command is intended for.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| move_type | [string](#string) |  | Name of the move type this command is intended for. |
+| move_id | [int32](#int32) |  | ID of the move this command is intended for. |
+| custom_gait_command | [CustomGaitCommand](#bosdyn-api-spot-CustomGaitCommand) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-MoveInfo"></a>
+
+### MoveInfo
+Defines properties of a choreography move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | Unique ID of the move type. |
+| move_length_slices | [int32](#int32) |  | The duration of this move in slices (usually 1/4 beats). |
+| move_length_time | [double](#double) |  | The duration of this move in seconds. If specified, overrides move_length_slices. |
+| is_extendable | [bool](#bool) |  | If true, the duration may be adjusted from the default specified by move_length_slices or<br>move_length_time. |
+| min_move_length_slices | [int32](#int32) |  | Bounds on the duration may be adjusted in slices (usually 1/4 beats).<br>These apply to extendable moves, but may also override move_length_time for some BPM. |
+| max_move_length_slices | [int32](#int32) |  |  |
+| min_time | [double](#double) |  | Bounds on the duration in time.<br>These apply to extendable moves, but may also override move_length_slices for some BPM. |
+| max_time | [double](#double) |  |  |
+| entrance_states | [MoveInfo.TransitionState](#bosdyn-api-spot-MoveInfo-TransitionState) | repeated | The admissible states the robot can be in currently for this move to execute. |
+| exit_state | [MoveInfo.TransitionState](#bosdyn-api-spot-MoveInfo-TransitionState) |  | The state of the robot after the move is complete. |
+| controls_arm | [bool](#bool) |  | Indicators as to which parts of the robot that the move controls. |
+| controls_legs | [bool](#bool) |  |  |
+| controls_body | [bool](#bool) |  |  |
+| controls_gripper | [bool](#bool) |  |  |
+| controls_lights | [bool](#bool) |  |  |
+| controls_annotations | [bool](#bool) |  |  |
+| is_looping | [bool](#bool) |  |  |
+| display | [ChoreographerDisplayInfo](#bosdyn-api-spot-ChoreographerDisplayInfo) |  | Information for the GUI tool to visualize the sequence move info. |
+| animated_move_generated_id | [google.protobuf.StringValue](#google-protobuf-StringValue) |  | Unique ID for the animated moves. This is sent with the UploadAnimatedMove request and use<br>to track which version of the animated move is currently saved on robot. The ID can be unset,<br>meaning the RPC which uploaded the animation did not provide an identifying hash. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-MoveParams"></a>
+
+### MoveParams
+Defines varying parameters for a particular instance of a move.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| type | [string](#string) |  | Unique ID of the move type that these params are associated with. |
+| start_slice | [int32](#int32) |  | How many slices since the start of the song this move should be executed at. |
+| requested_slices | [int32](#int32) |  | The number of slices (beats/sub-beats) that this move is supposed to last for. If the move<br>was extendable, then this corresponds to the number of slices that the user requested. |
+| id | [int32](#int32) |  | The ID number can be optionally set by the client as part of the UploadChoreographyRequest.<br>If not set by the client, the robot will assign an id to each move that is unique within the<br>sequence. The ID (either set by the client or the robot) will be reported in the ActiveMoves<br>in the ChoreographyStatusResponse. The ID can be used to specify which move a Command is<br>intended for. |
+| jump_params | [JumpParams](#bosdyn-api-spot-JumpParams) |  |  |
+| rotate_body_params | [RotateBodyParams](#bosdyn-api-spot-RotateBodyParams) |  |  |
+| step_params | [StepParams](#bosdyn-api-spot-StepParams) |  |  |
+| butt_circle_params | [ButtCircleParams](#bosdyn-api-spot-ButtCircleParams) |  |  |
+| turn_params | [TurnParams](#bosdyn-api-spot-TurnParams) |  |  |
+| pace_2step_params | [Pace2StepParams](#bosdyn-api-spot-Pace2StepParams) |  |  |
+| twerk_params | [TwerkParams](#bosdyn-api-spot-TwerkParams) |  |  |
+| chicken_head_params | [ChickenHeadParams](#bosdyn-api-spot-ChickenHeadParams) |  |  |
+| clap_params | [ClapParams](#bosdyn-api-spot-ClapParams) |  |  |
+| front_up_params | [FrontUpParams](#bosdyn-api-spot-FrontUpParams) |  |  |
+| sway_params | [SwayParams](#bosdyn-api-spot-SwayParams) |  |  |
+| body_hold_params | [BodyHoldParams](#bosdyn-api-spot-BodyHoldParams) |  |  |
+| arm_move_params | [ArmMoveParams](#bosdyn-api-spot-ArmMoveParams) |  |  |
+| kneel_leg_move_params | [KneelLegMoveParams](#bosdyn-api-spot-KneelLegMoveParams) |  |  |
+| running_man_params | [RunningManParams](#bosdyn-api-spot-RunningManParams) |  |  |
+| kneel_circle_params | [KneelCircleParams](#bosdyn-api-spot-KneelCircleParams) |  |  |
+| gripper_params | [GripperParams](#bosdyn-api-spot-GripperParams) |  |  |
+| hop_params | [HopParams](#bosdyn-api-spot-HopParams) |  |  |
+| random_rotate_params | [RandomRotateParams](#bosdyn-api-spot-RandomRotateParams) |  |  |
+| crawl_params | [CrawlParams](#bosdyn-api-spot-CrawlParams) |  |  |
+| side_params | [SideParams](#bosdyn-api-spot-SideParams) |  |  |
+| bourree_params | [BourreeParams](#bosdyn-api-spot-BourreeParams) |  |  |
+| workspace_arm_move_params | [WorkspaceArmMoveParams](#bosdyn-api-spot-WorkspaceArmMoveParams) |  |  |
+| figure8_params | [Figure8Params](#bosdyn-api-spot-Figure8Params) |  |  |
+| kneel_leg_move2_params | [KneelLegMove2Params](#bosdyn-api-spot-KneelLegMove2Params) |  |  |
+| fidget_stand_params | [FidgetStandParams](#bosdyn-api-spot-FidgetStandParams) |  |  |
+| goto_params | [GotoParams](#bosdyn-api-spot-GotoParams) |  |  |
+| frame_snapshot_params | [FrameSnapshotParams](#bosdyn-api-spot-FrameSnapshotParams) |  |  |
+| set_color_params | [SetColorParams](#bosdyn-api-spot-SetColorParams) |  |  |
+| ripple_color_params | [RippleColorParams](#bosdyn-api-spot-RippleColorParams) |  |  |
+| fade_color_params | [FadeColorParams](#bosdyn-api-spot-FadeColorParams) |  |  |
+| independent_color_params | [IndependentColorParams](#bosdyn-api-spot-IndependentColorParams) |  |  |
+| custom_gait_params | [CustomGaitParams](#bosdyn-api-spot-CustomGaitParams) |  |  |
+| leg_joint_params | [LegJointParams](#bosdyn-api-spot-LegJointParams) |  |  |
+| animate_params | [AnimateParams](#bosdyn-api-spot-AnimateParams) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-SaveSequenceRequest"></a>
+
+### SaveSequenceRequest
+Write a choreography sequence as a file to robot memory so it will be retained through reboot
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| sequence_name | [string](#string) |  | Name of the sequence to be added to the selection of retained sequences |
+| add_labels | [string](#string) | repeated | List of labels to add to the sequence when it is being saved |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-SaveSequenceResponse"></a>
+
+### SaveSequenceResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [SaveSequenceResponse.Status](#bosdyn-api-spot-SaveSequenceResponse-Status) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-SequenceInfo"></a>
+
+### SequenceInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  |  |
+| labels | [string](#string) | repeated |  |
+| saved_state | [SequenceInfo.SavedState](#bosdyn-api-spot-SequenceInfo-SavedState) |  | Use temporary sequences during development with choreographer, and then tell the robot to<br>retain the final version of the sequence so that it can be played back later from other<br>interfaces, like the tablet |
+| exit_state | [MoveInfo.TransitionState](#bosdyn-api-spot-MoveInfo-TransitionState) |  | The exit transition state of the sequence. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-StartRecordingStateRequest"></a>
+
+### StartRecordingStateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| continue_recording_duration | [google.protobuf.Duration](#google-protobuf-Duration) |  | How long should the robot record for if no stop RPC is sent. A recording session can be<br>extended by setting the recording_session_id below to a non-zero value matching the ID for<br>the current recording session. For both start and continuation commands, the service will<br>stop recording at end_time = (system time when the Start/Continue RPC is received) +<br>(continue_recording_duration), unless another continuation request updates this end time. The<br>robot has an internal maximum recording time of 5 minutes for the complete session log. |
+| recording_session_id | [uint64](#uint64) |  | Provide the unique identifier of the recording session to extend the recording end time for.<br>If the recording_session_id is 0, then it will create a new session and the robot will clear<br>the recorded robot state buffer and restart recording.<br>If this is a continuation of an existing recording session, than the robot will continue<br>to record until the specified end time. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-StartRecordingStateResponse"></a>
+
+### StartRecordingStateResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header |
+| status | [StartRecordingStateResponse.Status](#bosdyn-api-spot-StartRecordingStateResponse-Status) |  |  |
+| recording_session_id | [uint64](#uint64) |  | Unique identifier for the current recording session |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-StopRecordingStateRequest"></a>
+
+### StopRecordingStateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-StopRecordingStateResponse"></a>
+
+### StopRecordingStateResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-UploadAnimatedMoveRequest"></a>
+
+### UploadAnimatedMoveRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| animated_move_generated_id | [google.protobuf.StringValue](#google-protobuf-StringValue) |  | Unique ID for the animated moves. This will be automatically generated by the client<br>and is used to uniquely identify the entire animation by creating a hash from the Animation<br>protobuf message after serialization. The ID will be conveyed within the MoveInfo protobuf<br>message in the ListAllMoves RPC. This ID allows the choreography client to only reupload<br>animations that have changed or do not exist on robot already. |
+| animated_move | [Animation](#bosdyn-api-spot-Animation) |  | AnimatedMove to upload to the robot and create a dance move from. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-UploadAnimatedMoveResponse"></a>
+
+### UploadAnimatedMoveResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [UploadAnimatedMoveResponse.Status](#bosdyn-api-spot-UploadAnimatedMoveResponse-Status) |  |  |
+| warnings | [string](#string) | repeated | If the uploaded animated move is invalid (will throw a STATUS_ANIMATION_VALIDATION_FAILED),<br>then warning messages describing the failure cases will be populated here to indicate which<br>parts of the animated move failed. Note: there could be some warning messages even when an<br>animation is marked as ok. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-UploadChoreographyRequest"></a>
+
+### UploadChoreographyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| choreography_sequence | [ChoreographySequence](#bosdyn-api-spot-ChoreographySequence) |  | ChoreographySequence to upload and store in memory |
+| non_strict_parsing | [bool](#bool) |  | Should we run a sequences that has correctable errors?<br>If true, the service will fix any correctable errors and run the corrected choreography<br>sequence. If false, the service will reject a choreography sequence that has any errors. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-UploadChoreographyResponse"></a>
+
+### UploadChoreographyResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. If the dance upload is invalid, the header INVALID request error will<br>be set, which means that the choreography did not respect bounds of the parameters or has<br>other attributes missing or incorrect. |
+| warnings | [string](#string) | repeated | If the uploaded choreography is invalid (will throw a header InvalidRequest status), then<br>certain warning messages will be populated here to indicate which choreography moves or<br>parameters violated constraints of the robot. |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn-api-spot-Animation-ArmPlayback"></a>
+
+### Animation.ArmPlayback
+Mode for hand trajectory playback
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ARM_PLAYBACK_DEFAULT | 0 | Playback as specified. Arm animations specified with joint angles playback in jointspace<br>and arm animations specified as hand poses playback in workspace. |
+| ARM_PLAYBACK_JOINTSPACE | 1 | Playback in jointspace. Arm animation will be most consistent relative to the body |
+| ARM_PLAYBACK_WORKSPACE | 2 | Playback in workspace. Hand pose animation will be most consistent relative to the<br>current footprint. Reference frame is animation frame. |
+| ARM_PLAYBACK_WORKSPACE_DANCE_FRAME | 3 | Playback in workspace with poses relative to the dance frame. hand pose animation will be<br>most consistent relative to a fixed point in the world. |
+
+
+
+<a name="bosdyn-api-spot-ChoreographerDisplayInfo-Category"></a>
+
+### ChoreographerDisplayInfo.Category
+Move Category affects the grouping in the choreographer list view, as well as the color it's
+displayed with.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| CATEGORY_UNKNOWN | 0 |  |
+| CATEGORY_BODY | 1 |  |
+| CATEGORY_STEP | 2 |  |
+| CATEGORY_DYNAMIC | 3 |  |
+| CATEGORY_TRANSITION | 4 |  |
+| CATEGORY_KNEEL | 5 |  |
+| CATEGORY_ARM | 6 |  |
+| CATEGORY_ANIMATION | 7 |  |
+| CATEGORY_MPC | 8 |  |
+| CATEGORY_LIGHTS | 9 |  |
+| CATEGORY_ANNOTATIONS | 10 |  |
+
+
+
+<a name="bosdyn-api-spot-ChoreographyCommandResponse-Status"></a>
+
+### ChoreographyCommandResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_ACCEPTED_WITH_MODIFICATION | 2 |  |
+| STATUS_LEASE_ERROR | 3 |  |
+| STATUS_NO_MATCHING_MOVE | 4 |  |
+| STATUS_INVALID_COMMAND | 5 |  |
+| STATUS_ALREADY_EXPIRED | 6 |  |
+
+
+
+<a name="bosdyn-api-spot-ChoreographyStatusResponse-Status"></a>
+
+### ChoreographyStatusResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_DANCING | 1 |  |
+| STATUS_COMPLETED_SEQUENCE | 2 |  |
+| STATUS_PREPPING | 3 |  |
+| STATUS_WAITING_FOR_START_TIME | 4 |  |
+| STATUS_VALIDATING | 5 |  |
+| STATUS_INTERRUPTED | 6 |  |
+| STATUS_FALLEN | 7 |  |
+| STATUS_POWERED_OFF | 8 |  |
+| STATUS_OTHER | 9 |  |
+
+
+
+<a name="bosdyn-api-spot-ChoreographyTimeAdjustResponse-Status"></a>
+
+### ChoreographyTimeAdjustResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Status unknown. Do not use. |
+| STATUS_OK | 1 | The adjusted time value was accepted and stored. |
+| STATUS_BEFORE_CURRENT_TIME | 2 | The adjusted time was not stored, time requested is too far in the past. |
+| STATUS_EXCEEDS_VALIDITY_TIME | 3 | The override time was not stored, time requested exceeded the validity time limit. |
+| STATUS_OVERRIDE_TIME_UNSET | 4 | No override start time was provided. |
+
+
+
+<a name="bosdyn-api-spot-ClearAllSequenceFilesResponse-Status"></a>
+
+### ClearAllSequenceFilesResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | All retained sequences were successfully removed from robot memory |
+| STATUS_FAILED_TO_DELETE | 2 | Deletion of all retained files failed |
+
+
+
+<a name="bosdyn-api-spot-DeleteSequenceResponse-Status"></a>
+
+### DeleteSequenceResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | The sequence was successfully deleted |
+| STATUS_UNKNOWN_SEQUENCE | 2 | The sequence does not exist |
+| STATUS_ALREADY_TEMPORARY | 3 | The sequence is already temporary and will be removed at the next reboot. |
+| STATUS_PERMANENT_SEQUENCE | 4 | Permanent sequences cannot be deleted |
+
+
+
+<a name="bosdyn-api-spot-DownloadRobotStateLogRequest-LogType"></a>
+
+### DownloadRobotStateLogRequest.LogType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LOG_TYPE_UNKNOWN | 0 | Unknown. Do not use. |
+| LOG_TYPE_MANUAL | 1 | The robot state information recorded from the time of the manual start RPC<br>(StartRecordingState) to either {the time of the manual stop RPC (StopRecordingState),<br>the time of the download logs RPC, or the time of the internal service's buffer filling<br>up}. |
+| LOG_TYPE_LAST_CHOREOGRAPHY | 2 | The robot will automatically record robot state information for the entire duration of an<br>executing choreography in addition to any manual logging. This log type will download<br>this information for the last completed choreography. |
+
+
+
+<a name="bosdyn-api-spot-DownloadRobotStateLogResponse-Status"></a>
+
+### DownloadRobotStateLogResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Status unknown. Do not use. |
+| STATUS_OK | 1 | The log data downloaded successfully and is complete. |
+| STATUS_NO_RECORDED_INFORMATION | 2 | Error where there is no robot state information logged in the choreography service. |
+| STATUS_INCOMPLETE_DATA | 3 | Error where the complete duration of the recorded session caused the service's recording<br>buffer to fill up. When full, the robot will stop recording but preserve whatever was<br>recorded until that point. The robot has an internal maximum recording time of 5 minutes.<br>The data streamed in this response will go from the start time until the time the buffer<br>was filled. |
+
+
+
+<a name="bosdyn-api-spot-ExecuteChoreographyResponse-Status"></a>
+
+### ExecuteChoreographyResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_INVALID_UPLOADED_CHOREOGRAPHY | 2 |  |
+| STATUS_ROBOT_COMMAND_ISSUES | 3 |  |
+| STATUS_LEASE_ERROR | 4 |  |
+| STATUS_UNKNOWN_SEQUENCE | 5 |  |
+
+
+
+<a name="bosdyn-api-spot-GetChoreographySequenceResponse-Status"></a>
+
+### GetChoreographySequenceResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | Finding + returning the sequence succeeded. |
+| STATUS_UNKNOWN_SEQUENCE | 2 | The requested sequence was not found. |
+
+
+
+<a name="bosdyn-api-spot-ModifyChoreographyInfoResponse-Status"></a>
+
+### ModifyChoreographyInfoResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | The sequence was successfully modified |
+| STATUS_UNKNOWN_SEQUENCE | 2 | The sequence does not exist |
+| STATUS_PERMANENT_SEQUENCE | 3 | Permanent sequences cannot be modified |
+| STATUS_FAILED_TO_UPDATE | 4 | The changes were made, but the retained sequence file was not updated and<br>changes were reverted |
+
+
+
+<a name="bosdyn-api-spot-MoveInfo-TransitionState"></a>
+
+### MoveInfo.TransitionState
+The state that the robot is in at the start or end of a move.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TRANSITION_STATE_UNKNOWN | 0 | Unknown or unset state. |
+| TRANSITION_STATE_STAND | 1 | The robot is in a normal (standing) state. |
+| TRANSITION_STATE_KNEEL | 2 | The robot is kneeling down. |
+| TRANSITION_STATE_SIT | 3 | The robot is sitting. |
+| TRANSITION_STATE_SPRAWL | 4 | The robot requires a self-right. |
+
+
+
+<a name="bosdyn-api-spot-SaveSequenceResponse-Status"></a>
+
+### SaveSequenceResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | The sequence was successfully saved |
+| STATUS_UNKNOWN_SEQUENCE | 2 | The requested sequence was not found |
+| STATUS_PERMANENT_SEQUENCE | 3 | This sequence is already saved in the release |
+| STATUS_FAILED_TO_SAVE | 4 | We failed to save a file with the sequence information to robot |
+
+
+
+<a name="bosdyn-api-spot-SequenceInfo-SavedState"></a>
+
+### SequenceInfo.SavedState
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| SAVED_STATE_UNKNOWN | 0 | Status unknown; do not use |
+| SAVED_STATE_TEMPORARY | 1 | Sequence will be forgotten on reboot |
+| SAVED_STATE_RETAINED | 2 | A file for this sequence is stored on the robot; the sequence will be loaded<br>to memory each time the robot boots |
+| SAVED_STATE_PERMANENT | 3 | Sequence was built into the release and can't be deleted |
+
+
+
+<a name="bosdyn-api-spot-StartRecordingStateResponse-Status"></a>
+
+### StartRecordingStateResponse.Status
+The status for the start recording request.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Status unknown; do not use. |
+| STATUS_OK | 1 | The request succeeded and choreography has either started, or continued with an extended<br>duration based on if a session_id was provided. |
+| STATUS_UNKNOWN_RECORDING_SESSION_ID | 2 | The provided recording_session_id is unknown: it must either be 0 (start a new recording<br>log) or it can match the current recording session id returned by the most recent start<br>recording request. |
+| STATUS_RECORDING_BUFFER_FULL | 3 | The Choreography Service's internal buffer is filled. It will record for a maximum of 5<br>minutes. It will stop recording, but save the recorded data until |
+
+
+
+<a name="bosdyn-api-spot-UploadAnimatedMoveResponse-Status"></a>
+
+### UploadAnimatedMoveResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | Uploading + parsing the animated move succeeded. |
+| STATUS_ANIMATION_VALIDATION_FAILED | 2 | The animated move is considered invalid, see the warnings. |
+| STATUS_PING_RESPONSE | 3 | Treated this message as a ping. Responding to demonstrate connectivity. |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_spot_choreography_service-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/spot/choreography_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn-api-spot-ChoreographyService"></a>
+
+### ChoreographyService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| ListAllMoves | [ListAllMovesRequest](#bosdyn-api-spot-ListAllMovesRequest) | [ListAllMovesResponse](#bosdyn-api-spot-ListAllMovesResponse) | List the available dance moves and their parameter information. |
+| ListAllSequences | [ListAllSequencesRequest](#bosdyn-api-spot-ListAllSequencesRequest) | [ListAllSequencesResponse](#bosdyn-api-spot-ListAllSequencesResponse) | List the available choreography sequences currently on the robot. |
+| GetChoreographySequence | [GetChoreographySequenceRequest](#bosdyn-api-spot-GetChoreographySequenceRequest) | [GetChoreographySequenceResponse](#bosdyn-api-spot-GetChoreographySequenceResponse) | Return the ChoreographySequence with the given name and any Animations used in that sequence. |
+| DeleteSequence | [DeleteSequenceRequest](#bosdyn-api-spot-DeleteSequenceRequest) | [DeleteSequenceResponse](#bosdyn-api-spot-DeleteSequenceResponse) | Delete a retained choreography sequence from the collection of user uploaded <br>choreography sequences. |
+| SaveSequence | [SaveSequenceRequest](#bosdyn-api-spot-SaveSequenceRequest) | [SaveSequenceResponse](#bosdyn-api-spot-SaveSequenceResponse) | Save a user uploaded choreography sequence to the robots collection of <br>retained choreography sequences. |
+| ModifyChoreographyInfo | [ModifyChoreographyInfoRequest](#bosdyn-api-spot-ModifyChoreographyInfoRequest) | [ModifyChoreographyInfoResponse](#bosdyn-api-spot-ModifyChoreographyInfoResponse) | Modify the metadata of a choreography sequence. |
+| ClearAllSequenceFiles | [ClearAllSequenceFilesRequest](#bosdyn-api-spot-ClearAllSequenceFilesRequest) | [ClearAllSequenceFilesResponse](#bosdyn-api-spot-ClearAllSequenceFilesResponse) | Clear all retained choreography sequence files from robot memory. |
+| UploadChoreography | [UploadChoreographyRequest](#bosdyn-api-spot-UploadChoreographyRequest) | [UploadChoreographyResponse](#bosdyn-api-spot-UploadChoreographyResponse) | Upload a dance to the robot. |
+| UploadAnimatedMove | [UploadAnimatedMoveRequest](#bosdyn-api-spot-UploadAnimatedMoveRequest) | [UploadAnimatedMoveResponse](#bosdyn-api-spot-UploadAnimatedMoveResponse) | Upload an animation to the robot. |
+| ExecuteChoreography | [ExecuteChoreographyRequest](#bosdyn-api-spot-ExecuteChoreographyRequest) | [ExecuteChoreographyResponse](#bosdyn-api-spot-ExecuteChoreographyResponse) | Execute the uploaded dance. |
+| StartRecordingState | [StartRecordingStateRequest](#bosdyn-api-spot-StartRecordingStateRequest) | [StartRecordingStateResponse](#bosdyn-api-spot-StartRecordingStateResponse) | Manually start (or continue) recording the robot state. |
+| StopRecordingState | [StopRecordingStateRequest](#bosdyn-api-spot-StopRecordingStateRequest) | [StopRecordingStateResponse](#bosdyn-api-spot-StopRecordingStateResponse) | Manually stop recording the robot state. |
+| DownloadRobotStateLog | [DownloadRobotStateLogRequest](#bosdyn-api-spot-DownloadRobotStateLogRequest) | [DownloadRobotStateLogResponse](#bosdyn-api-spot-DownloadRobotStateLogResponse) stream | Download log of the latest recorded robot state information. |
+| ChoreographyStatus | [ChoreographyStatusRequest](#bosdyn-api-spot-ChoreographyStatusRequest) | [ChoreographyStatusResponse](#bosdyn-api-spot-ChoreographyStatusResponse) | Report the status of a dancing robot. |
+| ChoreographyCommand | [ChoreographyCommandRequest](#bosdyn-api-spot-ChoreographyCommandRequest) | [ChoreographyCommandResponse](#bosdyn-api-spot-ChoreographyCommandResponse) | Commands intended for individual dance moves that are currently executing. |
+| ChoreographyTimeAdjust | [ChoreographyTimeAdjustRequest](#bosdyn-api-spot-ChoreographyTimeAdjustRequest) | [ChoreographyTimeAdjustResponse](#bosdyn-api-spot-ChoreographyTimeAdjustResponse) | Adjust the time when a robot should start dancing within a tolerance. |
 
  <!-- end services -->
 
@@ -21832,6 +26328,7 @@ The type of swing height for a step.
 | SWING_HEIGHT_LOW | 1 | Low-stepping. Robot will try to only swing legs a few cm away from ground. |
 | SWING_HEIGHT_MEDIUM | 2 | Default for most cases, use other values with caution. |
 | SWING_HEIGHT_HIGH | 3 | High-stepping. Possibly useful with degraded vision operation. |
+| SWING_HEIGHT_AUTO | 4 | Swing height is automatically adjusted depending on the current state of the robot and environment. |
 
 
 
@@ -21963,6 +26460,72 @@ Results from foot height checks.
 
 
 
+<a name="bosdyn-api-spot-GripperCameraCalibrationCommandRequest"></a>
+
+### GripperCameraCalibrationCommandRequest
+Request for the GripperCameraCalibrationCommand service.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| lease | [bosdyn.api.Lease](#bosdyn-api-Lease) |  | The Lease to show ownership of the robot. Lease required to issue any<br>GripperCameraCalibration command. |
+| command | [GripperCameraCalibrationCommandRequest.Command](#bosdyn-api-spot-GripperCameraCalibrationCommandRequest-Command) |  | The command describing what the GripperCameraCalibration service should do. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-GripperCameraCalibrationCommandResponse"></a>
+
+### GripperCameraCalibrationCommandResponse
+Response for the GripperCameraCalibrationCommand service.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn-api-LeaseUseResult) |  | Details about how the lease was used. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-GripperCameraCalibrationFeedbackRequest"></a>
+
+### GripperCameraCalibrationFeedbackRequest
+Request for the GripperCameraCalibrationFeedback service.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-GripperCameraCalibrationFeedbackResponse"></a>
+
+### GripperCameraCalibrationFeedbackResponse
+Response for the GripperCameraCalibrationFeedback service.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [GripperCameraCalibrationFeedbackResponse.Status](#bosdyn-api-spot-GripperCameraCalibrationFeedbackResponse-Status) |  | Status of camera calibration procedure. |
+| progress | [float](#float) |  | The approximate progress of the calibration routine, range [0-1].<br>Status takes precedence over progress value. |
+| lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn-api-LeaseUseResult) |  | Details about how the lease was used. |
+
+
+
+
+
+
 <a name="bosdyn-api-spot-HipRangeOfMotionResult"></a>
 
 ### HipRangeOfMotionResult
@@ -22057,7 +26620,7 @@ Request for the SpotCheckCommand service.
 | ----- | ---- | ----- | ----------- |
 | header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
 | lease | [bosdyn.api.Lease](#bosdyn-api-Lease) |  | The Lease to show ownership of the robot. Lease required to issue any SpotCheck command. |
-| command | [SpotCheckCommandRequest.Command](#bosdyn-api-spot-SpotCheckCommandRequest-Command) |  | The describing what the spot check service should do. |
+| command | [SpotCheckCommandRequest.Command](#bosdyn-api-spot-SpotCheckCommandRequest-Command) |  | The command describing what the spot check service should do. |
 
 
 
@@ -22113,8 +26676,6 @@ Response for the SpotCheckFeedback service.
 | load_cell_results | [SpotCheckFeedbackResponse.LoadCellResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-LoadCellResultsEntry) | repeated | Results from load cell calibration.<br>The key string is the location of the joint (e.g. fl.hxa, fl.hya, fl.kna, ...) |
 | kinematic_cal_results | [SpotCheckFeedbackResponse.KinematicCalResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-KinematicCalResultsEntry) | repeated | Results from output position sensor calibration.<br>The key string is the location of the joint (e.g. fl.hx, fl.hy, fl.kn, ...) |
 | payload_result | [PayloadCheckResult](#bosdyn-api-spot-PayloadCheckResult) |  | Result from the payload check |
-| foot_height_results | [SpotCheckFeedbackResponse.FootHeightResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-FootHeightResultsEntry) | repeated | **Deprecated.** Results of foot height validation.<br>The key string is the name of the leg (e.g. fl, fr, hl, ...)<br>DEPRECATED as of 2.3. Will be removed in 4.0. Field is no longer being populated. |
-| leg_pair_results | [SpotCheckFeedbackResponse.LegPairResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-LegPairResultsEntry) | repeated | **Deprecated.** Results of leg pair validation.<br>The key string is the name of the leg pair (e.g. fl-fr, fl-hl, ...)<br>DEPRECATED as of 2.3. Will be removed in 4.0. Field is no longer being populated. |
 | hip_range_of_motion_results | [SpotCheckFeedbackResponse.HipRangeOfMotionResultsEntry](#bosdyn-api-spot-SpotCheckFeedbackResponse-HipRangeOfMotionResultsEntry) | repeated | Results of the hip range of motion check<br>The key string is the name of the leg (e.g. fl, fr, hl, ...) |
 | progress | [float](#float) |  | The approximate progress of the spot check routine, range [0-1]. |
 | last_cal_timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Timestamp for the most up-to-date calibration |
@@ -22134,22 +26695,6 @@ Response for the SpotCheckFeedback service.
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
 | value | [DepthPlaneSpotCheckResult](#bosdyn-api-spot-DepthPlaneSpotCheckResult) |  |  |
-
-
-
-
-
-
-<a name="bosdyn-api-spot-SpotCheckFeedbackResponse-FootHeightResultsEntry"></a>
-
-### SpotCheckFeedbackResponse.FootHeightResultsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [FootHeightCheckResult](#bosdyn-api-spot-FootHeightCheckResult) |  |  |
 
 
 
@@ -22182,22 +26727,6 @@ Response for the SpotCheckFeedback service.
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
 | value | [JointKinematicCheckResult](#bosdyn-api-spot-JointKinematicCheckResult) |  |  |
-
-
-
-
-
-
-<a name="bosdyn-api-spot-SpotCheckFeedbackResponse-LegPairResultsEntry"></a>
-
-### SpotCheckFeedbackResponse.LegPairResultsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [LegPairCheckResult](#bosdyn-api-spot-LegPairCheckResult) |  |  |
 
 
 
@@ -22289,6 +26818,44 @@ Errors reflect an issue with robot calibration.
 | STATUS_OK | 1 | No detected calibration error. |
 | STATUS_WARNING | 2 | Possible calibration error detected. |
 | STATUS_ERROR | 3 | Error with robot calibration. |
+
+
+
+<a name="bosdyn-api-spot-GripperCameraCalibrationCommandRequest-Command"></a>
+
+### GripperCameraCalibrationCommandRequest.Command
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| COMMAND_UNKNOWN | 0 | Unused enum. |
+| COMMAND_START | 1 | Start calibration routine. |
+| COMMAND_CANCEL | 2 | Cancel calibration routine. |
+
+
+
+<a name="bosdyn-api-spot-GripperCameraCalibrationFeedbackResponse-Status"></a>
+
+### GripperCameraCalibrationFeedbackResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Unused enum. |
+| STATUS_PROCESSING | 1 | The robot is actively running calibration routine. |
+| STATUS_SUCCESS | 2 | The robot successfully ran calibration routine and<br>is ready to use again. |
+| STATUS_NEVER_RUN | 3 | Calibration routine has never been run. No feedback to give. |
+| STATUS_USER_CANCELED | 4 | Calibration routine has been canceled mid-routine. |
+| STATUS_POWER_ERROR | 5 | The robot is not powered on. |
+| STATUS_LEASE_ERROR | 6 | Ownership error during calibration. |
+| STATUS_CALIBRATION_ERROR | 8 | Calibration procedure produced an invalid result.<br>This may occur in poor lighting conditions or if<br>calibration target moved during calibration<br>procedure. |
+| STATUS_INITIALIZATION_ERROR | 9 | Something went wrong during initialization. Try running the command again or, if it<br>persists, restarting the robot. |
+| STATUS_INTERNAL_ERROR | 10 | Something extraordinary happened. Try power cycling robot or contact BD. |
+| STATUS_TARGET_NOT_CENTERED | 11 | Target partially, but not fully, in view when starting calibration. |
+| STATUS_TARGET_NOT_IN_VIEW | 12 | Target not visible when starting calibration. |
+| STATUS_TARGET_NOT_GRAVITY_ALIGNED | 13 | Target not aligned with gravity when starting calibration. |
+| STATUS_TARGET_UPSIDE_DOWN | 14 | Target upside down when starting calibration. |
+| STATUS_STUCK | 15 | The robot took too long to reach the goal pose. |
 
 
 
@@ -22473,6 +27040,8 @@ run periodically in order to keep the system running in the best possible condit
 | SpotCheckFeedback | [SpotCheckFeedbackRequest](#bosdyn-api-spot-SpotCheckFeedbackRequest) | [SpotCheckFeedbackResponse](#bosdyn-api-spot-SpotCheckFeedbackResponse) | Check the status of the spot check procedure. After procedure completes, this reports back<br>results for specific joints and cameras. |
 | CameraCalibrationCommand | [CameraCalibrationCommandRequest](#bosdyn-api-spot-CameraCalibrationCommandRequest) | [CameraCalibrationCommandResponse](#bosdyn-api-spot-CameraCalibrationCommandResponse) | Send a camera calibration command to the robot. Used to start or abort a calibration routine. |
 | CameraCalibrationFeedback | [CameraCalibrationFeedbackRequest](#bosdyn-api-spot-CameraCalibrationFeedbackRequest) | [CameraCalibrationFeedbackResponse](#bosdyn-api-spot-CameraCalibrationFeedbackResponse) | Check the status of the camera calibration procedure. |
+| GripperCameraCalibrationCommand | [GripperCameraCalibrationCommandRequest](#bosdyn-api-spot-GripperCameraCalibrationCommandRequest) | [GripperCameraCalibrationCommandResponse](#bosdyn-api-spot-GripperCameraCalibrationCommandResponse) | Send a command to the GripperCameraCalibration service. |
+| GripperCameraCalibrationFeedback | [GripperCameraCalibrationFeedbackRequest](#bosdyn-api-spot-GripperCameraCalibrationFeedbackRequest) | [GripperCameraCalibrationFeedbackResponse](#bosdyn-api-spot-GripperCameraCalibrationFeedbackResponse) | Check the status of the GripperCameraCalibration procedure. |
 
  <!-- end services -->
 
@@ -25265,11 +29834,12 @@ Provide the SpotCam's software release version.
 | ----- | ---- | ----- | ----------- |
 | knowledge_type | [Staircase.KnowledgeType](#bosdyn-api-Staircase-KnowledgeType) |  | How do we know about this staircase. |
 | stair_tform | [StairTransform](#bosdyn-api-StairTransform) |  | Location of the stairs origin relative to some named frame.<br>Origin defined as the center of the bottom of the lowest riser. |
-| number_of_steps | [int32](#int32) |  | Number of vertical risers. |
+| number_of_steps | [int32](#int32) |  | **Deprecated.** Number of vertical risers.<br>DEPRECATED as of 4.0. Use the length of the steps field instead. |
 | average_rise | [double](#double) |  | Average vertical height of each step in meters. |
 | average_run | [double](#double) |  | Average horizontal distance between risers in meters. |
 | average_width | [Staircase.Width](#bosdyn-api-Staircase-Width) |  | Average width. |
 | steps | [Staircase.Step](#bosdyn-api-Staircase-Step) | repeated | The individual steps ordered from lowest to highest. |
+| id | [string](#string) |  | Unique identifier used to equate staircases shared across edges and externally. This should<br>be randomly generated. |
 
 
 
@@ -26191,6 +30761,21 @@ A sphere drawing object.
 
 
 
+<a name="bosdyn-api-GpsProperties"></a>
+
+### GpsProperties
+Properties related to GPS measurements of our location with respect to the Earth.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| registration | [gps.Registration](#bosdyn-api-gps-Registration) |  |  |
+
+
+
+
+
+
 <a name="bosdyn-api-ImageProperties"></a>
 
 ### ImageProperties
@@ -26371,6 +30956,7 @@ have multiple different properties that are all associated with the single objec
 | ray_properties | [RayProperties](#bosdyn-api-RayProperties) |  | A ray pointing at the object. Useful in cases where position is unknown but direction is<br>known. |
 | bounding_box_properties | [BoundingBoxProperties](#bosdyn-api-BoundingBoxProperties) |  | Bounding box in the world, oriented at the location provided in the transforms_snapshot. |
 | staircase_properties | [StaircaseProperties](#bosdyn-api-StaircaseProperties) |  | The staircase properties provide information that helps the robot traverse or see a staircase. |
+| gps_properties | [GpsProperties](#bosdyn-api-GpsProperties) |  | Information about the Earth relative to the robot, localized by GPS. |
 | additional_properties | [google.protobuf.Any](#google-protobuf-Any) |  | An extra field for application-specific object properties. |
 
 

@@ -98,12 +98,8 @@ def register_with_robot(options):
     return robot
 
 
-def main(argv):
-    """Command line interface.
-
-    Args:
-        argv: List of command-line arguments passed to the program.
-    """
+def main():
+    """Command line interface."""
 
     default_port = '50051'
 
@@ -111,7 +107,7 @@ def main(argv):
     parser.add_argument('-p', '--port', help=f'Server\'s port number, default: {default_port}',
                         default=default_port)
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     if options.hostname is None or len(options.hostname) < 1:
         print('Error: must provide a robot hostname.')
@@ -181,5 +177,5 @@ def main(argv):
 
 if __name__ == '__main__':
     logging.basicConfig()
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

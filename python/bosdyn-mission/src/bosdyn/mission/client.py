@@ -36,6 +36,14 @@ class QuestionAlreadyAnswered(MissionResponseError):
     """The indicated question was already answered."""
 
 
+class CustomParamsError(MissionResponseError):
+    """The indicated answer does not match the spec for the indicated answer"""
+
+
+class IncompatibleAnswer(MissionResponseError):
+    """The indicated answer is not in a format expected by the indicated question."""
+
+
 class CompilationError(MissionResponseError):
     """Mission could not be compiled."""
 
@@ -105,25 +113,28 @@ class MissionClient(BaseClient):
         return self.call_async(self._stub.GetState, req, _get_state_value, common_header_errors,
                                copy_request=False, **kwargs)
 
-    def answer_question(self, question_id, code, **kwargs):
+    def answer_question(self, question_id, code=None, custom_params=None, **kwargs):
         """Specify an answer to the question asked by the mission.
         Args:
             question_id (int): ID of the question to answer.
             code (int): Answer code.
+            custom_params (DictParam): Answer to a custom params prompt.
 
         Raises:
             RpcError: Problem communicating with the robot.
             InvalidQuestionId: question_id was not a valid id.
             InvalidAnswerCode: code was not valid for the question.
             QuestionAlreadyAnswered: The question for question_id was already answered.
+            CustomParamsError: The answer did not match the spec for the question.
+            IncompatibleAnswer: The answer did not match a type expected for the question.
         """
-        req = self._answer_question_request(question_id, code)
+        req = self._answer_question_request(question_id, code, custom_params)
         return self.call(self._stub.AnswerQuestion, req, None, _answer_question_error_from_response,
                          copy_request=False, **kwargs)
 
-    def answer_question_async(self, question_id, code, **kwargs):
+    def answer_question_async(self, question_id, code=None, custom_params=None, **kwargs):
         """Async version of answer_question()"""
-        req = self._answer_question_request(question_id, code)
+        req = self._answer_question_request(question_id, code, custom_params)
         return self.call_async(self._stub.AnswerQuestion, req, None,
                                _answer_question_error_from_response, copy_request=False, **kwargs)
 
@@ -287,8 +298,19 @@ class MissionClient(BaseClient):
             RpcError: Problem communicating with the robot.
         """
         req = self._get_info_request()
-        return self.call(self._stub.GetInfo, req, _get_info_value, common_header_errors,
-                         copy_request=False, **kwargs)
+        try:
+            return self._get_info_as_chunks_call(req)
+        except UnimplementedError as err:
+            # This indicates that the software release running on robot does not yet have
+            # the implementation for the streaming response of GetInfo.
+            return self.call(self._stub.GetInfo, req, _get_info_value, common_header_errors,
+                             copy_request=False, **kwargs)
+
+    def _get_info_as_chunks_call(self, req, **kwargs):
+        """Issues the GetInfoAsChunks RPC to the mission service."""
+        return self.call(self._stub.GetInfoAsChunks, req, _get_info_value,
+                         error_from_response=common_header_errors,
+                         assemble_type=mission_pb2.GetInfoResponse, copy_request=False, **kwargs)
 
     def get_info_async(self, **kwargs):
         """Async version of get_info."""
@@ -334,8 +356,9 @@ class MissionClient(BaseClient):
         return request
 
     @staticmethod
-    def _answer_question_request(question_id, code):
-        return mission_pb2.AnswerQuestionRequest(question_id=question_id, code=code)
+    def _answer_question_request(question_id, code, custom_params):
+        return mission_pb2.AnswerQuestionRequest(question_id=question_id, code=code,
+                                                 custom_params=custom_params)
 
     @staticmethod
     def _load_mission_request(root, leases):
@@ -400,6 +423,10 @@ _ANSWER_QUESTION_STATUS_TO_ERROR.update({
         (InvalidAnswerCode, InvalidAnswerCode.__doc__),
     mission_pb2.AnswerQuestionResponse.STATUS_ALREADY_ANSWERED:
         (QuestionAlreadyAnswered, QuestionAlreadyAnswered.__doc__),
+    mission_pb2.AnswerQuestionResponse.STATUS_CUSTOM_PARAMS_ERROR:
+        (CustomParamsError, CustomParamsError.__doc__),
+    mission_pb2.AnswerQuestionResponse.STATUS_INCOMPATIBLE_ANSWER:
+        (IncompatibleAnswer, IncompatibleAnswer.__doc__),
 })
 
 

@@ -13,6 +13,8 @@ option java_outer_classname = "GraphNavProto";
 import "bosdyn/api/basic_command.proto";
 import "bosdyn/api/data_chunk.proto";
 import "bosdyn/api/geometry.proto";
+import "bosdyn/api/gps/gps.proto";
+import "bosdyn/api/graph_nav/gps.proto";
 import "bosdyn/api/graph_nav/nav.proto";
 import "bosdyn/api/graph_nav/map.proto";
 import "bosdyn/api/graph_nav/area_callback.proto";
@@ -22,6 +24,8 @@ import "bosdyn/api/license.proto";
 import "bosdyn/api/robot_state.proto";
 import "bosdyn/api/service_fault.proto";
 
+
+import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
@@ -173,7 +177,7 @@ message SetLocalizationResponse {
     RobotImpairedState impaired_state = 8;
 
     // This status determines whether the robot has compatible sensors for the
-    // map that was recorded. Note that if sensors aren't working, STATUS_IMPARIED
+    // map that was recorded. Note that if sensors aren't working, STATUS_IMPAIRED
     // will be returned, rather than STATUS_INCOMPATIBLE_SENSORS.
     SensorCompatibilityStatus sensor_status = 9;
 
@@ -195,6 +199,8 @@ message SetLocalizationResponse {
         QUALITY_CHECK_POOR_GRAVITY_ALIGNMENT = 3;
         // There wasn't enough data to make a determination about quality.
         QUALITY_CHECK_SKIPPED = 4;
+        // The prior passed in is too different from the expected height of the robot e.w.r.t the waypoint.
+        QUALITY_CHECK_BAD_HEIGHT = 5;
     }
     // Graph Nav will check the quality of the resulting localization and report the status
     // here. Note that to preserve backwards compatability with 3.2 and earlier, a poor quality check
@@ -551,6 +557,22 @@ message NavigateRouteResponse {
     AreaCallbackServiceError area_callback_error = 8;
 }
 
+// Parameters controlling how the robot will navigate to a GPS coordinate.
+message GPSNavigationParams {
+    // The goal position as latitude/longitude. Height is ignored.
+    bosdyn.api.gps.LLH goal_llh = 1;
+
+    // Counter-clockwise rotation in radians around the "up" axis that the robot will try to achieve at the goal. This is a bearing
+    // around the "up" axis such that East points to zero yaw, and West is pi radians yaw. If not provided, the robot will try to
+    // achieve any allowable orientation at the goal.
+    google.protobuf.DoubleValue goal_yaw = 2;
+
+    // The maximum distance we are willing to accept for the LLH coordinate from the mapped data in meters. This
+    // is a 2 dimensional measurement (height is not considered). If not filled out, Spot will decide based on
+    // internal defaults.
+    google.protobuf.DoubleValue max_distance_from_map = 3;
+}
+
 // The NavigateToAnchorRequest can be used to command GraphNav to drive the robot to a specific
 // place in an anchoring. GraphNav will find the waypoint that has the shortest path length from
 // robot's current position but is still close to the goal. GraphNav will plan a path through the
@@ -568,10 +590,18 @@ message NavigateToAnchorRequest {
     // The Leases to show ownership of the robot and the graph.
     repeated Lease leases = 2;
 
+    // Users may either choose seed_tform_goal or gps_navigation_params as a goal.
+    oneof goal {
     // The goal, expressed with respect to the seed frame of the current anchoring.
     // The robot will use the z value to find the goal waypoint, but the final z height the robot
     // achieves will depend on the terrain height at the offset from the goal.
     SE3Pose seed_tform_goal = 3;
+    // If given, the NavigateToAnchor request will instead be interpreted as a command to navigate to GPS coordinates.
+    // When given, the seed_tform_goal will be ignored,and instead the parameters in this message will be used. Otherwise,
+    // the NavigateToAnchorRequest works identically to when seed_tform_goal is used instead.  For example, the TravelParams
+    // will be respected for this kind of goal.
+    GPSNavigationParams gps_navigation_params = 11;
+    }
 
     // These parameters control selection of the goal waypoint. In seed frame, they are the x, y,
     // and z tolerances with respect to the goal pose within which waypoints will be considered.
@@ -651,6 +681,8 @@ message NavigateToAnchorResponse {
 
         // [Route Error] Happens when you try to navigate along a route and a needed callback is no longer available.
         STATUS_AREA_CALLBACK_ERROR = 17;
+        // [Route Error] The command contained an invalid GPS request. See gps_status for more details.
+        STATUS_INVALID_GPS_COMMAND = 18;
 
     }
     // Return status for the request.
@@ -667,6 +699,23 @@ message NavigateToAnchorResponse {
 
     // Errors about Area Callbacks in the map.
     AreaCallbackServiceError area_callback_error = 7;
+
+    // The result of the GPS command, if relevant.
+    enum GPSStatus {
+        // An unknown/unexpected error occurred.
+        GPS_STATUS_UNKNOWN = 0;
+        // The GPS command was valid and can be executed.
+        GPS_STATUS_OK = 1;
+        // The GPS command could not be completed because the map does not have GPS coordinates, neither in
+        // waypoint annotations nor in the waypoint snapshot data. Please record the map using a GPS-enabled robot,
+        // or annotate the waypoints with custom GPS coordinates.
+        GPS_STATUS_NO_COORDS_IN_MAP = 2;
+        // The GPS command could not be completed because the coordinates passed in were too far from any mapped GPS
+        // data.
+        GPS_STATUS_TOO_FAR_FROM_MAP = 3;
+    }
+    // Result of the GPS command.
+    GPSStatus gps_status = 8;
 
 }
 
@@ -737,6 +786,16 @@ message NavigationFeedbackResponse {
 
     // Remaining part of current route.
     Route remaining_route = 3;
+
+    // The completed route taken for this command.  Intended primarily for visualization
+    // of route progress.
+    // Do not use this to determine if the route is finished, as under certain conditions
+    // edges can be reported as completed before the route is done.  Check the status for
+    // STATUS_REACHED_GOAL to determine if the robot has finished the route.
+    CompletedRoute completed_route = 18;
+
+    // Estimated length of remaining route.
+    double remaining_route_length = 17;
 
     // ID of the command this feedback corresponds to.
     uint32 command_id = 4;
@@ -858,6 +917,8 @@ message GetLocalizationStateRequest {
     // data. If false, three 32 bit floats will be used per point in the point cloud.
     bool compress_live_point_cloud = 7;
 
+    // If true, request data about the robot's GPS localization.
+    bool request_gps_state = 9;
 }
 
 // Message describing the state of a remote point cloud service (such as a velodyne).
@@ -909,6 +970,10 @@ message GetLocalizationStateResponse {
     // available through this message.
     LostDetectorState lost_detector_state = 7;
 
+
+    // If the robot has GPS capability and the map was recorded with GPS, this message will show graph nav's estimate of
+    // the robot location in earth-centered frames. To see the raw GPS data, look at the WorldObject list.
+    GPSLocalization gps = 8;
 }
 
 // Clears the graph on the server. Also clears GraphNav's localization to the graph.
@@ -1048,6 +1113,8 @@ message UploadGraphResponse {
         bool has_empty_waypoint_anchor_ids = 13;
         // At least one object anchor in the anchoring has an empty ID. This is a warning. Empty anchors will be ignored.
         bool has_empty_object_anchor_ids = 14;
+        // One or more edges had a malformed staircase annotation. This is an error. Remove, rerecord, or fix the annotation.
+        repeated Edge.Id malformed_staircase_edge_ids = 15;
     }
     // If the returned status is STATUS_INVALID_GRAPH, this contains the detailed information about why the
     // graph was invalid. Note that some graph validation errors are warnings and the robot will be able to navigate

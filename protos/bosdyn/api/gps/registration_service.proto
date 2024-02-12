@@ -1,0 +1,23 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.gps;
+
+option java_outer_classname = "RegistrationServiceProto";
+
+import "bosdyn/api/gps/registration.proto";
+
+/*
+ * The RegistrationService consumes data sent to the Gps/AggregatorService.
+ * It calculates where the robot is in the world, and the transfroms from
+ * the robots internal frames to the world frame. 
+ */
+ service RegistrationService {
+    rpc GetLocation (GetLocationRequest) returns (GetLocationResponse) {}
+    rpc ResetRegistration (ResetRegistrationRequest) returns (ResetRegistrationResponse) {}
+}

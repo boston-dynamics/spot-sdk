@@ -29,7 +29,7 @@ There are two components of establishing a service: starting the server and regi
 
 #### Starting a Server
 The server itself can be spun up with the Python `grpc` library. The Spot Python SDK provides helpers that wrap the library and make it easier to manage a server. An example of the code to run a gRPC service is shown below.
-```
+```python
 # Proto service specific function used to attach a servicer to a server.
 add_servicer_to_server_fn = image_service_pb2_grpc.add_ImageServiceServicer_to_server
 
@@ -44,7 +44,7 @@ The `image_service_pb2_grpc.add_ImageServiceServicer_to_server` is a function au
 
 #### Registering a Service
 Registering a service requires communication with the robot. A service can register itself via the Directory Registration Client provided with the Python SDK. Each service instance should have a unique service name, service authority, and service type associated with it that are provided at registration time. These details will enable Spot to route client requests to the proper service. The preferred method of registering a service is shown below. Note that it registers with a directory keep alive and will have liveness monitoring enabled.
-```
+```python
 dir_reg_client = robot.ensure_client(DirectoryRegistrationClient.default_service_name)
 keep_alive = DirectoryRegistrationKeepAlive(dir_reg_client)
 keep_alive.start({DIRECTORY_NAME}, {SERVICE_TYPE}, {SERVICE_AUTHORITY}, {SERVICE_IP}, {SERVICE_PORT})

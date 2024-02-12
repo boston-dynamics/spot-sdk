@@ -1,0 +1,31 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.gps;
+
+option java_outer_classname = "AggregatorProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/gps/gps.proto";
+
+message NewGpsDataRequest {
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+
+    // GPS Measurements.  GPS units that generate data at a high rate
+    // can bundle multiple measurements together in a single message.
+    repeated bosdyn.api.gps.GpsDataPoint data_points = 2;
+
+    // Describer for what device is generating GPS data.
+    GpsDevice gps_device = 3;
+}
+
+message NewGpsDataResponse {
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+}

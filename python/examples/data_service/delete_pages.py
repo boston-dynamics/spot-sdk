@@ -43,7 +43,7 @@ def delete_pages(config):
     print(service_client.delete_data_pages(time_range, config.id))
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -52,7 +52,7 @@ def main(argv):
                         help='Specified timespan is in robot time')
     parser.add_argument('--id', nargs='+', help='delete pages by page id')
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     try:
         delete_pages(options)
         return True
@@ -63,5 +63,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

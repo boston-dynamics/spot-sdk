@@ -12,6 +12,10 @@ option java_outer_classname = "AreaCallbackDataProto";
 import "google/protobuf/any.proto";
 import "bosdyn/api/service_customization.proto";
 
+// Configuration data for how an area callback should be treated in a map.
+message AreaCallbackMapConfig {
+}
+
 // Data for a AreaCallback to be stored in the map
 message AreaCallbackData {
     // Custom config data used by the service to do its job.
@@ -19,4 +23,7 @@ message AreaCallbackData {
     // Any other custom parameters to the callback. This will be copied into
     // custom_params inside the BeginCallback RPC if it exists.
     DictParam custom_params = 2;
+
+    // Configuration data for how this area callback should be treated in the map.
+    AreaCallbackMapConfig map_config = 3;
 }

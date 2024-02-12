@@ -642,9 +642,9 @@ class LocalGridTimedCallbackEvent(object):
         return actor
 
 
-def main(argv):
+def main():
     """Main rendering loop for the API streaming visualizer."""
-    # Setup the robot.
+    # Set up the robot.
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--local-grid', choices=['no-step', 'obstacle-distance', 'terrain'],
@@ -652,7 +652,7 @@ def main(argv):
     parser.add_argument('--show-hand-depth',
                         help='Draw the hand depth data as a point cloud (requires SpotArm)',
                         action='store_true')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     sdk = bosdyn.client.create_standard_sdk('SpotViz')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
@@ -679,7 +679,7 @@ def main(argv):
     renderWindowInteractor.SetRenderWindow(renderWindow)
     renderWindowInteractor.SetInteractorStyle(vtk.vtkInteractorStyleTrackballCamera())
 
-    # Setup the time-based event callbacks for each vtk actor to be visualized.
+    # Set up the time-based event callbacks for each vtk actor to be visualized.
     robot_state_timer = RobotStateTimedCallbackEvent(robot_state_client)
     robot_state_actor = robot_state_timer.get_actor()
     renderer.AddActor(robot_state_actor)
@@ -722,5 +722,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
-        os._exit(1)
+    if not main():
+        sys.exit(1)

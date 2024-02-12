@@ -16,7 +16,7 @@ The diagram below shows the diagram of `Network Compute Bridge` functionality.
 
 ![Network compute bridge diagram](network_compute_bridge_diagram.png)
 
-Users implement `Compute Server` applications as `NetworkComputeBridgeWorker` RPC services and register them with with Spot's [Directory](developing_api_services.md#robot-directory). These workers can run on an onboard compute payload, such as the CORE I/O, or any server networked with the Spot system. The `NetworkComputeBridge` service running on the robot periodically checks for new workers and queries them for available model names through the `ListAvailableModels`. API clients, such as the tablet application or any application that uses the Spot SDK, communicate with the `NetworkComputeBridge` service on the robot through the `NetworkCompute` RPC to process any set of images with any available models in registered in the system.
+Users implement `Compute Server` applications as `NetworkComputeBridgeWorker` RPC services and register them with Spot's [Directory](developing_api_services.md#robot-directory). These workers can run on an onboard compute payload, such as the CORE I/O, or any server networked with the Spot system. The `NetworkComputeBridge` service running on the robot periodically checks for new workers and queries them for available model names through the `ListAvailableModels`. API clients, such as the tablet application or any application that uses the Spot SDK, communicate with the `NetworkComputeBridge` service on the robot through the `NetworkCompute` RPC to process any set of images with any available models in registered in the system.
 
 ## Example Concept
 

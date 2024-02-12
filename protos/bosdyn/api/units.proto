@@ -25,11 +25,13 @@ enum PressureEnum {
     PRESSURE_BAR = 3;  // Bar
 }
 
+
 message Units {
     oneof units {
         string name = 1;  // Use this field if the desired unit is not a supported enum.
         TemperatureEnum temp = 2;
         PressureEnum press = 3;
+
     }
 
     // If a service wants an absolute temperature threshold between 0 C  and 100 C, that would show

@@ -44,8 +44,8 @@ def payload_spot(config):
 
     # Create a payload
     payload = payload_protos.Payload()
-    payload.GUID = '78b076a2-b4ba-491d-a099-738928c4410c'
-    payload_secret = 'secret'
+    payload.GUID, payload_secret = bosdyn.client.util.read_or_create_payload_credentials(
+        config.payload_credentials_file_1)
     payload.name = 'Client Registered Payload Ex #1'
     payload.description = 'This payload was created and registered by the payloads.py client example.'
     payload.label_prefix.append('test_payload')
@@ -80,8 +80,8 @@ def payload_spot(config):
 
     # Create a payload
     payload = payload_protos.Payload()
-    payload.GUID = '7c49e4f7-9cb9-497a-849f-114360fa9bbf'
-    payload_secret = 'secret'
+    payload.GUID, payload_secret = bosdyn.client.util.read_or_create_payload_credentials(
+        config.payload_credentials_file_2)
     payload.name = 'Client Registered Payload Ex #2'
     payload.description = 'This payload was created and registered by the payloads.py using a PayloadRegistrationKeepAlive.'
     payload.label_prefix.append('test_payload')
@@ -106,11 +106,19 @@ def payload_spot(config):
     print('\n\n\nDon\'t forget to clean up these registrations in the Spot payloads webpage!')
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    parser.add_argument(
+        '--payload-credentials-file-1', required=True, type=str, help=
+        'Filename on this script\'s host where the GUID and secret for the first example payload are generated (per robot) and stored.'
+    )
+    parser.add_argument(
+        '--payload-credentials-file-2', required=True, type=str, help=
+        'Filename on this script\'s host where the GUID and secret for the second example payload are generated (per robot) and stored.'
+    )
+    options = parser.parse_args()
 
     payload_spot(options)
 
@@ -118,5 +126,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

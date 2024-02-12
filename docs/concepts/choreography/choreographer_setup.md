@@ -14,7 +14,7 @@ The application can be downloaded from the [Boston Dynamics Support Center](http
 
 ## System requirements
 
-Choreographer supports 64-bit Microsoft Windows 10 and 64-bit Ubuntu 18.04 Linux. No other system dependencies are required to run the Choreographer application. However, to use the Choreography SDK independently from the Choreographer application, both python 3 and the `bosdyn-choreography-protos` and `bosdyn-choreography-client` wheels must be installed.
+Choreographer supports 64-bit Microsoft Windows 10 and 64-bit Ubuntu 18.04 Linux. No other system dependencies are required to run the Choreographer application. However, to use the Choreography SDK independently of the Choreographer application, both Python 3 and the `bosdyn-api` and `bosdyn-choreography-client` wheels must be installed.
 
 ## Installing and running Choreographer
 

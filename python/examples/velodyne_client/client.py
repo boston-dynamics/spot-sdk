@@ -66,12 +66,12 @@ class AsyncRobotState(AsyncPeriodicQuery):
 def window_closed(ax):
     fig = ax.figure.canvas.manager
     active_managers = plt._pylab_helpers.Gcf.figs.values()
-    return not fig in active_managers
+    return fig not in active_managers
 
 
 def set_axes_equal(ax):
     """Make axes of 3D plot have equal scale so that spheres appear as spheres,
-    cubes as cubes, etc..  This is one possible solution to Matplotlib's
+    cubes as cubes, etc.  This is one possible solution to Matplotlib's
     ax.set_aspect('equal') and ax.axis('equal') not working for 3D.
 
     Args
@@ -98,12 +98,12 @@ def set_axes_equal(ax):
     ax.set_zlim3d([z_middle - plot_radius, z_middle + plot_radius])
 
 
-def main(argv):
+def main():
     # The last argument should be the IP address of the robot. The app will use the directory to find
     # the velodyne and start getting data from it.
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     sdk = bosdyn.client.create_standard_sdk('VelodyneClient')
     robot = sdk.create_robot(options.hostname)
@@ -172,5 +172,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

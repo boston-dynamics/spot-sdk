@@ -14,8 +14,8 @@ from bosdyn.client.common import (BaseClient, error_factory, error_pair,
                                   handle_common_header_errors, handle_custom_params_errors,
                                   handle_unset_status_error)
 from bosdyn.client.data_acquisition import (DataAcquisitionClient, DataAcquisitionResponseError,
-                                            UnknownCaptureTypeError, acquire_data_error,
-                                            get_request_id, metadata_to_proto)
+                                            UnknownCaptureTypeError, _get_live_data_error,
+                                            acquire_data_error, get_request_id, metadata_to_proto)
 from bosdyn.util import now_timestamp
 
 
@@ -77,6 +77,16 @@ class DataAcquisitionPluginClient(BaseClient):
             data_id=data_identifiers, action_id=action_id)
         return self.call_async(self._stub.AcquirePluginData, request,
                                error_from_response=acquire_data_error, copy_request=False, **kwargs)
+
+    def get_live_data(self, request):
+        """Call the GetLiveData RPC of the plugin service."""
+        return self.call(self._stub.GetLiveData, request, error_from_response=_get_live_data_error,
+                         copy_request=True)
+
+    def get_live_data_async(self, request):
+        """Async version of the get_live_data() RPC."""
+        return self.call_async(self._stub.GetLiveData, request,
+                               error_from_response=_get_live_data_error, copy_request=True)
 
     # The get_status, get_service_info, and cancel_acquisition methods are identical to the ones
     # implemented in the DataAcquisitionClient.

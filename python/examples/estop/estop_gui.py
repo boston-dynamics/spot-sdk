@@ -58,7 +58,7 @@ class EstopGui(QtWidgets.QMainWindow):
         self.checkin_status_signal.connect(self.set_status_label)
         self.got_status_signal.connect(self._launch_estop_status_dialog)
         self.status_extant = False
-        self.quitting = False  # Used to tell threads to shutdown
+        self.quitting = False  # Used to tell threads to shut down
 
         # Force server to set up a single endpoint system
         ep = EstopEndpoint(client, name, timeout_sec)
@@ -272,7 +272,7 @@ def build_and_run_app(hostname, estop_client, options):
     return run_app(qt_app, button_window)
 
 
-def main(argv):
+def main():
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('-t', '--timeout', default=5, type=float, help='Timeout in seconds')
@@ -280,7 +280,7 @@ def main(argv):
                         action='store_false', default=True)
     parser.add_argument('--start-minimized', help='Start the window minimized.',
                         dest='start_minimized', action='store_true', default=False)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     bosdyn.client.util.setup_logging(options.verbose)
 
     # Create robot object
@@ -295,5 +295,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

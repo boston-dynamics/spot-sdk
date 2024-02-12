@@ -119,7 +119,9 @@ class CompositorClient(BaseClient):
             kwargs: extra arguments for controlling RPC details.
         """
         coords = compositor_pb2.IrMeterOverlay.NormalizedCoordinates(x=x, y=y)
-        overlay = compositor_pb2.IrMeterOverlay(enable=enable, meter=[coords], unit=unit)
+        # setting both coords and meter fields for backwards compatibility
+        overlay = compositor_pb2.IrMeterOverlay(enable=enable, coords=coords, meter=[coords],
+                                                unit=unit)
         request = compositor_pb2.SetIrMeterOverlayRequest(overlay=overlay)
         return self.call(self._stub.SetIrMeterOverlay, request, self._return_response,
                          self._compositor_error_from_response, copy_request=False, **kwargs)
@@ -127,7 +129,9 @@ class CompositorClient(BaseClient):
     def set_ir_meter_overlay_async(self, x, y, enable, unit, **kwargs):
         """Async version of set_ir_meter_overlay()"""
         coords = compositor_pb2.IrMeterOverlay.NormalizedCoordinates(x=x, y=y)
-        overlay = compositor_pb2.IrMeterOverlay(enable=enable, meter=[coords], unit=unit)
+        # setting both coords and meter fields for backwards compatibility
+        overlay = compositor_pb2.IrMeterOverlay(enable=enable, coords=coords, meter=[coords],
+                                                unit=unit)
         request = compositor_pb2.SetIrMeterOverlayRequest(overlay=overlay)
         return self.call_async(self._stub.SetIrMeterOverlay, request, self._return_response,
                                self._compositor_error_from_response, copy_request=False, **kwargs)

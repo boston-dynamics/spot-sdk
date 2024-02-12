@@ -10,7 +10,8 @@
 from bosdyn.api import geometry_pb2
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 from bosdyn.client.frame_helpers import (GRAV_ALIGNED_BODY_FRAME_NAME, GROUND_PLANE_FRAME_NAME,
-                                         HAND_FRAME_NAME, ODOM_FRAME_NAME, get_a_tform_b)
+                                         HAND_FRAME_NAME, ODOM_FRAME_NAME, WR1_FRAME_NAME,
+                                         get_a_tform_b)
 from bosdyn.client.math_helpers import Quat, SE3Pose, Vec3
 from bosdyn.client.robot_command import RobotCommandBuilder
 from bosdyn.util import seconds_to_duration
@@ -18,7 +19,6 @@ from bosdyn.util import seconds_to_duration
 ENABLE_STAND_HIP_ASSIST = True
 ENABLE_STAND_YAW_ASSIST = False
 ROOT_FRAME_NAME_DEFAULT = ODOM_FRAME_NAME
-WR1_FRAME_NAME = 'link_wr1'
 EPSILON = 1e-6
 
 # Max stiffnesses for the arm.  Any higher than this is not recommended as the arm can go unstable.
@@ -145,7 +145,7 @@ def scale_compliance_at_current_position(direction_rt_task_in, scale, robot_stat
     # the tool frame be in the direction of the requested compliance.  For this reason, the actual
     # tool frame used when building the impedance command will have the position of the nominal tool
     # frame relative to the task frame, and will have an orientation created by rotating the task
-    # frame about a single axis such that the the new frame's x-axis is aligned with the direction
+    # frame about a single axis such that the new frame's x-axis is aligned with the direction
     # of desired force.
     task_T_tool_nom = task_T_wr1 * wr1_T_tool_nom
     tool_pos_rt_task = task_T_tool_nom.get_translation()

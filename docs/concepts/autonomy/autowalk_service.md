@@ -27,7 +27,7 @@ The mission service and missions sit on top of the API.  There is nothing you ca
     * A client running a python script needs constant communication with the robot in order to advance to different stages of the script.
 1. To deal with as few RPC calls as possible.  RPCs can fail in many ways, and writing a program that does the right thing for every different failure mode is difficult.  Also, the API requires sending many RPCs to do something and wait for it to finish.
 1. The python script has grown too complex to successfully develop on and debug.
-    * Writing and debugging boilerplate state tracking logic can be time consuming. The behavior trees offered by the mission service might be easier to use.
+    * Writing and debugging boilerplate state tracking logic can be time-consuming. The behavior trees offered by the mission service might be easier to use.
 1. To seamlessly move a program from client to client.
     * Because missions are defined using protobufs, they are language agnostic. The proto defining a mission can be interpreted by any client.
 

@@ -195,3 +195,8 @@ class NetworkRequestCallbackServicer(remote_service_pb2_grpc.RemoteMissionServic
             response.status = remote_pb2.TeardownSessionResponse.STATUS_OK
         else:
             response.status = remote_pb2.TeardownSessionResponse.STATUS_INVALID_SESSION_ID
+
+    def GetRemoteMissionServiceInfo(self, request, context):
+        response = remote_pb2.GetRemoteMissionServiceInfoResponse()
+        with ResponseContext(request, response):
+            return response

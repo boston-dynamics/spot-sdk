@@ -1,0 +1,82 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.metrics_logging;
+
+import "bosdyn/api/data_buffer.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/parameter.proto";
+import "bosdyn/api/metrics_logging/signed_proto.proto";
+
+option java_outer_classname = "MetricsLoggingRobotProto";
+
+message GetStoreSequenceRangeRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message GetStoreSequenceRangeResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // The inclusive sequence_number of the first entry in the store.
+    int32 first_sequence_number = 2;
+
+    // The inclusive sequence_number of the last entry in the store.
+    int32 last_sequence_number = 3;
+}
+
+
+message GetAbsoluteMetricSnapshotRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // The robot will respond with the corresponding Snapshot for these
+    // sequence_numbers, if it has them.
+    repeated int32 sequence_numbers = 2;
+}
+
+
+message GetAbsoluteMetricSnapshotResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Signed AbsoluteMetricsSnapshot messages corresponding to the request timestamps.
+    // The robot will exclude snapshots if:
+    //    * They don't exist on the robot
+    //    * If included, the snapshot would push the total response message size over the GRPC limit.
+    repeated SignedProto snapshots = 2;
+}
+
+message GetMetricsRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // If keys are specified, the GetMetricsResponse will only include parameters
+    // which match the keys. If no keys are specified, all parameters will be returned.
+    repeated string keys = 2;
+
+    // Include events in the GetMetricsResponse. By default events will not be included.
+    bool include_events = 3;
+}
+
+message GetMetricsResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Current parameters for metrics. 
+    repeated Parameter parameters = 2;
+
+    // If any keys specified in the GetMetricsRequest are not present in the database,
+    // they'll be reported here.
+    repeated string missing_keys = 3;
+
+    // Events included in the metrics.
+    repeated Event events = 4;
+}
+

@@ -37,7 +37,7 @@ The protobuf messages and service definitions are the primary interface definiti
 
 **Document interfaces and messages**. The proto definitions effectively define the protocol of the API - be sure to document what each field means and what units it is in terms of. Ideally each service will also be unit-tested, and have tutorial code for how to use it. If conceptually difficult to understand, a concepts doc should also be included.
 
-**RPCs are expected to complete quickly.** RPCs are expected to respond within 1 second. Rapid response times let clients differentiate network stalls from processing time. However, there are times where an action triggered by an RPC could take longer than 1 second to complete - such as powering on robot motors, or executing a computationally expensive operation.
+**RPCs are expected to complete quickly.** RPCs are expected to respond within 1 second. Rapid response times let clients differentiate network stalls from processing time. However, there are times when an action triggered by an RPC could take longer than 1 second to complete - such as powering on robot motors, or executing a computationally expensive operation.
 
 In these cases, use the Feedback RPC pattern as demonstrated by the PowerService. The initial RPC to trigger the action (PowerCommand in the PowerService case) will complete quickly. The response to the initial RPC includes whether the preconditions for the action were met, as well as a command id if the preconditions were met. Clients can then poll a feedback RPC (PowerCommandFeedback in the PowerService case) with the command id to track progress on the action.
 

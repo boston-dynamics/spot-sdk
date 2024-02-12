@@ -52,7 +52,7 @@ def data_acquisition_download(config):
                        config.additional_REST_params)
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -71,7 +71,7 @@ def main(argv):
               'parameters to append to the GET request when downloading the data. Parameters with '
               'multiple values need to be set to lists in the format (param: [value1, value2])'),
         required=False)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     try:
         if not os.path.exists(options.destination_folder):
@@ -83,5 +83,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

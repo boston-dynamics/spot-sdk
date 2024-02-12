@@ -16,7 +16,8 @@ import remote_mission_service
 
 from bosdyn.api.mission import nodes_pb2, util_pb2
 
-if __name__ == '__main__':
+
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('output_file', help='File to save the mission to.')
     parser.add_argument(
@@ -50,3 +51,7 @@ if __name__ == '__main__':
 
     with open(options.output_file, 'wb') as output:
         output.write(mission.SerializeToString())
+
+
+if __name__ == '__main__':
+    main()

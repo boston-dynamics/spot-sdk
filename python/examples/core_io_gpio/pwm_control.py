@@ -26,7 +26,7 @@ def print_info(pwm):
     print(f'Enabled: {pwm.get_enabled()}')
 
 
-def main(argv):
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--number', type=int, choices=[1, 2, 3], required=True,
                         help='PWM chip number to use (1, 2, or 3).')
@@ -43,7 +43,7 @@ def main(argv):
                         help='Whether to enable the pwm, only used in combination with mode "set"')
     parser.add_argument('--disable', action='store_true', default=False,
                         help='Whether to disable the pwm, only used in combination with mode "set"')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     pwm = PwmOutput(pwm_num=options.number)
 
@@ -64,5 +64,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

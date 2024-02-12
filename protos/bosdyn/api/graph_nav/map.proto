@@ -128,6 +128,22 @@ message Waypoint {
         // Is useful for example when trying to ensure that a loop closure occurs at
         // a particular intersection or near a dock.
         LoopClosureSettings loop_closure_settings = 7;
+
+        // Waypoints can optionally define where they are in an Earth-Centered-Earth-Fixed (ECEF) frame, which
+        // can aid in localization.
+        message GPSSettings {
+            // If the annotation state is set, the GPS settings will be applied. Otherwise, they will be ignored.
+            // If ignored, GPS will only be used at this waypoint if data from a GPS exists in the waypoint snapshot, and the
+            // robot has a GPS payload installed and running. Set the annotation state to override this behavior.
+            AnnotationState state = 1;
+            // This defines the pose of the waypoint in the Earth-Centered-Earth-Fixed (ECEF) frame.
+            SE3Pose ecef_tform_waypoint = 2;
+            // If true, GPS localization will be disabled at this waypoint. If false, the robot will use GPS when available
+            // to localize to this waypoint.
+            bool disable_gps_localization = 5;
+        }
+        // Optional GPS navigation settings for this waypoint.
+        GPSSettings gps_settings = 8;
     }
     // Annotations specific to the current waypoint.
     Annotations annotations = 4;
@@ -247,10 +263,6 @@ message Edge {
 
     // Annotations understood by BostonDynamics systems.
     message Annotations {
-        // Velocity limits to use while traversing the edge.
-        // These are maxima and minima, NOT target speeds.
-        // DEPRECATED as of 2.4 and will be removed in 4.0. Please use mobility_params.vel_limit.
-        SE2VelocityLimit vel_limit = 1 [deprecated = true];
 
         // Defines any parameters of the stairs
         message StairData {
@@ -263,6 +275,25 @@ message Edge {
 
             // Parameters describing an arbitrary staircase.
             bosdyn.api.StaircaseWithLandings staircase_with_landings = 3;
+
+            enum DescentPreference {
+                // Unknown value, default to DESCENT_PREFERENCE_ALWAYS_REVERSE.
+                DESCENT_PREFERENCE_UNKNOWN = 0;
+                // Robot will prefer to descend in reverse, but may descend forwards if the route
+                // could not otherwise be executed. This could be due to conflicting constraints
+                // created by an annotation or by another staircase.
+                DESCENT_PREFERENCE_PREFER_REVERSE = 1;
+                // Robot will always attempt to descend stairs in reverse, even if it causes
+                // navigation to fail.
+                DESCENT_PREFERENCE_ALWAYS_REVERSE = 2;
+                // Robot may descend in any order. The exact order it chooses will be decided by
+                // the lowest cost path found by the local trajectory optimizer and adjacent
+                // constraints, if they exist.
+                // NOTE: If a staircase which is difficult for the robot to descend in the forward
+                // direction is marked with this option, it may cause the robot to fall.
+                DESCENT_PREFERENCE_NONE = 3;
+            }
+            DescentPreference descent_preference = 4;
         }
         // Stairs information/parameters specific to the edge.
         StairData stairs = 2;
@@ -291,18 +322,6 @@ message Edge {
         // DEPRECATED as of 3.3.  Replaced by ground_clutter_mode.
         google.protobuf.BoolValue flat_ground = 6 [deprecated = true];
 
-        // Terrain coefficient of friction user hint. This value must be postive and will clamped if
-        // necessary on the robot side. Best suggested values lie in the range between 0.4 and 0.8
-        // (which is the robot's default.)
-        // DEPRECATED as of 2.1 and will be removed in 4.0. Use mobility_params instead, which
-        // includes ground_mu_hint as part of the terrain_params.
-        google.protobuf.DoubleValue ground_mu_hint = 7 [deprecated = true];
-
-        // If true, the edge crosses over grated metal. This changes some parameters of the robot's
-        // perception system to allow it to see grated floors bettter.
-        // DEPRECATED as of 2.1 and will be removed in 4.0. Use mobility_params instead, which
-        // includes grated_floor as part of the terrain_params.
-        google.protobuf.BoolValue grated_floor = 8 [deprecated = true];
         // Overrides the following fields of the mobility parameters to whatever is
         // stored in the map. For example, if this FieldMask contains "stairs_mode" and
         // "terrain_params.enable_grated_floor", then the map will be

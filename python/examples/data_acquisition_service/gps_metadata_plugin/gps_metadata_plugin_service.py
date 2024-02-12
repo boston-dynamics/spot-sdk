@@ -98,7 +98,7 @@ def run_service(bosdyn_sdk_robot, port, logger=None):
     return GrpcServiceRunner(service_servicer, add_servicer_to_server_fn, port, logger=logger)
 
 
-if __name__ == '__main__':
+def main():
     # Define all arguments used by this service.
     import argparse
     parser = argparse.ArgumentParser()
@@ -127,3 +127,7 @@ if __name__ == '__main__':
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:
         service_runner.run_until_interrupt()
+
+
+if __name__ == '__main__':
+    main()

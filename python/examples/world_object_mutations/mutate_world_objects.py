@@ -73,7 +73,7 @@ def create_apriltag_object():
     vision_tform_fiducial = update_frame(tf=default_a_tform_b, position_change=(0, 0, -.2),
                                          rotation_change=(0, 0, 0, 0))
     edges = add_edge_to_tree(edges, vision_tform_fiducial, VISION_FRAME_NAME, frame_name_fiducial)
-    # Create a edge for the filtered version of the fiducial in the world.
+    # Create an edge for the filtered version of the fiducial in the world.
     vision_tform_filtered_fiducial = update_frame(tf=default_a_tform_b, position_change=(0, 0, -.2),
                                                   rotation_change=(0, 0, 0, 0))
     edges = add_edge_to_tree(edges, vision_tform_filtered_fiducial, VISION_FRAME_NAME,
@@ -103,11 +103,11 @@ def create_apriltag_object():
     return wo_obj_to_add
 
 
-def main(argv):
+def main():
     """An example using the API to apply mutations to world objects."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Create robot object with a world object client.
     sdk = bosdyn.client.create_standard_sdk('WorldObjectClient')
@@ -185,14 +185,14 @@ def main(argv):
     print(f'World object X dimension of apriltag size after change: '
           f'{[obj.apriltag_properties.dimensions.x for obj in world_objects]}')
 
-    # Add a apriltag and then delete it. This will succeed because it is deleting an object added by
+    # Add an apriltag and then delete it. This will succeed because it is deleting an object added by
     # a client program and not specific to Spot's perception
     add_apriltag = make_add_world_object_req(wo_obj_to_add)
     resp = world_object_client.mutate_world_objects(mutation_req=add_apriltag)
     assert (resp.status == world_object_pb2.MutateWorldObjectResponse.STATUS_OK)
     apriltag_to_delete_id = resp.mutated_object_id
 
-    # Update the list of world object's after adding a apriltag
+    # Update the list of world object's after adding an apriltag
     world_objects = world_object_client.list_world_objects().world_objects
 
     # Delete the april tag that was just added. This will succeed because it is changing an object that was
@@ -249,5 +249,5 @@ def update_frame(tf, position_change, rotation_change):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

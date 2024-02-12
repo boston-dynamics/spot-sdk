@@ -8,7 +8,6 @@
 import collections
 import time
 
-from deprecated.sphinx import deprecated
 from google.protobuf import any_pb2, wrappers_pb2
 
 from bosdyn import geometry
@@ -16,6 +15,9 @@ from bosdyn.api import (arm_command_pb2, basic_command_pb2, full_body_command_pb
                         gripper_command_pb2, mobility_command_pb2, payload_estimation_pb2,
                         robot_command_pb2, robot_command_service_pb2_grpc, synchronized_command_pb2,
                         trajectory_pb2)
+
+# isort: off
+# isort: on
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 from bosdyn.client.common import (BaseClient, error_factory, error_pair,
                                   handle_common_header_errors, handle_lease_use_result_errors,
@@ -26,7 +28,7 @@ from .exceptions import Error as BaseError
 from .exceptions import InvalidRequestError, ResponseError, TimedOutError, UnsetStatusError
 from .frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME, get_se2_a_tform_b
 from .lease import add_lease_wallet_processors
-from .math_helpers import SE2Pose, SE3Pose
+from .math_helpers import SE2Pose, SE3Pose, SE3Velocity
 
 # The angles (in radians) that represent the claw gripper open and closed positions.
 _CLAW_GRIPPER_OPEN_ANGLE = -1.5708
@@ -164,19 +166,6 @@ END_TIME_EDIT_TREE = {
                 }
             }
         }
-    },
-    'mobility_command': {
-        '@command': {  # 'command' is a oneof submessage
-            'se2_velocity_request': {
-                'end_time': None
-            },
-            'se2_trajectory_request': {
-                'end_time': None
-            },
-            'stance_request': {
-                'end_time': None
-            }
-        }
     }
 }
 
@@ -231,15 +220,6 @@ EDIT_TREE_CONVERT_LOCAL_TIME_TO_ROBOT_TIME = {
                     'task_tform_desired_tool': {
                         'reference_time': None
                     },
-                }
-            }
-        }
-    },
-    'mobility_command': {
-        '@command': {
-            'se2_trajectory_request': {
-                'trajectory': {
-                    'reference_time': None
                 }
             }
         }
@@ -542,6 +522,23 @@ class RobotCommandClient(BaseClient):
                                                            behavior_fault_id=behavior_fault_id)
 
 
+class RobotCommandStreamingClient(BaseClient):
+    """Client for calling RobotCommand services.
+
+    This client is in BETA and may undergo changes in future releases.
+    """
+    default_service_name = 'robot-command-streaming'
+    service_type = 'bosdyn.api.RobotCommandStreamingService'
+
+    def __init__(self):
+        super(RobotCommandStreamingClient,
+              self).__init__(robot_command_service_pb2_grpc.RobotCommandStreamingServiceStub)
+        self._timesync_endpoint = None
+
+    def send_joint_control_commands(self, command_iterator):
+        return self._stub.JointControlStream(command_iterator)
+
+
 def _robot_command_value(response):
     """Get the command id from a RobotCommandResponse.
 
@@ -594,9 +591,7 @@ def _robot_command_error(response):
 def _robot_command_feedback_error(response):
     # Write custom handling unset errors here. Only one of these statuses needs to be set.
     field = 'status'
-    code = getattr(response, 'STATUS_UNKNOWN')
-    if ((getattr(response, field) != code) or
-        (getattr(response.feedback.full_body_feedback, field)) or
+    if ((getattr(response.feedback.full_body_feedback, field)) or
         (getattr(response.feedback.synchronized_feedback.mobility_command_feedback, field)) or
         (getattr(response.feedback.synchronized_feedback.arm_command_feedback, field)) or
         (getattr(response.feedback.synchronized_feedback.gripper_command_feedback, field))):
@@ -776,138 +771,10 @@ class RobotCommandBuilder(object):
         command = robot_command_pb2.RobotCommand(full_body_command=full_body_command)
         return command
 
-    ###################################
-    # Mobility commands  - DEPRECATED #
-    ###################################
-
     @staticmethod
-    @deprecated(reason='Mobility commands are now sent as a part of synchronized commands. '
-                'Use synchro_se2_trajectory_command instead.', version='2.1.0', action="always")
-    def trajectory_command(goal_x, goal_y, goal_heading, frame_name, params=None, body_height=0.0,
-                           locomotion_hint=spot_command_pb2.HINT_AUTO):
-        """
-        Command robot to move to pose along a 2D plane. Pose can be specified in the world
-        (kinematic odometry) frame or the robot body frame. The arguments body_height and
-        locomotion_hint are ignored if params argument is passed.
-
-        A trajectory command requires an end time. End time is not set in this function, but rather
-        is set externally before call to RobotCommandService.
-
-        Args:
-            goal_x: Position X coordinate.
-            goal_y: Position Y coordinate.
-            goal_heading: Pose heading in radians.
-            frame_name: Name of the frame to use.
-            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
-                this will be constructed using other args.
-            body_height: Height, meters, relative to a nominal stand height.
-            locomotion_hint: Locomotion hint to use for the trajectory command.
-
-        Returns:
-            RobotCommand, which can be issued to the robot command service.
-        """
-        if not params:
-            params = RobotCommandBuilder.mobility_params(body_height=body_height,
-                                                         locomotion_hint=locomotion_hint)
-        any_params = RobotCommandBuilder._to_any(params)
-        position = geometry_pb2.Vec2(x=goal_x, y=goal_y)
-        pose = geometry_pb2.SE2Pose(position=position, angle=goal_heading)
-        point = trajectory_pb2.SE2TrajectoryPoint(pose=pose)
-        traj = trajectory_pb2.SE2Trajectory(points=[point])
-        traj_command = basic_command_pb2.SE2TrajectoryCommand.Request(trajectory=traj,
-                                                                      se2_frame_name=frame_name)
-        mobility_command = mobility_command_pb2.MobilityCommand.Request(
-            se2_trajectory_request=traj_command, params=any_params)
-        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
-        return command
-
-    @staticmethod
-    @deprecated(reason='Mobility commands are now sent as a part of synchronized commands. '
-                'Use synchro_velocity_command instead.', version='2.1.0', action="always")
-    def velocity_command(v_x, v_y, v_rot, params=None, body_height=0.0,
-                         locomotion_hint=spot_command_pb2.HINT_AUTO, frame_name=BODY_FRAME_NAME):
-        """
-        Command robot to move along 2D plane. Velocity should be specified in the robot body
-        frame. Other frames are currently not supported. The arguments body_height and
-        locomotion_hint are ignored if params argument is passed.
-
-        A velocity command requires an end time. End time is not set in this function, but rather
-        is set externally before call to RobotCommandService.
-
-        Args:
-            v_x: Velocity in X direction.
-            v_y: Velocity in Y direction.
-            v_rot: Velocity heading in radians.
-            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
-                this will be constructed using other args.
-            body_height: Height, meters, relative to a nominal stand height.
-            locomotion_hint: Locomotion hint to use for the velocity command.
-            frame_name: Name of the frame to use.
-        """
-        if not params:
-            params = RobotCommandBuilder.mobility_params(body_height=body_height,
-                                                         locomotion_hint=locomotion_hint)
-        any_params = RobotCommandBuilder._to_any(params)
-        linear = geometry_pb2.Vec2(x=v_x, y=v_y)
-        vel = geometry_pb2.SE2Velocity(linear=linear, angular=v_rot)
-        slew_rate_limit = geometry_pb2.SE2Velocity(linear=geometry_pb2.Vec2(x=4, y=4), angular=2.0)
-        vel_command = basic_command_pb2.SE2VelocityCommand.Request(velocity=vel,
-                                                                   se2_frame_name=frame_name,
-                                                                   slew_rate_limit=slew_rate_limit)
-        mobility_command = mobility_command_pb2.MobilityCommand.Request(
-            se2_velocity_request=vel_command, params=any_params)
-        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
-        return command
-
-    @staticmethod
-    @deprecated(reason='Mobility commands are now sent as a part of synchronized commands. '
-                'Use synchro_stand_command instead.', version='2.1.0', action="always")
-    def stand_command(params=None, body_height=0.0, footprint_R_body=geometry.EulerZXY()):
-        """
-        Command robot to stand. If the robot is sitting, it will stand up. If the robot is
-        moving, it will come to a stop. Params can specify a trajectory for the body to follow
-        while standing. In the simplest case, this can be a specific position+orientation which the
-        body will hold at. The arguments body_height and footprint_R_body are ignored if params
-        argument is passed.
-
-        Args:
-            params(spot.MobilityParams): Spot specific parameters for mobility commands. If not set,
-                this will be constructed using other args.
-            body_height(float): Height, meters, to stand at relative to a nominal stand height.
-            footprint_R_body(EulerZXY): The orientation of the body frame with respect to the
-                footprint frame (gravity aligned framed with yaw computed from the stance feet)
-
-        Returns:
-            RobotCommand, which can be issued to the robot command service.
-        """
-        if not params:
-            params = RobotCommandBuilder.mobility_params(body_height=body_height,
-                                                         footprint_R_body=footprint_R_body)
-        any_params = RobotCommandBuilder._to_any(params)
-        mobility_command = mobility_command_pb2.MobilityCommand.Request(
-            stand_request=basic_command_pb2.StandCommand.Request(), params=any_params)
-        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
-        return command
-
-    @staticmethod
-    @deprecated(reason='Mobility commands are now sent as a part of synchronized commands. '
-                'Use synchro_sit_command instead.', version='2.1.0', action="always")
-    def sit_command(params=None):
-        """
-        Command the robot to sit.
-
-        Args:
-            params(spot.MobilityParams): Spot specific parameters for mobility commands.
-
-        Returns:
-            RobotCommand, which can be issued to the robot command service.
-        """
-        if not params:
-            params = RobotCommandBuilder.mobility_params()
-        any_params = RobotCommandBuilder._to_any(params)
-        mobility_command = mobility_command_pb2.MobilityCommand.Request(
-            sit_request=basic_command_pb2.SitCommand.Request(), params=any_params)
-        command = robot_command_pb2.RobotCommand(mobility_command=mobility_command)
+    def joint_command():
+        command = robot_command_pb2.RobotCommand()
+        command.full_body_command.joint_request.SetInParent()
         return command
 
     #########################
@@ -992,10 +859,9 @@ class RobotCommandBuilder(object):
         return robot_command
 
     @staticmethod
-    def synchro_trajectory_command_in_body_frame(goal_x_rt_body, goal_y_rt_body,
-                                                 goal_heading_rt_body, frame_tree_snapshot,
-                                                 params=None, body_height=0.0,
-                                                 locomotion_hint=spot_command_pb2.HINT_AUTO):
+    def synchro_trajectory_command_in_body_frame(
+            goal_x_rt_body, goal_y_rt_body, goal_heading_rt_body, frame_tree_snapshot, params=None,
+            body_height=0.0, locomotion_hint=spot_command_pb2.HINT_AUTO, build_on_command=None):
         """Command robot to move to pose described relative to the robots body along a 2D plane. For example,
         a command to move forward 2 meters at the same heading will have goal_x_rt_body=2.0, goal_y_rt_body=0.0,
         goal_heading_rt_body=0.0.
@@ -1027,7 +893,8 @@ class RobotCommandBuilder(object):
         odom_tform_goto = odom_tform_body * goto_rt_body
         return RobotCommandBuilder.synchro_se2_trajectory_command(odom_tform_goto.to_proto(),
                                                                   ODOM_FRAME_NAME, params,
-                                                                  body_height, locomotion_hint)
+                                                                  body_height, locomotion_hint,
+                                                                  build_on_command=build_on_command)
 
     @staticmethod
     def synchro_velocity_command(v_x, v_y, v_rot, params=None, body_height=0.0,
@@ -1251,7 +1118,7 @@ class RobotCommandBuilder(object):
                                                        frame1_name=frame_name)
 
         if frame2_tform_desired_hand is not None and frame2_name is not None:
-            if type(frame2_tform_desired_hand) == SE3Pose:
+            if isinstance(frame2_tform_desired_hand, SE3Pose):
                 # Convert input argument from math_helpers class to protobuf message.
                 frame2_tform_desired_hand = frame2_tform_desired_hand.to_proto()
 
@@ -1355,25 +1222,109 @@ class RobotCommandBuilder(object):
         return robot_command
 
     @staticmethod
-    def claw_gripper_open_command(build_on_command=None):
-        command = robot_command_pb2.RobotCommand()
-        command.synchronized_command.gripper_command.claw_gripper_command.trajectory.points.add(
-        ).point = _CLAW_GRIPPER_OPEN_ANGLE
+    def claw_gripper_open_command(build_on_command=None, max_acc=None, max_vel=None):
+        """Builds a command to open the gripper.  Wraps it in SynchronizedCommand.
+
+        Args:
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and mobility_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
+            max_acc: Optional maximum allowable gripper acceleration. Not setting this will lead to the
+                        robot using a relatively safe low default. If the user is sure their gripper
+                        trajectory is safe and achievable, this can be set to a large value so it
+                        doesn't get in the way.
+            max_vel: Optional maximum allowable gripper velocity. Same thing about defaults as max_acc.
+
+        Returns:
+            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.
+        """
+
+        robot_cmd = robot_command_pb2.RobotCommand()
+        gripper_cmd = robot_cmd.synchronized_command.gripper_command.claw_gripper_command
+        gripper_cmd.trajectory.points.add().point = _CLAW_GRIPPER_OPEN_ANGLE
+
+        if max_acc is not None:
+            # Set a maximum allowable joint acceleration if desired.
+            # If unset, a safe default will be used
+            gripper_cmd.maximum_open_close_acceleration.value = max_acc
+        if max_vel is not None:
+            # Set a maximum allowable joint velocity if desired.
+            # If unset, a safe default will be used
+            gripper_cmd.maximum_open_close_velocity.value = max_vel
+
         if build_on_command:
-            return RobotCommandBuilder.build_synchro_command(build_on_command, command)
-        return command
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_cmd)
+        return robot_cmd
 
     @staticmethod
-    def claw_gripper_close_command(build_on_command=None):
-        command = robot_command_pb2.RobotCommand()
-        command.synchronized_command.gripper_command.claw_gripper_command.trajectory.points.add(
-        ).point = _CLAW_GRIPPER_CLOSED_ANGLE
+    def claw_gripper_close_command(build_on_command=None, max_acc=None, max_vel=None,
+                                   disable_force_on_contact=False, max_torque=None):
+        """Builds a command to close the gripper.  Wraps it in SynchronizedCommand.
+
+        Args:
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and mobility_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
+            max_acc: Optional maximum allowable gripper acceleration. Not setting this will lead to the
+                        robot using a relatively safe low default. If the user is sure their gripper
+                        trajectory is safe and achievable, this can be set to a large value so it
+                        doesn't get in the way.
+            max_vel: Optional maximum allowable gripper velocity. Same thing about defaults as max_acc.
+            disable_force_on_contact: Whether to switch the gripper to force control on contact detection.
+            max_torque: Optional Maximum torque applied if contact detected closing the gripper. If
+                unspecified, a default value of 5.5 (Nm) will be used.
+
+        Returns:
+            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.
+        """
+
+        robot_cmd = robot_command_pb2.RobotCommand()
+        gripper_cmd = robot_cmd.synchronized_command.gripper_command.claw_gripper_command
+        gripper_cmd.trajectory.points.add().point = _CLAW_GRIPPER_CLOSED_ANGLE
+
+        if max_acc is not None:
+            # Set a maximum allowable joint acceleration if desired.
+            # If unset, a safe default will be used
+            gripper_cmd.maximum_open_close_acceleration.value = max_acc
+        if max_vel is not None:
+            # Set a maximum allowable joint velocity if desired.
+            # If unset, a safe default will be used
+            gripper_cmd.maximum_open_close_velocity.value = max_vel
+        if max_torque is not None:
+            # Maximum torque applied if contact detected closing the gripper.
+            # If unspecified, a default value of 5.5 (Nm) will be used.
+            gripper_cmd.maximum_torque.value = max_torque
+
+        gripper_cmd.disable_force_on_contact = disable_force_on_contact
+
         if build_on_command:
-            return RobotCommandBuilder.build_synchro_command(build_on_command, command)
-        return command
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_cmd)
+        return robot_cmd
 
     @staticmethod
-    def claw_gripper_open_fraction_command(open_fraction, build_on_command=None):
+    def claw_gripper_open_fraction_command(open_fraction, build_on_command=None, max_acc=None,
+                                           max_vel=None, disable_force_on_contact=False,
+                                           max_torque=None):
+        """Builds a command to set the gripper using a fractional input.  Wraps it in SynchronizedCommand.
+
+        Args:
+            open_fraction: Percentage [0, 1] to open the gripper.  0 fully closed, 1 fully open.
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and mobility_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
+            max_acc: Optional maximum allowable gripper acceleration. Not setting this will lead to the
+                        robot using a relatively safe low default. If the user is sure their gripper
+                        trajectory is safe and achievable, this can be set to a large value so it
+                        doesn't get in the way.
+            max_vel: Optional maximum allowable gripper velocity. Same thing about defaults as max_acc.
+            disable_force_on_contact: Whether to switch the gripper to force control on contact detection.
+            max_torque: Optional Maximum torque applied if contact detected closing the gripper. If
+                unspecified, a default value of 5.5 (Nm) will be used.
+
+        Returns:
+            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.
+        """
+
         gripper_q = 0
         if open_fraction <= 0:
             gripper_q = _CLAW_GRIPPER_CLOSED_ANGLE
@@ -1383,21 +1334,75 @@ class RobotCommandBuilder(object):
             gripper_q = ((_CLAW_GRIPPER_OPEN_ANGLE - _CLAW_GRIPPER_CLOSED_ANGLE) *
                          open_fraction) + _CLAW_GRIPPER_CLOSED_ANGLE
 
-        command = robot_command_pb2.RobotCommand()
-        command.synchronized_command.gripper_command.claw_gripper_command.trajectory.points.add(
-        ).point = gripper_q
+        robot_cmd = robot_command_pb2.RobotCommand()
+        gripper_cmd = robot_cmd.synchronized_command.gripper_command.claw_gripper_command
+        gripper_cmd.trajectory.points.add().point = gripper_q
+
+        if max_acc is not None:
+            # Set a maximum allowable joint acceleration if desired.
+            # If unset, a safe default will be used
+            gripper_cmd.maximum_open_close_acceleration.value = max_acc
+        if max_vel is not None:
+            # Set a maximum allowable joint velocity if desired.
+            # If unset, a safe default will be used
+            gripper_cmd.maximum_open_close_velocity.value = max_vel
+        if max_torque is not None:
+            # Maximum torque applied if contact detected closing the gripper.
+            # If unspecified, a default value of 5.5 (Nm) will be used.
+            gripper_cmd.maximum_torque.value = max_torque
+
+        gripper_cmd.disable_force_on_contact = disable_force_on_contact
+
         if build_on_command:
-            return RobotCommandBuilder.build_synchro_command(build_on_command, command)
-        return command
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_cmd)
+        return robot_cmd
 
     @staticmethod
-    def claw_gripper_open_angle_command(gripper_q, build_on_command=None):
-        command = robot_command_pb2.RobotCommand()
-        command.synchronized_command.gripper_command.claw_gripper_command.trajectory.points.add(
-        ).point = gripper_q
+    def claw_gripper_open_angle_command(gripper_q, build_on_command=None, max_acc=None,
+                                        max_vel=None, disable_force_on_contact=False,
+                                        max_torque=None):
+        """Builds a command to set the gripper open angle.  Wraps it in SynchronizedCommand.
+
+        Args:
+            gripper_q: [-1.5708, 0] where -1.5708 is fully open and 0 is fully closed.
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and mobility_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
+            max_acc: Optional maximum allowable gripper acceleration. Not setting this will lead to the
+                        robot using a relatively safe low default. If the user is sure their gripper
+                        trajectory is safe and achievable, this can be set to a large value so it
+                        doesn't get in the way.
+            max_vel: Optional maximum allowable gripper velocity. Same thing about defaults as max_acc.
+            disable_force_on_contact: Whether to switch the gripper to force control on contact detection.
+            max_torque: Optional Maximum torque applied if contact detected closing the gripper. If
+                unspecified, a default value of 5.5 (Nm) will be used.
+
+        Returns:
+            robot_command_pb2.RobotCommand with a claw_gripper_command filled out.
+        """
+
+        robot_cmd = robot_command_pb2.RobotCommand()
+        gripper_cmd = robot_cmd.synchronized_command.gripper_command.claw_gripper_command
+        gripper_cmd.trajectory.points.add().point = gripper_q
+
+        if max_acc is not None:
+            # Set a maximum allowable joint acceleration if desired.
+            # If unset, a safe default will be used
+            gripper_cmd.maximum_open_close_acceleration.value = max_acc
+        if max_vel is not None:
+            # Set a maximum allowable joint velocity if desired.
+            # If unset, a safe default will be used
+            gripper_cmd.maximum_open_close_velocity.value = max_vel
+        if max_torque is not None:
+            # Maximum torque applied if contact detected closing the gripper.
+            # If unspecified, a default value of 5.5 (Nm) will be used.
+            gripper_cmd.maximum_torque.value = max_torque
+
+        gripper_cmd.disable_force_on_contact = disable_force_on_contact
+
         if build_on_command:
-            return RobotCommandBuilder.build_synchro_command(build_on_command, command)
-        return command
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_cmd)
+        return robot_cmd
 
     @staticmethod
     def create_arm_joint_trajectory_point(sh0, sh1, el0, el1, wr0, wr1,
@@ -1534,9 +1539,131 @@ class RobotCommandBuilder(object):
         return robot_cmd
 
     @staticmethod
-    def claw_gripper_command_helper(gripper_positions, times, gripper_velocities=None,
-                                    ref_time=None, max_acc=None, max_vel=None,
-                                    disable_force_on_contact=False, build_on_command=None):
+    def arm_cartesian_move_helper(se3_poses, times, root_frame_name, wrist_tform_tool=None,
+                                  root_tform_task=None, se3_velocities=None, ref_time=None,
+                                  max_acc=None, max_linear_vel=None, max_angular_vel=None,
+                                  build_on_command=None):
+        """Given a set of SE3Poses, times, and optional velocities, create a synchro command
+            containing an arm_cartesian_command.
+
+        Args:
+            se3_poses (geometry_pb2.SE3Pose): A list of length N with SE3 transforms at each knot point in our
+                        trajectory.
+            times: A list of length N with the corresponding time_since_reference for
+                each of our knots.
+            root_frame_name: The name of the root frame. It must be a valid frame name in the
+                frame_tree.
+            wrist_tform_tool (geometry_pb2.SE3Pose): The optional tool pose to use during the move. If unset, defaults to
+                a pose slightly in front of the gripper's palm plate aligned with the wrist's
+                orientation.
+            root_tform_task (geometry_pb2.SE3Pose): The SE3 transform between the root and the task frame.
+                If unset, it will treat the root frame as the task frame.
+            se3_velocities (geometry_pb2.SE3Velocity): An optional list of length N with SE3 velocities at each knot point in
+                our trajectory.
+            ref_time: Optional reference time for the trajectory gotten from the computer. If unset, we'll use the current
+                robot-synchronized time
+            max_acc: Optional maximum allowable linear acceleration (m/s^2).
+            max_linear_vel: Optional maximum allowable linear velocity (m/s).
+            max_angular_vel: Optional maximum allowable angular velocity (rad/s).
+            build_on_command: Option to input a RobotCommand for synchronous commands.
+
+        Returns:
+            robot_command_pb2.RobotCommand with an arm_cartesian_command filled out.
+        """
+
+        assert se3_poses is not None, "Must pass in a list of SE3Poses"
+        assert times is not None, "Must pass in a list of times"
+        assert len(se3_poses) == len(times), "Number of poses must match number of times"
+        if se3_velocities is not None:
+            assert len(se3_velocities) == len(
+                times), "Number of SE3Velocities must match number of times"
+
+        # Create an arm_cartesian_command, and set the trajectory
+        robot_cmd = robot_command_pb2.RobotCommand()
+        arm_cartesian_command = robot_cmd.synchronized_command.arm_command.arm_cartesian_command
+        arm_cartesian_traj = arm_cartesian_command.pose_trajectory_in_task
+        arm_cartesian_traj.pos_interpolation = trajectory_pb2.POS_INTERP_CUBIC
+        arm_cartesian_traj.ang_interpolation = trajectory_pb2.ANG_INTERP_CUBIC_EULER
+        for i, time in enumerate(times):
+            # Add a new trajectory point to our trajectory
+            traj_point = arm_cartesian_traj.points.add()
+
+            se3pose = se3_poses[i]
+
+            # If it is not a geometry_pb2.SE3Pose, throw an error.
+            assert isinstance(
+                se3pose, geometry_pb2.SE3Pose), ('All poses must be of type geometry_pb2.SE3Pose')
+
+            traj_point.pose.CopyFrom(se3pose)
+            if se3_velocities is not None:
+                se3_velocity = se3_velocities[i]
+
+                assert isinstance(se3_velocity, geometry_pb2.SE3Velocity), (
+                    'All Velocities must be of type geometry_pb2.SE3Velocity')
+
+                traj_point.velocity.CopyFrom(se3_velocity)
+
+            # Set our time_since_reference for this trajectory point
+            traj_point.time_since_reference.CopyFrom(seconds_to_duration(times[i]))
+
+        if ref_time is not None:
+            # Set a reference time if desired. If not, we'll automatically set the reference time
+            # to be the current robot-synchronized time
+            arm_cartesian_traj.reference_time.CopyFrom(ref_time)
+
+        if max_acc is not None:
+            # Set a maximum allowable linear acceleration if desired.
+            # If unset, a safe default will be used
+            arm_cartesian_command.maximum_acceleration.value = max_acc
+
+        if max_linear_vel is not None:
+            # Set a maximum allowable linear velocity if desired.
+            # If unset, a safe default will be used
+            arm_cartesian_command.max_linear_velocity.value = max_linear_vel
+
+        if max_angular_vel is not None:
+            # Set a maximum allowable angular velocity if desired.
+            # If unset, a safe default will be used
+            arm_cartesian_command.max_angular_velocity.value = max_angular_vel
+
+        if wrist_tform_tool is not None:
+            # Set the gripper position if it is a valid SE3Pose.
+            # If unset, defaults to a pose slightly in front of the gripper's palm plate aligned
+            # with the wrist's orientation.
+            assert isinstance(
+                wrist_tform_tool,
+                geometry_pb2.SE3Pose), 'All poses must be of type geometry_pb2.SE3Pose'
+
+            arm_cartesian_command.wrist_tform_tool.CopyFrom(wrist_tform_tool)
+
+        if root_tform_task is not None:
+            # Set the transformation from the root frame to the task frame if it is a valid SE3Pose
+            # If unset, it will be assumed that the root frame is the task frame
+            assert isinstance(
+                root_tform_task,
+                geometry_pb2.SE3Pose), 'All poses must be of type geometry_pb2.SE3Pose'
+
+            arm_cartesian_command.root_tform_task.CopyFrom(root_tform_task)
+
+        # If the root frame name is invalid the command will be rejected
+        arm_cartesian_command.root_frame_name = root_frame_name
+
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_cmd)
+        return robot_cmd
+
+    @staticmethod
+    def claw_gripper_command_helper(
+        gripper_positions,
+        times,
+        gripper_velocities=None,
+        ref_time=None,
+        max_acc=None,
+        max_vel=None,
+        disable_force_on_contact=False,
+        build_on_command=None,
+        max_torque=None,
+    ):
         """Given a set of gripper positions, times, and optional velocities, create a synchro command.
 
         Args:
@@ -1556,6 +1683,8 @@ class RobotCommandBuilder(object):
             build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
                 arm_command and mobility_command from this incoming RobotCommand will be added
                 to the returned RobotCommand.
+            max_torque: Optional Maximum torque applied if contact detected closing the gripper. If
+                unspecified, a default value of 5.5 (Nm) will be used.
 
         Returns:
             robot_command_pb2.RobotCommand with a claw_gripper_command filled out.
@@ -1596,8 +1725,32 @@ class RobotCommandBuilder(object):
             # Set a maximum allowable joint velocity if desired.
             # If unset, a safe default will be used
             gripper_cmd.maximum_open_close_velocity.value = max_vel
+        if max_torque is not None:
+            # Maximum torque applied if contact detected closing the gripper.
+            # If unspecified, a default value of 5.5 (Nm) will be used.
+            gripper_cmd.maximum_torque.value = max_torque
 
         gripper_cmd.disable_force_on_contact = disable_force_on_contact
+
+        if build_on_command:
+            return RobotCommandBuilder.build_synchro_command(build_on_command, robot_cmd)
+        return robot_cmd
+
+    @staticmethod
+    def arm_joint_freeze_command(build_on_command=None):
+        """Returns a RobotCommand with an ArmCommand that will freeze the arm's joints in place.
+
+        Args:
+            build_on_command: Option to input a RobotCommand (not containing a full_body_command). An
+                arm_command and mobility_command from this incoming RobotCommand will be added
+                to the returned RobotCommand.
+
+        Returns:
+            robot_command_pb2.RobotCommand
+        """
+
+        robot_cmd = robot_command_pb2.RobotCommand()
+        robot_cmd.synchronized_command.arm_command.arm_joint_move_command.trajectory.points.add()
 
         if build_on_command:
             return RobotCommandBuilder.build_synchro_command(build_on_command, robot_cmd)
@@ -1711,18 +1864,18 @@ class RobotCommandBuilder(object):
     def build_synchro_command(*args):
         """ Combines multiple commands into one command. There's no intelligence here on
         duplicate commands.
-        Args: RobotCommand containing only either mobility commands or synchro commands
-        Returns: RobotCommand containing a synchro command """
+
+        Args:
+            RobotCommand containing only either mobility commands or synchro commands
+        Returns:
+            RobotCommand containing a synchro command """
         mobility_request = None
         arm_request = None
         gripper_request = None
 
         for command in args:
             if command.HasField('full_body_command'):
-                raise Exception(
-                    'this function only takes RobotCommands containing mobility or synchro cmds')
-            elif command.HasField('mobility_command'):
-                mobility_request = command.mobility_command
+                raise Exception('this function only takes RobotCommands containing synchro cmds')
             elif command.HasField('synchronized_command'):
                 if command.synchronized_command.HasField('mobility_command'):
                     mobility_request = command.synchronized_command.mobility_command
@@ -1750,13 +1903,13 @@ def blocking_command(command_client, command, check_status_fn, end_time_secs=Non
 
     Blocks until check_status_fn return true, or raises an exception if the command times out or fails.
     This helper checks the main full_body/synchronized command status (RobotCommandFeedbackStatus), but
-    the caller should check the status of the specific commands (stand, stow, selfright, etc) in the callback.
+    the caller should check the status of the specific commands (stand, stow, selfright, etc.) in the callback.
 
     Args:
         command_client: RobotCommand client.
         command: The robot command to issue to the robot.
         check_status_fn: A callback that accepts RobotCommandFeedbackResponse and returns True when the
-                         correct status's are achieved for the specific requested command and throws 
+                         correct statuses are achieved for the specific requested command and throws
                          CommandFailedErrorWithFeedback if an error state occurs.
         end_time_sec: The local end time of the command (will be converted to robot time)
         timeout_sec: Timeout for the rpc in seconds.
@@ -1922,7 +2075,7 @@ def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
 
        Return values:
         True if successfully got to the end of the trajectory, False if the arm stalled or
-        the move was canceled (the arm failed to reach the goal). See the proto definitions in 
+        the move was canceled (the arm failed to reach the goal). See the proto definitions in
         arm_command.proto for more information about why a trajectory would succeed or fail.
     """
     if timeout_sec is not None:
@@ -1967,7 +2120,7 @@ def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
 
 def block_for_trajectory_cmd(
         command_client, cmd_id,
-        trajectory_end_statuses=(basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_AT_GOAL,),
+        trajectory_end_statuses=(basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_STOPPED,),
         body_movement_statuses=None, feedback_interval_secs=0.1, timeout_sec=None, logger=None):
     """Helper that blocks until a trajectory command reaches a desired goal state or a timeout is reached.
 
@@ -1976,7 +2129,7 @@ def block_for_trajectory_cmd(
         cmd_id (int): command ID returned by the robot when the trajectory command was sent
         trajectory_end_statuses (set of SE2TrajectoryCommand.Feedback.Status): the feedback must have a
             status which is included in this set of statuses to be considered successfully complete.
-            By default, this includes only the "STATUS_AT_GOAL" end condition.
+            By default, this includes only the "STATUS_STOPPED" end condition.
         body_movement_statuses (set of SE2TrajectoryCommand.Feedback.BodyMovementStatus): the body
             movement status must be one of these statuses to be considered successfully complete. By
             default, this is "None", which means any body movement status will be accepted.
@@ -1988,7 +2141,7 @@ def block_for_trajectory_cmd(
             will be sent.
 
        Return values:
-        True if reaches STATUS_AT_GOAL, False otherwise.
+        True if reaches STATUS_STOPPED, False otherwise.
     """
 
     if timeout_sec is not None:

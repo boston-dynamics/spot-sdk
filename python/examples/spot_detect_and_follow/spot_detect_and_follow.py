@@ -401,10 +401,10 @@ def get_go_to(world_tform_object, robot_state, mobility_params, dist_margin=0.5)
         world_tform_object.x - delta_ewrt_vo_norm[0] * dist_margin,
         world_tform_object.y - delta_ewrt_vo_norm[1] * dist_margin
     ])
-    tag_cmd = RobotCommandBuilder.trajectory_command(goal_x=vo_tform_goal[0],
-                                                     goal_y=vo_tform_goal[1], goal_heading=heading,
-                                                     frame_name=VISION_FRAME_NAME,
-                                                     params=mobility_params)
+    se2_pose = geo.SE2Pose(position=geo.Vec2(x=vo_tform_goal[0], y=vo_tform_goal[1]), angle=heading)
+    tag_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(se2_pose,
+                                                                 frame_name=VISION_FRAME_NAME,
+                                                                 params=mobility_params)
     return tag_cmd
 
 
@@ -657,12 +657,8 @@ def signal_handler(signal, frame):
     SHUTDOWN_FLAG.value = 1
 
 
-def main(argv):
-    """Command line interface.
-
-    Args:
-        argv: List of command-line arguments passed to the program.
-    """
+def main():
+    """Command line interface."""
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -693,7 +689,7 @@ def main(argv):
 
     bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_payload_credentials_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     signal.signal(signal.SIGINT, signal_handler)
     try:
         # Make sure the model path is a valid file
@@ -794,7 +790,7 @@ def main(argv):
             if time_gap > options.max_processing_delay:
                 continue  # Skip image due to delay
 
-            # Find the transform to highest confidence object using the depth sensor
+            # Find the transform to the highest confidence object using the depth sensor
             get_object_position_start = time.time()
             robot_state = robot_state_task.proto
             world_tform_gpe = get_a_tform_b(robot_state.kinematic_state.transforms_snapshot,
@@ -839,5 +835,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

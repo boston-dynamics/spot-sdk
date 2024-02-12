@@ -163,9 +163,12 @@ def create_waypoint_object(renderer, waypoints, snapshots, waypoint_id):
     actor.SetYAxisLabelText('')
     actor.SetZAxisLabelText('')
     actor.SetTotalLength(0.2, 0.2, 0.2)
-    point_cloud_actor = create_point_cloud_object(waypoints, snapshots, waypoint_id)
     assembly.AddPart(actor)
-    assembly.AddPart(point_cloud_actor)
+    try:
+        point_cloud_actor = create_point_cloud_object(waypoints, snapshots, waypoint_id)
+        assembly.AddPart(point_cloud_actor)
+    except Exception as e:
+        print("Sorry, unable to create point cloud...", e)
     renderer.AddActor(assembly)
     return assembly
 
@@ -257,8 +260,11 @@ def load_map(path):
                 continue
             with open(file_name, 'rb') as snapshot_file:
                 waypoint_snapshot = map_pb2.WaypointSnapshot()
-                waypoint_snapshot.ParseFromString(snapshot_file.read())
-                current_waypoint_snapshots[waypoint_snapshot.id] = waypoint_snapshot
+                try:
+                    waypoint_snapshot.ParseFromString(snapshot_file.read())
+                    current_waypoint_snapshots[waypoint_snapshot.id] = waypoint_snapshot
+                except Exception as e:
+                    print(f"{e}: {file_name}")
 
                 for fiducial in waypoint_snapshot.objects:
                     if not fiducial.HasField('apriltag_properties'):
@@ -294,13 +300,16 @@ def load_map(path):
 
 
 def create_anchored_graph_objects(current_graph, current_waypoint_snapshots, current_waypoints,
-                                  current_anchors, current_anchored_world_objects, renderer):
+                                  current_anchors, current_anchored_world_objects, renderer,
+                                  hide_waypoint_text, hide_world_object_text):
     """
     Creates all the VTK objects associated with the graph, in seed frame, if they are anchored.
     :param current_graph: the graph to use.
     :param current_waypoint_snapshots: dict from snapshot id to snapshot.
     :param current_waypoints: dict from waypoint id to waypoint.
     :param renderer: The VTK renderer
+    :param hide_waypoint_text: whether text representing each waypoint should be hidden
+    :param hide_world_object_text: whether text representing each world object should be hidden
     :return: the average position in world space of all the waypoints.
     """
     waypoint_objects = {}
@@ -314,7 +323,8 @@ def create_anchored_graph_objects(current_graph, current_waypoint_snapshots, cur
             seed_tform_waypoint = SE3Pose.from_proto(
                 current_anchors[waypoint.id].seed_tform_waypoint).to_matrix()
             waypoint_object.SetUserTransform(mat_to_vtk(seed_tform_waypoint))
-            make_text(waypoint.annotations.name, seed_tform_waypoint[:3, 3], renderer)
+            if not hide_waypoint_text:
+                make_text(waypoint.annotations.name, seed_tform_waypoint[:3, 3], renderer)
             avg_pos += seed_tform_waypoint[:3, 3]
             waypoints_in_anchoring += 1
 
@@ -334,18 +344,22 @@ def create_anchored_graph_objects(current_graph, current_waypoint_snapshots, cur
         (fiducial_object, _) = create_fiducial_object(anchored_wo[2], anchored_wo[1], renderer)
         seed_tform_fiducial = SE3Pose.from_proto(anchored_wo[0].seed_tform_object).to_matrix()
         fiducial_object.SetUserTransform(mat_to_vtk(seed_tform_fiducial))
-        make_text(anchored_wo[0].id, seed_tform_fiducial[:3, 3], renderer)
+        if not hide_world_object_text:
+            make_text(anchored_wo[0].id, seed_tform_fiducial[:3, 3], renderer)
 
     return avg_pos
 
 
-def create_graph_objects(current_graph, current_waypoint_snapshots, current_waypoints, renderer):
+def create_graph_objects(current_graph, current_waypoint_snapshots, current_waypoints, renderer,
+                         hide_waypoint_text, hide_world_object_text):
     """
     Creates all the VTK objects associated with the graph.
     :param current_graph: the graph to use.
     :param current_waypoint_snapshots: dict from snapshot id to snapshot.
     :param current_waypoints: dict from waypoint id to waypoint.
     :param renderer: The VTK renderer
+    :param hide_waypoint_text: whether text representing each waypoint should be hidden
+    :param hide_world_object_text: whether text representing each world object should be hidden
     :return: the average position in world space of all the waypoints.
     """
     waypoint_objects = {}
@@ -378,10 +392,11 @@ def create_graph_objects(current_graph, current_waypoint_snapshots, current_wayp
         waypoint_objects[curr_waypoint.id].SetUserTransform(mat_to_vtk(curr_element[1]))
         world_tform_current_waypoint = curr_element[1]
         # Add text to the waypoint.
-        make_text(curr_waypoint.annotations.name, world_tform_current_waypoint[:3, 3], renderer)
+        if not hide_waypoint_text:
+            make_text(curr_waypoint.annotations.name, world_tform_current_waypoint[:3, 3], renderer)
 
         # For each fiducial in the waypoint's snapshot, add an object at the world pose of that fiducial.
-        if (curr_waypoint.snapshot_id in current_waypoint_snapshots):
+        if curr_waypoint.snapshot_id in current_waypoint_snapshots:
             snapshot = current_waypoint_snapshots[curr_waypoint.snapshot_id]
             for fiducial in snapshot.objects:
                 if fiducial.HasField('apriltag_properties'):
@@ -390,8 +405,9 @@ def create_graph_objects(current_graph, current_waypoint_snapshots, current_wayp
                     world_tform_fiducial = np.dot(world_tform_current_waypoint,
                                                   vtk_to_mat(curr_wp_tform_fiducial))
                     fiducial_object.SetUserTransform(mat_to_vtk(world_tform_fiducial))
-                    make_text(str(fiducial.apriltag_properties.tag_id), world_tform_fiducial[:3, 3],
-                              renderer)
+                    if not hide_world_object_text:
+                        make_text(str(fiducial.apriltag_properties.tag_id),
+                                  world_tform_fiducial[:3, 3], renderer)
 
         # Now, for each edge, walk along the edge and concatenate the transform to the neighbor.
         for edge in current_graph.edges:
@@ -419,12 +435,16 @@ def create_graph_objects(current_graph, current_waypoint_snapshots, current_wayp
     return avg_pos
 
 
-def main(argv):
+def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('path', type=str, help='Map to draw.')
     parser.add_argument('-a', '--anchoring', action='store_true',
                         help='Draw the map according to the anchoring (in seed frame).')
-    options = parser.parse_args(argv)
+    parser.add_argument('--hide-waypoint-text', action='store_true',
+                        help='Do not display text representing waypoints.')
+    parser.add_argument('--hide-world-object-text', action='store_true',
+                        help='Do not display text representing world objects.')
+    options = parser.parse_args()
     # Load the map from the given file.
     (current_graph, current_waypoints, current_waypoint_snapshots, current_edge_snapshots,
      current_anchors, current_anchored_world_objects) = load_map(options.path)
@@ -437,12 +457,14 @@ def main(argv):
         if len(current_graph.anchoring.anchors) == 0:
             print('No anchors to draw.')
             sys.exit(-1)
-        avg_pos = create_anchored_graph_objects(current_graph, current_waypoint_snapshots,
-                                                current_waypoints, current_anchors,
-                                                current_anchored_world_objects, renderer)
+        avg_pos = create_anchored_graph_objects(
+            current_graph, current_waypoint_snapshots, current_waypoints, current_anchors,
+            current_anchored_world_objects, renderer, options.hide_waypoint_text,
+            options.hide_world_object_text)
     else:
         avg_pos = create_graph_objects(current_graph, current_waypoint_snapshots, current_waypoints,
-                                       renderer)
+                                       renderer, options.hide_waypoint_text,
+                                       options.hide_world_object_text)
 
     camera_pos = avg_pos + np.array([-1, 0, 5])
 
@@ -468,4 +490,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

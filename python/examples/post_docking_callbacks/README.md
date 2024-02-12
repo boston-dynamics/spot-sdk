@@ -85,13 +85,18 @@ sudo docker save docking_callback:arm64 | pigz > docking_callback_arm64.tar.gz
 
 Note: For the AWS callback, you must copy your config file as `config` to this directory for `docker build` to work. You will then uncomment `COPY ./config ~/.aws/config` in Dockerfile. Alternatively, you can supply your keys by using the `--aws-access-key` and `--aws-secret-key` arguments.
 
-This example also provides a script for building the callback service into a Spot Extension.
-This script requires the same prerequisites as listed above for building a docker image for CORE I/O.
-Additionally, this script requires that the current user be added to the `docker` user group.
-If this is not the case, the script needs to be run with root privileges.
+This example can also be built into a [Spot Extension](../../../docs/payload/docker_containers.md) using a provided [convenience script](../extensions/README.md)
 
 ```
-./create_extension.sh
+cd {/path/to/python/examples/post_docking_callbacks/}
+
+python3 ../extensions/build_extension.py \
+    --arm \
+    --dockerfile-paths Dockerfile.arm64 \
+    --build-image-tags docking_callback:arm64 \
+    -i aws_docking_callback_arm64.tar.gz \
+    --package-dir . \
+    --spx aws_docking_callback.spx
 ```
 
 The output file will be called aws_docking_callback_arm64.spx and can be uploaded to a CORE I/O.

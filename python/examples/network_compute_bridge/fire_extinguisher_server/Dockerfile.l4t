@@ -1,6 +1,7 @@
-FROM nvcr.io/nvidia/l4t-tensorflow:r32.7.1-tf2.7-py3
+FROM nvcr.io/nvidia/l4t-tensorflow:r35.3.1-tf2.11-py3
 
 ENV DEBIAN_FRONTEND="noninteractive"
+ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib/python3.8/dist-packages/opencv_python.libs/"
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
 RUN apt-get update && apt-get install -yq --no-install-recommends \
     libgtk2.0-dev \

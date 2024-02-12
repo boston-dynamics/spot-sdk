@@ -14,7 +14,7 @@ Choreographer is a tool for authoring dances and executing them on robots. It le
 
 Choreographer is an executable program you can download from the [Boston Dynamics Support Center](https://support.bostondynamics.com/s/downloads) (login required).
 
-To run the program, double click the executable. Choreographer is supported only on for Windows and Linux platforms.
+To run the program, double-click the executable. Choreographer is supported only on for Windows and Linux platforms.
 
 ## Choreography safety
 
@@ -92,7 +92,7 @@ There are different methods for adding moves to the timeline.
 Once the parameters are adjusted to the desired values, the move can be added to the dance timeline by any of the following methods:
 
 1. Pressing the Add button beneath the moves list. This appends the move to the end of the timeline with any parameter changes.
-2. Double clicking the move name in the Moves List. This appends the move to the end of the timeline with any parameter changes.
+2. Double-clicking the move name in the Moves List. This appends the move to the end of the timeline with any parameter changes.
 3. Click the toggle to go from **Append** to **Insert** (under the Moves List). In **Insert** mode, hovering over the timeline shows a ghost move block. Clicking the block adds the move to the timeline with any parameter changes. Hit Esc to exit insert mode or press the toggle again to return to **Append** mode
 
    ![Insert/Append Mode Toggle](images/adding_modes.png)
@@ -107,7 +107,7 @@ Once a move is added to your timeline, it can be dragged left or right to the ap
 
 To modify move parameters, click the move block on the timeline to select it. Modify the move parameters that appear in the **Move Parameters** section. Each move has different parameters. Some moves are not configurable.
 
-Refer to the [Choreography moves reference](move_reference.md) for descriptions of each move and move parameter. Numerical parameters can be modified by editing the text field, adjusting its slider, or pressing the Up or Down arrow buttons. Boolean parameters can be changed by checking or unchecking the box. Enum parameters are changed by choosing new values in the drop down menu.
+Refer to the [Choreography moves reference](move_reference.md) for descriptions of each move and move parameter. Numerical parameters can be modified by editing the text field, adjusting its slider, or pressing the Up or Down arrow buttons. Boolean parameters can be changed by checking or unchecking the box. Enum parameters are changed by choosing new values in the drop-down menu.
 
 Move parameters can be modified before being added to the timeline. Select a move in the **Moves List** to edit the move parameters. When the move is added to the timeline, it will contain these parameter modifications.
 
@@ -153,7 +153,7 @@ With a robot connected to the Choreographer, you can preview dance moves before 
 
 ## Performing Choreography sequences
 
-Click **Start Choreography** in the Robot Controls bar to upload the choreography that is currently selected in the **Robot Management** tab. By default, this is the currently open choreography tab. The robot starts to execute the routine with music at the same. A minimum three second delay ensures that the music and the dance routine begin at the same time. To adjust this delay, use the `--delay DELAY_IN_SECONDS` command line argument when starting the Choreographer application from the command line.
+Click **Start Choreography** in the Robot Controls bar to upload the choreography that is currently selected in the **Robot Management** tab. By default, this is the currently open choreography tab. The robot starts to execute the routine with music at the same. A minimum three-second delay ensures that the music and the dance routine begin at the same time. To adjust this delay, use the `--delay DELAY_IN_SECONDS` command line argument when starting the Choreographer application from the command line.
 
 Note: If the robot is not started in the proper position (sprawl, sit, stand) the music and choreography start timing will likely be out of synch.
 

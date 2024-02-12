@@ -12,6 +12,7 @@ option java_outer_classname = "BasicCommandProto";
 
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/trajectory.proto";
+import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -167,16 +168,23 @@ message SE2TrajectoryCommand {
         // the final point of the trajectory.
 
         enum Status {
+            option allow_alias = true;
             // STATUS_UNKNOWN should never be used. If used, an internal error has happened.
             STATUS_UNKNOWN = 0;
+            // The robot has stopped. Either the robot has reached the end of the trajectory or it
+            // believes that it cannot reach the desired position. Robot may start to move again if
+            // a blocked path clears.
+            STATUS_STOPPED = 1;
+            // The robot is nearing the end of the requested trajectory and is doing final
+            // positioning.
+            STATUS_STOPPING = 3;
+            // The robot is actively following the requested trajectory.
+            STATUS_IN_PROGRESS = 2;
 
-            // The robot has arrived and is standing at the goal.
+            // The following enum values were possibly confusing in situations where the robot
+            // cannot achieve the requested trajectory and are now deprecated.
             STATUS_AT_GOAL = 1;
-
-            // The robot has arrived at the goal and is doing final positioning.
             STATUS_NEAR_GOAL = 3;
-
-            // The robot is attempting to go to a goal.
             STATUS_GOING_TO_GOAL = 2;
         }
         // Current status of the command.
@@ -192,6 +200,20 @@ message SE2TrajectoryCommand {
         }
         // Current status of how the body is moving
         BodyMovementStatus body_movement_status = 2;
+
+        enum FinalGoalStatus {
+            // FINAL_GOAL_STATUS_UNKNOWN should never be used. If used, an internal error has
+            // happened.
+            FINAL_GOAL_STATUS_UNKNOWN = 0;
+            // Robot is not stopped or stopping.
+            FINAL_GOAL_STATUS_IN_PROGRESS = 1;
+            // Final position was achievable.
+            FINAL_GOAL_STATUS_ACHIEVABLE = 2;
+            // Final position was not achievable.
+            FINAL_GOAL_STATUS_BLOCKED = 3;
+        }
+        // Flag indicating if the final requested position was achievable.
+        FinalGoalStatus final_goal_status = 5;
     }
 }
 
@@ -489,7 +511,7 @@ message ConstrainedManipulationCommand {
             // and constrained manipulation moves to that position with a trapezoidal
             // trajectory that has the max velocity specified in task_speed
             CONTROL_MODE_POSITION = 1;
-            // Velocity control mode where constrained manipulation applies forces to 
+            // Velocity control mode where constrained manipulation applies forces to
             // maintain the velocity specified in task_speed
             CONTROL_MODE_VELOCITY = 2;
         }
@@ -515,8 +537,7 @@ message ConstrainedManipulationCommand {
         // Constrained manipulation estimates the task frame given the observed initial motion.
         // Setting this to false saves and uses the estimation state from the previous
         // constrained manipulation move. This is true by default.
-        google.protobuf.BoolValue  reset_estimator = 14;
-
+        google.protobuf.BoolValue reset_estimator = 14;
     }
 
     message Feedback {
@@ -540,6 +561,73 @@ message ConstrainedManipulationCommand {
         // A boolean signal indicating constrained manipulation has seen
         // enough motion to estimate the constraint and that the wrench
         // is being applied along the estimated directions.
-        google.protobuf.BoolValue  estimation_activated = 3;
+        google.protobuf.BoolValue estimation_activated = 3;
+    }
+}
+
+message JointCommand {
+    message Request {
+        // Empty message, no paramaters required to activate.
+    }
+
+    message Feedback {
+        enum Status {
+            STATUS_UNKNOWN = 0;
+            // Command is still active and processing incoming joint requests
+            STATUS_ACTIVE = 1;
+            // An error has occurred and joint requests are no longer being processed
+            STATUS_ERROR = 2;
+        }
+        Status status = 1;
+
+        // Number of UpdateRequest messages received through the stream
+        uint64 num_messages_received = 2;
+    }
+
+    message UpdateRequest {
+        // The timestamp (in robot time) when the command will stop executing. This is a
+        // required field and used to prevent runaway commands.
+        google.protobuf.Timestamp end_time = 1;
+
+        // (Optional) joint trajectory reference time. See extrapolation_time for detailed
+        // explanation. If unspecified, this will default to the time the command is received.
+        // If the time is in the future, no extrapolation will be performed until that time
+        // (extrapolation never goes backwards in time)
+        google.protobuf.Timestamp reference_time = 7;
+
+        // (Optional) joint trajectory extrapolation time. If specified, the robot will extrapolate
+        // desired position based on desired velocity, starting at reference_time for at most
+        // extrapolation_duration (or until end_time, whichever is sooner)
+        google.protobuf.Duration extrapolation_duration = 8;
+
+        // Joint orders for the following commands and gains can be found in
+        // `examples/joint_control/constants.py`. The length must match the robots joint count, which
+        // is 12 for base robots and 19 for robots with arms.
+
+        // Commanded joint details
+        repeated float position = 2;
+        repeated float velocity = 3;
+        repeated float load = 4;
+
+        message Gains {
+            repeated float k_q_p = 1;   // position error proportional coefficient
+            repeated float k_qd_p = 2;  // velocity error proportional coefficient
+        }
+
+        // Gains are required to be specified on the first message. After that can be optionally
+        // updated by filling out the gains message again. Partial updates of gains are not
+        // supported, a full gain set must be specified each time.
+        Gains gains = 5;
+
+        // user_command_key is optional, but it can be used for tracking when commands take effect
+        // on the robot and calculating latencies. Avoid using 0
+        uint32 user_command_key = 6;
+
+        // (Optional) Joint velocity safety limit. Possibly useful during initial development or
+        // gain tuning. If the magnitude of any joint velocity passes the threshold the robot will
+        // trigger a behavior fault and go into a safety state. Client must power down the robot or
+        // clear the behavior fault via the Robot Command Service. Values less than or equal to 0
+        // will be considered invalid and must be sent in every UpdateRequest for use.
+        google.protobuf.FloatValue velocity_safety_limit = 9;
     }
 }

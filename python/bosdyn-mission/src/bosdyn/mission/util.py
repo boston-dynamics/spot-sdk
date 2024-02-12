@@ -9,16 +9,21 @@ import json
 import operator
 import re
 from builtins import str as text
+from typing import Dict, Union
 
 import google.protobuf.message
 import google.protobuf.struct_pb2
 import google.protobuf.text_format
+from deprecated.sphinx import deprecated
+from google.protobuf import message_factory
 
 from bosdyn.api import data_acquisition_pb2, geometry_pb2, gripper_camera_param_pb2
 from bosdyn.api.autowalk import walks_pb2
 from bosdyn.api.docking import docking_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2
 from bosdyn.api.mission import mission_pb2, nodes_pb2, util_pb2
+from bosdyn.client.util import safe_pb_enum_to_string as _bosdyn_client_safe_pb_enum_to_string
+from bosdyn.deprecated import moved_to
 from bosdyn.mission import constants
 
 # This is a special dummy message we'll use for TYPE_MESSAGE parameters.
@@ -61,7 +66,24 @@ def tree_to_string(root, start_level=0, include_status=False):
     return string
 
 
-def proto_from_tuple(tup):
+def type_to_field_name(type_name):
+    """Use type name to reconstruct field name of bosdyn.api.mission.Node.type
+    Example: SimpleParallel becomes simple_parallel"""
+    node_type = str(type_name).split('.')[-1]
+    field_name = node_type[0].lower()
+    for char in node_type[1:]:
+        if char.isupper():
+            field_name += f'_{char.lower()}'
+        else:
+            field_name += char
+
+    oneof_field_names = [x.name for x in nodes_pb2.Node.DESCRIPTOR.oneofs_by_name['type'].fields]
+    assert field_name in oneof_field_names, f'{field_name} is not a field name in bosdyn.api.mission.Node.type'
+
+    return field_name
+
+
+def proto_from_tuple(tup, pack_nodes=True):
     """Return a bosdyn.api.mission Node from a tuple. EXPERIMENTAL.
 
     Example:
@@ -81,7 +103,7 @@ def proto_from_tuple(tup):
         tup: (Name of node, Instantiated implementation of node protobuf, List of children tuples)
     """
     if isinstance(tup, nodes_pb2.Node):
-        # Sometimes the short hand doesn't work nicely, and in those cases we allow setting
+        # Sometimes the shorthand doesn't work nicely, and in those cases we allow setting
         # The node itself.
         return tup
 
@@ -148,9 +170,13 @@ def proto_from_tuple(tup):
     elif num_children != 0:
         raise Error('Proto "{}" of type "{}" was given {} children, but I do not know how to add'
                     ' them!'.format(node.name, inner_type, num_children))
-
-    node.impl.Pack(inner_proto)
+    if pack_nodes:
+        node.impl.Pack(inner_proto)
+    else:
+        getattr(node, type_to_field_name(inner_type)).CopyFrom(inner_proto)
     return node
+
+
 
 
 def python_var_to_value(var):
@@ -318,7 +344,7 @@ def get_value_from_constant_value_message(const_proto):
     return value
 
 
-def get_value_from_value_message(node, blackboard, value_msg):
+def get_value_from_value_message(node, blackboard, value_msg, is_validation=False):
     if value_msg.HasField(text("constant")):
         constant = value_msg.constant
         return get_value_from_constant_value_message(constant)
@@ -328,11 +354,31 @@ def get_value_from_value_message(node, blackboard, value_msg):
         raise AttributeError("Value must be a runtime variable or constant.")
 
 
-def safe_pb_enum_to_string(value, pb_enum_obj):
-    try:
-        return pb_enum_obj.Name(value)
-    except ValueError:
-        pass
-    return '<unknown> (value: {})'.format(value)
+safe_pb_enum_to_string = moved_to(_bosdyn_client_safe_pb_enum_to_string, version='4.0.0')
+
+
+def create_value(
+        var: Union[bool, int, float, str, google.protobuf.message.Message]) -> util_pb2.Value:
+    """Returns a Value message containing a ConstantValue with the appropriate oneof set.
+    """
+    return util_pb2.Value(constant=python_var_to_value(var))
+
+
+def define_blackboard(dict_values: Dict[str, util_pb2.Value]) -> nodes_pb2.DefineBlackboard:
+    """Returns a DefineBlackboard protobuf message for the key-value pairs in `dict_values`.
+    """
+    node_to_return = nodes_pb2.DefineBlackboard()
+    for (key, value) in dict_values.items():
+        node_to_return.blackboard_variables.add().CopyFrom(util_pb2.KeyValue(key=key, value=value))
+    return node_to_return
+
+
+def set_blackboard(dict_values: Dict[str, util_pb2.Value]) -> nodes_pb2.SetBlackboard:
+    """Returns a SetBlackboard protobuf message for the key-value pairs in `dict_values`.
+    """
+    node_to_return = nodes_pb2.SetBlackboard()
+    for (key, value) in dict_values.items():
+        node_to_return.blackboard_variables.add().CopyFrom(util_pb2.KeyValue(key=key, value=value))
+    return node_to_return
 
 

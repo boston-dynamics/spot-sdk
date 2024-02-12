@@ -44,7 +44,7 @@ def get_all_network_compute_services(directory_client):
     return out
 
 
-def main(argv):
+def main():
     """An example using the API to list and get specific objects."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -68,7 +68,7 @@ def main(argv):
     parser.add_argument('-r', '--disable-rotation',
                         help='Disable rotation of images (to align with horizontal)',
                         action='store_true')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     if options.image_source is not None and options.input_image is not None:
         print('Error: cannot provide both an input image and an image source.')
@@ -78,7 +78,7 @@ def main(argv):
         print('Error: cannot list models with input image source or input image.')
         sys.exit(1)
 
-    if options.image_source is None and options.input_image is None and options.model_list == False:
+    if options.image_source is None and options.input_image is None and options.model_list is False:
         default_image_source = 'frontleft_fisheye_image'
         print(f'No image source provided so defaulting to "{default_image_source}".')
         options.image_source = default_image_source
@@ -265,5 +265,5 @@ def rotate_point(x, y, rotmat):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

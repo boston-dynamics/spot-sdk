@@ -55,7 +55,7 @@ class EstopNoGui():
         self.estop_keep_alive.settle_then_cut()
 
 
-def main(argv):
+def main():
     """If this file is the main, create an instance of EstopNoGui and wait for user to terminate.
 
     This has little practical use, because calling the function this way does not give the user
@@ -64,7 +64,7 @@ def main(argv):
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('-t', '--timeout', type=float, default=5, help='Timeout in seconds')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Create robot object
     sdk = bosdyn.client.create_standard_sdk('estop_nogui')
@@ -192,5 +192,5 @@ def main(argv):
 
 if __name__ == '__main__':
     # Open terminal interface and hold estop until user exits with SIGINT
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

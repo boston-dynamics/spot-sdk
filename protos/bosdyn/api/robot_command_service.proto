@@ -20,10 +20,18 @@ service RobotCommandService {
     // A client queries this RPC to determine a robot's progress towards completion of a command.
     // This updates the client with metrics like "distance to goal."
     // The client should use this feedback to determine whether the current command has
-    // succeeeded or failed, and thus send the next command.
+    // succeeded or failed, and thus send the next command.
     rpc RobotCommandFeedback(RobotCommandFeedbackRequest) returns (RobotCommandFeedbackResponse) {}
 
     // Clear robot behavior fault.
     rpc ClearBehaviorFault(ClearBehaviorFaultRequest) returns (ClearBehaviorFaultResponse) {}
 
+}
+
+// This service is used to stream high rate commands to the robot once they have been activated
+// using RobotCommandService.RobotCommand
+// This service is in BETA and may undergo changes in future releases.
+    service RobotCommandStreamingService {
+    // Command updates for joint control
+    rpc JointControlStream(stream JointControlStreamRequest) returns (JointControlStreamResponse) {}
 }

@@ -12,7 +12,7 @@ option java_outer_classname = "DataAcquisitionServiceProto";
 
 import "bosdyn/api/data_acquisition.proto";
 
-// The DataAcquisitionService is the main data acquisition service run on robot, which recieves
+// The DataAcquisitionService is the main data acquisition service run on robot, which receives
 // incoming requests and sends queries to all directory-registered DataAcquisitionPluginServices.
 service DataAcquisitionService {
     // Trigger a data acquisition to save data and metadata to the data buffer.
@@ -27,4 +27,8 @@ service DataAcquisitionService {
 
     // Cancel an in-progress data acquisition.
     rpc CancelAcquisition(CancelAcquisitionRequest) returns (CancelAcquisitionResponse);
+
+    // Request live data available from DAQ plugins during teleoperation.
+    // Please use the other RPCs for typical data acquisition.
+    rpc GetLiveData(LiveDataRequest) returns (LiveDataResponse);
 }

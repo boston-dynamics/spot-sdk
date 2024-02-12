@@ -23,3 +23,4 @@ The following examples show how to use various Boston Dynamics API services and 
 - [Time Sync](../time_sync/README.md)
 - [Comms Test](../comms_test/README.md)
 - [IR Enable/Disable](../disable_ir_emission/README.md)
+- [Reset Safety Stop](../reset_safety_stop/README.md)

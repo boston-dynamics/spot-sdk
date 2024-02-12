@@ -552,7 +552,7 @@ def test_full_data_acquisition_integration(robot, image_sources, service_name, v
     return success
 
 
-def main(argv):
+def main():
     """Main testing interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -566,7 +566,7 @@ def main(argv):
         'Test that the image sources are available in the data acquisition service and can be acquired.'
     )
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Setup logger specific for this test program.
     logging.basicConfig(level=logging.INFO, format='%(levelname)s - %(message)s')
@@ -641,5 +641,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

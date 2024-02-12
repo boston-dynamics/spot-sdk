@@ -483,7 +483,6 @@ class ExitCheck(object):
 
 
 def main():
-
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument(
@@ -529,7 +528,7 @@ def main():
 
     # Run the program with curses user interface
     try:
-        # Prevent curses from introducing a 1 second delay for ESC key
+        # Prevent curses from introducing a 1-second delay for ESC key
         os.environ.setdefault('ESCDELAY', '0')
         # Run animation recorder interface in curses mode, then restore terminal config.
         curses.wrapper(recorder_interface.drive)
@@ -546,5 +545,4 @@ def main():
 
 if __name__ == '__main__':
     if not main():
-        os._exit(1)
-    os._exit(0)
+        sys.exit(1)

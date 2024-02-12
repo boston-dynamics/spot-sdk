@@ -13,11 +13,7 @@ This example does not use the Spot SDK, but can be integrated with other Spot SD
 
 ## Setup Dependencies
 
-This example needs to be run with python3 and have the dependencies in requirements.txt installed. See the requirements.txt file for a list of dependencies which can be installed with pip using the command:
-
-```
-python3 -m pip install -r requirements.txt
-```
+This example does not have any extra Python dependencies.
 
 ## Running the Example
 

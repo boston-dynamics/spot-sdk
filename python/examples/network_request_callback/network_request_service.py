@@ -82,14 +82,14 @@ class NetworkRequestServiceTool:
         return exit_status[session_id]
 
 
-def main(argv):
+def main():
     # Define all arguments used by this service.
     import argparse
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_payload_credentials_arguments(parser)
     bosdyn.client.util.add_service_hosting_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Setup logging to use either INFO level or DEBUG level to see status.
     setup_logging()
@@ -102,7 +102,7 @@ def main(argv):
 
     # Create a service runner for remote mission callbacks to control the shared state
     service_active = False
-    while service_active == False:
+    while service_active is False:
         try:
             network_request_service = network_request_service_manager.run_network_request_service(
                 network_request_tool.http_request, robot, NETWORK_REQUEST_SERVICE_PORT,
@@ -134,4 +134,4 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

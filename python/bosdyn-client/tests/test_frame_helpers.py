@@ -629,7 +629,7 @@ def test_express_velocity_new_frame():
     vel_of_body_in_odom = frame_helpers.express_se2_velocity_in_new_frame(
         frame_tree, "vision", "odom", vel_of_body_in_vision)
     assert vel_of_body_in_odom is not None
-    assert type(vel_of_body_in_vision) == math_helpers.SE2Velocity
+    assert isinstance(vel_of_body_in_vision, math_helpers.SE2Velocity)
     assert math.fabs(vel_of_body_in_odom.angular - 2) < 1e-6
     assert math.fabs(vel_of_body_in_odom.linear.x - 1) < 1e-6
     assert math.fabs(vel_of_body_in_odom.linear.y - 5) < 1e-6
@@ -639,7 +639,7 @@ def test_express_velocity_new_frame():
     vel_of_body_in_odom = frame_helpers.express_se3_velocity_in_new_frame(
         frame_tree, "vision", "odom", vel_of_body_in_vision)
     assert vel_of_body_in_odom is not None
-    assert type(vel_of_body_in_vision) == math_helpers.SE3Velocity
+    assert isinstance(vel_of_body_in_vision, math_helpers.SE3Velocity)
     assert math.fabs(vel_of_body_in_odom.angular.x - 1) < 1e-6
     assert math.fabs(vel_of_body_in_odom.angular.y - 2) < 1e-6
     assert math.fabs(vel_of_body_in_odom.angular.z - 3) < 1e-6
@@ -675,7 +675,7 @@ def test_express_velocity_types():
     frame_tree = _create_snapshot(snapshot_text)
     assert frame_helpers.validate_frame_tree_snapshot(frame_tree)
     test_vel1 = math_helpers.SE3Velocity(1.1, 2.2, 3.3, 4.4, 5.5, 6.6)
-    assert type(test_vel1.linear_velocity_x) == float
+    assert isinstance(test_vel1.linear_velocity_x, float)
     assert test_vel1.linear_velocity_x == 1.1
     assert test_vel1.linear.x == 1.1
     test_vel2 = math_helpers.SE3Velocity(1.1, 2.2, 3.3, 4.4, 5.5, 6.6)
@@ -684,15 +684,15 @@ def test_express_velocity_types():
     body_vel = frame_helpers.express_se3_velocity_in_new_frame(frame_tree, "body", "vision",
                                                                test_vel2)
     assert body_vel is not None
-    assert type(body_vel.linear.x) == float
-    assert type(body_vel.linear_velocity_x) == float
+    assert isinstance(body_vel.linear.x, float)
+    assert isinstance(body_vel.linear_velocity_x, float)
     assert body_vel.linear_velocity_x == 56.1
     assert body_vel.linear.x == 56.1
     body_vel = frame_helpers.express_se3_velocity_in_new_frame(frame_tree, "body", "vision",
                                                                test_vel2_proto)
     assert body_vel is not None
-    assert type(body_vel.linear.x) == float
-    assert type(body_vel.linear_velocity_x) == float
+    assert isinstance(body_vel.linear.x, float)
+    assert isinstance(body_vel.linear_velocity_x, float)
     assert body_vel.linear_velocity_x == 56.1
     assert body_vel.linear.x == 56.1
 
@@ -701,14 +701,14 @@ def test_express_velocity_types():
     body_vel = frame_helpers.express_se2_velocity_in_new_frame(frame_tree, "body", "vision",
                                                                test_vel3)
     assert body_vel is not None
-    assert type(body_vel.linear.x) == float
-    assert type(body_vel.linear_velocity_x) == float
+    assert isinstance(body_vel.linear.x, float)
+    assert isinstance(body_vel.linear_velocity_x, float)
     assert body_vel.linear_velocity_x == 1.1
     assert body_vel.linear.x == 1.1
     body_vel = frame_helpers.express_se2_velocity_in_new_frame(frame_tree, "body", "vision",
                                                                test_vel3_proto)
     assert body_vel is not None
-    assert type(body_vel.linear.x) == float
-    assert type(body_vel.linear_velocity_x) == float
+    assert isinstance(body_vel.linear.x, float)
+    assert isinstance(body_vel.linear_velocity_x, float)
     assert body_vel.linear_velocity_x == 1.1
     assert body_vel.linear.x == 1.1

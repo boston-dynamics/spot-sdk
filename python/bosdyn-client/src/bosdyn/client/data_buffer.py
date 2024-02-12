@@ -143,10 +143,7 @@ class DataBufferClient(BaseClient):
     def _do_add_text_messages(self, func, text_messages, **kwargs):
         """Internal text message RPC stub call."""
         request = data_buffer_protos.RecordTextMessagesRequest()
-        for in_text_msg in text_messages:
-            # pylint: disable=no-member
-            request.text_messages.add().CopyFrom(in_text_msg)
-
+        request.text_messages.extend(text_messages)
         return func(self._stub.RecordTextMessages, request, value_from_response=None,
                     error_from_response=common_header_errors, **kwargs)
 
@@ -364,7 +361,7 @@ class DataBufferClient(BaseClient):
 
 
 class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attributes
-    """A logging system Handler that will publish text to a the data-buffer service.
+    """A logging system Handler that will publish text to the data-buffer service.
 
     Args:
         service: Name of the service. See LogAnnotationTextMessage.
@@ -375,6 +372,7 @@ class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attr
         msg_num_limit: If number of messages reaches this number, send data with data_buffer_client.
         msg_age_limit: If messages have been sitting locally for this many seconds, send data with
                        data_buffer_client.
+        skip_rpcs: Do not log any messages for RPC sending.
 
     Raises:
         log_annotation.InvalidArgument: The TimeSyncEndpoint is not valid.
@@ -382,8 +380,11 @@ class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attr
 
     def __init__(  # pylint: disable=too-many-arguments
             self, service, data_buffer_client, level=logging.NOTSET, time_sync_endpoint=None,
-            rpc_timeout=1, msg_num_limit=10, msg_age_limit=1):
+            rpc_timeout=1, msg_num_limit=10, msg_age_limit=1, skip_rpcs=False):
         logging.Handler.__init__(self, level=level)
+        self.addFilter(is_not_text_log)
+        if skip_rpcs:
+            self.addFilter(is_not_rpc)
         self.msg_age_limit = msg_age_limit
         self.msg_num_limit = msg_num_limit
         self.rpc_timeout = rpc_timeout
@@ -544,11 +545,12 @@ class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attr
                         if len(self._msg_queue) >= self._dump_msg_count:
                             self._dump_msg_queue()
 
-    def record_to_msg(self, record):
+    def record_to_msg(self, record: logging.LogRecord):
         """Convert logging record to TextMessage proto."""
         level = self.record_level_to_proto_level(record.levelno)
         msg = data_buffer_protos.TextMessage(source=self.service, level=level,
-                                             message=self.format(record))
+                                             message=self.format(record), filename=record.filename,
+                                             line_number=record.lineno)
         # pylint: disable=no-member
         if self.time_sync_endpoint is not None:
             try:
@@ -572,3 +574,15 @@ class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attr
         if record_level >= logging.INFO:
             return data_buffer_protos.TextMessage.LEVEL_INFO
         return data_buffer_protos.TextMessage.LEVEL_DEBUG
+
+
+def is_not_text_log(record: logging.LogRecord) -> bool:
+    """Filter out the RecordMessages calls that the handler sends so that we do not go into an infinite loop."""
+    return not record.name.endswith('.DataBufferService.RecordTextMessages')
+
+
+def is_not_rpc(record: logging.LogRecord) -> bool:
+    """Because our loggers use the form sdk_name.robot_name.service_name.rpc_method, we can't easily just turn
+    off all logging for rpcs.  This function identifies the rpc logging calls to be able to strip them out."""
+    return not (record.module == 'common' and
+                (record.funcName == 'call' or record.funcName == 'call_async'))

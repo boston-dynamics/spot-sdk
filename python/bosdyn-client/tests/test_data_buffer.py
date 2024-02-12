@@ -78,12 +78,12 @@ def test_add_protobuf(client, constant_log_timestamp):
     # Asynchronous data buffer writes
     client.add_protobuf(proto)
     assert client._stub.RecordDataBlobs.call_count == 1
-    assert client._stub.RecordDataBlobs.call_args[0][0].sync == False
+    assert client._stub.RecordDataBlobs.call_args[0][0].sync is False
 
     client.add_protobuf_async(proto).result()
     assert client._stub.RecordDataBlobs.future.call_count == 1
     assert (client._stub.RecordDataBlobs.call_args == client._stub.RecordDataBlobs.future.call_args)
-    assert client._stub.RecordDataBlobs.call_args[0][0].sync == False
+    assert client._stub.RecordDataBlobs.call_args[0][0].sync is False
     assert (
         client._stub.RecordDataBlobs.call_args[0][0].blob_data[0].data == proto.SerializeToString())
     assert (client._stub.RecordDataBlobs.call_args[0][0].blob_data[0].timestamp ==
@@ -92,12 +92,12 @@ def test_add_protobuf(client, constant_log_timestamp):
     # Synchronous data buffer writes
     client.add_protobuf(proto, write_sync=True)
     assert client._stub.RecordDataBlobs.call_count == 2
-    assert client._stub.RecordDataBlobs.call_args[0][0].sync == True
+    assert client._stub.RecordDataBlobs.call_args[0][0].sync is True
 
     client.add_protobuf_async(proto, write_sync=True).result()
     assert client._stub.RecordDataBlobs.future.call_count == 2
     assert (client._stub.RecordDataBlobs.call_args == client._stub.RecordDataBlobs.future.call_args)
-    assert client._stub.RecordDataBlobs.call_args[0][0].sync == True
+    assert client._stub.RecordDataBlobs.call_args[0][0].sync is True
     assert (
         client._stub.RecordDataBlobs.call_args[0][0].blob_data[0].data == proto.SerializeToString())
     assert (client._stub.RecordDataBlobs.call_args[0][0].blob_data[0].timestamp ==
@@ -200,7 +200,7 @@ def test_handler_simple(mock_log_client, handler, logger, record_and_proto_level
 
     # Log our message, at a specific time.
     msg = 'hello world'
-    with mock.patch('bosdyn.client.log_annotation.core_util.now_timestamp') as mock_now_ts:
+    with mock.patch('bosdyn.client.data_buffer.core_util.now_timestamp') as mock_now_ts:
         mock_now_ts.return_value = timestamp_pb2.Timestamp(seconds=12345, nanos=678)
         with handler:
             logger.log(record_level, msg)

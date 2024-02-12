@@ -24,16 +24,16 @@ Spot implements the API as a variety of network services, such as the image serv
 
 Finally, payloads allow for expansion of services beyond those provided by Spot itself. For example, Spot CAM offers a variety of services to control stream quality or the LED lights.
 
-## Scout API
+## Orbit API
 
-Scout collects, organizes, and stores data from every mission and teleoperation session executed by a Spot fleet - this information is open to Scout customers through a programmatic web api called the [Scout API](about_scout.md).
+Orbit collects, organizes, and stores data from every mission and teleoperation session executed by a Spot fleet - this information is open to Orbit customers through a programmatic web api called the [Orbit API](about_orbit.md).
 
-Similar to the Spot API, client applications can be written in many languages and run on most devices that can establish a network connection to Scout.
+Similar to the Spot API, client applications can be written in many languages and run on most devices that can establish a network connection to Orbit.
 
 ## Contents
 
 - [About Spot](about_spot.md)
-- [About Scout](about_scout.md)
+- [About Orbit(formerly Scout)](about_orbit.md)
 - [Networking](networking.md)
 - [Base services](base_services.md)
 - [Geometry and Frames](geometry_and_frames.md)
@@ -42,7 +42,7 @@ Similar to the Spot API, client applications can be written in many languages an
 - [KeepAlive (BETA)](keepalive_service.md)
 - [Lease](lease_service.md)
 - [Developing API Services](developing_api_services.md)
-- [Service Parameterization](service_customization.md)
+- [Service Customization](service_customization.md)
 - [Faults](faults.md)
 - [Autonomy services](autonomy/README.md)
 - [Choreography](choreography/README.md)

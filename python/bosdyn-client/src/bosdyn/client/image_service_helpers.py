@@ -65,9 +65,9 @@ class CameraInterface(ABC):
         threads/requests may try to call blocking_capture at the same time. A Lock (self.capture_lock) is provided
         as a convenience to help with this.
 
-        Keyword Args:
+        Args:
             custom_params (service_customization_pb2.DictParam): Custom parameters defined by the image source
-                                                                 affecting the resulting capture 
+                                                                 affecting the resulting capture
             **kwargs: Other keyword arguments including future additions to the request that affect the capture.
                       If an implementer is looking to use kwargs, it is expected that they update their
                       blocking_capture function signature to accept named keyword arguments such as custom_params
@@ -181,7 +181,7 @@ class VisualImageSource():
 
     def create_capture_thread(self, custom_params=None):
         """Initialize a background thread to continuously capture images.
-        
+
         """
         self.capture_thread = ImageCaptureThread(self.image_source_name, self.capture_function,
                                                  custom_params=custom_params)
@@ -277,7 +277,7 @@ class VisualImageSource():
         Args:
             capture_func (CameraInterface.blocking_capture): The function capturing the image
                                                               data and timestamp.
-            custom_params (service_customization_pb2.DictParam): Custom parameters passed to the blocking 
+            custom_params (service_customization_pb2.DictParam): Custom parameters passed to the blocking
                                                                  capture affecting the resulting capture
             **capture_func_kwargs: Other keyword arguments for the capture_func
         """
@@ -309,7 +309,7 @@ class VisualImageSource():
         """Retrieve the latest captured image and timestamp.
 
         Args:
-            custom_params (service_customization_pb2.DictParam): Custom parameters passed to the object's 
+            custom_params (service_customization_pb2.DictParam): Custom parameters passed to the object's
                                                                  capture_function affecting the resulting capture
             **capture_func_kwargs: Other keyword arguments for the capture_function
 
@@ -343,7 +343,7 @@ class VisualImageSource():
             image_req (image_pb2.ImageRequest): The image request associated with the image_data.
 
         Returns:
-            image_pb2.ImageResponse.Status indicating if the decode succeeds, or image format conversion or
+            image_pb2.ImageResponse.Status indicating if the decoding succeeds, or image format conversion or
             pixel conversion failed. Throws a decode data fault if the image or
             pixels cannot be decoded to the desired format. Mutates the image_proto Image proto
             with the decoded data if successful.
@@ -402,7 +402,7 @@ class VisualImageSource():
             image_type (image_pb2.ImageType): The type of image (e.g. visual, depth).
             image_formats (image_pb2.Image.Format): The image formats supported (jpeg, raw)
             pixel_formats (image_pb2.Image.PixelFormat): The pixel formats supported
-            param_spec (service_customization_pb2.DictParam.Spec): A set of custom parameters 
+            param_spec (service_customization_pb2.DictParam.Spec): A set of custom parameters
                                                                    passed into this image source
         Returns:
             An ImageSource with the cols, rows, and image type populated.
@@ -431,7 +431,7 @@ class VisualImageSource():
                                      which returns the gain as a float.
             exposure (float | function): The exposure time for an image in seconds. This can be a fixed
                               value or a function which returns the exposure time as a float.
-            request_custom_params (service_customization_pb2.DictParam): Custom Params associated with the image 
+            request_custom_params (service_customization_pb2.DictParam): Custom Params associated with the image
                             request. Should not be 'None', but left as an option to accomodate old callers
         Returns:
             An instance of the protobuf CaptureParameters message.
@@ -457,11 +457,11 @@ class VisualImageSource():
 class ThreadCaptureOutput:
     """Small struct to represent the output of an ImageCaptureThread's get_latest_captured_image
     in a future-compatible way
-    
+
     Args:
         is_valid (Boolean): Whether the latest capture uses the custom parameters and other arguments
                             supplied in the latest request, and is therefore returned
-        image (Any | None): If the latest capture is valid, the image data in any format 
+        image (Any | None): If the latest capture is valid, the image data in any format
                             (e.g. numpy, bytes, array)
         timestamp (float): The timestamp that the latest valid capture was taken
     """
@@ -547,7 +547,7 @@ class ImageCaptureThread():
             self.has_updated_capture = True
 
     def get_latest_captured_image(self, custom_params=None, **capture_func_kwargs):
-        """Returns the last found image and timestamp in a ThreadCaptureOutput object if that 
+        """Returns the last found image and timestamp in a ThreadCaptureOutput object if that
             image uses the latest params. Otherwise returns a ThreadCaptureOutput object with
             is_valid = False and capture/timestamp as None.
         """
@@ -567,8 +567,8 @@ class ImageCaptureThread():
         # Still, check for the custom_params argument to ensure we accomodate pre-3.3 direct implementations of ImageCaptureThreads
         if "custom_params" in inspect.signature(capture_func).parameters.keys():
             #If using a blocking capture function that takes in custom params or kwargs, one should supply those
-            output_capture_function = lambda: capture_func(custom_params=custom_params, **
-                                                           capture_func_kwargs)
+            def output_capture_function():
+                return capture_func(custom_params=custom_params, **capture_func_kwargs)
         else:
             output_capture_function = capture_func
         return output_capture_function
@@ -664,7 +664,7 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
         return response
 
     def _set_format_and_decode(self, image_data, img_proto, img_req):
-        """Calls the image_decode_with_error_checking function, which returns a (Boolean, Boolean) if the decode succeeds."""
+        """Calls the image_decode_with_error_checking function, which returns a (Boolean, Boolean) if the decoding succeeds."""
         # This function should set the image data, pixel format, image format, and transform snapshot fields.
         return self.image_sources_mapped[
             img_req.image_source_name].image_decode_with_error_checking(

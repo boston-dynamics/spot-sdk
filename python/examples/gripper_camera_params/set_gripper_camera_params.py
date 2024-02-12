@@ -19,7 +19,7 @@ from bosdyn.api import gripper_camera_param_pb2, header_pb2
 from bosdyn.client.gripper_camera_param import GripperCameraParamClient
 
 
-def main(argv):
+def main():
     # Parse args
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -51,7 +51,7 @@ def main(argv):
                         help='Enable/disable white-balance-temperature-auto')
     parser.add_argument('--white-balance-temperature', type=float,
                         help='Manual white-balance-temperature value , 0.0 - 1.0')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     sdk = bosdyn.client.create_standard_sdk('gripper_camera_params')
     robot = sdk.create_robot(options.hostname)
@@ -200,5 +200,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

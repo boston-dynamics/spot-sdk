@@ -17,7 +17,7 @@ Clients can set one of the following "stop levels":
  - `SETTLE_THEN_CUT` -- the robot attempts to come to a stop, sit down, and then cut actuator power.
  - `NONE` -- no stop level. Actuators are allowed to power on. This does NOT turn the actuators on.
 
-The set up happens over the course of several steps: Configuration, Registration, and CheckIn. Once all registered endpoints have checked in, actuators can be powered on.
+The setup happens over the course of several steps: Configuration, Registration, and CheckIn. Once all registered endpoints have checked in, actuators can be powered on.
 
 The Python library takes care of these steps for you. See the E-Stop example in [`estop_nogui` example](../../python/examples/estop/README.md) and the client implementation in [`bosdyn/client/estop.py`](../../python/bosdyn-client/src/bosdyn/client/estop.py) for an example usage and implementation.
 

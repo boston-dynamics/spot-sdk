@@ -16,7 +16,8 @@ The DataAcquisitionPluginService base class (defined in `data_acquisition_plugin
 - **pointcloud_plugin**: Reads from a point cloud service (such as a Velodyne) and saves the point cloud data as a binary protobuf.
 - **network_compute_bridge_plugin**: Used to call a Network Compute Bridge model to process data, and save the results. Customize this example for when the built-in network compute support in the Data Acquisition Service is not expressive enough for your case.
 - **gps_metadata_plugin** and **piksi_gps_plugin**: Used to store GPS coordinates as json-formatted metadata. gps_metadata_plugin just inserts random data and is meant to be customized for individual hardware. piksi_gps_plugin reads from a Piksi unit.
-- **save_file_plugin**: Loads an file from disk and saves the file as binary. For example, this plugin can save an mp4 video file to the robot.
+- **save_file_plugin**: Loads a file from disk and saves the file as binary. For example, this plugin can save an mp4 video file to the robot.
+- [**signals_coreio_modem_plugin**](signals_coreio_modem_plugin/README.md): Reads modem data from the CORE IO and exposes a new GetLiveData rpc to display signals data during Spot teleoperation.
 
 ## Setup Dependencies
 
@@ -125,3 +126,7 @@ Please refer to this [document](../../../docs/payload/docker_containers.md) for 
 With docker installed and setup, any of the data acquisition plugin services can be created into a docker container, saved as a tar file, and then run on the CORE I/O as an Extension. There are Dockerfiles for each plugin service within the plugin's specific directory. These files will create a docker container with all necessary dependencies installed, and will start the plugin service.
 
 Follow the instructions on how to build and use the docker image from [this section](../../../docs/payload/docker_containers.md#build-docker-images) on. The application arguments needed to run the plugins included in this example are `--host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP`.
+
+## Contents
+
+- [Modem Signals](signals_coreio_modem_plugin/README.md)

@@ -63,7 +63,7 @@ def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    bosdyn.client.util.add_payload_credentials_arguments(parser)
+    bosdyn.client.util.add_payload_credentials_file_argument(parser)
     bosdyn.client.util.add_service_endpoint_arguments(parser)
     options = parser.parse_args()
 

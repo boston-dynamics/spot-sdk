@@ -771,7 +771,7 @@ class CommsMapImageRenderer():
         return frame, tnow
 
 
-if __name__ == '__main__':
+def main():
     # Define all arguments used by this service.
     import argparse
     parser = argparse.ArgumentParser()
@@ -819,3 +819,7 @@ if __name__ == '__main__':
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:
         service_runner.run_until_interrupt()
+
+
+if __name__ == '__main__':
+    main()

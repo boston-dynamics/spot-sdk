@@ -16,6 +16,7 @@ The following examples demonstrate how to use the mission service and the autono
 - [Graph Nav Command Line](../graph_nav_command_line/README.md)
 - [Graph Nav Extract Point Cloud](../graph_nav_extract_point_cloud/README.md)
 - [Graph Nav View Map](../graph_nav_view_map/README.md)
+- [Graph Nav View GPS Data](../graph_nav_view_gps/README.md)
 - [Get Mission State](../get_mission_state/README.md)
 - [Remote Mission Service](../remote_mission_service/README.md)
 - [Mission Question Answerer](../mission_question_answerer/README.md)
@@ -25,4 +26,5 @@ The following examples demonstrate how to use the mission service and the autono
 - [Area Callbacks](../area_callback/README.md)
 - [Edit Autowalk](../edit_autowalk/README.md)
 - [Record Autowalk](../record_autowalk/README.md)
+- [Extract Images from Autowalk](../extract_images_from_walk/README.md)
 - [Network Request Callback](../network_request_callback/README.md)

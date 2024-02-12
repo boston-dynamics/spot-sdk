@@ -31,7 +31,6 @@ Development Kit License (20191101-BDSDK-SL).
     <li>Note: If you download the file, rename it to <code>fetch.py</code></li>
 </ul>
 
-
 <pre><code class="language-python">import argparse
 import sys
 import time
@@ -244,13 +243,14 @@ kImageSources = [
 <pre><code class="language-python">def block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=None, verbose=False):
     """Helper that blocks until a trajectory command reaches STATUS_AT_GOAL or a timeout is
         exceeded.
+
        Args:
         command_client: robot command client, used to request feedback
         cmd_id: command ID returned by the robot when the trajectory command was sent
         timeout_sec: optional number of seconds after which we'll return no matter what the
                         robot's state is.
         verbose: if we should print state at 10 Hz.
-       Return values:
+       Returns:
         True if reaches STATUS_AT_GOAL, False otherwise.
     """
     start_time = time.time()
@@ -398,6 +398,7 @@ kImageSources = [
 <br />
 
 <a id="enable_in_part5"></a>
+
 <pre><code class="language-python">                print('Found dogtoy...')
     
                 # Got a dogtoy.  Request pick up.
@@ -412,10 +413,11 @@ kImageSources = [
                 # walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
                     # vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
     
-                # move_cmd = RobotCommandBuilder.trajectory_command(
-                    # goal_x=walk_rt_vision[0],
-                    # goal_y=walk_rt_vision[1],
-                    # goal_heading=heading_rt_vision,
+                # se2_pose = geometry_pb2.SE2Pose(
+                    # position=geometry_pb2.Vec2(x=walk_rt_vision[0], y=walk_rt_vision[1]),
+                    # angle=heading_rt_vision)
+                # move_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
+                    # se2_pose,
                     # frame_name=frame_helpers.VISION_FRAME_NAME,
                     # params=get_walking_params(0.5, 0.5))
                 # end_time = 5.0

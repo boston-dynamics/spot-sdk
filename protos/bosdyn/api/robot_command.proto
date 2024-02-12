@@ -10,10 +10,10 @@ package bosdyn.api;
 
 option java_outer_classname = "RobotCommandProto";
 
+import "bosdyn/api/basic_command.proto";
 import "bosdyn/api/full_body_command.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/lease.proto";
-import "bosdyn/api/mobility_command.proto";
 import "bosdyn/api/robot_state.proto";
 import "bosdyn/api/synchronized_command.proto";
 
@@ -26,11 +26,10 @@ message RobotCommand {
 
         // A synchronized command, for partial or full control of robot.
         SynchronizedCommand.Request synchronized_command = 3;
-
-        // DEPRECATED as of 2.1.0, will be removed in 4.0.  Please use synchronized_command instead.
-        // A mobility command for a robot to execute.
-        MobilityCommand.Request mobility_command = 2 [deprecated = true];
     }
+
+    // mobility_command was removed in 4.0, please use synchronized_command instead.
+    reserved 2;
 }
 
 // Command specific feedback. Distance to goal, estimated time remaining, probability of
@@ -42,12 +41,11 @@ message RobotCommandFeedback {
 
         // A synchronized command, for partial or full control of robot.
         SynchronizedCommand.Feedback synchronized_feedback = 3;
-
-        // DEPRECATED as of 2.1.0.  Will be removed in 4.0.  Please use
-        // RobotCommand.synchronized_command and synchronized_feedback instead.
-        // Command to control mobility system of a robot.
-        MobilityCommand.Feedback mobility_feedback = 1 [deprecated = true];
     }
+
+    // mobility_feedback was removed in 4.0,  Please use RobotCommand.synchronized_command and
+    // synchronized_feedback instead.
+    reserved 1;
 }
 
 // A RobotCommand request message includes the lease and command as well as a clock
@@ -126,35 +124,13 @@ message RobotCommandFeedbackResponse {
     // Details about how the lease was used.
     LeaseUseResult lease_use_result = 5;
 
-    enum Status {
-        // Status enum is DEPRECATED as of 2.1.0 and Will be removed in 4.0.
-        option deprecated = true;
-
-        // Behavior execution is in an unknown / unexpected state.
-        STATUS_UNKNOWN = 0;
-
-        // The robot is actively working on the command
-        STATUS_PROCESSING = 1;
-
-        // The command was replaced by a new command
-        STATUS_COMMAND_OVERRIDDEN = 2;
-
-        // The command expired
-        STATUS_COMMAND_TIMED_OUT = 3;
-
-        // The robot is in an unsafe state, and will only respond to known safe commands.
-        STATUS_ROBOT_FROZEN = 4;
-    }
-    // DEPRECATED as of 2.1.0. Will be removed in 4.0.  Please use RobotCommandResponse.status.
-    // General status whether or not command is still processing.
-    Status status = 2 [deprecated = true];
-
-    // DEPRECATED as of 2.1.0. Will be removed in 4.0. RobotCommandResponse.message.
-    // Human-readable status message.  Not for programmatic analysis.
-    string message = 3 [deprecated = true];
-
     // Command specific feedback.
     RobotCommandFeedback feedback = 4;
+
+    // status removed in 4.0.  Please use RobotCommandResponse.status instead.
+    reserved 2;
+    // message removed in 4.0.  Please use RobotCommandResponse.message instead.
+    reserved 3;
 }
 
 // A ClearBehaviorFault request message has the associated behavior fault id to be cleared.
@@ -199,3 +175,34 @@ message ClearBehaviorFaultResponse {
     repeated SystemFault blocking_system_faults = 5;
 }
 
+
+message JointControlStreamRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Joint command details
+    JointCommand.UpdateRequest joint_command = 2;
+}
+
+message JointControlStreamResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;  // An unknown / unexpected error occurred.
+        STATUS_OK = 1;       // Steam was accepted and ended normally
+
+        // [Programming Error]
+        STATUS_INVALID_REQUEST = 2;  // Request was invalid / malformed in some way.
+        STATUS_INACTIVE = 3;         // The robot is not in joint control mode.
+
+        // [Timesync Error]
+        STATUS_EXPIRED = 4;      // The command was received after its end_time had already passed.
+        STATUS_TOO_DISTANT = 5;  // The command end time was too far in the future.
+    }
+    // Return status for the stream.
+    Status status = 2;
+
+    // Human-readable error description.  Not for programmatic analysis.
+    string message = 3;
+}

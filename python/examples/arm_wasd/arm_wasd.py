@@ -11,6 +11,7 @@ import curses
 import logging
 import os
 import signal
+import sys
 import threading
 import time
 
@@ -359,7 +360,7 @@ class ArmWasdInterface(object):
         self._arm_angular_velocity_cmd_helper('rotate_minus_rz', v_rz=-VELOCITY_ANGULAR_HAND)
 
     def _arm_cylindrical_velocity_cmd_helper(self, desc='', v_r=0.0, v_theta=0.0, v_z=0.0):
-        """ Helper function to build a arm velocity command from unitless cylindrical coordinates.
+        """ Helper function to build an arm velocity command from unitless cylindrical coordinates.
 
         params:
         + desc: string description of the desired command
@@ -382,7 +383,7 @@ class ArmWasdInterface(object):
         self._arm_velocity_cmd_helper(arm_velocity_command=arm_velocity_command, desc=desc)
 
     def _arm_angular_velocity_cmd_helper(self, desc='', v_rx=0.0, v_ry=0.0, v_rz=0.0):
-        """ Helper function to build a arm velocity command from angular velocities measured with respect
+        """ Helper function to build an arm velocity command from angular velocities measured with respect
             to the odom frame, expressed in the hand frame.
 
         params:
@@ -556,7 +557,7 @@ def main():
         return False
 
     try:
-        # Prevent curses from introducing a 1 second delay for ESC key
+        # Prevent curses from introducing a 1-second delay for ESC key
         os.environ.setdefault('ESCDELAY', '0')
         # Run wasd interface in curses mode
         curses.wrapper(arm_wasd_interface.drive)
@@ -571,5 +572,4 @@ def main():
 
 if __name__ == '__main__':
     if not main():
-        os._exit(1)
-    os._exit(0)
+        sys.exit(1)

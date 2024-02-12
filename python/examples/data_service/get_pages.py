@@ -64,14 +64,14 @@ def get_pages(options):
         _show_page(page)
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('-T', '--timespan', default='5m', help='Time span (default last 5 minutes)')
     parser.add_argument('-R', '--robot-time', action='store_true',
                         help='Specified timespan is in robot time')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     try:
         get_pages(options)
@@ -83,5 +83,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

@@ -22,6 +22,7 @@ import "bosdyn/api/geometry.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/service_customization.proto";
 import "bosdyn/api/trajectory.proto";
+import "bosdyn/api/spot/choreography_sequence.proto";
 import "bosdyn/api/spot_cam/ptz.proto";
 import "bosdyn/api/spot/robot_command.proto";
 import "bosdyn/api/arm_command.proto";
@@ -54,6 +55,9 @@ message Walk {
     // Unique identifier for this walk.  This will be embedded in various Data Acquisition captures
     // and various logging bundles.  This should be globally unique across all walks.
     string id = 8;
+
+    // Choreography related dependencies (any sequences and animations a robot needs to play this walk).
+    ChoreographyItems choreography_items = 9;
 
 }
 
@@ -121,6 +125,15 @@ message Dock {
     // This parameter also controls how long robot will wait to retry to undock on
     // a failed undock.
     google.protobuf.Duration prompt_duration = 4;
+}
+
+// Choreography elements required for the mission.
+message ChoreographyItems {
+    // Any sequences we need to play the mission.
+    repeated bosdyn.api.spot.ChoreographySequence choreography_sequences = 1;
+
+    // Any animations we need if we want to play the sequence.
+    repeated bosdyn.api.spot.Animation animated_moves = 2;
 }
 
 // The playback mode governs how many times the mission is played back (once or
@@ -251,6 +264,22 @@ message Target {
     // After relocalizing, the robot will re-navigate to the target.
     Relocalize relocalize = 3;
 
+
+    enum TargetStowBehavior {
+        // Will default to TARGET_STOW_BEHAVIOR_AUTO
+        TARGET_STOW_BEHAVIOR_UNKNOWN = 0;
+        // Compiler will do some heuristics to figure out if we should stow.
+        // Headed back to dock = stow
+        // Headed to another action that doesn't use arm sensor pointing = stow
+        // Headed to another action that uses arm sensor pointing and is far away = stow
+        // Headed to another action that uses arm sensor pointing and is close = don't stow
+        TARGET_STOW_BEHAVIOR_AUTO = 1;
+        // Never ever stow the arm on the way to this action.
+        TARGET_STOW_BEHAVIOR_NEVER = 2;
+        // Always stow the arm on the way to this action.
+        TARGET_STOW_BEHAVIOR_ALWAYS = 3;
+    }
+    TargetStowBehavior target_stow_behavior = 5;
 }
 
 // An Action is what the robot should do at a location. For example, the user
@@ -325,10 +354,16 @@ message Action {
         repeated ImageCaptureAndSource record_time_images = 6;
     }
 
+    message ExecuteChoreography{
+        // The name of the sequence to play.
+        string sequence_name = 1;
+    }
+
     oneof action {
         Sleep sleep = 1;
         DataAcquisition data_acquisition = 2;
         RemoteGrpc remote_grpc = 3;
+        ExecuteChoreography execute_choreography = 5;
 
         // This field can be used to specify a behavior tree as an action.  If the user had
         // two callbacks they would like to run simultaneously at the waypoint this action
@@ -387,6 +422,9 @@ message ActionWrapper {
 
             // If true, this alignment will be skipped during playback
             bool is_skipped = 4;
+
+            // Focus state used during alignment. Defaults to auto-focus.
+            bosdyn.api.spot_cam.PtzFocusState focus_state = 5;
         }
 
         // List of alignments to perform
@@ -428,6 +466,8 @@ message ActionWrapper {
         // Body mobility params during cartesian move
         bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation body_assist_params = 5;
 
+        // If true, the arm will stow after this action no matter what.
+        // If false, the arm will only stow if the next action is far away.
         bool force_stow_override = 6;
     }
 
@@ -438,6 +478,12 @@ message ActionWrapper {
 
     message GripperCommand {
         bosdyn.api.GripperCommand.Request request = 1;
+
+        // By default, any action that includes a GripperCommand action wrapper will run
+        // the specified command BEFORE the action is run.  By default, after the action
+        // is run the gripper will be closed.  This behavior can be turned off by setting
+        // this flag to true.
+        bool disable_post_action_close = 2;
     }
 
     RobotBodySit robot_body_sit = 1;

@@ -263,11 +263,11 @@ def joint_move_example(config):
         robot.logger.info('Robot safely powered off.')
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     try:
         joint_move_example(options)
         return True
@@ -278,5 +278,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

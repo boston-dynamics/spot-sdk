@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>bosdyn.orbit.client &mdash; Spot 4.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+    <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
+    <link rel="canonical" href="https://dev.bostondynamics.com/_modules/bosdyn/orbit/client.html" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../README.html">
+            
+              <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                4.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit(formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Customization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/faults.html">Faults</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/docking.html">Docking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/autowalk_service.html">Autowalk service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/gps.html">GPS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/arm/README.html">Spot Arm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/arm/arm_specification.html">Arm and Gripper Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/arm/arm_concepts.html">Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/arm/arm_services.html">Services</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/data.html">Spot Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_overview.html">Data Acquisition Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_output.html">Data Acquisition Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_buffer_overview.html">Data Buffer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/basic_service_examples.html">Basic Service Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_test/README.html">Comms Test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/disable_ir_emission/README.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/reset_safety_stop/README.html">Reset Safety Stop</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stance/README.html">Stance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_simple/README.html">Simple Arm Motion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_stow_unstow/README.html">Stow/unstow Arm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_freeze/README.html">Arm Freeze</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_and_mobility_command/README.html">Arm and Mobility Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_with_body_follow/README.html">Arm Command with Body Following</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_constrained_manipulation/README.html">Arm Constrained Manipulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html">Arm Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html#long-trajectory">Long Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">Arm WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/joint_control/README.html">Wiggle Arm</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html#components">Components</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html#recommended-debugging">Recommended debugging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extensions/README.html">Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gps_service/README.html">GPS</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_buffer/README.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_service/README.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/log_status/README.html">Log Status</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.html">Modem Signals</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_mapping/README.html">Comms image service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_mapping/README.html#how-to-use">How to use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.html">CoreIO Modem Signals Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/tester_programs/README.html">Tester Programs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_anchoring_optimization/README.html">Graph Nav Anchoring Optimization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Answerer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html">Data Acquisition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_helpers.html">Data Acquisition Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html">Data Acquisition Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/door.html">Door</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ray_cast.html">Ray casting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Customization Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/signals_helpers.html">Signals Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/README.html">BDDF</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/base_data_reader.html">Base Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html">Block Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/bosdyn.html">BDDF Conventions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/common.html">Common</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html">Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_writer.html">Data Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html">File Indexer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_proto_reader.html">GRPC Proto Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_reader.html">GRPC Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_reader.html">GRPC Service Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_writer.html">GRPC Service Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/message_reader.html">Message Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_reader.html">POD Series Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_writer.html">POD Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_channel_reader.html">Protobuf Channel Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_reader.html">Protobuf Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_series_writer.html">Protobuf Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html">Stream Data Reader</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/deprecated.html">Deprecated</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README.html">Choreography</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/README.html">Orbit (formerly Scout)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout (deprecated)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/fetch_tutorial/fetch6.html">Part 6: Running the model on Core IO</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_documentation.html">CORE I/O Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/coreio_openvpn_extension.html">CORE I/O OpenVPN Extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/configuring_payload_software.html">Configuring payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">Protos</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../README.html">Spot</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../README.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">bosdyn.orbit.client</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for bosdyn.orbit.client</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Downloading, reproducing, distributing or otherwise using the SDK Software</span>
+<span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
+<span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
+
+<span class="sd">&quot;&quot;&quot; The client uses a web API to send HTTPs requests to a number of REStful endpoints using the Requests library.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterable</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">import</span> <span class="nn">bosdyn.orbit.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+<span class="kn">from</span> <span class="nn">bosdyn.orbit.exceptions</span> <span class="kn">import</span> <span class="n">UnauthenticatedClientError</span>
+
+<span class="n">DEFAULT_HEADERS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">}</span>
+<span class="n">OCTET_HEADER</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Content-type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/octet-stream&#39;</span><span class="p">,</span> <span class="s1">&#39;Accept&#39;</span><span class="p">:</span> <span class="s1">&#39;application/octet-stream&#39;</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="Client"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client">[docs]</a><span class="k">class</span> <span class="nc">Client</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for the Orbit web API&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">verify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">cert</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Initializes the attributes of the Client object.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                hostname: the IP address associated with the instance</span>
+<span class="sd">                verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate</span>
+<span class="sd">                    Note that verify=False makes your application vulnerable to man-in-the-middle (MitM) attacks</span>
+<span class="sd">                    Defaults to True</span>
+<span class="sd">                cert(.pem file or a tuple with (&#39;cert&#39;, &#39;key&#39;) pair): a local cert to use as client side certificate</span>
+<span class="sd">                    Note that the private key to your local certificate must be unencrypted because Requests does not support using encrypted keys.</span>
+<span class="sd">                    Defaults to None. For additional configurations, use the member Session object &quot;_session&quot; in accordance with Requests library</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># The hostname of the instance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span> <span class="o">=</span> <span class="n">hostname</span>
+        <span class="c1"># Set a Session object to persist certain parameters across requests</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="c1"># Set SSL verification strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">verify</span> <span class="o">=</span> <span class="n">verify</span>
+        <span class="c1"># Client Side Certificates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">cert</span> <span class="o">=</span> <span class="n">cert</span>
+        <span class="c1"># Initialize session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="c1"># Set default headers for self._session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">DEFAULT_HEADERS</span><span class="p">)</span>
+        <span class="c1"># Set x-csrf-token for self._session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;x-csrf-token&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">cookies</span><span class="p">[</span><span class="s1">&#39;x-csrf-token&#39;</span><span class="p">]})</span>
+        <span class="c1"># Flag indicating that the Client is authenticated</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Client.authenticate_with_api_token"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.authenticate_with_api_token">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_with_api_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">api_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Authorizes the client using the provided API token obtained from the instance.</span>
+<span class="sd">            Must call before using other client functions.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                api_token: the API token obtained from the instance</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">api_token</span><span class="p">:</span>
+            <span class="n">api_token</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_api_token</span><span class="p">()</span>
+        <span class="c1"># Set API token for self._session</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;Authorization&#39;</span><span class="p">:</span> <span class="s1">&#39;Bearer &#39;</span> <span class="o">+</span> <span class="n">api_token</span><span class="p">})</span>
+        <span class="c1"># Check the validity of the API token</span>
+        <span class="n">authenticate_response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span><span class="si">}</span><span class="s1">/api/v0/api_token/authenticate&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">authenticate_response</span><span class="o">.</span><span class="n">ok</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Client: Login failed: </span><span class="si">{}</span><span class="s1"> Please, obtain a valid API token from the instance!&#39;</span><span class="o">.</span>
+                  <span class="nb">format</span><span class="p">(</span><span class="n">authenticate_response</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+            <span class="c1"># Remove the invalid API token from session headers</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;Authorization&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">authenticate_response</span></div>
+
+<div class="viewcode-block" id="Client.get_resource"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_resource">[docs]</a>    <span class="k">def</span> <span class="nf">get_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for getting a resource in /api/v0/</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                path: the path appended to /api/v0/</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnauthenticatedClientError</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span><span class="si">}</span><span class="s1">/api/v0/</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_resource"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_resource">[docs]</a>    <span class="k">def</span> <span class="nf">post_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for posting a resource in /api/v0/</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                path: the path appended to /api/v0/</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                The response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span> <span class="ow">and</span> <span class="n">path</span> <span class="o">!=</span> <span class="s2">&quot;login&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnauthenticatedClientError</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span><span class="si">}</span><span class="s1">/api/v0/</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_resource"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_resource">[docs]</a>    <span class="k">def</span> <span class="nf">delete_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for deleting a resource in /api/v0/</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                path: the path appended to /api/v0/</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                The response associated with the delete request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnauthenticatedClientError</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span><span class="si">}</span><span class="s1">/api/v0/</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_version"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Retrieves version info.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_system_time"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_system_time">[docs]</a>    <span class="k">def</span> <span class="nf">get_system_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the current system time.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;settings/system-time&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_robots"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_robots">[docs]</a>    <span class="k">def</span> <span class="nf">get_robots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns robots on the specified instance.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;robots&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_robot_by_hostname"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_robot_by_hostname">[docs]</a>    <span class="k">def</span> <span class="nf">get_robot_by_hostname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns a robot on given a hostname of a specific robot.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                hostname: the IP address associated with the desired robot on the instance</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;robots/</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_site_walks"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_walks">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_walks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site walks on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;site_walks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_site_walk_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_walk_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_walk_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site walk uuid, returns a site walk on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the site walk</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_site_elements"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_elements">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site elements on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;site_elements&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_site_element_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_element_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_element_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site element uuid, returns a site element on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the site element</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_elements/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_site_docks"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_docks">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_docks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site docks on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;site_docks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_site_dock_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_dock_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_dock_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site dock uuid, returns a site dock on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the site dock</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_docks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_calendar"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_calendar">[docs]</a>    <span class="k">def</span> <span class="nf">get_calendar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns calendar events on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;calendar/schedule&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_run_events"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_events">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns run events</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;run_events&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_run_event_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_event_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_event_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runEventUuid, returns a run event</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the run event</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;run_events/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_run_captures"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_captures">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_captures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns run captures</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;run_captures&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_run_capture_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_capture_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_capture_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runCaptureUuid, returns a run capture</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the run capture</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;run_captures/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_runs"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_runs">[docs]</a>    <span class="k">def</span> <span class="nf">get_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns runs</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;runs&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_run_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runUuid, returns a run</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the run</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;runs/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_run_archives_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_archives_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_archives_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runUuid, returns run archives</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the run</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;run_archives/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_image"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_image">[docs]</a>    <span class="k">def</span> <span class="nf">get_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;urllib3.response.HTTPResponse&#39;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a data capture url, returns a decoded image</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                url: the url associated with the data capture in the form of https://hostname + RunCapture[&quot;dataUrl&quot;].</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                urllib3.response.HTTPResponse: the decoded response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnauthenticatedClientError</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raw</span><span class="o">.</span><span class="n">decode_content</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">raw</span></div>
+
+<div class="viewcode-block" id="Client.get_image_response"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_image_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_image_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a data capture url, returns an image response</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                url: the url associated with the data capture in the form of https://hostname + RunCapture[&quot;dataUrl&quot;]</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the image response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnauthenticatedClientError</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="Client.get_webhook"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_webhook">[docs]</a>    <span class="k">def</span> <span class="nf">get_webhook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns webhook on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;webhooks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_webhook_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_webhook_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_webhook_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a uuid, returns a specific webhook instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the webhook</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;webhooks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_robot_info"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_robot_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_robot_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a robot nickname, returns information about the robot</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                robot_nickname: the nickname of the robot</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;robot-session/</span><span class="si">{</span><span class="n">robot_nickname</span><span class="si">}</span><span class="s1">/session&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_export_as_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_export_as_walk">[docs]</a>    <span class="k">def</span> <span class="nf">post_export_as_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_walk_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site walk uuid, it exports the walks_pb2.Walk equivalent</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                site_walk_uuid: the ID associated with the site walk</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError: indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/export_as_walk/</span><span class="si">{</span><span class="n">site_walk_uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_import_from_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_import_from_walk">[docs]</a>    <span class="k">def</span> <span class="nf">post_import_from_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a walk data, imports it to the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;site_walks/import_from_walk&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_site_element"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_site_element">[docs]</a>    <span class="k">def</span> <span class="nf">post_site_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a site element. It also updates a pre-existing Site Element using the associated UUID.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;site_elements&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_site_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_site_walk">[docs]</a>    <span class="k">def</span> <span class="nf">post_site_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a site walk. It also updates a pre-existing Site Walk using the associated UUID.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;site_walks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_site_dock"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_site_dock">[docs]</a>    <span class="k">def</span> <span class="nf">post_site_dock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a site element. It also updates a pre-existing Site Dock using the associated UUID.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;site_docks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_robot"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_robot">[docs]</a>    <span class="k">def</span> <span class="nf">post_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Add a robot to the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;robots&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_calendar_event"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_calendar_event">[docs]</a>    <span class="k">def</span> <span class="nf">post_calendar_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nickname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">time_ms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">repeat_ms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">mission_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force_acquire_estop</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">require_docked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">schedule_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">blackout_times</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">:</span><span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">disable_reason</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;  This function serves two purposes. It creates a new calendar event on using the following arguments</span>
+<span class="sd">             when Event ID is not specified. When the Event ID associated with a pre-existing calendar event is specified,</span>
+<span class="sd">             the function overwrites the attributes of the pre-existing calendar event.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                nickname: the name associated with the robot</span>
+<span class="sd">                time_ms: the first kickoff time in terms of milliseconds since epoch</span>
+<span class="sd">                repeat_ms:the delay time in milliseconds for repeating calendar events</span>
+<span class="sd">                mission_id: the UUID associated with the mission( also known as Site Walk)</span>
+<span class="sd">                force_acquire_estop: instructs the system to force acquire the estop when the mission kicks off</span>
+<span class="sd">                require_docked: determines whether the event will require the robot to be docked to start</span>
+<span class="sd">                schedule_name: the desired name of the calendar event</span>
+<span class="sd">                blackout_times: a specification for a time period over the course of a week when a schedule should not run</span>
+<span class="sd">                                  specified as list of a dictionary defined as {&quot;startMs&quot;: &lt;int&gt;, &quot;endMs&quot; : &lt;int&gt;}</span>
+<span class="sd">                                  with startMs (inclusive) being the millisecond offset from the beginning of the week (Sunday) when this blackout period starts</span>
+<span class="sd">                                  and endMs (exclusive) being the millisecond offset from beginning of the week(Sunday) when this blackout period ends</span>
+<span class="sd">                disable_reason: (optional) a reason for disabling the calendar event</span>
+<span class="sd">                event_id: the auto-generated ID for a calendar event that is already posted on the instance.</span>
+<span class="sd">                            This is only useful when editing a pre-existing calendar event.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check if the input contains the json param that is constructed outside the function</span>
+        <span class="k">if</span> <span class="s1">&#39;json&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/schedule&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># Construct payload based on provided inputs</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;nickname&quot;</span><span class="p">:</span> <span class="n">nickname</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;timeMs&quot;</span><span class="p">:</span> <span class="n">time_ms</span><span class="p">,</span>
+                <span class="s2">&quot;repeatMs&quot;</span><span class="p">:</span> <span class="n">repeat_ms</span><span class="p">,</span>
+                <span class="s2">&quot;blackouts&quot;</span><span class="p">:</span> <span class="n">blackout_times</span><span class="p">,</span>
+                <span class="s2">&quot;disableReason&quot;</span><span class="p">:</span> <span class="n">disable_reason</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;missionId&quot;</span><span class="p">:</span> <span class="n">mission_id</span><span class="p">,</span>
+                <span class="s2">&quot;forceAcquireEstop&quot;</span><span class="p">:</span> <span class="n">force_acquire_estop</span><span class="p">,</span>
+                <span class="s2">&quot;requireDocked&quot;</span><span class="p">:</span> <span class="n">require_docked</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;eventMetadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">schedule_name</span><span class="p">,</span>
+                <span class="s2">&quot;eventId&quot;</span><span class="p">:</span> <span class="n">event_id</span>
+            <span class="p">},</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/schedule&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_calendar_events_disable_all"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_calendar_events_disable_all">[docs]</a>    <span class="k">def</span> <span class="nf">post_calendar_events_disable_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disable_reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Disable all scheduled missions</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                disable_reason: Reason for disabling all scheduled missions</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/disable-enable&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;disableReason&quot;</span><span class="p">:</span> <span class="n">disable_reason</span><span class="p">},</span>
+                                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_calendar_event_disable_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_calendar_event_disable_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">post_calendar_event_disable_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">disable_reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Disable specific scheduled mission by event ID</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                event_id: eventId associated with a mission to disable</span>
+<span class="sd">                disable_reason: Reason for disabling a scheduled mission</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/disable-enable&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;disableReason&quot;</span><span class="p">:</span> <span class="n">disable_reason</span><span class="p">,</span>
+            <span class="s2">&quot;eventId&quot;</span><span class="p">:</span> <span class="n">event_id</span>
+        <span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_calendar_events_enable_all"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_calendar_events_enable_all">[docs]</a>    <span class="k">def</span> <span class="nf">post_calendar_events_enable_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Enable all scheduled missions</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/disable-enable&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;disableReason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_calendar_event_enable_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_calendar_event_enable_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">post_calendar_event_enable_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Enable specific scheduled mission by event ID</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                event_id: eventId associated with a mission to enable</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/disable-enable&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;disableReason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;eventId&quot;</span><span class="p">:</span> <span class="n">event_id</span>
+        <span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_webhook"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_webhook">[docs]</a>    <span class="k">def</span> <span class="nf">post_webhook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a webhook instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;webhooks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_webhook_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_webhook_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">post_webhook_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Update an existing webhook instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the desired webhook instance</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;webhooks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_return_to_dock_mission"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_return_to_dock_mission">[docs]</a>    <span class="k">def</span> <span class="nf">post_return_to_dock_mission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">site_dock_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Generate a mission to send the robot back to the dock</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                robot_nickname: the nickname of the robot</span>
+<span class="sd">                site_dock_uuid: the uuid of the dock to send robot to</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s1">&#39;graph/send-robot&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;nickname&quot;</span><span class="p">:</span> <span class="n">robot_nickname</span><span class="p">,</span>
+            <span class="s2">&quot;siteDockUuid&quot;</span><span class="p">:</span> <span class="n">site_dock_uuid</span>
+        <span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.post_dispatch_mission_to_robot"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_dispatch_mission_to_robot">[docs]</a>    <span class="k">def</span> <span class="nf">post_dispatch_mission_to_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">driver_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mission_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                       <span class="n">delete_mission</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">force_acquire_estop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                                       <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Dispatch the robot to a mission given a mission uuid</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                robot_nickname: the nickname of the robot</span>
+<span class="sd">                driver_id: the current driver ID of the mission</span>
+<span class="sd">                mission_uuid: uuid of the mission(also known as Site Walk) to dispatch</span>
+<span class="sd">                delete_mission: whether to delete the mission after playback</span>
+<span class="sd">                force_acquire_estop: whether to force acquire E-stop from the previous client</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Payload required for dispatching a mission</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;agent&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;nickname&quot;</span><span class="p">:</span> <span class="n">robot_nickname</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;schedule&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;timeMs&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;unsigned&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;repeatMs&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;low&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;high&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;unsigned&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;task&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;missionId&quot;</span><span class="p">:</span> <span class="n">mission_uuid</span><span class="p">,</span>
+                <span class="s2">&quot;forceAcquireEstop&quot;</span><span class="p">:</span> <span class="n">force_acquire_estop</span><span class="p">,</span>
+                <span class="s2">&quot;deleteMission&quot;</span><span class="p">:</span> <span class="n">delete_mission</span><span class="p">,</span>
+                <span class="s2">&quot;requireDocked&quot;</span><span class="p">:</span> <span class="kc">False</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;eventMetadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;API Triggered Mission&quot;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;calendar/mission/dispatch/</span><span class="si">{</span><span class="n">robot_nickname</span><span class="si">}</span><span class="s1">?currentDriverId=</span><span class="si">{</span><span class="n">driver_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_site_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_site_walk">[docs]</a>    <span class="k">def</span> <span class="nf">delete_site_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site walk uuid, deletes the site walk associated with the uuid on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the desired site walk</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the delete request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_robot"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_robot">[docs]</a>    <span class="k">def</span> <span class="nf">delete_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a robot hostname, deletes the robot associated with the hostname on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                robot_hostname: the IP address associated with the robot</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the delete request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;robots/</span><span class="si">{</span><span class="n">robot_hostname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_calendar_event"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_calendar_event">[docs]</a>    <span class="k">def</span> <span class="nf">delete_calendar_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Delete the specified calendar event on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                event_id(string): the ID associated with the calendar event</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the delete request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;calendar/schedule/</span><span class="si">{</span><span class="n">event_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_webhook"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_webhook">[docs]</a>    <span class="k">def</span> <span class="nf">delete_webhook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Delete the specified webhook instance on the specified instance</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the desired webhook</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the delete request</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;webhooks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="create_client"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.create_client">[docs]</a><span class="k">def</span> <span class="nf">create_client</span><span class="p">(</span><span class="n">options</span><span class="p">:</span> <span class="s1">&#39;argparse.Namespace&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;bosdyn.orbit.client.Client&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates a client object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            options: User input containing hostname, verification, and certification info.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            client: &#39;bosdyn.orbit.client.Client&#39; object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Determine the value for the argument &quot;verify&quot;</span>
+    <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">verify</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">]:</span>
+        <span class="n">verify</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">verify</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="s2">&quot;The provided value for the argument verify [</span><span class="si">%s</span><span class="s2">] is not either &#39;True&#39; or &#39;False&#39;. Assuming verify is set to &#39;path/to/CA bundle&#39;&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">verify</span><span class="p">))</span>
+        <span class="n">verify</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">verify</span>
+
+    <span class="c1"># A client object represents a single instance.</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">cert</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">cert</span><span class="p">)</span>
+
+    <span class="c1"># The client needs to be authenticated before using its functions</span>
+    <span class="n">client</span><span class="o">.</span><span class="n">authenticate_with_api_token</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">client</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

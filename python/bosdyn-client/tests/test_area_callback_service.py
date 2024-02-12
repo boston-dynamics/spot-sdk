@@ -21,7 +21,7 @@ from bosdyn.api import lease_pb2
 from bosdyn.api.graph_nav import area_callback_pb2
 from bosdyn.api.service_customization_pb2 import CustomParamError
 from bosdyn.client.area_callback_region_handler_base import (AreaCallbackRegionHandlerBase,
-                                                             IncorrectUsage)
+                                                             IncorrectUsage, RouteChangedResult)
 from bosdyn.client.area_callback_service_servicer import AreaCallbackServiceServicer
 from bosdyn.client.area_callback_service_utils import AreaCallbackServiceConfig
 from bosdyn.client.data_buffer import DataBufferClient
@@ -111,6 +111,7 @@ class AreaCallbackRegionHandlerImpl(AreaCallbackRegionHandlerBase):
         self.is_in_control = False
         self.start_called = False
         self.end_called = False
+        self.route_changed_result = RouteChangedResult()
 
         self.event_set_stop = threading.Event()
         self.event_at_start = threading.Event()
@@ -131,23 +132,29 @@ class AreaCallbackRegionHandlerImpl(AreaCallbackRegionHandlerBase):
     def run(self):
         self.stop_at_start()
         self.event_set_stop.set()
-        self.block_until_arrived_at_start()
-        self.control_at_start()
-        self.event_at_start.set()
-        self.block_until_control()
-        self.event_at_control.set()
+        # Normally block_until_arrived_at_start will return True, but in the rerouting case
+        # where we've already gone past the start, this will return False.
+        if self.block_until_arrived_at_start():
+            self.control_at_start()
+            self.event_at_start.set()
+            self.block_until_control()
+            self.event_at_control.set()
 
-        while self.is_in_control:
-            self.check()
-            self.continue_past_start()
-            self.event_set_continue.set()
-            time.sleep(0.01)
+            while self.is_in_control:
+                self.continue_past_start()
+                self.event_set_continue.set()
+                self.safe_sleep(0.01)
+        else:
+            self.safe_sleep(10.0)  # Just wait for the callback to finish.
 
         self.event_returning.set()
         # Do not set complete. This should happen inside the base class when run impl finishes.
 
     def end(self):
         self.end_called = True
+
+    def route_changed(self, request: area_callback_pb2.RouteChangeRequest) -> RouteChangedResult:
+        return self.route_changed_result
 
 
 def _run_callback(service):
@@ -220,12 +227,43 @@ def _run_callback(service):
     response = service.UpdateCallback(request, None)
     assert response.policy.at_start == response.policy.OPTION_CONTINUE
 
+    request = area_callback_pb2.RouteChangeRequest(command_id=command_id + 5)
+    response = service.RouteChange(request, None)
+    assert response.status == area_callback_pb2.RouteChangeResponse.STATUS_INVALID_COMMAND_ID
+
+    request = area_callback_pb2.RouteChangeRequest(command_id=command_id)
+    response = service.RouteChange(request, None)
+    assert response.status == area_callback_pb2.RouteChangeResponse.STATUS_OK
+
     handler.is_in_control = False
     handler.event_returning.wait(0.5)
     time.sleep(0.01)  # Let the returning code set complete.
     request = area_callback_pb2.UpdateCallbackRequest(command_id=command_id)
     response = service.UpdateCallback(request, None)
     assert response.HasField("complete")
+
+    # Another route change should leave it still complete.
+    request = area_callback_pb2.RouteChangeRequest(command_id=command_id)
+    response = service.RouteChange(request, None)
+    assert response.status == area_callback_pb2.RouteChangeResponse.STATUS_OK
+
+    request = area_callback_pb2.UpdateCallbackRequest(
+        command_id=command_id, stage=area_callback_pb2.UpdateCallbackRequest.STAGE_TO_END)
+    response = service.UpdateCallback(request, None)
+    assert response.HasField("complete")
+
+    # Change the handler to request restarting run().
+    handler.route_changed_result.rerun_if_stopped = True
+    # Now, a route change should restart the callback.
+    request = area_callback_pb2.RouteChangeRequest(command_id=command_id)
+    response = service.RouteChange(request, None)
+    assert response.status == area_callback_pb2.RouteChangeResponse.STATUS_OK
+
+    request = area_callback_pb2.UpdateCallbackRequest(
+        command_id=command_id, stage=area_callback_pb2.UpdateCallbackRequest.STAGE_TO_END)
+    response = service.UpdateCallback(request, None)
+    assert response.status == area_callback_pb2.UpdateCallbackResponse.STATUS_OK
+    assert response.policy.at_start == response.policy.OPTION_STOP
 
     request = area_callback_pb2.EndCallbackRequest(command_id=command_id + 101)
     response = service.EndCallback(request, None)

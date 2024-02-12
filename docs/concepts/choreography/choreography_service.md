@@ -12,7 +12,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 ### What is it?
 
-The Choreography service is a framework for producing precisely scripted motion, which are currently focused on dancing. Example choreography scripts can be seen on the Boston Dynamics Youtube channel, showing the robot dancing to [Bruno Mars's "Uptown Funk"](https://www.youtube.com/watch?v=kHBcVlqpvZ8) and [The Contours' "Do You Love Me"](https://www.youtube.com/watch?v=fn3KWM1kuAw).
+The Choreography service is a framework for producing precisely scripted motion, which are currently focused on dancing. Example choreography scripts can be seen on the Boston Dynamics YouTube channel, showing the robot dancing to [Bruno Mars's "Uptown Funk"](https://www.youtube.com/watch?v=kHBcVlqpvZ8) and [The Contours' "Do You Love Me"](https://www.youtube.com/watch?v=fn3KWM1kuAw).
 
 A choreography sequence consists of a series of moves. A wide variety of possible behaviors can be created from a list of available moves by:
 
@@ -105,13 +105,13 @@ The service returns a list of warnings and failures related to the uploaded chor
 The `ExecuteChoreography` RPC runs the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Starting time (in robot’s time) and starting slice specifies when the robot when starts the choreography sequence and at which move.  Named sequences can be returned using the `ListAllSequences` RPC.
 
 ### Interacting With a Sequence During Execution
-The `ChoreographyStatus` RPC returns information about whether the robot is currently executing a sequence or why it isn't.  If it is executing a sequence, the response tells you where (what slice) within the sequence Spot currently is as well as listing which moves are currently active.
+The `ChoreographyStatus` RPC returns information about whether the robot is currently executing a sequence or why it isn't.  If it is executing a sequence, the response tells you where (what slice) within the sequence Spot currently is, as well as listing which moves are currently active and the sequence name.
 
-Some moves (e.g. [CustomGait](custom_gait.md)) can respond to commands through the `ChorographyCommand` RPC.  When such moves are active, they will provide information about what commands they are currently able to accept in the `command_limits` field as part of the Status response.  The `ChoreographyCommand` RPC sends `MoveCommand`s, which are targeted at specific moves.  The `move_type` and `move_id` can (optionally) be used to restrict wich moves will accept the command and ensure that only the intended recipient can respond to it.
+Some moves (e.g. [CustomGait](custom_gait.md)) can respond to commands through the `ChorographyCommand` RPC.  When such moves are active, they will provide information about what commands they are currently able to accept in the `command_limits` field as part of the Status response.  The `ChoreographyCommand` RPC sends `MoveCommand`s, which are targeted at specific moves.  The `move_type` and `move_id` can (optionally) be used to restrict which moves will accept the command and ensure that only the intended recipient can respond to it.
 
 ### Saving Choreography Sequences to your Spot
 
-The `SaveSequence` RPC will save a sequence and all information required to play that sequence to a library of permanently retained choreography sequences stored on the robot. These sequences load automatically when Spot boots up, and are playable through the Tablet Choreography screen or with an `ExecuteChoreography` RPC. Sequences can be saved with additional information called labels, which are used to categorize and group retained sequences in the tablet UI. The labels associated wih a sequence can be added or removed with the `ModifyChoreographyInfo` RPC. Sequences saved to the robot can be removed using the `DeleteSequence` RPC, which deletes a single sequence, or by using the `ClearAllSequenceFiles` RPC, which deletes every saved choreography file from Spot. 
+The `SaveSequence` RPC will save a sequence and all information required to play that sequence to a library of permanently retained choreography sequences stored on the robot. These sequences load automatically when Spot boots up, and are playable through the Tablet Choreography screen or with an `ExecuteChoreography` RPC. Sequences can be saved with additional information called labels, which are used to categorize and group retained sequences in the tablet UI. The labels associated wih a sequence can be added or removed with the `ModifyChoreographyInfo` RPC. Sequences saved to the robot can be removed using the `DeleteSequence` RPC, which deletes a single sequence, or by using the `ClearAllSequenceFiles` RPC, which deletes every saved choreography file from Spot. The `GetChoreographySequence` RPC can be used to request the full sequence proto with a given name from Spot, along with all the `Animation` moves required to play the sequence (if any).
 
 ### Animation API
 
@@ -133,7 +133,6 @@ While animations can be written manually using protobuf in any application, we h
 
 The animation *.cha file can be converted into an `Animation` protobuf message using the `animation_file_to_proto.py` script provided in the choreography client library.
 
-
 ### Choreography logs API
 
 The Choreography logs API defines a choreography log using the `ChoreographyStateLog` protobuf message.  ChoreographyStateLog consists of a repeated series of timestamped key frames that contain:
@@ -154,6 +153,12 @@ Choreography logs are divided into two types:
 Choreography logs can be used to review how the robot actually executed a choreography or animated dance move. For example (specifically for animations): If the move is not completely feasible, the robot attempts to get as close to what was asked as possible, but may not succeed. The choreography log can be used to understand and update the animated move to make it more likely to succeed.
 
 Use the `DownloadRobotStateLog` RPC to download choreography logs. The request specifies which type of log should be downloaded. The response is streamed over grpc and recombined by the choreography client to create a full log message. The robot keeps only one auto log and one manual log in its buffer (2 total logs) at a time. The log must be downloaded immediately after completing the move on the robot.
+
+### Time Adjust API
+
+The `ChoreographyTimeAdjust` RPC can be used to slightly modify the start time of the next `ExecuteChoreography` RPC request that will be received by the robot in the future. If the new start time is within the right thresholds to be valid, the `start_time` of the `ExecuteChoreography` request will be ignored, and the `override_start_time` from the `ChoreographyTimeAdjust` request will be used instead. Values for `override_start_time` are limited to at most 5 minutes in the future from the time when the `ChoreographyTimeAdjust` request is sent, and can have a maximum of 2 minutes difference from the `ExecuteChoreography` request's original `start_time` value. Within those constraints, those thresholds are configurable by the user, but default to a `validity_time` threshold of 1 minute and an `acceptable_time_difference` threshold of 20 seconds.
+
+In nearly all cases the `ChoreographyTimeAdjust` RPC will not be necessary. The purpose of this RPC is the rare case where one isolated system will be sending the `ExecuteChoreography` RPC, and using a separate system the user would like to make a small adjustment to the start time of that request. If it's possible to set the desired start time using the system that sends the `ExecuteChoreography` RPC the user should just set that `start_time` in the `ExecuteChoreography` RPC and avoid using the `ChoreographyTimeAdjust` RPC.
 
 ### Choreography client
 

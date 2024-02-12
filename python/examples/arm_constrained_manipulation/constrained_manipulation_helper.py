@@ -75,7 +75,7 @@ def construct_right_handed_ballvalve_task(velocity_normalized, force_limit=40, t
                                           reset_estimator_bool=True):
     """ Helper function for manipulating right-handed ball valves
     Use this when the hand is to the right of the pivot of the ball valve
-    And when hand x axis is roughly parallel to the axis of rotation of
+    And when hand x-axis is roughly parallel to the axis of rotation of
     the ball valve
 
     params:
@@ -94,7 +94,7 @@ def construct_right_handed_ballvalve_task(velocity_normalized, force_limit=40, t
     + command: api command object
 
     Notes:
-    If the grasp is such that the hand x axis is not parallel to the axis
+    If the grasp is such that the hand x-axis is not parallel to the axis
     of rotation of the ball valve, then use the lever task.
     """
     angle_sign, angle_value, tangential_velocity = get_position_and_vel_values(
@@ -126,7 +126,7 @@ def construct_left_handed_ballvalve_task(velocity_normalized, force_limit=40, to
                                          reset_estimator_bool=True):
     """ Helper function for manipulating left-handed ball valves
     Use this when the hand is to the left of the pivot of the ball valve
-    And when hand x axis is roughly parallel to the axis of rotation of
+    And when hand x-axis is roughly parallel to the axis of rotation of
     the ball valve
 
     params:
@@ -145,7 +145,7 @@ def construct_left_handed_ballvalve_task(velocity_normalized, force_limit=40, to
     + command: api command object
 
     Notes:
-    If the grasp is such that the hand x axis is not parallel to the axis
+    If the grasp is such that the hand x-axis is not parallel to the axis
     of rotation of the ball valve, then use the lever task.
     """
     angle_sign, angle_value, tangential_velocity = get_position_and_vel_values(
@@ -191,7 +191,7 @@ def construct_crank_task(velocity_normalized, force_limit=40, target_angle=None,
 
     Notes:
     In this function, we assume the initial motion of the crank is
-    along the y axis of the hand (left and right). If the initial
+    along the y-axis of the hand (left and right). If the initial
     grasp is such that the initial motion needs to be something else,
     change the force direction.
     """
@@ -205,7 +205,7 @@ def construct_crank_task(velocity_normalized, force_limit=40, target_angle=None,
     # apply a pure torque in this task.
     torque_lim = 5.0
     # This assumes the grasp of crank is such that the crank will initially
-    # move along the hand y axis. Change if that is not the case.
+    # move along the hand y-axis. Change if that is not the case.
     force_direction = geometry_pb2.Vec3(x=0.0, y=0.0, z=angle_sign * 1.0)
     torque_direction = geometry_pb2.Vec3(x=0.0, y=0.0, z=0.0)
     init_wrench_dir = geometry_pb2.Wrench(force=force_direction, torque=torque_direction)
@@ -241,7 +241,7 @@ def construct_cabinet_task(velocity_normalized, force_limit=40, target_angle=Non
 
     Notes:
     In this function, we assume the initial motion of the cabinet is
-    along the x axis of the hand (forward and backward). If the initial
+    along the x-axis of the hand (forward and backward). If the initial
     grasp is such that the initial motion needs to be something else,
     change the force direction.
     """
@@ -287,7 +287,7 @@ def construct_drawer_task(velocity_normalized, force_limit=40, target_linear_pos
 
     Notes:
     In this function, we assume the initial motion of the drawer is
-    along the x axis of the hand (forward and backward). If the initial
+    along the x-axis of the hand (forward and backward). If the initial
     grasp is such that the initial motion needs to be something else,
     change the force direction.
     """
@@ -336,7 +336,7 @@ def construct_wheel_task(velocity_normalized, force_limit=40, target_angle=None,
     + command: api command object
 
     Notes:
-    This assumes initial motion will be along the y axis of the hand,
+    This assumes initial motion will be along the y-axis of the hand,
     which is often the case. Change force_direction if that is not true.
     """
     angle_sign, angle_value, tangential_velocity = get_position_and_vel_values(
@@ -383,7 +383,7 @@ def construct_knob_task(velocity_normalized, torque_limit=5, target_angle=None,
 
     Notes:
     This assumes that the axis of rotation of the knob is roughly parallel
-    to the x axis of the hand. Change torque_direction if that is not the case.
+    to the x-axis of the hand. Change torque_direction if that is not the case.
     """
     angle_sign, angle_value, rotational_velocity = get_position_and_vel_values(
         target_angle, velocity_normalized, torque_limit, position_control, True)

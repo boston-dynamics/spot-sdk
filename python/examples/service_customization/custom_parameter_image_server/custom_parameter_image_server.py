@@ -42,7 +42,7 @@ class WebCam(CameraInterface):
 
         # Check if the user is passing an index to a camera port, i.e. "0" to get the first
         # camera in the operating system's enumeration of available devices. The VideoCapture
-        # takes either a filepath to the device (as a string), or a index to the device (as an
+        # takes either a filepath to the device (as a string), or an index to the device (as an
         # int). Attempt to see if the device name can be cast to an integer before initializing
         # the video capture instance.
         # Someone may pass just the index because on certain operating systems (like Windows),
@@ -218,14 +218,14 @@ class WebCam(CameraInterface):
 
 
 def device_name_to_source_name(device_name):
-    if type(device_name) == int:
+    if isinstance(device_name, int):
         return f'video{device_name}'
     else:
         return os.path.basename(device_name)
 
 
 def create_dict_param_child_spec(default_val, min_val, max_val, display_name):
-    """Returns a DictParam ChildSpec with a, Int64Param.Spec value"""
+    """Returns a DictParam ChildSpec with an Int64Param.Spec value"""
     child = service_customization_pb2.DictParam.ChildSpec()
     child.ui_info.display_name = display_name
     child.spec.double_spec.default_value.value = default_val
@@ -296,7 +296,7 @@ def add_common_arguments(parser):
     add_web_cam_arguments(parser)
 
 
-if __name__ == '__main__':
+def main():
     # Define all arguments used by this service.
     import argparse
 
@@ -349,3 +349,7 @@ if __name__ == '__main__':
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:
         service_runner.run_until_interrupt()
+
+
+if __name__ == '__main__':
+    main()

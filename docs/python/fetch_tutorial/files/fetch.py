@@ -5,34 +5,34 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import argparse
+import math
 import sys
 import time
-import numpy as np
+
 import cv2
-import math
+import numpy as np
+from google.protobuf import wrappers_pb2
+
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.robot_state import RobotStateClient
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, block_until_arm_arrives
-from bosdyn.api import geometry_pb2
+from bosdyn.api import (basic_command_pb2, geometry_pb2, image_pb2, manipulation_api_pb2,
+                        network_compute_bridge_pb2)
+from bosdyn.client import frame_helpers, math_helpers
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
-from bosdyn.api import image_pb2
-from bosdyn.client.network_compute_bridge_client import NetworkComputeBridgeClient, ExternalServerError
-from bosdyn.api import network_compute_bridge_pb2
-from google.protobuf import wrappers_pb2
 from bosdyn.client.manipulation_api_client import ManipulationApiClient
-from bosdyn.api import manipulation_api_pb2
-from bosdyn.api import basic_command_pb2
-from bosdyn.client import frame_helpers
-from bosdyn.client import math_helpers
+from bosdyn.client.network_compute_bridge_client import (ExternalServerError,
+                                                         NetworkComputeBridgeClient)
+from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient,
+                                         block_for_trajectory_cmd, block_until_arm_arrives)
+from bosdyn.client.robot_state import RobotStateClient
 
 kImageSources = [
-    'frontleft_fisheye_image', 'frontright_fisheye_image',
-    'left_fisheye_image', 'right_fisheye_image', 'back_fisheye_image'
+    'frontleft_fisheye_image', 'frontright_fisheye_image', 'left_fisheye_image',
+    'right_fisheye_image', 'back_fisheye_image'
 ]
 
-def get_obj_and_img(network_compute_client, server, model, confidence,
-                    image_sources, label):
+
+def get_obj_and_img(network_compute_client, server, model, confidence, image_sources, label):
 
     for source in image_sources:
         # Build a network compute request for this image source.
@@ -44,11 +44,9 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
         #   minimum confidence (between 0 and 1)
         #   if we should automatically rotate the image
         input_data = network_compute_bridge_pb2.NetworkComputeInputData(
-            image_source_and_service=image_source_and_service,
-            model_name=model,
-            min_confidence=confidence,
-            rotate_image=network_compute_bridge_pb2.NetworkComputeInputData.
-            ROTATE_IMAGE_ALIGN_HORIZONTAL)
+            image_source_and_service=image_source_and_service, model_name=model,
+            min_confidence=confidence, rotate_image=network_compute_bridge_pb2.
+            NetworkComputeInputData.ROTATE_IMAGE_ALIGN_HORIZONTAL)
 
         # Server data: the service name
         server_data = network_compute_bridge_pb2.NetworkComputeServerConfiguration(
@@ -88,8 +86,7 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
 
                 try:
                     vision_tform_obj = frame_helpers.get_a_tform_b(
-                        obj.transforms_snapshot,
-                        frame_helpers.VISION_FRAME_NAME,
+                        obj.transforms_snapshot, frame_helpers.VISION_FRAME_NAME,
                         obj.image_properties.frame_name_image_coordinates)
                 except bosdyn.client.frame_helpers.ValidateFrameTreeError:
                     # No depth data available.
@@ -104,6 +101,7 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
             return best_obj, image_full, best_vision_tform_obj
 
     return None, None, None
+
 
 def get_bounding_box_image(response):
     dtype = np.uint8
@@ -136,10 +134,11 @@ def get_bounding_box_image(response):
         cv2.polylines(img, [polygon], True, (0, 255, 0), 2)
 
         caption = "{} {:.3f}".format(obj.name, confidence)
-        cv2.putText(img, caption, (int(min_x), int(min_y)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        cv2.putText(img, caption, (int(min_x), int(min_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                    (0, 255, 0), 2)
 
     return img
+
 
 def find_center_px(polygon):
     min_x = math.inf
@@ -159,73 +158,21 @@ def find_center_px(polygon):
     y = math.fabs(max_y - min_y) / 2.0 + min_y
     return (x, y)
 
-def block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=None, verbose=False):
-    """Helper that blocks until a trajectory command reaches STATUS_AT_GOAL or a timeout is
-        exceeded.
-       Args:
-        command_client: robot command client, used to request feedback
-        cmd_id: command ID returned by the robot when the trajectory command was sent
-        timeout_sec: optional number of seconds after which we'll return no matter what the
-                        robot's state is.
-        verbose: if we should print state at 10 Hz.
-       Return values:
-        True if reaches STATUS_AT_GOAL, False otherwise.
-    """
-    start_time = time.time()
-
-    if timeout_sec is not None:
-        end_time = start_time + timeout_sec
-        now = time.time()
-
-    while timeout_sec is None or now < end_time:
-        feedback_resp = command_client.robot_command_feedback(cmd_id)
-
-        current_state = feedback_resp.feedback.mobility_feedback.se2_trajectory_feedback.status
-
-        if verbose:
-            current_state_str = basic_command_pb2.SE2TrajectoryCommand.Feedback.Status.Name(current_state)
-
-            current_time = time.time()
-            print('Walking: ({time:.1f} sec): {state}'.format(
-                time=current_time - start_time, state=current_state_str),
-                  end='                \r')
-
-        if current_state == basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_AT_GOAL:
-            return True
-
-        time.sleep(0.1)
-        now = time.time()
-
-    if verbose:
-        print('block_for_trajectory_cmd: timeout exceeded.')
-
-    return False
 
 def main(argv):
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    parser.add_argument(
-        '-s',
-        '--ml-service',
-        help='Service name of external machine learning server.',
-        required=True)
-    parser.add_argument('-m',
-                        '--model',
-                        help='Model name running on the external server.',
+    parser.add_argument('-s', '--ml-service',
+                        help='Service name of external machine learning server.', required=True)
+    parser.add_argument('-m', '--model', help='Model name running on the external server.',
                         required=True)
-    parser.add_argument(
-        '-p',
-        '--person-model',
-        help='Person detection model name running on the external server.')
-    parser.add_argument('-c',
-                        '--confidence-dogtoy',
+    parser.add_argument('-p', '--person-model',
+                        help='Person detection model name running on the external server.')
+    parser.add_argument('-c', '--confidence-dogtoy',
                         help='Minimum confidence to return an object for the dogoy (0.0 to 1.0)',
-                        default=0.5,
-                        type=float)
-    parser.add_argument('-e',
-                        '--confidence-person',
-                        help='Minimum confidence for person detection (0.0 to 1.0)',
-                        default=0.6,
+                        default=0.5, type=float)
+    parser.add_argument('-e', '--confidence-person',
+                        help='Minimum confidence for person detection (0.0 to 1.0)', default=0.6,
                         type=float)
     options = parser.parse_args(argv)
 
@@ -240,15 +187,11 @@ def main(argv):
     # Time sync is necessary so that time-based filter requests can be converted
     robot.time_sync.wait_for_sync()
 
-    network_compute_client = robot.ensure_client(
-        NetworkComputeBridgeClient.default_service_name)
-    robot_state_client = robot.ensure_client(
-        RobotStateClient.default_service_name)
-    command_client = robot.ensure_client(
-        RobotCommandClient.default_service_name)
+    network_compute_client = robot.ensure_client(NetworkComputeBridgeClient.default_service_name)
+    robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
+    command_client = robot.ensure_client(RobotCommandClient.default_service_name)
     lease_client = robot.ensure_client(LeaseClient.default_service_name)
-    manipulation_api_client = robot.ensure_client(
-        ManipulationApiClient.default_service_name)
+    manipulation_api_client = robot.ensure_client(ManipulationApiClient.default_service_name)
 
     # This script assumes the robot is already standing via the tablet.  We'll take over from the
     # tablet.
@@ -289,23 +232,21 @@ def main(argv):
                 walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
                     vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
 
-                move_cmd = RobotCommandBuilder.trajectory_command(
-                    goal_x=walk_rt_vision[0],
-                    goal_y=walk_rt_vision[1],
-                    goal_heading=heading_rt_vision,
-                    frame_name=frame_helpers.VISION_FRAME_NAME,
+                se2_pose = geometry_pb2.SE2Pose(
+                    position=geometry_pb2.Vec2(x=walk_rt_vision[0], y=walk_rt_vision[1]),
+                    angle=heading_rt_vision)
+                move_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
+                    se2_pose, frame_name=frame_helpers.VISION_FRAME_NAME,
                     params=get_walking_params(0.5, 0.5))
                 end_time = 5.0
                 cmd_id = command_client.robot_command(command=move_cmd,
-                                                      end_time_secs=time.time() +
-                                                      end_time)
+                                                      end_time_secs=time.time() + end_time)
 
                 # Wait until the robot reports that it is at the goal.
-                block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+                block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5)
 
                 # The ML result is a bounding box.  Find the center.
-                (center_px_x,
-                 center_px_y) = find_center_px(dogtoy.image_properties.coordinates)
+                (center_px_x, center_px_y) = find_center_px(dogtoy.image_properties.coordinates)
 
                 # Request Pick Up on that pixel.
                 pick_vec = geometry_pb2.Vec2(x=center_px_x, y=center_px_y)
@@ -367,17 +308,19 @@ def main(argv):
 
                     current_state = response.current_state
                     current_time = time.time() - time_start
-                    print('Current state ({time:.1f} sec): {state}'.format(
-                        time=current_time,
-                        state=manipulation_api_pb2.ManipulationFeedbackState.Name(
-                            current_state)),
-                          end='                \r')
+                    print(
+                        'Current state ({time:.1f} sec): {state}'.format(
+                            time=current_time,
+                            state=manipulation_api_pb2.ManipulationFeedbackState.Name(
+                                current_state)), end='                \r')
                     sys.stdout.flush()
 
-                    failed_states = [manipulation_api_pb2.MANIP_STATE_GRASP_FAILED,
-                                     manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_NO_SOLUTION,
-                                     manipulation_api_pb2.MANIP_STATE_GRASP_FAILED_TO_RAYCAST_INTO_MAP,
-                                     manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_WAITING_DATA_AT_EDGE]
+                    failed_states = [
+                        manipulation_api_pb2.MANIP_STATE_GRASP_FAILED,
+                        manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_NO_SOLUTION,
+                        manipulation_api_pb2.MANIP_STATE_GRASP_FAILED_TO_RAYCAST_INTO_MAP,
+                        manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_WAITING_DATA_AT_EDGE
+                    ]
 
                     failed = current_state in failed_states
                     grasp_done = current_state == manipulation_api_pb2.MANIP_STATE_GRASP_SUCCEEDED or failed
@@ -399,9 +342,8 @@ def main(argv):
             while person is None:
                 # Find a person to deliver the toy to
                 person, image, vision_tform_person = get_obj_and_img(
-                    network_compute_client, options.ml_service,
-                    options.person_model, options.confidence_person, kImageSources,
-                    'person')
+                    network_compute_client, options.ml_service, options.person_model,
+                    options.confidence_person, kImageSources, 'person')
 
             # We now have found a person to drop the toy off near.
             drop_position_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
@@ -413,19 +355,18 @@ def main(argv):
             # Tell the robot to go there
 
             # Limit the speed so we don't charge at the person.
-            move_cmd = RobotCommandBuilder.trajectory_command(
-                goal_x=drop_position_rt_vision[0],
-                goal_y=drop_position_rt_vision[1],
-                goal_heading=heading_rt_vision,
-                frame_name=frame_helpers.VISION_FRAME_NAME,
+            se2_pose = geometry_pb2.SE2Pose(
+                position=geometry_pb2.Vec2(x=drop_position_rt_vision[0],
+                                           y=drop_position_rt_vision[1]), angle=heading_rt_vision)
+            move_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
+                se2_pose, frame_name=frame_helpers.VISION_FRAME_NAME,
                 params=get_walking_params(0.5, 0.5))
             end_time = 5.0
             cmd_id = command_client.robot_command(command=move_cmd,
-                                                  end_time_secs=time.time() +
-                                                  end_time)
+                                                  end_time_secs=time.time() + end_time)
 
             # Wait until the robot reports that it is at the goal.
-            block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+            block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5)
 
             print('Arrived at goal, dropping object...')
 
@@ -443,13 +384,12 @@ def main(argv):
             qz = 0
             flat_body_Q_hand = geometry_pb2.Quaternion(w=qw, x=qx, y=qy, z=qz)
 
-            flat_body_tform_hand = geometry_pb2.SE3Pose(
-                position=hand_ewrt_flat_body, rotation=flat_body_Q_hand)
+            flat_body_tform_hand = geometry_pb2.SE3Pose(position=hand_ewrt_flat_body,
+                                                        rotation=flat_body_Q_hand)
 
             robot_state = robot_state_client.get_robot_state()
             vision_tform_flat_body = frame_helpers.get_a_tform_b(
-                robot_state.kinematic_state.transforms_snapshot,
-                frame_helpers.VISION_FRAME_NAME,
+                robot_state.kinematic_state.transforms_snapshot, frame_helpers.VISION_FRAME_NAME,
                 frame_helpers.GRAV_ALIGNED_BODY_FRAME_NAME)
 
             vision_tform_hand_at_drop = vision_tform_flat_body * math_helpers.SE3Pose.from_proto(
@@ -462,16 +402,13 @@ def main(argv):
                 vision_tform_hand_at_drop.x, vision_tform_hand_at_drop.y,
                 vision_tform_hand_at_drop.z, vision_tform_hand_at_drop.rot.w,
                 vision_tform_hand_at_drop.rot.x, vision_tform_hand_at_drop.rot.y,
-                vision_tform_hand_at_drop.rot.z, frame_helpers.VISION_FRAME_NAME,
-                seconds)
+                vision_tform_hand_at_drop.rot.z, frame_helpers.VISION_FRAME_NAME, seconds)
 
             # Keep the gripper closed.
-            gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(
-                0.0)
+            gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(0.0)
 
             # Combine the arm and gripper commands into one RobotCommand
-            command = RobotCommandBuilder.build_synchro_command(
-                gripper_command, arm_command)
+            command = RobotCommandBuilder.build_synchro_command(gripper_command, arm_command)
 
             # Send the request
             cmd_id = command_client.robot_command(command)
@@ -480,8 +417,7 @@ def main(argv):
             block_until_arm_arrives(command_client, cmd_id)
 
             # Open the gripper
-            gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(
-                1.0)
+            gripper_command = RobotCommandBuilder.claw_gripper_open_fraction_command(1.0)
             command = RobotCommandBuilder.build_synchro_command(gripper_command)
             cmd_id = command_client.robot_command(command)
 
@@ -497,35 +433,32 @@ def main(argv):
             print('Backing up and waiting...')
 
             # Back up one meter and wait for the person to throw the object again.
-            move_cmd = RobotCommandBuilder.trajectory_command(
-                goal_x=wait_position_rt_vision[0],
-                goal_y=wait_position_rt_vision[1],
-                goal_heading=wait_heading_rt_vision,
-                frame_name=frame_helpers.VISION_FRAME_NAME,
+            se2_pose = geometry_pb2.SE2Pose(
+                position=geometry_pb2.Vec2(x=wait_position_rt_vision[0],
+                                           y=wait_position_rt_vision[1]),
+                angle=wait_heading_rt_vision)
+            move_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
+                se2_pose, frame_name=frame_helpers.VISION_FRAME_NAME,
                 params=get_walking_params(0.5, 0.5))
             end_time = 5.0
             cmd_id = command_client.robot_command(command=move_cmd,
-                                                  end_time_secs=time.time() +
-                                                  end_time)
+                                                  end_time_secs=time.time() + end_time)
 
             # Wait until the robot reports that it is at the goal.
-            block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
+            block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5)
 
 
-def compute_stand_location_and_yaw(vision_tform_target, robot_state_client,
-                                   distance_margin):
+def compute_stand_location_and_yaw(vision_tform_target, robot_state_client, distance_margin):
     # Compute drop-off location:
     #   Draw a line from Spot to the person
     #   Back up 2.0 meters on that line
     vision_tform_robot = frame_helpers.get_a_tform_b(
-        robot_state_client.get_robot_state(
-        ).kinematic_state.transforms_snapshot, frame_helpers.VISION_FRAME_NAME,
-        frame_helpers.GRAV_ALIGNED_BODY_FRAME_NAME)
+        robot_state_client.get_robot_state().kinematic_state.transforms_snapshot,
+        frame_helpers.VISION_FRAME_NAME, frame_helpers.GRAV_ALIGNED_BODY_FRAME_NAME)
 
     # Compute vector between robot and person
     robot_rt_person_ewrt_vision = [
-        vision_tform_robot.x - vision_tform_target.x,
-        vision_tform_robot.y - vision_tform_target.y,
+        vision_tform_robot.x - vision_tform_target.x, vision_tform_robot.y - vision_tform_target.y,
         vision_tform_robot.z - vision_tform_target.z
     ]
 
@@ -538,12 +471,9 @@ def compute_stand_location_and_yaw(vision_tform_target, robot_state_client,
 
     # Starting at the person, back up meters along the unit vector.
     drop_position_rt_vision = [
-        vision_tform_target.x +
-        robot_rt_person_ewrt_vision_hat[0] * distance_margin,
-        vision_tform_target.y +
-        robot_rt_person_ewrt_vision_hat[1] * distance_margin,
-        vision_tform_target.z +
-        robot_rt_person_ewrt_vision_hat[2] * distance_margin
+        vision_tform_target.x + robot_rt_person_ewrt_vision_hat[0] * distance_margin,
+        vision_tform_target.y + robot_rt_person_ewrt_vision_hat[1] * distance_margin,
+        vision_tform_target.z + robot_rt_person_ewrt_vision_hat[2] * distance_margin
     ]
 
     # We also want to compute a rotation (yaw) so that we will face the person when dropping.
@@ -557,18 +487,20 @@ def compute_stand_location_and_yaw(vision_tform_target, robot_state_client,
 
     return drop_position_rt_vision, heading_rt_vision
 
+
 def pose_dist(pose1, pose2):
     diff_vec = [pose1.x - pose2.x, pose1.y - pose2.y, pose1.z - pose2.z]
     return np.linalg.norm(diff_vec)
 
+
 def get_walking_params(max_linear_vel, max_rotation_vel):
     max_vel_linear = geometry_pb2.Vec2(x=max_linear_vel, y=max_linear_vel)
-    max_vel_se2 = geometry_pb2.SE2Velocity(linear=max_vel_linear,
-                                           angular=max_rotation_vel)
+    max_vel_se2 = geometry_pb2.SE2Velocity(linear=max_vel_linear, angular=max_rotation_vel)
     vel_limit = geometry_pb2.SE2VelocityLimit(max_vel=max_vel_se2)
     params = RobotCommandBuilder.mobility_params()
     params.vel_limit.CopyFrom(vel_limit)
     return params
+
 
 if __name__ == '__main__':
     if not main(sys.argv[1:]):

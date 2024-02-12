@@ -127,15 +127,15 @@ def data_acquisition(config):
     download_data_REST(query_params, config.hostname, robot.user_token, destination_folder='.')
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     data_acquisition(options)
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

@@ -122,7 +122,7 @@ Note, the Ricoh Theta image requests can be slow due to the time it takes to sti
 
 Here are a couple suggestions for debugging the Ricoh Theta image service:
 
-- Check that the Ricoh Theta is configured properly. If running the image service locally, the Ricoh Theta can be in direct-ip mode and the local computer can connect to the Ricoh Theta's network. If running on the CORE I/O or a different spot payload computer, the Ricoh Theta should be in client mode. For the Ricoh Theta V, the wireless indicator should be solid green; for the Ricoh Theta Z, the OLED display will have a 'CL' icon near the wireless indicator. It may help to just rerun the `ricoh_client_mode.py` script to fully ensure that it is setup for communicating on Spot's network.
+- Check that the Ricoh Theta is configured properly. If running the image service locally, the Ricoh Theta can be in direct-ip mode and the local computer can connect to the Ricoh Theta's network. If running on the CORE I/O or a different spot payload computer, the Ricoh Theta should be in client mode. For the Ricoh Theta V, the wireless indicator should be solid green; for the Ricoh Theta Z, the OLED display will have a 'CL' icon near the wireless indicator. It may help to just rerun the `ricoh_client_mode.py` script to fully ensure that it is set up for communicating on Spot's network.
 - Check that the image service appears in the directory using the command line tool: `python3 -m bosdyn.client {ROBOT_IP} dir list`
 - Use the [image service tester program](../tester_programs/README.md) to ensure the service can successfully be communicated with and that each RPC will complete correctly.
 - When all tests pass for the image service tester program, check that the tablet is detecting the Ricoh Theta image service by looking in the camera sources drop down menu (top-left of the status bar) and then check that the images are appearing by selecting the Ricoh Theta.
@@ -134,7 +134,7 @@ Please refer to this [document](../../../docs/payload/docker_containers.md) for 
 
 Follow the instructions on how to build and use the docker image from [this section](../../../docs/payload/docker_containers.md#build-docker-images). The application arguments needed to run the Ricoh Theta application in this example are `--theta-ssid THETA_SSID --theta-client --host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET --port PORT_NUMBER ROBOT_IP`.
 
-**Reminder:** the Ricoh Theta needs to be in client mode when running the image service on a payload computer. Follow the initial instructions above to setup client mode.
+**Reminder:** the Ricoh Theta needs to be in client mode when running the image service on a payload computer. Follow the initial instructions above to set up client mode.
 
 ## Developer Comments
 

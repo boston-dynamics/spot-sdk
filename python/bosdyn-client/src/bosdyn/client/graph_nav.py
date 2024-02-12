@@ -128,6 +128,7 @@ class GraphNavClient(BaseClient):
             request_live_world_objects=False,
             request_live_robot_state=False,
             waypoint_id=None,
+            request_gps_state=False,
             **kwargs):
         """Obtain current localization state of the robot.
 
@@ -141,21 +142,23 @@ class GraphNavClient(BaseClient):
             request_live_images=request_live_images,
             request_live_terrain_maps=request_live_terrain_maps,
             request_live_world_objects=request_live_world_objects,
-            request_live_robot_state=request_live_robot_state, waypoint_id=waypoint_id)
+            request_live_robot_state=request_live_robot_state, waypoint_id=waypoint_id,
+            request_gps_state=request_gps_state)
         return self.call(self._stub.GetLocalizationState, req, None, common_header_errors,
                          copy_request=False, **kwargs)
 
-    def get_localization_state_async(self, request_live_point_cloud=False,
-                                     request_live_images=False, request_live_terrain_maps=False,
-                                     request_live_world_objects=False,
-                                     request_live_robot_state=False, waypoint_id=None, **kwargs):
+    def get_localization_state_async(
+            self, request_live_point_cloud=False, request_live_images=False,
+            request_live_terrain_maps=False, request_live_world_objects=False,
+            request_live_robot_state=False, waypoint_id=None, request_gps_state=False, **kwargs):
         """Async version of get_localization_state()."""
         req = self._build_get_localization_state_request(
             request_live_point_cloud=request_live_point_cloud,
             request_live_images=request_live_images,
             request_live_terrain_maps=request_live_terrain_maps,
             request_live_world_objects=request_live_world_objects,
-            request_live_robot_state=request_live_robot_state, waypoint_id=waypoint_id)
+            request_live_robot_state=request_live_robot_state, waypoint_id=waypoint_id,
+            request_gps_state=request_gps_state)
         return self.call_async(self._stub.GetLocalizationState, req, None, common_header_errors,
                                copy_request=False, **kwargs)
 
@@ -302,7 +305,8 @@ class GraphNavClient(BaseClient):
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
         request = self._build_navigate_to_request(destination_waypoint_id, travel_params,
                                                   route_params, cmd_duration, leases, used_endpoint,
-                                                  command_id, destination_waypoint_tform_body_goal)
+                                                  command_id, destination_waypoint_tform_body_goal,
+                                                  route_blocked_behavior)
         return self.call_async(self._stub.NavigateTo, request,
                                value_from_response=_command_id_from_navigate_route_response,
                                error_from_response=_navigate_to_error, copy_request=False, **kwargs)
@@ -340,7 +344,7 @@ class GraphNavClient(BaseClient):
     def navigate_to_anchor(self, seed_tform_goal, cmd_duration, route_params=None,
                            travel_params=None, leases=None, timesync_endpoint=None,
                            goal_waypoint_rt_seed_ewrt_seed_tolerance=None, command_id=None,
-                           **kwargs):
+                           gps_navigation_params=None, **kwargs):
         """Navigate to a pose in seed frame along a route chosen by the GraphNav service.
 
         Args:
@@ -353,6 +357,9 @@ class GraphNavClient(BaseClient):
             goal_waypoint_rt_seed_ewrt_seed_tolerance: Vec3 protobuf of the tolerances for goal waypoint selection.
             command_id: If not None, this continues an existing navigate_to command with the given ID. If None,
             a new command_id will be used.
+            gps_navigation_params: API GPSNavigationParams. If not None, this will be interpreted as a GPS-based
+            navigation command. seed_tform_goal will be ignored and whatever goal is passed in using the GPS
+            navigation params will be used.
         Returns:
             int: Command ID to use in feedback lookup.
         Raises:
@@ -372,10 +379,9 @@ class GraphNavClient(BaseClient):
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
-        request = self._build_navigate_to_anchor_request(seed_tform_goal, travel_params,
-                                                         route_params, cmd_duration, leases,
-                                                         used_endpoint, command_id,
-                                                         goal_waypoint_rt_seed_ewrt_seed_tolerance)
+        request = self._build_navigate_to_anchor_request(
+            seed_tform_goal, travel_params, route_params, cmd_duration, leases, used_endpoint,
+            command_id, goal_waypoint_rt_seed_ewrt_seed_tolerance, gps_navigation_params)
         return self.call(self._stub.NavigateToAnchor, request,
                          value_from_response=_command_id_from_navigate_route_response,
                          error_from_response=_navigate_to_anchor_error, copy_request=False,
@@ -384,15 +390,14 @@ class GraphNavClient(BaseClient):
     def navigate_to_anchor_async(self, seed_tform_goal, cmd_duration, route_params=None,
                                  travel_params=None, leases=None, timesync_endpoint=None,
                                  goal_waypoint_rt_seed_ewrt_seed_tolerance=None, command_id=None,
-                                 **kwargs):
+                                 gps_navigation_params=None, **kwargs):
         """Async version of navigate_to_anchor()."""
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
-        request = self._build_navigate_to_anchor_request(seed_tform_goal, travel_params,
-                                                         route_params, cmd_duration, leases,
-                                                         used_endpoint, command_id,
-                                                         goal_waypoint_rt_seed_ewrt_seed_tolerance)
+        request = self._build_navigate_to_anchor_request(
+            seed_tform_goal, travel_params, route_params, cmd_duration, leases, used_endpoint,
+            command_id, goal_waypoint_rt_seed_ewrt_seed_tolerance, gps_navigation_params)
         return self.call_async(self._stub.NavigateTo, request,
                                value_from_response=_command_id_from_navigate_route_response,
                                error_from_response=_navigate_to_anchor_error, copy_request=False,
@@ -628,13 +633,15 @@ class GraphNavClient(BaseClient):
     @staticmethod
     def _build_get_localization_state_request(request_live_point_cloud, request_live_images,
                                               request_live_terrain_maps, request_live_world_objects,
-                                              request_live_robot_state, waypoint_id):
+                                              request_live_robot_state, waypoint_id,
+                                              request_gps_state):
         return graph_nav_pb2.GetLocalizationStateRequest(
             request_live_point_cloud=request_live_point_cloud,
             request_live_images=request_live_images,
             request_live_terrain_maps=request_live_terrain_maps,
             request_live_world_objects=request_live_world_objects,
-            request_live_robot_state=request_live_robot_state, waypoint_id=waypoint_id)
+            request_live_robot_state=request_live_robot_state, waypoint_id=waypoint_id,
+            request_gps_state=request_gps_state)
 
     @staticmethod
     def _build_navigate_route_request(route, route_follow_params, travel_params, end_time_secs,
@@ -677,12 +684,16 @@ class GraphNavClient(BaseClient):
     @staticmethod
     def _build_navigate_to_anchor_request(seed_tform_goal, travel_params, route_params,
                                           end_time_secs, leases, timesync_endpoint, command_id,
-                                          goal_waypoint_rt_seed_ewrt_seed_tolerance):
+                                          goal_waypoint_rt_seed_ewrt_seed_tolerance,
+                                          gps_navigation_params):
         converter = timesync_endpoint.get_robot_time_converter()
         request = graph_nav_pb2.NavigateToAnchorRequest(
             seed_tform_goal=seed_tform_goal,
             goal_waypoint_rt_seed_ewrt_seed_tolerance=goal_waypoint_rt_seed_ewrt_seed_tolerance,
             clock_identifier=timesync_endpoint.clock_identifier)
+        # Note that this overrides the seed_tform_goal, which is a OneOf.
+        if gps_navigation_params:
+            request.gps_navigation_params.CopyFrom(gps_navigation_params)
         request.end_time.CopyFrom(
             converter.robot_timestamp_from_local_secs(time.time() + end_time_secs))
         if travel_params is not None:
@@ -923,6 +934,23 @@ class RouteNotUpdatingError(RouteNavigationError):
 
 class RobotLostError(RouteNavigationError):
     """Cannot issue a navigation request when the robot is already lost."""
+
+
+class InvalidGPSError(RouteNavigationError):
+    """Cannot issue the GPS command because it is invalid."""
+
+    def _gps_status_to_string(self, status):
+        if status == graph_nav_pb2.NavigateToAnchorResponse.GPS_STATUS_OK:
+            return 'OK'
+        elif status == graph_nav_pb2.NavigateToAnchorResponse.GPS_STATUS_NO_COORDS_IN_MAP:
+            return 'The uploaded map did not contain any valid GPS coordinates.'
+        elif status == graph_nav_pb2.NavigateToAnchorResponse.GPS_STATUS_TOO_FAR_FROM_MAP:
+            return 'The given coordinates were too far from any coordinates in the uploaded map.'
+        else:
+            return 'Unknown error'
+
+    def __str__(self):
+        return f'{self.error_message} (reason: {self._gps_status_to_string(self.response.gps_status)})'
 
 
 class RobotNotLocalizedToRouteError(RouteNavigationError):
@@ -1213,6 +1241,8 @@ _NAVIGATE_TO_ANCHOR_STATUS_TO_ERROR.update({
         error_pair(UnrecognizedCommandError),
     graph_nav_pb2.NavigateToAnchorResponse.STATUS_AREA_CALLBACK_ERROR:
         error_pair(AreaCallbackMapError),
+    graph_nav_pb2.NavigateToAnchorResponse.STATUS_INVALID_GPS_COMMAND:
+        error_pair(InvalidGPSError)
 })
 
 

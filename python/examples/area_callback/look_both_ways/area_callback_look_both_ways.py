@@ -74,7 +74,7 @@ class AreaCallbackRegionHandlerLookBothWays(AreaCallbackRegionHandlerBase):
         # self.set_complete()
 
     def end(self):
-        # No extra cleanup is required by this callback. For something like an callback that plays a
+        # No extra cleanup is required by this callback. For something like a callback that plays a
         # sound, the EndCallback call would be a place to stop playing the sound.
         pass
 
@@ -102,6 +102,20 @@ def main():
     required_lease_resources = ['body']
     config = AreaCallbackServiceConfig(service_name,
                                        required_lease_resources=required_lease_resources)
+    info = config.area_callback_information
+
+    # This callback does not do anything special to get past obstacles, so we should allow
+    # Graph Nav to identify blockages in the region.
+    info.blockage = info.BLOCKAGE_CHECK
+    # This callback controls the robot, but only looks left and right, so it is okay for Graph Nav
+    # to interrupt it if the robot becomes impaired.
+    info.impairment_check = info.IMPAIRMENT_CHECK
+    # Graph Nav should still wait for entities as normal when crossing this region.
+    info.entity_waiting = info.ENTITY_WAITING_ENABLE
+    # The robot should face along the route it is going to cross, so that we look left and
+    # right of the crossing direction.
+    info.default_stop.face_direction = info.default_stop.FACE_DIRECTION_ALONG_ROUTE
+
     servicer = AreaCallbackServiceServicer(robot, config, AreaCallbackRegionHandlerLookBothWays)
 
     # Run the area callback service.

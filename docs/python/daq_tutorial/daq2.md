@@ -64,7 +64,7 @@ mkdir ~/data_capture
 cd ~/data_capture
 ```
 
-Copy (or <a href="files/web_cam_image_service.py">download</a>)) the script below into a file called `web_cam_image_service.py` in the `~/data_capture` folder.  This is a simplified version of the [web cam example](../../../python/examples/web_cam_image_service/README.md) (which includes some extra options to control how images are captured).
+Copy (or <a href="files/web_cam_image_service.py">download</a>) the script below into a file called `web_cam_image_service.py` in the `~/data_capture` folder.  This is a simplified version of the [web cam example](../../../python/examples/web_cam_image_service/README.md) (which includes some extra options to control how images are captured).
 
 ### Web cam image service
 Set up the imports for images and the Spot API
@@ -340,7 +340,7 @@ python3 -m bosdyn.client $ROBOT_IP self-ip
 ```
 Be sure that the `$WEBCAM_PORT` is not blocked on your computer.
 
-Once this is running, use the [`image_service_tester.py` program](../../../python/examples/tester_programs/README.md#testing-an-image-service)) to test its basic functionality.
+Once this is running, use the [`image_service_tester.py` program](../../../python/examples/tester_programs/README.md#testing-an-image-service) to test its basic functionality.
 ```sh
 python3 image_service_tester.py $ROBOT_IP --service-name web-cam-service --check-data-acquisition
 ```

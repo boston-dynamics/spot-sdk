@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  metrics_over_core:
+    image: metrics_over_coreio:arm64
+    network_mode: bridge
+    restart: unless-stopped
+    ulimits:
+      memlock: -1
+    volumes:
+      # Mount payload credentials.
+      - "/opt/payload_credentials:/creds"
+      # Mount file storage
+      - /home/spot/performance_logs:/performance_logs

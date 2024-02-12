@@ -8,12 +8,13 @@ Development Kit License (20191101-BDSDK-SL).
 
 # GraphNav and Robot Locomotion
 
-The GraphNav service provides two RPCs for navigating to different locations on the prior map:
+The GraphNav service provides three RPCs for navigating to different locations on the prior map:
 
 *   NavigateTo
 *   NavigateRoute
+*   NavigateToAnchor
 
-Both RPCs let the client specify maximum speed as well as the size of the goal region at the final waypoint.
+These RPCs let the client specify maximum speed as well as the size of the goal region at the final waypoint.
 
 ## NavigateTo
 
@@ -25,6 +26,12 @@ The `NavigateTo` RPC is the simplest way to command a robot to go to a destinati
 The `NavigateRoute` RPC allows the client to directly specify the path of the robot. This lets the client command the robot to take a longer path as needed. Routes are specified as a list of waypoints and edges. For example, you could make a path that doubles back on itself, allowing the robot to go to a distant waypoint and then back to the start.
 
 Clients that maintain contact with the robot are encouraged to continuously resend the command with a deadline in the near future. This results in the robot stopping quickly if the client stops checking in. Clients that disconnect from an autonomous robot should set a longer deadline and rely on an alternate mechanism to maintain safety.
+
+
+## NavigateToAnchor
+
+The `NavigateToAnchor` RPC allows the client to command the robot go to an approximate `x, y, z` position relative to the seed frame. This position can also be specified in a global coordinate system (like GPS coordinates, for example).
+
 
 ## Status and feedback
 
@@ -52,6 +59,8 @@ The following error types can interrupt an autonomous route:
 | STATUS_CONSTRAINT_FAULT |	Indicates the route is over-constrained. Choose a different route. |
 | STATUS_LEASE_ERROR |	Indicates the lease given to GraphNav is no longer valid. |
 | STATUS_COMMAND_TIMED_OUT |	Indicates a comms problem or the timeout deadline was reached. |
+| STATUS_ROBOT_IMPAIRED |   Indicates a crtical perception fault, behavior fault, or LIDAR not working. |
+| STATUS_AREA_CALLBACK_ERROR |  Indicates an error occurred with an Area Callback. |
 
 
 <!--- image and page reference link definitions --->

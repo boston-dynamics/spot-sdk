@@ -39,7 +39,7 @@ class WebCam(CameraInterface):
 
         # Check if the user is passing an index to a camera port, i.e. "0" to get the first
         # camera in the operating system's enumeration of available devices. The VideoCapture
-        # takes either a filepath to the device (as a string), or a index to the device (as an
+        # takes either a filepath to the device (as a string), or an index to the device (as an
         # int). Attempt to see if the device name can be cast to an integer before initializing
         # the video capture instance.
         # Someone may pass just the index because on certain operating systems (like Windows),
@@ -204,7 +204,7 @@ class WebCam(CameraInterface):
 
 
 def device_name_to_source_name(device_name):
-    if type(device_name) == int:
+    if isinstance(device_name, int):
         return f'video{device_name}'
     else:
         return os.path.basename(device_name)
@@ -254,7 +254,7 @@ def add_web_cam_arguments(parser):
                         help='Resolution height (pixels).')
 
 
-if __name__ == '__main__':
+def main():
     # Define all arguments used by this service.
     import argparse
     parser = argparse.ArgumentParser(allow_abbrev=False)
@@ -291,3 +291,7 @@ if __name__ == '__main__':
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:
         service_runner.run_until_interrupt()
+
+
+if __name__ == '__main__':
+    main()

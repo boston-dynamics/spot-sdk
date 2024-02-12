@@ -42,7 +42,7 @@ To install this example on Ubuntu 18.04, follow these instructions:
 Prior to running the example, you will need to acquire estop access from another source such as from a connected laptop or tablet. This allows you to emergency stop the robot since this application does not have a GUI.
 This example follows the common pattern for expected arguments. It needs the common arguments used to configure the SDK and connect to a Spot:
 
-- hostname passed as the last argument
+- robot IP passed as the last argument
 - username and password should be set in the environment variables `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD`.
 
 On top of those arguments, it also needs the following arguments:
@@ -89,24 +89,36 @@ cp ../spot_tensorflow_detector/tensorflow_object_detection.py .
 sudo docker build -t spot_detect_and_follow:l4t -f Dockerfile.l4t .
 ```
 
-To run a container, replace ROBOT_HOSTNAME and <absolute_path_to_pb> with the full path to the pb model file in the command below:
+To run a container, replace ROBOT_IP and <absolute_path_to_pb> with the full path to the pb model file in the command below:
 
 ```sh
-sudo docker run -it --network=host spot_detect_and_follow ROBOT_HOSTNAME
+sudo docker run -it --network=host spot_detect_and_follow ROBOT_IP
 ```
 
 On CORE I/O (using the GPU):
 
 ```sh
-sudo docker run --gpus all -it --network=host spot_detect_and_follow:l4t ROBOT_HOSTNAME
+sudo docker run --gpus all -it --network=host spot_detect_and_follow:l4t ROBOT_IP
 ```
 
 #### Running as a Spot Extension on CORE I/O
 
-This directory contains a script `create_extension.sh` that can be used to create an l4t-based Spot Extension for this example.
-This will create a file spot_detect_and_follow.spx, which can be uploaded to the CORE I/O.
-The extension requires that the payload be authorized on the robot admin console to run.
+This example can also be built into a [Spot Extension](../../../docs/payload/docker_containers.md) using a provided [convenience script](../extensions/README.md)
 
-If building the extension on an x86 system run the following to support building aarch64 containers
-`sudo apt-get install qemu binfmt-support qemu-user-static`
-`docker run --rm --privileged multiarch/qemu-user-static --reset -p yes`
+```
+cd {/path/to/python/examples/spot_detect_and_follow/}
+
+cp ../spot_tensorflow_detector/tensorflow_object_detection.py .
+
+python3 ../extensions/build_extension.py \
+    --arm \
+    --dockerfile-paths Dockerfile.l4t \
+    --build-image-tags spot_detect_and_follow \
+    -i spot_detect_and_follow.tar.gz \
+    --package-dir . \
+    --spx spot_detect_and_follow.spx
+```
+
+### Troubleshooting
+
+Depending upon the robot's surroundings and what other Spot Extensions are consuming resources on the CoreIO, you may find it necessary to adjust some of the command line arguments. You can either (1) [SSH into the CoreIO](../../../docs/payload/coreio_documentation.md#how-to-connect-via-ssh) and edit the `docker-compose.yml` directly (in `/data/.extensions/spot_detect_and_follow/`) or (2) edit the `docker-compose.yml` locally, create a new Spot Extension, and upload it to the CoreIO.

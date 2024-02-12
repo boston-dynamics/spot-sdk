@@ -15,7 +15,7 @@ import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
 import "bosdyn/api/data_acquisition.proto";
 
-// A query parameter which filters the possible set of data identifiters to those
+// A query parameter which filters the possible set of data identifiers to those
 // which contain the same action/group names matching any of the names in the
 // set of CaptureActionIds.
 message ActionIdQuery {
@@ -44,6 +44,40 @@ message DataQueryParams {
         ActionIdQuery action_ids = 2;
     }
 
+}
+
+message QueryParameters {
+    // Time range to query.
+    TimeRangeQuery time_range = 1;
+
+    // List of action ids to query. The constructed query statement will have an OR relation
+    // between the action_ids specified in this list, with an AND relation for the fields inside
+    // each action_id. For example, specifying
+    // [{action_name="action1", group_name="group1"}, {action_name="action2", group_name="group2"}]
+    // will insert the following in the WHERE part of the query:
+    // (action_name="action1" AND group_name="group1") OR (action_name="action2" AND
+    // group_name="group2").
+    repeated CaptureActionId action_ids = 2;
+
+    // Channels to include in the query results. The constructed query statement will have an OR
+    // relation for all the channel values listed in this field.
+    repeated string channels = 3;
+
+    // Query for captures with id higher or equal to this value. Specifying 0 means that the
+    // Data Acquisition Store will return all captured data it has. Otherwise, it will return new
+    // captures stored with an id greater than the value specified in this field.
+    uint64 captures_from_id = 4;
+
+    // Setting this field to true only returns the DataIdentifiers in the response and not the
+    // actual captures.
+    bool only_include_identifiers = 5;
+
+    // The following fields specify which capture types to include in the results. If none of the
+    // following fields is specified, then all capture types will be included in the results.
+    bool include_images = 6;
+    bool include_data = 7;
+    bool include_metadata = 8;
+    bool include_alerts = 9;
 }
 
 
@@ -201,3 +235,56 @@ message ListStoredDataResponse {
     repeated DataIdentifier data_ids = 2;
 }
 
+message QueryStoredCapturesRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Query parameters for finding data.
+    QueryParameters query = 2;
+}
+
+message StoredCapturedData {
+    bytes data = 1;
+
+    // File extension to use for writing the data to a file.
+    string file_extension = 2;
+}
+
+message QueryStoredCaptureResult {
+    DataIdentifier data_id = 1;
+
+    oneof result {
+        ImageCapture image = 3;
+        AssociatedMetadata metadata = 4;
+        AssociatedAlertData alert_data = 5;
+        StoredCapturedData data = 6;
+    }
+}
+
+message QueryStoredCapturesResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // CaptureActionIds that match the query parameters and are included in the results.
+    repeated CaptureActionId action_ids = 2;
+
+    // Results that match the query parameters.
+    repeated QueryStoredCaptureResult results = 3;
+
+    // Max capture_id in the database matching the query parameters.
+    uint64 max_capture_id = 4;
+}
+
+message QueryMaxCaptureIdRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Query parameters for finding data.
+    QueryParameters query = 2;
+}
+
+message QueryMaxCaptureIdResponse {
+    ResponseHeader header = 1;
+
+    uint64 max_capture_id = 2;
+}

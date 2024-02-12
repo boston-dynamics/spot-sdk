@@ -43,10 +43,9 @@ Lovely Spam!
 Spam, Spam, Spam, Spam!
 -----END CERTIFICATE-----""".encode()
 
-    def _create_sdk(self, client_name='sdk-test', app_token='ABC123', cert=None):
+    def _create_sdk(self, client_name='sdk-test', cert=None):
         sdk = bosdyn.client.Sdk()
         sdk.client_name = client_name
-        sdk.app_token = app_token
         sdk.cert = cert or SdkTest.CA_CERT
         return sdk
 
@@ -94,9 +93,6 @@ Spam, Spam, Spam, Spam!
         service_type = ServiceClientMock.default_service_name
         sdk = self._create_sdk()
         robot = self._create_robot(sdk, 'test-robot')
-        # Hacking in a cached version of "should_send_app_token" to avoid need to prop
-        # up a RobotId client and service.
-        robot._should_send_app_token_on_each_request = lambda: True
         # This should raise an exception -- we haven't installed a factory for the service.
         with self.assertRaises(bosdyn.client.robot.UnregisteredServiceNameError):
             client = robot.ensure_client(service_name)
@@ -114,12 +110,6 @@ Spam, Spam, Spam, Spam!
             pkg_resources.resource_stream('bosdyn.client.resources', 'robot.pem').read())
         with self.assertRaises(IOError):
             sdk.load_robot_cert('this-path-does-not-exist')
-
-    def test_load_app_token(self):
-        sdk = bosdyn.client.Sdk()
-
-        # App tokens are deprecated, test that not loading a token does not throw an exception
-        sdk.load_app_token(None)
 
 
 

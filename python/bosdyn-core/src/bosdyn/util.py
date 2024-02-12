@@ -5,26 +5,33 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Common utilities for API Python code."""
-from __future__ import division
-
 import datetime
+import os
 import re
 import sys
 import time
+from typing import Callable
 
 from google.protobuf.duration_pb2 import Duration
 from google.protobuf.timestamp_pb2 import Timestamp
-
-if sys.version_info[0] >= 3:
-    LONG = int
-else:
-    LONG = long
 
 THOUSAND = 10**3
 MILLION = 10**6
 BILLION = 10**9
 
 NSEC_PER_SEC = BILLION
+
+# Returns the time in seconds.
+ClockFn = Callable[[], float]
+
+# Global variable representing the current clock source.
+_clock_source_fn: ClockFn = time.time
+
+
+def set_clock_source(clock_fn: ClockFn) -> None:
+    """Set the clock source to use the input clock source."""
+    global _clock_source_fn
+    _clock_source_fn = clock_fn
 
 
 def duration_str(duration):
@@ -95,14 +102,14 @@ def timestamp_str(timestamp):
 
 
 def sec_to_nsec(secs):
-    """Convert time in seconds as from time.time() to a timestamp in nanoseconds.
+    """Convert time in seconds as from _clock_source_fn() to a timestamp in nanoseconds.
 
     Args:
      secs: Time in seconds
     Returns:
      The time in nanoseconds, as an integer.
     """
-    return LONG(secs * NSEC_PER_SEC)
+    return int(secs * NSEC_PER_SEC)
 
 
 def nsec_to_sec(secs):
@@ -118,12 +125,12 @@ def nsec_to_sec(secs):
 
 def now_nsec():
     """Returns nanoseconds from dawn of unix epoch until when this is called."""
-    return sec_to_nsec(time.time())
+    return sec_to_nsec(now_sec())
 
 
 def now_sec():
     """Returns seconds from dawn of unix epoch until when this is called."""
-    return time.time()
+    return _clock_source_fn()
 
 
 def set_timestamp_from_now(timestamp_proto):
@@ -221,7 +228,7 @@ def secs_to_hms(seconds):
 
 
 def distance_str(meters):
-    """Convert a distance in meters to a either xxx.xx m or xxx.xx km
+    """Convert a distance in meters to either xxx.xx m or xxx.xx km
 
     Args:
       meters (float/int):   distance in meters

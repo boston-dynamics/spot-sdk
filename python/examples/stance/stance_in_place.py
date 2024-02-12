@@ -85,13 +85,13 @@ def run(config):
             time.sleep(1)
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--x-offset', default=0.3, type=float, help='Offset in X for Spot to step')
     parser.add_argument('--y-offset', default=0.3, type=float, help='Offset in Y for Spot to step')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     if not 0.2 <= abs(options.x_offset) <= 0.5:
         print('Invalid x-offset value. Please pass a value between 0.2 and 0.5')
@@ -110,5 +110,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

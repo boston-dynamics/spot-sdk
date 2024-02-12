@@ -64,7 +64,7 @@ def main():
     """Create an AnnounceClient and use it to make a single announcement with a message."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    bosdyn.client.util.add_payload_credentials_arguments(parser)
+    bosdyn.client.util.add_payload_credentials_file_argument(parser)
     parser.add_argument('--message', required=True, type=str, help='Message to send to server')
     options = parser.parse_args()
 

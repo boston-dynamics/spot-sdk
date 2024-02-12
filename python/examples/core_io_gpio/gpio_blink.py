@@ -18,14 +18,14 @@ def blink(gpio, duration):
         time.sleep(1)
 
 
-def main(argv):
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--voltage', default=5, type=int, choices=[5, 12, 24],
                         help='Voltage to use, 5, 12, or 24.')
     parser.add_argument('--duration', default=10, type=int, help='Number of seconds to run for')
     parser.add_argument('--mode', default='blink', type=str, choices=['blink', 'on'],
                         help='Number of seconds to run for')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     gpio = GpioOutput(voltage=options.voltage)
 
@@ -37,5 +37,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

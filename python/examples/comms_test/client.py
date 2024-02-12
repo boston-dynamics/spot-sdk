@@ -96,7 +96,7 @@ class AsyncMissionState(AsyncPeriodicQuery):
         return self._client.get_state_async()
 
 
-def main(argv):
+def main():
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--protocol', default='tcp', type=str, choices=['tcp', 'udp'],
@@ -108,7 +108,7 @@ def main(argv):
     parser.add_argument('-w', '--run-without-mission',
                         help='Run the comms test app without needing an Autowalk mission',
                         action='store_true')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     sdk = bosdyn.client.create_standard_sdk('CommsTestingClient', [MissionClient])
     robot = sdk.create_robot(options.hostname)  #ROBOT_IP
@@ -214,5 +214,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

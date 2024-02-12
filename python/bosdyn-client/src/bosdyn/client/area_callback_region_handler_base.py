@@ -50,6 +50,15 @@ class CallbackTimedOutError(HandlerError):
     re-raised to make sure the response is set correctly."""
 
 
+class RouteChangedResult:
+    """Options for how the helper class should respond to a route change."""
+
+    def __init__(self):
+        # Specify that if the callback has stopped (returned or raised from run()) that run()
+        # should be called again.
+        self.rerun_if_stopped = False
+
+
 class AreaCallbackRegionHandlerBase:
     """Base class for implementing a AreaCallbackRegionHandler.
 
@@ -99,6 +108,12 @@ class AreaCallbackRegionHandlerBase:
     def end(self):
         """This function is called after run thread has finished and client calls EndCallback."""
         raise NotImplementedError("Derived class must implement this function.")
+
+    def route_changed(self, request: area_callback_pb2.RouteChangeRequest) -> RouteChangedResult:
+        """This function is called when Graph Nav re-routes inside the callback region.
+        In most cases, the callback does not need to do anything for this case and can leave the
+        default implementation"""
+        return RouteChangedResult()
 
     @property
     def area_callback_information(self) -> area_callback_pb2.AreaCallbackInformation:
@@ -155,10 +170,10 @@ class AreaCallbackRegionHandlerBase:
             self._update_response.complete.SetInParent()
 
     def set_localization_at_end(self):
-        """Set the localization hint to the end of the callback region, indicating that graph nav 
+        """Set the localization hint to the end of the callback region, indicating that graph nav
         that navigation should continue from this point.
         Robot control is required to set this. It should be called after walking to the end of
-        the region, but before ceding control. 
+        the region, but before ceding control.
 
         Raises:
             IncorrectUsage: When called without robot control.
@@ -243,7 +258,7 @@ class AreaCallbackRegionHandlerBase:
             sleep_time_secs (float): Time to sleep, in seconds.
 
         Raises:
-            HandlerError: When a shutdown is requested during the sleep time..
+            HandlerError: When a shutdown is requested during the sleep time.
         """
         if self.robot.time_sec() > self._end_time:
             raise CallbackTimedOutError()
@@ -318,7 +333,7 @@ class AreaCallbackRegionHandlerBase:
         """Wrapper around the run function which catches exceptions and set update response.
 
         Args:
-            shutdown_event (Event): Event that signals the run thread to shutdown.
+            shutdown_event (Event): Event that signals the run thread to shut down.
         """
         self._shutdown_event = shutdown_event
         _LOGGER.info('Beginning callback')

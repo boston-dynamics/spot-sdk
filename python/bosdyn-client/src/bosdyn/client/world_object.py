@@ -334,10 +334,10 @@ def send_add_mutation_requests(world_object_client, world_object_array):
     Create and send an "add" mutation request for each world object in an array.  Return a matching
     array of the object id's that are assigned when the object is created, so that each object we add
     can be identified and removed individually (if desired) later.
-    
+
     Args:
         world_object_client (WorldObjectClient): Client for World Object service.
-        world_object_array (List): 
+        world_object_array (List): List of objects to add.
     Returns:
         A List containing the object ids associated with the objects created.
     """
@@ -354,7 +354,7 @@ def send_delete_mutation_requests(world_object_client, delete_object_id_array):
     """
     Create and send a "delete" mutation request for each world object successfully identified from a
     given list of object id's.
-        
+
     Args:
         world_object_client (WorldObjectClient): Client for World Object service.
         delete_object_id_array (List): List of object id's to send delete requests for.
@@ -362,7 +362,7 @@ def send_delete_mutation_requests(world_object_client, delete_object_id_array):
     world_objects = world_object_client.list_world_objects().world_objects
     for obj in world_objects:
         this_object_id = obj.id
-        if type(delete_object_id_array) == int:
+        if isinstance(delete_object_id_array, int):
             delete_object_id_array = [delete_object_id_array]
         for i in range(len(delete_object_id_array)):
             delete_id = delete_object_id_array[i]

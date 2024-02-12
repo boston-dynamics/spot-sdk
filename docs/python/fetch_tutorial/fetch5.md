@@ -11,14 +11,12 @@ Development Kit License (20191101-BDSDK-SL).
 <link href="prism.css" rel="stylesheet" />
 <script src="prism.js"></script>
 
-
 <div class="section line-numbers">
 
 <p>
 <a href="fetch4.html"><< Previous Page</a> | <a href="fetch6.html">Next Page >></a>
 </p>
 <hr />
-
 
 # Fetch Part 5: Detecting People and Playing Fetch
 
@@ -76,7 +74,6 @@ Loaded models:
     dogtoy-model
     ssd_resnet50_v1_fpn_640x640_coco17_tpu-8
 </code></pre>
-
 
 <hr />
 <h3>Testing Person Detection</h3>
@@ -179,10 +176,11 @@ Loaded models:
 <pre><code class="language-python">            # Tell the robot to go there
 
             # Limit the speed so we don't charge at the person.
-            move_cmd = RobotCommandBuilder.trajectory_command(
-                goal_x=drop_position_rt_vision[0],
-                goal_y=drop_position_rt_vision[1],
-                goal_heading=heading_rt_vision,
+            se2_pose = geometry_pb2.SE2Pose(
+                position=geometry_pb2.Vec2(x=drop_position_rt_vision[0],
+                                           y=drop_position_rt_vision[1]), angle=heading_rt_vision)
+            move_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
+                se2_pose,
                 frame_name=frame_helpers.VISION_FRAME_NAME,
                 params=get_walking_params(0.5, 0.5))
             end_time = 5.0
@@ -297,10 +295,12 @@ Loaded models:
 <pre><code class="language-python">            print('Backing up and waiting...')
 
             # Back up one meter and wait for the person to throw the object again.
-            move_cmd = RobotCommandBuilder.trajectory_command(
-                goal_x=wait_position_rt_vision[0],
-                goal_y=wait_position_rt_vision[1],
-                goal_heading=wait_heading_rt_vision,
+            se2_pose = geometry_pb2.SE2Pose(
+                position=geometry_pb2.Vec2(x=wait_position_rt_vision[0],
+                                           y=wait_position_rt_vision[1]),
+                angle=wait_heading_rt_vision)
+            move_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
+                se2_pose,
                 frame_name=frame_helpers.VISION_FRAME_NAME,
                 params=get_walking_params(0.5, 0.5))
             end_time = 5.0
@@ -345,7 +345,6 @@ Loaded models:
     <li>Ignore that line's length.</li>
     <li>Move in the direction of the line, from the target, until we're <code>2.0</code> meters along it.</li>
 </ol>
-
 
 <pre><code class="language-python">    # Compute vector between robot and person
     robot_rt_person_ewrt_vision = [
@@ -507,7 +506,6 @@ Loaded models:
     <li>This is essentially the same as what we do for walking up to a person above.  Uncomment this section to allow the robot to walk further to the dogtoy.</li>
 </ul>
 
-
 <hr />
 <h2>Playing Fetch</h2>
 <p>
@@ -549,5 +547,3 @@ Loaded models:
 <hr />
 
 </div>
-
-

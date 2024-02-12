@@ -135,12 +135,12 @@ def direct_faulting(robot):
     watch_service_fault_state(robot_state_client, 4)
 
 
-def main(argv):
+def main():
     """Demonstrate usage of service faults."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     bosdyn.client.util.add_payload_credentials_arguments(parser, required=False)
-    config = parser.parse_args(argv)
+    config = parser.parse_args()
 
     bosdyn.client.util.setup_logging(config.verbose)
 
@@ -164,5 +164,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

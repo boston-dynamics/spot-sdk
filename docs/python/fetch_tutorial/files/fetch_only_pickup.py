@@ -5,34 +5,33 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import argparse
+import math
 import sys
 import time
-import numpy as np
+
 import cv2
-import math
+import numpy as np
+from google.protobuf import wrappers_pb2
+
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.robot_state import RobotStateClient
-from bosdyn.client.robot_command import RobotCommandClient, RobotCommandBuilder, block_until_arm_arrives
-from bosdyn.api import geometry_pb2
+from bosdyn.api import (basic_command_pb2, geometry_pb2, image_pb2, manipulation_api_pb2,
+                        network_compute_bridge_pb2)
+from bosdyn.client import frame_helpers, math_helpers
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
-from bosdyn.api import image_pb2
-from bosdyn.client.network_compute_bridge_client import NetworkComputeBridgeClient
-from bosdyn.api import network_compute_bridge_pb2
-from google.protobuf import wrappers_pb2
 from bosdyn.client.manipulation_api_client import ManipulationApiClient
-from bosdyn.api import manipulation_api_pb2
-from bosdyn.api import basic_command_pb2
-from bosdyn.client import frame_helpers
-from bosdyn.client import math_helpers
+from bosdyn.client.network_compute_bridge_client import NetworkComputeBridgeClient
+from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient,
+                                         block_until_arm_arrives)
+from bosdyn.client.robot_state import RobotStateClient
 
 kImageSources = [
-    'frontleft_fisheye_image', 'frontright_fisheye_image',
-    'left_fisheye_image', 'right_fisheye_image', 'back_fisheye_image'
+    'frontleft_fisheye_image', 'frontright_fisheye_image', 'left_fisheye_image',
+    'right_fisheye_image', 'back_fisheye_image'
 ]
 
-def get_obj_and_img(network_compute_client, server, model, confidence,
-                    image_sources, label):
+
+def get_obj_and_img(network_compute_client, server, model, confidence, image_sources, label):
 
     for source in image_sources:
         # Build a network compute request for this image source.
@@ -44,11 +43,9 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
         #   minimum confidence (between 0 and 1)
         #   if we should automatically rotate the image
         input_data = network_compute_bridge_pb2.NetworkComputeInputData(
-            image_source_and_service=image_source_and_service,
-            model_name=model,
-            min_confidence=confidence,
-            rotate_image=network_compute_bridge_pb2.NetworkComputeInputData.
-            ROTATE_IMAGE_ALIGN_HORIZONTAL)
+            image_source_and_service=image_source_and_service, model_name=model,
+            min_confidence=confidence, rotate_image=network_compute_bridge_pb2.
+            NetworkComputeInputData.ROTATE_IMAGE_ALIGN_HORIZONTAL)
 
         # Server data: the service name
         server_data = network_compute_bridge_pb2.NetworkComputeServerConfiguration(
@@ -58,8 +55,7 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
         process_img_req = network_compute_bridge_pb2.NetworkComputeRequest(
             input_data=input_data, server_config=server_data)
 
-        resp = network_compute_client.network_compute_bridge_command(
-            process_img_req)
+        resp = network_compute_client.network_compute_bridge_command(process_img_req)
 
         best_obj = None
         highest_conf = 0.0
@@ -84,8 +80,7 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
 
                 try:
                     vision_tform_obj = frame_helpers.get_a_tform_b(
-                        obj.transforms_snapshot,
-                        frame_helpers.VISION_FRAME_NAME,
+                        obj.transforms_snapshot, frame_helpers.VISION_FRAME_NAME,
                         obj.image_properties.frame_name_image_coordinates)
                 except bosdyn.client.frame_helpers.ValidateFrameTreeError:
                     # No depth data available.
@@ -100,6 +95,7 @@ def get_obj_and_img(network_compute_client, server, model, confidence,
             return best_obj, image_full, best_vision_tform_obj
 
     return None, None, None
+
 
 def get_bounding_box_image(response):
     dtype = np.uint8
@@ -132,10 +128,11 @@ def get_bounding_box_image(response):
         cv2.polylines(img, [polygon], True, (0, 255, 0), 2)
 
         caption = "{} {:.3f}".format(obj.name, confidence)
-        cv2.putText(img, caption, (int(min_x), int(min_y)),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+        cv2.putText(img, caption, (int(min_x), int(min_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                    (0, 255, 0), 2)
 
     return img
+
 
 def find_center_px(polygon):
     min_x = math.inf
@@ -155,16 +152,18 @@ def find_center_px(polygon):
     y = math.fabs(max_y - min_y) / 2.0 + min_y
     return (x, y)
 
+
 def block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=None, verbose=False):
     """Helper that blocks until a trajectory command reaches STATUS_AT_GOAL or a timeout is
         exceeded.
+
        Args:
         command_client: robot command client, used to request feedback
         cmd_id: command ID returned by the robot when the trajectory command was sent
         timeout_sec: optional number of seconds after which we'll return no matter what the
                         robot's state is.
         verbose: if we should print state at 10 Hz.
-       Return values:
+       Returns:
         True if reaches STATUS_AT_GOAL, False otherwise.
     """
     start_time = time.time()
@@ -179,12 +178,14 @@ def block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=None, verbose=F
         current_state = feedback_resp.feedback.mobility_feedback.se2_trajectory_feedback.status
 
         if verbose:
-            current_state_str = basic_command_pb2.SE2TrajectoryCommand.Feedback.Status.Name(current_state)
+            current_state_str = basic_command_pb2.SE2TrajectoryCommand.Feedback.Status.Name(
+                current_state)
 
             current_time = time.time()
-            print('Walking: ({time:.1f} sec): {state}'.format(
-                time=current_time - start_time, state=current_state_str),
-                  end='                \r')
+            print(
+                'Walking: ({time:.1f} sec): {state}'.format(time=current_time - start_time,
+                                                            state=current_state_str),
+                end='                \r')
 
         if current_state == basic_command_pb2.SE2TrajectoryCommand.Feedback.STATUS_AT_GOAL:
             return True
@@ -197,31 +198,21 @@ def block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=None, verbose=F
 
     return False
 
+
 def main(argv):
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    parser.add_argument(
-        '-s',
-        '--ml-service',
-        help='Service name of external machine learning server.',
-        required=True)
-    parser.add_argument('-m',
-                        '--model',
-                        help='Model name running on the external server.',
+    parser.add_argument('-s', '--ml-service',
+                        help='Service name of external machine learning server.', required=True)
+    parser.add_argument('-m', '--model', help='Model name running on the external server.',
                         required=True)
-    parser.add_argument(
-        '-p',
-        '--person-model',
-        help='Person detection model name running on the external server.')
-    parser.add_argument('-c',
-                        '--confidence-dogtoy',
+    parser.add_argument('-p', '--person-model',
+                        help='Person detection model name running on the external server.')
+    parser.add_argument('-c', '--confidence-dogtoy',
                         help='Minimum confidence to return an object for the dogoy (0.0 to 1.0)',
-                        default=0.5,
-                        type=float)
-    parser.add_argument('-e',
-                        '--confidence-person',
-                        help='Minimum confidence for person detection (0.0 to 1.0)',
-                        default=0.6,
+                        default=0.5, type=float)
+    parser.add_argument('-e', '--confidence-person',
+                        help='Minimum confidence for person detection (0.0 to 1.0)', default=0.6,
                         type=float)
     options = parser.parse_args(argv)
 
@@ -236,15 +227,11 @@ def main(argv):
     # Time sync is necessary so that time-based filter requests can be converted
     robot.time_sync.wait_for_sync()
 
-    network_compute_client = robot.ensure_client(
-        NetworkComputeBridgeClient.default_service_name)
-    robot_state_client = robot.ensure_client(
-        RobotStateClient.default_service_name)
-    command_client = robot.ensure_client(
-        RobotCommandClient.default_service_name)
+    network_compute_client = robot.ensure_client(NetworkComputeBridgeClient.default_service_name)
+    robot_state_client = robot.ensure_client(RobotStateClient.default_service_name)
+    command_client = robot.ensure_client(RobotCommandClient.default_service_name)
     lease_client = robot.ensure_client(LeaseClient.default_service_name)
-    manipulation_api_client = robot.ensure_client(
-        ManipulationApiClient.default_service_name)
+    manipulation_api_client = robot.ensure_client(ManipulationApiClient.default_service_name)
 
     # This script assumes the robot is already standing via the tablet.  We'll take over from the
     # tablet.
@@ -285,26 +272,26 @@ def main(argv):
                 # -------------------------
                 # # Walk to the object.
                 # walk_rt_vision, heading_rt_vision = compute_stand_location_and_yaw(
-                    # vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
+                #   vision_tform_dogtoy, robot_state_client, distance_margin=1.0)
 
-                # move_cmd = RobotCommandBuilder.trajectory_command(
-                    # goal_x=walk_rt_vision[0],
-                    # goal_y=walk_rt_vision[1],
-                    # goal_heading=heading_rt_vision,
-                    # frame_name=frame_helpers.VISION_FRAME_NAME,
-                    # params=get_walking_params(0.5, 0.5))
+                # se2_pose = geometry_pb2.SE2Pose(
+                #   position=geometry_pb2.Vec2(x=walk_rt_vision[0], y=walk_rt_vision[1]),
+                #   angle=heading_rt_vision)
+                # move_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
+                #   se2_pose,
+                #   frame_name=frame_helpers.VISION_FRAME_NAME,
+                #   params=get_walking_params(0.5, 0.5))
                 # end_time = 5.0
                 # cmd_id = command_client.robot_command(command=move_cmd,
-                                                      # end_time_secs=time.time() +
-                                                      # end_time)
+                #                                       end_time_secs=time.time() +
+                #                                       end_time)
 
                 # # Wait until the robot reports that it is at the goal.
                 # block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5, verbose=True)
                 # -------------------------
 
                 # The ML result is a bounding box.  Find the center.
-                (center_px_x,
-                 center_px_y) = find_center_px(dogtoy.image_properties.coordinates)
+                (center_px_x, center_px_y) = find_center_px(dogtoy.image_properties.coordinates)
 
                 # Request Pick Up on that pixel.
                 pick_vec = geometry_pb2.Vec2(x=center_px_x, y=center_px_y)
@@ -366,17 +353,19 @@ def main(argv):
 
                     current_state = response.current_state
                     current_time = time.time() - time_start
-                    print('Current state ({time:.1f} sec): {state}'.format(
-                        time=current_time,
-                        state=manipulation_api_pb2.ManipulationFeedbackState.Name(
-                            current_state)),
-                          end='                \r')
+                    print(
+                        'Current state ({time:.1f} sec): {state}'.format(
+                            time=current_time,
+                            state=manipulation_api_pb2.ManipulationFeedbackState.Name(
+                                current_state)), end='                \r')
                     sys.stdout.flush()
 
-                    failed_states = [manipulation_api_pb2.MANIP_STATE_GRASP_FAILED,
-                                     manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_NO_SOLUTION,
-                                     manipulation_api_pb2.MANIP_STATE_GRASP_FAILED_TO_RAYCAST_INTO_MAP,
-                                     manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_WAITING_DATA_AT_EDGE]
+                    failed_states = [
+                        manipulation_api_pb2.MANIP_STATE_GRASP_FAILED,
+                        manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_NO_SOLUTION,
+                        manipulation_api_pb2.MANIP_STATE_GRASP_FAILED_TO_RAYCAST_INTO_MAP,
+                        manipulation_api_pb2.MANIP_STATE_GRASP_PLANNING_WAITING_DATA_AT_EDGE
+                    ]
 
                     failed = current_state in failed_states
                     grasp_done = current_state == manipulation_api_pb2.MANIP_STATE_GRASP_SUCCEEDED or failed

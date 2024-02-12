@@ -12,7 +12,7 @@
 # robot_ip - IP address the robot can be accessed at from the current system
 # endpoint_ip - IP address the current system can be accessed at from the robot
 # endpoint_port - An open port on the current system for the service to communicate through
-# payload_secret - A private 16 character string unique to this payload instance
+# payload_credentials_file - A file where the GUID and Secret for this instance are written
 
 # Compile the protobuf files.
 python3 -m pip install grpcio-tools
@@ -22,11 +22,6 @@ python3 -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. announce.pro
 # All requests will be routed to the robot IP.
 robot_ip="$1"
 
-# Payload definition:
-# GUID should be a uniquely generated GUID.
-payload_guid="f71966ec-5c0e-43c1-92d6-522f12736fe9"
-# Secret should be an arbitrary string. Human readability is not necessary.
-payload_secret="$4"
 # Name is a human-readable string used to identify a payload.
 payload_name="Self-Registered-Payload"
 # Description is human-readable explanation of a payload.
@@ -41,7 +36,12 @@ endpoint_ip="$2"
 endpoint_port="$3"
 
 # Register the payload. Only need to register a single time.
-python3 self_register_payload.py --guid "$payload_guid" --secret "$payload_secret" --name "$payload_name" \
+
+# On the initial registration we will generate a payload credentials file containing a
+# per-instance GUID and secret. This can be reused by future services by simply pointing
+# to the file. If the file is already populated from a previous registration of this
+# payload, we will reuse those values.
+python3 self_register_payload.py --payload-credentials-file "$4" --name "$payload_name" \
     --description "$payload_description" $robot_ip
 if [ $? -ne 0 ]; then exit; fi
 echo "Payload registration complete."
@@ -57,7 +57,7 @@ echo "Announce service started."
 
 # Register the service. This can be called from the payload or an arbitrary API client.
 # Must be registered after each robot power cycle.
-python3 self_register_service.py --guid $payload_guid --secret "$payload_secret" \
+python3 self_register_service.py --payload-credentials-file "$4" \
     --host-ip $endpoint_ip --port $endpoint_port $robot_ip
 if [ $? -ne 0 ]; then
     kill -9 $announce_service_script_pid
@@ -67,8 +67,7 @@ echo "Announce service registration complete."
 
 # Create a client and access the Announce Service through the robot.
 sleep 5 # Give the robot time to initialize the service
-python3 announce_client.py --guid $payload_guid \
-    --secret "$payload_secret" \
+python3 announce_client.py --payload-credentials-file "$4" \
     --message "This message is passed through the robot." $robot_ip
 if [ $? -ne 0 ]; then
     kill -9 $announce_service_script_pid

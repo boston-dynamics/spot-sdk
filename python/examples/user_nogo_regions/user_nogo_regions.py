@@ -105,7 +105,7 @@ def set_and_test_user_obstacles(config):
 
         # Create a new user nogo that is just a foot obstacle with no associated body obstacle.
         # Note that unless we explicitly command it not to inflate the foot nogo region (as has been
-        # done here)), the foot nogo region will still be inflated from the given box size by a small
+        # done here), the foot nogo region will still be inflated from the given box size by a small
         # amount.
         lifetime_secs_obs2 = 8
         body_T_obs2 = math_helpers.SE3Pose(x=1.3, y=0.5, z=0, rot=math_helpers.Quat())
@@ -247,11 +247,11 @@ def create_mobility_goto_command(x_rt_frame, y_rt_frame, vision_T_frame):
     return command, traj_time
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     try:
         set_and_test_user_obstacles(options)
         return True
@@ -262,5 +262,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

@@ -12,11 +12,11 @@ The following examples show how to use the different arm API commands to control
 
 See the [robot services](../../../docs/concepts/robot_services.md) document and the [geometry and frames](../../../docs/concepts/geometry_and_frames.md) document, which respectively cover the robot command service and the different frames of the robot which can be used to simplify behavior commands.
 
-
 ## Contents
 
 - [Simple Arm Motion](../arm_simple/README.md)
 - [Stow/unstow Arm](../arm_stow_unstow/README.md)
+- [Arm Freeze](../arm_freeze/README.md)
 - [Arm and Mobility Command](../arm_and_mobility_command/README.md)
 - [Arm Command with Body Following](../arm_with_body_follow/README.md)
 - [Arm Constrained Manipulation](../arm_constrained_manipulation/README.md)
@@ -33,3 +33,5 @@ See the [robot services](../../../docs/concepts/robot_services.md) document and 
 - [Gripper Camera Parameters](../gripper_camera_params/README.md)
 - [Arm Impedance Control](../arm_impedance_control/README.md)
 - [Inverse Kinematics](../inverse_kinematics/README.md)
+- [Arm WASD](../arm_wasd/README.md)
+- [Wiggle Arm](../joint_control/README.md)

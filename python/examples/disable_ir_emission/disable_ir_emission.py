@@ -15,7 +15,7 @@ from bosdyn.api import header_pb2
 from bosdyn.client.ir_enable_disable import IREnableDisableServiceClient
 
 
-def main(argv):
+def main():
     # Parse args
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -25,7 +25,7 @@ def main(argv):
     group.add_argument('--disable', action='store_false', dest='enable',
                        help='Disable IR emissions')
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Create robot object with an IREnableDisableServiceClient client.
     sdk = bosdyn.client.create_standard_sdk('ir_emission_test')
@@ -41,5 +41,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

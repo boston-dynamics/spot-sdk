@@ -1,0 +1,48 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api.metrics_logging;
+
+import "bosdyn/api/data_buffer.proto";
+import "bosdyn/api/parameter.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_outer_classname = "AbsoluteMetricsProto";
+
+/**
+ * Stores a collection of AbsoluteMetrics.  The scalar values stored in this structure
+ * are meant to be cumulative.
+ */
+message AbsoluteMetricsSnapshot {
+    /*
+     * Assume two snapshots.  One at time=t, and one at time=t-1.  If we subtract the metrics
+     * of snapshot t-1 from the metrics of snapshot t, we'll get change in metrics.  That change
+     * in metrics corresponds to the bounding time given by the following two timestamps.
+     * Note, when the user transitions from opt out to opt in, or the robot starts up for the first
+     * time, timestamp_start will be empty!
+     */
+    google.protobuf.Timestamp timestamp_start = 1;
+    google.protobuf.Timestamp timestamp_end = 2;
+
+    /*
+     * Monotonic number.  Every time the robot creates a snapshot, this number will increment.  It
+     * will be how the robot reports what snapshots are available, and how the client & proxy track
+     * what snapshots they have & still need.
+     */
+    int32 sequence_number = 3;
+
+    string robot_serial_number = 4;
+
+    string robot_species = 5;
+
+    repeated Parameter parameters = 6;
+
+    // Robot events
+    repeated Event events = 7;
+}
+

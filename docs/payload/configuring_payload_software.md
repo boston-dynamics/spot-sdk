@@ -66,6 +66,9 @@ The [Fault documentation](../concepts/faults.md) provides more context on the di
 ## Registering payloads
 
 This code snippet example uses the API to communicate payload configuration settings to Spot. The example first registers a payload then lists all payloads on the robot, including the newly registered payload.
+It involves providing a "secret", which can be thought of as something akin to a password for the payload GUID, which is like a username.
+The GUID and secret can be any string, but we typically recommend that both be at least 12 digits. A Version 4 UUID would work for this.
+The "read_or_create_payload_credentials" helper function allows you to autogenerate these values per-robot and save them to a file. These values can thereafter be used for re-registering the same payload to the robot or as credentials once the payload has been authorized.
 
     ...
     # Authenticate robot before being able to use it
@@ -77,7 +80,8 @@ This code snippet example uses the API to communicate payload configuration sett
 
     # Create a payload
     payload = payload_protos.Payload()
-    payload.GUID = '78b076a2-b4ba-491d-a099-738928c4410c'
+    payload.GUID, payload_secret = bosdyn.client.util.read_or_create_payload_credentials(
+        config.payload_credentials_file_1)
     payload.name = 'Client Registered Payload Ex'
     payload.description = 'This payload was created and registered by the register_payload.py client example.'
     payload.label_prefix.append("test_payload")
@@ -86,7 +90,7 @@ This code snippet example uses the API to communicate payload configuration sett
     payload.is_noncompute_payload = False
 
     # Register the payload
-    payload_registration_client.register_payload(payload)
+    payload_registration_client.register_payload(payload, secret=payload_secret)
 
     # Create a payload client
     payload_client = robot.ensure_client(PayloadClient.default_service_name)
@@ -172,7 +176,7 @@ A payload self-registration service is available as part of the Spot SDK.
 
 The following payload configuration table shows configuration values for the rear-mounted CORE I/O EAP payload as they would appear in the robot's admin console GUI.
 
-This table provides a reference when developing a client application using the the RegisterPayload RPC to register a Spot payload.
+This table provides a reference when developing a client application using the RegisterPayload RPC to register a Spot payload.
 
 ### Position (m)
 

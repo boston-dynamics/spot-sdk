@@ -36,7 +36,7 @@ def angle_diff_degrees(a1, a2):
 
 
 class Vec2(object):
-    """Class representing a two dimensional vector."""
+    """Class representing a two-dimensional vector."""
 
     def __init__(self, x, y):
         self.x = x
@@ -115,7 +115,7 @@ class Vec2(object):
 
 
 class Vec3(object):
-    """Class representing a three dimensional vector."""
+    """Class representing a three-dimensional vector."""
 
     def __init__(self, x, y, z):
         self.x = x
@@ -183,6 +183,10 @@ class Vec3(object):
         """Converts the math_helpers.Vec3 into an output of the protobuf geometry_pb2.Vec3."""
         return geometry_pb2.Vec3(x=self.x, y=self.y, z=self.z)
 
+    def to_numpy(self):
+        """Converts the math_helpers.Vec3 into an output of numpy format."""
+        return numpy.array([self.x, self.y, self.z])
+
     def dot(self, other):
         if not isinstance(other, Vec3):
             raise TypeError("Can't dot types %s and %s." % (type(self), type(other)))
@@ -198,6 +202,11 @@ class Vec3(object):
     def from_proto(proto):
         """Create a math_helpers.Vec3 from a geometry_pb2.Vec3 proto."""
         return Vec3(proto.x, proto.y, proto.z)
+
+    @staticmethod
+    def from_numpy(array):
+        """Create a math_helpers.Vec3 from a numpy array."""
+        return Vec3(array[0], array[1], array[2])
 
 
 class SE2Pose(object):
@@ -382,7 +391,7 @@ class SE2Velocity(object):
     @staticmethod
     def from_vector(se2_vel_vector):
         """Converts a 3x1 velocity vector (of either a numpy array or a list) into a math_helpers.SE2Velocity object."""
-        if type(se2_vel_vector) == list:
+        if isinstance(se2_vel_vector, list):
             if len(se2_vel_vector) != 3:
                 # Must have 3 elements to be a complete SE2Velocity
                 print("Velocity list must have 3 elements. The input has the wrong dimension of: " +
@@ -391,7 +400,7 @@ class SE2Velocity(object):
             else:
                 return SE2Velocity(x=se2_vel_vector[0], y=se2_vel_vector[1],
                                    angular=se2_vel_vector[2])
-        if type(se2_vel_vector) == numpy.ndarray:
+        if isinstance(se2_vel_vector, numpy.ndarray):
             if se2_vel_vector.shape[0] != 3:
                 # Must have 3 elements to be a complete SE2Velocity
                 print(
@@ -494,7 +503,7 @@ class SE3Velocity(object):
     @staticmethod
     def from_vector(se3_vel_vector):
         """Converts a 6x1 velocity vector (of either a numpy array or a list) into a math_helpers.SE3Velocity object."""
-        if type(se3_vel_vector) == list:
+        if isinstance(se3_vel_vector, list):
             if len(se3_vel_vector) != 6:
                 # Must have 6 elements to be a complete SE3Velocity
                 print("Velocity list must have 6 elements. The input has the wrong dimension of: " +
@@ -504,7 +513,7 @@ class SE3Velocity(object):
                 return SE3Velocity(lin_x=se3_vel_vector[0], lin_y=se3_vel_vector[1],
                                    lin_z=se3_vel_vector[2], ang_x=se3_vel_vector[3],
                                    ang_y=se3_vel_vector[4], ang_z=se3_vel_vector[5])
-        if type(se3_vel_vector) == numpy.ndarray:
+        if isinstance(se3_vel_vector, numpy.ndarray):
             if se3_vel_vector.shape[0] != 6:
                 # Must have 6 elements to be a complete SE3Velocity
                 print(
@@ -526,7 +535,7 @@ class SE3Pose(object):
         self.z = z
         # Expect the declaration of math_helpers.SE3Pose to pass a math_helpers.Quat, however we will convert
         # a protobuf Quaternion into the math_helpers object as well.
-        if type(rot) == geometry_pb2.Quaternion:
+        if isinstance(rot, geometry_pb2.Quaternion):
             rot = Quat.from_proto(rot)
         self.rot = rot
 
@@ -675,6 +684,7 @@ class SE3Pose(object):
         """Property to allow attribute access of the protobuf message field 'position' similar to the geometry_pb2.SE3Pose
            for the math_helper.SE3Pose."""
         return geometry_pb2.Vec3(x=self.x, y=self.y, z=self.z)
+
 
     @property
     def rotation(self):
@@ -1102,9 +1112,9 @@ def transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b):
     Returns:
         math_helpers.SE2Velocity described in frame a. None if the input velocity is an unknown type.
     """
-    if type(se2_velocity_in_b) == geometry_pb2.SE2Velocity:
+    if isinstance(se2_velocity_in_b, geometry_pb2.SE2Velocity):
         se2_velocity_in_b_vector = (SE2Velocity.from_proto(se2_velocity_in_b)).to_vector()
-    elif type(se2_velocity_in_b) == SE2Velocity:
+    elif isinstance(se2_velocity_in_b, SE2Velocity):
         se2_velocity_in_b_vector = se2_velocity_in_b.to_vector()
     else:
         return None
@@ -1126,9 +1136,9 @@ def transform_se3velocity(a_adjoint_b_matrix, se3_velocity_in_b):
     Returns:
         math_helpers.SE3Velocity described in frame a. None if the input velocity is an unknown type.
     """
-    if type(se3_velocity_in_b) == geometry_pb2.SE3Velocity:
+    if isinstance(se3_velocity_in_b, geometry_pb2.SE3Velocity):
         se3_velocity_in_b_vec = (SE3Velocity.from_proto(se3_velocity_in_b)).to_vector()
-    elif type(se3_velocity_in_b) == SE3Velocity:
+    elif isinstance(se3_velocity_in_b, SE3Velocity):
         se3_velocity_in_b_vec = se3_velocity_in_b.to_vector()
     else:
         return None

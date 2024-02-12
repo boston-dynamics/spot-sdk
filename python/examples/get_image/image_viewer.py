@@ -57,7 +57,7 @@ def image_to_opencv(image, auto_rotate=True):
     img = np.frombuffer(image.shot.image.data, dtype=dtype)
     if image.shot.image.format == image_pb2.Image.FORMAT_RAW:
         try:
-            # Attempt to reshape array into a RGB rows X cols shape.
+            # Attempt to reshape array into an RGB rows X cols shape.
             img = img.reshape((image.shot.image.rows, image.shot.image.cols, num_channels))
         except ValueError:
             # Unable to reshape the image data, trying a regular decode.
@@ -78,7 +78,7 @@ def reset_image_client(robot):
     return robot.ensure_client('image')
 
 
-def main(argv):
+def main():
     # Parse args
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -97,7 +97,7 @@ def main(argv):
         action='store_true')
     parser.add_argument('--auto-rotate', help='rotate right and front images to be upright',
                         action='store_true')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Create robot object with an image client.
     sdk = bosdyn.client.create_standard_sdk('image_capture')
@@ -153,5 +153,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

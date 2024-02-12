@@ -103,7 +103,7 @@ Once you have tested and verified that the docker containers work correctly on y
 
 ### Recreate Docker Images for ARM64 Architecture
 
-If you are using a development machine with an `x86` architecture, you need to run a few more steps to be able to create `arm64` docker images that can run on CORE I/O. Please follow the instructions in the SDK documentation [here](../../payload/docker_containers.md#build-docker-images). After installing the additional dependecies listed in that part of the documentation, you simply need to pass `--platform linux/arm64` to the `docker build` command you used earlier in order to create `arm64` docker images.
+If you are using a development machine with an `x86` architecture, you need to run a few more steps to be able to create `arm64` docker images that can run on CORE I/O. Please follow the instructions in the SDK documentation [here](../../payload/docker_containers.md#build-docker-images). After installing the additional dependencies listed in that part of the documentation, you simply need to pass `--platform linux/arm64` to the `docker build` command you used earlier in order to create `arm64` docker images.
 
 ### Create docker-compose.yml File
 
@@ -131,11 +131,11 @@ services:
     command: --port 5050
 ```
 
-In this configuration, we use ports 5000 and 5050 that you used earlier for testing. The command fields for the two docker services in the file specify the additiona parameters to append to the `CMD` field specified in the `Dockerfile` files. The `web_cam_image_service` contains the additional field `devices`, which is described in more details in the section below.
+In this configuration, we use ports 5000 and 5050 that you used earlier for testing. The command fields for the two docker services in the file specify the additional parameters to append to the `CMD` field specified in the `Dockerfile` files. The `web_cam_image_service` contains the additional field `devices`, which is described in more details in the section below.
 
 ### Create Udev Rules Files for Web Cam application
 
-The python script in the `web_cam_image_service` docker container pulls images from a web cam USB device. That device name is generated when the device is plugged in and it is usually `/dev/video0` when it is the first USB device plugged in (the `0` count increases afterwards). But, with that device name not being deterministic by default, we do not want to regenerate the `web_cam_image_service` docker image every time the web cam is mounted with a different device name. To solve this issue, we will add udev rules in the Extension that are automatically installed by the Extesion manager installed on the CORE I/O.
+The python script in the `web_cam_image_service` docker container pulls images from a web cam USB device. That device name is generated when the device is plugged in and it is usually `/dev/video0` when it is the first USB device plugged in (the `0` count increases afterward). But, with that device name not being deterministic by default, we do not want to regenerate the `web_cam_image_service` docker image every time the web cam is mounted with a different device name. To solve this issue, we will add udev rules in the Extension that are automatically installed by the Extension manager installed on the CORE I/O.
 
 The way we will structure the udev rule is as follows:
 
@@ -167,7 +167,7 @@ The script finds the original device name that is symlinked to `/dev/video99` an
 ORIG_VIDEO_DEV=@ORIG_VIDEO_DEV
 ```
 
-Then, the `docker-compose.yml` file mounts the original device name specified in the docker environment variable `ORIG_VIDEO_DEV` as device `/dev/video99` in the docker container, which is also passed as the `--device-name` to the python script. This method allows us create an Extension for this tutorial that works with any device name given to the USB web cam when it is plugged in.
+Then, the `docker-compose.yml` file mounts the original device name specified in the docker environment variable `ORIG_VIDEO_DEV` as device `/dev/video99` in the docker container, which is also passed as the `--device-name` to the python script. This method allows us to create an Extension for this tutorial that works with any device name given to the USB web cam when it is plugged in.
 
 ### Create manifest.json File
 

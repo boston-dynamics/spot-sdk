@@ -224,7 +224,7 @@ def _maybe_save_image(image, path):
         logger.warning('Exception thrown saving image. %r', exc)
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -236,7 +236,7 @@ def main(argv):
         '--save-path', default=None, nargs='?', help=
         'Save the image captured by Spot to the provided directory. Invalid path saves to working directory.'
     )
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     try:
         hello_spot(options)
         return True
@@ -247,5 +247,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

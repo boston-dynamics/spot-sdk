@@ -85,7 +85,7 @@ class RicohThetaServiceHelper(CameraInterface):
             # An issue occurred getting the file format for the camera images. This is likely due
             # to upstream failures creating the Theta instance, which already have triggered service
             # faults.
-            _LOGGER.info(f'Unable to set the image width/height dimensions. Error message: %s %s',
+            _LOGGER.info('Unable to set the image width/height dimensions. Error message: %s %s',
                          str(type(err)), str(err))
             pass
 
@@ -260,7 +260,7 @@ class RicohThetaServiceHelper(CameraInterface):
 
 def make_ricoh_theta_image_service(theta_ssid, theta_password, theta_client, robot, logger=None,
                                    use_background_capture_thread=False, live_stream=False):
-    # Create an theta instance, which will perform the HTTP requests to the ricoh theta
+    # Create a theta instance, which will perform the HTTP requests to the ricoh theta
     # camera (using the Ricoh Theta API: https://api.ricoh/docs/#ricoh-theta-api).
     theta_instance = Theta(theta_ssid=theta_ssid, theta_pw=theta_password, client_mode=theta_client,
                            show_state_at_init=False)
@@ -334,7 +334,7 @@ def add_ricoh_theta_arguments(parser):
     parser.set_defaults(capture_continuously=False)
 
 
-if __name__ == '__main__':
+def main():
     # Define all arguments used by this service.
     import argparse
     parser = argparse.ArgumentParser()
@@ -373,3 +373,7 @@ if __name__ == '__main__':
     # Attach the keep alive to the service runner and run until a SIGINT is received.
     with keep_alive:
         service_runner.run_until_interrupt()
+
+
+if __name__ == '__main__':
+    main()

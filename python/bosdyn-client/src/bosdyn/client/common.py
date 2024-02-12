@@ -16,6 +16,7 @@ import grpc
 from deprecated.sphinx import deprecated
 
 from bosdyn.api.header_pb2 import CommonError
+from bosdyn.deprecated import moved_to
 
 from .channel import TransportError, translate_exception
 from .data_chunk import chunk_message, parse_from_chunks
@@ -98,7 +99,7 @@ def custom_params_error(response, status_value=None, status_field_name='status',
 
 def error_pair(error_message):
     """Creates a pair of an error class and the associated docstring as the error message
-       which can be used by the error_factory.
+    which can be used by the error_factory.
 
     Args:
         error_message: A class that inherits from the python Error class.
@@ -486,13 +487,12 @@ class BaseClient(object):
     def _get_logger(self, rpc_method):
         method_name = getattr(rpc_method, '_method', None)
         if method_name:
-            method_name_short = str(method_name).split(BaseClient._SPLIT_METHOD)[-1]
+            method_name_short = str(method_name.decode()).rsplit(BaseClient._SPLIT_METHOD, 1)[-1]
             # This returns the same instance if it's been created before.
             return self.logger.getChild(method_name_short)
         return self.logger
 
-    chunk_message = deprecated(reason='Use bosdyn.client.data_chunk.chunk_message() instead.',
-                               version='3.3.0')(chunk_message)
+    chunk_message = moved_to(chunk_message, version='3.3.0')
 
 
 class FutureWrapper():

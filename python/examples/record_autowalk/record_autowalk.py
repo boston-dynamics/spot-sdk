@@ -65,7 +65,7 @@ POSE_INDEX, ROBOT_CAMERA_INDEX, DOCK_INDEX = range(3)
 INITIAL_PANEL, RECORDED_PANEL, ACTION_PANEL, FINAL_PANEL = range(4)
 
 
-def main(raw_args=None):
+def main():
     """Record autowalks with GUI"""
 
     # Configure logging

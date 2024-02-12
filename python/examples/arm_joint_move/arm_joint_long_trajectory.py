@@ -22,7 +22,7 @@ from bosdyn.client.robot_command import (RobotCommandBuilder, RobotCommandClient
 from bosdyn.util import seconds_to_timestamp
 
 # Amount of time in seconds to run our trajectory for
-RUN_TIME = 20
+RUN_TIME = 60
 
 # Amount of time in seconds to take to move from the "POSITIONS_READY"
 # pose to the start of our trajectory
@@ -144,11 +144,11 @@ def arm_joint_move_long_trajectory_example(config):
         start_time = start_time + TRAJ_APPROACH_TIME
         ref_time = seconds_to_timestamp(start_time)
 
-        N = 10
+        N = 250
         dt = 0.2
         segment_start_time = 0
-        # Now, begin our loop. We will send a set of 10 points at a time. Note that we are only
-        # allowed to send a maximum of 10 points in an ArmJointTrajectory, as some checking /
+        # Now, begin our loop. We will send a set of 250 points at a time. Note that we are only
+        # allowed to send a maximum of 250 points in an ArmJointTrajectory, as some checking /
         # optimization is done under the hood to make sure the trajectory is safe before
         # executing, and this adds a computation burden to the robot. However, by setting the
         # first point of our next message to be the last point of the previous message, we can
@@ -204,16 +204,16 @@ def arm_joint_move_long_trajectory_example(config):
         robot.logger.info('Robot safely powered off.')
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Run the example code
     arm_joint_move_long_trajectory_example(options)
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

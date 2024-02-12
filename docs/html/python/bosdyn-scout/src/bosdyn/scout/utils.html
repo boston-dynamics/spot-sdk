@@ -4,11 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Utils &mdash; Spot 3.3.2 documentation</title>
+  <title>Utils &mdash; Spot 4.0.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
-    <link rel="canonical" href="https:://dev.bostondynamics.com/python/bosdyn-scout/src/bosdyn/scout/utils.html"/>
+    <link rel="canonical" href="https://dev.bostondynamics.com/python/bosdyn-scout/src/bosdyn/scout/utils.html" />
   <!--[if lt IE 9]>
     <script src="../../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                3.3.2
+                4.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -51,7 +51,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_scout.html">About Scout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_orbit.html">About Orbit(formerly Scout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -60,7 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/service_customization.html">Service Parameterization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/service_customization.html">Service Customization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/faults.html">Faults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/autonomy/README.html">Autonomy services</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
@@ -80,6 +80,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/network_compute_bridge.html">Network compute bridge</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/auto_return.html">AutoReturn service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/directed_exploration.html">Directed Exploration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/gps.html">GPS</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
@@ -92,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/arm/README.html">Spot Arm</a><ul>
@@ -127,6 +129,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/time_sync/README.html">Time Sync</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/comms_test/README.html">Comms Test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/disable_ir_emission/README.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/reset_safety_stop/README.html">Reset Safety Stop</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
@@ -146,10 +149,12 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/arm_examples.html">Arm Command Examples</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_simple/README.html">Simple Arm Motion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_stow_unstow/README.html">Stow/unstow Arm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_freeze/README.html">Arm Freeze</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_and_mobility_command/README.html">Arm and Mobility Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_with_body_follow/README.html">Arm Command with Body Following</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_constrained_manipulation/README.html">Arm Constrained Manipulation</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_trajectory/README.html">Arm Trajectory Motion Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_trajectory/README.html">Arm Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_trajectory/README.html#long-trajectory">Long Trajectory</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_force_control/README.html">Arm Force Control Command</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_grasp/README.html">Arm Grasp Command</a></li>
@@ -162,6 +167,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/arm_wasd/README.html">Arm WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -170,6 +177,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/velodyne_client/README.html">Velodyne</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/metrics_over_coreio/README.html">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/metrics_over_coreio/README.html#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/metrics_over_coreio/README.html#components">Components</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/metrics_over_coreio/README.html#recommended-debugging">Recommended debugging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/extensions/README.html">Extensions</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
@@ -180,7 +192,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
@@ -192,6 +205,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ray_cast/README.html">Ray Cast</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/user_nogo_regions/README.html">No-Go Regions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/gps_service/README.html">GPS</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/logging_examples.html">Logging Examples</a><ul>
@@ -203,17 +217,22 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/data_acquisition_service/README.html">Data Acquisition Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/data_acquisition_service/README.html">Data Acquisition Service</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../examples/data_acquisition_service/signals_coreio_modem_plugin/README.html">Modem Signals</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/cloud_upload/README.html">Cloud Upload</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/tester_programs/README.html">Tester Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/comms_mapping/README.html">Comms image service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/comms_mapping/README.html#how-to-use">How to use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/data_acquisition_service/signals_coreio_modem_plugin/README.html">CoreIO Modem Signals Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/tester_programs/README.html">Tester Programs</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
@@ -222,6 +241,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_mission_state/README.html">Get Mission State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/remote_mission_service/README.html">Remote Mission Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/mission_question_answerer/README.html">Mission Question Answerer</a></li>
@@ -231,13 +251,19 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/area_callback/README.html">Area Callbacks</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/edit_autowalk/README.html">Edit Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/scout.html">Scout</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/scout/hello_scout/README.html">Hello Scout</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/scout/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/orbit.html">Orbit</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/runs_response/README.html">Runs Response</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/webhook/README.html">Webhook</a></li>
 </ul>
 </li>
 </ul>
@@ -277,6 +303,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
+</ul>
+</li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -287,11 +320,11 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/license.html">License</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/log_annotation.html">Log Annotation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
@@ -306,7 +339,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Parameterization Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Customization Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/signals_helpers.html">Signals Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
 <li class="toctree-l5"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
@@ -325,6 +359,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -353,6 +388,7 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-core/src/bosdyn/deprecated.html">Deprecated</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
@@ -370,7 +406,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="README.html">Scout</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-orbit/src/bosdyn/orbit/README.html">Orbit (formerly Scout)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-orbit/src/bosdyn/orbit/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-orbit/src/bosdyn/orbit/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-orbit/src/bosdyn/orbit/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l3 current"><a class="reference internal" href="README.html">Scout (deprecated)</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
@@ -420,10 +462,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../protos/bosdyn/api/proto_reference.html">Protos</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../choreography_protos/bosdyn/api/README.html">Choreography Proto Reference Guide</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../choreography_protos/bosdyn/api/choreography_reference.html">Choreography Protos</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/release_notes.html">Release Notes</a></li>
@@ -461,302 +499,230 @@
 <p>Utility functions for Scout web API</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.scout.utils.get_credentials">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_credentials</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_credentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_credentials" title="Permalink to this definition"></a></dt>
-<dd><p>Obtains credentials from either environment variables or terminal inputs
-- Returns</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>username(str): the username for the Scout instance</p></li>
-<li><p>password(str): the password for the Scout instance</p></li>
-</ul>
-</div></blockquote>
+<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_credentials</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">[&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">&lt;class</span> <span class="pre">'str'&gt;]</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_credentials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_credentials" title="Permalink to this definition"></a></dt>
+<dd><p>Obtains credentials from either environment variables or terminal inputs</p>
+<dl class="simple">
+<dt>Returns</dt><dd><p>username(str): the username for the Scout instance
+password(str): the password for the Scout instance</p>
+</dd>
+</dl>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 4.0.0: </span>Please, use get_api_token instead.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.scout.utils.get_latest_created_at_for_run_events">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_created_at_for_run_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_created_at_for_run_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_created_at_for_run_events" title="Permalink to this definition"></a></dt>
-<dd><p>Given a dictionary of query params, returns the max created at time for run events
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
-<li><p>params(dict): the query params associated with the get request</p></li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Raises:</dt><dd><ul>
-<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
-<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_created_at_for_run_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="client.html#bosdyn.scout.client.ScoutClient" title="bosdyn.scout.client.ScoutClient"><span class="pre">bosdyn.scout.client.ScoutClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">datetime</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_created_at_for_run_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_created_at_for_run_events" title="Permalink to this definition"></a></dt>
+<dd><p>Given a dictionary of query params, returns the max created at time for run events</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scout_client</strong> – the client for Scout web API</p></li>
+<li><p><strong>params</strong> – the query params associated with the get request</p></li>
 </ul>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>datetime.datetime(datetime representation): the max created at time for run events in datetime</p></li>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RequestExceptions</strong> – exceptions thrown by the Requests library</p></li>
+<li><p><strong>UnauthenticatedScoutClientError</strong> – indicates that the scout client is not authenticated properly</p></li>
 </ul>
 </dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The max created at time for run events in datetime</p>
+</dd>
 </dl>
-</li>
-</ul>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 4.0.0: </span>Scout has been renamed to Orbit. Please, use bosdyn-orbit
+package instead of bosdyn-scout.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.scout.utils.get_latest_run_capture_resources">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_run_capture_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_run_capture_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_run_capture_resources" title="Permalink to this definition"></a></dt>
-<dd><p>Given a dictionary of query params, returns the latest run capture resources in json format
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
-<li><p>params(dict): the query params associated with the get request</p></li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Raises:</dt><dd><ul>
-<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
-<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_run_capture_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="client.html#bosdyn.scout.client.ScoutClient" title="bosdyn.scout.client.ScoutClient"><span class="pre">bosdyn.scout.client.ScoutClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_run_capture_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_run_capture_resources" title="Permalink to this definition"></a></dt>
+<dd><p>Given a dictionary of query params, returns the latest run capture resources in json format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scout_client</strong> – the client for Scout web API</p></li>
+<li><p><strong>params</strong> – the query params associated with the get request</p></li>
 </ul>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>Run Capture Resources(list): a list of resources obtained from Scout’s RESTful endpoint</p></li>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RequestExceptions</strong> – exceptions thrown by the Requests library</p></li>
+<li><p><strong>UnauthenticatedScoutClientError</strong> – indicates that the scout client is not authenticated properly</p></li>
 </ul>
 </dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of resources obtained from Scout’s RESTful endpoint</p>
+</dd>
 </dl>
-</li>
-</ul>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 4.0.0: </span>Scout has been renamed to Orbit. Please, use bosdyn-orbit
+package instead of bosdyn-scout.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.scout.utils.get_latest_created_at_for_run_captures">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_created_at_for_run_captures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_created_at_for_run_captures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_created_at_for_run_captures" title="Permalink to this definition"></a></dt>
-<dd><p>Given a dictionary of query params, returns the max created at time for run captures
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
-<li><p>params(dict): the query params associated with the get request</p></li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Raises:</dt><dd><ul>
-<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
-<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_created_at_for_run_captures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="client.html#bosdyn.scout.client.ScoutClient" title="bosdyn.scout.client.ScoutClient"><span class="pre">bosdyn.scout.client.ScoutClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">datetime</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_created_at_for_run_captures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_created_at_for_run_captures" title="Permalink to this definition"></a></dt>
+<dd><p>Given a dictionary of query params, returns the max created at time for run captures</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scout_client</strong> – the client for Scout web API</p></li>
+<li><p><strong>params</strong> – the query params associated with the get request</p></li>
 </ul>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>datetime.datetime(datetime representation): the max created at time for run captures in datetime</p></li>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RequestExceptions</strong> – exceptions thrown by the Requests library</p></li>
+<li><p><strong>UnauthenticatedScoutClientError</strong> – indicates that the scout client is not authenticated properly</p></li>
 </ul>
 </dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The max created at time for run captures in datetime</p>
+</dd>
 </dl>
-</li>
-</ul>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 4.0.0: </span>Scout has been renamed to Orbit. Please, use bosdyn-orbit
+package instead of bosdyn-scout.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.scout.utils.get_latest_run_resource">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_run_resource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_run_resource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_run_resource" title="Permalink to this definition"></a></dt>
-<dd><p>Given a dictionary of query params, returns the latest run resource in json format
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
-<li><p>params(dict): the query params associated with the get request</p></li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Raises:</dt><dd><ul>
-<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
-<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_run_resource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="client.html#bosdyn.scout.client.ScoutClient" title="bosdyn.scout.client.ScoutClient"><span class="pre">bosdyn.scout.client.ScoutClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_run_resource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_run_resource" title="Permalink to this definition"></a></dt>
+<dd><p>Given a dictionary of query params, returns the latest run resource in json format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scout_client</strong> – the client for Scout web API</p></li>
+<li><p><strong>params</strong> – the query params associated with the get request</p></li>
 </ul>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>Run Resource(json): a resource obtained from Scout’s RESTful endpoint in json</p></li>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RequestExceptions</strong> – exceptions thrown by the Requests library</p></li>
+<li><p><strong>UnauthenticatedScoutClientError</strong> – indicates that the scout client is not authenticated properly</p></li>
 </ul>
 </dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list corresponding to a run resource obtained from Scout’s RESTful endpoint in json</p>
+</dd>
 </dl>
-</li>
-</ul>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 4.0.0: </span>Scout has been renamed to Orbit. Please, use bosdyn-orbit
+package instead of bosdyn-scout.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.scout.utils.get_latest_run_in_progress">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_run_in_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_run_in_progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_run_in_progress" title="Permalink to this definition"></a></dt>
-<dd><p>Given a dictionary of query params, returns the latest running resource in json format
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
-<li><p>params(dict): the query params associated with the get request</p></li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Raises:</dt><dd><ul>
-<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
-<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_run_in_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="client.html#bosdyn.scout.client.ScoutClient" title="bosdyn.scout.client.ScoutClient"><span class="pre">bosdyn.scout.client.ScoutClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_run_in_progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_run_in_progress" title="Permalink to this definition"></a></dt>
+<dd><p>Given a dictionary of query params, returns the latest running resource in json format</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scout_client</strong> – the client for Scout web API</p></li>
+<li><p><strong>params</strong> – the query params associated with the get request</p></li>
 </ul>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>Run(json): a run obtained from Scout’s RESTful endpoint in json</p></li>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RequestExceptions</strong> – exceptions thrown by the Requests library</p></li>
+<li><p><strong>UnauthenticatedScoutClientError</strong> – indicates that the scout client is not authenticated properly</p></li>
 </ul>
 </dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list corresponding to a run obtained from Scout’s RESTful endpoint in json</p>
+</dd>
 </dl>
-</li>
-</ul>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 4.0.0: </span>Scout has been renamed to Orbit. Please, use bosdyn-orbit
+package instead of bosdyn-scout.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.scout.utils.get_latest_end_time_for_runs">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_end_time_for_runs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_end_time_for_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_end_time_for_runs" title="Permalink to this definition"></a></dt>
-<dd><p>Given a dictionary of query params, returns the max end time for runs
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>scout_client(ScoutClient object): the client for Scout web API</p></li>
-<li><p>params(dict): the query params associated with the get request</p></li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Raises:</dt><dd><ul>
-<li><p>RequestExceptions: exceptions thrown by the Requests library</p></li>
-<li><p>UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</p></li>
+<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_latest_end_time_for_runs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="client.html#bosdyn.scout.client.ScoutClient" title="bosdyn.scout.client.ScoutClient"><span class="pre">bosdyn.scout.client.ScoutClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">datetime</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_latest_end_time_for_runs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_latest_end_time_for_runs" title="Permalink to this definition"></a></dt>
+<dd><p>Given a dictionary of query params, returns the max end time for runs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scout_client</strong> – the client for Scout web API</p></li>
+<li><p><strong>params</strong> – the query params associated with the get request</p></li>
 </ul>
 </dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>datetime.datetime(datetime representation): the max end for runs in datetime</p></li>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>RequestExceptions</strong> – exceptions thrown by the Requests library</p></li>
+<li><p><strong>UnauthenticatedScoutClientError</strong> – indicates that the scout client is not authenticated properly</p></li>
 </ul>
 </dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The max end time for runs in datetime</p>
+</dd>
 </dl>
-</li>
-</ul>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.scout.utils.write_image">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">write_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_raw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_fp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#write_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.write_image" title="Permalink to this definition"></a></dt>
-<dd><p>Given a raw image and a desired output directory, writes the image to a file
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>img_raw(Raw image object): the input raw image</p></li>
-<li><p>image_fp(str): the output filepath for the image</p></li>
-</ul>
-</div></blockquote>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 4.0.0: </span>Scout has been renamed to Orbit. Please, use bosdyn-orbit
+package instead of bosdyn-scout.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.scout.utils.data_capture_urls_from_run_events">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">data_capture_urls_from_run_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_events</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_of_channel_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#data_capture_urls_from_run_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.data_capture_urls_from_run_events" title="Permalink to this definition"></a></dt>
-<dd><p>Given run events and list of desired channel names, returns the a list data capture urls
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>run_events(json): a json representation of run events obtained from Scout’s RESTful endpoint</p></li>
-<li><dl class="simple">
-<dt>list_of_channel_names(list): a list of channel names associated with the desired data captures.</dt><dd><p>Defaults to None which returns all the available channels.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>data_urls(list): a list of urls</p></li>
+<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">data_capture_urls_from_run_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="client.html#bosdyn.scout.client.ScoutClient" title="bosdyn.scout.client.ScoutClient"><span class="pre">bosdyn.scout.client.ScoutClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_events</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_of_channel_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#data_capture_urls_from_run_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.data_capture_urls_from_run_events" title="Permalink to this definition"></a></dt>
+<dd><p>Given run events and list of desired channel names, returns the list of data capture urls</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scout_client</strong> – the client for Scout web API</p></li>
+<li><p><strong>run_events</strong> – a json representation of run events obtained from Scout’s RESTful endpoint</p></li>
+<li><p><strong>list_of_channel_names</strong> – a list of channel names associated with the desired data captures.
+Defaults to None which returns all the available channels.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list of urls</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>data_urls</p>
+</dd>
 </dl>
-</li>
-</ul>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 4.0.0: </span>Scout has been renamed to Orbit. Please, use bosdyn-orbit
+package instead of bosdyn-scout.</p>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.scout.utils.data_capture_url_from_run_capture_resources">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">data_capture_url_from_run_capture_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_capture_resources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_of_channel_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#data_capture_url_from_run_capture_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.data_capture_url_from_run_capture_resources" title="Permalink to this definition"></a></dt>
-<dd><p>Given run capture resources and list of desired channel names, returns the a list data capture urls
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>run_capture_resources(list): a list of resources obtained from Scout’s RESTful endpoint</p></li>
-<li><dl class="simple">
-<dt>list_of_channel_names(list): a list of channel names associated with the desired data captures.</dt><dd><p>Defaults to None which returns all the available channels.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>data_urls(list): a list of urls</p></li>
+<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">data_capture_url_from_run_capture_resources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scout_client</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="client.html#bosdyn.scout.client.ScoutClient" title="bosdyn.scout.client.ScoutClient"><span class="pre">bosdyn.scout.client.ScoutClient</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_capture_resources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">list_of_channel_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#data_capture_url_from_run_capture_resources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.data_capture_url_from_run_capture_resources" title="Permalink to this definition"></a></dt>
+<dd><p>Given run capture resources and list of desired channel names, returns the list of data capture urls</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scout_client</strong> – the client for Scout web API</p></li>
+<li><p><strong>run_capture_resources</strong> – a list of resources obtained from Scout’s RESTful endpoint</p></li>
+<li><p><strong>list_of_channel_names</strong> – a list of channel names associated with the desired data captures.
+Defaults to None which returns all the available channels.</p></li>
 </ul>
 </dd>
-</dl>
-</li>
-</ul>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.scout.utils.get_action_names_from_run_events">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">get_action_names_from_run_events</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">run_events</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#get_action_names_from_run_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.get_action_names_from_run_events" title="Permalink to this definition"></a></dt>
-<dd><p>Given run events, returns a list of action names
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>run_events(json): a json representation of run events obtained from Scout’s RESTful endpoint</p></li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>action_names(list): a list of action names</p></li>
-</ul>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list of urls</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>data_urls</p>
 </dd>
 </dl>
-</li>
-</ul>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.scout.utils.datetime_from_isostring">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.scout.utils.</span></span><span class="sig-name descname"><span class="pre">datetime_from_isostring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datetime_isostring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/scout/utils.html#datetime_from_isostring"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.scout.utils.datetime_from_isostring" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the datetime representation of the iso string representation of time
-- Args:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>datetime_isostring(str): the iso string representation of time</p></li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li><dl class="simple">
-<dt>Returns:</dt><dd><ul>
-<li><p>datetime.datetime(datetime representation): the datetime representation of the iso string representation of time</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 4.0.0: </span>Scout has been renamed to Orbit. Please, use bosdyn-orbit
+package instead of bosdyn-scout.</p>
+</div>
 </dd></dl>
 
 </section>
@@ -772,7 +738,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2023 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

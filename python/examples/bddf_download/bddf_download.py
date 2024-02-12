@@ -67,8 +67,11 @@ A timespan is {val} or {val}-{val} where:
  - nnnnnnnnnnnnnnnnnnnn  Nanoseconds since epoch
 
 For example:
-  '5m'                    From 5 minutes ago until now.
-  '20201107-20201108'     All of 2020/11/07.
+  '20201107_080000-20201107_090000'     2020/11/07, 8-9am.
+  '20201107_20201107_003000'            2020/11/07, 12am-12:30am.
+  '30s'                                 From 30 seconds ago until now.
+  '10m-5m'                              From 10 minutes ago until 5 minutes ago.
+  '1d-23h'                              From 1 day ago until 23 hours ago.
 """)
 
 
@@ -164,14 +167,16 @@ def collect_and_write_file(url, headers, parameters, output):
             # Transfer encoding is chunked.
             total_content_length = 0
         if resp.status_code != 200:
-            LOGGER.error('Unable to get data. https response: %d', resp.status_code)
-            yield None, None, resp.status_code
+            reason = 'Query returned no data' if resp.status_code == 204 else resp.text
+            LOGGER.error('Unable to get data. Reason: %s. https response: %d', reason,
+                         resp.status_code)
+            yield None, None, resp
         else:
             outfile = output_filename(output, resp)
             with open(outfile, 'wb') as fid:
                 for chunk in resp.iter_content(chunk_size=REQUEST_CHUNK_SIZE):
                     fid.write(chunk)
-                    yield len(chunk), int(total_content_length), resp.status_code
+                    yield len(chunk), int(total_content_length), resp
 
     LOGGER.info('Wrote \'%s\'.', outfile)
 
@@ -197,7 +202,7 @@ def main():  # pylint: disable=too-many-locals
 
     if options.help_timespan:
         _print_help_timespan()
-        return 0
+        return True
 
     # Create a robot object.
     sdk = create_standard_sdk('bddf')
@@ -207,10 +212,10 @@ def main():  # pylint: disable=too-many-locals
                                             options.service)
 
     number_of_bytes_processed = 0
-    for chunk, total_content_length, response_status_code in collect_and_write_file(
+    for chunk, total_content_length, response in collect_and_write_file(
             url, headers, params, options.output):
         # Check for success status response.
-        if response_status_code != 200:
+        if response.status_code != 200:
             return False
         else:
             # Calculate and write status updates.
@@ -225,8 +230,9 @@ def main():  # pylint: disable=too-many-locals
                 print(f'Download is {percentage_compete:.2f}% complete.', end='\r')
     print()
 
-    return 0
+    return True
 
 
 if __name__ == '__main__':
-    sys.exit(main())
+    if not main():
+        sys.exit(1)

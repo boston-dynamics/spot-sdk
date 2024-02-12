@@ -33,6 +33,8 @@ from .door import DoorClient
 from .estop import EstopClient
 from .exceptions import Error
 from .fault import FaultClient
+from .gps.aggregator_client import AggregatorClient
+from .gps.registration_client import RegistrationClient
 from .graph_nav import GraphNavClient
 from .gripper_camera_param import GripperCameraParamClient
 from .image import ImageClient
@@ -42,10 +44,10 @@ from .keepalive import KeepaliveClient
 from .lease import LeaseClient
 from .license import LicenseClient
 from .local_grid import LocalGridClient
-from .log_annotation import LogAnnotationClient
 from .log_status import LogStatusClient
 from .manipulation_api_client import ManipulationApiClient
 from .map_processing import MapProcessingServiceClient
+from .metrics_logging import MetricsLoggingClient
 from .network_compute_bridge_client import NetworkComputeBridgeClient
 from .payload import PayloadClient
 from .payload_registration import PayloadRegistrationClient
@@ -104,6 +106,7 @@ def generate_client_name(prefix=''):
 
 
 _DEFAULT_SERVICE_CLIENTS = [
+    AggregatorClient,
     ArmSurfaceContactClient,
     AuthClient,
     AutoReturnClient,
@@ -126,7 +129,6 @@ _DEFAULT_SERVICE_CLIENTS = [
     LeaseClient,
     KeepaliveClient,
     LicenseClient,
-    LogAnnotationClient,
     LogStatusClient,
     LocalGridClient,
     ManipulationApiClient,
@@ -137,6 +139,7 @@ _DEFAULT_SERVICE_CLIENTS = [
     PointCloudClient,
     PowerClient,
     RayCastClient,
+    RegistrationClient,
     RobotCommandClient,
     RobotIdClient,
     RobotStateClient,
@@ -198,7 +201,6 @@ class Sdk(object):
         # creating channels in the bosdyn.client.Robot class.
         self.max_send_message_length = DEFAULT_MAX_MESSAGE_LENGTH
         self.max_receive_message_length = DEFAULT_MAX_MESSAGE_LENGTH
-
 
 
     def create_robot(
@@ -295,14 +297,6 @@ class Sdk(object):
         for robot in self.robots.values():
             robot._shutdown()
         self.robots = {}
-
-    @staticmethod
-    @deprecated(
-        reason='App tokens are no longer in use. Authorization is now handled via licenses.',
-        version='2.0.1', action="always")
-    def load_app_token(*_):
-        """Do nothing, this method is kept only to maintain backwards compatibility."""
-        return
 
 
 @deprecated(

@@ -17,3 +17,5 @@ The following examples show how to register a payload and create payload faults,
 - [Faults](../service_faults/README.md)
 - [Velodyne](../velodyne_client/README.md)
 - [CORE I/O GPIO](../core_io_gpio/README.md)
+- [Metrics over CORE I/O](../metrics_over_coreio/README.md)
+- [Extensions](../extensions/README.md)

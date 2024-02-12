@@ -33,7 +33,7 @@ def connect(options):
         camera.sleepMode(enabled=False)
 
 
-def main(argv):
+def main():
     """Collects command line arguments to enable client mode"""
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -47,10 +47,10 @@ def main(argv):
                         help='WiFi security type: "none", "WEP", "WPA/WPA2 PSK"')
     parser.add_argument('--disable-sleep-mode', action='store_true',
                         help='Disables the Ricoh theta from automatically sleeping.')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     connect(options)
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

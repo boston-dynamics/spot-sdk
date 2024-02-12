@@ -67,8 +67,16 @@ class FanControlTemperatureError(PowerResponseError):
     """Current measured robot temperatures are too high to accept user fan command."""
 
 
+class SafetyStopIncompatibleHardwareError(PowerResponseError):
+    """SafetyStop command invalid because robot is not configured for SRSF."""
 
 
+class SafetyStopFailedError(PowerResponseError):
+    """SafetyStop command executed and failed."""
+
+
+class SafetyStopUnknownStopTypeError(PowerResponseError):
+    """SafetyStop command failed due to unknown stop type."""
 
 
 class PowerClient(BaseClient):
@@ -136,7 +144,17 @@ class PowerClient(BaseClient):
         return self.call_async(self._stub.FanPowerCommandFeedback, req, None,
                                _fan_power_feedback_error_from_response, **kwargs)
 
+    def reset_safety_stop(self, safety_stop_type, lease=None, **kwargs):
+        """Issue a reset safety stop request to the robot."""
+        req = self._reset_safety_stop_request(lease, safety_stop_type)
+        return self.call(self._stub.ResetSafetyStop, req, None,
+                         _reset_safety_stop_error_from_response, **kwargs)
 
+    def reset_safety_stop_async(self, safety_stop_type, lease=None, **kwargs):
+        """Async version of reset_safety_stop()"""
+        req = self._reset_safety_stop_request(lease, safety_stop_type)
+        return self.call_async(self._stub.ResetSafetyStop, req, None,
+                               _reset_safety_stop_error_from_response, **kwargs)
 
     @staticmethod
     def _power_command_request(lease, request):
@@ -155,6 +173,9 @@ class PowerClient(BaseClient):
     def _fan_power_command_feedback_request(command_id):
         return power_pb2.FanPowerCommandFeedbackRequest(command_id=command_id)
 
+    @staticmethod
+    def _reset_safety_stop_request(lease, safety_stop_type):
+        return power_pb2.ResetSafetyStopRequest(lease=lease, safety_stop_type=safety_stop_type)
 
 
 def _handle_license_errors(func):
@@ -247,6 +268,25 @@ def _fan_power_feedback_error_from_response(response):
     return None
 
 
+@handle_common_header_errors
+@handle_lease_use_result_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN', statustype=power_pb2.ResetSafetyStopResponse)
+def _reset_safety_stop_error_from_response(response):
+    return error_factory(response, response.status,
+                         status_to_string=power_pb2.ResetSafetyStopResponse.Status.Name,
+                         status_to_error=_RESET_SAFETY_STOP_STATUS_TO_ERROR)
+
+
+_RESET_SAFETY_STOP_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
+_RESET_SAFETY_STOP_STATUS_TO_ERROR.update({
+    power_pb2.ResetSafetyStopResponse.STATUS_OK: (None, None),
+    power_pb2.ResetSafetyStopResponse.STATUS_INCOMPATIBLE_HARDWARE_ERROR:
+        (SafetyStopIncompatibleHardwareError, SafetyStopIncompatibleHardwareError.__doc__),
+    power_pb2.ResetSafetyStopResponse.STATUS_FAILED:
+        (SafetyStopFailedError, SafetyStopFailedError.__doc__),
+    power_pb2.ResetSafetyStopResponse.STATUS_UNKNOWN_STOP_TYPE:
+        (SafetyStopUnknownStopTypeError, SafetyStopUnknownStopTypeError.__doc__)
+})
 
 
 @deprecated(reason='Replaced by the less ambiguous safe_power_off_motors function.',

@@ -14,9 +14,9 @@ detection networks by modifying the tensor names to match your model's input
 and output layer names. Please see the README.md for information on how to
 acquire the Faster R-CNN model file that can be used to demonstrate this example.
 
-Clients can specify a region of interest and confidence value in the image recieved 
+Clients can specify a region of interest and confidence value in the image recieved
 by the network compute bridge worker. The region of interest tells the model where
-to look for object matches. The confidence value tells the model the confidence 
+to look for object matches. The confidence value tells the model the confidence
 threshold for an object match.
 """
 
@@ -231,9 +231,10 @@ def process_images(options, model_extension):
         if param_error:
             out_proto.status = network_compute_bridge_pb2.NETWORK_COMPUTE_STATUS_CUSTOM_PARAMS_ERROR
             out_proto.custom_param_error.CopyFrom(param_error)
+            err_str = 'Custom parameter validation failed:'
             for message in param_error.error_message:
-                err_str = "\n" + err_str + message
-            print(f'Custom parameter validation failed: {err_str}')
+                err_str = err_str + "\n" + message
+            print(err_str)
             RESPONSE_QUEUE.put(out_proto)
             continue
 
@@ -439,12 +440,8 @@ def register_with_robot(options):
                                            kServiceAuthority, ip, int(options.port))
 
 
-def main(argv):
-    """Command line interface.
-
-    Args:
-        argv: List of command-line arguments passed to the program.
-    """
+def main():
+    """Command line interface."""
 
     default_port = '50051'
     model_extension = '.pb'
@@ -461,7 +458,7 @@ def main(argv):
     parser.add_argument('hostname', nargs='?', help='Hostname or address of robot,'
                         ' e.g. "beta25-p" or "192.168.80.3"')
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     if not os.path.isdir(options.model_dir):
         print(f'Error: model directory ({options.model_dir}) not found or is not a directory.')
@@ -505,5 +502,5 @@ def main(argv):
 
 if __name__ == '__main__':
     logging.basicConfig()
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

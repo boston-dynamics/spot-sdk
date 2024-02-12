@@ -331,7 +331,7 @@ class WasdInterface(object):
         stdscr.addstr(18, 0, '')
 
         # print as many lines of the image as will fit on the curses screen
-        if self._image_task.ascii_image != None:
+        if self._image_task.ascii_image is not None:
             max_y, _max_x = stdscr.getmaxyx()
             for y_i, img_line in enumerate(self._image_task.ascii_image):
                 if y_i + 17 >= max_y:
@@ -638,7 +638,7 @@ def main():
 
     try:
         try:
-            # Prevent curses from introducing a 1 second delay for ESC key
+            # Prevent curses from introducing a 1-second delay for ESC key
             os.environ.setdefault('ESCDELAY', '0')
             # Run wasd interface in curses mode, then restore terminal config.
             curses.wrapper(wasd_interface.drive)
@@ -656,5 +656,4 @@ def main():
 
 if __name__ == '__main__':
     if not main():
-        os._exit(1)
-    os._exit(0)
+        sys.exit(1)

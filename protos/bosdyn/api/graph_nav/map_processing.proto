@@ -301,6 +301,9 @@ message ProcessAnchoringRequest {
             // If true, world object measurements will be used to constrain waypoints to one another
             // when those waypoints co-observe the same world object.
             google.protobuf.BoolValue use_world_objects = 5;
+            // If true, GPS measurements stored in waypoint snapshots will be used to
+            // help constrain the anchoring.
+            google.protobuf.BoolValue use_gps = 6;
         }
         // Relative weights to use for each of the optimizer's terms. These can be any positive value.
         // If set to zero, a reasonable default will be used. In general, the higher the weight, the more
@@ -312,6 +315,7 @@ message ProcessAnchoringRequest {
             double hint_weight = 4;
             double gyroscope_weight = 5;
             double loop_closure_weight = 6;
+            double gps_weight = 7;
         }
         OptimizerParams optimizer_params = 1;
         MeasurementParams measurement_params = 2;
@@ -339,6 +343,13 @@ message ProcessAnchoringRequest {
     // If true, the anchoring will be streamed back to the user after every iteration.
     // This is useful for debug visualization.
     bool stream_intermediate_results = 5;
+    // If true, the GPSSettings inside waypoint annotations will be modified based on the optimization.
+    // Every waypoint will have waypoint.gps_settings set, with ecef_tform_waypoint applied form this
+    // optimization. To get these results, call the DownloadGraph RPC. Alternatively, the ecef_tform_waypoint
+    // can be found using: response.gps_result.ecef_tform_seed * seed_tform_waypoint[waypoint_id].
+    // Note that after this operation completes successfully, all waypoints in the graph can be used to navigate
+    // using GPS, even if they didn't have GPS data in their waypoint snapshots.
+    bool apply_gps_result_to_waypoints_on_server = 6;
 }
 
 // Streamed response from the ProcessAnchoringRequest. These will be streamed until optimization is complete.
@@ -397,4 +408,23 @@ message ProcessAnchoringResponse {
     // loop closures have been made before optimization, when inconsistent anchoring hints were passed in,
     // or because the optmizer ended up in a local minimum.
     repeated Edge.Id inconsistent_edges = 14;
+
+    message GPSResult {
+        // Status of the GPS embedding optimization.
+        enum GPSStatus {
+            GPS_STATUS_UNKNOWN = 0;
+            GPS_STATUS_OK = 1; // Managed to find an ECEF transform.
+            GPS_STATUS_NOT_ENOUGH_MEASUREMENTS = 2; // Not enough high quality GPS measurements in the map.
+        }
+        // Overall status of the GPS embedding optimization.
+        GPSStatus status = 1;
+        // Pose of the "seed" frame of this optimization in the Earth-Centered-Earth-Fixed (ECEF) frame.
+        // This can be used to estimate the pose of every waypoint in the ECEF frame via:
+        // ecef_tform_waypoint = ecef_tform_seed * anchoring.waypoints[waypoint_id].seed_tform_waypoint
+        api.SE3Pose ecef_tform_seed = 2;
+        // This is the number of GPS measurements actually used to compute the GPS embedding.
+        int32 num_measurements_used = 3;
+    };
+    // If GPS embedding optimzation was enabled, this is the result of that process.
+    GPSResult gps_result = 15;
 }

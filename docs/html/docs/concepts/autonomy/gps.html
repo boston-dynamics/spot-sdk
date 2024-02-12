@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPS on Spot &mdash; Spot 4.0.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
+    <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
+    <link rel="canonical" href="https://dev.bostondynamics.com/docs/concepts/autonomy/gps.html" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Spot Choreography SDK" href="../choreography/README.html" />
+    <link rel="prev" title="Directed Exploration" href="directed_exploration.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../README.html">
+            
+              <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                4.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../README.html">Concepts</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../about_spot.html">About Spot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about_orbit.html">About Orbit(formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../base_services.html">Base services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../geometry_and_frames.html">Geometry and Frames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../robot_services.html">Robot services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../estop_service.html">E-Stop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../keepalive_service.html">KeepAlive (BETA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../lease_service.html">Lease</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../developing_api_services.html">Developing API Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../service_customization.html">Service Customization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../faults.html">Faults</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="README.html">Autonomy services</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="graphnav_tech_summary.html">Autonomy Technical Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomous_navigation_code_examples.html">Autonomous navigation code examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="components_of_autonomous_navigation.html">Components of autonomous navigation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="docking.html">Docking</a></li>
+<li class="toctree-l3"><a class="reference internal" href="typical_autonomous_navigation_use_case.html">Typical autonomous navigation use case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autonomous_navigation_services.html">Autonomous navigation services</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphnav_service.html">GraphNav service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphnav_map_structure.html">GraphNav map structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="initialization.html">Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="localization.html">Localization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="missions_service.html">Missions service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="autowalk_service.html">Autowalk service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../network_compute_bridge.html">Network compute bridge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="auto_return.html">AutoReturn service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="directed_exploration.html">Directed Exploration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">GPS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../choreography/README.html">Choreography</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/choreography_service.html">Choreography Service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/move_reference.html">Move Reference Guide</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/choreographer_setup.html">Choreographer Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/choreographer.html">Choreographer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../arm/README.html">Spot Arm</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../arm/arm_specification.html">Arm and Gripper Specification</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../arm/arm_concepts.html">Concepts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../arm/arm_services.html">Services</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data.html">Spot Data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../data_acquisition_overview.html">Data Acquisition Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_acquisition_output.html">Data Acquisition Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../writing_services_for_data_acquisition.html">Integrate Payloads with the API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_buffer_overview.html">Data Buffer Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bddf.html">BDDF File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../data_acquisition_thermal_raw.html">Thermal Raw Data Format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../python/README.html">Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../python/quickstart.html">Quickstart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/understanding_spot_programming.html">Understanding Spot Programming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/examples/README.html">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/basic_service_examples.html">Basic Service Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/hello_spot/README.html">Hello Spot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/directory/README.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_robot_state/README.html">Get Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_robot_state_async/README.html">Get Robot State Async</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/estop/README.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/time_sync/README.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_test/README.html">Comms Test</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/disable_ir_emission/README.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/reset_safety_stop/README.html">Reset Safety Stop</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stance/README.html">Stance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/frame_trajectory_command/README.html">Frame Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_light/README.html">Spot Light</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/upload_choreographed_sequence/README.html">Upload Choreographed Sequence</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/xbox_controller/README.html">Xbox Controller</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/wasd/README.html">WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/docking/README.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/animation_recorder/README.html">Animation Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/auto_return/README.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fan_command/README.html">Fan Commands</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">ARM WASD</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/arm_examples.html">Arm Command Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_simple/README.html">Simple Arm Motion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_stow_unstow/README.html">Stow/unstow Arm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_freeze/README.html">Arm Freeze</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_and_mobility_command/README.html">Arm and Mobility Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_with_body_follow/README.html">Arm Command with Body Following</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_constrained_manipulation/README.html">Arm Constrained Manipulation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html">Arm Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_trajectory/README.html#long-trajectory">Long Trajectory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_joint_move/README.html">Arm Joint Move Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_force_control/README.html">Arm Force Control Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp/README.html">Arm Grasp Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_grasp_carry_overrides/README.html">Arm Grasp and Carry Overrides</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gaze/README.html">Arm Gaze Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_surface_contact/README.html">Arm Command with Surface Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_door/README.html">Arm Door Opening Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_walk_to_object/README.html">Walk to And Pick Up Object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_gcode/README.html">Writing Gcode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">Arm WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/joint_control/README.html">Wiggle Arm</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/payloads/README.html">Payloads</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/self_registration/README.html">Self Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/velodyne_client/README.html">Velodyne</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/core_io_gpio/README.html">CORE I/O GPIO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html">Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html#usage">Usage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html#components">Components</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/metrics_over_coreio/README.html#recommended-debugging">Recommended debugging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extensions/README.html">Extensions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_world_objects/README.html">Get World Objects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/fire_extinguisher_server/README.html">Fire Extinguisher Detector with the Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ray_cast/README.html">Ray Cast</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/user_nogo_regions/README.html">No-Go Regions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gps_service/README.html">GPS</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/logging_examples.html">Logging Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/bddf_download/README.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_buffer/README.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_service/README.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/logging/README.html">Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/log_status/README.html">Log Status</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/data_acquisition_examples.html">Data Acquisition Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_acquisition_service/README.html">Data Acquisition Service</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.html">Modem Signals</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/cloud_upload/README.html">Cloud Upload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_mapping/README.html">Comms image service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_mapping/README.html#how-to-use">How to use</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.html">CoreIO Modem Signals Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/tester_programs/README.html">Tester Programs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/autonomy_and_missions_examples.html">Autonomy and Missions Examples</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_anchoring_optimization/README.html">Graph Nav Anchoring Optimization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html">GraphNav and Recording Service Command Line Interfaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html#example-programs">Example Programs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_extract_point_cloud/README.html">Graph Nav Extract Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_map/README.html">Graph Nav View Map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html">Graph Nav View GPS Data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_mission_state/README.html">Get Mission State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/README.html">Remote Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_question_answerer/README.html">Mission Question Answerer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/mission_recorder/README.html">Mission Recorder</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/replay_mission/README.html">Replay Mission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/post_docking_callbacks/README.html">Post Docking Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/area_callback/README.html">Area Callbacks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/edit_autowalk/README.html">Edit Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/record_autowalk/README.html">Record Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_servicer.html">Area Callback Servicer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf.html">BDDF</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/bddf_download.html">BDDF Download</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/channel.html">Channel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html">Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/common.html">Common</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition.html">Data Acquisition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_helpers.html">Data Acquisition Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin.html">Data Acquisition Plugin</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html">Data Acquisition Plugin Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html">Data Acquisition Store</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_buffer.html">Data Buffer</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_chunk.html">Data Chunk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/data_service.html">Data Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory_registration.html">Directory Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/directory.html">Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/door.html">Door</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html">Graph Nav</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html">Gripper Camera Params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/README.html">GPS</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ir_enable_disable.html">IR Enable/Disable</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/keepalive.html">Keep Alive</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease.html">Lease</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_resource_hierarchy.html">Lease Resource Hierarchy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/lease_validator.html">Lease Validator</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/license.html">License</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/local_grid.html">Local Grid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html">Log Status</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/math_helpers.html">Math Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/manipulation_api_client.html">Manipulation API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/map_processing.html">Map Processing</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/processors.html">Processors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/ray_cast.html">Ray casting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/recording.html">Recording</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html">Robot Command</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_id.html">Robot ID</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html">Robot State</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/sdk.html">SDK</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html">Service Customization Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/signals_helpers.html">Signals Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/README.html">Spot CAM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/audio.html">Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.html">Compositor</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/health.html">Health</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lighting.html">Lighting</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/lights_helper.html">Lights Helper</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/media_log.html">Media Log</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/network.html">Network</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/power.html">Power</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.html">PTZ</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/streamquality.html">Stream Quality</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_cam/version.html">Version</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html">Spot Check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/time_sync.html">Time Sync</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/README.html">Core</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/README.html">BDDF</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/base_data_reader.html">Base Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/block_writer.html">Block Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/bosdyn.html">BDDF Conventions</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/common.html">Common</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_reader.html">Data Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/data_writer.html">Data Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/file_indexer.html">File Indexer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_proto_reader.html">GRPC Proto Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_reader.html">GRPC Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_reader.html">GRPC Service Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/grpc_service_writer.html">GRPC Service Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/message_reader.html">Message Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_reader.html">POD Series Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/pod_series_writer.html">POD Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_channel_reader.html">Protobuf Channel Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_reader.html">Protobuf Reader</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/protobuf_series_writer.html">Protobuf Series Writer</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/bddf/stream_data_reader.html">Stream Data Reader</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/geometry.html">Geometry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/util.html">Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-core/src/bosdyn/deprecated.html">Deprecated</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/README.html">Choreography</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html">Choreography</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_to_proto.html">Animation File to Proto</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/animation_file_conversion_helpers.html">Animation File to Proto Helpers</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/README.html">Orbit (formerly Scout)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/README.html">Scout (deprecated)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html">Client</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/utils.html">Utils</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-scout/src/bosdyn/scout/exceptions.html">Exceptions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/fetch_tutorial/fetch1.html">Fetch Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch2.html">Part 2: Training the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch3.html">Part 3: Evaluating the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch4.html">Part 4: Autonomous Pick Up</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch5.html">Part 5: Detecting People and Playing Fetch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/fetch_tutorial/fetch6.html">Part 6: Running the model on Core IO</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../python/daq_tutorial/daq1.html">Data Collection Tutorial</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq2.html">Part 2: Capturing images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq3.html">Part 3: Capturing other data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq4.html">Part 4: Deploying to the CORE I/O</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq5.html">Part 5: Collecting data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/daq_tutorial/daq6.html">Part 6: Processing collected data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../payload/README.html">Payloads</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/payload_configuration_requirements.html">Payload configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/mechanical_interfaces.html">Mechanical interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/robot_mounting_rails.html">Robot mounting rails</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/guidelines_for_robust_payload_design.html">Guidelines for robust payload design</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/robot_electrical_interface.html">Robot electrical interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/coreio_documentation.html">CORE I/O Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/coreio_openvpn_extension.html">CORE I/O OpenVPN Extension</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/configuring_payload_software.html">Configuring payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/docker_containers.html">Dockerize payload software</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../payload/spot_core_documentation.html">Pre-3.2 Spot CORE Documentation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_portainer.html">Configuring Docker containers in SpotCORE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_cockpit.html">Spot CORE system management tool: Cockpit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../payload/spot_core_vnc.html">Spot CORE VNC</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../protos/README.html">API Protocol</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../protos/style_guide.html">Style Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../protos/bosdyn/api/README.html">Proto Reference Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../protos/bosdyn/api/proto_reference.html">Protos</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../release_notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/boston-dynamics/spot-sdk">SDK Repository</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../README.html">Spot</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../README.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../README.html">Concepts</a></li>
+          <li class="breadcrumb-item"><a href="README.html">Autonomy</a></li>
+      <li class="breadcrumb-item active">GPS on Spot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!--
+Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+
+Downloading, reproducing, distributing or otherwise using the SDK Software
+is subject to the terms and conditions of the Boston Dynamics Software
+Development Kit License (20191101-BDSDK-SL).
+--><section id="gps-on-spot">
+<h1>GPS on Spot<a class="headerlink" href="#gps-on-spot" title="Permalink to this heading"></a></h1>
+<p>Starting in software version 4.0, the Spot SDK now supports integration with
+Global Positioning Systems (GPS) and Global Navigation Satellite Systems
+(GNSS) hardware. Spot can be localized to Earth-centered reference frames and
+can autonomously navigate and localize on Graph Nav maps that have been
+recorded with these systems.</p>
+<section id="hardware-integration">
+<h2>Hardware Integration<a class="headerlink" href="#hardware-integration" title="Permalink to this heading"></a></h2>
+<section id="gps-receiver-overview">
+<h3>GPS Receiver Overview<a class="headerlink" href="#gps-receiver-overview" title="Permalink to this heading"></a></h3>
+<p>GPS devices compute their position with respect to the Earth using constellations of satellites. Their computed fixes are typically reported through a standard message protocol specified by the Nation Marine Electronics Association known as <a class="reference external" href="https://www.nmea.org/nmea-0183.html">NMEA-0183</a>. GGA messages include information about the computed position of the receiver, such as latitude, longitude, and altitude. GST messages include information about the quality of the computed position fix, such as the standard deviation in meters of the latitude, longitude, and altitude measurements. In addition to computing the position of the receiver, GPS receivers also compute an accurate time measurement. The time measurement is captured in the ZDA message.</p>
+<p>Most consumer-grade GPS receivers can compute their location with a few meters of accuracy. This accuracy can be improved using a system of base stations and relay satellites. One system, known as Satellite Based Augmentation System (SBAS) uses ground stations at known locations to compute positioning errors and relay them to receivers using a network of relay satellites. In the United States, this system is also known as Wide Area Augmentation System (WAAS). To achieve centimeter level accuracy, a system known as Real Time Kinematics (RTK) can be used. This system uses a local base station to report corrections directly to the receiver. For use in robot navigation, it is recommended to use a receiver that supports one or more correction services to maximize the accuracy of the measurements and the performance of the system as a whole.</p>
+</section>
+<section id="attaching-gps-receivers-to-spot">
+<h3>Attaching GPS Receivers to Spot<a class="headerlink" href="#attaching-gps-receivers-to-spot" title="Permalink to this heading"></a></h3>
+<p>GPS receivers make NMEA-0183 messages available through different interfaces. Examples of receiver interfaces include USB, Ethernet, Wi-Fi, and Bluetooth. Spot is not able to consume this data directly from the sensor. Instead, Spot has an interface for accepting GPS data from attached payloads through its API. This means that in addition to a GPS receiver payload, a user must also attach a payload capable of translating from the GPS receiver interface to the Spot API. For information about designing and attaching payloads for Spot, refer to the documentation <a class="reference internal" href="../../payload/README.html"><span class="doc">here</span></a>. The figure shown below depicts a system with three GPS receivers communicating with Spot through the GPS API.</p>
+<p>Boston Dynamics provides an example of such a system involving the <a class="reference external" href="https://www.sitechnorcal.com/products/site-positioning-systems/antennas-and-base-stations/trimble-sps986-gnss-smart-antenna">Trimble SPS986</a>. The CORE I/O and associated extension also supports GPS devices using USB and UDP connections.</p>
+<p><img alt="../../../_images/gps_diagram.png" src="../../../_images/gps_diagram.png" />
+<em>Figure 1: Spot GPS System Diagram</em></p>
+</section>
+<section id="writing-custom-gps-services">
+<h3>Writing Custom GPS Services<a class="headerlink" href="#writing-custom-gps-services" title="Permalink to this heading"></a></h3>
+<p>The GPS Listener example provided by Boston Dynamics translates NMEA-0183 messages to the Spot API. If this is not suitable for a use case, it is possible to interface with the Spot API directly to provide GPS data. To do this, a new service should be developed. For information on how to do this, please refer to the documentation <a class="reference internal" href="../developing_api_services.html"><span class="doc">here</span></a>. This service will need to send NewGpsDataRequest messages to Spot’s Aggregator service. This request must contain information about the position of the receiver in either <a class="reference external" href="https://en.wikipedia.org/wiki/Geographic_coordinate_system">Geographic Coordinate System</a> (GCS: latitude, longitude, and altitude) or in <a class="reference external" href="https://en.wikipedia.org/wiki/Earth-centered,_Earth-fixed_coordinate_system">Earth Centered Earth Fixed</a> (ECEF) coordinates. Additionally, the timestamp of the fix in robot time and the quantity of satellites used to calculate the fix must be provided. If available, other information such as horizontal and vertical accuracy, yaw, heading, the GPS timestamp, and information about individual satellites used for the fix can be included. GPS data points must also include an SE3Pose specifying the location of the receiver with respect to Spot’s body. For additional information, please refer to the <a class="reference internal" href="../../../protos/bosdyn/api/README.html"><span class="doc">API documentation</span></a>.</p>
+</section>
+</section>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this heading"></a></h2>
+<section id="common-reference-frames">
+<h3>Common Reference Frames<a class="headerlink" href="#common-reference-frames" title="Permalink to this heading"></a></h3>
+<p>See <a class="reference internal" href="../geometry_and_frames.html"><span class="doc">the geometry and frames document</span></a> for more information on common robot reference frames and their definitions.</p>
+<p><img alt="../../../_images/gps_frames.png" src="../../../_images/gps_frames.png" />
+<em>Figure 2. Relevant GPS Frames</em></p>
+<p>GPS data are used in Spot’s SDK through the following reference frames:</p>
+<ul class="simple">
+<li><p><strong>Robot Body - “body”</strong> (see frames doc)is a frame at the geometric center of the robot’s body.</p></li>
+<li><p><strong>Odometry - “odom”</strong> (see frames doc)  is an inertial frame that estimates the fixed location in the world (relative to where the robot is booted up) using the kinematics of the robot.</p></li>
+<li><p><strong>Payload -</strong> is the frame of the robot’s payload computer, usually defined using the payload registration service.</p></li>
+<li><p><strong>GPS Antenna - “gps”</strong> this is the frame of the GPS receiver antenna, and is the frame that the GPS unit should be reporting positional measurements in. The orientation convention for this frame should be the same as with the robot body; that is, the x-axis should point “forward”, and the z axis should point “up”. The GPS antenna payload is defined in the GPS service itself.</p></li>
+<li><p><strong><a class="reference external" href="https://en.wikipedia.org/wiki/Earth-centered,_Earth-fixed_coordinate_system">Earth-Centered-Earth-Fixed </a></strong> <strong>- “ecef”</strong> is a standard frame defined based on the center of the Earth. Some parts of the SDK refer to the GPS antenna or robot body’s relative position and/or orientation with respect to this frame.</p></li>
+<li><p><strong><a class="reference external" href="https://en.wikipedia.org/wiki/Latitude">Latitude/Longitude/Height</a> - “llh”</strong> refers to angular measurements on the Earth’s surface and an altitude measurement. Some parts of the SDK refer to the GPS antenna or robot body’s position using this convention.</p></li>
+<li><p><strong>Seed Frame - “seed”</strong> is a fixed metric frame in which a Graph Nav map has been represented (see <a class="reference internal" href="graphnav_map_structure.html"><span class="doc">Graph Nav Map Structure</span></a>). Graph Nav maps may contain a transformation between seed frame and the ECEF frame.</p></li>
+<li><p><strong>Waypoint Frame - “waypoint”</strong> defines the frame of a graph nav waypoint. Usually this is the frame of the robot body at the time that the waypoint was recorded. Waypoints may contain transformations to the ECEF frame.</p></li>
+</ul>
+</section>
+</section>
+<section id="software-integration">
+<h2>Software Integration<a class="headerlink" href="#software-integration" title="Permalink to this heading"></a></h2>
+<section id="registration-to-odometry">
+<h3>Registration to Odometry<a class="headerlink" href="#registration-to-odometry" title="Permalink to this heading"></a></h3>
+<p>As Spot moves, it measures the movement of its body with respect to the
+ground. This position measurement is known as odometry and is measured with
+respect to a coordinate frame known as odom. Importantly, this measurement has
+six degrees of freedom, three for position and three for orientation. When GPS
+data is received by Spot, it provides estimates of position, but not
+orientation. In order to extract orientation information, the GPS data is
+transformed into a Cartesian coordinate system tangent to the surface of the
+Earth. A trajectory of odometry and GPS measurements is synchronized in time
+and recorded. As Spot moves through its environment, this trajectory is used
+to find a registration <em>odom_T_gps</em>  between the odom frame and the GPS frame
+tangent to the Earth.</p>
+<p><img alt="../../../_images/gps_registration.png" src="../../../_images/gps_registration.png" /><br /><em>Figure 3: Correlation and registration of GPS and Odometry trajectories.</em></p>
+<p>The currently computed registration can be queried using the Spot API. The
+Registration service supports the <em>GetLocation</em>  RPC which returns a
+<em>GetLocationResponse</em> .</p>
+<p>GetLocationResponse::Status                          |   Explanation<br />—————————————————–|—-
+<code class="docutils literal notranslate"><span class="pre">STATUS_UNKNOWN</span></code> | No registration could be computed<br /><code class="docutils literal notranslate"><span class="pre">STATUS_OK</span></code> | A (possibly invalid) registration was computed<br /><code class="docutils literal notranslate"><span class="pre">STATUS_NEEDS_DEVICE</span></code>  | No GPS device is available to compute a registration</p>
+<p>If the Registration status is STATUS_OK, a Registration object will be
+available for inspection.</p>
+<p>Registration::Status | Explanation<br />— | —<br /><code class="docutils literal notranslate"><span class="pre">STATUS_UNKNOWN</span></code>                                                           | No registration could be computed<br /><code class="docutils literal notranslate"><span class="pre">STATUS_OK</span></code>                                                                | A registration was computed<br /><code class="docutils literal notranslate"><span class="pre">STATUS_NEED_DATA</span></code>                                                         | No usable GPS data was available<br /><code class="docutils literal notranslate"><span class="pre">STATUS_NEED_MORE_DATA</span></code>                                                    | Spot has not moved far enough<br /><code class="docutils literal notranslate"><span class="pre">STATUS_STALE</span></code> |  No usable data has been received recently enough to compute a registration</p>
+</section>
+<section id="registration-to-graph-nav-maps">
+<h3>Registration to Graph Nav Maps<a class="headerlink" href="#registration-to-graph-nav-maps" title="Permalink to this heading"></a></h3>
+<p>While recording a Graph Nav map (see
+<a class="reference internal" href="../../../python/examples/graph_nav_command_line/README.html"><span class="doc">here</span></a>),
+whenever a GPS device is attached to the robot and a registration to odometry
+is found, the registration is stored in the Graph Nav Map inside individual
+waypoint snapshots.</p>
+<p>This is referred to as “raw GPS data” in examples (see
+<a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html"><span class="doc">here</span></a>).  Note
+that the raw data stored in waypoint snapshots represents the registration to
+the odometry frame at the time the waypoint snapshot was recorded, and may be
+inaccurate or missing entirely in areas where there were no satellites
+reachable from the GPS.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># World objects stored within waypoint snapshots may contain raw GPS data and</span>
+<span class="n">a</span> <span class="n">registration</span> <span class="n">to</span> <span class="n">the</span> <span class="n">odometry</span> <span class="n">frame</span><span class="o">.</span>  
+       <span class="k">for</span> <span class="n">world_object</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>  
+           <span class="k">if</span> <span class="n">world_object</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;gps_properties&#39;</span><span class="p">):</span>  
+               <span class="c1"># This is a &quot;latitude longitude height&quot; message.   </span>
+               <span class="n">llh</span> <span class="o">=</span> <span class="n">world_object</span><span class="o">.</span><span class="n">gps_properties</span><span class="o">.</span><span class="n">registration</span><span class="o">.</span><span class="n">robot_body_location</span>  
+  
+</pre></div>
+</div>
+<p>Graph Nav maps can also be registered to the ECEF frame using anchoring
+optimization (see <a class="reference internal" href="../../../python/examples/graph_nav_anchoring_optimization/README.html"><span class="doc">here</span></a>).
+This process takes all of the raw GPS data in the map along with the odometry
+data, fiducials, loop closures and other measurements to find an optimized
+registration between the seed frame and the ECEF frame.</p>
+<p><img alt="../../../_images/gps_map.png" src="../../../_images/gps_map.png" /><br /><em>Figure 4: an example of the raw (blue) and annotated (red) GPS data displayed on
+OpenStreetMaps. The raw data may have noise, missing data, or systematic
+errors that anchoring optimization attempts to correct.</em></p>
+<p>Registrations to the ECEF frame obtained via this method are available in
+waypoint annotations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The optimized GPS data is stored in each waypoint&#39;s annotations.  </span>
+<span class="n">ecef_tform_waypoint</span> <span class="o">=</span> <span class="n">waypoint</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">gps_settings</span><span class="o">.</span><span class="n">ecef_tform_waypoint</span>  
+</pre></div>
+</div>
+<p>Note that after anchoring optimization, all of the waypoints stored in the
+graph will have an associated ecef_tform_waypoint transform. For waypoints
+without raw GPS data in them, this value corresponds to the anchoring
+optimizer’s best guess at where these waypoints are given the data from
+waypoints that do have raw gps data in them.</p>
+<p>If you are unsatisfied with the results of anchoring optimization, or want to
+modify the gps coordinates of any waypoint, you may directly set the values
+inside waypoint annotations, and these will be used by the robot for
+navigation and localization.</p>
+</section>
+<section id="navigating-using-graph-nav-and-gps">
+<h3>Navigating using Graph Nav and GPS<a class="headerlink" href="#navigating-using-graph-nav-and-gps" title="Permalink to this heading"></a></h3>
+<p>When the robot is navigating on a Graph Nav map, it will use data from GPS
+whenever:</p>
+<ol class="simple">
+<li><p>There exists a GPS-enabled payload and GPS service running currently on the robot.</p></li>
+<li><p>The map has either raw GPS data in waypoint snapshots, or GPS data in waypoint annotations.
+1. When both exist, Graph Nav will use the data in waypoint annotations.</p></li>
+</ol>
+<p>Graph Nav automatically uses or ignores GPS data depending on the context. For
+example, in areas where GPS signal is lost (too few satellites, high error,
+etc.) Graph Nav will simply continue navigating using realsense data, LIDAR
+point clouds, fiducials, and odometry. When GPS signal is reacquired, Graph
+Nav will attempt to use the data without interruption.</p>
+<p>If GPS data is expected, but not present on the robot (due to misconfigured or
+broken payload hardware, for example), Graph Nav navigation will fail with a
+STATUS_IMPAIRED return code.</p>
+<section id="rpcs">
+<h4>RPCs<a class="headerlink" href="#rpcs" title="Permalink to this heading"></a></h4>
+<p>The following RPCs are relevant for using and understanding GPS use in Graph
+Nav:</p>
+<ul>
+<li><p><strong>graph_nav.GetLocalizationState -</strong>  this RPC returns information about the robot’s GPS-centric localization when “request_gps_state” is set to “true” in the request.</p>
+<ul class="simple">
+<li><p>This returns a message of type GPSLocalization, which contains an estimate of the robot’s body in ECEF frame and LLH frame, and diagnostic information about the current GPS state and whatever GPS state happens to be in the map.</p></li>
+</ul>
+<p><strong>GPSLocalization::State</strong>                                                  |    <strong>Explanation</strong><br />—-|—-
+<code class="docutils literal notranslate"><span class="pre">STATE_OK</span></code>                                                                   |    Using GPS.<br /><code class="docutils literal notranslate"><span class="pre">STATE_BAD_FRAMES</span></code>                                                            |    Error getting frames (ko, etc.)<br /><code class="docutils literal notranslate"><span class="pre">STATE_NO_GPS_OBJECTS</span>&#160; </code>                                                     |    No GPS available.<br /><code class="docutils literal notranslate"><span class="pre">STATE_REGISTRATION_NOT_OK</span></code>                                                   |    GPS registration isn’t ready.<br /><code class="docutils literal notranslate"><span class="pre">STATE_NO_GPS_STATES</span></code>                                                         |    No GPS state measurements.<br /><code class="docutils literal notranslate"><span class="pre">STATE_NOT_ENOUGH_SATELLITES</span></code>                                                 |    Too few satellites to localize.<br /><code class="docutils literal notranslate"><span class="pre">STATE_NO_ECEF_FRAME</span></code>                                                         |    GPS registration is missing a frame.<br /><code class="docutils literal notranslate"><span class="pre">STATE_HIGH_ERROR</span></code>                                                            |    The GPS data exists, but is high error.<br /><code class="docutils literal notranslate"><span class="pre">STATE_STALE</span>&#160; </code>                                                              |    The GPS data exists, and we have not used it yet, but it is too old to use.
+<code class="docutils literal notranslate"><span class="pre">STATE_INTERNAL_ERROR</span> </code>                                                       |     Internal error (e.g. missing waypoints).</p>
+</li>
+<li><p><strong>graph_nav.NavigateToAnchor</strong> - this RPC allows Graph Nav to navigate to either a point in the “seed” frame, the ECEF frame, or the LLH frame. To navigate to a latitude and longitude, or to an ECEF coordinate, use GPSNavigationParams as the goal field.</p>
+<ul class="simple">
+<li><p>When navigating to a GPS coordinate, Graph Nav will use its best guess of where each waypoint is in the ECEF frame to find the closest waypoint to the goal. Graph Nav will then navigate to that waypoint, and then walk the robot in a straight line toward the goal.</p></li>
+<li><p>If the GPS command fails, NavigateToAnchor will return `INVALID_GPS_COMMAND``. Here are possible reasons the GPS command might be invalid:</p></li>
+</ul>
+<p><strong>GPSStatus</strong> |<strong>Explanation</strong>
+—-|—-<br /><code class="docutils literal notranslate"><span class="pre">GPS_STATUS_OK</span></code> | The GPS command was valid and can be executed.<br /><code class="docutils literal notranslate"><span class="pre">GPS_STATUS_NO_COORDS_IN_MAP</span></code>                        |The GPS command could not be completed because the map does not have GPScoordinates, neither in                                                  waypoint annotations nor in the waypoint snapshot data. Please record the map using a GPS-enabled robot, or annotate the waypoints with custom GPS coordinates.<br /><code class="docutils literal notranslate"><span class="pre">GPS_STATUS_TOO_FAR_FROM_MAP</span></code> | The GPS command could not be completed because the coordinates passed in weretoo far from any mapped GPS                                                  data.</p>
+<blockquote>
+<div><p>Note that LLH coordinates given to this request require sufficient precision (in the sub-meter range) for the robot to navigate successfully to them. The order of magnitude of precision required is about $1 \times 10^{-6}$ degrees. If this isn’t satisfied, GPS_STATUS_TOO_FAR_FROM_MAP is likely to be returned.</p>
+</div></blockquote>
+</li>
+<li><p><strong>map_processing.ProcessAnchoring -</strong>  this RPC may be used to find an optimized pose of every waypoint in the ECEF frame. Set “measurement_params.use_gps” to true and set “apply_gps_result_to_waypoint_on_server” to true as well to set the waypoint transforms in ECEF frame.</p>
+<ul class="simple">
+<li><p>After processing the anchoring, re-download the map using the graph_nav.DownloadGraph RPC to see the changes.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="tablet">
+<h2>Tablet<a class="headerlink" href="#tablet" title="Permalink to this heading"></a></h2>
+<section id="gps-status-display">
+<h3>GPS Status Display<a class="headerlink" href="#gps-status-display" title="Permalink to this heading"></a></h3>
+<p>When recording a Graph Nav map, or localizing to a loaded Graph Nav map, the status of the GPS system is displayed at the top of the screen after the Earth (🌎) icon:</p>
+<p><img alt="../../../_images/tablet_gps_icons.png" src="../../../_images/tablet_gps_icons.png" /></p>
+<p>These icons communicate status of the “Live” data (that is, data arriving at the present moment from the GPS service), and the “Map” data (that is, the status of GPS data in the currently recorded map). The meaning of the icons is shown below:</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Icon</th>
+<th>Name</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>.</td>
+<td><em>nothing</em></td>
+<td>Neither the live nor the map data reports that a GPS service exists.</td>
+</tr>
+<tr>
+<td>❌</td>
+<td><em>x mark</em></td>
+<td>The GPS service is not working, misconfigured, or does not exist.</td>
+</tr>
+<tr>
+<td><strong>?</strong></td>
+<td><em>question mark</em></td>
+<td>A GPS service exists, but the data are not being used (either because it is high error, or there are too few satellites).</td>
+</tr>
+<tr>
+<td>✔️</td>
+<td><em>check mark</em></td>
+<td>A GPS service exists, and the data are being used.</td>
+</tr>
+</tbody>
+</table><p>For example, in the image shown the icons:</p>
+<blockquote>
+<div><p>🌎 Live: <strong>?</strong> Map: ✔️</p>
+</div></blockquote>
+<p>mean that the current GPS data exists but is high error or has too few satellites, and that the map data exists and is of high quality. When this happens, the robot is navigating using its cameras, LIDAR point cloud, fiducials, etc. but is not using GPS data.</p>
+</section>
+<section id="recording-an-autowalk-mission-with-gps">
+<h3>Recording an Autowalk Mission with GPS<a class="headerlink" href="#recording-an-autowalk-mission-with-gps" title="Permalink to this heading"></a></h3>
+<p>To record an Autowalk Mission with GPS, simply record an Autowalk mission as you normally would, and keep an eye on the GPS status icons shown above. If live GPS data ever appears, it will be recorded into the map that Autowalk uses, and later the robot will be able to navigate using GPS while running that mission.</p>
+<p>Missions without GPS can also be <em>extended</em> using a robot that has a GPS service, and the inferred GPS coordinates of the rest of the map will be automatically inferred via anchoring optimization on mission download from the tablet.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+      
+      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
+      <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
+
+    </p>
+  </div> 
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-XXXXXXX-1', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

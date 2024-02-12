@@ -29,7 +29,7 @@ from bosdyn.client.data_acquisition_helpers import (download_data_REST,
                                                     make_time_query_params_from_group_name)
 from bosdyn.client.data_acquisition_plugin import DataAcquisitionPluginClient
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
-from bosdyn.client.exceptions import InvalidRequestError, ResponseError
+from bosdyn.client.exceptions import InvalidRequestError, ResponseError, UnimplementedError
 from bosdyn.client.util import setup_logging
 
 # The sets of statuses for the GetStatus RPC that indicate the acquisition is continuing still, complete, or has failed.
@@ -507,7 +507,38 @@ def test_downloading_all_data_via_REST(data_store_client, group_name, robot_host
     return success
 
 
-def main(argv):
+GET_LIVE_DATA_ATTEMPTS = 5
+GET_LIVE_DATE_MAX_TIME_S = 1.0
+
+
+def test_get_live_data_if_applicable(capabilities, client):
+    request = data_acquisition_pb2.LiveDataRequest()
+    for capability in capabilities:
+        if capability.has_live_data:
+            request.data_captures.append(data_acquisition_pb2.DataCapture(name=capability.name))
+    request_capabilities = ", ".join(data_capture.name for data_capture in request.data_captures)
+    request_times = []
+    for index in range(0, GET_LIVE_DATA_ATTEMPTS):
+        start_time = time.time()
+        try:
+            _LOGGER.info("Calling get_live_data for: %s (request %s of %s).", request_capabilities,
+                         index + 1, GET_LIVE_DATA_ATTEMPTS)
+            response = client.get_live_data(request)
+        except UnimplementedError as exc:
+            _LOGGER.warning(f"Double check your robot is running 4.0.0 or newer.")
+            return False
+        total_time = time.time() - start_time
+        _LOGGER.info("Total time: %0.3f seconds.", total_time)
+        request_times.append(total_time)
+    average_total_time = sum(request_times) / len(request_times)
+    if average_total_time > GET_LIVE_DATE_MAX_TIME_S:
+        _LOGGER.warning(
+            f"GetLiveData should be quick (<100ms), but took {average_total_time:.3f} seconds on average."
+        )
+    return True
+
+
+def main():
     """Main testing interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -517,7 +548,7 @@ def main(argv):
     parser.add_argument('--destination-folder',
                         help=('The folder where the data should be downloaded to.'), required=False,
                         default='.')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Setup logger specific for this test program.
     streamlog = logging.StreamHandler()
@@ -578,7 +609,7 @@ def main(argv):
         return False
 
     # Test that each data capability successfully gets acquired and saved to the data store by monitoring
-    # the GetStatus request and then checking if the action id is in the data store afterwards.
+    # the GetStatus request and then checking if the action id is in the data store afterward.
     run_test(test_capabilities_acquires_and_saves,
              ('All data sources are successfully acquired, respond '
               'with \'status complete\' to the GetStatus RPC, and are saved to the data store.'),
@@ -602,10 +633,16 @@ def main(argv):
              group_name, options.hostname, robot, options.destination_folder)
 
     _LOGGER.info('Data is downloaded to: %s', options.destination_folder)
+
+    # Test plugin that has_live_data.
+    run_test(test_get_live_data_if_applicable,
+             "All capabilities with live data were called and returned STATUS_OK.", data_sources,
+             main_daq_client)
+
     _LOGGER.info('All tests passed for plugin service %s', options.service_name)
     return True
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

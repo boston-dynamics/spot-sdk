@@ -266,7 +266,7 @@ class BDDFDownloadGui(QtWidgets.QMainWindow):
             timespan = self.le_val.text()
 
         if raise_filesize_limit_flag is True:
-            self.statusBar().showMessage(f'File size to large. Do not exceed 60 minutes.',
+            self.statusBar().showMessage('File size to large. Do not exceed 60 minutes.',
                                          DEFAULT_STATUS_BAR_TIMEOUT)
             self.statusBar().setStyleSheet('background-color : red')
         else:
@@ -278,7 +278,7 @@ class BDDFDownloadGui(QtWidgets.QMainWindow):
         """Perform the BDDF download and update with download percentage."""
         hostname, username, password, timespan, output, channel = self.return_all_arguments()
         if not hostname:
-            self.statusBar().showMessage(f'Please specify a hostname.', DEFAULT_STATUS_BAR_TIMEOUT)
+            self.statusBar().showMessage('Please specify a hostname.', DEFAULT_STATUS_BAR_TIMEOUT)
             return
 
         robot = self.get_authenticated_robot_client()
@@ -307,12 +307,13 @@ class BDDFDownloadGui(QtWidgets.QMainWindow):
 
         self.pb.setValue(0)
         number_of_bytes_processed = 0
-        for chunk, total_content_length, response_status_code in collect_and_write_file(
+        for chunk, total_content_length, response in collect_and_write_file(
                 url, headers, params, output):
             # Check for success status response.
-            if response_status_code != 200:
+            if response.status_code != 200:
+                reason = 'Query returned no data' if response.status_code == 204 else response.text
                 self.statusBar().showMessage(
-                    f'Unable to get data. https response: {response_status_code}',
+                    f'Unable to get data. Reason: {reason}. https response: {response.status_code}',
                     DEFAULT_STATUS_BAR_TIMEOUT)
                 return False
             else:
@@ -325,7 +326,8 @@ class BDDFDownloadGui(QtWidgets.QMainWindow):
                     self.label_filesize.setText(
                         f'Download progress: {number_of_bytes_processed/1e6:.2f} [MB] of {total_size_of_request/1e6:.2f} [MB]'
                     )
-                    percentage_compete = (number_of_bytes_processed / total_size_of_request) * 100
+                    percentage_compete = round(
+                        (number_of_bytes_processed / total_size_of_request) * 100)
                     download_percentage_string = f'Download is {percentage_compete:.2f}% complete.'
                     logging.debug(download_percentage_string)
                     self.pb.setValue(percentage_compete)

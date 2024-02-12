@@ -28,7 +28,7 @@ python3 -m pip install -r requirements.txt
 Below is example output from casting a ray starting in front of the robot (positive X) forward and down toward the ground.
 
 ```shell
->>> python3 cast_single_ray.py -o 0.5 0.0 0.0 -d 1.0 0.0 -1.0 HOSTNAME
+>>> python3 cast_single_ray.py -o 0.5 0.0 0.0 -d 1.0 0.0 -1.0 ROBOT_IP
 Raycasting from position: X: 0.500 Y: 0.000 Z: 0.000
 Raycasting in direction: X: 1.000 Y: 0.000 Z: -1.000
 Raycast returned 3 hits.

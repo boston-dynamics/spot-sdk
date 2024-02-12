@@ -28,6 +28,10 @@ class NetworkComputeRotationError(ResponseError):
     """The robot failed to rotate the image as requested."""
 
 
+class NetworkComputeAnalysisFailedError(ResponseError):
+    """The model failed to analyze the set of input images, but a retry might work."""
+
+
 class NetworkComputeBridgeClient(BaseClient):
     """Client to either the NetworkComputeBridgeService or the NetworkComputeBridgeWorkerService."""
 
@@ -143,6 +147,8 @@ _NETWORK_COMPUTE_STATUS_TO_ERROR.update({
         error_pair(ExternalServerError),
     network_compute_bridge_pb2.NETWORK_COMPUTE_STATUS_ROTATION_ERROR:
         error_pair(NetworkComputeRotationError),
+    network_compute_bridge_pb2.NETWORK_COMPUTE_STATUS_ANALYSIS_FAILED:
+        error_pair(NetworkComputeAnalysisFailedError),
 })
 
 

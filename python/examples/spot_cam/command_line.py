@@ -45,7 +45,7 @@ def register_all_commands(subparsers, command_dict):
         register_command(subparsers, command_dict)
 
 
-def main(args=None):
+def main():
     """Command-line interface for interacting with Spot CAM"""
     parser = argparse.ArgumentParser(prog='bosdyn.api.spot_cam', description=main.__doc__)
     add_base_arguments(parser)
@@ -56,7 +56,7 @@ def main(args=None):
 
     register_all_commands(subparsers, command_dict)
 
-    options = parser.parse_args(args=args)
+    options = parser.parse_args()
 
     setup_logging(verbose=options.verbose)
 
@@ -67,7 +67,7 @@ def main(args=None):
     robot = sdk.create_robot(options.hostname)
 
     result = command_dict[options.command].run(robot, options)
-    if args is None and result is not None:
+    if result is not None:
         # Invoked as a CLI, so print result
         print(result)
 

@@ -29,16 +29,19 @@ from bosdyn.client.recording import GraphNavRecordingServiceClient
 class RecordingInterface(object):
     """Recording service command line interface."""
 
-    def __init__(self, robot, download_filepath, client_metadata):
+    def __init__(self, robot, download_filepath, client_metadata, use_gps=False):
         # Keep the robot instance and it's ID.
         self._robot = robot
+
+        self.use_gps = use_gps
+
         # Force trigger timesync.
         self._robot.time_sync.wait_for_sync()
 
         # Filepath for the location to put the downloaded graph and snapshots.
         self._download_filepath = os.path.join(download_filepath, 'downloaded_graph')
 
-        # Setup the recording service client.
+        # Set up the recording service client.
         self._recording_client = self._robot.ensure_client(
             GraphNavRecordingServiceClient.default_service_name)
 
@@ -47,7 +50,7 @@ class RecordingInterface(object):
             waypoint_env=GraphNavRecordingServiceClient.make_waypoint_environment(
                 client_metadata=client_metadata))
 
-        # Setup the graph nav service client.
+        # Set up the graph nav service client.
         self._graph_nav_client = robot.ensure_client(GraphNavClient.default_service_name)
 
         self._map_processing_client = robot.ensure_client(
@@ -328,9 +331,15 @@ class RecordingInterface(object):
         """Call anchoring optimization on the server, producing a globally optimal reference frame for waypoints to be expressed in."""
         response = self._map_processing_client.process_anchoring(
             params=map_processing_pb2.ProcessAnchoringRequest.Params(),
-            modify_anchoring_on_server=True, stream_intermediate_results=False)
+            modify_anchoring_on_server=True, stream_intermediate_results=False,
+            apply_gps_results=self.use_gps)
         if response.status == map_processing_pb2.ProcessAnchoringResponse.STATUS_OK:
             print(f'Optimized anchoring after {response.iteration} iteration(s).')
+            # If we are using GPS, the GPS coordinates in the graph have been changed, so we need
+            # to re-download the graph.
+            if self.use_gps:
+                print(f'Downloading updated graph...')
+                self._current_graph = self._graph_nav_client.download_graph()
         else:
             print(f'Error optimizing {response}')
 
@@ -402,7 +411,7 @@ class RecordingInterface(object):
                 print(e)
 
 
-def main(argv):
+def main():
     """Run the command-line interface."""
     parser = argparse.ArgumentParser(description=__doc__)
     bosdyn.client.util.add_base_arguments(parser)
@@ -417,7 +426,10 @@ def main(argv):
         '-s', '--recording_session_name', help=
         'Provides a special name for this recording session. If not provided, the download filepath will be used.',
         default='')
-    options = parser.parse_args(argv)
+    parser.add_argument(
+        '-g', '--use-gps', action='store_true',
+        help='Record the map with GPS enabled. The robot must have a working GPS payload.')
+    options = parser.parse_args()
 
     # Create robot object.
     sdk = bosdyn.client.create_standard_sdk('RecordingClient')
@@ -436,7 +448,8 @@ def main(argv):
     client_metadata = GraphNavRecordingServiceClient.make_client_metadata(
         session_name=session_name, client_username=user_name, client_id='RecordingClient',
         client_type='Python SDK')
-    recording_command_line = RecordingInterface(robot, options.download_filepath, client_metadata)
+    recording_command_line = RecordingInterface(robot, options.download_filepath, client_metadata,
+                                                options.use_gps)
 
     try:
         recording_command_line.run()
@@ -448,5 +461,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

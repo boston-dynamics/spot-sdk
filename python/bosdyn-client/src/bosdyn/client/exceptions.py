@@ -81,10 +81,6 @@ class ClientCancelledOperationError(PersistentRpcError):
     """The user cancelled the rpc request."""
 
 
-class InvalidAppTokenError(PersistentRpcError):
-    """The provided app token is invalid."""
-
-
 class InvalidClientCertificateError(PersistentRpcError):
     """The provided client certificate is invalid."""
 

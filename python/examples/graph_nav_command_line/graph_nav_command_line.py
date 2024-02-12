@@ -20,6 +20,7 @@ import grpc
 import bosdyn.client.channel
 import bosdyn.client.util
 from bosdyn.api import geometry_pb2, power_pb2, robot_state_pb2
+from bosdyn.api.gps import gps_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, nav_pb2
 from bosdyn.client.exceptions import ResponseError
 from bosdyn.client.frame_helpers import get_odom_tform_body
@@ -34,8 +35,9 @@ from bosdyn.client.robot_state import RobotStateClient
 class GraphNavInterface(object):
     """GraphNav service command line interface."""
 
-    def __init__(self, robot, upload_path):
+    def __init__(self, robot, upload_path, use_gps=False):
         self._robot = robot
+        self.use_gps = use_gps
 
         # Force trigger timesync.
         self._robot.time_sync.wait_for_sync()
@@ -83,13 +85,17 @@ class GraphNavInterface(object):
             '8': self._navigate_to_anchor,
             '9': self._clear_graph
         }
+        if self.use_gps:
+            self._command_dictionary['g'] = self._navigate_to_gps_coords
 
     def _get_localization_state(self, *args):
         """Get the current localization and state of the robot."""
-        state = self._graph_nav_client.get_localization_state()
+        state = self._graph_nav_client.get_localization_state(request_gps_state=self.use_gps)
         print(f'Got localization: \n{state.localization}')
         odom_tform_body = get_odom_tform_body(state.robot_kinematics.transforms_snapshot)
         print(f'Got robot state in kinematic odometry frame: \n{odom_tform_body}')
+        if self.use_gps:
+            print(f'GPS info:\n{state.gps}')
 
     def _set_initial_localization_fiducial(self, *args):
         """Trigger localization when near a fiducial."""
@@ -244,6 +250,66 @@ class GraphNavInterface(object):
             try:
                 nav_to_cmd_id = self._graph_nav_client.navigate_to_anchor(
                     seed_T_goal.to_proto(), 1.0, command_id=nav_to_cmd_id)
+            except ResponseError as e:
+                print(f'Error while navigating {e}')
+                break
+            time.sleep(.5)  # Sleep for half a second to allow for command execution.
+            # Poll the robot for feedback to determine if the navigation command is complete. Then sit
+            # the robot down once it is finished.
+            is_finished = self._check_success(nav_to_cmd_id)
+
+        # Power off the robot if appropriate.
+        if self._powered_on and not self._started_powered_on:
+            # Sit the robot down + power off after the navigation command is complete.
+            self.toggle_power(should_power_on=False)
+
+    def _navigate_to_gps_coords(self, *args):
+        """Navigates to GPS coordinates using the NavigateToAnchor RPC from arguments.
+           The arguments are directly captured from keyboard input."""
+        coords = self._parse_gps_goal_from_args(args[0])
+        if not coords:
+            return
+        self._navigate_to_parsed_gps_coords(coords[0], coords[1], coords[2])
+
+    def _parse_gps_goal_from_args(self, list_of_strings: list):
+        """ This function first parses the input from cin, which is passed in an argument.
+         The following options are accepted for arguments:
+         [latitude_degrees, longitude_degrees], [latitude_degrees, longitude_degrees, yaw_around_up_radians]
+         Returns a tuple of latitude, longitude and yaw (where yaw is possibly None).
+        """
+        if len(list_of_strings) not in [2, 3]:
+            print('Invalid arguments supplied.')
+            return None
+
+        latitude = float(list_of_strings[0])
+        longitude = longitude = float(list_of_strings[1])
+        yaw = None
+        if len(list_of_strings) == 3:
+            yaw = float(list_of_strings[2])
+        return (latitude, longitude, yaw)
+
+    def _navigate_to_parsed_gps_coords(self, latitude_degrees, longitude_degrees,
+                                       yaw_around_up_radians=None):
+        """Navigates to GPS coordinates using the NavigateToAnchor RPC."""
+        llh = gps_pb2.LLH(latitude=latitude_degrees, longitude=longitude_degrees, height=0.0)
+        gps_params = graph_nav_pb2.GPSNavigationParams(goal_llh=llh)
+        if yaw_around_up_radians:
+            gps_params.goal_yaw.value = yaw_around_up_radians
+
+        if not self.toggle_power(should_power_on=True):
+            print('Failed to power on the robot, and cannot complete navigate to request.')
+            return
+
+        nav_to_cmd_id = None
+        # Navigate to the destination.
+        is_finished = False
+        while not is_finished:
+            # Issue the navigation command about twice a second such that it is easy to terminate the
+            # navigation command (with estop or killing the program).
+            try:
+                nav_to_cmd_id = self._graph_nav_client.navigate_to_anchor(
+                    SE3Pose.from_identity().to_proto(), 1.0, command_id=nav_to_cmd_id,
+                    gps_navigation_params=gps_params)
             except ResponseError as e:
                 print(f'Error while navigating {e}')
                 break
@@ -449,6 +515,12 @@ class GraphNavInterface(object):
                 When a value for z is not specified, we use the current z height.
                 When only yaw is specified, the quaternion is constructed from the yaw.
                 When yaw is not specified, an identity quaternion is used.
+
+            (g) Navigate to in the GPS frame. Your robot must have a GPS payload installed, and must
+                have already recorded a map with GPS data in it.
+                The following options are accepted for arguments:
+                [latitude_degrees, longitude_degrees],
+                [latitude_degrees, longitude_degrees, yaw_around_up_radians]
             (9) Clear the current graph.
             (q) Exit.
             """)
@@ -472,20 +544,24 @@ class GraphNavInterface(object):
                 print(e)
 
 
-def main(argv):
+def main():
     """Run the command-line interface."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-u', '--upload-filepath',
                         help='Full filepath to graph and snapshots to be uploaded.', required=True)
+    parser.add_argument(
+        '-g', '--use-gps', action='store_true', help=
+        'Enable GPS commands for this robot. The robot must have a GPS payload. The map must have been recorded with GPS.'
+    )
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Setup and authenticate the robot.
     sdk = bosdyn.client.create_standard_sdk('GraphNavClient')
     robot = sdk.create_robot(options.hostname)
     bosdyn.client.util.authenticate(robot)
 
-    graph_nav_command_line = GraphNavInterface(robot, options.upload_filepath)
+    graph_nav_command_line = GraphNavInterface(robot, options.upload_filepath, options.use_gps)
     lease_client = robot.ensure_client(LeaseClient.default_service_name)
     try:
         with LeaseKeepAlive(lease_client, must_acquire=True, return_at_exit=True):
@@ -504,7 +580,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    exit_code = 0
-    if not main(sys.argv[1:]):
-        exit_code = 1
-    os._exit(exit_code)  # Exit hard, no cleanup that could block.
+    if not main():
+        sys.exit(1)

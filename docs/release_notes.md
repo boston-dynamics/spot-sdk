@@ -12,9 +12,246 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
-## 3.3.2
+## 4.0.0
 
-No changes from 3.3.1
+### Breaking Changes
+
+The following fields and services have been **removed**.
+
+- `LogAnnotationService`
+- Auth application token, `application_token`, and its corresponding statuses, `STATUS_INVALID_APPLICATION_TOKEN` and `STATUS_EXPIRED_APPLICATION_TOKEN`
+- Robot commands: non-synchronized mobility commands. Top-level feedback messages.
+- Graph Nav map edge annotations: `vel_limit`, `ground_mu_hint`, `grated_floor`
+- SpotCheck feedback: `foot_height_results` and `leg_pair_results`
+
+The mapping between voltage and GPIO pins on the CoreIO has changed as part of the Jetpack 5 update. {5: 133, 12: 19, 24: 148} is now {5: 440, 12: 320, 24: 453}. Please see the updated [CoreIO GPIO](../python/examples/core_io_gpio/README.md) example.
+
+### New Features
+
+#### Autowalk and Missions
+
+- The focus state of the SpotCam PTZ is now configurable using `focus_state`. The tablet allows the user to configure the SpotCam PTZ focus during autowalk recording. Clients that previously were unable to use the `SpotCamAlignment` action wrapper because of issues with auto-focus may now use this action wrapper with the desired manual focus setting.
+
+- The stow behavior of Spot's arm while Spot is navigating to its next `Target` is now configurable using `target_stow_behavior`.
+
+- The gripper behavior of Spot's arm after Spot has executed an action is now configurable using `disable_post_action_close`.
+
+- Support for Choreography has been added to autowalk. Please see the `MissionUploadChoreography` and `ExecuteChoreography` messages. The robot must have a choreography license in order to use this. Please see the [choreography documentation](concepts/choreography/choreographer.md) for more information.
+
+- Support for visualization of route progress with the addition of `CompletedRoute` to the `NavigationFeedbackResponse` message.
+
+- `Prompt` nodes now support custom paramater specification for answers, enabling prompts for any data supported by the Service Customization service. More detailed descriptions of how to specify these parameters can be found in the [service customization documentation](concepts/service_customization.md).
+
+#### Orbit (formerly Scout)
+
+- [**Webhooks**](./concepts/about_orbit.md#orbit-webhooks): Webhooks are a new mechanism for clients to subscribe to real-time Orbit events. In order to receive events, Webhook subscribers must register with Orbit via the settings UI or the new `/webhooks` endpoints documented as part of the [Orbit API](https://dev.bostondynamics.com/docs/orbit/docs). Corresponding helper functions such as `post_webhook` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
+
+- [**Scheduler**](./concepts/about_orbit.md#scheduling-missions): Alongside the new Orbit scheduler, one can also schedule missions via the new `/calendar` set of [Orbit API](https://dev.bostondynamics.com/docs/orbit/docs) endpoints. Corresponsing helper functions such as `post_calendar_event` and `get_calendar` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
+
+#### GPS
+
+Spot can now autonomously navigate and localize on Graph Nav maps that have been recorded while using a Global Positioning System (GPS) receiver. Note that the robot does not consume GPS data directly from GPS receivers. Instead, the GPS receiver must be connected to a payload computer (e.g., Core I/O) that is running software that receives the required information from the GPS receiver, then communicates it to the `Aggregator Service` using the `NewGpsDataRequest` RPC. Extensive documentation is available [here](concepts/autonomy/gps.md); an [example](../python/examples/gps_service/README.md) is also provided. One thing worth noting is that although the example makes use of NMEA messages, there is no reason the payload computer could not receive configure the receiver to output messages in a different format (e.g., GSOF, UBX, OEM7).
+
+#### Robot Mobility
+
+A new enum value, `SWING_HEIGHT_AUTO`, has been added to the `SwingHeight` enum. This setting results in the swing height being automatically adjusted based upon the current state of the robot and its surrounding environment.
+
+A new enum, `DescentPreference`, has been added to the `StairData` message. The user may allow the robot to descend the stairs facing forwards by setting `DESCENT_PREFERENCE_PREFER_REVERSE` or `DESCENT_PREFERENCE_NONE`. This setting can be useful for allowing the robot to descend a staircase where there was not enough room to turn around after the initial descent (e.g., a catwalk).
+
+#### Data Acquisition Live Data
+
+This feature allows payloads to display live data on the tablet and Orbit during teleoperation. The `GetLiveData` RPC has been added to both the Data Acquisition and Data Acquisition Plugin services. Please see the [CoreIO Modem Plugin](../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.md) example. Helper functions have been added to [signal_helpers.py](../python/bosdyn-client/src/bosdyn/client/signals_helpers.py), [unit_helpers.py](../python/bosdyn-client/src/bosdyn/client/units_helpers.py), and `test_signals_helpers.py`. The [DataAcquisitionClient](../python/bosdyn-client/src/bosdyn/client/data_acquisition.py) and [DataAcquisitionPluginService](../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.py) classes have been updated accordingly.
+
+#### Data Acquisition Store
+
+Two RPCs have been added, namely `QueryStoredCaptures` and `QueryMaxCaptureId`. `QueryStoredCaptures` is used to query the DAQ Store for stored data while `QueryMaxCaptureId` returns only the largest capture ID for the associated query. These RPCs are intended to be used instead of the `/v1/data-buffer/daq-data/` endpoint.
+
+#### Spot Arm
+
+- The field, `disable_velocity_limiting`, has been added to the `ArmCartesianCommand` message. Setting this field to `true` **disables** protections that prevent the arm from moving unexpectedly fast. Users must exercise extreme caution when setting this field to `true`.
+- The field, `disable_safety_check`, has been added to the `ArmImpedanceCommand` message. Setting this field to `true` **disables** the cancellation of an arm trajectory for unsafe behaviors. Users must exercise extreme caution when setting this field to `true`.
+- A new enum value, `STATUS_TRAJECTORY_CANCELLED`, has been added to the `Feedback` message of `ArmImpedanceCommand`. This feedback status indicates whether an arm instability was detected, and if it was detected, the command is cancelled. This new status may be useful for debugging purposes.
+
+#### Joint Control
+
+The Joint Control API allows for low-level control of the robot's joints. Note that this API is experimental and license-limited; the robot must have a Joint Level Control license installed in order for this API to be used. Please see the [Wiggle Arm](../python/examples/joint_control/README.md) example for more information.
+
+#### Network Compute Bridge
+
+A new enum value, `NETWORK_COMPUTE_STATUS_ANALYSIS_FAILED`, has been added to the `NetworkComputeStatus` enum. If the Network Compute Bridge Worker fails to process the input image for some reason (e.g., it was blurry), the Worker may use this status to indicate that the action should be retried. If the action is part of an autowalk, the `retry_count` in the `FailureBehavior` message must be > 0.
+
+#### [Service Customization](./concepts/service_customization.md)
+
+Our [service customization helpers](../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.py) now include more helper functions, including:
+
+- Generation of specs from a set of Python-native objects as arguments. See `make_list_param_spec` for an example.
+- Conversions to Python-native values for `DictParams`, `ListParams`, and `OneOfParams`. See `dict_params_to_dict` for an example.
+- Generation of default parameter values from a parameter spec. See `double_spec_to_default` for an example.
+- [Value coercion](./concepts/service_customization.md#parameter-coercion), which allows you to gracefully handle errors from parameter values being out of spec. See `int_param_coerce_to` for an example of this, although one is more likely to use `dict_param_coerce_to`.
+
+#### Choreography
+
+- Added `GetChoreographySequence` RPC to request the full sequence proto with a given name from Spot.
+- Added `ChoreographyTimeAdjust` RPC to slightly modify the start time of the next `ExecuteChoreography` RPC request that will be received by the robot in the future.
+
+#### Safety-Related Stopping Function
+
+Added `ResetSafetyStop` RPC for Safety-Related Stopping Function (SRSF) compatible robots. Robots equipped with this feature will be listed as Safety-Related Stopping Function (SRSF) "Enabled" under the hardware information section found in the "About" page on the robot's admin console.
+
+#### GraphNav
+
+New [configuration options](concepts/autonomy/graphnav_area_callbacks.md#configuring-behavior-for-a-callback) have been added to Area Callbacks to specify GraphNav's behavior with respect to blockages, impairment, entities, and stopping poses for callback regions.  
+
+### Bug Fixes and Improvements
+
+Clients are now configured with a default 5s keep-alive time, which triggers a faster reconnect with the service, when the network connection goes down.
+
+Lease update change: ignore failed old leases in the case the wallet contains the new lease.
+
+A new `SystemState` message that includes the temperature data for the robot's motors has been added to the `RobotState` message. This new message is expected to expand in the future. The documentation for the `Kinematic State` message in [robot_state.proto](../protos/bosdyn/api/robot_state.proto) has been improved.
+
+The SpotCam [CompositorClient](../python/bosdyn-client/src/bosdyn/client/spot_cam/compositor.py) now sets both the `coords` (deprecated in v3.3) and `meter` fields for backwards compability purposes in the `set_ir_meter_overlay` and `set_ir_meter_overlay_async` methods.
+
+In the SpotCam [PtzClient](../python/bosdyn-client/src/bosdyn/client/spot_cam/ptz.py), `focus_mode` overrides `distance` in the `set_ptz_focus_state` and `set_ptz_focus_state_async` methods, so long as it is not set to `None`.
+
+Two new helper functions have been added to the `Vec3` class in [math_helpers.py](../python/bosdyn-client/src/bosdyn/client/math_helpers.py), namely `to_numpy` and `from_numpy`. These functions may be used to convert back and forth between `Vec3` and numpy arrays.
+
+The `get_info` method in the [Mission Client](../python/bosdyn-mission/src/bosdyn/mission/client.py) now supports very large missions which would have previously exceeded the maximum protobuf size. If the robot software version is such that the `GetInfoAsChunks` RPC is unimplemented, `get_info` falls back to the `GetInfo` RPC instead.
+
+For non-Core I/O payloads, it is now recommended to [authenticate and register payloads](../python/examples/self_registration/README.md) by generating a payload credentials file with a unique GUID and secret. The `read_or_create_payload_credentials` and `add_payload_credentials_file_argument` [helper functions](../python/bosdyn-client/src/bosdyn/client/util.py) assist with doing this. Core I/O Extensions should continue reading the existing on-disk file, located at `/opt/payload_credentials/payload_guid_and_secret`.
+
+GraphNav will no longer restart an Area Callback in the middle of a region if it re-routes.  It will instead call a [new Area Callback RPC](concepts/autonomy/graphnav_area_callbacks.md#handling-re-routing) to inform the callback of the change.
+
+Published robot state messages previously contained kinematic information for a non-existant HR0 joint on Spot's arm, set to all zeros. This has been removed and the published kinematic information now only contains existing joints. The number of published joints will be one less than on releases < 4.0. Customers storing local copies of Spot URDF files may need to reacquire them from the robot after updating to 4.0.
+
+### Deprecations
+
+- The protos in the `bosdyn-choreography-protos` package have been moved into [bosdyn-api](https://pypi.org/project/bosdyn-api/); `bosdyn-choreography-protos` is now an empty package that just depends on `bosdyn-api`.
+
+- The `number_of_steps` in the `Staircase` message is deprecated and replaced by the length of the `steps` field in the same message (`Staircase`).
+
+- The `pixel_to_camera_space` method in the `ImageClient` class has been updated such that the `image_proto` argument should now be of type `image_pb2.ImageSource` (previously `image_pb2.Image`). If the method is called with an `image_proto` argument of type `image_pb2.ImageCaptureAndSource` or `image_pb2.ImageResponse`, a warning message is logged.
+
+- **Network Compute Bridge**: The `object_in_image` in the `NetworkComputeResponse` message is deprecated and replaced by `object_in_image` in `OutputImage`
+
+- **Autowalk**: The `root_id` in the `ElementIdentifiers` message is deprecated and replaced by `navigation_id` in the same message.
+
+- **Mission Prompt**: The `options` list in `Prompt` message is deprecated and replaced by the wrapped `OptionsList options_list` field to support answer specification by both `OptionsList options` and `DictParam.Spec custom_params`.
+
+- **Mission Service**: the `impl` field (type `google.protobuf.Any`) in `type` oneof
+
+- `bosdyn.client.robot_id.create_strict_version()` uses deprecated `distutils` functionality. Use `bosdyn.client.robot_id.version_tuple()` instead.
+
+- The kinematic_state's transforms_snapshot now uses "arm0.link_wr1" instead of "link_wr1" for the name of the frame attached to the SpotArm's wr1 link. This is (1) the name used in the URDF description of the robot and (2) the name used in the image service snapshots. We will continue to publish the kinematic_state's snapshot with the deprecated name in the 4.0 release, but it will be removed in a future release.
+
+#### Orbit (formerly Scout)
+
+- The package `bosdyn-scout` is deprecated and replaced with [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/), due to Scout being renamed to Orbit. As a result, the pre-existing examples in `../python/examples/scout/` are moved to `../python/examples/orbit/`. All examples use `bosdyn-orbit` instead of `bosdyn-scout`.
+
+- The `/login` [Orbit API](https://dev.bostondynamics.com/docs/orbit/docs) endpoint is now deprecated. It has been functionally replaced by the `/api_token/authenticate` endpoint. This endpoint allows an admin user to generate an API Access Token with specific permissions for use against the Orbit API. A corresponding `authenticate_with_api_token` helper function in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client has replaced 3.3's `authenticate_with_password` function.
+
+- The `/missions` set of [Orbit API](https://dev.bostondynamics.com/docs/orbit/docs) endpoints are now deprecated in favor of the `/site_walks` endpoints. Corresponding helper functions such as `get_site_walks` in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client support this.
+
+### Known Issues
+
+#### New in 4.0
+
+- There are circular imports between bosdyn/api/gps/registration.proto and bosdyn/api/world_object.proto. This may break proto code generation for some languages (e.g., Go).
+
+#### Preexisting, but undiscovered prior to 4.0
+
+- The /v1/data-buffer/daq-data/ REST endpoint sometimes fails to return all of the requested data. Two workarounds are to (1) modify the query parameters such that a subset of data is returned or (2) use the new QueryStoredCaptures RPC.
+
+#### Preexisting
+
+- Same as 3.3.2.
+
+### Sample Code
+
+#### New
+
+- [Arm Freeze ](../python/examples/arm_freeze/README.md): Command Spot's end-effector to hold a pose expressed in the ODOM and BODY frames,
+  demonstrating the differences of holding a pose relative to and expressed in fixed versus moving frames.
+
+- [Long Arm Cartesian Trajectory](../python/examples/arm_trajectory/README.md): Show how to follow a long cartesian trajectory with the arm.
+
+- [Orbit Schedule Mission](../python/examples/orbit/schedule_mission/README.md): An example to show how to create, edit, and delete a mission calendar event using Orbit web API.
+
+- [Orbit Runs Response](../python/examples/orbit/runs_response/README.md): Tutorial to show how to use the Orbit client to get runs response and process data through the Orbit web API.
+
+- [Orbit Send Robot Back to Dock](../python/examples/orbit/send_robot_back_to_dock/README.md): An example to show how to send robot back to the dock using Orbit web API.
+
+- [Orbit Disable/Enable Calendar Events Based on Weather](../python/examples/orbit/toggle_mission_based_on_weather/README.md): An example to show how to enable or disable calendar events based on weather using Orbit web API.
+
+- [Orbit Webhooks](../python/examples/orbit/webhook/README.md): An example to show how to utilize webhooks using Orbit web API to obtain data.
+
+- [SpotCam Video Recording](../python/examples/spot_cam/README.md): An example that shows how to record a video using SpotCam.
+
+- [DAQ Plugin with Custom Parameters](../python/examples/service_customization/custom_parameters_data_acquisition/README.md): An example that shows how to use custom parameters with a DAQ plugin.
+
+- [Reset Safety Stop](../python/examples/reset_safety_stop/README.md): An example that shows how to reset the primary and redundant safety stops on a Safety-Related Stopping Function (SRSF) configured robot. Robots equipped with this feature will be listed as SRSF "Enabled" under the hardware information section found in the "About" page on the robot's admin console.
+
+- [Metrics Over CoreIO](../python/examples/metrics_over_coreio/README.md): An example that shows to upload metrics to Boston Dynamics via CoreIO LTE or WiFi (using a WiFi dongle).
+
+- [View GraphNav Map in a Web Browser](../python/examples/graph_nav_view_gps/README.md): An example that shows how to view a GraphNav map on Open Street Maps in a Web Browser.
+
+- [GPS Listener](../python/examples/gps_service/README.md): An example that shows how to consume data from a GPS receiver and send it to Spot. The example includes configurations for the Trimble SPS986 and Leica GA03 receivers, though any GPS receiver that publishes the required information could hypothetically be used (your mileage may vary based upon the receiver's performance).
+
+- [Extract Images from Walk](../python/examples/extract_images_from_walk/README.md): An example that shows how to extract all of the record-time images embedded in a .walk and create a .pptx slideshow containing them.
+
+- [Signals CoreIO Modem](../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.md): An example that gets modem data from the CoreIO and sends it to the robot in such a way (using the Signals API) that it is displayed on the tablet and Orbit in real-time.
+
+- [Wiggle Arm](../python/examples/joint_control/README.md): An example that moves the WR0 (one of two wrist joints) and F1X (gripper) joints in a sinusoidal pattern.
+
+- [Extensions](../python/examples/extensions/README.md): A couple of [helper scripts](./payload/docker_containers.md#helper-scripts) have been introduced to help create CORE I/O and Scout Extensions. These can even be used to package any other Dockerized example into an Extension.
+
+#### Updated
+
+- [Area Callbacks](../python/examples/area_callback/README.md): Updated to set the new callback configuration parameters.
+
+- [Orbit Hello](../python/examples/orbit/hello_orbit/README.md): Updated to use `bosdyn-orbit` instead of `bosdyn-scout`.
+
+- [Orbit Export Run Archives](../python/examples/orbit/export_run_archives/README.md): Updated to use `bosdyn-orbit` instead of `bosdyn-scout`.
+
+- [Fan Control Mission Service](../python/examples/fan_command/README.md): FanOffServicer now implements GetRemoteMissionServiceInfo, which prevents a harmless message from being printed when the example is run.
+
+- [GraphNav Command Line](../python/examples/graph_nav_command_line/README.md): Added support for navigating the robot to a given latitude/longitude/yaw. Some new helper functions include `_clear_graph_and_cache`, `_navigate_to_gps_coords`, `_parse_gps_goal_from_args`, and `_navigate_to_parsed_gps_coords`.
+
+- [GraphNav View Map](../python/examples/graph_nav_command_line/README.md): Added two command-line arguments that control whether text for each waypoint and world object should be shown.
+
+- [Arm Impedance Control](../python/examples/arm_impedance_control/README.md): Updated to use "arm0.link_wr1" instead of "link_wr1" for the name of the WR1 frame.
+
+- [BDDF Download](../python/examples/bddf_download/README.md): Updated documentation to indicate that (at most) 1 hour of data may be requested. If the user requests more than 1 hour, an error is now bubbled up through the GUI.
+
+- [Network Compute Bridge Worker (Fire Extinguisher)](../python/examples/network_compute_bridge/fire_extinguisher_server/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5.
+
+- [Network Request Callback](../python/examples/network_request_callback/README.md): The base image in Dockerfile.coreio has been updated to account for a dependency that requires Python 3.10. NetworkRequestCallbackServicer now implements GetRemoteMissionServiceInfo, which prevents a harmless message from being printed when the example is run.
+
+- [Post-Docking Callback (Cloud Upload)](../python/examples/post_docking_callbacks/README.md): FanOffServicer now implements GetRemoteMissionServiceInfo, which prevents a harmless message from being printed when the example is run.
+
+- [Power Off Mission Service Callback](../python/examples/remote_mission_service/README.md): PowerOffServicer now implements GetRemoteMissionServiceInfo, which prevents a harmless message from being printed when the example is run.
+
+- [Ricoh Theta](../python/examples/ricoh_theta/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5. When no password argument is supplied, the default password for the Ricoh Theta now includes only the numeric portion of the Ricoh Theta SSID (as described in the Ricoh Theta documentation).
+
+- [Custom Parameter Image Server](../python/examples/service_customization/custom_parameter_image_server/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5.
+
+- [Custom Parameter Network Compute Bridge Worker](../python/examples/service_customization/custom_parameter_ncb_worker/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5. Specific instructions for how to build the corresponding Spot Extension are now included.
+
+- [Detect and Follow](../python/examples/spot_detect_and_follow/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5. Specific instructions for how to build the corresponding Spot Extension are now included.
+
+- [DAQ Plugin Tester](../python/examples/tester_programs/README.md): The plugin now tests for whether the DAQ plugin is publishing live data.
+
+- [Web Cam Image Service](../python/examples/web_cam_image_service/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5.
+
+- [Fetch Tutorial](python/fetch_tutorial/fetch1.md): The example has been updated such that it no longer uses the `trajectory_command` method, which has been removed. The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5.
+
+- [Self Registration](../python/examples/self_registration/README.md): Updated to generate and read a unique GUID and secret from a payload credentials file, as is now recommended for payload authentication.
+
+- [Payloads](../python/examples/payloads/README.md): Updated to generate and read a unique GUID and secret from a payload credentials file, as is now recommended for payload authentication.
+
+- [SpotCam - Opening .pgm/.raw Files](concepts/data_acquisition_thermal_raw.md): The example code for opening SpotCam .pgm and/or .raw files has been updated to also work for files downloaded from the tablet and/or Scout. Previously, it only worked for files downloaded from the SpotCam.
+
+[**Mission question answerer (updated)**](../python/examples/mission_question_answerer/README.md)
 
 ## 3.3.1
 
@@ -23,7 +260,6 @@ No changes from 3.3.1
 Several protobuf fields or services are scheduled to be removed in the 4.0 release. Please ensure that they are no longer used within your code.
 
 - `LogAnnotationService`
-- `SE3Covariance` fields
 - Auth application token.
 - Robot commands: non-synchronized mobility commands. Top-level feedback messages.
 - Graph Nav map edge annotations: `vel_limit`, `ground_mu_hint`, `grated_floor`
@@ -59,7 +295,7 @@ Same as 3.3.0
 
 [Log Status](../python/examples/log_status/README.md): Show how to query the log status service.
 
-[Scout Export Run Archives](../python/examples/scout/export_run_archives/README.md): Show how to export run archives from Scout for the recent completed missions.
+[Scout Export Run Archives](../python/examples/orbit/export_run_archives/README.md): Show how to export run archives from Scout for the recent completed missions.
 
 [Simple Alert Server](../python/examples/network_compute_bridge/README.md): Additional Network Compute Bridge worker that generates responses with alerts.
 
@@ -80,7 +316,6 @@ Same as 3.3.0
 Several protobuf fields or services are scheduled to be removed in the 4.0 release. Please ensure that they are no longer used within your code.
 
 - `LogAnnotationService`
-- `SE3Covariance` fields
 - Auth application token.
 - Robot commands: non-synchronized mobility commands. Top-level feedback messages.
 - Graph Nav map edge annotations: `vel_limit`, `ground_mu_hint`, `grated_floor`
@@ -143,13 +378,13 @@ Added a new `ChoreographyCommand` RPC to support [interactive choreography moves
 
 Added a new `ChoreographyStatus` RPC so that users can receive feedback on the dance state a robot is in and a robot’s progress in completing a dance or current move(s) in a dance.
 
-Added `exit_state` field in `SequenceInfo` message to specify the exit transition state of the sequence.
-Added `execution_id` field in `ExecuteChoreographyResponse` message with the unique ID for the execution.
-Added `id` field in `MoveParams` message, set by the client or auto-assigned by the service, to be reported in the `ChoreographyStatusResponse` `ActiveMoves` field.
-Added `custom_gait_params` and `leg_joint_params` fields in `MoveParams` object.
-Added `is_looping` field in `MoveInfo` message.
-Added `entrance_state` field in `ChoreographySequence` message to specify an explicit entrance state in the case where the first legs-track move accepts multiple entrance states.
-Animations now support more flexibility to adjusting timing, can specify whether the animation starts from a sit pose, or can specify that an Animation can be used for a custom gait.
+- Added `exit_state` field in `SequenceInfo` message to specify the exit transition state of the sequence.
+- Added `execution_id` field in `ExecuteChoreographyResponse` message with the unique ID for the execution.
+- Added `id` field in `MoveParams` message, set by the client or auto-assigned by the service, to be reported in the `ChoreographyStatusResponse` `ActiveMoves` field.
+- Added `custom_gait_params` and `leg_joint_params` fields in `MoveParams` object.
+- Added `is_looping` field in `MoveInfo` message.
+- Added `entrance_state` field in `ChoreographySequence` message to specify an explicit entrance state in the case where the first legs-track move accepts multiple entrance states.
+- Animations now support more flexibility to adjusting timing, can specify whether the animation starts from a sit pose, or can specify that an Animation can be used for a custom gait.
 
 #### Payloads
 
@@ -158,7 +393,8 @@ New fields in the Payload proto enable a liveness check, similar to a service li
 - `liveness_timeout_secs`: How long payload can be unpingable before a liveness fault is raised.
 - `ipv4_address`: Address for the robot to ping the payload at.
 - `link_speed`: Expected ethernet speed negotiated.
-  If present, the `ipv4_address` field will also be used to detect whether a payload is mounted to the front or rear payload port. If a payload preset has a label "mount_port:rear" and the payload is connected to the front port, it will not be displayed on the registration page. The same is true if there is a preset "mount_port:front" and the payload is connected to the rear port.
+
+If present, the `ipv4_address` field will also be used to detect whether a payload is mounted to the front or rear payload port. If a payload preset has a label "mount_port:rear" and the payload is connected to the front port, it will not be displayed on the registration page. The same is true if there is a preset "mount_port:front" and the payload is connected to the rear port.
 
 #### Images and Data
 
@@ -167,7 +403,9 @@ Added the SpotCamAlignment action wrapper for aligning Spot Cam image captures.
 Images can be stored for Data Acquisition and RemoteGrpc elements in order to aid in editing walks.
 
 Updated the `IrMeterOverlay` Spot Cam message and added a new RPC to get the current overlay.
+
 Added new RPCs for setting and getting the focus state of the Spot Cam PTZ.
+
 Added exposure settings to the `StreamParams` message.
 
 New `AvailableModels` message to describe Network Compute Bridge models available for data acquisition capture.
@@ -215,8 +453,11 @@ When calling the NetworkComputeBridge service, the `input_data` is deprecated in
 #### Deprecated fields and values
 
 **GripperCameraParam**: Renamed `CameraMode` enum values.
+
 **Graph Nav**: The `StraightStaircase` representation of staircases is deprecated and replaced with the new `StaircaseWithLandings`.
+
 **Choreography**; The `precise_timing` in `Animation` message is deprecated and replaced by the more fine-grained control of `timing_adjustability` field.
+
 **Leases**: Use `is_stale` instead of the stale time in the `LeaseResource` message to determine staleness.
 
 #### Python functions
@@ -269,7 +510,7 @@ Some malformed Graph Nav graphs were previously accepted, but would leave the se
 
 [Record Autowalk](../python/examples/record_autowalk/README.md): Create an interface for recording an Autowalk with your keyboard.
 
-[Scout - Hello Scout](../python/examples/scout/hello_scout/README.md): Introductory programming example for the Scout client, which uses the Scout web API.
+[Scout - Hello Scout](../python/examples/orbit/hello_orbit/README.md): Introductory programming example for the Scout client, which uses the Scout web API.
 
 [Service Customization for Image Services](../python/examples/service_customization//custom_parameter_image_server/README.md): Show how to host an image service that contains an image source with custom parameters.
 
@@ -346,7 +587,7 @@ Fixed issues relating to GraphNav Area Callbacks and loop closures where connect
 
 Updated Fetch tutorial with information to run on CORE I/O payload.
 
-Added [Getting Started](concepts/about_scout.md) section in Scout documentation.
+Added [Getting Started](concepts/about_orbit.md) section in Scout documentation.
 
 Removed unused imports in the protobuf files `protos/bosdyn/api/autowalk/walks.proto`, `protos/bosdyn/api/graph_nav/area_callback.proto`, `protos/bosdyn/api/graph_nav/graph_nav.proto`, `protos/bosdyn/api/mission/nodes.proto`.
 
@@ -375,11 +616,11 @@ Same as 3.2.0
 
 #### Autowalk Service
 
-Enables API clients to specify high level autonomous behaviors for Spot using an easily editable format. The autowalk format is a list of actions and their associated locations. Using this service, users can program the robot to “go to location A, perform action A, go to location B, perform action B, etc”. The autowalk service compiles the autowalk into a behavior tree that can then be uploaded to the robot and played using the mission service. Previously this feature was only available on the tablet, but now it is a service for all client applications.
+Enables API clients to specify high level autonomous behaviors for Spot using an easily editable format. The autowalk format is a list of actions and their associated locations. Using this service, users can program the robot to “go to location A, perform action A, go to location B, perform action B, etc.”. The autowalk service compiles the autowalk into a behavior tree that can then be uploaded to the robot and played using the mission service. Previously this feature was only available on the tablet, but now it is a service for all client applications.
 
 #### Arm Impedance Control (Beta)
 
-Enables users to specify virtual springs and forces about the end effector. Users can specify a trajectory that the hand (or something attached to the hand) should follow while being dragged along by those springs. They can also add an additional feed forward wrench (force + torque) that the end effector can apply. This command can be useful for tasks such as inserting a peg into a hole, or sliding along a surface.
+Enables users to specify virtual springs and forces about the end effector. Users can specify a trajectory that the hand (or something attached to the hand) should follow while being dragged along by those springs. They can also add an additional feed-forward wrench (force + torque) that the end effector can apply. This command can be useful for tasks such as inserting a peg into a hole, or sliding along a surface.
 
 Notes:
 
@@ -475,7 +716,7 @@ Added `stair_mode` field in `MobilityParams` with selected option for stairs mod
 Spotcheck:
 
 - Added `STATE_ARM_JOINT_CHECK` in `SpotCheckFeedbackResponse.State` message for arm joint endstops and cross error check being underway.
-- Added `ERROR_ARM_CHECK_COLLISION` and `ERROR_ARM_CHECK_TIMEOUT` enum values in `SpotCheckFeedbackResponse.Error` to flag an arm motion causing collisions (eg. w/ a payload) or timeout during arm joint check.
+- Added `ERROR_ARM_CHECK_COLLISION` and `ERROR_ARM_CHECK_TIMEOUT` enum values in `SpotCheckFeedbackResponse.Error` to flag an arm motion causing collisions (e.g. w/ a payload) or timeout during arm joint check.
 - Added `ERROR_ENCODER_SHIFTED` and `ERROR_COLLISION` enum values in `JointKinematicCheckResult.Error` to flag whether the measured endstops shifted from kin cal or the joint would have a collision.
 - Added `STATUS_CALIBRATION_VERIFICATION_FAILED` enum in `CameraCalibrationFeedbackResponse.Status` to flag Spotcheck failed after the camera calibration.
 
@@ -493,7 +734,7 @@ Added documentation on thermal SpotCAM images [here](concepts/data_acquisition_t
 
 Added `AutowalkClient` to support the new Autowalk functionality
 
-Added `LoggingHandler` class in `data_buffer.py` as a logging system Handler that will publish text to a the data-buffer service
+Added `LoggingHandler` class in `data_buffer.py` as a logging system Handler that will publish text to the data-buffer service
 
 Added `InvalidGravityAlignmentError` error in `map_processing.py` to report if one or more anchoring hints disagrees with gravity.
 
@@ -1050,7 +1291,7 @@ In addition, the communication loss behavior of the arm when it is holding an it
 
 #### Docking
 
-The docking state includes additional “in-between” states, `DOCK_STATUS_UNDOCKING` and `LINK_STATUS_DETECTING` that indicate that a process is still on-going.
+The docking state includes additional “in-between” states, `DOCK_STATUS_UNDOCKING` and `LINK_STATUS_DETECTING` that indicate that a process is still ongoing.
 Additional errors have been added to DockingCommandResponse for particular ways that docking can fail (`STATUS_ERROR_GRIPPER_HOLDING_ITEM`, `STATUS_ERROR_NOT_AVAILABLE`, `STATUS_ERROR_SYSTEM`).
 The feedback also has a new error status: `STATUS_ERROR_NOT_AVAILABLE`.
 See the [protobuf documentation](../protos/bosdyn/api/docking/docking.proto) for more details.
@@ -1271,7 +1512,7 @@ Same as 2.3.0
 
 #### Power Control
 
-New options have been added to the Power Service to allow for power cycling the robot and powering the payload ports or wifi radios on or off. Additional fields have been added to the robot state message to check the payload and wifi power states. Support has also been been added to the `bosdyn.client` command line interface for these commands.
+New options have been added to the Power Service to allow for power cycling the robot and powering the payload ports or wifi radios on or off. Additional fields have been added to the robot state message to check the payload and wifi power states. Support has also been added to the `bosdyn.client` command line interface for these commands.
 
 These new options will only work on some Enterprise Spot robots. Check the HardwareConfiguration message reported by a particular robot to see if it supports them.
 
@@ -1484,7 +1725,7 @@ A starter example which shows how to issue the robot command RPC with a basic ar
 Shows how to issue API commands to stow and unstow the arm.
 
 [**Arm Surface Contact (new)**](../python/examples/arm_surface_contact/README.md)
-Uses the arm surface contact API to request a end effector trajectory move which applies some force to the ground.
+Uses the arm surface contact API to request an end effector trajectory move which applies some force to the ground.
 
 [**Arm Trajectory (new)**](../python/examples/arm_trajectory/README.md)
 Demonstrates how to create an arm command with a position-based trajectory.
@@ -1574,10 +1815,10 @@ When comparing blackboard values, there is a new `HandleStaleness` option to spe
 ### Bug fixes and improvements
 
 **Data Acquisition**
-Data Acquisition Service on robots is now robust to port number changes. The previous work around to this problem was to always specify the same port when starting/restarting a service. Now, the port argument for external api services can use the default, which will choose an available ephemeral port.
+Data Acquisition Service on robots is now robust to port number changes. The previous workaround to this problem was to always specify the same port when starting/restarting a service. Now, the port argument for external api services can use the default, which will choose an available ephemeral port.
 
 **Image Services**
-Robot Cameras image service will respond to GetImage requests with incorrect format (e.g requesting a depth image as format JPEG) using the `STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED`. Previously, this was returned as `STATUS_IMAGE_DATA_ERROR`.
+Robot Cameras image service will respond to GetImage requests with incorrect format (e.g. requesting a depth image as format JPEG) using the `STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED`. Previously, this was returned as `STATUS_IMAGE_DATA_ERROR`.
 
 **The Ricoh Theta image service example improvements**
 
@@ -1643,7 +1884,7 @@ Uses the new data acquisition helpers. The data acquisition tester program has b
 
 #### Spot I/O: [Data Acquisition](concepts/data_acquisition_overview.md)
 
-This release features a new system for acquiring, storing, and retrieving sensor data. It comprises several new services and their associated clients.
+This release features a new system for acquiring, storing, and retrieving sensor data. It consists of several new services and their associated clients.
 
 **Data Acquisition Service**: The coordinating service that will capture images, robot metadata, and delegate to plugins to capture custom sensor data.
 
@@ -1986,7 +2227,7 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 
 Release 2.0.2 contains the same issues as release 2.0.1, listed below.
 
-**If you delete an object from the world object service**, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.
+**If you delete an object from the world object service**, there is a chance that a ListWorldObjects call immediately afterward may still include that object.
 
 - Workaround: wait a short time before expecting the object to be gone.
 
@@ -2043,7 +2284,7 @@ There is a new LicenseClient which can be used to query the license information 
 
 Release 2.0.1 contains the same issues as release 2.0.0, listed below.
 
-**If you delete an object from the world object service**, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.
+**If you delete an object from the world object service**, there is a chance that a ListWorldObjects call immediately afterward may still include that object.
 
 - Workaround: wait a short time before expecting the object to be gone.
 
@@ -2236,7 +2477,7 @@ Robot command client will throw a new error if a frame is specified that the rob
 
 ### Known issues
 
-**If you delete an object from the world object service**, there is a chance that a ListWorldObjects call immediately afterwards may still include that object.
+**If you delete an object from the world object service**, there is a chance that a ListWorldObjects call immediately afterward may still include that object.
 
 - Workaround: wait a short time before expecting the object to be gone.
 
@@ -2285,7 +2526,7 @@ Robot command client will throw a new error if a frame is specified that the rob
 
 [**frame_trajectory_command**](../python/examples/frame_trajectory_command/README.md)
 
-- Example program shows how to retrieve Spot's location in both the visual and odometry frames. Using these frames, the program shows how to build and execute a command to move Spot to that location plus 1.0 in the x axis.
+- Example program shows how to retrieve Spot's location in both the visual and odometry frames. Using these frames, the program shows how to build and execute a command to move Spot to that location plus 1.0 in the x-axis.
 
 [**get_robot_state_async**](../python/examples/get_robot_state_async/README.md)
 
@@ -2391,7 +2632,7 @@ The sample code directory structure has changed to directory-per-example under p
 
 - **logging** demonstrates how to add custom annotations to Spot’s log files.
 
-- **spot_check** demonstrates how to use SpotCheck - Spot’s in-the-field calibration behavior..
+- **spot_check** demonstrates how to use SpotCheck - Spot’s in-the-field calibration behavior.
 
 - **spot_light** is a demo where Spot rotates its body while standing to try to face a flashlight seen in its front cameras.
 

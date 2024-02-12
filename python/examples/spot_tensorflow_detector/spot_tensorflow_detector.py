@@ -237,12 +237,8 @@ class SpotImageCapture:
             time.sleep(sleep_between_capture)
 
 
-def main(argv):
-    """Command line interface.
-
-    Args:
-        argv: List of command-line arguments passed to the program.
-    """
+def main():
+    """Command line interface."""
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--model-path', required=True,
@@ -269,7 +265,7 @@ def main(argv):
     )
 
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     try:
         detection_classes = []
         if options.detection_classes:
@@ -310,5 +306,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

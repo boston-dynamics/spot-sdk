@@ -88,8 +88,8 @@ message ArmParams {
     /// Whether or not to disable the body force limiter running on the robot. By default, this is
     /// on, and the chance that the body falls over because the arm makes contact in the world is
     /// low. If this is purposely disabled (by setting disable_body_force_limiter to True), the arm
-    /// may be able to accelerate faster, and apply more force to the world and to objects than usual,
-    /// but there is also added risk of the robot falling over.
+    /// may be able to accelerate faster, and apply more force to the world and to objects than
+    /// usual, but there is also added risk of the robot falling over.
     google.protobuf.BoolValue disable_body_force_limiter = 1;
 }
 
@@ -185,8 +185,11 @@ message NamedArmPositionsCommand {
             STATUS_COMPLETE = 1;
             // Robot is re-configuring arm to get to desired configuration.
             STATUS_IN_PROGRESS = 2;
-            // Some positions may refuse to execute if the gripper is holding an item, for example
-            // stow.
+            // Some requests may not execute if the gripper is holding an item declared not
+            // stowable, e.g. POSITIONS_STOW with carry_state == CARRY_STATE_CARRIABLE. In these
+            // situations, Spot will instead run an ArmStopCommand request while the blocking
+            // condition remains true.  Clearing the condition will cause the request to proceed and
+            // the arm will start moving.
             STATUS_STALLED_HOLDING_ITEM = 3;
         }
         // Current status of the request.
@@ -246,9 +249,10 @@ message ArmCartesianCommand {
         // robot will move towards the specified pose. If no pose is provided (i.e. no value is set
         // for this oneof), a default one will be chosen. If the user wishes to explicitly tell the
         // robot to not prefer any pose, (useful if doing a local move, and the user wants to avoid
-        // large joint motions) they should set ignore_joint_configuration to be true. The robot's
-        // behavior around singularities will then be to simply minimize joint velocity, resulting
-        // in the robot coming in and out of the singularity with similar joint angles
+        // large joint motions) they should set force_remain_near_current_joint_configuration to be
+        // true. The robot's behavior around singularities will then be to simply minimize joint
+        // velocity, resulting in the robot coming in and out of the singularity with similar joint
+        // angles
         oneof joint_configuration {
             bool force_remain_near_current_joint_configuration = 17;
             ArmJointPosition preferred_joint_configuration = 18;
@@ -275,6 +279,13 @@ message ArmCartesianCommand {
         // This trajectory is optional if requesting a pure pose at the end-effector,
         // otherwise required for force or mixed force/position end-effector requests.
         WrenchTrajectory wrench_trajectory_in_task = 14;
+
+        // Disables protection that prevents the arm from moving unexpectedly fast. If you are
+        // commanding an especially aggressive arm trajectory, you may need to disable this
+        // protection.
+        // WARNING: setting `disable_velocity_limiting` to true may result in fast arm motions!
+        google.protobuf.BoolValue disable_velocity_limiting = 21;
+
 
         reserved 1, 7;
     }
@@ -326,25 +337,25 @@ message ArmJointMoveCommand {
             STATUS_COMPLETE = 1;
             // Robot is re-configuring arm to get to desired configuration.
             STATUS_IN_PROGRESS = 2;
-            // The arm has stopped making progress towards the goal. This could be because it is 
+            // The arm has stopped making progress towards the goal. This could be because it is
             // avoiding a collision or joint limit.
             STATUS_STALLED = 3;
         }
         // Current status of the request.
         Status status = 1;
-    
+
         enum PlannerStatus {
             // PLANNER_STATUS_UNKNOWN should never be used. If used, an internal error has happened.
             PLANNER_STATUS_UNKNOWN = 0;
             // A solution passing through the desired points and obeying the constraints was found.
             PLANNER_STATUS_SUCCESS = 1;
             // The planner had to modify the desired points in order to obey the constraints.  For
-            // example, if you specify a 1 point trajectory, and tell it to get there in a really short
-            // amount of time, but haven't set a high allowable max velocity / acceleration, the planner
-            // will do its best to get as close as possible to the final point, but won't reach it. In
-            // situations where we've modified you last point, we append a minimum time trajectory (that
-            // obeys the velocity and acceleration limits) from the planner's final point to the requested
-            // final point.
+            // example, if you specify a 1 point trajectory, and tell it to get there in a really
+            // short amount of time, but haven't set a high allowable max velocity / acceleration,
+            // the planner will do its best to get as close as possible to the final point, but
+            // won't reach it. In situations where we've modified you last point, we append a
+            // minimum time trajectory (that obeys the velocity and acceleration limits) from the
+            // planner's final point to the requested final point.
             PLANNER_STATUS_MODIFIED = 2;
             // Failed to compute a valid trajectory, will go to first point instead. It is possible
             // that our optimizer till fail to solve the problem instead of returning a sub-optimal
@@ -354,13 +365,15 @@ message ArmJointMoveCommand {
         // Current status of the trajectory planner.
         PlannerStatus planner_status = 2;
 
-        // Based on the user trajectory, the planned knot points that obey acceleration and 
-        // velocity constraints. If these knot points don't match the requested knot points, 
-        // consider increasing velocity/acceleration limits, and/or staying further away from 
+        // Based on the user trajectory, the planned knot points that obey acceleration and
+        // velocity constraints. If these knot points don't match the requested knot points,
+        // consider increasing velocity/acceleration limits, and/or staying further away from
         // joint position limits. In situations where we've modified you last point, we append
         // a minimum time trajectory (that obeys the velocity and acceleration limits) from the
         // planner's final point to the requested final point. This means that the length of
-        // planned_points may be one point larger than the requested.
+        // planned_points may be one point larger than the requested. The planner works on a
+        // moving window of up to 10 points from the input trajectory, so the length of planned
+        // points will be at most 10, and its contents will change over time for long trajectories.
         repeated ArmJointTrajectoryPoint planned_points = 3;
 
         // Returns amount of time remaining until the joints are at the goal position.  For
@@ -518,18 +531,18 @@ message ArmStopCommand {
     }
 }
 
-// Specify impedance about the end-effector. Users can set up frames along with stiffness and damping
-// parameters to control how the end-effector will respond to external contact as it moves along a 
-// specified trajectory
+// Specify impedance about the end-effector. Users can set up frames along with stiffness and
+// damping parameters to control how the end-effector will respond to external contact as it moves
+// along a specified trajectory
 message ArmImpedanceCommand {
     message Request {
-        // Name of the frame relative to which the task frame is defined for this command. 
+        // Name of the frame relative to which the task frame is defined for this command.
         // Common frames for this include "odom", "vision", "body", and "flat_body".
         string root_frame_name = 1;
 
         // This transform specifies the pose of the task frame relative to the root frame.
         // If unset, it defaults to identity, and the task frame coincides with the root frame.
-        // The `desired_tool` frame will be specified relative to the task frame. For peg in 
+        // The `desired_tool` frame will be specified relative to the task frame. For peg in
         // hole tasks for example, the task frame could be a frame attached to the top of the
         // hole with z-axis aligned with the hole axis, and the `desired_tool` frame could
         // move in z to direct the peg deeper into the hole.
@@ -546,33 +559,42 @@ message ArmImpedanceCommand {
         // the gripper's palm plate.
         SE3Pose wrist_tform_tool = 3;
 
-        // Trajectory of where we want the tool to be relative to the task frame. Note that this `desired_tool` 
-        // frame is not the same as the tool frame attached to the wrist link. If our tool deviates from this 
-        // `desired_tool` pose, it will be subject to a wrench determined by our stiffness and damping matrices.
+        // Trajectory of where we want the tool to be relative to the task frame. Note that this
+        // `desired_tool` frame is not the same as the tool frame attached to the wrist link. If our
+        // tool deviates from this `desired_tool` pose, it will be subject to a wrench determined by
+        // our stiffness and damping matrices.
         SE3Trajectory task_tform_desired_tool = 4;
 
-        // Feed forward wrench to apply at the tool, expressed with respect to the `desired_tool` frame
+        // Feed forward wrench to apply at the tool, expressed with respect to the `desired_tool`
+        // frame
         Wrench feed_forward_wrench_at_tool_in_desired_tool = 5;
 
-        // Stiffness matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6 doubles,
-        // representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (N/m, N/m, N/m, Nm/rad, Nm/rad, Nm/rad).
-        // All other entries will be set to 0. All stiffness values along the diagonal should be non-negative.
+        // Stiffness matrix in the `desired_tool` frame. The matrix is parameterized by a vector of
+        // 6 doubles, representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (N/m, N/m, N/m,
+        // Nm/rad, Nm/rad, Nm/rad). All other entries will be set to 0. All stiffness values along
+        // the diagonal should be non-negative.
         Vector diagonal_stiffness_matrix = 6;
 
-        // Damping matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6 doubles,
-        // representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (Ns/m, Ns/m, Ns/m, Nms/rad, Nms/rad, Nms/rad)
-        // All other entries will be set to 0. All damping values along the diagonal should be non-negative.
+        // Damping matrix in the `desired_tool` frame. The matrix is parameterized by a vector of 6
+        // doubles, representing the diagonal of this 6x6 matrix: [x,y,z,tx,ty,tz] (Ns/m, Ns/m,
+        // Ns/m, Nms/rad, Nms/rad, Nms/rad) All other entries will be set to 0. All damping values
+        // along the diagonal should be non-negative.
         Vector diagonal_damping_matrix = 7;
 
-        // Maximum force magnitude in Newtons we're allowed to exert. If the tool deviates such that the
-        // magnitude of the requested force would exceed this threshold, saturate the requested force.
-        // If this value is not set, a default of 60N will be used.
+        // Maximum force magnitude in Newtons we're allowed to exert. If the tool deviates such that
+        // the magnitude of the requested force would exceed this threshold, saturate the requested
+        // force. If this value is not set, a default of 60N will be used.
         google.protobuf.DoubleValue max_force_mag = 8;
 
-        // Maximum torque magnitude in Newton meters we're allowed to exert. If the tool deviates such
-        // that the magnitude of the requested torque would exceed this threshold, saturate the
+        // Maximum torque magnitude in Newton meters we're allowed to exert. If the tool deviates
+        // such that the magnitude of the requested torque would exceed this threshold, saturate the
         // requested torque. If this value is not set, a default of 15Nm will be used.
         google.protobuf.DoubleValue max_torque_mag = 9;
+
+        // Set to True to disable cancelling the trajectory for unsafe behaviors. NOTE: If
+        // disable_safety_check is set to True, the robot may damage itself or the environment.
+        // Extreme caution should be used when setting disable_safety_check to True.
+        google.protobuf.BoolValue disable_safety_check = 10;
 
     }
 
@@ -588,6 +610,9 @@ message ArmImpedanceCommand {
             // The arm has stopped making progress to the goal and the measured tool frame is far
             // from the `desired_tool` along directions where we expect good tracking
             STATUS_TRAJECTORY_STALLED = 3;
+            // Detected an arm instability, so the commanded motion was cancelled. Consider lowering
+            // stiffness or lowering both stiffness and damping to improve stability.
+            STATUS_TRAJECTORY_CANCELLED = 4;
         }
         // Current status of the pose trajectory.
         Status status = 1;
@@ -603,7 +628,7 @@ message ArmImpedanceCommand {
         //
         // While these poses can be used in any way the user sees fit, here are some useful ideas:
         // desired_tool_tform_tool: The current measured tool pose relative to the `desired_tool`
-        //                          frame [meters, quaternion]. This is our "tracking error". 
+        //                          frame [meters, quaternion]. This is our "tracking error".
         //                          Multiplying this error by `diagonal_stiffness_matrix` should
         //                          yield `commanded_wrench_from_stiffness_at_tool_in_desired_tool`.
         // desired_tool_at_end_tform_tool: The current measured tool pose relative to the

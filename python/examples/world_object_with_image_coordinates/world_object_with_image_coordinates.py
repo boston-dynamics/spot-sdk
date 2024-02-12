@@ -16,11 +16,11 @@ from bosdyn.client.world_object import WorldObjectClient, make_add_world_object_
 from bosdyn.util import now_timestamp
 
 
-def main(argv):
+def main():
     """An example using the API demonstrating adding image coordinates to the world object service."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Create robot object with a world object client.
     sdk = bosdyn.client.create_standard_sdk('WorldObjectClient')
@@ -60,5 +60,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

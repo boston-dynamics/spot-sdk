@@ -848,10 +848,8 @@ def run_gcode_program(config):
             odom_T_walk_se2 = SE2Pose.flatten(odom_T_walk)
 
             # Command the robot to go to the end point.
-            walk_cmd = RobotCommandBuilder.trajectory_command(goal_x=odom_T_walk_se2.x,
-                                                              goal_y=odom_T_walk_se2.y,
-                                                              goal_heading=odom_T_walk_se2.angle,
-                                                              frame_name='odom')
+            walk_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
+                odom_T_walk_se2.to_proto(), frame_name='odom')
             end_time = 15.0
             #Issue the command to the robot
             command_client.robot_command(command=walk_cmd, end_time_secs=time.time() + end_time)
@@ -868,13 +866,13 @@ def run_gcode_program(config):
         robot.logger.info('Robot safely powered off.')
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
     parser.add_argument('--test-file-parsing', action='store_true',
                         help='Try parsing the gcode, without executing on a robot')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
     try:
         run_gcode_program(options)
         return True
@@ -885,5 +883,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

@@ -17,7 +17,7 @@ import bosdyn.client.util
 from bosdyn.client.image import ImageClient
 
 
-def main(argv):
+def main():
     # Parse args
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -29,7 +29,7 @@ def main(argv):
                         ])
     parser.add_argument('--auto-rotate', help='rotate right and front images to be upright',
                         action='store_true')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     if options.to_depth:
         sources = [options.camera + '_depth', options.camera + '_visual_in_depth_frame']
@@ -93,5 +93,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

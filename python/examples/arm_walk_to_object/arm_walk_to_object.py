@@ -182,7 +182,7 @@ def arg_float(x):
     return x
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -190,7 +190,7 @@ def main(argv):
                         default='frontleft_fisheye_image')
     parser.add_argument('-d', '--distance', help='Distance from object to walk to (meters).',
                         default=None, type=arg_float)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     try:
         walk_to_object(options)
@@ -202,5 +202,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

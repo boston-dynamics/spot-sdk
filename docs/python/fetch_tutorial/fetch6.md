@@ -240,7 +240,7 @@ services:
 </code></pre>
 
 To make updating and building our extension easy, we're going to create a script that builds the extension. Make (or <a href="files/coreio_extension/create_extension.sh">download</a>) the following `create_extension.sh` script.
-You'll see this this script copies over the latest versions of the network compute script and the ML models. The models are put into a `data` folder that is included in the spot extension, then mounted in the Docker image at run time as specified in the `docker-compose.yml` file.
+You'll see this script copies over the latest versions of the network compute script and the ML models. The models are put into a `data` folder that is included in the spot extension, then mounted in the Docker image at run time as specified in the `docker-compose.yml` file.
 
 <pre><code class="language-bash wrap">#!/bin/bash -e
 
@@ -286,7 +286,7 @@ Don't forget to make the script executable.
 chmod +x create_extension.sh
 </code></pre>
 
-Lets build the Spot Extension!
+Let's build the Spot Extension!
 
 <pre><code class="language-bash wrap">cd ~/fetch/coreio_extension
 ./create_extension.sh

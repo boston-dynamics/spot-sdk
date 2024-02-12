@@ -16,11 +16,11 @@ from bosdyn.api import world_object_pb2
 from bosdyn.client.world_object import WorldObjectClient
 
 
-def main(argv):
+def main():
     """An example using the API to list and get specific objects."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     # Create robot object with a world object client.
     sdk = bosdyn.client.create_standard_sdk('WorldObjectClient')
@@ -69,5 +69,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

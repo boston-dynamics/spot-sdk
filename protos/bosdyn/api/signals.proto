@@ -1,0 +1,113 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option java_outer_classname = "SignalsProto";
+
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/alerts.proto";
+import "bosdyn/api/units.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+// Signal display information.
+message SignalDisplayInfo {
+  // Optional display name typically used for signal acronyms or abbreviations.
+  // Ex: "PT1" (short name)
+  // If unset, no name will be displayed.
+  string name = 1;
+
+  // An optional description that provides additional information about the signal.
+  // Ex: "Pressure Transducer 1" (long name)
+  // If unset, no description will be displayed.
+  string description = 2;
+
+  // This is an optional sorting hint for how to display a set of signals.
+  // If unset, the list will be sorted alphabetically by name or id.
+  int64 order = 3;
+}
+
+// Sensor output specification.
+message SensorOutputSpec {
+    // Min and max (lower and upper) range of the sensor.
+    bosdyn.api.Bounds bounds = 1; // Ex: 0.0 - 100.0 psia
+    google.protobuf.DoubleValue resolution = 2; // Ex: 0.02 (+/-)
+
+    // The units of the sensor data.
+    Units units = 3; // Ex: "psia"
+
+    // The sample rate of the sensor.
+    google.protobuf.DoubleValue sample_rate = 4; // Ex: 0.5 Hz
+}
+
+// Alert condition specifications for a double, int, or boolean signal.
+// Ex 1: "Max Warning Threshold" (int signal)
+// - alert_data.severity: SEVERITY_LEVEL_WARN
+// - min: 10.0
+// If the value is <= 10, then SEVERITY_LEVEL_WARN.
+
+// Ex 2: "Critical Bounds" (double signal)
+// - alert_data.severity: SEVERITY_LEVEL_CRITICAL
+// - bounds.lower: 90.0
+// - bounds.upper: 100.0
+// If the value is at or between 90.0 and 100.0, then SEVERITY_LEVEL_CRITICAL.
+
+// Ex 3: "Critical Condition" (boolean signal)
+// - alert_data.severity: SEVERITY_LEVEL_CRITICAL
+// - condition: false
+// If the value is false, then SEVERITY_LEVEL_CRITICAL.
+message AlertConditionSpec {
+    // Indicate severity if thresholds are met or exceeded.
+    AlertData alert_data = 1;
+
+    // Use min, max, and bounds fields for double and int signals.
+    // Use condition field for boolean signals.
+    oneof type {
+        // If the signal value is <= the min, the condition is met.
+        double min = 2;
+        // If the signal value is >= the max, the condition is met.
+        double max = 3;
+        // If the signal value is >= the lower bound and <= the upper bound, the condition is met.
+        bosdyn.api.Bounds bounds = 4;
+        // If boolean signal value is false, and the condition is false, the condition is met.
+        bool condition = 5;
+    }
+}
+
+// The signal specification.
+message SignalSpec {
+    SignalDisplayInfo info = 1;
+    SensorOutputSpec sensor = 2;
+    // A signal can have multiple alert conditions.
+    // If multiple conditions are simultaneously met,
+    // the higher severity condition or first in the list will be the accepted alert state.
+    repeated AlertConditionSpec alerts = 3;
+}
+
+// The recorded signal data.
+message SignalData {
+    message Data {
+        oneof value {
+            double double = 1;
+            int64 int = 2;
+            string string = 3;
+            bool bool = 4;
+        }
+    }
+
+    Data data = 1;
+
+    // Optional timestamp for when the data was collected.  If unset, the RPC time will be used.
+    google.protobuf.Timestamp timestamp = 2;
+}
+
+// The signal specification and the recorded data.
+message Signal {
+    SignalSpec signal_spec = 1;
+    SignalData signal_data = 2;
+}

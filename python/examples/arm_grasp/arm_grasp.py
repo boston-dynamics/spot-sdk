@@ -119,7 +119,7 @@ def arm_object_grasp(config):
 
         robot.logger.info(
             f'Picking object at image location ({g_image_click[0]}, {g_image_click[1]})')
-        robot.logger.info(f'Picking object at image location (%s, %s)', g_image_click[0],
+        robot.logger.info('Picking object at image location (%s, %s)', g_image_click[0],
                           g_image_click[1])
 
         pick_vec = geometry_pb2.Vec2(x=g_image_click[0], y=g_image_click[1])
@@ -265,7 +265,7 @@ def add_grasp_constraint(config, grasp, robot_state_client):
         constraint.squeeze_grasp.SetInParent()
 
 
-def main(argv):
+def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -283,7 +283,7 @@ def main(argv):
         action='store_true')
     parser.add_argument('-s', '--force-squeeze-grasp',
                         help='Force the robot to use a squeeze grasp', action='store_true')
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     num = 0
     if options.force_top_down_grasp:
@@ -309,5 +309,5 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

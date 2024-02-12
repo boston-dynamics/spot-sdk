@@ -14,7 +14,7 @@ This section describes two ways to manage docker containers on a computation pay
 
 In Spot release 2.1, Spot CORE comes preloaded with [Portainer](https://www.portainer.io) software to manage the docker containers. Portainer is a complete software solution for container management to speed up software deployments and troubleshooting on the Spot CORE. It is the recommended method for managing docker containers on Spot CORE. We also recommend using Portainer and following these instructions with other computation payloads as well.
 
-Check the Spot CORE version to make sure it is 2.1 or higher by ssh-ing onto the Spot CORE and running `cat /etc/spotcore-release`. If it is not up to date, upgrade to the latest Spot CORE release by following the [instructions to upgrade](https://support.bostondynamics.com/s/article/How-to-update-Spot-CORE-software).
+Check the Spot CORE version to make sure it is 2.1 or higher by ssh-ing onto the Spot CORE and running `cat /etc/spotcore-release`. If it is not up-to-date, upgrade to the latest Spot CORE release by following the [instructions to upgrade](https://support.bostondynamics.com/s/article/How-to-update-Spot-CORE-software).
 
 If you are having issues with Portainer running on the Spot CORE, refer to the support site [Spot CORE payload reference](https://support.bostondynamics.com/s/article/Spot-CORE-payload-reference)
 

@@ -29,7 +29,7 @@ g_mouse_pos = None
 # Also sets the auto-exposure to that position.
 
 
-def main(argv):
+def main():
     # Parse args
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -39,7 +39,7 @@ def main(argv):
     parser.add_argument('-w', '--window-size', help='Set the ROI window size, valid options: [1-8]',
                         type=int)
 
-    options = parser.parse_args(argv)
+    options = parser.parse_args()
 
     if options.window_size:
         if options.window_size < 1 or options.window_size > 8:
@@ -182,5 +182,5 @@ def draw_lines(image_title, img, mouse_pos):
 
 
 if __name__ == '__main__':
-    if not main(sys.argv[1:]):
+    if not main():
         sys.exit(1)

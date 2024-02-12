@@ -52,7 +52,7 @@ class ResourceAlreadyClaimedError(LeaseResponseError):
 
 
 class RevokedLeaseError(LeaseResponseError):
-    """Lease is stale because the lease holder did not check in regularly enough."""
+    """Lease is stale because the lease-holder did not check in regularly enough."""
 
 
 class UnmanagedResourceError(LeaseResponseError):
@@ -135,14 +135,11 @@ class Lease(object):
 
     Args:
         lease_proto: bosdyn.api.Lease protobuf object.
+    Raises:
+        ValueError if lease_proto is not present or valid.
     """
 
     def __init__(self, lease_proto, ignore_is_valid_check=False):
-        """Initializes a Lease object.
-
-        Raises:
-            ValueError if lease_proto is not present or valid.
-        """
         if not ignore_is_valid_check and not self.is_valid_proto(lease_proto):
             raise ValueError('invalid lease_proto: {}'.format(lease_proto))
         self.lease_proto = lease_proto
@@ -289,6 +286,17 @@ class Lease(object):
 
 
 class LeaseState(object):
+    """State of lease ownership in the wallet.
+
+    Args:
+        lease_status(LeaseState.Status): The ownership status of the lease.
+        lease_owner(lease_pb2.LeaseOwner): The name of the owner of the lease.
+        lease (Lease): The original lease used to initialize the LeaseState, before
+                       applying any subleasing/incrementing.
+        lease_current(Lease): The newest version of the lease (subleased, and
+                              incremented from the original lease).
+        client_name(string): The name of the client using this lease.
+    """
 
     class Status(enum.Enum):
         UNOWNED = 0
@@ -306,16 +314,7 @@ class LeaseState(object):
 
     def __init__(self, lease_status, lease_owner=None, lease=None, lease_current=None,
                  client_name=None):
-        """
-        Args:
-            lease_status(LeaseState.Status): The ownership status of the lease.
-            lease_owner(lease_pb2.LeaseOwner): The name of the owner of the lease.
-            lease (Lease): The original lease used to initialize the LeaseState, before
-                           applying any subleasing/incrementing.
-            lease_current(Lease): The newest version of the lease (subleased, and
-                                  incremented from the original lease).
-            client_name(string): The name of the client using this lease.
-        """
+
         self.lease_status = lease_status
         self.lease_owner = lease_owner
         self.lease_original = lease
@@ -349,10 +348,16 @@ class LeaseState(object):
         """
         if lease_use_result.status == lease_use_result.STATUS_OLDER:
             if self.lease_current:
-                attempted_lease = Lease(lease_use_result.attempted_lease)
-                if attempted_lease.compare(self.lease_current) is Lease.CompareResult.SAME:
-                    return LeaseState(LeaseState.Status.OTHER_OWNER,
-                                      lease_owner=lease_use_result.owner)
+                latest_known_lease = Lease(lease_use_result.latest_known_lease)
+                if latest_known_lease.is_valid_lease():
+                    cmp = self.lease_current.compare(latest_known_lease)
+                    if cmp is Lease.CompareResult.NEWER or cmp is Lease.CompareResult.SAME:
+                        # The attempted lease was older, but the lease in the wallet has been updated
+                        # in the meantime to something that is newer than what the robot has seen, so
+                        # this OLDER result is no longer relevant.
+                        return self
+                # The lease from the lease wallet was an older lease.
+                return LeaseState(LeaseState.Status.OTHER_OWNER, lease_owner=lease_use_result.owner)
         elif lease_use_result.status == lease_use_result.STATUS_WRONG_EPOCH:
             if self.lease_current:
                 attempted_lease = Lease(lease_use_result.attempted_lease)
@@ -837,10 +842,10 @@ def add_lease_wallet_processors(client, lease_wallet, resource_list=None):
 class LeaseKeepAlive(object):
     """LeaseKeepAlive issues lease liveness checks on a background thread.
 
-    The robot's lease system expects lease holders to check in at a regular
+    The robot's lease system expects lease-holders to check in at a regular
     cadence. If the check-ins do not happen, the robot will treat it as a
     communications loss. Typically this will result in the robot stopping,
-    powering off, and the lease holder getting their lease revoked.
+    powering off, and the lease-holder getting their lease revoked.
 
     Using a LeaseKeepAlive object hides most of the details of issuing the
     lease liveness check. Developers can also manage liveness checks directly
