@@ -50,7 +50,7 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="concepts/about_orbit.html">About Orbit(formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -167,7 +167,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../python/examples/arm_wasd/README.html">Arm WASD</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../python/examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -559,10 +558,6 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>A new enum value, <code class="docutils literal notranslate"><span class="pre">STATUS_TRAJECTORY_CANCELLED</span></code>, has been added to the <code class="docutils literal notranslate"><span class="pre">Feedback</span></code> message of <code class="docutils literal notranslate"><span class="pre">ArmImpedanceCommand</span></code>. This feedback status indicates whether an arm instability was detected, and if it was detected, the command is cancelled. This new status may be useful for debugging purposes.</p></li>
 </ul>
 </section>
-<section id="joint-control">
-<h4>Joint Control<a class="headerlink" href="#joint-control" title="Permalink to this heading"></a></h4>
-<p>The Joint Control API allows for low-level control of the robot’s joints. Note that this API is experimental and license-limited; the robot must have a Joint Level Control license installed in order for this API to be used. Please see the <a class="reference internal" href="../python/examples/joint_control/README.html"><span class="doc">Wiggle Arm</span></a> example for more information.</p>
-</section>
 <section id="network-compute-bridge">
 <h4>Network Compute Bridge<a class="headerlink" href="#network-compute-bridge" title="Permalink to this heading"></a></h4>
 <p>A new enum value, <code class="docutils literal notranslate"><span class="pre">NETWORK_COMPUTE_STATUS_ANALYSIS_FAILED</span></code>, has been added to the <code class="docutils literal notranslate"><span class="pre">NetworkComputeStatus</span></code> enum. If the Network Compute Bridge Worker fails to process the input image for some reason (e.g., it was blurry), the Worker may use this status to indicate that the action should be retried. If the action is part of an autowalk, the <code class="docutils literal notranslate"><span class="pre">retry_count</span></code> in the <code class="docutils literal notranslate"><span class="pre">FailureBehavior</span></code> message must be &gt; 0.</p>
@@ -670,7 +665,6 @@ demonstrating the differences of holding a pose relative to and expressed in fix
 <li><p><a class="reference internal" href="../python/examples/gps_service/README.html"><span class="doc">GPS Listener</span></a>: An example that shows how to consume data from a GPS receiver and send it to Spot. The example includes configurations for the Trimble SPS986 and Leica GA03 receivers, though any GPS receiver that publishes the required information could hypothetically be used (your mileage may vary based upon the receiver’s performance).</p></li>
 <li><p><a class="reference internal" href="../python/examples/extract_images_from_walk/README.html"><span class="doc">Extract Images from Walk</span></a>: An example that shows how to extract all of the record-time images embedded in a .walk and create a .pptx slideshow containing them.</p></li>
 <li><p><a class="reference internal" href="../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.html"><span class="doc">Signals CoreIO Modem</span></a>: An example that gets modem data from the CoreIO and sends it to the robot in such a way (using the Signals API) that it is displayed on the tablet and Orbit in real-time.</p></li>
-<li><p><a class="reference internal" href="../python/examples/joint_control/README.html"><span class="doc">Wiggle Arm</span></a>: An example that moves the WR0 (one of two wrist joints) and F1X (gripper) joints in a sinusoidal pattern.</p></li>
 <li><p><a class="reference internal" href="../python/examples/extensions/README.html"><span class="doc">Extensions</span></a>: A couple of <a class="reference external" href="./payload/docker_containers.html#helper-scripts">helper scripts</a> have been introduced to help create CORE I/O and Scout Extensions. These can even be used to package any other Dockerized example into an Extension.</p></li>
 </ul>
 </section>

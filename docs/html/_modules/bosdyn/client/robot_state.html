@@ -48,7 +48,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit(formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -165,7 +165,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">Arm WASD</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -621,26 +620,6 @@
         <span class="k">return</span> <span class="n">robot_state_pb2</span><span class="o">.</span><span class="n">RobotLinkModelRequest</span><span class="p">(</span><span class="n">link_name</span><span class="o">=</span><span class="n">link_name</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="RobotStateStreamingClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html#bosdyn.client.robot_state.RobotStateStreamingClient">[docs]</a><span class="k">class</span> <span class="nc">RobotStateStreamingClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for the RobotState service.</span>
-<span class="sd">    </span>
-<span class="sd">    This client is in BETA and may undergo changes in future releases.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot-state-streaming&#39;</span>
-    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.RobotStateStreamingService&#39;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">RobotStateStreamingClient</span><span class="p">,</span>
-              <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">robot_state_service_pb2_grpc</span><span class="o">.</span><span class="n">RobotStateStreamingServiceStub</span><span class="p">)</span>
-
-<div class="viewcode-block" id="RobotStateStreamingClient.get_robot_state_stream"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_state.html#bosdyn.client.robot_state.RobotStateStreamingClient.get_robot_state_stream">[docs]</a>    <span class="k">def</span> <span class="nf">get_robot_state_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an iterator providing current state updates of the robot.&quot;&quot;&quot;</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_robot_state_stream_request</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetRobotStateStream</span><span class="p">(</span><span class="n">req</span><span class="p">)</span></div>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_robot_state_stream_request</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">robot_state_pb2</span><span class="o">.</span><span class="n">RobotStateStreamRequest</span><span class="p">()</span></div>
 
 
 <span class="k">def</span> <span class="nf">_get_robot_state_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>

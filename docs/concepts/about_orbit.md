@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # About Orbit (formerly Scout)
 
-Orbit is a collection of web services for fleet management and data acquisition deployed to an on-site server. Learn more about the product and deployment [here](https://www.bostondynamics.com/products/spot/orbit).
+Orbit is a collection of web services for site awareness, fleet management and data centralization deployed to an on-premise or cloud server. Learn more about the product and deployment [here](https://www.bostondynamics.com/products/orbit).
 
 Orbit collects, organizes, and stores data from every mission and teleoperation session executed by a Spot fleet - this information is served to users through a programmatic Application Programming Interface (API) called the Orbit API.
 
@@ -24,6 +24,7 @@ For a complete list of resources and their methods, see the <a href="../orbit/do
 
 - <a href="../orbit/docs.html">Orbit API REST Reference</a>
 - [Orbit API Python SDK](../../python/bosdyn-orbit/src/bosdyn/orbit/README.md)
+- [Orbit API Python SDK Examples](../../python/examples/docs/orbit.md)
 - [Authentication](#authentication)
 - [Webhooks](#webhooks)
 - [Scheduling Missions](#scheduling-missions)

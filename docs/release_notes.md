@@ -72,10 +72,6 @@ Two RPCs have been added, namely `QueryStoredCaptures` and `QueryMaxCaptureId`. 
 - The field, `disable_safety_check`, has been added to the `ArmImpedanceCommand` message. Setting this field to `true` **disables** the cancellation of an arm trajectory for unsafe behaviors. Users must exercise extreme caution when setting this field to `true`.
 - A new enum value, `STATUS_TRAJECTORY_CANCELLED`, has been added to the `Feedback` message of `ArmImpedanceCommand`. This feedback status indicates whether an arm instability was detected, and if it was detected, the command is cancelled. This new status may be useful for debugging purposes.
 
-#### Joint Control
-
-The Joint Control API allows for low-level control of the robot's joints. Note that this API is experimental and license-limited; the robot must have a Joint Level Control license installed in order for this API to be used. Please see the [Wiggle Arm](../python/examples/joint_control/README.md) example for more information.
-
 #### Network Compute Bridge
 
 A new enum value, `NETWORK_COMPUTE_STATUS_ANALYSIS_FAILED`, has been added to the `NetworkComputeStatus` enum. If the Network Compute Bridge Worker fails to process the input image for some reason (e.g., it was blurry), the Worker may use this status to indicate that the action should be retried. If the action is part of an autowalk, the `retry_count` in the `FailureBehavior` message must be > 0.
@@ -200,8 +196,6 @@ Published robot state messages previously contained kinematic information for a 
 - [Extract Images from Walk](../python/examples/extract_images_from_walk/README.md): An example that shows how to extract all of the record-time images embedded in a .walk and create a .pptx slideshow containing them.
 
 - [Signals CoreIO Modem](../python/examples/data_acquisition_service/signals_coreio_modem_plugin/README.md): An example that gets modem data from the CoreIO and sends it to the robot in such a way (using the Signals API) that it is displayed on the tablet and Orbit in real-time.
-
-- [Wiggle Arm](../python/examples/joint_control/README.md): An example that moves the WR0 (one of two wrist joints) and F1X (gripper) joints in a sinusoidal pattern.
 
 - [Extensions](../python/examples/extensions/README.md): A couple of [helper scripts](./payload/docker_containers.md#helper-scripts) have been introduced to help create CORE I/O and Scout Extensions. These can even be used to package any other Dockerized example into an Extension.
 

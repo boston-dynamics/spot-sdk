@@ -129,26 +129,6 @@ class RobotStateClient(BaseClient):
         return robot_state_pb2.RobotLinkModelRequest(link_name=link_name)
 
 
-class RobotStateStreamingClient(BaseClient):
-    """Client for the RobotState service.
-    
-    This client is in BETA and may undergo changes in future releases.
-    """
-    default_service_name = 'robot-state-streaming'
-    service_type = 'bosdyn.api.RobotStateStreamingService'
-
-    def __init__(self):
-        super(RobotStateStreamingClient,
-              self).__init__(robot_state_service_pb2_grpc.RobotStateStreamingServiceStub)
-
-    def get_robot_state_stream(self, **kwargs):
-        """Returns an iterator providing current state updates of the robot."""
-        req = self._get_robot_state_stream_request()
-        return self._stub.GetRobotStateStream(req)
-
-    @staticmethod
-    def _get_robot_state_stream_request():
-        return robot_state_pb2.RobotStateStreamRequest()
 
 
 def _get_robot_state_value(response):

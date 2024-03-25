@@ -48,7 +48,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit(formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -165,7 +165,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">Arm WASD</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -1014,21 +1013,6 @@
                                                            <span class="n">behavior_fault_id</span><span class="o">=</span><span class="n">behavior_fault_id</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="RobotCommandStreamingClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandStreamingClient">[docs]</a><span class="k">class</span> <span class="nc">RobotCommandStreamingClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Client for calling RobotCommand services.</span>
-
-<span class="sd">    This client is in BETA and may undergo changes in future releases.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">default_service_name</span> <span class="o">=</span> <span class="s1">&#39;robot-command-streaming&#39;</span>
-    <span class="n">service_type</span> <span class="o">=</span> <span class="s1">&#39;bosdyn.api.RobotCommandStreamingService&#39;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">RobotCommandStreamingClient</span><span class="p">,</span>
-              <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">robot_command_service_pb2_grpc</span><span class="o">.</span><span class="n">RobotCommandStreamingServiceStub</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span> <span class="o">=</span> <span class="kc">None</span>
-
-<div class="viewcode-block" id="RobotCommandStreamingClient.send_joint_control_commands"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandStreamingClient.send_joint_control_commands">[docs]</a>    <span class="k">def</span> <span class="nf">send_joint_control_commands</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command_iterator</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">JointControlStream</span><span class="p">(</span><span class="n">command_iterator</span><span class="p">)</span></div></div>
 
 
 <span class="k">def</span> <span class="nf">_robot_command_value</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
