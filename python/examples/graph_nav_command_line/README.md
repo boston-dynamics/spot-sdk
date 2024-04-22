@@ -90,9 +90,9 @@ To manually create an edge, use option _7_. This will prompt you for two waypoin
 
 You can also create an edge between the start and end of a chain by using option _8_. This is commonly used when a robot returns back to the location it started recording in.
 
-Option _9_ allows the recording service to automatically identify and close loops (including at the start and end of the map), using fiducials, odometry, and other methods (see [here](../../../docs/concepts/autonomy/graphnav_map_structure#map-processing) for details.)
+Option _9_ allows the recording service to automatically identify and close loops (including at the start and end of the map), using fiducials, odometry, and other methods (see [here](../../../docs/concepts/autonomy/graphnav_map_structure.md#map-processing) for details.)
 
-Option _a_ creates an _anchoring_ for the map, which allows it to be more accurately drawn and used for data export (see [here](../../../docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details.)
+Option _a_ creates an _anchoring_ for the map, which allows it to be more accurately drawn and used for data export (see [here](../../../docs/concepts/autonomy/graphnav_map_structure.md#anchorings-and-anchoring-optimization) for more details.)
 
 ## GraphNav Service Command Line
 
@@ -175,7 +175,7 @@ To issue a _navigate route_ (option _7_) command, the listed waypoints must be i
 
 In this example, there would also be a known edge (from waypoint id: `hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg==`, to waypoint id: `unread-beagle-vQfl7NrKVhHPOUoos+ffIg==`) and a second edge (from waypoint id: `unread-beagle-vQfl7NrKVhHPOUoos+ffIg==`, to waypoint id: `zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==`). Note that you would likely be able to simplify this with short codes to `7 hs ub zf`.
 
-To issue a _navigate to anchor_ (option _8_) command, you must first know where you want the robot to go in absolute (x, y) meter coordinates relative to the _seed frame_ (see [here](../../../docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization) for more details). This allows the robot to navigate to a position on the map without necessarily knowing which waypoint is near that location.
+To issue a _navigate to anchor_ (option _8_) command, you must first know where you want the robot to go in absolute (x, y) meter coordinates relative to the _seed frame_ (see [here](../../../docs/concepts/autonomy/graphnav_map_structure.md#anchorings-and-anchoring-optimization) for more details). This allows the robot to navigate to a position on the map without necessarily knowing which waypoint is near that location.
 
 For example, this command:
 

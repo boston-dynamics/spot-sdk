@@ -58,7 +58,7 @@ When `use_background_capture_thread` is set to False, the `CameraBaseImageServic
 
 ### Example Image Services
 
-There are two SDK examples showing `ImageService` implementations using the helper functions: a [USB web camera](../../python/examples/web_cam_image_service/README.md), and the [Ricoh Theta camera](../../python/examples/ricoh_theta/README.md).
+There are two SDK examples showing `ImageService` implementations using the helper functions: a [USB web camera](../../python/examples/service_customization/custom_parameter_image_server/README.md), and the [Ricoh Theta camera](../../python/examples/ricoh_theta/README.md).
 
 ### Tips for Creating an Image Service
 - The `image_decode` function should attempt to accurately fill out the PixelFormat and ImageFormat fields for the image proto in addition to the image data. This allows for end-user applications to more accurately decode the image data.

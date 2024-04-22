@@ -130,7 +130,7 @@ rm openvpn_client.tar.gz
 
 ## Running the Extension
 
-The output file will be called openvpn_client.spx and can be uploaded to a CORE I/O. See [extension documentation](docker_containers#install-extension-using-web-portal) for directions on uploading extension to the CORE I/O using the web portal.
+The output file will be called openvpn_client.spx and can be uploaded to a CORE I/O. See [extension documentation](docker_containers.md#install-extension-using-web-portal) for directions on uploading extension to the CORE I/O using the web portal.
 **The cred.ovpn file must be provided by the user and placed under /persist/openvpn/\*.ovpn to work.**
 
 To copy over the cred file to the robot over ethernet or wifi run the following.

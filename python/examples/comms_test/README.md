@@ -83,7 +83,7 @@ sudo docker load -i comms_test_l4t.tgz
 Run the image:
 
 ```
-sudo docker run -it -v $(pwd):/comms_out/ --network host comms_test ROBOT_IP --server-hostname SERVER_IP
+sudo docker run -it -v $(pwd):/comms_out/ --network host comms_test:l4t ROBOT_IP --server-hostname SERVER_IP
 ```
 
 which will ask for username/password, or pass the environment variables `--env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD` to the command above.

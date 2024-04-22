@@ -7,6 +7,7 @@
 """ The client uses a web API to send HTTPs requests to a number of REStful endpoints using the Requests library.
 """
 from collections.abc import Iterable
+from typing import Dict
 
 import requests
 
@@ -525,9 +526,9 @@ class Client():
     def post_calendar_event(self, nickname: str = None, time_ms: int = None, repeat_ms: int = None,
                             mission_id: str = None, force_acquire_estop: bool = None,
                             require_docked: bool = None, schedule_name: str = None,
-                            blackout_times: Iterable[dict[str:int]] = None,
-                            disable_reason: str = None, event_id: str = None,
-                            **kwargs) -> requests.Response:
+                            blackout_times: Iterable[Dict[str,
+                                                          int]] = None, disable_reason: str = None,
+                            event_id: str = None, **kwargs) -> requests.Response:
         """  This function serves two purposes. It creates a new calendar event on using the following arguments
              when Event ID is not specified. When the Event ID associated with a pre-existing calendar event is specified,
              the function overwrites the attributes of the pre-existing calendar event.

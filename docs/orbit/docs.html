@@ -81498,943 +81498,858 @@
       window.onload = () => {
         window.ui = SwaggerUIBundle({
           spec: {
-            "openapi": "3.0.1",
-            "info": {
-              "title": "Orbit Web API",
-              "description": "The Orbit web API provides access to a variety of resources through RESTful http endpoints. You can test the endpoints on your live Orbit instance via https://your-orbit-instance/api/v0/docs/ after signing in to your Orbit instance.",
-              "version": "4.0.0"
-            },
-            "servers": [
-              {
-                "url": "/api/v0"
-              }
-            ],
-            "paths": {
-              "/login": {
-                "post": {
-                  "description": "Warning: This endpoint is deprecated. Use  /api_token/authenticate endpoint instead!",
-                  "deprecated": true,
-                  "tags": ["Authentication"],
-                  "summary": "Authenticates with username and password.",
-                  "requestBody": {
-                    "description": "Information to post a login request.",
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "type": "object",
-                          "properties": {
-                            "username": {
-                              "type": "string",
-                              "description": "The username for the Orbit instance."
-                            },
-                            "password": {
-                              "type": "string",
-                              "description": "The password for the Orbit instance."
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "required": true
-                  },
-                  "responses": {
-                    "200": {
-                      "description": "Successfully logged into the Orbit instance."
-                    },
-                    "401": {
-                      "description": "Unauthorized Request response."
-                    },
-                    "429": {
-                      "description": "Too Many Requests response."
-                    },
-                    "500": {
-                      "description": "Failed to log into the Orbit instance."
-                    }
-                  }
-                }
-              },
-              "/api_token/authenticate": {
-                "get": {
-                  "tags": ["Authentication"],
-                  "summary": "Authenticates the API token that is provided in the request header. Obtain an API token from the Orbit instance and add it to the request header in the form of {'Authorization': 'Bearer ' + <API TOKEN>}",
-                  "responses": {
-                    "200": {
-                      "description": "Successfully authenticated using the provided API Token in the request header."
-                    },
-                    "400": {
-                      "description": "Bad Request response."
-                    },
-                    "401": {
-                      "description": "Unauthorized Request response."
-                    }
-                  }
-                }
-              },
-              "/calendar/disable-enable": {
-                "post": {
-                  "tags": ["Calendar"],
-                  "summary": "Disable/enable mission scheduled on Orbit.",
-                  "requestBody": {
-                    "description": "Information on disable reason and eventId (optional).",
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "type": "object",
-                          "properties": {
-                            "disableReason": {
-                              "type": "string",
-                              "description": "The reason for disabling the mission. Enables the mission if left empty."
-                            },
-                            "eventId": {
-                              "type": "string",
-                              "description": "(Optional) The eventId of the specific scheduled mission. Do not use this field if all scheduled missions are targets."
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "required": true
-                  },
-                  "responses": {
-                    "200": {
-                      "description": "Successfully completed the disable/enable request."
-                    },
-                    "500": {
-                      "description": "Failed to complete the disable/enable request."
-                    }
-                  }
-                }
-              },
-              "/calendar/schedule": {
-                "get": {
-                  "summary": "Returns calendar events on the specified Orbit instance.",
-                  "description": "A list of active calendar events.",
-                  "tags": ["Calendar"],
-                  "responses": {
-                    "200": {
-                      "description": "Fetched list of active calendar events.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "object",
-                            "properties": {
-                              "activeEvents": {
-                                "type": "array",
-                                "items": {
-                                  "$ref": "#/components/schemas/Schedule"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Failed to get a list of active calendar events."
-                    }
-                  }
+                "openapi": "3.0.1",
+                "info": {
+                  "title": "Orbit Web API",
+                  "description": "The Orbit web API provides access to a variety of resources through RESTful http endpoints.",
+                  "version": "4.0.0"
                 },
-                "post": {
-                  "tags": ["Calendar"],
-                  "summary": "Create a calendar event to play a mission.",
-                  "requestBody": {
-                    "description": "Information of a new calendar event to add to Orbit.",
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "$ref": "#/components/schemas/Schedule"
-                        }
-                      }
-                    },
-                    "required": true
-                  },
-                  "responses": {
-                    "200": {
-                      "description": "Successful operation"
-                    }
+                "servers": [
+                  {
+                    "url": "/api/v0"
                   }
-                }
-              },
-              "/calendar/schedule/{eventid}": {
-                "delete": {
-                  "tags": ["Calendar"],
-                  "summary": "Removes the specified calendar event.",
-                  "parameters": [
-                    {
-                      "name": "eventid",
-                      "in": "path",
-                      "description": "ID of the calendar event",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Calendar event deleted successfully."
-                    },
-                    "500": {
-                      "description": "Could not delete calendar event."
-                    }
-                  }
-                }
-              },
-              "/runs/{runUuid}": {
-                "get": {
-                  "summary": "Retrieve a run by its uuid.",
-                  "description": "A Run represents a period of robot operation. Both teleoperation and autonomous operations are represented as Runs.",
-                  "tags": ["Runs"],
-                  "parameters": [
-                    {
-                      "name": "runUuid",
-                      "in": "path",
-                      "description": "A run's uuid",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Fetched run details.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "$ref": "#/components/schemas/Run"
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Failed to get run details."
-                    }
-                  }
-                }
-              },
-              "/runs/": {
-                "get": {
-                  "summary": "Query a collection of runs.",
-                  "description": "Returns a list of run resources based on the provided query parameters. A Run represents a period of robot operation. Both teleoperation and autonomous operations are represented as Runs.",
-                  "tags": ["Runs"],
-                  "parameters": [
-                    {
-                      "name": "startTime",
-                      "in": "query",
-                      "description": "Include runs with a start_time greater than or equal to this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    {
-                      "name": "endTime",
-                      "in": "query",
-                      "description": "Include runs with a start_time less than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    {
-                      "name": "modifiedAt",
-                      "in": "query",
-                      "description": "Include runs with a modified_at time greater than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    {
-                      "name": "missions",
-                      "in": "query",
-                      "description": "Only include runs performing one of the provided missions. The value should be a single or a comma-separated list of mission names.",
-                      "required": false,
-                      "schema": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    {
-                      "name": "robots",
-                      "in": "query",
-                      "description": "Only include runs performed by the provided robots. The value should be a single or a comma-separated list of robot hostnames.",
-                      "required": false,
-                      "schema": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    {
-                      "name": "types",
-                      "in": "query",
-                      "description": "Only include runs of this type. The value can be either 0 or 1 corresponding to mission and teleoperation respectively.",
-                      "required": false,
-                      "schema": {
-                        "type": "array",
-                        "items": {
-                          "enum": [0, 1]
-                        }
-                      }
-                    },
-                    {
-                      "name": "robotHostname",
-                      "in": "query",
-                      "description": "Include runs performed by a robot with this hostname",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "robotNickname",
-                      "in": "query",
-                      "description": "Include runs performed by a robot with this nickname.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "robotSerial",
-                      "in": "query",
-                      "description": "Include runs performed by a robot with this serial.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "limit",
-                      "in": "query",
-                      "description": "Only return a number of runs up to this value.",
-                      "required": false,
-                      "schema": {
-                        "type": "integer",
-                        "default": 20
-                      }
-                    },
-                    {
-                      "name": "offset",
-                      "in": "query",
-                      "description": "Skip this number of runs before returning.",
-                      "required": false,
-                      "schema": {
-                        "type": "integer",
-                        "default": 0
-                      }
-                    },
-                    {
-                      "name": "orderBy",
-                      "in": "query",
-                      "description": "Criteria for ordering results.",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "default": "newest",
-                        "enum": [
-                          "robots",
-                          "missions",
-                          "missionStatus",
-                          "newest",
-                          "oldest",
-                          "mission",
-                          "sessions",
-                          "lastRunStartTime"
-                        ]
-                      }
-                    },
-                    {
-                      "name": "format",
-                      "in": "query",
-                      "description": "The data format of the response. Set format to csv to download a csv file of summary run stats. By default, format is set to json which returns run_resources.",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "default": "json",
-                        "enum": ["json", "csv"]
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Fetched run resource.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "object",
-                            "properties": {
-                              "limit": {
-                                "type": "integer"
-                              },
-                              "offset": {
-                                "type": "integer"
-                              },
-                              "total": {
-                                "type": "integer"
-                              },
-                              "resources": {
-                                "type": "array",
-                                "items": {
-                                  "$ref": "#/components/schemas/Run"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Failed to get run details."
-                    }
-                  }
-                }
-              },
-              "/run_events/": {
-                "get": {
-                  "summary": "Retrieve a collection of run events.",
-                  "description": "Returns a list of run events which match the provided query parameters. A RunEvent represents the output of an action executed during a Run. It contains all the RunCaptures associated with the action.",
-                  "tags": ["Run Events"],
-                  "parameters": [
-                    {
-                      "name": "runUuid",
-                      "in": "query",
-                      "description": "Include run_events which occurred during the run with this uuid.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "actionUuid",
-                      "in": "query",
-                      "description": "Include run_events which represent playback of actions with this uuid.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "elementId",
-                      "in": "query",
-                      "description": "Include run_events which represent playback of a SiteElement with this uuid.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "robotHostname",
-                      "in": "query",
-                      "description": "Include run_events performed by a robot with this hostname",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "robotNickname",
-                      "in": "query",
-                      "description": "Include run_events performed by a robot with this nickname.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "robotSerial",
-                      "in": "query",
-                      "description": "Include run_events performed by a robot with this serial.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "missionName",
-                      "in": "query",
-                      "description": "Include run_events which occurred during playback of a mission with this name.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "excludeNonAlerts",
-                      "in": "query",
-                      "description": "If true, only include run_events that generated an alert.",
-                      "required": false,
-                      "schema": {
-                        "type": "boolean",
-                        "default": false
-                      }
-                    },
-                    {
-                      "name": "startTime",
-                      "in": "query",
-                      "description": "Include run_events with a time greater than or equal to this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    {
-                      "name": "endTime",
-                      "in": "query",
-                      "description": "Include run_events with a time less than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    {
-                      "name": "startCreatedAt",
-                      "in": "query",
-                      "description": "Include run_events with a created_at greater than or equal to this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    {
-                      "name": "endCreatedAt",
-                      "in": "query",
-                      "description": "Include run_events with a created_at less than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    {
-                      "name": "limit",
-                      "in": "query",
-                      "description": "Only return a number of resources up to this value.",
-                      "required": false,
-                      "schema": {
-                        "type": "integer",
-                        "default": 20
-                      }
-                    },
-                    {
-                      "name": "orderBy",
-                      "in": "query",
-                      "description": "Criteria for ordering results.",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "enum": ["time", "-time", "created_at", "-created_at"]
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Run Events were fetched.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "object",
-                            "properties": {
-                              "limit": {
-                                "type": "integer"
-                              },
-                              "offset": {
-                                "type": "integer"
-                              },
-                              "total": {
-                                "type": "integer"
-                              },
-                              "resources": {
-                                "type": "array",
-                                "items": {
-                                  "$ref": "#/components/schemas/RunEvent"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Something went wrong."
-                    }
-                  }
-                }
-              },
-              "/run_events/{runEventUuid}": {
-                "get": {
-                  "summary": "Retrieves a single run event resource by uuid.",
-                  "description": "A RunEvent represents the output of an action executed during a Run. It contains all the RunCaptures associated with the action.",
-                  "tags": ["Run Events"],
-                  "parameters": [
-                    {
-                      "name": "runEventUuid",
-                      "in": "path",
-                      "description": "ID of run",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Run Event was fetched.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "$ref": "#/components/schemas/RunEvent"
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Something went wrong."
-                    }
-                  }
-                }
-              },
-              "/run_captures/": {
-                "get": {
-                  "summary": "Retrieve a collection of run captures.",
-                  "description": "Returns a list of run captures which match the provided query parameters. A RunCapture describes a data point captured during a particular RunEvent.",
-                  "tags": ["Run Captures"],
-                  "parameters": [
-                    {
-                      "name": "runEventUuid",
-                      "in": "query",
-                      "description": "Include run_captures which occurred during the run event with this uuid.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "actionUuid",
-                      "in": "query",
-                      "description": "Include run_captures from playbacks of an action with this uuid.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "actionName",
-                      "in": "query",
-                      "description": "Include run_captures from playbacks of an action with this name.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "robotHostname",
-                      "in": "query",
-                      "description": "Include run_captures from a robot with this hostname",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "robotNickname",
-                      "in": "query",
-                      "description": "Include run_captures from a robot with this nickname.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "robotSerial",
-                      "in": "query",
-                      "description": "Include run_captures from a robot with this serial.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "missionName",
-                      "in": "query",
-                      "description": "Include run_captures which occurred during playback of a mission with this name.",
-                      "required": false,
-                      "schema": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "name": "startCreatedAt",
-                      "in": "query",
-                      "description": "Include run_captures with a created_at greater than or equal to this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    {
-                      "name": "endCreatedAt",
-                      "in": "query",
-                      "description": "Include run_captures with a created_at less than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "format": "date-time"
-                      }
-                    },
-                    {
-                      "name": "limit",
-                      "in": "query",
-                      "description": "Only return a number of resources up to this value.",
-                      "required": false,
-                      "schema": {
-                        "type": "integer",
-                        "default": 20
-                      }
-                    },
-                    {
-                      "name": "orderBy",
-                      "in": "query",
-                      "description": "Criteria for ordering results.",
-                      "required": false,
-                      "schema": {
-                        "type": "string",
-                        "enum": ["time", "-time", "created_at", "-created_at"]
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Run Captures were fetched.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "object",
-                            "properties": {
-                              "limit": {
-                                "type": "integer"
-                              },
-                              "offset": {
-                                "type": "integer"
-                              },
-                              "total": {
-                                "type": "integer"
-                              },
-                              "resources": {
-                                "type": "array",
-                                "items": {
-                                  "$ref": "#/components/schemas/RunCapture"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Something went wrong."
-                    }
-                  }
-                }
-              },
-              "/run_captures/{runCaptureUuid}": {
-                "get": {
-                  "summary": "Retrieves a single run capture resource by uuid.",
-                  "description": "A RunCapture describes a data point captured during a particular RunEvent.",
-                  "tags": ["Run Captures"],
-                  "parameters": [
-                    {
-                      "name": "runCaptureUuid",
-                      "in": "path",
-                      "description": "ID of run capture",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Run Capture was fetched.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "$ref": "#/components/schemas/RunCapture"
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Something went wrong."
-                    }
-                  }
-                }
-              },
-              "/run_archives/{runId}": {
-                "get": {
-                  "summary": "Downloads a zip file containing a run's data.",
-                  "description": "All run events, images, and metadata for the given run are packaged into a zip file and downloaded upon this request. The result is similar to what can be downloaded from the tablet after mission execution.",
-                  "tags": ["Run Archives"],
-                  "parameters": [
-                    {
-                      "name": "runId",
-                      "in": "path",
-                      "description": "ID of run",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "File generated.",
-                      "content": {
-                        "application/zip": {
-                          "schema": {
-                            "type": "string",
-                            "format": "binary"
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Could not generate file."
-                    }
-                  }
-                }
-              },
-              "/runs/facets/actions/{missionName}": {
-                "get": {
-                  "summary": "Retrieves a list of action descriptions which match query params.",
-                  "tags": ["Run Facets"],
-                  "parameters": [
-                    {
-                      "name": "missionName",
-                      "in": "path",
-                      "description": "The name of the mission",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Action facets delivered.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "array",
-                            "items": {
+                ],
+                "paths": {
+                  "/login": {
+                    "post": {
+                      "description": "Warning: This endpoint is deprecated. Use  /api_token/authenticate endpoint instead!",
+                      "deprecated": true,
+                      "tags": ["Authentication"],
+                      "summary": "Authenticates with username and password.",
+                      "requestBody": {
+                        "description": "Information to post a login request.",
+                        "content": {
+                          "application/json": {
+                            "schema": {
                               "type": "object",
                               "properties": {
-                                "id": {
-                                  "type": "string"
+                                "username": {
+                                  "type": "string",
+                                  "description": "The username for the Orbit instance."
                                 },
-                                "name": {
-                                  "type": "string"
+                                "password": {
+                                  "type": "string",
+                                  "description": "The password for the Orbit instance."
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "required": true
+                      },
+                      "responses": {
+                        "200": {
+                          "description": "Successfully logged into the Orbit instance."
+                        },
+                        "401": {
+                          "description": "Unauthorized Request response."
+                        },
+                        "429": {
+                          "description": "Too Many Requests response."
+                        },
+                        "500": {
+                          "description": "Failed to log into the Orbit instance."
+                        }
+                      }
+                    }
+                  },
+                  "/api_token/authenticate": {
+                    "get": {
+                      "tags": ["Authentication"],
+                      "summary": "Authenticates the API token that is provided in the request header. Obtain an API token from the Orbit instance and add it to the request header in the form of {'Authorization': 'Bearer ' + <API TOKEN>}",
+                      "responses": {
+                        "200": {
+                          "description": "Successfully authenticated using the provided API Token in the request header."
+                        },
+                        "400": {
+                          "description": "Bad Request response."
+                        },
+                        "401": {
+                          "description": "Unauthorized Request response."
+                        }
+                      }
+                    }
+                  },
+                  "/calendar/disable-enable": {
+                    "post": {
+                      "tags": ["Calendar"],
+                      "summary": "Disable/enable mission scheduled on Orbit.",
+                      "requestBody": {
+                        "description": "Information on disable reason and eventId (optional).",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "disableReason": {
+                                  "type": "string",
+                                  "description": "The reason for disabling the mission. Enables the mission if left empty."
                                 },
-                                "channels": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "string"
+                                "eventId": {
+                                  "type": "string",
+                                  "description": "(Optional) The eventId of the specific scheduled mission. Do not use this field if all scheduled missions are targets."
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "required": true
+                      },
+                      "responses": {
+                        "200": {
+                          "description": "Successfully completed the disable/enable request."
+                        },
+                        "500": {
+                          "description": "Failed to complete the disable/enable request."
+                        }
+                      }
+                    }
+                  },
+                  "/calendar/schedule": {
+                    "get": {
+                      "summary": "Returns calendar events on the specified Orbit instance.",
+                      "description": "A list of active calendar events.",
+                      "tags": ["Calendar"],
+                      "responses": {
+                        "200": {
+                          "description": "Fetched list of active calendar events.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "object",
+                                "properties": {
+                                  "activeEvents": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Schedule"
+                                    }
                                   }
                                 }
                               }
                             }
                           }
+                        },
+                        "500": {
+                          "description": "Failed to get a list of active calendar events."
                         }
                       }
                     },
-                    "500": {
-                      "description": "Something went wrong."
+                    "post": {
+                      "tags": ["Calendar"],
+                      "summary": "Create a calendar event to play a mission.",
+                      "requestBody": {
+                        "description": "Information of a new calendar event to add to Orbit.",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "$ref": "#/components/schemas/Schedule"
+                            }
+                          }
+                        },
+                        "required": true
+                      },
+                      "responses": {
+                        "200": {
+                          "description": "Successful operation"
+                        }
+                      }
                     }
-                  }
-                }
-              },
-              "/runs/facets/robots": {
-                "get": {
-                  "tags": ["Run Facets"],
-                  "summary": "Retrieves a list of robot descriptions which match query params.",
-                  "responses": {
-                    "200": {
-                      "description": "Robot facets delivered.",
-                      "content": {
-                        "application/json": {
+                  },
+                  "/calendar/schedule/{eventid}": {
+                    "delete": {
+                      "tags": ["Calendar"],
+                      "summary": "Removes the specified calendar event.",
+                      "parameters": [
+                        {
+                          "name": "eventid",
+                          "in": "path",
+                          "description": "ID of the calendar event",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Calendar event deleted successfully."
+                        },
+                        "500": {
+                          "description": "Could not delete calendar event."
+                        }
+                      }
+                    }
+                  },
+                  "/runs/{runUuid}": {
+                    "get": {
+                      "summary": "Retrieve a run by its uuid.",
+                      "description": "A Run represents a period of robot operation. Both teleoperation and autonomous operations are represented as Runs.",
+                      "tags": ["Runs"],
+                      "parameters": [
+                        {
+                          "name": "runUuid",
+                          "in": "path",
+                          "description": "A run's uuid",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Fetched run details.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/Run"
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Failed to get run details."
+                        }
+                      }
+                    }
+                  },
+                  "/runs/": {
+                    "get": {
+                      "summary": "Query a collection of runs.",
+                      "description": "Returns a list of run resources based on the provided query parameters. A Run represents a period of robot operation. Both teleoperation and autonomous operations are represented as Runs.",
+                      "tags": ["Runs"],
+                      "parameters": [
+                        {
+                          "name": "startTime",
+                          "in": "query",
+                          "description": "Include runs with a start_time greater than or equal to this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        {
+                          "name": "endTime",
+                          "in": "query",
+                          "description": "Include runs with a start_time less than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        {
+                          "name": "modifiedAt",
+                          "in": "query",
+                          "description": "Include runs with a modified_at time greater than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        {
+                          "name": "missions",
+                          "in": "query",
+                          "description": "Only include runs performing one of the provided missions. The value should be a single or a comma-separated list of mission names.",
+                          "required": false,
                           "schema": {
                             "type": "array",
                             "items": {
-                              "type": "object",
-                              "properties": {
-                                "robot_hostname": {
-                                  "type": "string"
-                                },
-                                "robot_serial": {
-                                  "type": "string"
-                                },
-                                "robot_nickname": {
-                                  "type": "string"
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "name": "robots",
+                          "in": "query",
+                          "description": "Only include runs performed by the provided robots. The value should be a single or a comma-separated list of robot hostnames.",
+                          "required": false,
+                          "schema": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        {
+                          "name": "types",
+                          "in": "query",
+                          "description": "Only include runs of this type. The value can be either 0 or 1 corresponding to mission and teleoperation respectively.",
+                          "required": false,
+                          "schema": {
+                            "type": "array",
+                            "items": {
+                              "enum": [0, 1]
+                            }
+                          }
+                        },
+                        {
+                          "name": "robotHostname",
+                          "in": "query",
+                          "description": "Include runs performed by a robot with this hostname",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "robotNickname",
+                          "in": "query",
+                          "description": "Include runs performed by a robot with this nickname.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "robotSerial",
+                          "in": "query",
+                          "description": "Include runs performed by a robot with this serial.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "limit",
+                          "in": "query",
+                          "description": "Only return a number of runs up to this value.",
+                          "required": false,
+                          "schema": {
+                            "type": "integer",
+                            "default": 20
+                          }
+                        },
+                        {
+                          "name": "offset",
+                          "in": "query",
+                          "description": "Skip this number of runs before returning.",
+                          "required": false,
+                          "schema": {
+                            "type": "integer",
+                            "default": 0
+                          }
+                        },
+                        {
+                          "name": "orderBy",
+                          "in": "query",
+                          "description": "Criteria for ordering results.",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "default": "newest",
+                            "enum": [
+                              "robots",
+                              "missions",
+                              "missionStatus",
+                              "newest",
+                              "oldest",
+                              "mission",
+                              "sessions",
+                              "lastRunStartTime"
+                            ]
+                          }
+                        },
+                        {
+                          "name": "format",
+                          "in": "query",
+                          "description": "The data format of the response. Set format to csv to download a csv file of summary run stats. By default, format is set to json which returns run_resources.",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "default": "json",
+                            "enum": ["json", "csv"]
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Fetched run resource.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "object",
+                                "properties": {
+                                  "limit": {
+                                    "type": "integer"
+                                  },
+                                  "offset": {
+                                    "type": "integer"
+                                  },
+                                  "total": {
+                                    "type": "integer"
+                                  },
+                                  "resources": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/Run"
+                                    }
+                                  }
                                 }
                               }
                             }
                           }
+                        },
+                        "500": {
+                          "description": "Failed to get run details."
                         }
                       }
-                    },
-                    "500": {
-                      "description": "Something went wrong."
                     }
-                  }
-                }
-              },
-              "/runs/facets/missions": {
-                "get": {
-                  "tags": ["Run Facets"],
-                  "summary": "Retrieves a list of every unique mission which produced a run.",
-                  "responses": {
-                    "200": {
-                      "description": "Mission facets delivered.",
-                      "content": {
-                        "application/json": {
+                  },
+                  "/run_events/": {
+                    "get": {
+                      "summary": "Retrieve a collection of run events.",
+                      "description": "Returns a list of run events which match the provided query parameters. A RunEvent represents the output of an action executed during a Run. It contains all the RunCaptures associated with the action.",
+                      "tags": ["Run Events"],
+                      "parameters": [
+                        {
+                          "name": "runUuid",
+                          "in": "query",
+                          "description": "Include run_events which occurred during the run with this uuid.",
+                          "required": false,
                           "schema": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "limit": {
-                                  "type": "integer"
-                                },
-                                "offset": {
-                                  "type": "integer"
-                                },
-                                "total": {
-                                  "type": "integer"
-                                },
-                                "resources": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "object",
-                                    "properties": {
-                                      "missionName": {
-                                        "type": "string"
-                                      },
-                                      "sessionCount": {
-                                        "type": "integer"
-                                      },
-                                      "lastRunStartTime": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "actionUuid",
+                          "in": "query",
+                          "description": "Include run_events which represent playback of actions with this uuid.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "elementId",
+                          "in": "query",
+                          "description": "Include run_events which represent playback of a SiteElement with this uuid.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "robotHostname",
+                          "in": "query",
+                          "description": "Include run_events performed by a robot with this hostname",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "robotNickname",
+                          "in": "query",
+                          "description": "Include run_events performed by a robot with this nickname.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "robotSerial",
+                          "in": "query",
+                          "description": "Include run_events performed by a robot with this serial.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "missionName",
+                          "in": "query",
+                          "description": "Include run_events which occurred during playback of a mission with this name.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "excludeNonAlerts",
+                          "in": "query",
+                          "description": "If true, only include run_events that generated an alert.",
+                          "required": false,
+                          "schema": {
+                            "type": "boolean",
+                            "default": false
+                          }
+                        },
+                        {
+                          "name": "startTime",
+                          "in": "query",
+                          "description": "Include run_events with a time greater than or equal to this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        {
+                          "name": "endTime",
+                          "in": "query",
+                          "description": "Include run_events with a time less than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        {
+                          "name": "startCreatedAt",
+                          "in": "query",
+                          "description": "Include run_events with a created_at greater than or equal to this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        {
+                          "name": "endCreatedAt",
+                          "in": "query",
+                          "description": "Include run_events with a created_at less than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        {
+                          "name": "limit",
+                          "in": "query",
+                          "description": "Only return a number of resources up to this value.",
+                          "required": false,
+                          "schema": {
+                            "type": "integer",
+                            "default": 20
+                          }
+                        },
+                        {
+                          "name": "orderBy",
+                          "in": "query",
+                          "description": "Criteria for ordering results.",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "enum": ["time", "-time", "created_at", "-created_at"]
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Run Events were fetched.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "object",
+                                "properties": {
+                                  "limit": {
+                                    "type": "integer"
+                                  },
+                                  "offset": {
+                                    "type": "integer"
+                                  },
+                                  "total": {
+                                    "type": "integer"
+                                  },
+                                  "resources": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/RunEvent"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/run_events/{runEventUuid}": {
+                    "get": {
+                      "summary": "Retrieves a single run event resource by uuid.",
+                      "description": "A RunEvent represents the output of an action executed during a Run. It contains all the RunCaptures associated with the action.",
+                      "tags": ["Run Events"],
+                      "parameters": [
+                        {
+                          "name": "runEventUuid",
+                          "in": "path",
+                          "description": "ID of run",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Run Event was fetched.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/RunEvent"
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/run_captures/": {
+                    "get": {
+                      "summary": "Retrieve a collection of run captures.",
+                      "description": "Returns a list of run captures which match the provided query parameters. A RunCapture describes a data point captured during a particular RunEvent.",
+                      "tags": ["Run Captures"],
+                      "parameters": [
+                        {
+                          "name": "runEventUuid",
+                          "in": "query",
+                          "description": "Include run_captures which occurred during the run event with this uuid.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "actionUuid",
+                          "in": "query",
+                          "description": "Include run_captures from playbacks of an action with this uuid.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "actionName",
+                          "in": "query",
+                          "description": "Include run_captures from playbacks of an action with this name.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "robotHostname",
+                          "in": "query",
+                          "description": "Include run_captures from a robot with this hostname",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "robotNickname",
+                          "in": "query",
+                          "description": "Include run_captures from a robot with this nickname.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "robotSerial",
+                          "in": "query",
+                          "description": "Include run_captures from a robot with this serial.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "missionName",
+                          "in": "query",
+                          "description": "Include run_captures which occurred during playback of a mission with this name.",
+                          "required": false,
+                          "schema": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "name": "startCreatedAt",
+                          "in": "query",
+                          "description": "Include run_captures with a created_at greater than or equal to this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        {
+                          "name": "endCreatedAt",
+                          "in": "query",
+                          "description": "Include run_captures with a created_at less than this value. The value should be in isostring format. For e.g: '2023-06-05T19:29:35.066Z' ",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        {
+                          "name": "limit",
+                          "in": "query",
+                          "description": "Only return a number of resources up to this value.",
+                          "required": false,
+                          "schema": {
+                            "type": "integer",
+                            "default": 20
+                          }
+                        },
+                        {
+                          "name": "orderBy",
+                          "in": "query",
+                          "description": "Criteria for ordering results.",
+                          "required": false,
+                          "schema": {
+                            "type": "string",
+                            "enum": ["time", "-time", "created_at", "-created_at"]
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Run Captures were fetched.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "object",
+                                "properties": {
+                                  "limit": {
+                                    "type": "integer"
+                                  },
+                                  "offset": {
+                                    "type": "integer"
+                                  },
+                                  "total": {
+                                    "type": "integer"
+                                  },
+                                  "resources": {
+                                    "type": "array",
+                                    "items": {
+                                      "$ref": "#/components/schemas/RunCapture"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/run_captures/{runCaptureUuid}": {
+                    "get": {
+                      "summary": "Retrieves a single run capture resource by uuid.",
+                      "description": "A RunCapture describes a data point captured during a particular RunEvent.",
+                      "tags": ["Run Captures"],
+                      "parameters": [
+                        {
+                          "name": "runCaptureUuid",
+                          "in": "path",
+                          "description": "ID of run capture",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Run Capture was fetched.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/RunCapture"
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/run_archives/{runId}": {
+                    "get": {
+                      "summary": "Downloads a zip file containing a run's data.",
+                      "description": "All run events, images, and metadata for the given run are packaged into a zip file and downloaded upon this request. The result is similar to what can be downloaded from the tablet after mission execution.",
+                      "tags": ["Run Archives"],
+                      "parameters": [
+                        {
+                          "name": "runId",
+                          "in": "path",
+                          "description": "ID of run",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "File generated.",
+                          "content": {
+                            "application/zip": {
+                              "schema": {
+                                "type": "string",
+                                "format": "binary"
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Could not generate file."
+                        }
+                      }
+                    }
+                  },
+                  "/runs/facets/actions/{missionName}": {
+                    "get": {
+                      "summary": "Retrieves a list of action descriptions which match query params.",
+                      "tags": ["Run Facets"],
+                      "parameters": [
+                        {
+                          "name": "missionName",
+                          "in": "path",
+                          "description": "The name of the mission",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Action facets delivered.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "channels": {
+                                      "type": "array",
+                                      "items": {
                                         "type": "string"
                                       }
                                     }
@@ -82443,1175 +82358,1260 @@
                               }
                             }
                           }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/runs/facets/robots": {
+                    "get": {
+                      "tags": ["Run Facets"],
+                      "summary": "Retrieves a list of robot descriptions which match query params.",
+                      "responses": {
+                        "200": {
+                          "description": "Robot facets delivered.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "robot_hostname": {
+                                      "type": "string"
+                                    },
+                                    "robot_serial": {
+                                      "type": "string"
+                                    },
+                                    "robot_nickname": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/runs/facets/missions": {
+                    "get": {
+                      "tags": ["Run Facets"],
+                      "summary": "Retrieves a list of every unique mission which produced a run.",
+                      "responses": {
+                        "200": {
+                          "description": "Mission facets delivered.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "limit": {
+                                      "type": "integer"
+                                    },
+                                    "offset": {
+                                      "type": "integer"
+                                    },
+                                    "total": {
+                                      "type": "integer"
+                                    },
+                                    "resources": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "object",
+                                        "properties": {
+                                          "missionName": {
+                                            "type": "string"
+                                          },
+                                          "sessionCount": {
+                                            "type": "integer"
+                                          },
+                                          "lastRunStartTime": {
+                                            "type": "string"
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/site_walks/": {
+                    "get": {
+                      "summary": "Retrieve a collection of all SiteWalks on Orbit.",
+                      "description": "Returns the entire list of SiteWalks currently on Orbit",
+                      "tags": ["SiteWalks"],
+                      "responses": {
+                        "200": {
+                          "description": "A list of SiteWalks was fetched.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/components/schemas/SiteWalk"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/site_walks/{uuid}": {
+                    "get": {
+                      "summary": "Retrieves a single SiteWalk resource by uuid.",
+                      "description": "A SiteWalk describes a series of tasks that define autonomous robot operation. It contains SiteElements and SiteDocks together with other parameters that define autonomous operation.",
+                      "tags": ["SiteWalks"],
+                      "parameters": [
+                        {
+                          "name": "uuid",
+                          "in": "path",
+                          "description": "ID of SiteWalk",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "A SiteWalk was fetched.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/SiteWalk"
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
                         }
                       }
                     },
-                    "500": {
-                      "description": "Something went wrong."
-                    }
-                  }
-                }
-              },
-              "/site_walks/": {
-                "get": {
-                  "summary": "Retrieve a collection of all SiteWalks on Orbit.",
-                  "description": "Returns the entire list of SiteWalks currently on Orbit",
-                  "tags": ["SiteWalks"],
-                  "responses": {
-                    "200": {
-                      "description": "A list of SiteWalks was fetched.",
-                      "content": {
-                        "application/json": {
+                    "delete": {
+                      "tags": ["SiteWalks"],
+                      "summary": "Removes the specified SiteWalk.",
+                      "parameters": [
+                        {
+                          "name": "uuid",
+                          "in": "path",
+                          "description": "ID of SiteWalk",
+                          "required": true,
                           "schema": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/SiteWalk"
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "SiteWalk deleted successfully."
+                        },
+                        "500": {
+                          "description": "Could not delete SiteWalk."
+                        }
+                      }
+                    }
+                  },
+                  "/site_walks": {
+                    "post": {
+                      "tags": ["SiteWalks"],
+                      "summary": "Adds a new SiteWalk to Orbit. It also updates a pre-existing SiteWalk using the associated UUID.",
+                      "requestBody": {
+                        "description": "Information of a new SiteWalk in Orbit.",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/SiteWalk"
+                              }
+                            }
+                          }
+                        },
+                        "required": true
+                      },
+                      "responses": {
+                        "200": {
+                          "description": "Successful operation",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/SiteWalk"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "/site_elements/{uuid}": {
+                    "get": {
+                      "summary": "Retrieves a single SiteElement resource by uuid.",
+                      "description": "A SiteElement describes what a robot should do and where to do it.",
+                      "tags": ["SiteElements"],
+                      "parameters": [
+                        {
+                          "name": "uuid",
+                          "in": "path",
+                          "description": "ID of SiteElement",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "A SiteElement was fetched.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/SiteElement"
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/site_elements": {
+                    "post": {
+                      "tags": ["SiteElements"],
+                      "summary": "Adds a new SiteElement to Orbit. It also updates a pre-existing SiteElement using the associated UUID.",
+                      "requestBody": {
+                        "description": "Information of a new SiteElement in Orbit.",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/SiteElement"
+                              }
+                            }
+                          }
+                        },
+                        "required": true
+                      },
+                      "responses": {
+                        "200": {
+                          "description": "Successful operation",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/components/schemas/SiteElement"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "/site_docks/{uuid}": {
+                    "get": {
+                      "summary": "Retrieves a single SiteDock resource by uuid.",
+                      "description": "A SiteDock is a representation of robot's docking station.",
+                      "tags": ["SiteDocks"],
+                      "parameters": [
+                        {
+                          "name": "uuid",
+                          "in": "path",
+                          "description": "ID of SiteDock",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "A SiteDock was fetched.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/SiteDock"
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Something went wrong."
+                        }
+                      }
+                    }
+                  },
+                  "/site_docks": {
+                    "post": {
+                      "tags": ["SiteDocks"],
+                      "summary": "Adds a new SiteDock to Orbit. It also updates a pre-existing SiteDock using the associated UUID.",
+                      "requestBody": {
+                        "description": "Information of a new SiteDock in Orbit.",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/SiteDock"
+                              }
+                            }
+                          }
+                        },
+                        "required": true
+                      },
+                      "responses": {
+                        "200": {
+                          "description": "Successful operation",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/components/schemas/SiteDock"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "/robots": {
+                    "get": {
+                      "tags": ["Robots"],
+                      "summary": "Retrieves a complete list of robot information on Orbit. This includes which robot is assigned to each slot.",
+                      "responses": {
+                        "200": {
+                          "description": "Successfully retrieved robots.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/components/schemas/Robot"
+                                }
+                              }
                             }
                           }
                         }
                       }
                     },
-                    "500": {
-                      "description": "Something went wrong."
-                    }
-                  }
-                }
-              },
-              "/site_walks/{uuid}": {
-                "get": {
-                  "summary": "Retrieves a single SiteWalk resource by uuid.",
-                  "description": "A SiteWalk describes a series of tasks that define autonomous robot operation. It contains SiteElements and SiteDocks together with other parameters that define autonomous operation.",
-                  "tags": ["SiteWalks"],
-                  "parameters": [
-                    {
-                      "name": "uuid",
-                      "in": "path",
-                      "description": "ID of SiteWalk",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
+                    "post": {
+                      "tags": ["Robots"],
+                      "summary": "Adds a new robot to Orbit.",
+                      "requestBody": {
+                        "description": "Information of a robot in Orbit.",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "hostname": {
+                                  "type": "string",
+                                  "description": "The hostname where the robot can be reached."
+                                },
+                                "nickname": {
+                                  "type": "string",
+                                  "description": "A descriptive label for the robot."
+                                },
+                                "username": {
+                                  "type": "string",
+                                  "description": "The username that Orbit is connected to the robot with."
+                                },
+                                "password": {
+                                  "type": "string",
+                                  "description": "The password of the account Orbit will use to connect to the robot."
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "required": true
+                      },
+                      "responses": {
+                        "200": {
+                          "description": "Successful operation",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "object",
+                                "properties": {
+                                  "robotIndex": {
+                                    "type": "integer",
+                                    "description": "The index to which the added robot was assigned."
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
                       }
                     }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "A SiteWalk was fetched.",
-                      "content": {
-                        "application/json": {
+                  },
+                  "/robots/{robotHostname}": {
+                    "get": {
+                      "tags": ["Robots"],
+                      "summary": "Retrieves information about a single robot.",
+                      "parameters": [
+                        {
+                          "name": "robotHostname",
+                          "in": "path",
+                          "description": "Hostname of the robot. This should match the hostname field of the robot resource.",
+                          "required": true,
                           "schema": {
-                            "$ref": "#/components/schemas/SiteWalk"
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Robot retrieved successfully.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/Robot"
+                              }
+                            }
+                          }
+                        },
+                        "404": {
+                          "description": "Could not find robot"
+                        },
+                        "500": {
+                          "description": "Could not fetch robot due to server error."
+                        }
+                      }
+                    },
+                    "delete": {
+                      "tags": ["Robots"],
+                      "summary": "Removes the specified robot.",
+                      "parameters": [
+                        {
+                          "name": "robotHostname",
+                          "in": "path",
+                          "description": "Hostname of the robot. This should match the hostname field of the robot resource.",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Robot deleted successfully."
+                        },
+                        "500": {
+                          "description": "Could not delete robot."
+                        }
+                      }
+                    }
+                  },
+                  "/webhooks": {
+                    "get": {
+                      "tags": ["Webhook"],
+                      "summary": "Retrieves a complete list of registered webhooks on Orbit.",
+                      "responses": {
+                        "200": {
+                          "description": "Successfully retrieved list of webhooks.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/components/schemas/Webhook"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Could not fetch webhooks."
+                        }
+                      }
+                    },
+                    "post": {
+                      "tags": ["Webhook"],
+                      "summary": "Adds a new webhook to Orbit.",
+                      "requestBody": {
+                        "description": "Information of a new webhook on Orbit.",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string",
+                                  "description": "The url of the webhook."
+                                },
+                                "enabled": {
+                                  "type": "boolean",
+                                  "description": "Determines whether or not to send the data to url from the webhook."
+                                },
+                                "events": {
+                                  "type": "object",
+                                  "description": "The list that contains what type of events would trigger sending the data to url. These can also be defined as payload types."
+                                },
+                                "validateTlsCert": {
+                                  "type": "boolean",
+                                  "description": "Whether or not to validate TLS certificate."
+                                },
+                                "secret": {
+                                  "type": "string",
+                                  "description": "The secret required to update the webhook (32 bit hex string)."
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "required": true
+                      },
+                      "responses": {
+                        "200": {
+                          "description": "Successfully created a webhook.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/components/schemas/Webhook"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "/webhooks/{uuid}": {
+                    "get": {
+                      "summary": "Retrieve a webhook by its uuid.",
+                      "description": "A single webhook registered webhook identified by the unique id.",
+                      "tags": ["Webhook"],
+                      "parameters": [
+                        {
+                          "name": "uuid",
+                          "in": "path",
+                          "description": "A webhook's uuid",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Fetched webhook details.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/Webhook"
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Failed to get webhook details."
+                        }
+                      }
+                    },
+                    "post": {
+                      "tags": ["Webhook"],
+                      "parameters": [
+                        {
+                          "name": "uuid",
+                          "in": "path",
+                          "description": "A webhook's uuid",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "summary": "Updates a specific webhook on Orbit.",
+                      "requestBody": {
+                        "description": "Information to update for a specific webhook on Orbit.",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "url": {
+                                  "type": "string",
+                                  "description": "The url of the webhook."
+                                },
+                                "enabled": {
+                                  "type": "boolean",
+                                  "description": "Determines whether or not to send the data to url from the webhook."
+                                },
+                                "events": {
+                                  "type": "object",
+                                  "description": "The list that contains what type of events would trigger sending the data to url. These can also be defined as payload types."
+                                },
+                                "validateTlsCert": {
+                                  "type": "boolean",
+                                  "description": "Whether or not to validate TLS certificate."
+                                },
+                                "secret": {
+                                  "type": "string",
+                                  "description": "The secret required to update the webhook (32 bit hex string)."
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "required": true
+                      },
+                      "responses": {
+                        "200": {
+                          "description": "Successfully updated a specific webhook.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/components/schemas/Webhook"
+                                }
+                              }
+                            }
                           }
                         }
                       }
                     },
-                    "500": {
-                      "description": "Something went wrong."
+                    "delete": {
+                      "tags": ["Webhook"],
+                      "summary": "Removes the specified webhook.",
+                      "parameters": [
+                        {
+                          "name": "uuid",
+                          "in": "path",
+                          "description": "A webhook's uuid",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Webhook deleted successfully."
+                        },
+                        "500": {
+                          "description": "Could not delete a webhook."
+                        }
+                      }
+                    }
+                  },
+                  "/missions": {
+                    "get": {
+                      "description": "Warning: This endpoint is deprecated. Use SiteWalk instead!",
+                      "deprecated": true,
+                      "tags": ["Missions"],
+                      "summary": "Retrieves a complete list of mission information on Orbit.",
+                      "responses": {
+                        "200": {
+                          "description": "Successfully retrieved missions.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "type": "array",
+                                "items": {
+                                  "$ref": "#/components/schemas/Mission"
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Could not fetch missions."
+                        }
+                      }
+                    }
+                  },
+                  "/missions/{missionId}": {
+                    "get": {
+                      "description": "Warning: This endpoint is deprecated. Use SiteWalk instead!",
+                      "deprecated": true,
+                      "tags": ["Missions"],
+                      "summary": "Retrieves information about a single mission.",
+                      "parameters": [
+                        {
+                          "name": "missionId",
+                          "in": "path",
+                          "description": "ID of the mission. This should match the uuid field of the mission resource.",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Mission retrieved successfully.",
+                          "content": {
+                            "application/json": {
+                              "schema": {
+                                "$ref": "#/components/schemas/Mission"
+                              }
+                            }
+                          }
+                        },
+                        "500": {
+                          "description": "Could not fetch mission."
+                        }
+                      }
+                    },
+                    "delete": {
+                      "description": "Warning: This endpoint is deprecated. Use SiteWalk instead!",
+                      "deprecated": true,
+                      "tags": ["Missions"],
+                      "summary": "Removes the specified mission.",
+                      "parameters": [
+                        {
+                          "name": "missionId",
+                          "in": "path",
+                          "description": "ID of the mission. This should match the uuid field of the mission resource.",
+                          "required": true,
+                          "schema": {
+                            "type": "string"
+                          }
+                        }
+                      ],
+                      "responses": {
+                        "200": {
+                          "description": "Mission deleted successfully."
+                        },
+                        "500": {
+                          "description": "Could not delete mission."
+                        }
+                      }
                     }
                   }
                 },
-                "delete": {
-                  "tags": ["SiteWalks"],
-                  "summary": "Removes the specified SiteWalk.",
-                  "parameters": [
-                    {
-                      "name": "uuid",
-                      "in": "path",
-                      "description": "ID of SiteWalk",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
+                "components": {
+                  "securitySchemes": {
+                    "Authorization": {
+                      "type": "apiKey",
+                      "description": " Obtain an API token from the Orbit instance and add it to the request header in the form of 'Bearer API TOKEN'.",
+                      "in": "header",
+                      "name": "Authorization"
                     }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "SiteWalk deleted successfully."
-                    },
-                    "500": {
-                      "description": "Could not delete SiteWalk."
-                    }
-                  }
-                }
-              },
-              "/site_walks": {
-                "post": {
-                  "tags": ["SiteWalks"],
-                  "summary": "Adds a new SiteWalk to Orbit. It also updates a pre-existing SiteWalk using the associated UUID.",
-                  "requestBody": {
-                    "description": "Information of a new SiteWalk in Orbit.",
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/SiteWalk"
-                          }
-                        }
-                      }
-                    },
-                    "required": true
                   },
-                  "responses": {
-                    "200": {
-                      "description": "Successful operation",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "$ref": "#/components/schemas/SiteWalk"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "/SiteElements/{uuid}": {
-                "get": {
-                  "summary": "Retrieves a single SiteElement resource by uuid.",
-                  "description": "A SiteElement describes what a robot should do and where to do it.",
-                  "tags": ["SiteElement"],
-                  "parameters": [
-                    {
-                      "name": "uuid",
-                      "in": "path",
-                      "description": "ID of SiteElement",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "A SiteElement was fetched.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "$ref": "#/components/schemas/SiteElement"
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Something went wrong."
-                    }
-                  }
-                }
-              },
-              "/SiteElements": {
-                "post": {
-                  "tags": ["SiteElement"],
-                  "summary": "Adds a new SiteElement to Orbit. It also updates a pre-existing SiteElement using the associated UUID.",
-                  "requestBody": {
-                    "description": "Information of a new SiteElement in Orbit.",
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/SiteElement"
-                          }
-                        }
-                      }
-                    },
-                    "required": true
-                  },
-                  "responses": {
-                    "200": {
-                      "description": "Successful operation",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/SiteElement"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "/site_docks/{uuid}": {
-                "get": {
-                  "summary": "Retrieves a single SiteDock resource by uuid.",
-                  "description": "A SiteDock is a representation of robot's docking station.",
-                  "tags": ["SiteDock"],
-                  "parameters": [
-                    {
-                      "name": "uuid",
-                      "in": "path",
-                      "description": "ID of SiteDock",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "A SiteDock was fetched.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "$ref": "#/components/schemas/SiteDock"
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Something went wrong."
-                    }
-                  }
-                }
-              },
-              "/site_docks": {
-                "post": {
-                  "tags": ["SiteDock"],
-                  "summary": "Adds a new SiteDock to Orbit. It also updates a pre-existing SiteDock using the associated UUID.",
-                  "requestBody": {
-                    "description": "Information of a new SiteDock in Orbit.",
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/SiteDock"
-                          }
-                        }
-                      }
-                    },
-                    "required": true
-                  },
-                  "responses": {
-                    "200": {
-                      "description": "Successful operation",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/SiteDock"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "/robots": {
-                "get": {
-                  "tags": ["Robots"],
-                  "summary": "Retrieves a complete list of robot information on Orbit. This includes which robot is assigned to each slot.",
-                  "responses": {
-                    "200": {
-                      "description": "Successfully retrieved robots.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/Robot"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "post": {
-                  "tags": ["Robots"],
-                  "summary": "Adds a new robot to Orbit.",
-                  "requestBody": {
-                    "description": "Information of a robot in Orbit.",
-                    "content": {
-                      "application/json": {
-                        "schema": {
+                  "schemas": {
+                    "Schedule": {
+                      "type": "object",
+                      "description": "A schedule describes when and how often a robot should execute an autonomous mission.",
+                      "properties": {
+                        "eventMetadata": {
                           "type": "object",
                           "properties": {
-                            "hostname": {
+                            "name": {
                               "type": "string",
-                              "description": "The hostname where the robot can be reached."
+                              "description": "The name of the calendar event."
                             },
+                            "modificationTimeMs": {
+                              "type": "integer",
+                              "description": "The time this event was last modified in milliseconds since epoch."
+                            },
+                            "modificationUser": {
+                              "type": "string",
+                              "description": "The user name that modified the event."
+                            }
+                          },
+                          "description": "Metadata for the calendar event."
+                        },
+                        "agent": {
+                          "type": "object",
+                          "properties": {
                             "nickname": {
                               "type": "string",
-                              "description": "A descriptive label for the robot."
-                            },
-                            "username": {
-                              "type": "string",
-                              "description": "The username that Orbit is connected to the robot with."
-                            },
-                            "password": {
-                              "type": "string",
-                              "description": "The password of the account Orbit will use to connect to the robot."
+                              "description": "The nickname of the robot for this event."
                             }
-                          }
-                        }
-                      }
-                    },
-                    "required": true
-                  },
-                  "responses": {
-                    "200": {
-                      "description": "Successful operation",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "object",
-                            "properties": {
-                              "robotIndex": {
-                                "type": "integer",
-                                "description": "The index to which the added robot was assigned."
+                          },
+                          "description": "Information about the agent(robot) for the calendar event."
+                        },
+                        "task": {
+                          "type": "object",
+                          "properties": {
+                            "missionId": {
+                              "type": "string",
+                              "description": "The ID associated with the mission for this event."
+                            },
+                            "forceAcquireEstop": {
+                              "type": "boolean",
+                              "description": "Determines whether Orbit should forcibly acquire Estop authority."
+                            }
+                          },
+                          "description": "Information about the agent(robot) for the calendar event."
+                        },
+                        "schedule": {
+                          "type": "object",
+                          "properties": {
+                            "timeMs": {
+                              "type": "integer",
+                              "description": "The first kick off time in milliseconds since epoch for this calendar event."
+                            },
+                            "repeatMs": {
+                              "type": "integer",
+                              "description": "The interval time between runs in milliseconds for this calendar event."
+                            },
+                            "blackouts": {
+                              "type": "array",
+                              "description": "The list of blackout times where this event should not occur.",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "startMs": {
+                                    "type": "integer",
+                                    "description": "The start time in milliseconds since epoch for this blackout."
+                                  },
+                                  "endMs": {
+                                    "type": "integer",
+                                    "description": "The end time in milliseconds since epoch for this blackout."
+                                  }
+                                }
                               }
                             }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "/robots/{robotHostname}": {
-                "get": {
-                  "tags": ["Robots"],
-                  "summary": "Retrieves information about a single robot.",
-                  "parameters": [
-                    {
-                      "name": "robotHostname",
-                      "in": "path",
-                      "description": "Hostname of the robot. This should match the hostname field of the robot resource.",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Robot retrieved successfully.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "$ref": "#/components/schemas/Robot"
-                          }
+                          },
+                          "description": "Information about the agent(robot) for the calendar event."
                         }
                       }
                     },
-                    "404": {
-                      "description": "Could not find robot"
-                    },
-                    "500": {
-                      "description": "Could not fetch robot due to server error."
-                    }
-                  }
-                },
-                "delete": {
-                  "tags": ["Robots"],
-                  "summary": "Removes the specified robot.",
-                  "parameters": [
-                    {
-                      "name": "robotHostname",
-                      "in": "path",
-                      "description": "Hostname of the robot. This should match the hostname field of the robot resource.",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Robot deleted successfully."
-                    },
-                    "500": {
-                      "description": "Could not delete robot."
-                    }
-                  }
-                }
-              },
-              "/webhooks": {
-                "get": {
-                  "tags": ["Webhook"],
-                  "summary": "Retrieves a complete list of registered webhooks on Orbit.",
-                  "responses": {
-                    "200": {
-                      "description": "Successfully retrieved list of webhooks.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/Webhook"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Could not fetch webhooks."
-                    }
-                  }
-                },
-                "post": {
-                  "tags": ["Webhook"],
-                  "summary": "Adds a new webhook to Orbit.",
-                  "requestBody": {
-                    "description": "Information of a new webhook on Orbit.",
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "type": "object",
-                          "properties": {
-                            "url": {
-                              "type": "string",
-                              "description": "The url of the webhook."
-                            },
-                            "enabled": {
-                              "type": "boolean",
-                              "description": "Determines whether or not to send the data to url from the webhook."
-                            },
-                            "events": {
-                              "type": "object",
-                              "description": "The list that contains what type of events would trigger sending the data to url. These can also be defined as payload types."
-                            },
-                            "validateTlsCert": {
-                              "type": "boolean",
-                              "description": "Whether or not to validate TLS certificate."
-                            },
-                            "secret": {
-                              "type": "string",
-                              "description": "The secret required to update the webhook (32 bit hex string)."
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "required": true
-                  },
-                  "responses": {
-                    "200": {
-                      "description": "Successfully created a webhook.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/Webhook"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "/webhooks/{uuid}": {
-                "get": {
-                  "summary": "Retrieve a webhook by its uuid.",
-                  "description": "A single webhook registered webhook identified by the unique id.",
-                  "tags": ["Webhook"],
-                  "parameters": [
-                    {
-                      "name": "uuid",
-                      "in": "path",
-                      "description": "A webhook's uuid",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Fetched webhook details.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "$ref": "#/components/schemas/Webhook"
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Failed to get webhook details."
-                    }
-                  }
-                },
-                "post": {
-                  "tags": ["Webhook"],
-                  "parameters": [
-                    {
-                      "name": "uuid",
-                      "in": "path",
-                      "description": "A webhook's uuid",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "summary": "Updates a specific webhook on Orbit.",
-                  "requestBody": {
-                    "description": "Information to update for a specific webhook on Orbit.",
-                    "content": {
-                      "application/json": {
-                        "schema": {
-                          "type": "object",
-                          "properties": {
-                            "url": {
-                              "type": "string",
-                              "description": "The url of the webhook."
-                            },
-                            "enabled": {
-                              "type": "boolean",
-                              "description": "Determines whether or not to send the data to url from the webhook."
-                            },
-                            "events": {
-                              "type": "object",
-                              "description": "The list that contains what type of events would trigger sending the data to url. These can also be defined as payload types."
-                            },
-                            "validateTlsCert": {
-                              "type": "boolean",
-                              "description": "Whether or not to validate TLS certificate."
-                            },
-                            "secret": {
-                              "type": "string",
-                              "description": "The secret required to update the webhook (32 bit hex string)."
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "required": true
-                  },
-                  "responses": {
-                    "200": {
-                      "description": "Successfully updated a specific webhook.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/Webhook"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "delete": {
-                  "tags": ["Webhook"],
-                  "summary": "Removes the specified webhook.",
-                  "parameters": [
-                    {
-                      "name": "uuid",
-                      "in": "path",
-                      "description": "A webhook's uuid",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Webhook deleted successfully."
-                    },
-                    "500": {
-                      "description": "Could not delete a webhook."
-                    }
-                  }
-                }
-              },
-              "/missions": {
-                "get": {
-                  "description": "Warning: This endpoint is deprecated. Use SiteWalk instead!",
-                  "deprecated": true,
-                  "tags": ["Missions"],
-                  "summary": "Retrieves a complete list of mission information on Orbit.",
-                  "responses": {
-                    "200": {
-                      "description": "Successfully retrieved missions.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "type": "array",
-                            "items": {
-                              "$ref": "#/components/schemas/Mission"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Could not fetch missions."
-                    }
-                  }
-                }
-              },
-              "/missions/{missionId}": {
-                "get": {
-                  "description": "Warning: This endpoint is deprecated. Use SiteWalk instead!",
-                  "deprecated": true,
-                  "tags": ["Missions"],
-                  "summary": "Retrieves information about a single mission.",
-                  "parameters": [
-                    {
-                      "name": "missionId",
-                      "in": "path",
-                      "description": "ID of the mission. This should match the uuid field of the mission resource.",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Mission retrieved successfully.",
-                      "content": {
-                        "application/json": {
-                          "schema": {
-                            "$ref": "#/components/schemas/Mission"
-                          }
-                        }
-                      }
-                    },
-                    "500": {
-                      "description": "Could not fetch mission."
-                    }
-                  }
-                },
-                "delete": {
-                  "description": "Warning: This endpoint is deprecated. Use SiteWalk instead!",
-                  "deprecated": true,
-                  "tags": ["Missions"],
-                  "summary": "Removes the specified mission.",
-                  "parameters": [
-                    {
-                      "name": "missionId",
-                      "in": "path",
-                      "description": "ID of the mission. This should match the uuid field of the mission resource.",
-                      "required": true,
-                      "schema": {
-                        "type": "string"
-                      }
-                    }
-                  ],
-                  "responses": {
-                    "200": {
-                      "description": "Mission deleted successfully."
-                    },
-                    "500": {
-                      "description": "Could not delete mission."
-                    }
-                  }
-                }
-              }
-            },
-            "components": {
-              "securitySchemes": {
-                "Authorization": {
-                  "type": "apiKey",
-                  "description": " Obtain an API token from the Orbit instance and add it to the request header in the form of 'Bearer API TOKEN'.",
-                  "in": "header",
-                  "name": "Authorization"
-                }
-              },
-              "schemas": {
-                "Schedule": {
-                  "type": "object",
-                  "description": "A schedule describes when and how often a robot should execute an autonomous mission.",
-                  "properties": {
-                    "eventMetadata": {
+                    "Robot": {
                       "type": "object",
+                      "description": "A Robot is a data structure representing a robot that is used to execute autonomous operations.",
                       "properties": {
-                        "name": {
-                          "type": "string",
-                          "description": "The name of the calendar event."
-                        },
-                        "modificationTimeMs": {
+                        "robotIndex": {
                           "type": "integer",
-                          "description": "The time this event was last modified in milliseconds since epoch."
+                          "description": "The index at which this robot is registered. This is a number between 0 and the max for your Orbit server (typically 32)."
                         },
-                        "modificationUser": {
+                        "hostname": {
                           "type": "string",
-                          "description": "The user name that modified the event."
-                        }
-                      },
-                      "description": "Metadata for the calendar event."
-                    },
-                    "agent": {
-                      "type": "object",
-                      "properties": {
+                          "description": "The hostname where the robot can be reached."
+                        },
                         "nickname": {
                           "type": "string",
-                          "description": "The nickname of the robot for this event."
-                        }
-                      },
-                      "description": "Information about the agent(robot) for the calendar event."
-                    },
-                    "task": {
-                      "type": "object",
-                      "properties": {
-                        "missionId": {
+                          "description": "A descriptive label for the robot."
+                        },
+                        "username": {
                           "type": "string",
-                          "description": "The ID associated with the mission for this event."
-                        },
-                        "forceAcquireEstop": {
-                          "type": "boolean",
-                          "description": "Determines whether Orbit should forcibly acquire Estop authority."
+                          "description": "The username that Orbit is connected to the robot with."
                         }
-                      },
-                      "description": "Information about the agent(robot) for the calendar event."
+                      }
                     },
-                    "schedule": {
+                    "Run": {
                       "type": "object",
+                      "description": "A Run represents a period of robot operation. Both teleoperation and autonomous operations are represented as Runs.",
                       "properties": {
-                        "timeMs": {
-                          "type": "integer",
-                          "description": "The first kick off time in milliseconds since epoch for this calendar event."
+                        "actionCount": {
+                          "type": "integer"
                         },
-                        "repeatMs": {
-                          "type": "integer",
-                          "description": "The interval time between runs in milliseconds for this calendar event."
+                        "pendingActionCount": {
+                          "type": "integer"
                         },
-                        "blackouts": {
+                        "uuid": {
+                          "type": "string",
+                          "description": "A unique identifier for this run."
+                        },
+                        "runType": {
+                          "type": "string",
+                          "description": "Whether the run was of a mission or teleoperation.",
+                          "enum": ["teleop", "mission"]
+                        },
+                        "startTime": {
+                          "type": "string",
+                          "description": "When this run started.",
+                          "format": "date-time"
+                        },
+                        "endTime": {
+                          "type": "string",
+                          "description": "When this run completed.",
+                          "format": "date-time"
+                        },
+                        "robotHostname": {
+                          "type": "string",
+                          "description": "The hostname of the robot being operated."
+                        },
+                        "robotSerial": {
+                          "type": "string",
+                          "description": "The serial of the robot being operated."
+                        },
+                        "robotNickname": {
+                          "type": "string",
+                          "description": "The nickname of the robot being operated."
+                        },
+                        "operatorId": {
+                          "type": "string",
+                          "description": "The username of the driver."
+                        },
+                        "missionStatus": {
+                          "type": "string",
+                          "description": "The status of the mission this run played."
+                        },
+                        "missionName": {
+                          "type": "string",
+                          "description": "The name of the mission this run played."
+                        },
+                        "robotSoftwareMajorVersion": {
+                          "type": "integer",
+                          "description": "The robot software major version during operation."
+                        },
+                        "robotSoftwareMinorVersion": {
+                          "type": "integer",
+                          "description": "The robot software minor version during operation."
+                        },
+                        "robotSoftwarePatchVersion": {
+                          "type": "integer",
+                          "description": "The robot software patch version during operation."
+                        },
+                        "robotSoftwareGitHash": {
+                          "type": "string",
+                          "description": "The version hash of the robot software used during operation."
+                        }
+                      }
+                    },
+                    "RunEvent": {
+                      "type": "object",
+                      "description": "A RunEvent represents the output of an action executed during a Run. It contains all the RunCaptures associated with the action.",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "description": "A unique identifier for this run event."
+                        },
+                        "runUuid": {
+                          "type": "string",
+                          "description": "The unique identifier for the run in which this event took place."
+                        },
+                        "time": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "When this event took place on robot."
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "description": "When this event was stored in Orbit."
+                        },
+                        "actionName": {
+                          "type": "string",
+                          "description": "The name of the action which this event represents."
+                        },
+                        "actionRunArchiveFileUrl": {
+                          "type": "string",
+                          "description": "The path to the event's data and metadata archive."
+                        },
+                        "error": {
+                          "type": "integer",
+                          "description": "The error code for an error which occured during this event."
+                        },
+                        "actionUuid": {
+                          "type": "string",
+                          "description": "A unique identifier for the action this event represents."
+                        },
+                        "missionName": {
+                          "type": "string",
+                          "description": "The name of the mission during which this event took place."
+                        },
+                        "metadataFileUrl": {
+                          "type": "string",
+                          "description": "The path to the metadata.json file for this event."
+                        },
+                        "eventType": {
+                          "type": "string",
+                          "enum": ["daq", "screenshot"],
+                          "description": "The type of run event this is. Could be an action execution (daq) or a user triggered screenshot."
+                        },
+                        "dataCaptures": {
                           "type": "array",
-                          "description": "The list of blackout times where this event should not occur.",
                           "items": {
-                            "type": "object",
-                            "properties": {
-                              "startMs": {
-                                "type": "integer",
-                                "description": "The start time in milliseconds since epoch for this blackout."
-                              },
-                              "endMs": {
-                                "type": "integer",
-                                "description": "The end time in milliseconds since epoch for this blackout."
-                              }
-                            }
+                            "$ref": "#/components/schemas/RunCapture"
                           }
                         }
-                      },
-                      "description": "Information about the agent(robot) for the calendar event."
-                    }
-                  }
-                },
-                "Robot": {
-                  "type": "object",
-                  "description":"A Robot is a data structure representing a robot that is used to execute autonomous operations.",
-                  "properties": {
-                    "robotIndex": {
-                      "type": "integer",
-                      "description": "The index at which this robot is registered. This is a number between 0 and the max for your Orbit server (typically 32)."
-                    },
-                    "hostname": {
-                      "type": "string",
-                      "description": "The hostname where the robot can be reached."
-                    },
-                    "nickname": {
-                      "type": "string",
-                      "description": "A descriptive label for the robot."
-                    },
-                    "username": {
-                      "type": "string",
-                      "description": "The username that Orbit is connected to the robot with."
-                    }
-                  }
-                },
-                "Run": {
-                  "type": "object",
-                  "description":"A Run represents a period of robot operation. Both teleoperation and autonomous operations are represented as Runs.",
-                  "properties": {
-                    "actionCount": {
-                      "type": "integer"
-                    },
-                    "pendingActionCount": {
-                      "type": "integer"
-                    },
-                    "uuid": {
-                      "type": "string",
-                      "description": "A unique identifier for this run."
-                    },
-                    "runType": {
-                      "type": "string",
-                      "description": "Whether the run was of a mission or teleoperation.",
-                      "enum": ["teleop", "mission"]
-                    },
-                    "startTime": {
-                      "type": "string",
-                      "description": "When this run started.",
-                      "format": "date-time"
-                    },
-                    "endTime": {
-                      "type": "string",
-                      "description": "When this run completed.",
-                      "format": "date-time"
-                    },
-                    "robotHostname": {
-                      "type": "string",
-                      "description": "The hostname of the robot being operated."
-                    },
-                    "robotSerial": {
-                      "type": "string",
-                      "description": "The serial of the robot being operated."
-                    },
-                    "robotNickname": {
-                      "type": "string",
-                      "description": "The nickname of the robot being operated."
-                    },
-                    "operatorId": {
-                      "type": "string",
-                      "description": "The username of the driver."
-                    },
-                    "missionStatus": {
-                      "type": "string",
-                      "description": "The status of the mission this run played."
-                    },
-                    "missionName": {
-                      "type": "string",
-                      "description": "The name of the mission this run played."
-                    },
-                    "robotSoftwareMajorVersion": {
-                      "type": "integer",
-                      "description": "The robot software major version during operation."
-                    },
-                    "robotSoftwareMinorVersion": {
-                      "type": "integer",
-                      "description": "The robot software minor version during operation."
-                    },
-                    "robotSoftwarePatchVersion": {
-                      "type": "integer",
-                      "description": "The robot software patch version during operation."
-                    },
-                    "robotSoftwareGitHash": {
-                      "type": "string",
-                      "description": "The version hash of the robot software used during operation."
-                    }
-                  }
-                },
-                "RunEvent": {
-                  "type": "object",
-                  "description":"A RunEvent represents the output of an action executed during a Run. It contains all the RunCaptures associated with the action.",
-                  "properties": {
-                    "uuid": {
-                      "type": "string",
-                      "description": "A unique identifier for this run event."
-                    },
-                    "runUuid": {
-                      "type": "string",
-                      "description": "The unique identifier for the run in which this event took place."
-                    },
-                    "time": {
-                      "type": "string",
-                      "format": "date-time",
-                      "description": "When this event took place on robot."
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "description": "When this event was stored in Orbit."
-                    },
-                    "actionName": {
-                      "type": "string",
-                      "description": "The name of the action which this event represents."
-                    },
-                    "actionRunArchiveFileUrl": {
-                      "type": "string",
-                      "description": "The path to the event's data and metadata archive."
-                    },
-                    "error": {
-                      "type": "integer",
-                      "description": "The error code for an error which occured during this event."
-                    },
-                    "actionUuid": {
-                      "type": "string",
-                      "description": "A unique identifier for the action this event represents."
-                    },
-                    "missionName": {
-                      "type": "string",
-                      "description": "The name of the mission during which this event took place."
-                    },
-                    "metadataFileUrl": {
-                      "type": "string",
-                      "description": "The path to the metadata.json file for this event."
-                    },
-                    "eventType": {
-                      "type": "string",
-                      "enum": ["daq", "screenshot"],
-                      "description": "The type of run event this is. Could be an action execution (daq) or a user triggered screenshot."
-                    },
-                    "dataCaptures": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/RunCapture"
-                      }
-                    }
-                  }
-                },
-                "RunCapture": {
-                  "type": "object",
-                  "description":"A RunCapture describes a data point captured during a particular RunEvent.",
-                  "properties": {
-                    "time": {
-                      "type": "string",
-                      "format": "date-time",
-                      "description": "The time at which this result was captured."
-                    },
-                    "uuid": {
-                      "type": "string",
-                      "description": "A unique identifier for this result."
-                    },
-                    "runEventUuid": {
-                      "type": "string",
-                      "description": "The unique identifier for the run event during which this result was captured."
-                    },
-                    "dataUrl": {
-                      "type": "string",
-                      "description": "The path to the file holding this result's data."
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "description": "When the result was stored in Orbit."
-                    },
-                    "keyResults": {
-                      "type": "array",
-                      "description": "A collection of key value pairs summarizing this result.",
-                      "items": {
-                        "type": "object"
                       }
                     },
-                    "channelName": {
-                      "type": "string",
-                      "description": "The name of the action channel which produced this result."
-                    },
-                    "actionChannelRunFlagUuid": {
-                      "type": "string",
-                      "description": "A unique identifier for a flag on this data."
-                    }
-                  }
-                },
-                "SiteWalk": {
-                  "type": "object",
-                  "description":"A SiteWalk describes a series of tasks that define autonomous robot operation. It contains SiteElements and SiteDocks together with other parameters that define autonomous operation.",
-                  "properties": {
-                    "uuid": {
-                      "type": "string",
-                      "description": "Unique identifier for the SiteWalk."
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name for the SiteWalk."
-                    },
-                    "siteElementIds": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "References to elements in this walk in the order they will be visited."
-                    },
-                    "globalParameters": {
+                    "RunCapture": {
                       "type": "object",
-                      "description": "Parameters that apply to the entire mission."
+                      "description": "A RunCapture describes a data point captured during a particular RunEvent.",
+                      "properties": {
+                        "time": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "The time at which this result was captured."
+                        },
+                        "uuid": {
+                          "type": "string",
+                          "description": "A unique identifier for this result."
+                        },
+                        "runEventUuid": {
+                          "type": "string",
+                          "description": "The unique identifier for the run event during which this result was captured."
+                        },
+                        "dataUrl": {
+                          "type": "string",
+                          "description": "The path to the file holding this result's data."
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "description": "When the result was stored in Orbit."
+                        },
+                        "keyResults": {
+                          "type": "array",
+                          "description": "A collection of key value pairs summarizing this result.",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        "channelName": {
+                          "type": "string",
+                          "description": "The name of the action channel which produced this result."
+                        },
+                        "actionChannelRunFlagUuid": {
+                          "type": "string",
+                          "description": "A unique identifier for a flag on this data."
+                        }
+                      }
                     },
-                    "siteDockIds": {
+                    "SiteWalk": {
                       "type": "object",
-                      "description": "References to docks to be used by this walk."
+                      "description": "A SiteWalk describes a series of tasks that define autonomous robot operation. It contains SiteElements and SiteDocks together with other parameters that define autonomous operation.",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "description": "Unique identifier for the SiteWalk."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The name for the SiteWalk."
+                        },
+                        "siteElementIds": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "References to elements in this walk in the order they will be visited."
+                        },
+                        "globalParameters": {
+                          "type": "object",
+                          "description": "Parameters that apply to the entire mission."
+                        },
+                        "siteDockIds": {
+                          "type": "object",
+                          "description": "References to docks to be used by this walk."
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "description": "When the SiteWalk was stored in Orbit."
+                        },
+                        "modifiedAt": {
+                          "type": "string",
+                          "description": "When the SiteWalk was modified in Orbit."
+                        },
+                        "siteElementMetadata": {
+                          "type": "object",
+                          "description": "Metadata for each SiteElement references in SiteElement_ids."
+                        },
+                        "targetFailureBehavior": {
+                          "type": "object",
+                          "description": "Default behavior if a robot fails to navigate to a given position."
+                        },
+                        "actionFailureBehavior": {
+                          "type": "object",
+                          "description": "Default behavior if a robot fails to perform an action."
+                        },
+                        "preferRecordedRoutes": {
+                          "type": "boolean",
+                          "description": "Whether or not to take shortcuts."
+                        },
+                        "batteryMonitor": {
+                          "type": "object",
+                          "description": "Default behavior for leaving and returning to dock based on the robot battery charge."
+                        },
+                        "travelParams": {
+                          "type": "object",
+                          "description": "Travel params common to the entire SiteWalk."
+                        },
+                        "entityParams": {
+                          "type": "object",
+                          "description": "Entity params used by all elements."
+                        },
+                        "skipDockingAfterCompletion": {
+                          "type": "boolean",
+                          "description": "Whether or not to dock after executing all actions."
+                        }
+                      }
                     },
-                    "createdAt": {
-                      "type": "string",
-                      "description": "When the SiteWalk was stored in Orbit."
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "description": "When the SiteWalk was modified in Orbit."
-                    },
-                    "siteElementMetadata": {
+                    "SiteElement": {
                       "type": "object",
-                      "description": "Metadata for each SiteElement references in SiteElement_ids."
+                      "description": "A SiteElement describes what a robot should do and where to do it.",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "description": "Unique identifier for the SiteElement."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The name for the SiteElement."
+                        },
+                        "waypointId": {
+                          "type": "string",
+                          "description": "The location of the element."
+                        },
+                        "waypointMaxDistance": {
+                          "type": "number",
+                          "description": "The maximum distance [meters] that defines when we have reached the element waypoint."
+                        },
+                        "waypointMaxYaw": {
+                          "type": "number",
+                          "description": "The maximum yaw [radians] that defines when we have reached the element waypoint."
+                        },
+                        "action": {
+                          "type": "object",
+                          "description": "Action performed at target destination."
+                        },
+                        "targetFailureBehavior": {
+                          "type": "object",
+                          "description": "Default behavior if a robot fails to navigate to a given position."
+                        },
+                        "actionFailureBehavior": {
+                          "type": "object",
+                          "description": "Default behavior if a robot fails to perform an action."
+                        },
+                        "actionDuration": {
+                          "type": "object",
+                          "description": "The maximum time spent performing the action."
+                        },
+                        "relocalize": {
+                          "type": "object",
+                          "description": "Whether the robot should relocalize at the target."
+                        },
+                        "actionWrapper": {
+                          "type": "object",
+                          "description": "What the robot should do prior to and during an action."
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "description": "When the SiteElement was stored in Orbit."
+                        },
+                        "modifiedAt": {
+                          "type": "string",
+                          "description": "When the SiteElement was modified in Orbit."
+                        }
+                      }
                     },
-                    "targetFailureBehavior": {
+                    "SiteDock": {
                       "type": "object",
-                      "description": "Default behavior if a robot fails to navigate to a given position."
+                      "description": "A SiteDock is a representation of robot's docking station.",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "description": "Unique identifier for the SiteDock."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "The fiducial number of the dock."
+                        },
+                        "dockedWaypointId": {
+                          "type": "string",
+                          "description": "The waypoint where the dock is located."
+                        },
+                        "targetPrepPose": {
+                          "type": "object",
+                          "description": "When it is time for the robot to dock, it will approach this target before issuing docking commands. "
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "description": "When the SiteDock was stored in Orbit."
+                        },
+                        "modifiedAt": {
+                          "type": "string",
+                          "description": "When the SiteDock was modified in Orbit."
+                        }
+                      }
                     },
-                    "actionFailureBehavior": {
+                    "Webhook": {
                       "type": "object",
-                      "description": "Default behavior if a robot fails to perform an action."
+                      "description": "A Webhook is a mechanism by which Orbit sends real-time data from robot operation to any subscribed external systems.",
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "description": "Unique identifier for the webhook instance."
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "The url of the webhook instance."
+                        },
+                        "enabled": {
+                          "type": "boolean",
+                          "description": "Determines whether or not to send the data to url from the webhook."
+                        },
+                        "archived": {
+                          "type": "boolean",
+                          "description": "Determines whether or not the webhook is archived."
+                        },
+                        "events": {
+                          "type": "object",
+                          "description": "The list that contains what type of events would trigger sending the data to url. These can also be defined as payload types."
+                        },
+                        "validateTlsCert": {
+                          "type": "boolean",
+                          "description": "Whether or not to validate TLS certificate."
+                        },
+                        "secret": {
+                          "type": "string",
+                          "description": "The secret required to update the webhook (32 bit hex string)."
+                        }
+                      }
                     },
-                    "preferRecordedRoutes": {
-                      "type": "boolean",
-                      "description": "Whether or not to take shortcuts."
-                    },
-                    "batteryMonitor": {
+                    "Mission": {
+                      "description": "Warning: This endpoint is deprecated. Use SiteWalk instead!",
+                      "deprecated": true,
                       "type": "object",
-                      "description": "Default behavior for leaving and returning to dock based on the robot battery charge."
-                    },
-                    "travelParams": {
-                      "type": "object",
-                      "description": "Travel params common to the entire SiteWalk."
-                    },
-                    "entityParams": {
-                      "type": "object",
-                      "description": "Entity params used by all elements."
-                    },
-                    "skipDockingAfterCompletion": {
-                      "type": "boolean",
-                      "description": "Whether or not to dock after executing all actions."
-                    }
-                  }
-                },
-                "SiteElement": {
-                  "type": "object",
-                  "description":"A SiteElement describes what a robot should do and where to do it.",
-                  "properties": {
-                    "uuid": {
-                      "type": "string",
-                      "description": "Unique identifier for the SiteElement."
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name for the SiteElement."
-                    },
-                    "waypointId": {
-                      "type": "string",
-                      "description": "The location of the element."
-                    },
-                    "waypointMaxDistance": {
-                      "type": "number",
-                      "description": "The maximum distance [meters] that defines when we have reached the element waypoint."
-                    },
-                    "waypointMaxYaw": {
-                      "type": "number",
-                      "description": "The maximum yaw [radians] that defines when we have reached the element waypoint."
-                    },
-                    "action": {
-                      "type": "object",
-                      "description": "Action performed at target destination."
-                    },
-                    "targetFailureBehavior": {
-                      "type": "object",
-                      "description": "Default behavior if a robot fails to navigate to a given position."
-                    },
-                    "actionFailureBehavior": {
-                      "type": "object",
-                      "description": "Default behavior if a robot fails to perform an action."
-                    },
-                    "actionDuration": {
-                      "type": "object",
-                      "description": "The maximum time spent performing the action."
-                    },
-                    "relocalize": {
-                      "type": "object",
-                      "description": "Whether the robot should relocalize at the target."
-                    },
-                    "actionWrapper": {
-                      "type": "object",
-                      "description": "What the robot should do prior to and during an action."
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "description": "When the SiteElement was stored in Orbit."
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "description": "When the SiteElement was modified in Orbit."
-                    }
-                  }
-                },
-                "SiteDock": {
-                  "type": "object",
-                  "description":"A SiteDock is a representation of robot's docking station.",
-                  "properties": {
-                    "uuid": {
-                      "type": "string",
-                      "description": "Unique identifier for the SiteDock."
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The fiducial number of the dock."
-                    },
-                    "dockedWaypointId": {
-                      "type": "string",
-                      "description": "The waypoint where the dock is located."
-                    },
-                    "targetPrepPose": {
-                      "type": "object",
-                      "description": "When it is time for the robot to dock, it will approach this target before issuing docking commands. "
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "description": "When the SiteDock was stored in Orbit."
-                    },
-                    "modifiedAt": {
-                      "type": "string",
-                      "description": "When the SiteDock was modified in Orbit."
-                    }
-                  }
-                },
-                "Webhook": {
-                  "type": "object",
-                  "description": "A Webhook is a mechanism by which Orbit sends real-time data from robot operation to any subscribed external systems.",
-                  "properties": {
-                    "uuid": {
-                      "type": "string",
-                      "description": "Unique identifier for the webhook instance."
-                    },
-                    "url": {
-                      "type": "string",
-                      "description": "The url of the webhook instance."
-                    },
-                    "enabled": {
-                      "type": "boolean",
-                      "description": "Determines whether or not to send the data to url from the webhook."
-                    },
-                    "archived": {
-                      "type": "boolean",
-                      "description": "Determines whether or not the webhook is archived."
-                    },
-                    "events": {
-                      "type": "object",
-                      "description": "The list that contains what type of events would trigger sending the data to url. These can also be defined as payload types."
-                    },
-                    "validateTlsCert": {
-                      "type": "boolean",
-                      "description": "Whether or not to validate TLS certificate."
-                    },
-                    "secret": {
-                      "type": "string",
-                      "description": "The secret required to update the webhook (32 bit hex string)."
-                    }
-                  }
-                },
-                "Mission": {
-                  "description": "Warning: This endpoint is deprecated. Use SiteWalk instead!",
-                  "deprecated": true,
-                  "type": "object",
-                  "properties": {
-                    "uuid": {
-                      "type": "string",
-                      "description": "Orbit's unique id for this mission. Use this as a parameter for operations like scheduling missions."
-                    },
-                    "mission_id": {
-                      "type": "string",
-                      "description": "The mission id from the robot when this mission was uploaded to Orbit."
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "A descriptive label for the mission."
-                    },
-                    "saved_at": {
-                      "type": "string",
-                      "description": "When this mission was saved.",
-                      "format": "date-time"
+                      "properties": {
+                        "uuid": {
+                          "type": "string",
+                          "description": "Orbit's unique id for this mission. Use this as a parameter for operations like scheduling missions."
+                        },
+                        "mission_id": {
+                          "type": "string",
+                          "description": "The mission id from the robot when this mission was uploaded to Orbit."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "A descriptive label for the mission."
+                        },
+                        "saved_at": {
+                          "type": "string",
+                          "description": "When this mission was saved.",
+                          "format": "date-time"
+                        }
+                      }
                     }
                   }
                 }
-              }
-            }
-          },
+              },
           dom_id: "#swagger-ui",
         });
       };

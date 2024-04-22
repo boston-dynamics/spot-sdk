@@ -43,7 +43,7 @@ To create a data acquisition plugin, we will use the `DataAcquisitionPluginServi
 
 #### Enter your Spot API virtualenv
 
-Replace `my_spot_env` with the name of the virtualenv that you created using the <a href="https://dev.bostondynamics.com/docs/python/quickstart">Spot Quickstart Guide</a>:
+Replace `my_spot_env` with the name of the virtualenv that you created using the [Spot Quickstart Guide](../quickstart.md):
 
 ```sh
 source my_spot_env/bin/activate

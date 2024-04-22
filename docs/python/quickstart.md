@@ -24,9 +24,9 @@ This guide will help you set up your programming environment to successfully com
      * [Get a Spot Robot](#get-a-spot-robot)
      * [Get a user account on the robot](#get-a-user-account-on-the-robot)
      * [Ping Spot](#ping-spot)
-     * [Request Spot robot's ID](#request-spot-robots-id)
+     * [Request Spot robot's ID](#request-spot-robot-s-id)
   * [Get a copy of the full SDK distribution from github](#get-a-copy-of-the-full-sdk-distribution-from-github)
-  * [Run Hello Spot - let's see the robot move!](#run-hello-spot---lets-see-the-robot-move)
+  * [Run Hello Spot - let's see the robot move!](#run-hello-spot-let-s-see-the-robot-move)
      * [Run an Independent E-Stop](#run-an-independent-e-stop)
      * [Run Hello Spot (Take 2)](#run-hello-spot-take-2)
   * [Next Steps](#next-steps)
@@ -158,16 +158,16 @@ With `python` and `pip` properly installed and configured, the Python packages a
 or upgraded from PyPI with the following command.
 
 ```shell
-$ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreography-client
+$ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreography-client bosdyn-orbit
 ```
 
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 4.0.0, use the following command.
+example 4.0.1, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==4.0.0 bosdyn-mission==4.0.0 bosdyn-choreography-client==4.0.0
+$ python3 -m pip install bosdyn-client==4.0.1 bosdyn-mission==4.0.1 bosdyn-choreography-client==4.0.1 bosdyn-orbit==4.0.1
 ```
 
 **Version incompatibility:**
@@ -176,10 +176,10 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 4.0.0 which is incompatible.
+have bosdyn-api 4.0.1 which is incompatible.
 ```
 
-Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:
+Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all packages) and then reinstalling:
 
 ```shell
 $ python3 -m pip uninstall bosdyn-client bosdyn-mission bosdyn-api bosdyn-core
@@ -191,19 +191,20 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    4.0.0
-bosdyn-choreography-client    4.0.0
-bosdyn-choreography-protos    4.0.0
-bosdyn-client                 4.0.0
-bosdyn-core                   4.0.0
-bosdyn-mission                4.0.0
+bosdyn-api                    4.0.1
+bosdyn-choreography-client    4.0.1
+bosdyn-choreography-protos    4.0.1
+bosdyn-client                 4.0.1
+bosdyn-core                   4.0.1
+bosdyn-mission                4.0.1
+bosdyn-orbit                  4.0.1
 ```
 **Windows users:**
 ```shell
 > python3 -m pip list --format=columns | findstr bosdyn
 ```
 
-If you don't see the 4 bosdyn packages with your target version, something went wrong during
+If you don't see the above bosdyn packages with your target version, something went wrong during
 installation.
 
 Next, start the python interpreter:

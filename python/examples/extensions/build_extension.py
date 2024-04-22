@@ -21,7 +21,7 @@ _IMAGES_MANIFEST_FIELD_NAME = "images"
 _VERSION_FIELD_NAME = "version"
 
 
-def build_image(client: docker.DockerClient, dockerfile_path: Path, tag: str):
+def build_image(client: docker.DockerClient, dockerfile_path: Path, tag: str, amd64: bool = False):
     """Builds the Docker image and saves it to a .tar.gz file.
 
     Args:
@@ -35,7 +35,14 @@ def build_image(client: docker.DockerClient, dockerfile_path: Path, tag: str):
 
     # Build the image
     print(f"Building image {tag} from {dockerfile_path}")
-    client.images.build(path=str(dockerfile_path.parent), tag=tag, dockerfile=dockerfile_path.name)
+    if amd64:
+        client.images.build(path=str(dockerfile_path.parent), tag=tag,
+                            dockerfile=dockerfile_path.name, platform="linux/amd64")
+    else:
+        # Setting the platform seems to persist on future builds, so explicitly setting the
+        # platform to ARM if "--amd64" is not specified ensures consistent builds.
+        client.images.build(path=str(dockerfile_path.parent), tag=tag,
+                            dockerfile=dockerfile_path.name, platform="linux/arm64")
 
 
 def pull_extra_images(client: docker.DockerClient, image_tags: List[str]) -> bool:
@@ -192,8 +199,10 @@ def main():
     parser.add_argument('--spx', type=Path, required=True, help='Path to write the final spx to')
 
     # Optional arguments
-    parser.add_argument('--arm', action='store_true',
-                        help='Whether or not the target architecture is ARM.')
+    parser.add_argument(
+        '--amd64', action='store_true', help=
+        'If specified, the docker image is built for an amd64 architecture. Otherwise defaults to arm for running on the CORE I/O.'
+    )
     parser.add_argument(
         '--extra-image-tags', nargs='*', type=str, help=
         'Additional image tags to save that do not need to be built (e.g. images pulled directly from Dockerhub)'
@@ -215,13 +224,13 @@ def main():
     client = docker.from_env()
 
     # Enable multi-arch build if building for ARM
-    if options.arm:
+    if not options.amd64:
         client.containers.run("multiarch/qemu-user-static", command=["--reset", "-p", "yes"],
                               privileged=True, remove=False)
 
     # Build images
     for dockerfile_path, image_tag in zip(options.dockerfile_paths, options.build_image_tags):
-        build_image(client, dockerfile_path, image_tag)
+        build_image(client, dockerfile_path, image_tag, options.amd64)
 
     # Save images
     image_tags_to_save = options.build_image_tags

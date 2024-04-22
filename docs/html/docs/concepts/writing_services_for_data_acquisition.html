@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Integrate a Payload with the Data Acquisition Pipeline &mdash; Spot 4.0.0 documentation</title>
+  <title>Integrate a Payload with the Data Acquisition Pipeline &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -505,7 +504,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p><img alt="Communication Map Screenshot" src="../../_images/payload_communication_map.png" /></p>
 <section id="camera-payloads">
 <h2>Camera Payloads<a class="headerlink" href="#camera-payloads" title="Permalink to this heading"></a></h2>
-<p>To integrate a camera payload which outputs image data in a known format (e.g. raw bytes or JPEG) with the data acquisition pipeline, a developer needs to implement an <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#image-service-proto">ImageService</a>.</p>
+<p>To integrate a camera payload which outputs image data in a known format (e.g. raw bytes or JPEG) with the data acquisition pipeline, a developer needs to implement an <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-image-service-proto">ImageService</a>.</p>
 <p>The data acquisition service will automatically recognize any directory-registered image services, create <code class="docutils literal notranslate"><span class="pre">ImageAcquistionCapabilities</span></code> for the image sources, and be able to collect image data for each service using the standard <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> RPCs. For a camera payload, a developer will need to implement an image servicer class. To simplify the implementation of an image service, a set of base image service helper functions are provided in <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html"><span class="doc">image_service_helpers.py</span></a>.</p>
 <p>For each image source that will be available in the image service, a <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code> helper class should be created to create the necessary protos for responding to gRPC requests from an image service, request and decode image data from the specific image source, and create or clear faults specific to the image source. The constructor requires the image source name to be provided (as a string), and then a class inheriting from the <code class="docutils literal notranslate"><span class="pre">CameraInterface</span></code> and overriding the functions for capturing image data and decoding the data. Optionally, the number of pixel rows and columns in the image can be provided as integer values in the <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code> constructor. The gain and exposure time can be provided as either a function which dynamically determines the values or fixed float values in the <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code> constructor as well.</p>
 <p>The image service can be created with the <code class="docutils literal notranslate"><span class="pre">CameraBaseImageServicer</span></code> class, which is a helper class that will manage state and respond to the RPCs required of an image service (<code class="docutils literal notranslate"><span class="pre">ListImageSources</span></code> RPC and <code class="docutils literal notranslate"><span class="pre">GetImage</span></code> RPC). The constructor of the image service helper class requires a developer to provide the sdk robot instance, the service name, and a list of <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code>’s which will represent the image sources available for capture from this image service.</p>
@@ -535,7 +534,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="example-image-services">
 <h3>Example Image Services<a class="headerlink" href="#example-image-services" title="Permalink to this heading"></a></h3>
-<p>There are two SDK examples showing <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> implementations using the helper functions: a <a class="reference internal" href="../../python/examples/web_cam_image_service/README.html"><span class="doc">USB web camera</span></a>, and the <a class="reference internal" href="../../python/examples/ricoh_theta/README.html"><span class="doc">Ricoh Theta camera</span></a>.</p>
+<p>There are two SDK examples showing <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> implementations using the helper functions: a <a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html"><span class="doc">USB web camera</span></a>, and the <a class="reference internal" href="../../python/examples/ricoh_theta/README.html"><span class="doc">Ricoh Theta camera</span></a>.</p>
 </section>
 <section id="tips-for-creating-an-image-service">
 <h3>Tips for Creating an Image Service<a class="headerlink" href="#tips-for-creating-an-image-service" title="Permalink to this heading"></a></h3>
@@ -556,7 +555,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="non-image-payloads">
 <h2>Non-image Payloads<a class="headerlink" href="#non-image-payloads" title="Permalink to this heading"></a></h2>
-<p>To integrate a payload which outputs a different, non-image format of data with the data acquisition pipeline, a developer needs to implement a <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#data-acquisition-plugin-service-proto">DataAcquisitionPluginService</a>.</p>
+<p>To integrate a payload which outputs a different, non-image format of data with the data acquisition pipeline, a developer needs to implement a <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-data-acquisition-plugin-service-proto">DataAcquisitionPluginService</a>.</p>
 <p>A directory-registered DataAcquisitionPluginService will be automatically recognized by the data acquisition service on robot. The plugin service will collect the necessary payload data to respond to requests for its specific data captures from the data acquisition service. To simplify the implementation of a plugin service, a set of base plugin service helper functions are provided in <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.html"><span class="doc">data_acquisition_plugin_service.py</span></a>.</p>
 <p>The plugin service can be created with the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> class, which is a helper class that will manage state and respond to the RPCs required of a plugin service. The constructor of the plugin service helper class requires a developer to provide 1) a list of the data capabilities that the service can collect data, and 2) a function to collect this data.</p>
 <section id="data-capabilities-list">

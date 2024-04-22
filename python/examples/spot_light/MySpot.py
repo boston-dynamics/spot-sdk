@@ -58,6 +58,9 @@ class MySpot(object):
         self._robot = self._sdk.create_robot(config.hostname)
         bosdyn.client.util.authenticate(self._robot)
 
+        # Set brightness_threshold
+        self._brightness_threshold = config.brightness_threshold
+
     def get_image(self):
         """
         Get an image from the front left camera

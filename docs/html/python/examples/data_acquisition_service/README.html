@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Acquisition Plugin Services &mdash; Spot 4.0.0 documentation</title>
+  <title>Data Acquisition Plugin Services &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -531,7 +530,7 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <p>The other IP address is the traditional robot hostname (”ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
-<p>Since the example is created to run off of a payload computer, it requires the input arguments <code class="docutils literal notranslate"><span class="pre">--guid</span></code> (uniquely generated payload specifier) and <code class="docutils literal notranslate"><span class="pre">--secret</span></code> (private string associated with a payload) for the registered payload computer that will be running the example plugins. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#Configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
+<p>Since the example is created to run off of a payload computer, it requires the input arguments <code class="docutils literal notranslate"><span class="pre">--guid</span></code> (uniquely generated payload specifier) and <code class="docutils literal notranslate"><span class="pre">--secret</span></code> (private string associated with a payload) for the registered payload computer that will be running the example plugins. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
 <p>For the CORE I/O, this information by default will be located in the file <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code>.</p>
 <p>Note, you can run the example plugins locally on your PC by registering it as a weightless payload using <a class="reference internal" href="../payloads/README.html"><span class="doc">the payloads example</span></a> and creating a GUID and secret for your computer.</p>
 <p>Lastly, port numbers for the example plugin services can be specified using the <code class="docutils literal notranslate"><span class="pre">--port</span></code> (”PORT_THE_PLUGIN_WILL_MONITOR”) argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. The port numbers will be used with the <code class="docutils literal notranslate"><span class="pre">--host-ip</span></code> (”IP_WHERE_PLUGIN_WILL_RUN”) to fully specify where the two services are running on the payload computer. The port numbers of different plugins cannot be the same, they must be open, and they must not be blocked by a local firewall, otherwise the service will be unreachable from the robot and other applications.</p>
@@ -591,7 +590,8 @@ Development Kit License (20191101-BDSDK-SL).
 <h2>Run a Data Acquisition Plugin Service using Docker<a class="headerlink" href="#run-a-data-acquisition-plugin-service-using-docker" title="Permalink to this heading"></a></h2>
 <p>Please refer to this <a class="reference internal" href="../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on computation payloads as docker containers.</p>
 <p>With docker installed and setup, any of the data acquisition plugin services can be created into a docker container, saved as a tar file, and then run on the CORE I/O as an Extension. There are Dockerfiles for each plugin service within the plugin’s specific directory. These files will create a docker container with all necessary dependencies installed, and will start the plugin service.</p>
-<p>Follow the instructions on how to build and use the docker image from <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">this section</a> on. The application arguments needed to run the plugins included in this example are <code class="docutils literal notranslate"><span class="pre">--host-ip</span> <span class="pre">HOST_COMPUTER_IP</span> <span class="pre">--guid</span> <span class="pre">GUID</span> <span class="pre">--secret</span> <span class="pre">SECRET</span> <span class="pre">ROBOT_IP</span></code>.</p>
+<p>Follow the instructions on how to build and use the docker image from <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">this section</a> on.</p>
+<p>Once built, all examples can be run with the following command: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-it</span> <span class="pre">{IMAGE_NAME}</span> <span class="pre">{ROBOT_IP}</span> <span class="pre">{APPLICATION</span> <span class="pre">ARGUMENTS}</span></code>. Application arguments generally include payload authentication parameters such as a <code class="docutils literal notranslate"><span class="pre">guid/secret</span></code> or <code class="docutils literal notranslate"><span class="pre">payload-credentials-file</span></code>, and service endpoint parameters such as <code class="docutils literal notranslate"><span class="pre">port</span></code> and <code class="docutils literal notranslate"><span class="pre">host-ip</span></code>. For a detailed list of application arguments for any given example, you can run <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">docker</span> <span class="pre">run</span> <span class="pre">-it</span> <span class="pre">{IMAGE_NAME}</span> <span class="pre">-h</span></code>.</p>
 </section>
 <section id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this heading"></a></h2>

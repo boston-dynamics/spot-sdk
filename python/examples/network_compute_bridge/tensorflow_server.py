@@ -212,6 +212,9 @@ def process_images(options, model_extension):
                 # Single channel image, convert to RGB.
                 image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
+        # Set the status.
+        out_proto.status = network_compute_bridge_pb2.NetworkComputeStatus.NETWORK_COMPUTE_STATUS_SUCCESS
+
         boxes, scores, classes, _ = model.predict(image)
 
         num_objects = 0

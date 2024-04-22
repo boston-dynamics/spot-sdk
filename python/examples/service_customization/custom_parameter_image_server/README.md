@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Custom Parameter Image Service for a Web Cam
 
-This example program demonstrates how to host an image service that contains an image source with custom parameters. The custom parameters enable developers to extend the given image source API with additional functionality. This example is mostly a copy of the [Web Cam Image Service example](../../web_cam_image_service/README.md). However in this example, the image source contains a custom parameter that enable clients to specify the contrast of the image the service returns.
+This example program demonstrates how to host an image service that contains an image source with custom parameters. The custom parameters enable developers to extend the given image source API with additional functionality. To demonstrate, the image source in this example contains a custom parameter that enable clients to specify the contrast of the image the service returns.
 
 This example can be run on an external computer or on a payload such as the CORE I/O. If running on a payload, this example will register the service from a payload, therefore it will require knowing the guid, secret, and IP address of the computer the service will be running off of. See the [self registration payloads example](../../self_registration/README.md) for a higher level overview of how to set up and register a payload, as well as how to register a simple announcing service.
 
@@ -20,7 +20,7 @@ This example requires bosdyn API and client to be installed, and must be run usi
 python3 -m pip install -r requirements.txt
 ```
 
-In addition to the pip-installable requirements, the example requires OpenCV, which must be installed separately following instructions from OpenCV. Alternatively, the example provides a Dockerfile which can be used to run the example and has a base docker image with OpenCV already installed.
+The example requires OpenCV, which may need to be installed separately following instructions from OpenCV, if installation via pip fails. Alternatively, the example provides a Dockerfile which can be used to build and then run the example.
 
 ## Example Execution
 
@@ -52,7 +52,7 @@ The other IP address is the traditional robot hostname ("ROBOT_IP") argument, wh
 
 When launching the web cam image service, the different device names should be provided. All of these sources should be queryable from the web cam image service using OpenCV. They can be specified individually by using the argument `--device-name`, and appending multiple of the argument to specify each camera source. For example, `--device-name CAMERA1 --device-name CAMERA2`. By default, the device "0" will be used, which represents the device at index 0 and will connect to the first connected video device found for each operating system. A user can provide either an index to a specific camera device, or the file path to describe the USB location of the camera. Each device will be listed by the service as an image source using the final part of the device name after the last "/" in a filepath (e.g. "/dev/video0" will result in an image source name "video0", device index "0" will also have image source name "video0"). Note for linux, by default the camera devices connected will have a filepath formatted as `/dev/videoXXX` where "XXX" is the index of the camera. However, on Windows the default locations are more difficult to determine, so providing the index number as the device name is preferred.
 
-If this example is run on a payload computer, it requires a GUID (uniquely generated payload specifier) and secret (private string associated with a payload) for a _registered_ and _authorized_ payload computer as arguments when launching the example. This "payload" can represent any type of computer capable of hosting the web cam image service. See documentation on [configuration of payload software](../../../docs/payload/configuring_payload_software.md#Configuring-and-authorizing-payloads) for more information.
+If this example is run on a payload computer, it requires a GUID (uniquely generated payload specifier) and secret (private string associated with a payload) for a _registered_ and _authorized_ payload computer as arguments when launching the example. This "payload" can represent any type of computer capable of hosting the web cam image service. See documentation on [configuration of payload software](../../../../docs/payload/configuring_payload_software.md#configuring-and-authorizing-payloads) for more information.
 
 A port number for the image service can be specified using the `--port` argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip ("PAYLOAD_IP") to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the web cam image service will be unreachable from the robot and the directory registration service.
 
@@ -81,10 +81,39 @@ Here are a couple suggestions for debugging the example:
 
 ## Run the Custom Parameter Image Service using Docker
 
-Please refer to this [document](../../../../docs/payload/docker_containers.md) for general instructions on how to run software applications on computation payloads as docker containers.
+Please refer to this [document](../../../../docs/payload/docker_containers.md) for general instructions on how to run software applications on computation payloads as Docker containers. The sections below describe how to run the example on a CORE I/O payload, locally on a development environment, or a SpotCORE payload.
 
-Follow the instructions on how to build and use the docker image from [this section](../../../docs/payload/docker_containers.md#build-docker-images) on. The docker container with the application in this example needs the following modifications from the general instructions:
+### CORE I/O
 
-- The application arguments needed to run the Web Cam application in this example are `--host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET --port PORT_NUMBER ROBOT_IP --device-name DEVICE_NAME`
+[Spot Extensions](../../../../docs/payload/docker_containers.md#manage-payload-software-in-core-i-o) are the recommended way to deploy applications that run on the CORE I/O. The example contains a helper script to build Spot Extensions easily. To build a Spot Extension for this example, navigate to the directory containing this README and run the following command:
+
+```sh
+python3 ../../extensions/build_extension.py \
+    --dockerfile-paths Dockerfile.l4t \
+    --build-image-tags custom_parameter_image_server:l4t \
+    -i custom_parameter_image_server.tar.gz \
+    --package-dir . \
+    --spx custom_parameter_image_server.spx
+```
+
+### Locally
+
+To build the image:
+
+```sh
+sudo docker build -t custom_parameter_image_server:local -f Dockerfile .
+```
+
+To run a container:
+
+```sh
+sudo docker run -it --device /dev/video0 --network=host custom_parameter_image_server:local payload --host-ip localhost --port 50051 --guid GUID --secret SECRET ROBOT_IP
+```
+
+where `GUID` and `SECRET` are for an `Authorized` payload (see above) and `ROBOT_IP` is the robot's IP address.
+
+### SpotCORE (Deprecated)
+
+- The application arguments needed to run the Web Cam application in this example are `--device-name DEVICE_NAME --guid GUID --secret SECRET --host-ip HOST_COMPUTER_IP --port PORT_NUMBER ROBOT_IP`
 - In the `Runtime & Resources` tab in the `Portainer` container configuration page , click `add device` and specify the camera's communication port (e.g. `/dev/video0`) in both the `host` field as well as the `container` field before deploying the container.
 - If running the docker container locally, the device needs to be mapped from the container to your local computer in a similar manner to how it is configured on portainer. The `docker run` command needs the additional argument `--device=/dev/video0:/dev/video0`, which is mapping the host location to the container location with `/dev/video0` as an example.

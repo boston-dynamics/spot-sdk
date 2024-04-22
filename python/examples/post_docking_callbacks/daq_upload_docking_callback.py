@@ -54,9 +54,9 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
     """When run, uploads all acquired data to an S3 bucket.
     """
 
-    def __init__(self, bosdyn_sdk_robot, options, logger=None):
+    def __init__(self, robot, options, logger=None):
         self.logger = logger or _LOGGER
-        self.bosdyn_sdk_robot = bosdyn_sdk_robot
+        self.robot = robot
         self.sessions_by_id = {}
         self._used_session_ids = []
         self.lock = threading.Lock()
@@ -125,14 +125,14 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
         query_params = None
         try:
             current_time = time.time()
-            query_params = make_time_query_params(self.start_time, current_time, robot)
+            query_params = make_time_query_params(self.start_time, current_time, self.robot)
         except ValueError as val_err:
             print(f'Value Exception:\n{val_err}')
 
         retry = 0
         success = False
         while not success and retry < 10:
-            success = download_data_REST(query_params, options.hostname, robot.user_token,
+            success = download_data_REST(query_params, self.options.hostname, self.robot.user_token,
                                          self.destination_folder)
             retry += 1
 
@@ -236,9 +236,9 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
         self._used_session_ids.append(session_id)
         response.session_id = session_id
         if self.options.time_period:
-            self.start_time = (
-                datetime.datetime.utcnow() -
-                datetime.timedelta(minutes=self.options.time_period)).strftime('%Y-%m-%dT%H:%M:%SZ')
+            self.start_time = (datetime.datetime.utcnow() -
+                               datetime.timedelta(minutes=self.options.time_period)).replace(
+                                   tzinfo=datetime.timezone.utc).timestamp()
         return response
 
     def Stop(self, request, context):
@@ -262,16 +262,16 @@ class DaqDockingUploadServicer(remote_service_pb2_grpc.RemoteMissionServiceServi
 
     def GetRemoteMissionServiceInfo(self, request, context):
         response = remote_pb2.GetRemoteMissionServiceInfoResponse()
-        with ResponseContext(request, response):
+        with ResponseContext(response, request):
             return response
 
 
-def run_service(bosdyn_sdk_robot, options, logger=None):
+def run_service(robot, options, logger=None):
     # Proto service specific function used to attach a servicer to a server.
     add_servicer_to_server_fn = remote_service_pb2_grpc.add_RemoteMissionServiceServicer_to_server
 
     # Instance of the servicer to be run.
-    service_servicer = DaqDockingUploadServicer(bosdyn_sdk_robot, options, logger=logger)
+    service_servicer = DaqDockingUploadServicer(robot, options, logger=logger)
     return GrpcServiceRunner(service_servicer, add_servicer_to_server_fn, options.port,
                              logger=logger)
 

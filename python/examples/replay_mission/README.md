@@ -30,13 +30,9 @@ To run an Autowalk mission:
 python3 -m replay_mission ROBOT_IP autowalk --walk_directory WALK_DIRECTORY --walk_filename WALK_FILENAME
 ```
 
-Your SDK applications can also create custom mission files as described below:
+Your SDK applications can also create custom mission files as described [here](../../../docs/concepts/autonomy/missions_service.md)
 
-https://dev.bostondynamics.com/python/bosdyn-mission/src/bosdyn/mission/readme
-
-See the documentation for the Mission Question Answerer for an example:
-
-https://dev.bostondynamics.com/python/examples/mission_question_answerer/readme
+See the [documentation](../mission_question_answerer/README.md) for the Mission Question Answerer for an example.
 
 To run a simple non-Autowalk mission that does not use graph_nav for navigation:
 

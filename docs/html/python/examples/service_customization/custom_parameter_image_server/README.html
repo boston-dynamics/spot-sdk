@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Custom Parameter Image Service for a Web Cam &mdash; Spot 4.0.0 documentation</title>
+  <title>Custom Parameter Image Service for a Web Cam &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -21,8 +21,8 @@
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
-    <link rel="next" title="Custom Parameter Data Acquisition" href="../custom_parameters_data_acquisition/README.html" />
-    <link rel="prev" title="Modem Signals" href="../../data_acquisition_service/signals_coreio_modem_plugin/README.html" /> 
+    <link rel="next" title="Follow a Fiducial" href="../../fiducial_follow/README.html" />
+    <link rel="prev" title="API Example - Visualize Depth in Visual Image" href="../../get_depth_plus_visual_image/README.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -183,7 +183,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../extensions/README.html">Extensions</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../../docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul>
+<li class="toctree-l3 current"><a class="reference internal" href="../../docs/perception_world_objects_examples.html">Perception and World Objects Examples</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="../../get_image/README.html">Get Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../get_world_objects/README.html">Get World Objects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -483,7 +482,7 @@
       <li><a href="../../../../README.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../../docs/python/README.html">Python Library</a></li>
           <li class="breadcrumb-item"><a href="../../README.html">Python Examples</a></li>
-          <li class="breadcrumb-item"><a href="../../docs/data_acquisition_examples.html">Data Acquisition Examples</a></li>
+          <li class="breadcrumb-item"><a href="../../docs/perception_world_objects_examples.html">Perception &amp; World Objects Examples</a></li>
       <li class="breadcrumb-item active">Custom Parameter Image Service for a Web Cam</li>
       <li class="wy-breadcrumbs-aside">
       </li>
@@ -501,7 +500,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="custom-parameter-image-service-for-a-web-cam">
 <h1>Custom Parameter Image Service for a Web Cam<a class="headerlink" href="#custom-parameter-image-service-for-a-web-cam" title="Permalink to this heading"></a></h1>
-<p>This example program demonstrates how to host an image service that contains an image source with custom parameters. The custom parameters enable developers to extend the given image source API with additional functionality. This example is mostly a copy of the <a class="reference internal" href="../../web_cam_image_service/README.html"><span class="doc">Web Cam Image Service example</span></a>. However in this example, the image source contains a custom parameter that enable clients to specify the contrast of the image the service returns.</p>
+<p>This example program demonstrates how to host an image service that contains an image source with custom parameters. The custom parameters enable developers to extend the given image source API with additional functionality. To demonstrate, the image source in this example contains a custom parameter that enable clients to specify the contrast of the image the service returns.</p>
 <p>This example can be run on an external computer or on a payload such as the CORE I/O. If running on a payload, this example will register the service from a payload, therefore it will require knowing the guid, secret, and IP address of the computer the service will be running off of. See the <a class="reference internal" href="../../self_registration/README.html"><span class="doc">self registration payloads example</span></a> for a higher level overview of how to set up and register a payload, as well as how to register a simple announcing service.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading"></a></h2>
@@ -509,7 +508,7 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
 </div>
-<p>In addition to the pip-installable requirements, the example requires OpenCV, which must be installed separately following instructions from OpenCV. Alternatively, the example provides a Dockerfile which can be used to run the example and has a base docker image with OpenCV already installed.</p>
+<p>The example requires OpenCV, which may need to be installed separately following instructions from OpenCV, if installation via pip fails. Alternatively, the example provides a Dockerfile which can be used to build and then run the example.</p>
 </section>
 <section id="example-execution">
 <h2>Example Execution<a class="headerlink" href="#example-execution" title="Permalink to this heading"></a></h2>
@@ -530,7 +529,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>The other IP address is the traditional robot hostname (”ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
 <p>When launching the web cam image service, the different device names should be provided. All of these sources should be queryable from the web cam image service using OpenCV. They can be specified individually by using the argument <code class="docutils literal notranslate"><span class="pre">--device-name</span></code>, and appending multiple of the argument to specify each camera source. For example, <code class="docutils literal notranslate"><span class="pre">--device-name</span> <span class="pre">CAMERA1</span> <span class="pre">--device-name</span> <span class="pre">CAMERA2</span></code>. By default, the device “0” will be used, which represents the device at index 0 and will connect to the first connected video device found for each operating system. A user can provide either an index to a specific camera device, or the file path to describe the USB location of the camera. Each device will be listed by the service as an image source using the final part of the device name after the last “/” in a filepath (e.g. “/dev/video0” will result in an image source name “video0”, device index “0” will also have image source name “video0”). Note for linux, by default the camera devices connected will have a filepath formatted as <code class="docutils literal notranslate"><span class="pre">/dev/videoXXX</span></code> where “XXX” is the index of the camera. However, on Windows the default locations are more difficult to determine, so providing the index number as the device name is preferred.</p>
-<p>If this example is run on a payload computer, it requires a GUID (uniquely generated payload specifier) and secret (private string associated with a payload) for a <em>registered</em> and <em>authorized</em> payload computer as arguments when launching the example. This “payload” can represent any type of computer capable of hosting the web cam image service. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#Configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
+<p>If this example is run on a payload computer, it requires a GUID (uniquely generated payload specifier) and secret (private string associated with a payload) for a <em>registered</em> and <em>authorized</em> payload computer as arguments when launching the example. This “payload” can represent any type of computer capable of hosting the web cam image service. See documentation on <a class="reference external" href="../../../../docs/payload/configuring_payload_software.html#configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
 <p>A port number for the image service can be specified using the <code class="docutils literal notranslate"><span class="pre">--port</span></code> argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip (”PAYLOAD_IP”) to fully specify where the image service is running. This port number must be open and cannot be blocked by a local firewall, otherwise the web cam image service will be unreachable from the robot and the directory registration service.</p>
 <p>There is an optional string argument <code class="docutils literal notranslate"><span class="pre">--codec</span></code> to specify a four character video codec describing the camera’s compression/decompression software. The video codec code is operating system dependent. For example, on a Windows computer, the video codec is commonly ‘DIVX’, and on a linux computer, the video codec is commonly ‘MJPG’. Note, the video codec does not necessarily need to be specified as OpenCV’s default selection will typically work for most web cams, however if you are seeing OpenCV errors when the image service tries to capture an image, then try specifying the video codec for your camera. An example error of this type is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="n">WARN</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span> <span class="k">global</span> <span class="o">/</span><span class="n">io</span><span class="o">/</span><span class="n">opencv</span><span class="o">/</span><span class="n">modules</span><span class="o">/</span><span class="n">videoio</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">cap_v4l</span><span class="o">.</span><span class="n">cpp</span> <span class="p">(</span><span class="mi">998</span><span class="p">)</span> <span class="n">tryIoctl</span> <span class="n">VIDEOIO</span><span class="p">(</span><span class="n">V4L2</span><span class="p">:</span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">video1</span><span class="p">):</span> <span class="n">select</span><span class="p">()</span> <span class="n">timeout</span><span class="o">.</span>
@@ -554,13 +553,39 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="run-the-custom-parameter-image-service-using-docker">
 <h2>Run the Custom Parameter Image Service using Docker<a class="headerlink" href="#run-the-custom-parameter-image-service-using-docker" title="Permalink to this heading"></a></h2>
-<p>Please refer to this <a class="reference internal" href="../../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on computation payloads as docker containers.</p>
-<p>Follow the instructions on how to build and use the docker image from <a class="reference external" href="../../../docs/payload/docker_containers.html#build-docker-images">this section</a> on. The docker container with the application in this example needs the following modifications from the general instructions:</p>
+<p>Please refer to this <a class="reference internal" href="../../../../docs/payload/docker_containers.html"><span class="doc">document</span></a> for general instructions on how to run software applications on computation payloads as Docker containers. The sections below describe how to run the example on a CORE I/O payload, locally on a development environment, or a SpotCORE payload.</p>
+<section id="core-i-o">
+<h3>CORE I/O<a class="headerlink" href="#core-i-o" title="Permalink to this heading"></a></h3>
+<p><a class="reference external" href="../../../../docs/payload/docker_containers.html#manage-payload-software-in-core-i-o">Spot Extensions</a> are the recommended way to deploy applications that run on the CORE I/O. The example contains a helper script to build Spot Extensions easily. To build a Spot Extension for this example, navigate to the directory containing this README and run the following command:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>../../extensions/build_extension.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--dockerfile-paths<span class="w"> </span>Dockerfile.l4t<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--build-image-tags<span class="w"> </span>custom_parameter_image_server:l4t<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>-i<span class="w"> </span>custom_parameter_image_server.tar.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--package-dir<span class="w"> </span>.<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--spx<span class="w"> </span>custom_parameter_image_server.spx
+</pre></div>
+</div>
+</section>
+<section id="locally">
+<h3>Locally<a class="headerlink" href="#locally" title="Permalink to this heading"></a></h3>
+<p>To build the image:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>custom_parameter_image_server:local<span class="w"> </span>-f<span class="w"> </span>Dockerfile<span class="w"> </span>.
+</pre></div>
+</div>
+<p>To run a container:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>-it<span class="w"> </span>--device<span class="w"> </span>/dev/video0<span class="w"> </span>--network<span class="o">=</span>host<span class="w"> </span>custom_parameter_image_server:local<span class="w"> </span>payload<span class="w"> </span>--host-ip<span class="w"> </span>localhost<span class="w"> </span>--port<span class="w"> </span><span class="m">50051</span><span class="w"> </span>--guid<span class="w"> </span>GUID<span class="w"> </span>--secret<span class="w"> </span>SECRET<span class="w"> </span>ROBOT_IP
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">GUID</span></code> and <code class="docutils literal notranslate"><span class="pre">SECRET</span></code> are for an <code class="docutils literal notranslate"><span class="pre">Authorized</span></code> payload (see above) and <code class="docutils literal notranslate"><span class="pre">ROBOT_IP</span></code> is the robot’s IP address.</p>
+</section>
+<section id="spotcore-deprecated">
+<h3>SpotCORE (Deprecated)<a class="headerlink" href="#spotcore-deprecated" title="Permalink to this heading"></a></h3>
 <ul class="simple">
-<li><p>The application arguments needed to run the Web Cam application in this example are <code class="docutils literal notranslate"><span class="pre">--host-ip</span> <span class="pre">HOST_COMPUTER_IP</span> <span class="pre">--guid</span> <span class="pre">GUID</span> <span class="pre">--secret</span> <span class="pre">SECRET</span> <span class="pre">--port</span> <span class="pre">PORT_NUMBER</span> <span class="pre">ROBOT_IP</span> <span class="pre">--device-name</span> <span class="pre">DEVICE_NAME</span></code></p></li>
+<li><p>The application arguments needed to run the Web Cam application in this example are <code class="docutils literal notranslate"><span class="pre">--device-name</span> <span class="pre">DEVICE_NAME</span> <span class="pre">--guid</span> <span class="pre">GUID</span> <span class="pre">--secret</span> <span class="pre">SECRET</span> <span class="pre">--host-ip</span> <span class="pre">HOST_COMPUTER_IP</span> <span class="pre">--port</span> <span class="pre">PORT_NUMBER</span> <span class="pre">ROBOT_IP</span></code></p></li>
 <li><p>In the <code class="docutils literal notranslate"><span class="pre">Runtime</span> <span class="pre">&amp;</span> <span class="pre">Resources</span></code> tab in the <code class="docutils literal notranslate"><span class="pre">Portainer</span></code> container configuration page , click <code class="docutils literal notranslate"><span class="pre">add</span> <span class="pre">device</span></code> and specify the camera’s communication port (e.g. <code class="docutils literal notranslate"><span class="pre">/dev/video0</span></code>) in both the <code class="docutils literal notranslate"><span class="pre">host</span></code> field as well as the <code class="docutils literal notranslate"><span class="pre">container</span></code> field before deploying the container.</p></li>
 <li><p>If running the docker container locally, the device needs to be mapped from the container to your local computer in a similar manner to how it is configured on portainer. The <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">run</span></code> command needs the additional argument <code class="docutils literal notranslate"><span class="pre">--device=/dev/video0:/dev/video0</span></code>, which is mapping the host location to the container location with <code class="docutils literal notranslate"><span class="pre">/dev/video0</span></code> as an example.</p></li>
 </ul>
+</section>
 </section>
 </section>
 

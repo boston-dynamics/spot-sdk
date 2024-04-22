@@ -93,7 +93,7 @@ To finish the callback, simply return from the callback's `run()` method. This c
 
 ## Running the example without graph nav & recording
 
-This tutorial will run the area callback server on your laptop. We will use "fake" client code so that you can run your example before the full graph-nav integrated solution is ready. This tutorial assumes that you have your environment set up for the sdk examples to run. Please refer to [this guide](https://dev.bostondynamics.com/docs/python/quickstart) for more information on setting up your environment using the sdk.
+This tutorial will run the area callback server on your laptop. We will use "fake" client code so that you can run your example before the full graph-nav integrated solution is ready. This tutorial assumes that you have your environment set up for the sdk examples to run. Please refer to [this guide](../../../docs/python/quickstart.md) for more information on setting up your environment using the sdk.
 
 Step 0. Turn on the robot, and have it sitting next to you with motors off.
 Step 1. On your computer, get into the virtual environment that contains sdk package installation & connect to the robot. If you connect via the robot's wifi, its ip address will be 192.168.80.3.

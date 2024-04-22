@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # GraphNav GPS Viewer
 
-This is an example program for opening, parsing, and viewing a GraphNav map on <a href="www.openstreetmap.org/">Open Street Maps</a> in the browser. This example may be used with GraphNav maps generated using Autowalk or the command line interface to GraphNav.
+This is an example program for opening, parsing, and viewing a GraphNav map on <a href="https://www.openstreetmap.org/">Open Street Maps</a> in the browser. This example may be used with GraphNav maps generated using Autowalk or the command line interface to GraphNav.
 
 ## Setup Dependencies
 

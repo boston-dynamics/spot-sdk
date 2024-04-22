@@ -187,7 +187,7 @@ The last step is to create a `manifest.json` file with the Extension information
 Creating an Extension is very simple once we have the files created in the section above. Simply copy the files `battery_service.tgz`, `web_cam_image_service.tgz`, `manifest.json`, `docker-compose.yml`, `1-sdk.camera.rules`, `setup_device_name.sh`, `.env.tpl` in a folder and create the Extension, which is a zipped tar file, with the command `tar zcfv daq_tutorial.spx * .env.tpl`. Then, follow these steps to install the Extension `daq_tutorial.spx` in the CORE I/O:
 
 1. Plug in USB web cam. This will execute the udev rule included in the Extension and create `/dev/video99` symlink and the `.env` file.
-2. Install Extension by drag-and-dropping it in the "Upload New Extension" section in the Extensions tab of the CORE I/O web portal. This process is also described in the SDK documentation section [here](../../payload/docker_containers.md#install-extension). The udev rules in the Extension will be automatically triggered when the Extension is installed.
+2. Install Extension by drag-and-dropping it in the "Upload New Extension" section in the Extensions tab of the CORE I/O web portal. This process is also described in the SDK documentation section [here](../../payload/docker_containers.md#install-extension-using-web-portal). The udev rules in the Extension will be automatically triggered when the Extension is installed.
 
 On other types of computational payloads, users can copy the docker images to the payload, load them and run `docker-compose` commands manually to start/stop/monitor the containers.
 

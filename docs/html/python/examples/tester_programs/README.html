@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tester Programs &mdash; Spot 4.0.0 documentation</title>
+  <title>Tester Programs &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -515,45 +514,72 @@ Development Kit License (20191101-BDSDK-SL).
 <h2>Testing an Image Service<a class="headerlink" href="#testing-an-image-service" title="Permalink to this heading"></a></h2>
 <p>The image service tester script (<code class="docutils literal notranslate"><span class="pre">image_service_tester.py</span></code>) can be used while developing a new image service to help ensure that the service can be communicated with and behaves as expected.</p>
 <p>Note: check that the camera is powered on, connected, and can be communicated with before running the tester program. This program is to help debug issues with the image service, and not the physical camera hardware.</p>
-<p>The script runs through a series of tests checking:</p>
-<ul class="simple">
-<li><p>The image service is registered with the robot’s directory service.</p></li>
-<li><p>The image service can be communicated with using gRPC calls.</p></li>
-<li><p>The image service has no active service faults when first starting the service, as well as after all tests are run.</p></li>
-<li><p>The image service has image sources listed and the ImageSource protos are correctly filled out.</p></li>
-<li><p>The image service can return image data and the response proto is correctly filled out. A warning will be printed if the image data cannot be successfully requested in one of the image formats the tablet requires.</p></li>
-<li><p>For each image source, when multiple images are requested, each returned image has a new (or at least identical) acquisition timestamp.</p></li>
-<li><p>Optionally test the integration of the image service with the data acquisition service.</p></li>
-</ul>
-<p>To use the image service tester script, the new image service must be running. Then, the tester script can be run using the following command:</p>
+<p>To use the image service tester script, first create a new guid, a new secret, and register a payload.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export GUID=$(python3 -c &#39;import uuid; print(uuid.uuid4())&#39;)
+export SECRET=$(python3 -c &#39;import uuid; print(uuid.uuid4())&#39;)
+python3 -m bosdyn.client {ROBOT_IP} payload register --payload-name {PAYLOAD_NAME} --payload-guid $GUID --payload-secret $SECRET
+</pre></div>
+</div>
+<p>then authorize the payload in Spot’s admin console.
+Next, get your self-ip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="bp">self</span><span class="o">-</span><span class="n">ip</span>
+</pre></div>
+</div>
+<p>Next, run your new image service.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python3 your_new_image_service.py --host-ip {SELF_IP} --guid $GUID --secret $SECRET {ROBOT_IP}
+</pre></div>
+</div>
+<p>Finally, open a new terminal and run image_service_tester.py</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">image_service_tester</span><span class="o">.</span><span class="n">py</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="o">--</span><span class="n">service</span><span class="o">-</span><span class="n">name</span> <span class="p">{</span><span class="n">SERVICE_NAME</span><span class="p">}</span>
 </pre></div>
 </div>
+<section id="arguments">
+<h3>Arguments<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h3>
 <p>The command line argument <code class="docutils literal notranslate"><span class="pre">--service-name</span></code> is the name for the image service that is used for directory registration. In the example image services (e.g. the web cam example, the ricoh theta example), the service name is defined near the top of each plugin file by the variable <code class="docutils literal notranslate"><span class="pre">DIRECTORY_NAME</span></code>.</p>
 <p>Many of the images collected during the test will be saved to a directory, which can be specified through the command line argument <code class="docutils literal notranslate"><span class="pre">--destination-folder</span></code> and defaults to the current working directory.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> command line argument can be provided, which will allow for even more debug information (e.g. complete RPC requests and responses, extra information about the failure and error messages) to be displayed to the command line when tests run and fail.</p>
 <p>Lastly, the robot’s data acquisition should automatically integrate any directory-registered image services with the data acquisition capabilities. The command line argument <code class="docutils literal notranslate"><span class="pre">--check-data-acquisition</span></code> can be provided to run an additional test for all image sources available in the image service that will check that the source is listed in the data acquisition capabilities and can be successfully acquired from the data acquisition service.</p>
 </section>
+</section>
 <section id="testing-a-data-acquisition-plugin">
 <h2>Testing a Data Acquisition Plugin<a class="headerlink" href="#testing-a-data-acquisition-plugin" title="Permalink to this heading"></a></h2>
-<p>The plugin tester script (<code class="docutils literal notranslate"><span class="pre">plugin_tester.py</span></code>) can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected. The script runs through a series of tests checking:</p>
-<ul class="simple">
-<li><p>The data acquisition plugin service is registered with the robot’s directory service.</p></li>
-<li><p>The data acquisition plugin service can be communicated with using gRPC calls.</p></li>
-<li><p>The data acquisition plugin has no active service faults when first starting the service, as well as after all tests are run.</p></li>
-<li><p>All data sources advertised by the plugin service are available in the data acquisition service on robot.</p></li>
-<li><p>All data sources can be acquired using the AcquireData RPC without errors.</p></li>
-<li><p>All data sources eventually respond with STATUS_COMPLETE to the GetStatus RPC.</p></li>
-<li><p>All data sources are saved in the data acquisition store service.</p></li>
-<li><p>All acquisitions can be cancelled successfully using the CancelAcquisition RPC.</p></li>
-</ul>
-<p>To use the data acquisition plugin service tester script, the new image service must be running. Then, the tester script can be run using the following command:</p>
+<p>The plugin tester script (plugin_tester.py) can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected.</p>
+<p>To use the data acquisition plugin service tester script, first create a new guid, a new secret, and register a payload.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>export GUID=$(python3 -c &#39;import uuid; print(uuid.uuid4())&#39;)
+export SECRET=$(python3 -c &#39;import uuid; print(uuid.uuid4())&#39;)
+python3 -m bosdyn.client {ROBOT_IP} payload register --payload-name {PAYLOAD_NAME} --payload-guid $GUID --payload-secret $SECRET
+</pre></div>
+</div>
+<p>then authorize the payload in Spot’s admin console.
+Next, get your self-ip:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="bp">self</span><span class="o">-</span><span class="n">ip</span>
+</pre></div>
+</div>
+<p>Then, run your new data acquisition plugin.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>python3 your_new_data_acquisition_plugin.py --host-ip {SELF_IP} --guid ${GUID} --secret ${SECRET} --port {PORT} {ROBOT_IP}
+</pre></div>
+</div>
+<p>Finally, open a new terminal and run plugin_tester.py.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">plugin_tester</span><span class="o">.</span><span class="n">py</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="o">--</span><span class="n">service</span><span class="o">-</span><span class="n">name</span> <span class="p">{</span><span class="n">SERVICE_NAME</span><span class="p">}</span>
 </pre></div>
 </div>
+<section id="id1">
+<h3>Arguments<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
 <p>The command line argument <code class="docutils literal notranslate"><span class="pre">--service-name</span></code> is the name for the data acquisition plugin service that is used for directory registration. In the example plugins, the service name is defined near the top of each plugin file by the variable <code class="docutils literal notranslate"><span class="pre">DIRECTORY_NAME</span></code>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> command line argument can be provided, which will allow for even more debug information (e.g. complete RPC requests and responses, extra information about the failure and error messages) to be displayed to the command line when tests run and fail.</p>
 <p>All data collected during the test will be downloaded through the REST endpoint and saved to a directory, which can be specified through the command line argument <code class="docutils literal notranslate"><span class="pre">--destination-folder</span></code> and defaults to the current working directory.</p>
+</section>
+</section>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading"></a></h2>
+<p>If you have gRPC errors like the following try opening a port.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">The</span> <span class="n">gRPC</span> <span class="n">service</span> <span class="n">call</span> <span class="n">has</span> <span class="n">timed</span> <span class="n">out</span><span class="o">.</span> <span class="n">Check</span> <span class="n">that</span> <span class="n">the</span> <span class="n">service</span> <span class="ow">is</span> <span class="n">still</span> <span class="n">running</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">service</span> <span class="n">port</span> <span class="ow">is</span> <span class="n">NOT</span> <span class="n">blocked</span> <span class="n">by</span> <span class="nb">any</span> <span class="n">firewalls</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>To open a port:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">ufw</span> <span class="n">allow</span> <span class="p">{</span><span class="n">PORT</span><span class="p">}</span>
+</pre></div>
+</div>
 </section>
 </section>
 

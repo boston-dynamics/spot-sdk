@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GraphNav and Recording Service Command Line Interfaces &mdash; Spot 4.0.0 documentation</title>
+  <title>GraphNav and Recording Service Command Line Interfaces &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -572,8 +571,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Simply starting and stopping recording will cause the recording service to create a <em>chain</em> of waypoints and edges from the start to the end. This means that the robot can only walk along this chain (as if it were on a rail). However, the recording service is also capable of making <em>branches</em> and <em>loops</em>.</p>
 <p>To manually create an edge, use option <em>7</em>. This will prompt you for two waypoint ids (which you can find using option <em>6</em>, or using the view_map.py example after you download the map). It will create an edge using these two waypoints and kinematic odometry as a guess to how those two waypoints are connected.</p>
 <p>You can also create an edge between the start and end of a chain by using option <em>8</em>. This is commonly used when a robot returns back to the location it started recording in.</p>
-<p>Option <em>9</em> allows the recording service to automatically identify and close loops (including at the start and end of the map), using fiducials, odometry, and other methods (see <a class="reference external" href="../../../docs/concepts/autonomy/graphnav_map_structure#map-processing">here</a> for details.)</p>
-<p>Option <em>a</em> creates an <em>anchoring</em> for the map, which allows it to be more accurately drawn and used for data export (see <a class="reference external" href="../../../docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization">here</a> for more details.)</p>
+<p>Option <em>9</em> allows the recording service to automatically identify and close loops (including at the start and end of the map), using fiducials, odometry, and other methods (see <a class="reference external" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#map-processing">here</a> for details.)</p>
+<p>Option <em>a</em> creates an <em>anchoring</em> for the map, which allows it to be more accurately drawn and used for data export (see <a class="reference external" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">here</a> for more details.)</p>
 </section>
 </section>
 <section id="graphnav-service-command-line">
@@ -639,7 +638,7 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <p>In this example, there would also be a known edge (from waypoint id: <code class="docutils literal notranslate"><span class="pre">hammy-skink-iKQI6hGQ.fCBWXJy6mmjqg==</span></code>, to waypoint id: <code class="docutils literal notranslate"><span class="pre">unread-beagle-vQfl7NrKVhHPOUoos+ffIg==</span></code>) and a second edge (from waypoint id: <code class="docutils literal notranslate"><span class="pre">unread-beagle-vQfl7NrKVhHPOUoos+ffIg==</span></code>, to waypoint id: <code class="docutils literal notranslate"><span class="pre">zigzag-filly-8ieN.xz8c9pL5tDZtQYW+w==</span></code>). Note that you would likely be able to simplify this with short codes to <code class="docutils literal notranslate"><span class="pre">7</span> <span class="pre">hs</span> <span class="pre">ub</span> <span class="pre">zf</span></code>.</p>
-<p>To issue a <em>navigate to anchor</em> (option <em>8</em>) command, you must first know where you want the robot to go in absolute (x, y) meter coordinates relative to the <em>seed frame</em> (see <a class="reference external" href="../../../docs/concepts/autonomy/graphnav_map_structure#anchorings-and-anchoring-optimization">here</a> for more details). This allows the robot to navigate to a position on the map without necessarily knowing which waypoint is near that location.</p>
+<p>To issue a <em>navigate to anchor</em> (option <em>8</em>) command, you must first know where you want the robot to go in absolute (x, y) meter coordinates relative to the <em>seed frame</em> (see <a class="reference external" href="../../../docs/concepts/autonomy/graphnav_map_structure.html#anchorings-and-anchoring-optimization">here</a> for more details). This allows the robot to navigate to a position on the map without necessarily knowing which waypoint is near that location.</p>
 <p>For example, this command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="mi">8</span> <span class="mf">5.2</span> <span class="mf">3.1</span> <span class="mf">0.1</span>
 </pre></div>

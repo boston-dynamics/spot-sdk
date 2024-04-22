@@ -1,0 +1,31 @@
+version: "3.5"
+services:
+  custom_parameter_image_server:
+    # NOTE: update tag accordingly
+    image: custom_parameter_image_server:l4t
+    restart: unless-stopped
+    volumes:
+      # Mount payload credentials.
+      # NOTE: this file only exists at this path on CORE I/O.
+      - /opt/payload_credentials/payload_guid_and_secret:/opt/payload_credentials/payload_guid_and_secret
+    network_mode: bridge
+    ports:
+      - "50051:50051"
+    # This assumes that the webcam successfully mounted on /dev/video0. If multiple devices are plugged in,
+    # this may not be the case.
+    devices:
+      - /dev/video0:/dev/video0
+    # Adjust these command-line arguments as necessary
+    command:
+      [
+        "payload",
+        "--host-ip",
+        "192.168.50.5",
+        "--port",
+        "50051",
+        "--device",
+        "/dev/video0",
+        "--payload-credentials-file",
+        "/opt/payload_credentials/payload_guid_and_secret",
+        "192.168.50.3",
+      ]

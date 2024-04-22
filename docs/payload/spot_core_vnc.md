@@ -45,7 +45,7 @@ Perform the following steps on the PC to start the VNC connection.
 
 ### Install vncviewer
 
-Install vncviewer for 64-bit Windows by downloading `vncviewer64-1.10.1.exe` from [https://bintray.com/tigervnc/stable/tigervnc/](https://bintray.com/tigervnc/stable/tigervnc/).
+Install vncviewer for 64-bit Windows by downloading `vncviewer64-1.10.1.exe` from [here](https://github.com/TigerVNC/tigervnc/releases).
 
 Install tigervnc-viewer on Ubuntu using apt:
 ```

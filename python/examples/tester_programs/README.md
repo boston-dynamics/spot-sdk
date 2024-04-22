@@ -28,21 +28,34 @@ The image service tester script (`image_service_tester.py`) can be used while de
 
 Note: check that the camera is powered on, connected, and can be communicated with before running the tester program. This program is to help debug issues with the image service, and not the physical camera hardware.
 
-The script runs through a series of tests checking:
+To use the image service tester script, first create a new guid, a new secret, and register a payload.
 
-- The image service is registered with the robot's directory service.
-- The image service can be communicated with using gRPC calls.
-- The image service has no active service faults when first starting the service, as well as after all tests are run.
-- The image service has image sources listed and the ImageSource protos are correctly filled out.
-- The image service can return image data and the response proto is correctly filled out. A warning will be printed if the image data cannot be successfully requested in one of the image formats the tablet requires.
-- For each image source, when multiple images are requested, each returned image has a new (or at least identical) acquisition timestamp.
-- Optionally test the integration of the image service with the data acquisition service.
+```
+export GUID=$(python3 -c 'import uuid; print(uuid.uuid4())')
+export SECRET=$(python3 -c 'import uuid; print(uuid.uuid4())')
+python3 -m bosdyn.client {ROBOT_IP} payload register --payload-name {PAYLOAD_NAME} --payload-guid $GUID --payload-secret $SECRET
+```
 
-To use the image service tester script, the new image service must be running. Then, the tester script can be run using the following command:
+then authorize the payload in Spot's admin console.
+Next, get your self-ip:
+
+```
+python3 -m bosdyn.client {ROBOT_IP} self-ip
+```
+
+Next, run your new image service.
+
+```
+python3 your_new_image_service.py --host-ip {SELF_IP} --guid $GUID --secret $SECRET {ROBOT_IP}
+```
+
+Finally, open a new terminal and run image_service_tester.py
 
 ```
 python3 image_service_tester.py {ROBOT_IP} --service-name {SERVICE_NAME}
 ```
+
+### Arguments
 
 The command line argument `--service-name` is the name for the image service that is used for directory registration. In the example image services (e.g. the web cam example, the ricoh theta example), the service name is defined near the top of each plugin file by the variable `DIRECTORY_NAME`.
 
@@ -54,25 +67,53 @@ Lastly, the robot's data acquisition should automatically integrate any director
 
 ## Testing a Data Acquisition Plugin
 
-The plugin tester script (`plugin_tester.py`) can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected. The script runs through a series of tests checking:
+The plugin tester script (plugin_tester.py) can be used while developing a new data acquisition plugin service to help ensure that the service can be communicated with and behaves as expected.
 
-- The data acquisition plugin service is registered with the robot's directory service.
-- The data acquisition plugin service can be communicated with using gRPC calls.
-- The data acquisition plugin has no active service faults when first starting the service, as well as after all tests are run.
-- All data sources advertised by the plugin service are available in the data acquisition service on robot.
-- All data sources can be acquired using the AcquireData RPC without errors.
-- All data sources eventually respond with STATUS_COMPLETE to the GetStatus RPC.
-- All data sources are saved in the data acquisition store service.
-- All acquisitions can be cancelled successfully using the CancelAcquisition RPC.
+To use the data acquisition plugin service tester script, first create a new guid, a new secret, and register a payload.
 
-To use the data acquisition plugin service tester script, the new image service must be running. Then, the tester script can be run using the following command:
+```
+export GUID=$(python3 -c 'import uuid; print(uuid.uuid4())')
+export SECRET=$(python3 -c 'import uuid; print(uuid.uuid4())')
+python3 -m bosdyn.client {ROBOT_IP} payload register --payload-name {PAYLOAD_NAME} --payload-guid $GUID --payload-secret $SECRET
+```
+
+then authorize the payload in Spot's admin console.
+Next, get your self-ip:
+
+```
+python3 -m bosdyn.client {ROBOT_IP} self-ip
+```
+
+Then, run your new data acquisition plugin.
+
+```
+python3 your_new_data_acquisition_plugin.py --host-ip {SELF_IP} --guid ${GUID} --secret ${SECRET} --port {PORT} {ROBOT_IP}
+```
+
+Finally, open a new terminal and run plugin_tester.py.
 
 ```
 python3 plugin_tester.py {ROBOT_IP} --service-name {SERVICE_NAME}
 ```
+
+### Arguments
 
 The command line argument `--service-name` is the name for the data acquisition plugin service that is used for directory registration. In the example plugins, the service name is defined near the top of each plugin file by the variable `DIRECTORY_NAME`.
 
 The `--verbose` command line argument can be provided, which will allow for even more debug information (e.g. complete RPC requests and responses, extra information about the failure and error messages) to be displayed to the command line when tests run and fail.
 
 All data collected during the test will be downloaded through the REST endpoint and saved to a directory, which can be specified through the command line argument `--destination-folder` and defaults to the current working directory.
+
+## Troubleshooting
+
+If you have gRPC errors like the following try opening a port.
+
+```
+The gRPC service call has timed out. Check that the service is still running and the service port is NOT blocked by any firewalls.
+```
+
+To open a port:
+
+```
+sudo ufw allow {PORT}
+```

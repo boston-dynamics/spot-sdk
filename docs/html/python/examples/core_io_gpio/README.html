@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPIO Blinking &mdash; Spot 4.0.0 documentation</title>
+  <title>CORE I/O GPIO &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -484,7 +483,7 @@
           <li class="breadcrumb-item"><a href="../../../docs/python/README.html">Python Library</a></li>
           <li class="breadcrumb-item"><a href="../README.html">Python Examples</a></li>
           <li class="breadcrumb-item"><a href="../docs/payloads_examples.html">Payload Examples</a></li>
-      <li class="breadcrumb-item active">GPIO Blinking</li>
+      <li class="breadcrumb-item active">CORE I/O GPIO</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -499,22 +498,53 @@ Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><section id="gpio-blinking">
-<h1>GPIO Blinking<a class="headerlink" href="#gpio-blinking" title="Permalink to this heading"></a></h1>
+--><section id="core-i-o-gpio">
+<h1>CORE I/O GPIO<a class="headerlink" href="#core-i-o-gpio" title="Permalink to this heading"></a></h1>
+<section id="this-example">
+<h2>This Example<a class="headerlink" href="#this-example" title="Permalink to this heading"></a></h2>
+<p>The CORE I/O has 5V, 12V and a 24V rails, as well as 3 General-Purpose Input/Output (GPIO) pins that also function as Pulse Width Modulation (PWM) pins.
+The rails and the GPIO pins can be triggered via API commands as well as through web endpoints.
+This example shows the usage of the GPIO pins with API.</p>
+</section>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading"></a></h2>
+<p>To install the dependencies run the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</section>
+<section id="gpio-pins">
+<h2>GPIO Pins<a class="headerlink" href="#gpio-pins" title="Permalink to this heading"></a></h2>
+<p>See the CORE I/O documentation on the developer site:</p>
+<p><a class="reference external" href="../../../docs/payload/coreio_documentation.html#gpio-and-pwm">GPIO and PWM</a></p>
+<p>Note: If the pins are set to output mode, they will output 3.3V (in relation to the ground pins). These are NOT dry contact pins</p>
+</section>
+<section id="gpio-example">
+<h2>GPIO Example<a class="headerlink" href="#gpio-example" title="Permalink to this heading"></a></h2>
 <p>This example demonstrates how to use the CORE IO GPIO pins to blink an LED.
-This example does not use the Spot SDK, but can be integrated with other Spot SDK examples.</p>
-<section id="setup-dependencies">
-<h2>Setup Dependencies<a class="headerlink" href="#setup-dependencies" title="Permalink to this heading"></a></h2>
-<p>This example does not have any extra Python dependencies.</p>
+This example does not use the Spot SDK, but can be integrated with other Spot SDK examples.
+In the example, the user is given the choice as to which pin to trigger, and the syntax of the arguments required for this is as follows:</p>
+<p>Arguments:</p>
+<p>pin_mode: this argument allows choosing between voltage rails and GPIO pins</p>
+<ul class="simple">
+<li><p>voltage: this argument is used for specifying the voltage rail to be triggerred</p></li>
+<li><p>gpio: this argument is used for specifying the gpio pin to be triggered</p></li>
+<li><p>duration: number of seconds to trigger the output for the blink function</p></li>
+<li><p>mode: this argument sets the GPIO pin to input or putput mode</p></li>
+</ul>
 </section>
 <section id="running-the-example">
 <h2>Running the Example<a class="headerlink" href="#running-the-example" title="Permalink to this heading"></a></h2>
 <p>To run the GPIO example using the 5V pin:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">gpio_blink</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">voltage</span> <span class="mi">5</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span><span class="mf">.10</span> <span class="n">gpio_example</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">voltage</span> <span class="mi">5</span> <span class="o">--</span><span class="n">duration</span> <span class="mi">10</span>
+</pre></div>
+</div>
+<p>To run the GPIO example for a GPIO pin set as output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span><span class="mf">.10</span> <span class="n">gpio_example</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">gpio</span> <span class="mi">1</span> <span class="o">--</span><span class="n">duration</span> <span class="mi">10</span> <span class="o">--</span><span class="n">mode</span> <span class="n">out</span>
 </pre></div>
 </div>
 <p>To run the PWM example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">pwm_control</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">number</span> <span class="mi">1</span> <span class="o">--</span><span class="n">duty</span><span class="o">-</span><span class="n">ratio</span> <span class="mf">0.7</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span><span class="mf">.10</span> <span class="n">pwm_control</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">number</span> <span class="mi">1</span> <span class="o">--</span><span class="n">duty</span><span class="o">-</span><span class="n">ratio</span> <span class="mf">0.7</span>
 </pre></div>
 </div>
 <section id="running-with-docker">
@@ -522,15 +552,15 @@ This example does not use the Spot SDK, but can be integrated with other Spot SD
 <p>Alternatively, these examples can be run with Docker. To do so, just build and run the image.
 When building on a separate machine, the docker image will need to be saved and copied to the CORE.</p>
 <p>Build the image:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="n">gpio_pwm</span> <span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">docker</span> <span class="n">build</span> <span class="o">-</span><span class="n">t</span> <span class="n">gpio_control</span> <span class="o">.</span>
 </pre></div>
 </div>
 <p>Run the image:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Turn on 5V rail</span>
-<span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">privileged</span> <span class="n">gpio_pwm</span> <span class="o">--</span><span class="n">voltage</span> <span class="mi">5</span> <span class="o">--</span><span class="n">on</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Toggle GPIO pin 1 on/off for 5 seconds</span>
+<span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">privileged</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">etc</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span> <span class="n">gpio_control</span> <span class="o">-</span><span class="n">pin_mode</span> <span class="n">gpio</span> <span class="o">--</span><span class="n">gpio</span> <span class="mi">1</span> <span class="o">--</span><span class="n">duration</span> <span class="mi">5</span> <span class="o">--</span><span class="n">mode</span> <span class="n">out</span>
 
-<span class="c1"># Toggle 24V rail on/off for 15 seconds</span>
-<span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">privileged</span> <span class="n">gpio_pwm</span> <span class="o">--</span><span class="n">voltage</span> <span class="mi">24</span> <span class="o">--</span><span class="n">blink</span> <span class="o">--</span><span class="n">duration</span> <span class="mi">15</span>
+<span class="c1"># Toggle 5V rail on/off for 10 seconds</span>
+<span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">privileged</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">etc</span><span class="p">:</span><span class="o">/</span><span class="n">etc</span> <span class="n">gpio_control</span> <span class="o">--</span><span class="n">pin_mode</span> <span class="n">voltage</span> <span class="o">--</span><span class="n">voltage</span> <span class="mi">5</span> <span class="o">--</span><span class="n">duration</span> <span class="mi">5</span>
 
 <span class="c1"># PWM</span>
 <span class="n">sudo</span> <span class="n">docker</span> <span class="n">run</span> <span class="o">--</span><span class="n">privileged</span> <span class="o">-</span><span class="n">v</span> <span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">class</span><span class="o">/</span><span class="n">pwm</span><span class="o">/</span><span class="p">:</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">class</span><span class="o">/</span><span class="n">pwm</span><span class="o">/</span> <span class="o">--</span><span class="n">entrypoint</span> <span class="n">python3</span> <span class="n">gpio_pwm</span> <span class="n">pwm_control</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">number</span> <span class="mi">1</span> <span class="o">--</span><span class="n">duty</span><span class="o">-</span><span class="n">ratio</span> <span class="mf">0.7</span>

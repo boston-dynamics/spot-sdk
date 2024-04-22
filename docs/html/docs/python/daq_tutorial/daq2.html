@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Part 2: Capturing Images &mdash; Spot 4.0.0 documentation</title>
+  <title>Part 2: Capturing Images &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -512,7 +511,7 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Run the image service, connecting to the robot.</p></li>
 <li><p>Test that the image service functions properly.</p></li>
 </ul>
-<p>If you do not have a webcam available, please skip ahead to <a class="reference internal" href="daq3.html"><span class="doc">capturing other data</span></a>.  To skip the explanation and just run the service, jump ahead to <a class="reference external" href="#testing_the_service">testing the service</a>.</p>
+<p>If you do not have a webcam available, please skip ahead to <a class="reference internal" href="daq3.html"><span class="doc">capturing other data</span></a>.  To skip the explanation and just run the service, jump ahead to <a class="reference external" href="#testing-the-service">testing the service</a>.</p>
 <section id="understanding-image-services">
 <h2>Understanding Image Services<a class="headerlink" href="#understanding-image-services" title="Permalink to this heading"></a></h2>
 <p>An image service is a grpc service that implements the [bosdyn.api.ImageService] interface.  A single image service can handle multiple cameras, exposing them as image sources. It then responds to GetImage requests by providing the images for the requested sources.  The on-robot “image” service is exactly this interface, and provides access to the images from the robot’s on-board cameras.  Note that image services are expected to return images “quickly”.  If you have an image sensor that takes significant time to capture its images (more than several seconds), then you should instead implement a data acquisition plugin which can report on its capture status, and is not used for live views.</p>
@@ -533,7 +532,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>For this example, we will use OpenCV to read from the camera hardware.</p>
 <section id="enter-your-spot-api-virtualenv">
 <h4>Enter your Spot API virtualenv<a class="headerlink" href="#enter-your-spot-api-virtualenv" title="Permalink to this heading"></a></h4>
-<p>Replace <code>my_spot_env</code> with the name of the virtualenv that you created using the <a href="https://dev.bostondynamics.com/docs/python/quickstart">Spot Quickstart Guide</a>:</p><pre><code class="language-text">source my_spot_env/bin/activate
+<p>Replace <code>my_spot_env</code> with the name of the virtualenv that you created using the [Spot Quickstart Guide](../quickstart.md):</p><pre><code class="language-text">source my_spot_env/bin/activate
 </code></pre></section>
 <section id="install-requirements">
 <h4>Install requirements<a class="headerlink" href="#install-requirements" title="Permalink to this heading"></a></h4>
@@ -547,7 +546,7 @@ Development Kit License (20191101-BDSDK-SL).
 <span class="nb">cd</span><span class="w"> </span>~/data_capture
 </pre></div>
 </div>
-<p>Copy (or <a href="files/web_cam_image_service.py">download</a>) the script below into a file called <code class="docutils literal notranslate"><span class="pre">web_cam_image_service.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">~/data_capture</span></code> folder.  This is a simplified version of the <a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html"><span class="doc">web cam example</span></a> (which includes some extra options to control how images are captured).</p>
+<p>Copy (or <a href="files/web_cam_image_service.py">download</a>) the script below into a file called <code class="docutils literal notranslate"><span class="pre">web_cam_image_service.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">~/data_capture</span></code> folder.  This is a simplified version of the <a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html"><span class="doc">web cam example</span></a> (which includes some extra options to control how images are captured).</p>
 </section>
 </section>
 <section id="web-cam-image-service">

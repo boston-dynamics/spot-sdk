@@ -20,5 +20,5 @@ PASSWORD = "<input-admin-password-here>"
 To build this Spot Extension for the CORE I/O, using the build_extension.py helper on Linux. Additional information can be found [here](../../../../docs/payload/docker_containers.md)
 
 ```
-python3 ../../extensions/build_extension.py --arm --dockerfile-paths Dockerfile.arm64 --build-image-tags signals_lte:arm64 -i signals_lte_arm.tar.gz --package-dir . --spx signals_lte.spx
+python3 ../../extensions/build_extension.py --dockerfile-paths Dockerfile.arm64 --build-image-tags signals_lte:arm64 -i signals_lte_arm.tar.gz --package-dir . --spx signals_lte.spx
 ```

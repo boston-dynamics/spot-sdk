@@ -68,7 +68,7 @@ Insert a USB WiFi adapter into the Spot CORE and notice the device appears as an
 
 The next step is to connect the WiFi adapter to a wireless access point. There are a couple methods to perform this task, but we recommend using the Cockpit Terminal as this will be the fastest. Please note, connecting to a wireless access point can also be achieved using SSH, VNC, or the standard desktop environment with a monitor, keyboard, and mouse plugged into the Spot CORE.
 
-Return to the Cockpit Terminal and use the condensed instructions included below or follow [the detailed instructions here](https://docs.ubuntu.com/core/en/stacks/network/network-manager/docs/configure-wifi-connections) to configure your WiFi adapter from the terminal.
+Return to the Cockpit Terminal and use the condensed instructions included below or follow [the detailed instructions here](https://ubuntu.com/core/docs/networkmanager/configure-wifi-connections) to configure your WiFi adapter from the terminal.
 
 ```
 nmcli d # List interface names.

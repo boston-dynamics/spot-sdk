@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Running Custom Applications with Spot &mdash; Spot 4.0.0 documentation</title>
+  <title>Running Custom Applications with Spot &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -515,7 +514,7 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><a class="reference internal" href="../../python/examples/data_acquisition_service/README.html"><span class="doc">Data Acquisition Plugins</span></a></p></li>
 <li><p><a class="reference internal" href="../../python/examples/ricoh_theta/README.html"><span class="doc">Ricoh Theta</span></a></p></li>
 <li><p><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html"><span class="doc">Spot Detect and Follow</span></a></p></li>
-<li><p><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html"><span class="doc">Web Cam Image Service</span></a></p></li>
+<li><p><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html"><span class="doc">Custom Parameter Web Cam Image Service</span></a></p></li>
 </ul>
 <section id="installing-docker-engine">
 <h2>Installing Docker Engine<a class="headerlink" href="#installing-docker-engine" title="Permalink to this heading"></a></h2>
@@ -527,7 +526,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>After implementing and testing the application on the development environment, the first step is to create a docker image with the software application and its dependencies. Docker containers are dependent on images and use them to construct a run-time environment and run an application. The instructions to create a docker image are specified in a file, usually named <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>. The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> specifies what base docker image to start from, what additional software and libraries to install on top of the base image, and what software needs to be run when the container starts. A variety of Spot SDK examples contain a <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> files in the SDK examples contain instructions to create x86/AMD-based Ubuntu docker images. On top of <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> files, SDK examples also contain <code class="docutils literal notranslate"><span class="pre">Dockerfile.l4t</span></code> for creating ARM-based Ubuntu docker images for the CORE I/O payloads.</p>
 <p>When writing Dockerfiles for images targeted for the CORE I/O, if using <a class="reference external" href="https://catalog.ngc.nvidia.com/containers?filters=&amp;orderBy=scoreDESC&amp;query=l4t">Nvidia Docker images</a> as a base, ensure that the tag matches the version of Jetpack running on the CORE I/O. As of 3.3.0, the CORE I/O is running JetPack 4.6.1 (L4T R32.7.1).</p>
-<p><strong>Note:</strong> OpenCV is commonly used for processing image data on the CORE I/O. By Default, most installations of OpenCV do not have CUDA support. Nvidia’s <a class="reference external" href="https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-ml">l4t-ml</a> container provides a version of OpenCV with CUDA support built-in, but is also fairly large. To build a more lightweight container with CUDA support in OpenCV, follow the instructions provided <a class="reference external" href="https://github.com/dusty-nv/jetson-containers/blob/master/Dockerfile.opencv">here</a>, replacing <code class="docutils literal notranslate"><span class="pre">BASE_IMAGE</span></code> and <code class="docutils literal notranslate"><span class="pre">OPENCV_VERSION</span></code> with the desired versions (see above).</p>
+<p><strong>Note:</strong> OpenCV is commonly used for processing image data on the CORE I/O. By Default, most installations of OpenCV do not have CUDA support. Nvidia’s <a class="reference external" href="https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-ml">l4t-ml</a> container provides a version of OpenCV with CUDA support built-in, but is also fairly large. To build a more lightweight container with CUDA support in OpenCV, follow the instructions provided <a class="reference external" href="https://github.com/dusty-nv/jetson-containers/blob/93c5b397f8daeeb9218ba49acefc23f4ad19965f/Dockerfile.opencv">here</a>, replacing <code class="docutils literal notranslate"><span class="pre">BASE_IMAGE</span></code> and <code class="docutils literal notranslate"><span class="pre">OPENCV_VERSION</span></code> with the desired versions (see above).</p>
 <p><strong>Note:</strong> Most of the Dockerfiles in the SDK examples use the default user provided by the base image. This user is usually the <code class="docutils literal notranslate"><span class="pre">root</span></code> user and is not recommended to be used for running applications on CORE I/O. In most cases, it is good practice to change this to a non-root user with limited privileges.
 Running as the <code class="docutils literal notranslate"><span class="pre">root</span></code> user bypasses certain limitations imposed on non-root users around resource utilization. This means that unintentional memory or thread leaks in a program running as the <code class="docutils literal notranslate"><span class="pre">root</span></code> user can crash the entire system or cause other undefined behavior.
 The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> files in the SDK examples do not change the user, but the user can be changed by adding the following lines to the <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>:</p>

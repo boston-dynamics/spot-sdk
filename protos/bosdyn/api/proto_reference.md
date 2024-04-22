@@ -12100,6 +12100,7 @@ Defines any parameters of the stairs
 | straight_staircase | [bosdyn.api.StraightStaircase](#bosdyn-api-StraightStaircase) |  | **Deprecated.** Parameters describing a straight staircase.<br>DEPRECATED as of 3.3. Please use staircase_with_landings. |
 | staircase_with_landings | [bosdyn.api.StaircaseWithLandings](#bosdyn-api-StaircaseWithLandings) |  | Parameters describing an arbitrary staircase. |
 | descent_preference | [Edge.Annotations.StairData.DescentPreference](#bosdyn-api-graph_nav-Edge-Annotations-StairData-DescentPreference) |  |  |
+| traversal_y_offset | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | The Y position with respect to the staircase frame to align to when traversing this<br>staircase. Regardless of how the recorded waypoints are distributed on the staircase,<br>when traversing the staircase all navigation goals will have this Y position with<br>respect to the staircase in order to guide the robot over the stairs in a straight<br>line. |
 
 
 

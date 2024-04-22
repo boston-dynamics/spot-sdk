@@ -90,7 +90,7 @@ In this portion of the tutorial, you will:
 <h2>Connecting to Spot</h2>
 
 <p>
-    Next, we'll connect to Spot using the <a href="https://dev.bostondynamics.com/docs/concepts/network_compute_bridge.html">Network Compute Bridge</a> which will let us view the results on the tablet and use our model in a script.
+    Next, we'll connect to Spot using the [Network Compute Bridge](../../concepts/network_compute_bridge.md) which will let us view the results on the tablet and use our model in a script.
 </p>
 
 <p>To do this, we'll write a script that connects to Spot and offers our model as a network compute resource.</p>

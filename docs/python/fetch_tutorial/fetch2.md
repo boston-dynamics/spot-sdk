@@ -75,7 +75,7 @@ In this portion of the tutorial, you will:
 
 <h3>Install TensorFlow</h3>
 <h4>Enter your Spot API virtualenv</h4>
-<p>Replace <code>my_spot_env</code> with the name of the virtualenv that you created in the <a href="https://dev.bostondynamics.com/docs/python/quickstart">Spot Quickstart Guide</a>:</p>
+<p>Replace <code>my_spot_env</code> with the name of the virtualenv that you created in the [Spot Quickstart Guide](../quickstart.md):</p>
 
 <pre><code class="language-text">source my_spot_env/bin/activate
 </code></pre>

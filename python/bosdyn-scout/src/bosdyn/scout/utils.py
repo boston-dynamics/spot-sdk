@@ -9,6 +9,7 @@ import datetime
 import getpass
 import os
 import sys
+from typing import Dict, List
 
 from deprecated.sphinx import deprecated
 
@@ -45,7 +46,7 @@ def get_credentials() -> [str, str]:
     'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
     version='4.0.0', action="always")
 def get_latest_created_at_for_run_events(scout_client: 'bosdyn.scout.client.ScoutClient',
-                                         params: dict = {}) -> datetime.datetime:
+                                         params: Dict = {}) -> datetime.datetime:
     """ Given a dictionary of query params, returns the max created at time for run events
 
         Args:
@@ -72,7 +73,7 @@ def get_latest_created_at_for_run_events(scout_client: 'bosdyn.scout.client.Scou
     'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
     version='4.0.0', action="always")
 def get_latest_run_capture_resources(scout_client: 'bosdyn.scout.client.ScoutClient',
-                                     params: dict = {}) -> list:
+                                     params: Dict = {}) -> List:
     """ Given a dictionary of query params, returns the latest run capture resources in json format
 
         Args:
@@ -95,7 +96,7 @@ def get_latest_run_capture_resources(scout_client: 'bosdyn.scout.client.ScoutCli
     'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
     version='4.0.0', action="always")
 def get_latest_created_at_for_run_captures(scout_client: 'bosdyn.scout.client.ScoutClient',
-                                           params: dict = {}) -> datetime.datetime:
+                                           params: Dict = {}) -> datetime.datetime:
     """ Given a dictionary of query params, returns the max created at time for run captures
 
         Args:
@@ -122,7 +123,7 @@ def get_latest_created_at_for_run_captures(scout_client: 'bosdyn.scout.client.Sc
     'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
     version='4.0.0', action="always")
 def get_latest_run_resource(scout_client: 'bosdyn.scout.client.ScoutClient',
-                            params: dict = {}) -> list:
+                            params: Dict = {}) -> List:
     """ Given a dictionary of query params, returns the latest run resource in json format
 
         Args:
@@ -147,7 +148,7 @@ def get_latest_run_resource(scout_client: 'bosdyn.scout.client.ScoutClient',
     'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
     version='4.0.0', action="always")
 def get_latest_run_in_progress(scout_client: 'bosdyn.scout.client.ScoutClient',
-                               params: dict = {}) -> list:
+                               params: Dict = {}) -> List:
     """ Given a dictionary of query params, returns the latest running resource in json format
 
         Args:
@@ -175,7 +176,7 @@ def get_latest_run_in_progress(scout_client: 'bosdyn.scout.client.ScoutClient',
     'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
     version='4.0.0', action="always")
 def get_latest_end_time_for_runs(scout_client: 'bosdyn.scout.client.ScoutClient',
-                                 params: dict = {}) -> datetime.datetime:
+                                 params: Dict = {}) -> datetime.datetime:
     """ Given a dictionary of query params, returns the max end time for runs
 
         Args:
@@ -204,7 +205,7 @@ def get_latest_end_time_for_runs(scout_client: 'bosdyn.scout.client.ScoutClient'
     'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
     version='4.0.0', action="always")
 def data_capture_urls_from_run_events(scout_client: 'bosdyn.scout.client.ScoutClient',
-                                      run_events: list, list_of_channel_names: list = None) -> list:
+                                      run_events: List, list_of_channel_names: List = None) -> List:
     """ Given run events and list of desired channel names, returns the list of data capture urls
 
         Args:
@@ -236,8 +237,8 @@ def data_capture_urls_from_run_events(scout_client: 'bosdyn.scout.client.ScoutCl
     'Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.',
     version='4.0.0', action="always")
 def data_capture_url_from_run_capture_resources(scout_client: 'bosdyn.scout.client.ScoutClient',
-                                                run_capture_resources: list,
-                                                list_of_channel_names: list = None) -> list:
+                                                run_capture_resources: List,
+                                                list_of_channel_names: List = None) -> List:
     """ Given run capture resources and list of desired channel names, returns the list of data capture urls
 
         Args:

@@ -30,7 +30,7 @@ Development Kit License (20191101-BDSDK-SL).
 2. Run
 
 ```sh
-python3 ../extensions/build_extension.py --arm --dockerfile-paths Dockerfile --build-image-tags metrics_over_coreio:arm64  --image-archive  metrics_over_coreio.tar.gz --icon ./extension/icon.png --package-dir ./extension/  --spx ~/Downloads/metric_over_coreio.spx
+python3 ../extensions/build_extension.py --dockerfile-paths Dockerfile --build-image-tags metrics_over_coreio:arm64  --image-archive  metrics_over_coreio.tar.gz --icon ./extension/icon.png --package-dir ./extension/  --spx ~/Downloads/metric_over_coreio.spx
 
 ```
 

@@ -35,7 +35,7 @@ environment setup properly.
 To install this example on Ubuntu 18.04, follow these instructions:
 
 - Create virtual environment as described in this
-  [Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments)
+  [Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments-with-virtualenv)
 - Install dependencies: `python3 -m pip install -r requirements.txt`
 - Run the example using instructions in the next section
 - To exit the virtual environment, run `deactivate`

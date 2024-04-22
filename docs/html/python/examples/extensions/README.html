@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spot Extensions Build Script &mdash; Spot 4.0.0 documentation</title>
+  <title>Spot Extensions Build Script &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -563,7 +562,7 @@ The manifest file, compose file, and icon should either be located in the same d
 <li><p><code class="docutils literal notranslate"><span class="pre">--image-archive</span></code>: Required. Docker saved images file. Should match contents of manifest.json.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--package-dir</span></code>: Required. Directory containing manifest.json, docker-compose.yml, and icon.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--spx</span></code>: Required. Path to write the final SPX to.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--arm</span></code>: Optional. Whether or not the target architecture is ARM.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--amd64</span></code>: Optional. Whether or not the target architecture is amd64. Otherwise defaults to an arm64 architecture for running on CORE I/O.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--extra-image-tags</span></code>: Optional. Additional image tags to save that do not need to be built (e.g. images pulled directly from Dockerhub).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--icon</span></code>: Optional. Path to the icon file. Default value is icon.png.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--additional-files</span></code>: Optional. List of any additional files in the package directory to be included in the resulting SPX, such as a <code class="docutils literal notranslate"><span class="pre">udev_rules</span></code> file.</p></li>
@@ -571,7 +570,7 @@ The manifest file, compose file, and icon should either be located in the same d
 </ul>
 <p>The format for running this command is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">build_extension</span><span class="o">.</span><span class="n">py</span> \
-    <span class="p">[</span><span class="o">--</span><span class="n">arm</span><span class="p">]</span> \
+    <span class="p">[</span><span class="o">--</span><span class="n">amd64</span><span class="p">]</span> \
     <span class="o">--</span><span class="n">dockerfile</span><span class="o">-</span><span class="n">paths</span> <span class="p">{</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">image1</span><span class="o">.</span><span class="n">dockerfile</span><span class="p">}</span> <span class="p">{</span><span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">image2</span><span class="o">.</span><span class="n">dockerfile</span><span class="p">}</span> \
     <span class="o">--</span><span class="n">build</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="n">tags</span> <span class="p">{</span><span class="n">image1</span><span class="p">:</span><span class="n">tag</span><span class="p">}</span> <span class="p">{</span><span class="n">image2</span><span class="p">:</span><span class="n">tag</span><span class="p">}</span> \
     <span class="p">[</span><span class="o">--</span><span class="n">extra</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="n">tags</span> <span class="p">{</span><span class="n">extra_image</span><span class="p">:</span><span class="n">tag</span><span class="p">}]</span> \
@@ -586,7 +585,6 @@ The manifest file, compose file, and icon should either be located in the same d
 follow the setup steps in the <a class="reference internal" href="../post_docking_callbacks/README.html"><span class="doc">README</span></a>,
 then run the following command in this directory:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">build_extension</span><span class="o">.</span><span class="n">py</span> \
-    <span class="o">--</span><span class="n">arm</span> \
     <span class="o">--</span><span class="n">dockerfile</span><span class="o">-</span><span class="n">paths</span> <span class="o">../</span><span class="n">post_docking_callbacks</span><span class="o">/</span><span class="n">Dockerfile</span><span class="o">.</span><span class="n">arm64</span> \
     <span class="o">--</span><span class="n">build</span><span class="o">-</span><span class="n">image</span><span class="o">-</span><span class="n">tags</span> <span class="n">docking_callback</span><span class="p">:</span><span class="n">arm64</span> \
     <span class="o">--</span><span class="n">image</span><span class="o">-</span><span class="n">archive</span> <span class="n">aws_docking_callback_arm64</span><span class="o">.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span> \

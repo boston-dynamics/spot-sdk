@@ -14,6 +14,7 @@ import secrets
 import shutil
 import sys
 import time
+from typing import Dict, List
 
 from bosdyn.orbit.exceptions import WebhookSignatureVerificationError
 
@@ -36,7 +37,7 @@ def get_api_token() -> str:
 
 
 def get_latest_created_at_for_run_events(client: 'bosdyn.orbit.client.Client',
-                                         params: dict = {}) -> datetime.datetime:
+                                         params: Dict = {}) -> datetime.datetime:
     """ Given a dictionary of query params, returns the max created at time for run events
 
         Args:
@@ -59,7 +60,7 @@ def get_latest_created_at_for_run_events(client: 'bosdyn.orbit.client.Client',
 
 
 def get_latest_run_capture_resources(client: 'bosdyn.orbit.client.Client',
-                                     params: dict = {}) -> list:
+                                     params: Dict = {}) -> List:
     """ Given a dictionary of query params, returns the latest run capture resources in json format
 
         Args:
@@ -78,7 +79,7 @@ def get_latest_run_capture_resources(client: 'bosdyn.orbit.client.Client',
 
 
 def get_latest_created_at_for_run_captures(client: 'bosdyn.orbit.client.Client',
-                                           params: dict = {}) -> datetime.datetime:
+                                           params: Dict = {}) -> datetime.datetime:
     """ Given a dictionary of query params, returns the max created at time for run captures
 
         Args:
@@ -100,7 +101,7 @@ def get_latest_created_at_for_run_captures(client: 'bosdyn.orbit.client.Client',
     return datetime_from_isostring(latest_resource["resources"][0]["createdAt"])
 
 
-def get_latest_run_resource(client: 'bosdyn.orbit.client.Client', params: dict = {}) -> list:
+def get_latest_run_resource(client: 'bosdyn.orbit.client.Client', params: Dict = {}) -> List:
     """ Given a dictionary of query params, returns the latest run resource in json format
 
         Args:
@@ -120,7 +121,7 @@ def get_latest_run_resource(client: 'bosdyn.orbit.client.Client', params: dict =
     return latest_run_json['resources'][0]
 
 
-def get_latest_run_in_progress(client: 'bosdyn.orbit.client.Client', params: dict = {}) -> list:
+def get_latest_run_in_progress(client: 'bosdyn.orbit.client.Client', params: Dict = {}) -> List:
     """ Given a dictionary of query params, returns the latest running resource in json format
 
         Args:
@@ -144,7 +145,7 @@ def get_latest_run_in_progress(client: 'bosdyn.orbit.client.Client', params: dic
 
 
 def get_latest_end_time_for_runs(client: 'bosdyn.orbit.client.Client',
-                                 params: dict = {}) -> datetime.datetime:
+                                 params: Dict = {}) -> datetime.datetime:
     """ Given a dictionary of query params, returns the max end time for runs
 
         Args:
@@ -180,8 +181,8 @@ def write_image(img_raw, image_fp: str) -> None:
         shutil.copyfileobj(img_raw, out_file)
 
 
-def data_capture_urls_from_run_events(client: 'bosdyn.orbit.client.Client', run_events: list,
-                                      list_of_channel_names: list = None) -> list:
+def data_capture_urls_from_run_events(client: 'bosdyn.orbit.client.Client', run_events: List,
+                                      list_of_channel_names: List = None) -> List:
     """ Given run events and list of desired channel names, returns the list of data capture urls
 
         Args:
@@ -209,8 +210,8 @@ def data_capture_urls_from_run_events(client: 'bosdyn.orbit.client.Client', run_
 
 
 def data_capture_url_from_run_capture_resources(client: 'bosdyn.orbit.client.Client',
-                                                run_capture_resources: list,
-                                                list_of_channel_names: list = None) -> list:
+                                                run_capture_resources: List,
+                                                list_of_channel_names: List = None) -> List:
     """ Given run capture resources and list of desired channel names, returns the list of data capture urls
 
         Args:
@@ -234,7 +235,7 @@ def data_capture_url_from_run_capture_resources(client: 'bosdyn.orbit.client.Cli
     return data_urls
 
 
-def get_action_names_from_run_events(run_events: dict) -> list:
+def get_action_names_from_run_events(run_events: Dict) -> List:
     """ Given run events, returns a list of action names
 
         Args:
@@ -264,7 +265,7 @@ def datetime_from_isostring(datetime_isostring: str) -> datetime.datetime:
                                           "%Y-%m-%dT%H:%M:%S.%f")
 
 
-def validate_webhook_payload(payload: dict, signature_header: str, secret: str,
+def validate_webhook_payload(payload: Dict, signature_header: str, secret: str,
                              max_age_ms: int = DEFAULT_MAX_MESSAGE_AGE_MS) -> None:
     """ Verifies that the webhook payload came from
 

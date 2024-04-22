@@ -9,6 +9,7 @@
 import copy
 import logging
 import signal
+import sys
 import time
 from concurrent import futures
 
@@ -133,7 +134,9 @@ class GrpcServiceRunner(object):
             signal.signal(signal.SIGINT, signal.default_int_handler)
             # Included SIGTERM for "docker stop". See https://docs.docker.com/engine/reference/commandline/stop/
             signal.signal(signal.SIGTERM, signal.default_int_handler)
-            signal.signal(signal.SIGQUIT, signal.default_int_handler)
+            # OS check because on Windows, signal() can only be called with SIGABRT, SIGFPE, SIGILL, SIGINT, SIGSEGV, or SIGTERM.
+            if not sys.platform.startswith("win32"):
+                signal.signal(signal.SIGQUIT, signal.default_int_handler)
 
         # Monitor for SIGINT, SIGTERM, or SIGQUIT and shut down cleanly.
         try:

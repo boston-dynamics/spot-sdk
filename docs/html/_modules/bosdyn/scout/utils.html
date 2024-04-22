@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.scout.utils &mdash; Spot 4.0.0 documentation</title>
+  <title>bosdyn.scout.utils &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -192,7 +192,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -219,7 +219,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -500,6 +499,7 @@
 <span class="kn">import</span> <span class="nn">getpass</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
 
 <span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
 
@@ -536,7 +536,7 @@
     <span class="s1">&#39;Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;4.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_latest_created_at_for_run_events</span><span class="p">(</span><span class="n">scout_client</span><span class="p">:</span> <span class="s1">&#39;bosdyn.scout.client.ScoutClient&#39;</span><span class="p">,</span>
-                                         <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+                                         <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns the max created at time for run events</span>
 
 <span class="sd">        Args:</span>
@@ -563,7 +563,7 @@
     <span class="s1">&#39;Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;4.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_latest_run_capture_resources</span><span class="p">(</span><span class="n">scout_client</span><span class="p">:</span> <span class="s1">&#39;bosdyn.scout.client.ScoutClient&#39;</span><span class="p">,</span>
-                                     <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+                                     <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns the latest run capture resources in json format</span>
 
 <span class="sd">        Args:</span>
@@ -586,7 +586,7 @@
     <span class="s1">&#39;Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;4.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_latest_created_at_for_run_captures</span><span class="p">(</span><span class="n">scout_client</span><span class="p">:</span> <span class="s1">&#39;bosdyn.scout.client.ScoutClient&#39;</span><span class="p">,</span>
-                                           <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+                                           <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns the max created at time for run captures</span>
 
 <span class="sd">        Args:</span>
@@ -613,7 +613,7 @@
     <span class="s1">&#39;Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;4.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_latest_run_resource</span><span class="p">(</span><span class="n">scout_client</span><span class="p">:</span> <span class="s1">&#39;bosdyn.scout.client.ScoutClient&#39;</span><span class="p">,</span>
-                            <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+                            <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns the latest run resource in json format</span>
 
 <span class="sd">        Args:</span>
@@ -638,7 +638,7 @@
     <span class="s1">&#39;Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;4.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_latest_run_in_progress</span><span class="p">(</span><span class="n">scout_client</span><span class="p">:</span> <span class="s1">&#39;bosdyn.scout.client.ScoutClient&#39;</span><span class="p">,</span>
-                               <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+                               <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns the latest running resource in json format</span>
 
 <span class="sd">        Args:</span>
@@ -666,7 +666,7 @@
     <span class="s1">&#39;Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;4.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">get_latest_end_time_for_runs</span><span class="p">(</span><span class="n">scout_client</span><span class="p">:</span> <span class="s1">&#39;bosdyn.scout.client.ScoutClient&#39;</span><span class="p">,</span>
-                                 <span class="n">params</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
+                                 <span class="n">params</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns the max end time for runs</span>
 
 <span class="sd">        Args:</span>
@@ -695,7 +695,7 @@
     <span class="s1">&#39;Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;4.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">data_capture_urls_from_run_events</span><span class="p">(</span><span class="n">scout_client</span><span class="p">:</span> <span class="s1">&#39;bosdyn.scout.client.ScoutClient&#39;</span><span class="p">,</span>
-                                      <span class="n">run_events</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">list_of_channel_names</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+                                      <span class="n">run_events</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">list_of_channel_names</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Given run events and list of desired channel names, returns the list of data capture urls</span>
 
 <span class="sd">        Args:</span>
@@ -727,8 +727,8 @@
     <span class="s1">&#39;Scout has been renamed to Orbit. Please, use bosdyn-orbit package instead of bosdyn-scout.&#39;</span><span class="p">,</span>
     <span class="n">version</span><span class="o">=</span><span class="s1">&#39;4.0.0&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">&quot;always&quot;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">data_capture_url_from_run_capture_resources</span><span class="p">(</span><span class="n">scout_client</span><span class="p">:</span> <span class="s1">&#39;bosdyn.scout.client.ScoutClient&#39;</span><span class="p">,</span>
-                                                <span class="n">run_capture_resources</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-                                                <span class="n">list_of_channel_names</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+                                                <span class="n">run_capture_resources</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span>
+                                                <span class="n">list_of_channel_names</span><span class="p">:</span> <span class="n">List</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Given run capture resources and list of desired channel names, returns the list of data capture urls</span>
 
 <span class="sd">        Args:</span>

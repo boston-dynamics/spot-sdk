@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fire Extinguisher Detector Server &mdash; Spot 4.0.0 documentation</title>
+  <title>Fire Extinguisher Detector Server &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -501,7 +500,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="fire-extinguisher-detector-server">
 <h1>Fire Extinguisher Detector Server<a class="headerlink" href="#fire-extinguisher-detector-server" title="Permalink to this heading"></a></h1>
-<p>This is an example of a network compute bridge server. It is similar to tensorflow_server.py, but uses Keras Retinanet instead of TensorFlow. The provided model specifically detects fire extinguishers</p>
+<p>This is an example of a Network Compute Bridge server. It is similar to <code class="docutils literal notranslate"><span class="pre">tensorflow_server.py</span></code>, but uses Keras Retinanet instead of TensorFlow. The provided model specifically detects fire extinguishers.</p>
 <section id="build-and-export">
 <h2>Build and Export<a class="headerlink" href="#build-and-export" title="Permalink to this heading"></a></h2>
 <p>This example can be run on a local machine directly, but is easier to use with Docker.</p>
@@ -566,7 +565,6 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="o">{</span>/path/to/python/examples/network_compute_bridge/fire_extinguisher_server/<span class="o">}</span>
 
 python3<span class="w"> </span>../../extensions/build_extension.py<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--arm<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--dockerfile-paths<span class="w"> </span>Dockerfile.l4t<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--build-image-tags<span class="w"> </span>fire_ext_detector:l4t<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-i<span class="w"> </span>fire_ext_detector_image.tar.gz<span class="w"> </span><span class="se">\</span>
@@ -575,6 +573,31 @@ python3<span class="w"> </span>../../extensions/build_extension.py<span class="w
 </pre></div>
 </div>
 <p>The output file will be called fire_ext_detector.spx and can be uploaded to a CORE I/O.</p>
+</section>
+<section id="action-configuration">
+<h2>Action Configuration<a class="headerlink" href="#action-configuration" title="Permalink to this heading"></a></h2>
+<p>To configure the Fire Extinguisher Detector as an Inspection on Spot’s control tablet, go to Hamburger menu –&gt; SETTINGS –&gt; ACTIONS.</p>
+<p><img alt="hamburger_settings_actions.jpg" src="../../../../_images/hamburger_settings_actions.jpg" /></p>
+<p>Scroll down to CUSTOM INSPECTIONS and select “Create New Action.”</p>
+<p><img alt="custom_inspections_create_new_action.jpg" src="../../../../_images/custom_inspections_create_new_action.jpg" /></p>
+<p>Choose the “Empty Inspection” template action and click the CREATE button.</p>
+<p><img alt="choose_empty_inspection_action_template.jpg" src="../../../../_images/choose_empty_inspection_action_template.jpg" /></p>
+<p>Set the ROBOT BODY CONTROL to “Body Pose” and the ACTION to “Daq.”</p>
+<p><img alt="name_body_pose_control_daq_action.jpg" src="../../../../_images/name_body_pose_control_daq_action.jpg" /></p>
+<p>Click “Add Network Compute Bridge Workers” and select “Fire Extinguisher Server - Fire Ext”</p>
+<p><img alt="ncb_worker_fire_extinguisher_server.jpg" src="../../../../_images/ncb_worker_fire_extinguisher_server.jpg" /></p>
+<p>Add the Spot CAM - Ptz as an input image to the <code class="docutils literal notranslate"><span class="pre">Fire</span> <span class="pre">Extinguisher</span> <span class="pre">Server</span> <span class="pre">-</span> <span class="pre">Fire</span> <span class="pre">Ext</span></code> Network Compute Bridge Worker. Note that this input image is what will be used as the input to the Worker. It is not a standalone image. So, make sure to add an input image and not a standalone image.
+<img alt="input_image_spot_cam_ptz.jpg" src="../../../../_images/input_image_spot_cam_ptz.jpg" /></p>
+<p>Click save to finish configuring the action.</p>
+<p>The configuration can be verified by teleoperating Spot to a fire extinguisher and setting up a clear shot with the SPOT CAM PTZ.</p>
+<p><img alt="set_up_shot_and_hit_red_action_button.jpg" src="../../../../_images/set_up_shot_and_hit_red_action_button.jpg" /></p>
+<p>Click the red action button, select the configured action and fine tune the shot.</p>
+<p><img alt="fine_tune_shot_in_action.jpg" src="../../../../_images/fine_tune_shot_in_action.jpg" /></p>
+<p>Click CONFIGURE to observe the input image.</p>
+<p><img alt="observe_input_on_first_page.jpg" src="../../../../_images/observe_input_on_first_page.jpg" /></p>
+<p>After a short period of time, you can see the output of the worker on the second page by clicking the arrows below the input image.</p>
+<p><img alt="observe_output_on_second_page.jpg" src="../../../../_images/observe_output_on_second_page.jpg" /></p>
+<p>If you see a green box around the fire extinguisher gauge, then the action is configured and working correctly. If you do not see any green boxes, then reduce the “MIN_CONFIDENCE” or exit the action and set up a clearer shot of the fire extinguisher (e.g., consider zooming out further than indicated in the above screenshots).</p>
 </section>
 </section>
 

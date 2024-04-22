@@ -54,10 +54,10 @@ python3 gps_listener.py --name "" "" udp --help
 
 ## Building the Core IO extensions
 
-The Trimble SPS986 and Leica GA03 examples are intended to be run as Core IO extensions. To build these extensions, please refer to the instructions [here](../extensions/README.md).
+The Trimble SPS986 and Leica GA03 examples are intended to be run as ARM architecture Core IO extensions. To build these extensions on an x86/AMD development environment, first run the commands in the section about "creating docker images on a development environment for a different architecture" [here](https://dev.bostondynamics.com/docs/payload/docker_containers.html#build-docker-images). After this one-time setup, you can use the `build_extension.py` script to create the Docker image via the command below, with further instructions [here](../extensions/README.md).
 
 ```sh
-python3 build_extension.py --arm --dockerfile-paths ../gps_service/Dockerfile --build-image-tags gps_listener:trimble_sps986 --image-archive gps_listener_image_arm64.tgz --package-dir ../gps_service/extensions/trimble_sps986/ --spx trimble_listener.spx
+python3 build_extension.py --dockerfile-paths ../gps_service/Dockerfile --build-image-tags gps_listener:trimble_sps986 --image-archive gps_listener_image_arm64.tgz --package-dir ../gps_service/extensions/trimble_sps986/ --spx trimble_listener.spx
 ```
 
 The trimble_listener.spx file can then be uploaded to the Core IO through its webpage.

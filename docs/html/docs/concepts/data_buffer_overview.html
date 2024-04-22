@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Data Buffer Overview &mdash; Spot 4.0.0 documentation</title>
+  <title>Data Buffer Overview &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -504,7 +503,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The robot allocates 60 gigabytes for data buffer storage.  Logged data is saved to persistent storage in data <em>pages</em>.  In Spot v2.1 all data pages are BDDF files on disk.  When the limit of 60 gigabytes is exceeded, data files are deleted in oldest-first order until disk space used by these files falls below that threshold.</p>
 <section id="supported-data-types">
 <h2>Supported Data Types<a class="headerlink" href="#supported-data-types" title="Permalink to this heading"></a></h2>
-<p>Although API clients may log arbitrary data, the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#data-buffer-service-proto">Data Buffer service</a> enables clients to log specific <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#data-buffer-proto">structured types</a> that may be handled specially and simplify later analysis.</p>
+<p>Although API clients may log arbitrary data, the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-data-buffer-service-proto">Data Buffer service</a> enables clients to log specific <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-data-buffer-proto">structured types</a> that may be handled specially and simplify later analysis.</p>
 <section id="text-messages">
 <h3>Text Messages<a class="headerlink" href="#text-messages" title="Permalink to this heading"></a></h3>
 <p>Basic text logs supporting <em>Info</em>, <em>Error</em>, <em>Warning</em>, and <em>Debug</em> levels, as well as file and line number of origin.  API clients and services may use the data buffer as a backend to their own text logging systems.  Clients may log text messages via the <code class="docutils literal notranslate"><span class="pre">RecordTextMessages</span></code> RPC.</p>

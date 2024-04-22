@@ -48,7 +48,7 @@ At the end of this tutorial, you will have a system that can repeatably walk aro
 ### Setting up Python 3 and the Spot SDK
 
 <ul>
-    <li>Follow the <a href="https://dev.bostondynamics.com/docs/python/quickstart">Quickstart guide</a> for the Spot SDK.</li>
+    <li>Follow the [Quickstart guide](../quickstart.md) for the Spot SDK.</li>
     <li><strong>Note</strong>: the <strong>virtualenv</strong> section of that guide is <strong>required</strong> for this tutorial.
 </ul>
 

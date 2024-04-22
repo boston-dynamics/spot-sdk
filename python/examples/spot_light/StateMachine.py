@@ -108,7 +108,8 @@ class StateMachine(object):
 
         # Binarize the image
         grey_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        ret, bin_img = cv2.threshold(grey_img, 250, 255, cv2.THRESH_BINARY)
+        ret, bin_img = cv2.threshold(grey_img, self._robot._brightness_threshold, 255,
+                                     cv2.THRESH_BINARY)
 
         # Noise removal
         kernel = numpy.ones((3, 3), numpy.uint8)

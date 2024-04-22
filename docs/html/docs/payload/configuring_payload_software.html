@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Payload Software Interface &mdash; Spot 4.0.0 documentation</title>
+  <title>Payload Software Interface &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -605,6 +604,15 @@ Development Kit License (20191101-BDSDK-SL).
 </tbody>
 </table></section>
 </section>
+<section id="time-synchronization">
+<h2>Time Synchronization<a class="headerlink" href="#time-synchronization" title="Permalink to this heading"></a></h2>
+<p>Spot hosts an NTP server for time synchronization purposes. This is especially useful for high precision timing, such as a payload sensor collecting data while the robot is moving (e.g. lidar).</p>
+<p>If you wish to use this to synchronize a computing payload, such as a CORE, then here is an example of a one-line config file (typically saved as /etc/ntp.conf):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">server</span> <span class="mf">192.168.50.3</span> <span class="n">iburst</span> <span class="n">minpoll</span> <span class="mi">3</span> <span class="n">maxpoll</span> <span class="mi">3</span>
+</pre></div>
+</div>
+<p>The NTP server and Spot’s internal clock are not configurable.</p>
+</section>
 <section id="registering-payloads">
 <h2>Registering payloads<a class="headerlink" href="#registering-payloads" title="Permalink to this heading"></a></h2>
 <p>This code snippet example uses the API to communicate payload configuration settings to Spot. The example first registers a payload then lists all payloads on the robot, including the newly registered payload.
@@ -665,28 +673,18 @@ The “read_or_create_payload_credentials” helper function allows you to autog
 </section>
 <section id="payload-device-network-configuration">
 <h2>Payload device network configuration<a class="headerlink" href="#payload-device-network-configuration" title="Permalink to this heading"></a></h2>
-<p>The robot’s default private IP address is 192.168.80.3. Users can configure these properties via the robot’s admin console. Use the network settings to change the robot’s network configuration from WiFi AP to WiFi client.</p>
-<p>The robot’s rear ethernet port can be configured to a user desired IP address via the web interface. By default, its IP is set to 10.0.0.3.</p>
-<p>Payload devices should use the following network configuration:</p>
+<p>Users can communicate with the payloads attached to Spot via WiFi (Access Point (AP) or Client Mode) or Ethernet connection. Spot acts a medium when communicating with payloads which is allowed via built-in internal port forwarding rules.</p>
+<p>Different payloads require different ports, and since the internal port forwarding cannot be changed, some additional ports are forwarded for development purposes.</p>
+<p>The rear ethernet port can be configured to a user-desired IP address via the web interface. By default, the ethernet port IP is set to 10.0.0.3.</p>
+<p>Payload devices should use the following network configurations:</p>
 <ul class="simple">
-<li><p>IP v4 host address 192.168.50.5 or 192.168.50.6 for either front or rear payload port</p></li>
-<li><p>Do not use the same IP address for both front and rear payload port</p></li>
-<li><p>Netmask 255.255.255.0</p></li>
-<li><p>Default gateway will be set to 192.168.50.3</p></li>
+<li><p>Spot CORE I/O and Spot EAP 2: 192.168.50.5 (default from Boston Dynamics).</p></li>
+<li><p>Spot CAM: 192.168.50.6 (default from Boston Dynamics).</p></li>
+<li><p>Fluke SV600: 192.168.50.8 (default from Fluke).</p></li>
+<li><p>Netmask: 255.255.255.0.</p></li>
+<li><p>Default gateway will be set to 192.168.50.3.</p></li>
 </ul>
-<p>Devices on the payload network can reach the robot at 192.168.50.3 via port 443. Devices on the robot network can reach payload services as follows:</p>
-<ol class="simple">
-<li><p>TCP traffic sent to the robot’s IP address on ports 20022, 20080, or 20443 will be forwarded to 192.168.50.5 on ports 22, 80, or 443.</p></li>
-<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 21000-22000 will be forwarded to 192.168.50.5 on that same port.</p></li>
-<li><p>TCP traffic sent to the robot’s IP address on ports 30022, 30080, or 30443 will be forwarded to 192.168.50.6 on ports 22, 80, or 443.</p></li>
-<li><p>TCP/UDP traffic sent to the robot on ports 31000-32000 will be forwarded to 192.168.50.6.</p></li>
-<li><p>TCP traffic sent to the robot’s IP address on ports 23022, 23080, or 23443 will be forwarded to 192.168.50.7 on ports 22, 80, or 443.</p></li>
-<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 23100-23199 will be forwarded to 192.168.50.7 on that same port.</p></li>
-<li><p>TCP traffic sent to the robot’s IP address on ports 24022, 24080, or 24443 will be forwarded to 192.168.50.8 on ports 22, 80, or 443.</p></li>
-<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 24100-24199 will be forwarded to 192.168.50.8 on that same port.</p></li>
-<li><p>TCP traffic sent to the robot’s IP address on ports 25022, 25080, or 25443 will be forwarded to 192.168.50.9 on ports 22, 80, or 443.</p></li>
-<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 25100-25199 will be forwarded to 192.168.50.9 on that same port.</p></li>
-</ol>
+<p>Ports actively in use and reserved for other payloads can only be used once. For example, attempting to use port 192.168.50.6 for both an attached Spot CAM and another custom payload will cause both payloads to fail.</p>
 </section>
 <section id="payload-port-forwarding-table">
 <h2>Payload port forwarding table<a class="headerlink" href="#payload-port-forwarding-table" title="Permalink to this heading"></a></h2>
@@ -761,8 +759,21 @@ The “read_or_create_payload_credentials” helper function allows you to autog
 <td>TCP/UDP</td>
 </tr>
 </tbody>
-</table><p>Robot port forwards for ports ending in 443, 22, and 80 now masquerade. They should allow the payload to respond to forwarded traffic to the robot on any of the robot’s interfaces.</p>
-<p>All other forwarded ports are purely port forwarded, meaning that packets received by the payload still have the original address of the sender. These port forwards will only connect for hosts on one of the LANs attached to the robot OR for hosts located on the default route as configured in the robot network page.</p>
+</table><p>Devices on the payload network can reach the robot at 192.168.50.3 via port 443. Devices on the robot network can reach payload services as follows:</p>
+<ol class="simple">
+<li><p>TCP traffic sent to the robot’s IP address on ports 20022, 20080, or 20443 will be forwarded to 192.168.50.5 on ports 22, 80, or 443.</p></li>
+<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 21000-22000 will be forwarded to 192.168.50.5 on that same port.</p></li>
+<li><p>TCP traffic sent to the robot’s IP address on ports 30022, 30080, or 30443 will be forwarded to 192.168.50.6 on ports 22, 80, or 443.</p></li>
+<li><p>TCP/UDP traffic sent to the robot on ports 31000-32000 will be forwarded to 192.168.50.6.</p></li>
+<li><p>TCP traffic sent to the robot’s IP address on ports 23022, 23080, or 23443 will be forwarded to 192.168.50.7 on ports 22, 80, or 443.</p></li>
+<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 23100-23199 will be forwarded to 192.168.50.7 on that same port.</p></li>
+<li><p>TCP traffic sent to the robot’s IP address on ports 24022, 24080, or 24443 will be forwarded to 192.168.50.8 on ports 22, 80, or 443.</p></li>
+<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 24100-24199 will be forwarded to 192.168.50.8 on that same port.</p></li>
+<li><p>TCP traffic sent to the robot’s IP address on ports 25022, 25080, or 25443 will be forwarded to 192.168.50.9 on ports 22, 80, or 443.</p></li>
+<li><p>TCP/UDP traffic sent to the robot’s IP address on ports 25100-25199 will be forwarded to 192.168.50.9 on that same port.</p></li>
+</ol>
+<p>Robot port forwards for ports ending in 443, 22, and 80 masquerade, which means they should allow the payload to respond to forwarded traffic to the robot on any of the robot’s ports.</p>
+<p>All other forwarded ports are purely port forwarded, meaning that packets received by the payload still have the original address of the sender. These port forwards will only connect for hosts on one of the LANs attached to the robot or for hosts located on the default route as configured in the robot network page.</p>
 </section>
 <section id="configuring-payload-mass-properties">
 <h2>Configuring payload mass properties<a class="headerlink" href="#configuring-payload-mass-properties" title="Permalink to this heading"></a></h2>
@@ -1074,7 +1085,7 @@ The “read_or_create_payload_credentials” helper function allows you to autog
 <td>m</td>
 </tr>
 </tbody>
-</table><p>The <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#payload-proto">payload.proto</a> file in the Spot SDK provides details about fields and data types.</p>
+</table><p>The <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-payload-proto">payload.proto</a> file in the Spot SDK provides details about fields and data types.</p>
 <!--- image and page reference link definitions ---></section>
 </section>
 </section>

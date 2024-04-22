@@ -14,11 +14,11 @@ The autowalk service is a way for API clients to specify high level autonomous b
 
 | Term  |  Description |
 | ----- | -----------|
-| [Mission](../../../protos/bosdyn/api/proto_reference.html#node) | A `bosdyn.api.mission.Node` proto that fully defines a behavior tree.  The structure is infinitely recursive.
-| [Mission Service](../../../protos/bosdyn/api/proto_reference.html#missionservice)  |	A GRPC service that sits on top of the API and can compile & run a mission.
+| [Mission](../../../protos/bosdyn/api/mission/nodes.proto#node) | A `bosdyn.api.mission.Node` proto that fully defines a behavior tree.  The structure is infinitely recursive.
+| [Mission Service](../../../protos/bosdyn/api/mission/mission_service.proto#missionservice)  |	A GRPC service that sits on top of the API and can compile & run a mission.
 | Program | Some high level robot behavior that can either be expressed as a mission, a python script, or some other medium.
-| [Autowalk](../../../protos/bosdyn/api/proto_reference.html#walk) |	A `bosdyn.api.autowalk.Walk` proto that fully defines a program with structure sequence { go here, do this, go there, do that, etc }.
-| [Autowalk Service](../../../protos/bosdyn/api/proto_reference.html#autowalkservice) |	A GRPC service that translates an autowalk into a mission.
+| [Autowalk](../../../protos/bosdyn/api/autowalk/walks.proto#walk) |	A `bosdyn.api.autowalk.Walk` proto that fully defines a program with structure sequence { go here, do this, go there, do that, etc }.
+| [Autowalk Service](../../../protos/bosdyn/api/autowalk/autowalk_service.proto#autowalkservice) |	A GRPC service that translates an autowalk into a mission.
 
 ## How Autowalks Differs From Missions
 The mission service and missions sit on top of the API.  There is nothing you can do with the mission service that you can’t do with a python script.  The reasons to write a program using missions instead of a python script are:
@@ -44,12 +44,12 @@ The walk proto defines the autowalk's “go here, do this” format. It is a lin
 
 | Term  |  Description |
 | ----- | -----------|
-| [Action](../../../protos/bosdyn/api/proto_reference.html#action) | What the robot should do at a location.
-| [Action Wrapper](../../../protos/bosdyn/api/proto_reference.html#actionwrapper)  |	What the robot should do before and during an action.
-| [Action Failure Behavior](../../../protos/bosdyn/api/proto_reference.html#failurebehavior) | What the robot should do if the action fails.
-| [Target](../../../protos/bosdyn/api/proto_reference.html#target) |	Where the robot should go. Targets are speicified within the context of a graph nav map.
-| [Target Failure Behavior](../../../protos/bosdyn/api/proto_reference.html#failurebehavior) |	What the robot should do if it fails to reach the target.
-| [Battery Monitor](../../../protos/bosdyn/api/proto_reference.html#batterymonitor) | The battery thresholds at which the robot should pause/resume mission execution.
+| [Action](../../../protos/bosdyn/api/autowalk/walks.proto#action) | What the robot should do at a location.
+| [Action Wrapper](../../../protos/bosdyn/api/autowalk/walks.proto#actionwrapper)  |	What the robot should do before and during an action.
+| [Action Failure Behavior](../../../protos/bosdyn/api/autowalk/walks.proto#failurebehavior) | What the robot should do if the action fails.
+| [Target](../../../protos/bosdyn/api/pautowalk/walks.proto#target) |	Where the robot should go. Targets are speicified within the context of a graph nav map.
+| [Target Failure Behavior](../../../protos/bosdyn/api/autowalk/walks.proto#failurebehavior) |	What the robot should do if it fails to reach the target.
+| [Battery Monitor](../../../protos/bosdyn/api/autowalk/walks.proto#batterymonitor) | The battery thresholds at which the robot should pause/resume mission execution.
 
 ## Autowalk Service RPCs
 The autowalk service provides [RPCs][autowalkserivce] for clients to convert an autowalk to a mission.
@@ -80,15 +80,15 @@ As previously mentioned, missions offer more flexibility than autowalks because 
 
 [autowalklanguage]: images/autowalk_language_layer.png "Analogy for how autowalks work"
 [missions]: missions_service.md "Missions service"
-[autowalkserivce]: ../../../protos/bosdyn/api/proto_reference.html#autowalkservice "Autowalk Service RPCs"
-[element]: ../../../protos/bosdyn/api/proto_reference.html#element "Element Proto"
-[nodeidentifier]: ../../../protos/bosdyn/api/proto_reference.html#nodeidentifier "Node Identifier Proto"
-[nodeinfo]: ../../../protos/bosdyn/api/proto_reference.html#nodeinfo "Node Info Proto"
-[userdata]: ../../../protos/bosdyn/api/proto_reference.html#userdata "User Data Proto"
-[getstateresponse]: ../../../protos/bosdyn/api/proto_reference.html#getstateresponse "Get State Response Proto"
+[autowalkserivce]: ../../../protos/bosdyn/api/autowalk/autowalk_service.proto#autowalkservice "Autowalk Service RPCs"
+[element]: ../../../protos/bosdyn/api/autowalk/walks.proto#element "Element Proto"
+[nodeidentifier]: ../../../protos/bosdyn/api/autowalk/walks.proto#nodeidentifier "Node Identifier Proto"
+[nodeinfo]: ../../../protos/bosdyn/api/mission/mission.proto#nodeinfo "Node Info Proto"
+[userdata]: ../../../protos/bosdyn/api/mission/util.proto#userdata "User Data Proto"
+[getstateresponse]: ../../../protos/bosdyn/api/mission/mission.proto#getstateresponse "Get State Response Proto"
 [editautowalk]: ../../../python/examples/edit_autowalk/README.md "Edit Autowalk Example"
 [queryautowalkstatus]: https://github.com/boston-dynamics/spot-cpp-sdk/tree/master/cpp/examples/query_autowalk_status "Query Autowalk Status Example"
-[failedelement]: ../../../protos/bosdyn/api/proto_reference.html#failedelement "Failed Element Proto"
-[node]: ../../../protos/bosdyn/api/proto_reference.html#node "Node Proto"
-[action]: ../../../protos/bosdyn/api/proto_reference.html#action "Action Proto"
-[loadautowalkresponse]: ../../../protos/bosdyn/api/proto_reference.html#loadautowalkresponse "Load Autowalk Response Proto"
+[failedelement]: ../../../protos/bosdyn/api/autowalk/autowalk.proto#failedelement "Failed Element Proto"
+[node]: ../../../protos/bosdyn/api/mission/nodes.proto#node "Node Proto"
+[action]: ../../../protos/bosdyn/api/autowalk/walks.proto#action "Action Proto"
+[loadautowalkresponse]: ../../../protos/bosdyn/api/autowalk/autowalk.proto#loadautowalkresponse "Load Autowalk Response Proto"

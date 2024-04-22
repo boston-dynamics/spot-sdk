@@ -68,6 +68,20 @@ sudo docker build -f Dockerfile  -t docking_callback .
 sudo docker save docking_callback | pigz > docking_callback.tar.gz
 ```
 
+To run the Docker image on the same computer where it was built, run:
+
+```
+sudo docker run -it --network=host docking_callback --time-period 90 --destination local --destination-folder test_folder --host-ip HOST_IP ROBOT_IP
+```
+
+where `--time-period 90 --destination local --destination-folder test_folder --host-ip HOST_IP ROBOT_IP` is one possibility of many for the command-line and positional arguments. This command results in the corresponding data (i.e., the last 90 minutes), if any, being retrieved from Data Acquisition Store service and copied to a folder inside of the Docker container, not the host machine. To copy this folder from the Docker container to the host machine, run:
+
+```
+sudo docker cp CONTAINER_ID:/app/test_folder .
+```
+
+where `CONTAINER_ID` is the container ID for the `docking_callback` image.
+
 To build the Docker image for an arm64 platform (e.g. CORE I/O), run:
 
 ```
@@ -91,7 +105,6 @@ This example can also be built into a [Spot Extension](../../../docs/payload/doc
 cd {/path/to/python/examples/post_docking_callbacks/}
 
 python3 ../extensions/build_extension.py \
-    --arm \
     --dockerfile-paths Dockerfile.arm64 \
     --build-image-tags docking_callback:arm64 \
     -i aws_docking_callback_arm64.tar.gz \

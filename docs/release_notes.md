@@ -12,6 +12,70 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 4.0.1
+
+### Breaking Changes
+
+- A breaking change that was present in 4.0.0, but was unfortunately not reported, is that Network Compute Bridge workers are now required to set the status field. Previously, this was not required. One of the Network Compute Bridge examples has been updated accordingly (see [here](../python/examples/network_compute_bridge/README.md)).
+
+### Bug Fixes and Improvements
+
+- In Spot software versions prior to 4.0.1, the `bosdyn.client.power.power_off_robot` and `bosdyn.client.power.safe_power_off_robot` methods may not de-energize the robot. Note that the `safe_power_off_robot` method will still cause the robot’s motors to power off, but will not cause the entire robot to shut down. If your robot uses this or any integration that relies on the programmatic full shutdown, and your robot is affected by this issue, we recommend updating to 4.0.1 or later Spot software.
+
+- [Orbit Client](../python/bosdyn-orbit/src/bosdyn/orbit/README.md) and [Scout Client](../python/bosdyn-scout/src/bosdyn/scout/README.md): For developers on Python <= 3.8, the Orbit and (deprecated) Scout clients failed to import due to the use of a feature that is only available starting in Python 3.9. This feature is no longer used.
+
+- Examples that use the `GrpcServiceRunner` in `bosdyn.client.server_util` with the default argument `force_sigint_capture=True` no longer fail on Windows. A check for the Operating System (OS) has been added so that this does not happen.
+
+- The diagnostics and exception handling in `bosdyn.client.area_callback_service_utils` have been improved.
+
+- Fixed an issue where the robot would try to walk up the center of very wide staircases. Now, it stays closer to the recorded path up the staircase. The path on the stairs can be overridden by changing a new field, `traversal_y_offset`, which has been added to the [edge annotations](../protos/bosdyn/api/graph_nav/map.proto#edge) message.
+
+### Deprecations
+
+In addition to those listed for 4.0.0:
+
+- GraphNav map edge annotations: `flat_ground`
+
+### Known Issues
+
+- Same as 4.0.0
+
+### Sample Code
+
+#### Updated
+
+##### Spot
+
+- [Tester Programs](../python/examples/tester_programs/README.md): The instructions for the tester programs that may be used to test image services and data acquisition plugins have been made more clear.
+
+- [Fan Control](../python/examples/fan_command/README.md): Fixed flipped `response` and `request` arguments, which caused the `GetRemoteMissionServiceInfo` method to fail.
+
+- [Network Request](../python/examples/network_request_callback/README.md): Fixed flipped `response` and `request` arguments, which caused the `GetRemoteMissionServiceInfo` method to fail.
+
+- [Power Off Mission Service Callback](../python/examples/remote_mission_service/README.md): Fixed flipped `response` and `request` arguments, which caused the `GetRemoteMissionServiceInfo` method to fail.
+
+- [Build Extension](../python/examples/extensions/README.md): The `build_extension.py` script now defaults to building Extensions for the ARM64 architecture now.
+
+- [Comms Test](../python/examples/comms_test/README.md): The command to run the Docker image has been updated (previously, it was incorrect).
+
+- [Edit Autowalk](../python/examples/edit_autowalk/README.md): The mission status is now printed regularly, as well as any mission questions as they occur.
+
+- [Custom Parameter Image Server](../python/examples/service_customization/custom_parameter_image_server/README.md): This example now works on CORE I/O. A webcam that is compatible with CORE I/O is required (e.g., Logitech, Inc. HD Pro Webcam C920).
+
+- [Post-Docking Callback](../python/examples/post_docking_callbacks/README.md): Fixed an issue where the example would break if a time period was supplied.
+
+- [Spot Light](../python/examples/spot_light/README.md): A brightness threshold has been added, so that if the user does not have a light that is bright enough, they can adjust the threshold so that the robot will stand.
+
+- [Network Compute Bridge Worker (Fire Extinguisher)](../python/examples/network_compute_bridge/fire_extinguisher_server/README.md): The instructions have been updated to demonstrate how to configure the Inspection in the tablet.
+
+- [Network Compute Bridge Worker (TensorFlow)](../python/examples/network_compute_bridge/README.md): The `status` field in NetworkComputeResponse is now set.
+
+##### Orbit
+
+- <a href="orbit/docs.html">Orbit API</a>: The name of the `site_elements` endpoint has been corrected (previously `SiteElements`).
+
+- [Orbit Send Robot Back to Dock](../python/examples/orbit/send_robot_back_to_dock/README.md): The example has been made more interactive.
+
 ## 4.0.0
 
 ### Breaking Changes
@@ -25,6 +89,8 @@ The following fields and services have been **removed**.
 - SpotCheck feedback: `foot_height_results` and `leg_pair_results`
 
 The mapping between voltage and GPIO pins on the CoreIO has changed as part of the Jetpack 5 update. {5: 133, 12: 19, 24: 148} is now {5: 440, 12: 320, 24: 453}. Please see the updated [CoreIO GPIO](../python/examples/core_io_gpio/README.md) example.
+
+Network Compute Bridge workers are now required to set the status field. Previously, this was not required.
 
 ### New Features
 
@@ -44,9 +110,9 @@ The mapping between voltage and GPIO pins on the CoreIO has changed as part of t
 
 #### Orbit (formerly Scout)
 
-- [**Webhooks**](./concepts/about_orbit.md#orbit-webhooks): Webhooks are a new mechanism for clients to subscribe to real-time Orbit events. In order to receive events, Webhook subscribers must register with Orbit via the settings UI or the new `/webhooks` endpoints documented as part of the [Orbit API](https://dev.bostondynamics.com/docs/orbit/docs). Corresponding helper functions such as `post_webhook` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
+- [**Webhooks**](./concepts/about_orbit.md#webhooks): Webhooks are a new mechanism for clients to subscribe to real-time Orbit events. In order to receive events, Webhook subscribers must register with Orbit via the settings UI or the new `/webhooks` endpoints documented as part of the <a href="orbit/docs.html">Orbit API</a>. Corresponding helper functions such as `post_webhook` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
 
-- [**Scheduler**](./concepts/about_orbit.md#scheduling-missions): Alongside the new Orbit scheduler, one can also schedule missions via the new `/calendar` set of [Orbit API](https://dev.bostondynamics.com/docs/orbit/docs) endpoints. Corresponsing helper functions such as `post_calendar_event` and `get_calendar` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
+- [**Scheduler**](./concepts/about_orbit.md#scheduling-missions): Alongside the new Orbit scheduler, one can also schedule missions via the new `/calendar` set of <a href="orbit/docs.html">Orbit API</a> endpoints. Corresponsing helper functions such as `post_calendar_event` and `get_calendar` are available in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client.
 
 #### GPS
 
@@ -144,9 +210,9 @@ Published robot state messages previously contained kinematic information for a 
 
 - The package `bosdyn-scout` is deprecated and replaced with [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/), due to Scout being renamed to Orbit. As a result, the pre-existing examples in `../python/examples/scout/` are moved to `../python/examples/orbit/`. All examples use `bosdyn-orbit` instead of `bosdyn-scout`.
 
-- The `/login` [Orbit API](https://dev.bostondynamics.com/docs/orbit/docs) endpoint is now deprecated. It has been functionally replaced by the `/api_token/authenticate` endpoint. This endpoint allows an admin user to generate an API Access Token with specific permissions for use against the Orbit API. A corresponding `authenticate_with_api_token` helper function in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client has replaced 3.3's `authenticate_with_password` function.
+- The `/login` <a href="orbit/docs.html">Orbit API</a> endpoint is now deprecated. It has been functionally replaced by the `/api_token/authenticate` endpoint. This endpoint allows an admin user to generate an API Access Token with specific permissions for use against the Orbit API. A corresponding `authenticate_with_api_token` helper function in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client has replaced 3.3's `authenticate_with_password` function.
 
-- The `/missions` set of [Orbit API](https://dev.bostondynamics.com/docs/orbit/docs) endpoints are now deprecated in favor of the `/site_walks` endpoints. Corresponding helper functions such as `get_site_walks` in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client support this.
+- The `/missions` set of <a href="orbit/docs.html">Orbit API</a> endpoints are now deprecated in favor of the `/site_walks` endpoints. Corresponding helper functions such as `get_site_walks` in [bosdyn-orbit](https://pypi.org/project/bosdyn-orbit/)'s client support this.
 
 ### Known Issues
 
@@ -234,8 +300,6 @@ Published robot state messages previously contained kinematic information for a 
 - [Detect and Follow](../python/examples/spot_detect_and_follow/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5. Specific instructions for how to build the corresponding Spot Extension are now included.
 
 - [DAQ Plugin Tester](../python/examples/tester_programs/README.md): The plugin now tests for whether the DAQ plugin is publishing live data.
-
-- [Web Cam Image Service](../python/examples/web_cam_image_service/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5.
 
 - [Fetch Tutorial](python/fetch_tutorial/fetch1.md): The example has been updated such that it no longer uses the `trajectory_command` method, which has been removed. The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5.
 
@@ -346,7 +410,7 @@ More detailed descriptions of how to specify these parameters can be found in th
 - **Constrained Manipulation**: Users can put constrained manipulation in velocity control or position control of the task space. Previously, all constrained manipulation motions were velocity controlled, meaning that users would for example specify the velocity of turning a crank.
   In position control mode, the user can specify target positions, such as the angle or distance to move the object, as well as acceleration limits to obey.
   Previously, the internal estimator was always reset with a new request. Now users can disable that resetting, for cases where the task configuration has not changed from the previous request.
-- **Door opening**: Added new `STATUS_STALLED` and `STATUS_NOT_DETECTED` [error statuses](../protos/bosdyn/api/proto_reference#doorcommand-feedback-status), and `DoorCommand.Feedback` reports progress through the door.
+- **Door opening**: Added new `STATUS_STALLED` and `STATUS_NOT_DETECTED` [error statuses](../protos/bosdyn/api/spot/door.proto#doorcommand-feedback-status), and `DoorCommand.Feedback` reports progress through the door.
 - **Gripper Camera**: New options added for controlling white balance, gamma, and sharpness.
 - Added many pieces of information to `ArmImpedanceCommand.Feedback`.
 
@@ -640,7 +704,7 @@ CORE I/O payload replaces the Spot CORE payload. We added the documentation rela
 
 #### Added Spot Extensions Documentation
 
-CORE I/O contains improved functionality to package and run applications as Spot Extensions. We added the Spot Extensions documentation [here](payload/docker_containers.md#manage-payload-software-in-core-io)
+CORE I/O contains improved functionality to package and run applications as Spot Extensions. We added the Spot Extensions documentation [here](payload/docker_containers.md#manage-payload-software-in-core-i-o)
 
 ### Bug Fixes and Improvements
 
@@ -902,7 +966,7 @@ Robot image services now report which image formats and pixel formats they suppo
 
 #### Alerts
 
-A new [AlertData](../protos/bosdyn/api/alertdata.proto) message has been added for the purpose of triggering live alerts for various events that can happen during a mission. These alerts can be saved into the `DataAcquisitionStore` service using the new `StoreAlertData` RPC and queried using the `ListStoredAlertData` RPC. Additionally, the alert data can be added to the response from a network compute bridge worker, where it will be automatically saved into the data acquisition store when captured as part of a data acquisition request. If a client calls the network compute bridge service itself, the alert data will be returned to the client in the response but not automatically saved to the data acquisition store.
+A new [AlertData](../protos/bosdyn/api/alerts.proto) message has been added for the purpose of triggering live alerts for various events that can happen during a mission. These alerts can be saved into the `DataAcquisitionStore` service using the new `StoreAlertData` RPC and queried using the `ListStoredAlertData` RPC. Additionally, the alert data can be added to the response from a network compute bridge worker, where it will be automatically saved into the data acquisition store when captured as part of a data acquisition request. If a client calls the network compute bridge service itself, the alert data will be returned to the client in the response but not automatically saved to the data acquisition store.
 
 #### New Services
 
@@ -1100,7 +1164,7 @@ Includes a new `--upload-only` option that will upload the sequence without runn
 [**Basic Streaming Visualizer (updated)**](../python/examples/visualizer/README.md)
 Added an example to draw gripper depth data as a point cloud.
 
-[**Web Cam Image Service (updated)**](../python/examples/web_cam_image_service/README.md)
+[**Web Cam Image Service (updated)**](../python/examples/service_customization/custom_parameter_image_server/README.md)
 Includes support for pixel format and resize ratio.
 
 [**World Object Mutations (updated)**](../python/examples/world_object_mutations/README.md)
@@ -1463,7 +1527,7 @@ New options for getting and setting PTZ focus, audio capture channel, and audio 
 [**WASD (updated)**](../python/examples/wasd/README.md)
 The Escape key can now be used to stop the robot.
 
-[**Webcam Image Service (updated)**](../python/examples/web_cam_image_service/README.md)
+[**Webcam Image Service (updated)**](../python/examples/service_customization/custom_parameter_image_server/README.md)
 New resolution options allow for capturing from the webcam at different resolutions.
 
 ## 2.3.5
@@ -1767,7 +1831,7 @@ The WebRTC example now records audio. The compositor example now includes Spot C
 [**Upload Choreographed Sequence (updated)**](../python/examples/upload_choreographed_sequence/README.md)
 Returns a clearer error message if being used with an incorrect license.
 
-[**Web Cam Image Service (updated)**](../python/examples/web_cam_image_service/README.md)
+[**Web Cam Image Service (updated)**](../python/examples/service_customization/custom_parameter_image_server/README.md)
 The web cam example now has better support for Windows, and has a debug mode which will show a popup image window of the camera image.
 
 ## 2.2.0
@@ -1860,7 +1924,7 @@ A new tester program for image services is available to help with the developmen
 [**Docking (new)**](../python/examples/docking/README.md)
 Shows how to trigger the docking service to safely dock the robot on a charger.
 
-[**Web Cam Image Service (updated)**](../python/examples/web_cam_image_service/README.md)
+[**Web Cam Image Service (updated)**](../python/examples/service_customization/custom_parameter_image_server/README.md)
 The web cam example now uses the new image service helpers.
 
 [**Ricoh Theta Image Service (updated)**](../python/examples/ricoh_theta/README.md)
@@ -2114,7 +2178,7 @@ Shows how to use the Choreography service to upload an existing choreographed se
 [**Velodyne client (new)**](../python/examples/velodyne_client/README.md)
 Demonstrates how to use the Velodyne service to query for point clouds.
 
-[**Web cam image service (new)**](../python/examples/web_cam_image_service/README.md)
+[**Web cam image service (new)**](../python/examples/service_customization/custom_parameter_image_server/README.md)
 Implements the standard Boston Dynamics API `ImageService` and communicates to common web cameras using OpenCV.
 
 [**World object with image coords (new)**](../python/examples/world_object_with_image_coordinates/README.md)

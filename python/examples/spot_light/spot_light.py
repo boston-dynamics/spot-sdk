@@ -40,6 +40,8 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description='Spot API Test')
     bosdyn.client.util.add_base_arguments(parser)
+    parser.add_argument('--brightness_threshold', type=int, default=250,
+                        help='the brightness from 0 to 255 that spot will respond to')
     options = parser.parse_args()
 
     try:

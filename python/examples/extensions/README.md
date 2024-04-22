@@ -77,7 +77,7 @@ Note: While the Spot Extension specification allows for multiple image archive t
 - `--image-archive`: Required. Docker saved images file. Should match contents of manifest.json.
 - `--package-dir`: Required. Directory containing manifest.json, docker-compose.yml, and icon.
 - `--spx`: Required. Path to write the final SPX to.
-- `--arm`: Optional. Whether or not the target architecture is ARM.
+- `--amd64`: Optional. Whether or not the target architecture is amd64. Otherwise defaults to an arm64 architecture for running on CORE I/O.
 - `--extra-image-tags`: Optional. Additional image tags to save that do not need to be built (e.g. images pulled directly from Dockerhub).
 - `--icon`: Optional. Path to the icon file. Default value is icon.png.
 - `--additional-files`: Optional. List of any additional files in the package directory to be included in the resulting SPX, such as a `udev_rules` file.
@@ -87,7 +87,7 @@ The format for running this command is:
 
 ```
 python3 build_extension.py \
-    [--arm] \
+    [--amd64] \
     --dockerfile-paths {/path/to/image1.dockerfile} {/path/to/image2.dockerfile} \
     --build-image-tags {image1:tag} {image2:tag} \
     [--extra-image-tags {extra_image:tag}] \
@@ -104,7 +104,6 @@ then run the following command in this directory:
 
 ```
 python3 build_extension.py \
-    --arm \
     --dockerfile-paths ../post_docking_callbacks/Dockerfile.arm64 \
     --build-image-tags docking_callback:arm64 \
     --image-archive aws_docking_callback_arm64.tar.gz \

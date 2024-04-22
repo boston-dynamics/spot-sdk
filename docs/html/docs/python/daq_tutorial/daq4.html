@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Part 4: Deploying to the CORE I/O &mdash; Spot 4.0.0 documentation</title>
+  <title>Part 4: Deploying to the CORE I/O &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -650,7 +649,7 @@ sed &quot;s/@ORIG_VIDEO_DEV/$orig_device/&quot; $SCRIPT_DIR/.env.tpl &gt; $SCRIP
 <p>Creating an Extension is very simple once we have the files created in the section above. Simply copy the files <code class="docutils literal notranslate"><span class="pre">battery_service.tgz</span></code>, <code class="docutils literal notranslate"><span class="pre">web_cam_image_service.tgz</span></code>, <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>, <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code>, <code class="docutils literal notranslate"><span class="pre">1-sdk.camera.rules</span></code>, <code class="docutils literal notranslate"><span class="pre">setup_device_name.sh</span></code>, <code class="docutils literal notranslate"><span class="pre">.env.tpl</span></code> in a folder and create the Extension, which is a zipped tar file, with the command <code class="docutils literal notranslate"><span class="pre">tar</span> <span class="pre">zcfv</span> <span class="pre">daq_tutorial.spx</span> <span class="pre">*</span> <span class="pre">.env.tpl</span></code>. Then, follow these steps to install the Extension <code class="docutils literal notranslate"><span class="pre">daq_tutorial.spx</span></code> in the CORE I/O:</p>
 <ol class="simple">
 <li><p>Plug in USB web cam. This will execute the udev rule included in the Extension and create <code class="docutils literal notranslate"><span class="pre">/dev/video99</span></code> symlink and the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file.</p></li>
-<li><p>Install Extension by drag-and-dropping it in the “Upload New Extension” section in the Extensions tab of the CORE I/O web portal. This process is also described in the SDK documentation section <a class="reference external" href="../../payload/docker_containers.html#install-extension">here</a>. The udev rules in the Extension will be automatically triggered when the Extension is installed.</p></li>
+<li><p>Install Extension by drag-and-dropping it in the “Upload New Extension” section in the Extensions tab of the CORE I/O web portal. This process is also described in the SDK documentation section <a class="reference external" href="../../payload/docker_containers.html#install-extension-using-web-portal">here</a>. The udev rules in the Extension will be automatically triggered when the Extension is installed.</p></li>
 </ol>
 <p>On other types of computational payloads, users can copy the docker images to the payload, load them and run <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> commands manually to start/stop/monitor the containers.</p>
 </section>

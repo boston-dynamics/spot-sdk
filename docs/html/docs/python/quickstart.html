@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuickStart &mdash; Spot 4.0.0 documentation</title>
+  <title>QuickStart &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -520,11 +519,11 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><a class="reference external" href="#get-a-spot-robot">Get a Spot Robot</a></p></li>
 <li><p><a class="reference external" href="#get-a-user-account-on-the-robot">Get a user account on the robot</a></p></li>
 <li><p><a class="reference external" href="#ping-spot">Ping Spot</a></p></li>
-<li><p><a class="reference external" href="#request-spot-robots-id">Request Spot robot’s ID</a></p></li>
+<li><p><a class="reference external" href="#request-spot-robot-s-id">Request Spot robot’s ID</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference external" href="#get-a-copy-of-the-full-sdk-distribution-from-github">Get a copy of the full SDK distribution from github</a></p></li>
-<li><p><a class="reference external" href="#run-hello-spot---lets-see-the-robot-move">Run Hello Spot - let’s see the robot move!</a></p>
+<li><p><a class="reference external" href="#run-hello-spot-let-s-see-the-robot-move">Run Hello Spot - let’s see the robot move!</a></p>
 <ul>
 <li><p><a class="reference external" href="#run-an-independent-e-stop">Run an Independent E-Stop</a></p></li>
 <li><p><a class="reference external" href="#run-hello-spot-take-2">Run Hello Spot (Take 2)</a></p></li>
@@ -633,23 +632,23 @@ Type<span class="w"> </span><span class="s2">&quot;help&quot;</span>,<span class
 <h2>Install Spot Python packages<a class="headerlink" href="#install-spot-python-packages" title="Permalink to this heading"></a></h2>
 <p>With <code class="docutils literal notranslate"><span class="pre">python</span></code> and <code class="docutils literal notranslate"><span class="pre">pip</span></code> properly installed and configured, the Python packages are easily installed
 or upgraded from PyPI with the following command.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>bosdyn-client<span class="w"> </span>bosdyn-mission<span class="w"> </span>bosdyn-choreography-client
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>bosdyn-client<span class="w"> </span>bosdyn-mission<span class="w"> </span>bosdyn-choreography-client<span class="w"> </span>bosdyn-orbit
 </pre></div>
 </div>
 <p>Installing the <code class="docutils literal notranslate"><span class="pre">bosdyn-client</span></code>, <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-mission</span></code> packages will also
 install <code class="docutils literal notranslate"><span class="pre">bosdyn-api</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-core</span></code> packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 4.0.0, use the following command.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>bosdyn-client<span class="o">==</span><span class="m">4</span>.0.0<span class="w"> </span>bosdyn-mission<span class="o">==</span><span class="m">4</span>.0.0<span class="w"> </span>bosdyn-choreography-client<span class="o">==</span><span class="m">4</span>.0.0
+example 4.0.1, use the following command.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>bosdyn-client<span class="o">==</span><span class="m">4</span>.0.1<span class="w"> </span>bosdyn-mission<span class="o">==</span><span class="m">4</span>.0.1<span class="w"> </span>bosdyn-choreography-client<span class="o">==</span><span class="m">4</span>.0.1<span class="w"> </span>bosdyn-orbit<span class="o">==</span><span class="m">4</span>.0.1
 </pre></div>
 </div>
 <p><strong>Version incompatibility:</strong></p>
 <p>If you see a version incompatibility error during pip install such as:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ERROR:<span class="w"> </span>bosdyn-core<span class="w"> </span>&lt;VERSION_STRING&gt;<span class="w"> </span>has<span class="w"> </span>requirement<span class="w"> </span>bosdyn-api<span class="o">==</span>&lt;VERSION_STRING&gt;,<span class="w"> </span>but<span class="w"> </span>you
-have<span class="w"> </span>bosdyn-api<span class="w"> </span><span class="m">4</span>.0.0<span class="w"> </span>which<span class="w"> </span>is<span class="w"> </span>incompatible.
+have<span class="w"> </span>bosdyn-api<span class="w"> </span><span class="m">4</span>.0.1<span class="w"> </span>which<span class="w"> </span>is<span class="w"> </span>incompatible.
 </pre></div>
 </div>
-<p>Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all 4 packages) and then reinstalling:</p>
+<p>Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all packages) and then reinstalling:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>uninstall<span class="w"> </span>bosdyn-client<span class="w"> </span>bosdyn-mission<span class="w"> </span>bosdyn-api<span class="w"> </span>bosdyn-core
 $<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>bosdyn-client<span class="w"> </span>bosdyn-mission
 </pre></div>
@@ -658,19 +657,20 @@ $<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </spa
 <h3>Verify your Spot packages installation<a class="headerlink" href="#verify-your-spot-packages-installation" title="Permalink to this heading"></a></h3>
 <p>Make sure that the packages have been installed.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>list<span class="w"> </span>--format<span class="o">=</span>columns<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>bosdyn
-bosdyn-api<span class="w">                    </span><span class="m">4</span>.0.0
-bosdyn-choreography-client<span class="w">    </span><span class="m">4</span>.0.0
-bosdyn-choreography-protos<span class="w">    </span><span class="m">4</span>.0.0
-bosdyn-client<span class="w">                 </span><span class="m">4</span>.0.0
-bosdyn-core<span class="w">                   </span><span class="m">4</span>.0.0
-bosdyn-mission<span class="w">                </span><span class="m">4</span>.0.0
+bosdyn-api<span class="w">                    </span><span class="m">4</span>.0.1
+bosdyn-choreography-client<span class="w">    </span><span class="m">4</span>.0.1
+bosdyn-choreography-protos<span class="w">    </span><span class="m">4</span>.0.1
+bosdyn-client<span class="w">                 </span><span class="m">4</span>.0.1
+bosdyn-core<span class="w">                   </span><span class="m">4</span>.0.1
+bosdyn-mission<span class="w">                </span><span class="m">4</span>.0.1
+bosdyn-orbit<span class="w">                  </span><span class="m">4</span>.0.1
 </pre></div>
 </div>
 <p><strong>Windows users:</strong></p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>&gt;<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>list<span class="w"> </span>--format<span class="o">=</span>columns<span class="w"> </span><span class="p">|</span><span class="w"> </span>findstr<span class="w"> </span>bosdyn
 </pre></div>
 </div>
-<p>If you don’t see the 4 bosdyn packages with your target version, something went wrong during
+<p>If you don’t see the above bosdyn packages with your target version, something went wrong during
 installation.</p>
 <p>Next, start the python interpreter:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3

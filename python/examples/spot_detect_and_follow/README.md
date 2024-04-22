@@ -111,7 +111,6 @@ cd {/path/to/python/examples/spot_detect_and_follow/}
 cp ../spot_tensorflow_detector/tensorflow_object_detection.py .
 
 python3 ../extensions/build_extension.py \
-    --arm \
     --dockerfile-paths Dockerfile.l4t \
     --build-image-tags spot_detect_and_follow \
     -i spot_detect_and_follow.tar.gz \

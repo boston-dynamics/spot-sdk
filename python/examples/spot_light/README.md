@@ -35,6 +35,12 @@ To run the example:
 python3 spot_light.py ROBOT_IP
 ```
 
+If Spot does not stand up, you can use a brighter light or adjust the brightness threshold. For example:
+
+```
+python3 spot_light.py ROBOT_IP --brightness_threshold 200
+```
+
 ### E-Stop Endpoint Dependency
 
 The example depends on an external E-Stop endpoint application to configure E-Stop and cut off power to all motors in the robot, if necessary. In parallel with this example, please run the E-Stop SDK example as the E-Stop controller.

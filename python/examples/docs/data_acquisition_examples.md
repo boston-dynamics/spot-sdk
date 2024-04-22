@@ -15,7 +15,6 @@ The following examples show how to use the data acquisition service, and how to 
 - [Data Acquisition Service](../data_acquisition_service/README.md)
 - [Faults](../service_faults/README.md)
 - [Ricoh Theta](../ricoh_theta/README.md)
-- [Web Cam Service](../web_cam_image_service/README.md)
 - [Custom Parameter Image Service](../service_customization/custom_parameter_image_server/README.md)
 - [Custom Parameter Data Acquisition Plugin](../service_customization/custom_parameters_data_acquisition/README.md)
 - [Test Image Service Implementation with Get Image](../get_image/README.md)

@@ -294,6 +294,13 @@ message Edge {
                 DESCENT_PREFERENCE_NONE = 3;
             }
             DescentPreference descent_preference = 4;
+
+            // The Y position with respect to the staircase frame to align to when traversing this
+            // staircase. Regardless of how the recorded waypoints are distributed on the staircase,
+            // when traversing the staircase all navigation goals will have this Y position with
+            // respect to the staircase in order to guide the robot over the stairs in a straight
+            // line.
+            google.protobuf.DoubleValue traversal_y_offset = 5;
         }
         // Stairs information/parameters specific to the edge.
         StairData stairs = 2;

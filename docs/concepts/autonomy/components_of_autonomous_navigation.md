@@ -11,13 +11,13 @@ Development Kit License (20191101-BDSDK-SL).
 To get started with autonomous navigation, you'll need a grasp of the following concepts:
 
 
-*  [Maps](#Maps)
+*  [Maps](#maps)
 *  [Waypoints](#waypoints)
 *  [Edges](#edges)
 *  [Localization](#localization)
 *  [Initialization](#initialization)
 *  [Missions](#missions)
-*  [(Advanced) Area Callbacks](#area-callbacks)
+*  [(Advanced) Area Callbacks](#area_callbacks)
 
 
 <h2 id="maps">Maps</h2>

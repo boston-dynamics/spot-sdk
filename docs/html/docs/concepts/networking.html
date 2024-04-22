@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Networking &mdash; Spot 4.0.0 documentation</title>
+  <title>Networking &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -522,7 +521,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>The service interface’s name is <code class="docutils literal notranslate"><span class="pre">AuthService</span></code>. It only supports a single RPC named <code class="docutils literal notranslate"><span class="pre">GetAuthToken</span></code>, which checks the passed in username and password and returns a session token if they are valid.</p>
 <p>The input (GetAuthTokenRequest) and output (GetAuthTokenResponse) messages are <a class="reference external" href="https://developers.google.com/protocol-buffers/docs/overview">Protocol Buffer</a> messages. Protocol Buffer messages have a compact wire representation, support backwards/forwards compatibility, and are implemented for a broad set of programming languages and environments.</p>
-<p>Protocol Buffer messages are defined using a language independent format, with automatically generated serialization/deserialization bindings for languages. For example, the definition for <code class="docutils literal notranslate"><span class="pre">GetAuthTokenRequest</span></code> can be seen below (or in <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#auth-proto">auth.proto</a>):</p>
+<p>Protocol Buffer messages are defined using a language independent format, with automatically generated serialization/deserialization bindings for languages. For example, the definition for <code class="docutils literal notranslate"><span class="pre">GetAuthTokenRequest</span></code> can be seen below (or in <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-auth-proto">auth.proto</a>):</p>
 <div class="highlight-protobuf notranslate"><div class="highlight"><pre><span></span><span class="kd">message</span><span class="w"> </span><span class="nc">GetAuthTokenRequest</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Common request header.</span>
 <span class="w">    </span><span class="n">RequestHeader</span><span class="w"> </span><span class="na">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
@@ -561,7 +560,7 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <p>This method takes <code class="docutils literal notranslate"><span class="pre">username</span></code>, <code class="docutils literal notranslate"><span class="pre">password</span></code>, and <code class="docutils literal notranslate"><span class="pre">app_token</span></code> strings and generates a <code class="docutils literal notranslate"><span class="pre">GetAuthTokenRequest</span></code> message from those using <code class="docutils literal notranslate"><span class="pre">_build_auth_request</span></code>. The RPC is then sent to the <code class="docutils literal notranslate"><span class="pre">AuthService</span></code> and a <code class="docutils literal notranslate"><span class="pre">GetAuthTokenResponse</span></code> is received. If the authentication attempt is valid, the session token is returned to the caller of the auth function. If there were networking issues or the username/password combination was invalid, an exception is raised.</p>
-<p>This layer of abstraction simplifies common use cases, but developers will occasionally need to interact with Protocol Buffer messages directly, even when using the Python library. For example, the <code class="docutils literal notranslate"><span class="pre">RobotState</span></code> message includes many nested sub-messages and detailed information. Rather than convert into primitive types or other data structures, developers need to directly operate on the protocol buffer itself. The message definition and comments in <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">protos/bosdyn/api/robot_state.proto</a> are key to understanding what is included and how to interpret the data.</p>
+<p>This layer of abstraction simplifies common use cases, but developers will occasionally need to interact with Protocol Buffer messages directly, even when using the Python library. For example, the <code class="docutils literal notranslate"><span class="pre">RobotState</span></code> message includes many nested sub-messages and detailed information. Rather than convert into primitive types or other data structures, developers need to directly operate on the protocol buffer itself. The message definition and comments in <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-robot-state-proto">protos/bosdyn/api/robot_state.proto</a> are key to understanding what is included and how to interpret the data.</p>
 <p>Developers who wish to support another language or environment are also able to build client libraries using the gRPC service definitions and Protocol Buffer message definitions. The Python client library may also be used as a reference implementation.</p>
 </section>
 <section id="error-handling">

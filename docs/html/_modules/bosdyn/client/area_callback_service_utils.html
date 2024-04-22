@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.area_callback_service_utils &mdash; Spot 4.0.0 documentation</title>
+  <title>bosdyn.client.area_callback_service_utils &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -192,7 +192,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -219,7 +219,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -499,13 +498,12 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
+<span class="kn">import</span> <span class="nn">bosdyn.client</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">service_fault_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.graph_nav</span> <span class="kn">import</span> <span class="n">area_callback_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.service_customization_pb2</span> <span class="kn">import</span> <span class="n">DictParam</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.directory</span> <span class="kn">import</span> <span class="n">NonexistentServiceError</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">RpcError</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.fault</span> <span class="kn">import</span> <span class="p">(</span><span class="n">FaultResponseError</span><span class="p">,</span> <span class="n">ServiceFaultAlreadyExistsError</span><span class="p">,</span>
-                                 <span class="n">ServiceFaultDoesNotExistError</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.fault</span> <span class="kn">import</span> <span class="n">ServiceFaultAlreadyExistsError</span><span class="p">,</span> <span class="n">ServiceFaultDoesNotExistError</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.service_customization_helpers</span> <span class="kn">import</span> <span class="n">dict_params_to_dict</span>
 
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -546,7 +544,7 @@
 <div class="viewcode-block" id="handle_service_faults"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html#bosdyn.client.area_callback_service_utils.handle_service_faults">[docs]</a><span class="k">def</span> <span class="nf">handle_service_faults</span><span class="p">(</span><span class="n">fault_client</span><span class="p">,</span> <span class="n">robot_state_client</span><span class="p">,</span> <span class="n">directory_client</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span>
                           <span class="n">prereq_services</span><span class="p">):</span>
     <span class="n">service_fault</span> <span class="o">=</span> <span class="n">service_fault_pb2</span><span class="o">.</span><span class="n">ServiceFault</span><span class="p">()</span>
-    <span class="n">service_fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">fault_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">service_name</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">service_fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">fault_name</span> <span class="o">=</span> <span class="n">service_name</span>
     <span class="n">service_fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">service_name</span> <span class="o">=</span> <span class="n">service_name</span>
     <span class="n">service_fault</span><span class="o">.</span><span class="n">severity</span> <span class="o">=</span> <span class="n">service_fault_pb2</span><span class="o">.</span><span class="n">ServiceFault</span><span class="o">.</span><span class="n">SEVERITY_CRITICAL</span>
     <span class="n">check_period</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># seconds.</span>
@@ -559,46 +557,71 @@
             <span class="n">registered_service</span> <span class="o">=</span> <span class="n">directory_client</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="n">service_name</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">NonexistentServiceError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
             <span class="k">continue</span>
+        <span class="k">except</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to check if </span><span class="si">%s</span><span class="s2"> exists during fault handling: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span>
+                          <span class="n">exc</span><span class="p">)</span>
+            <span class="k">continue</span>
 
         <span class="n">set_fault</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">fault_exists</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">unavailable_services</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="n">prereq_services</span><span class="p">:</span>
+
+        <span class="c1"># Need robot state to check existing faults.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">robot_state_client</span><span class="o">.</span><span class="n">get_robot_state</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to get robot state during fault handling: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="k">for</span> <span class="n">prereq_service</span> <span class="ow">in</span> <span class="n">prereq_services</span><span class="p">:</span>
             <span class="c1"># Make sure the prereq service exists.</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">registered_service</span> <span class="o">=</span> <span class="n">directory_client</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+                <span class="n">registered_service</span> <span class="o">=</span> <span class="n">directory_client</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="n">prereq_service</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">NonexistentServiceError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
                 <span class="n">set_fault</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="n">unavailable_services</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+                <span class="n">unavailable_services</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prereq_service</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">except</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to check if </span><span class="si">%s</span><span class="s2"> exists during fault handling: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                              <span class="n">prereq_service</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
+                <span class="n">set_fault</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">unavailable_services</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prereq_service</span><span class="p">)</span>
                 <span class="k">continue</span>
 
             <span class="c1"># Make sure the prereq service isn&#39;t faulted.</span>
-            <span class="n">state</span> <span class="o">=</span> <span class="n">robot_state_client</span><span class="o">.</span><span class="n">get_robot_state</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">fault</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">service_fault_state</span><span class="o">.</span><span class="n">faults</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">service_name</span> <span class="o">==</span> <span class="n">service</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">service_name</span> <span class="o">==</span> <span class="n">prereq_service</span><span class="p">:</span>
                     <span class="n">set_fault</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="n">unavailable_services</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+                    <span class="n">unavailable_services</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prereq_service</span><span class="p">)</span>
                     <span class="k">break</span>
 
-        <span class="c1"># Fault the service.</span>
-        <span class="k">if</span> <span class="n">set_fault</span><span class="p">:</span>
+        <span class="c1"># Check if the service is already faulted.</span>
+        <span class="k">for</span> <span class="n">fault</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">service_fault_state</span><span class="o">.</span><span class="n">faults</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fault</span><span class="o">.</span><span class="n">fault_id</span><span class="o">.</span><span class="n">service_name</span> <span class="o">==</span> <span class="n">service_name</span><span class="p">:</span>
+                <span class="n">fault_exists</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+
+        <span class="c1"># Fault the service if there isn&#39;t an existing fault.</span>
+        <span class="k">if</span> <span class="n">set_fault</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">fault_exists</span><span class="p">:</span>
             <span class="n">service_fault</span><span class="o">.</span><span class="n">error_message</span> <span class="o">=</span> <span class="s1">&#39;Faulted due to issues with &#39;</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="n">unavailable_services</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">fault_client</span><span class="o">.</span><span class="n">trigger_service_fault</span><span class="p">(</span><span class="n">service_fault</span><span class="p">)</span>
+                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Triggered fault on </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">ServiceFaultAlreadyExistsError</span><span class="p">:</span>
                 <span class="k">pass</span>
-            <span class="k">except</span> <span class="p">(</span><span class="n">RpcError</span><span class="p">,</span> <span class="n">FaultResponseError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to set </span><span class="si">{</span><span class="n">service_name</span><span class="si">}</span><span class="s2"> fault. </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to set </span><span class="si">%s</span><span class="s2"> fault: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
 
         <span class="c1"># Otherwise, clear the fault if it exists.</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="n">set_fault</span> <span class="ow">and</span> <span class="n">fault_exists</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">fault_client</span><span class="o">.</span><span class="n">clear_service_fault</span><span class="p">(</span><span class="n">service_fault</span><span class="o">.</span><span class="n">fault_id</span><span class="p">)</span>
-                <span class="n">set_fault</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cleared fault on </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">ServiceFaultDoesNotExistError</span><span class="p">:</span>
                 <span class="k">pass</span>
-            <span class="k">except</span> <span class="p">(</span><span class="n">RpcError</span><span class="p">,</span> <span class="n">FaultResponseError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
-                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to clear </span><span class="si">{</span><span class="n">service_name</span><span class="si">}</span><span class="s2"> fault. </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">except</span> <span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">Error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">_LOGGER</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to clear </span><span class="si">%s</span><span class="s2"> fault: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

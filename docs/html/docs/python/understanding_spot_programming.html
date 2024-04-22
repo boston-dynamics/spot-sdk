@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Understanding Spot Programming &mdash; Spot 4.0.0 documentation</title>
+  <title>Understanding Spot Programming &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -723,7 +722,7 @@ Type<span class="w"> </span><span class="s2">&quot;help&quot;</span>,<span class
 </section>
 <section id="robot-state-was-a-message-messages-are-defined-by-protobufs">
 <h4>Robot State was a message, messages are defined by protobufs<a class="headerlink" href="#robot-state-was-a-message-messages-are-defined-by-protobufs" title="Permalink to this heading"></a></h4>
-<p>The structure of the robot state message retrieved above is defined by its <em>protobuf definition</em>.  This is the language the robot speaks.  Spot SDK completely exposes the protobuf, so to really understand Spot programming you want to look at and understand the protobufs. Take a look, they are right here in your distribution!   <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#robot-state-proto">../../protos/bosdyn/api/robot_state.proto</a></p>
+<p>The structure of the robot state message retrieved above is defined by its <em>protobuf definition</em>.  This is the language the robot speaks.  Spot SDK completely exposes the protobuf, so to really understand Spot programming you want to look at and understand the protobufs. Take a look, they are right here in your distribution!   <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-robot-state-proto">../../protos/bosdyn/api/robot_state.proto</a></p>
 </section>
 </section>
 <section id="spot-s-frames">
@@ -936,7 +935,7 @@ Let’s acquire a lease, create the keepalive, and again list:</p>
 </div>
 <p>The robot should now be standing. In addition, the stand command can be modified to control the height of the body as well as the orientation of the body with respect to the <strong>footprint frame</strong>. The footprint frame is a gravity aligned frame with its origin located at the geometric center of the feet. The Z axis up, and the X axis is forward.</p>
 <p>The commands proto can be quite expressive, and therefore, if going beyond default parameters, non-trivial.  To increase simplicity, Spot API provides several helper functions that combine Spot API RPC commands into single line functions.</p>
-<p>We encourage you to experiment with these various parameters, referencing the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#robot-command-proto">robot_command proto</a> parent class for general Boston Dynamics robots and the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#spot-robot-command-proto">robot command proto</a> Spot subclass.</p>
+<p>We encourage you to experiment with these various parameters, referencing the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-robot-command-proto">robot_command proto</a> parent class for general Boston Dynamics robots and the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-spot-robot-command-proto">robot command proto</a> Spot subclass.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Command Spot to rotate about the Z axis.</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">bosdyn.geometry</span> <span class="kn">import</span> <span class="n">EulerZXY</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">footprint_R_body</span> <span class="o">=</span> <span class="n">EulerZXY</span><span class="p">(</span><span class="n">yaw</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">roll</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>

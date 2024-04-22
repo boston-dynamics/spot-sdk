@@ -24,7 +24,7 @@ In this part of the tutorial, you will:
 * Run the image service, connecting to the robot.
 * Test that the image service functions properly.
 
-If you do not have a webcam available, please skip ahead to [capturing other data](daq3.md).  To skip the explanation and just run the service, jump ahead to [testing the service](#testing_the_service).
+If you do not have a webcam available, please skip ahead to [capturing other data](daq3.md).  To skip the explanation and just run the service, jump ahead to [testing the service](#testing-the-service).
 
 ## Understanding Image Services
 
@@ -43,7 +43,7 @@ For initial development, it is usually easiest to first connect the webcam (or o
 For this example, we will use OpenCV to read from the camera hardware.
 
 #### Enter your Spot API virtualenv
-<p>Replace <code>my_spot_env</code> with the name of the virtualenv that you created using the <a href="https://dev.bostondynamics.com/docs/python/quickstart">Spot Quickstart Guide</a>:</p>
+<p>Replace <code>my_spot_env</code> with the name of the virtualenv that you created using the [Spot Quickstart Guide](../quickstart.md):</p>
 
 <pre><code class="language-text">source my_spot_env/bin/activate
 </code></pre>
@@ -64,7 +64,7 @@ mkdir ~/data_capture
 cd ~/data_capture
 ```
 
-Copy (or <a href="files/web_cam_image_service.py">download</a>) the script below into a file called `web_cam_image_service.py` in the `~/data_capture` folder.  This is a simplified version of the [web cam example](../../../python/examples/web_cam_image_service/README.md) (which includes some extra options to control how images are captured).
+Copy (or <a href="files/web_cam_image_service.py">download</a>) the script below into a file called `web_cam_image_service.py` in the `~/data_capture` folder.  This is a simplified version of the [web cam example](../../../python/examples/service_customization/custom_parameter_image_server/README.md) (which includes some extra options to control how images are captured).
 
 ### Web cam image service
 Set up the imports for images and the Spot API

@@ -155,7 +155,7 @@ Loaded models:
 </p>
 <ul>
     <li>
-        If you're new to Spot's frame conventions, take a look at our <a href="https://dev.bostondynamics.com/docs/concepts/geometry_and_frames#transformations-between-spot-s-frames">concept documentation</a>.
+        If you're new to Spot's frame conventions, take a look at our [concept documentation](../../concepts/geometry_and_frames.md#transformations-between-spot-s-frames).
     </li>
 </ul>
 <br />
@@ -262,7 +262,7 @@ Loaded models:
 
 </code></pre>
 <p>
-    Build and send the arm command.  We use a <a href="https://dev.bostondynamics.com/docs/concepts/arm/arm_concepts">synchronized command</a> to command the arm and the gripper.  We don't pass anything for Spot's body to do, so it will continue to stand.
+    Build and send the arm command.  We use a [synchronized command](../../concepts/arm/arm_concepts.md) to command the arm and the gripper.  We don't pass anything for Spot's body to do, so it will continue to stand.
 </p>
 <br />
 

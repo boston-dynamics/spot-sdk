@@ -67,7 +67,7 @@ The `xboxdrv` driver supports only Xbox360 controllers. Newer controllers are no
 To install this example on Ubuntu 18.04 and Windows, follow these instructions:
 
 - Create virtual environment as described in this
-  [Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments)
+  [Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments-with-virtualenv)
 - Install dependencies: `python3 -m pip install -r requirements.txt`
 - Run the example using instructions in the next section
 - To exit the virtual environment, run `deactivate`
@@ -79,9 +79,12 @@ This example follows the common pattern for expected arguments. It needs the com
 - hostname passed as the last argument
 - username and password should be set in the environment variables `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD`.
 
-**1)** The example needs to be run as sudo. To run a python program as sudo within a virtual environment, you need to specify the python executable in the virtualenv folder:
+**1)** The example needs to be run as sudo. To run a python program as sudo within a virtual environment, you need to specify the python executable in the virtualenv folder.
 
-`sudo venv/bin/python xbox_controller.py --user USER --password PASSWORD ROBOT_IP`
+To find the virtualenv python executable, activate the desired virtual environment and then run `which python`, which should return the python executable's path.
+
+Then run the example with the following:
+`sudo <path/to/python/executable> xbox_controller.py ROBOT_IP`
 
 **2)** After the controller is connected, the example prints a status window:
 

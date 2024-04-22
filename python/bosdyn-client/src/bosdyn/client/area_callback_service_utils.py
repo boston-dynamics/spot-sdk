@@ -8,13 +8,12 @@ import logging
 import time
 from typing import List
 
+import bosdyn.client
 from bosdyn.api import service_fault_pb2
 from bosdyn.api.graph_nav import area_callback_pb2
 from bosdyn.api.service_customization_pb2 import DictParam
 from bosdyn.client.directory import NonexistentServiceError
-from bosdyn.client.exceptions import RpcError
-from bosdyn.client.fault import (FaultResponseError, ServiceFaultAlreadyExistsError,
-                                 ServiceFaultDoesNotExistError)
+from bosdyn.client.fault import ServiceFaultAlreadyExistsError, ServiceFaultDoesNotExistError
 from bosdyn.client.service_customization_helpers import dict_params_to_dict
 
 _LOGGER = logging.getLogger(__name__)
@@ -55,7 +54,7 @@ class AreaCallbackServiceConfig:
 def handle_service_faults(fault_client, robot_state_client, directory_client, service_name,
                           prereq_services):
     service_fault = service_fault_pb2.ServiceFault()
-    service_fault.fault_id.fault_name = f'{service_name}'
+    service_fault.fault_id.fault_name = service_name
     service_fault.fault_id.service_name = service_name
     service_fault.severity = service_fault_pb2.ServiceFault.SEVERITY_CRITICAL
     check_period = 0.5  # seconds.
@@ -68,43 +67,68 @@ def handle_service_faults(fault_client, robot_state_client, directory_client, se
             registered_service = directory_client.get_entry(service_name)
         except NonexistentServiceError as exc:
             continue
+        except bosdyn.client.Error as exc:
+            _LOGGER.error("Failed to check if %s exists during fault handling: %s", service_name,
+                          exc)
+            continue
 
         set_fault = False
+        fault_exists = False
         unavailable_services = []
-        for service in prereq_services:
+
+        # Need robot state to check existing faults.
+        try:
+            state = robot_state_client.get_robot_state()
+        except bosdyn.client.Error as exc:
+            _LOGGER.error("Failed to get robot state during fault handling: %s", exc)
+            continue
+
+        for prereq_service in prereq_services:
             # Make sure the prereq service exists.
             try:
-                registered_service = directory_client.get_entry(service)
+                registered_service = directory_client.get_entry(prereq_service)
             except NonexistentServiceError as exc:
                 set_fault = True
-                unavailable_services.append(service)
+                unavailable_services.append(prereq_service)
+                continue
+            except bosdyn.client.Error as exc:
+                _LOGGER.error("Failed to check if %s exists during fault handling: %s",
+                              prereq_service, exc)
+                set_fault = True
+                unavailable_services.append(prereq_service)
                 continue
 
             # Make sure the prereq service isn't faulted.
-            state = robot_state_client.get_robot_state()
             for fault in state.service_fault_state.faults:
-                if fault.fault_id.service_name == service:
+                if fault.fault_id.service_name == prereq_service:
                     set_fault = True
-                    unavailable_services.append(service)
+                    unavailable_services.append(prereq_service)
                     break
 
-        # Fault the service.
-        if set_fault:
+        # Check if the service is already faulted.
+        for fault in state.service_fault_state.faults:
+            if fault.fault_id.service_name == service_name:
+                fault_exists = True
+                break
+
+        # Fault the service if there isn't an existing fault.
+        if set_fault and not fault_exists:
             service_fault.error_message = 'Faulted due to issues with ' + ','.join(
                 unavailable_services)
             try:
                 fault_client.trigger_service_fault(service_fault)
+                _LOGGER.info("Triggered fault on %s", service_name)
             except ServiceFaultAlreadyExistsError:
                 pass
-            except (RpcError, FaultResponseError) as exc:
-                _LOGGER.error(f"Failed to set {service_name} fault. {exc}")
+            except bosdyn.client.Error as exc:
+                _LOGGER.error("Failed to set %s fault: %s", service_name, exc)
 
         # Otherwise, clear the fault if it exists.
-        else:
+        elif not set_fault and fault_exists:
             try:
                 fault_client.clear_service_fault(service_fault.fault_id)
-                set_fault = False
+                _LOGGER.info("Cleared fault on %s", service_name)
             except ServiceFaultDoesNotExistError:
                 pass
-            except (RpcError, FaultResponseError) as exc:
-                _LOGGER.error(f"Failed to clear {service_name} fault. {exc}")
+            except bosdyn.client.Error as exc:
+                _LOGGER.error("Failed to clear %s fault: %s", service_name, exc)

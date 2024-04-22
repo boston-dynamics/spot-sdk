@@ -8,10 +8,10 @@ import argparse
 import os
 import shutil
 import sys
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
-from pathlib2 import Path
 from pptx import Presentation
 
 from bosdyn.api import image_pb2

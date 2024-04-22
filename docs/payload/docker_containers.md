@@ -29,7 +29,7 @@ Multiple Spot SDK examples support dockerization and running as docker container
 - [Data Acquisition Plugins](../../python/examples/data_acquisition_service/README.md)
 - [Ricoh Theta](../../python/examples/ricoh_theta/README.md)
 - [Spot Detect and Follow](../../python/examples/spot_detect_and_follow/README.md)
-- [Web Cam Image Service](../../python/examples/web_cam_image_service/README.md)
+- [Custom Parameter Web Cam Image Service](../../python/examples/service_customization/custom_parameter_image_server/README.md)
 
 ## Installing Docker Engine
 
@@ -45,7 +45,7 @@ The `Dockerfile` files in the SDK examples contain instructions to create x86/AM
 
 When writing Dockerfiles for images targeted for the CORE I/O, if using [Nvidia Docker images](https://catalog.ngc.nvidia.com/containers?filters=&orderBy=scoreDESC&query=l4t) as a base, ensure that the tag matches the version of Jetpack running on the CORE I/O. As of 3.3.0, the CORE I/O is running JetPack 4.6.1 (L4T R32.7.1).
 
-**Note:** OpenCV is commonly used for processing image data on the CORE I/O. By Default, most installations of OpenCV do not have CUDA support. Nvidia's [l4t-ml](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-ml) container provides a version of OpenCV with CUDA support built-in, but is also fairly large. To build a more lightweight container with CUDA support in OpenCV, follow the instructions provided [here](https://github.com/dusty-nv/jetson-containers/blob/master/Dockerfile.opencv), replacing `BASE_IMAGE` and `OPENCV_VERSION` with the desired versions (see above).
+**Note:** OpenCV is commonly used for processing image data on the CORE I/O. By Default, most installations of OpenCV do not have CUDA support. Nvidia's [l4t-ml](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-ml) container provides a version of OpenCV with CUDA support built-in, but is also fairly large. To build a more lightweight container with CUDA support in OpenCV, follow the instructions provided [here](https://github.com/dusty-nv/jetson-containers/blob/93c5b397f8daeeb9218ba49acefc23f4ad19965f/Dockerfile.opencv), replacing `BASE_IMAGE` and `OPENCV_VERSION` with the desired versions (see above).
 
 **Note:** Most of the Dockerfiles in the SDK examples use the default user provided by the base image. This user is usually the `root` user and is not recommended to be used for running applications on CORE I/O. In most cases, it is good practice to change this to a non-root user with limited privileges.
 Running as the `root` user bypasses certain limitations imposed on non-root users around resource utilization. This means that unintentional memory or thread leaks in a program running as the `root` user can crash the entire system or cause other undefined behavior.

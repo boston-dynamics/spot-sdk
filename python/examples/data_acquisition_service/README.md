@@ -47,7 +47,7 @@ python3 -m bosdyn.client {ROBOT_IP} self-ip
 
 The other IP address is the traditional robot hostname ("ROBOT_IP") argument, which describes the IP address of the robot hosting the directory service.
 
-Since the example is created to run off of a payload computer, it requires the input arguments `--guid` (uniquely generated payload specifier) and `--secret` (private string associated with a payload) for the registered payload computer that will be running the example plugins. See documentation on [configuration of payload software](../../../docs/payload/configuring_payload_software.md#Configuring-and-authorizing-payloads) for more information.
+Since the example is created to run off of a payload computer, it requires the input arguments `--guid` (uniquely generated payload specifier) and `--secret` (private string associated with a payload) for the registered payload computer that will be running the example plugins. See documentation on [configuration of payload software](../../../docs/payload/configuring_payload_software.md#configuring-and-authorizing-payloads) for more information.
 
 For the CORE I/O, this information by default will be located in the file `/opt/payload_credentials/payload_guid_and_secret`.
 
@@ -125,7 +125,9 @@ Please refer to this [document](../../../docs/payload/docker_containers.md) for 
 
 With docker installed and setup, any of the data acquisition plugin services can be created into a docker container, saved as a tar file, and then run on the CORE I/O as an Extension. There are Dockerfiles for each plugin service within the plugin's specific directory. These files will create a docker container with all necessary dependencies installed, and will start the plugin service.
 
-Follow the instructions on how to build and use the docker image from [this section](../../../docs/payload/docker_containers.md#build-docker-images) on. The application arguments needed to run the plugins included in this example are `--host-ip HOST_COMPUTER_IP --guid GUID --secret SECRET ROBOT_IP`.
+Follow the instructions on how to build and use the docker image from [this section](../../../docs/payload/docker_containers.md#build-docker-images) on.
+
+Once built, all examples can be run with the following command: `sudo docker run -it {IMAGE_NAME} {ROBOT_IP} {APPLICATION ARGUMENTS}`. Application arguments generally include payload authentication parameters such as a `guid/secret` or `payload-credentials-file`, and service endpoint parameters such as `port` and `host-ip`. For a detailed list of application arguments for any given example, you can run `sudo docker run -it {IMAGE_NAME} -h`.
 
 ## Contents
 

@@ -110,7 +110,6 @@ To build this extension use the extension builder located `../extensions` then r
 
 ```sh
 python3 build_extension.py \
-    --arm \
     --dockerfile-paths ../spot_cam/Dockerfile.l4t \
     --build-image-tags spotcam_video:latest \
     --image-archive spotcam_video.tgz \

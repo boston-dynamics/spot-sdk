@@ -293,12 +293,14 @@ def run_autowalk(logger, mission_client, fail_on_question, mission_timeout, path
     mission_state = mission_client.get_state()
 
     while mission_state.status in (mission_pb2.State.STATUS_NONE, mission_pb2.State.STATUS_RUNNING):
-        # We optionally fail if any questions are triggered.
-        # This often indicates a problem in Autowalk missions
-        if mission_state.questions and fail_on_question:
-            logger.info('Mission failed by triggering operator question: %s',
-                        mission_state.questions)
-            return False
+        if mission_state.questions:
+            # Show the mission questions; one may answer the mission questions by using the answer_question method
+            logger.info('Mission questions: %s', mission_state.questions)
+
+            if fail_on_question:
+                # Stop playing the mission after some time
+                logger.info('Mission failed by triggering operator question')
+                return False
 
         local_pause_time = time.time() + mission_timeout
 
@@ -309,7 +311,7 @@ def run_autowalk(logger, mission_client, fail_on_question, mission_timeout, path
 
         mission_state = mission_client.get_state()
 
-    logger.info('Mission status = %s', mission_state.Status.Name(mission_state.status))
+        logger.info('Mission status = %s', mission_state.Status.Name(mission_state.status))
 
     return mission_state.status in (mission_pb2.State.STATUS_SUCCESS,
                                     mission_pb2.State.STATUS_PAUSED)

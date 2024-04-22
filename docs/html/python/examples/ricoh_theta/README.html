@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interacting with a Ricoh Theta Camera &mdash; Spot 4.0.0 documentation</title>
+  <title>Interacting with a Ricoh Theta Camera &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../service_faults/README.html">Faults</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -575,7 +574,7 @@ Development Kit License (20191101-BDSDK-SL).
 </pre></div>
 </div>
 <p>The other IP address is the traditional robot hostname (”ROBOT_IP”) argument, which describes the IP address of the robot hosting the directory service.</p>
-<p>Since the example is created to run off of a payload computer, it requires the input arguments <code class="docutils literal notranslate"><span class="pre">--guid</span></code> (uniquely generated payload specifier) and <code class="docutils literal notranslate"><span class="pre">--secret</span></code> (private string associated with a payload) for the registered payload computer that will be running the Ricoh Theta image service. For the CORE I/O, this information by default will be located in the file <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code>. Note, you can run the Ricoh Theta image service locally on your PC by registering it as a weightless payload using <a class="reference internal" href="../payloads/README.html"><span class="doc">the payloads example</span></a> and creating a GUID and secret for your computer. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#Configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
+<p>Since the example is created to run off of a payload computer, it requires the input arguments <code class="docutils literal notranslate"><span class="pre">--guid</span></code> (uniquely generated payload specifier) and <code class="docutils literal notranslate"><span class="pre">--secret</span></code> (private string associated with a payload) for the registered payload computer that will be running the Ricoh Theta image service. For the CORE I/O, this information by default will be located in the file <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code>. Note, you can run the Ricoh Theta image service locally on your PC by registering it as a weightless payload using <a class="reference internal" href="../payloads/README.html"><span class="doc">the payloads example</span></a> and creating a GUID and secret for your computer. See documentation on <a class="reference external" href="../../../docs/payload/configuring_payload_software.html#configuring-and-authorizing-payloads">configuration of payload software</a> for more information.</p>
 <p>If the <code class="docutils literal notranslate"><span class="pre">--theta-client</span></code> argument is provided, the Ricoh Theta will be connected to in client mode. Otherwise, it will default to a direct-ip mode connection, requiring the computer running the image service script to be wirelessly connected to the Ricoh Theta’s WiFi. If using the Ricoh Theta in client mode, make sure that the <code class="docutils literal notranslate"><span class="pre">ricoh_client_mode.py</span></code> script has been run to create a connection to Spot’s WiFi with the correct static ip.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">--theta-ssid</span></code> argument is used to pass the SSID for the Ricoh Theta camera that will take the images and <strong>should have the .OSC removed</strong>. This will be set as the image source name for the service. Additionally, if the password for the Ricoh Theta is different from the default password of the camera, this can be provided using the <code class="docutils literal notranslate"><span class="pre">--theta-password</span></code> argument.</p>
 <p>The Ricoh Theta image service will default to only attempting to capture an image from the Ricoh Theta camera when requested with a GetImage gRPC call. To have the Ricoh Theta attempt to continuously capture images, pass the command line argument <code class="docutils literal notranslate"><span class="pre">--capture-continuously</span></code>. This will cause the image service to create a background thread and attempt to query the ricoh theta at a high rate. Note, the Ricoh Theta images are very high resolution and the stitching process to go from the fisheye image to the processed image is time-consuming, so sometimes the continuous captures will drain the camera’s battery quickly or overwhelm the camera processors.</p>

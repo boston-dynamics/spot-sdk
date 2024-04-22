@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Components of Navigation &mdash; Spot 4.0.0 documentation</title>
+  <title>Components of Navigation &mdash; Spot 4.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.0
+                4.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -195,7 +195,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
@@ -222,7 +222,6 @@
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/web_cam_image_service/README.html">Web Cam Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -502,13 +501,13 @@ Development Kit License (20191101-BDSDK-SL).
 <h1>Components of Navigation<a class="headerlink" href="#components-of-navigation" title="Permalink to this heading"></a></h1>
 <p>To get started with autonomous navigation, you’ll need a grasp of the following concepts:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="#Maps">Maps</a></p></li>
+<li><p><a class="reference external" href="#maps">Maps</a></p></li>
 <li><p><a class="reference external" href="#waypoints">Waypoints</a></p></li>
 <li><p><a class="reference external" href="#edges">Edges</a></p></li>
 <li><p><a class="reference external" href="#localization">Localization</a></p></li>
 <li><p><a class="reference external" href="#initialization">Initialization</a></p></li>
 <li><p><a class="reference external" href="#missions">Missions</a></p></li>
-<li><p><a class="reference external" href="#area-callbacks">(Advanced) Area Callbacks</a></p></li>
+<li><p><a class="reference external" href="#area_callbacks">(Advanced) Area Callbacks</a></p></li>
 </ul>
 <p><h2 id="maps">Maps</h2></p>
 <p>Maps are topological graphs consisting of waypoints and edges. Maps are recorded either by operators using the tablet controller or by client applications using RPC calls to the GraphNavRecordingService.</p>
@@ -521,7 +520,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p><h2 id="initialization">Initialization</h2></p>
 <p>When a map is initially loaded, GraphNav is unaware of the robot’s location relative to it and the user must help initialize the robot’s localization. If using fiducials, you can elect to initialize to a specific fiducial or a waypoint. If not using a fiducial, you must initialize to a particular waypoint, and may elect to provide an initial guess or search area.</p>
 <p><h2 id="missions">Missions</h2></p>
-<p>Missions are expressed as behavior trees, which are composed of nodes arranged in a hierarchy. Behavior trees are executed inside the mission loop. Each iteration of a mission loop is referred to as a tick. For any given tick, mission execution starts at the root of the tree and proceeds down particular branches based on the type of node and the state of each node: failed, running, or success (see the NodeState Result enum defined in the <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#mission-mission-proto"><code class="docutils literal notranslate"><span class="pre">mission.proto</span></code></a> file). A failed node does not necessarily result in a failed mission. For example, a node could check for low battery and ‘fails’ when the robot is fully charged.</p>
+<p>Missions are expressed as behavior trees, which are composed of nodes arranged in a hierarchy. Behavior trees are executed inside the mission loop. Each iteration of a mission loop is referred to as a tick. For any given tick, mission execution starts at the root of the tree and proceeds down particular branches based on the type of node and the state of each node: failed, running, or success (see the NodeState Result enum defined in the <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#bosdyn-api-mission-mission-proto"><code class="docutils literal notranslate"><span class="pre">mission.proto</span></code></a> file). A failed node does not necessarily result in a failed mission. For example, a node could check for low battery and ‘fails’ when the robot is fully charged.</p>
 <p>The mission is complete once the root node has changed from running to failed or success.</p>
 <p>See <a class="reference internal" href="missions_service.html"><span class="doc">Missions service</span></a> for details.</p>
 <p><h2 id="area_callbacks">Advanced – Area Callbacks</h2></p>

@@ -22,7 +22,7 @@ The following examples show how to use Spot's perception system, through image s
 - [Spot CAM](../spot_cam/README.md)
 - [Stitch Front Images](../stitch_front_images/README.md)
 - [Project Depth Data on Visual Images](../get_depth_plus_visual_image/README.md)
-- [Web Cam Service](../web_cam_image_service/README.md)
+- [Custom Parameter Image Server](../service_customization/custom_parameter_image_server/README.md)
 - [Fiducial Follow](../fiducial_follow/README.md)
 - [Spot Detect and Follow](../spot_detect_and_follow/README.md)
 - [Tensorflow Detector](../spot_tensorflow_detector/README.md)

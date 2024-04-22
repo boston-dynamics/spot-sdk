@@ -17,5 +17,4 @@ missions, which are part of the Boston Dynamics Spot API. The client interfaces 
 implement the mission-related Remote Procedure Calls (RPCs) defined in
 [bosdyn-api wheel](https://pypi.org/project/bosdyn-api/) and they utilize code included in the
 [bosdyn-client wheel](https://pypi.org/project/bosdyn-client/). Full design documentation for the
-functionality included in this wheel can be found
-[here](https://dev.bostondynamics.com/docs/concepts/autonomy/missions_service).
+functionality included in this wheel can be found [here](../../docs/concepts/autonomy/missions_service.md).

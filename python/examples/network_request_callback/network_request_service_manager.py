@@ -198,5 +198,5 @@ class NetworkRequestCallbackServicer(remote_service_pb2_grpc.RemoteMissionServic
 
     def GetRemoteMissionServiceInfo(self, request, context):
         response = remote_pb2.GetRemoteMissionServiceInfoResponse()
-        with ResponseContext(request, response):
+        with ResponseContext(response, request):
             return response
