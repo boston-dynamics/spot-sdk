@@ -51,12 +51,13 @@ def webhook_listener() -> Response:
     # Check if the incoming data contains a message specific to payload types
     if data['type'] == "ACTION_COMPLETED":
         message = data['data']
-        LOGGER.info("ACTION_COMPLETED: ", message)
+        LOGGER.info("ACTION_COMPLETED: %s", message)
     elif data['type'] == "ACTION_COMPLETED_WITH_ALERT":
         message = data['data']
-        LOGGER.info("ACTION_COMPETED_WITH_ALERT: ", message)
+        LOGGER.info("ACTION_COMPETED_WITH_ALERT: %s", message)
     elif data['type'] == "TEST":
-        LOGGER.info("TEST", message)
+        message = data['data']
+        LOGGER.info("TEST: %s", message)
     else:
         # If the 'type' field is not recognized, return a 400 Bad Request
         return jsonify({"error": "Unrecognized payload type"}), 400
