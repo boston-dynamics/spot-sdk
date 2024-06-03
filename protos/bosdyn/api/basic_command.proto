@@ -601,8 +601,8 @@ message JointCommand {
         google.protobuf.Duration extrapolation_duration = 8;
 
         // Joint orders for the following commands and gains can be found in
-        // `examples/joint_control/constants.py`. The length must match the robots joint count, which
-        // is 12 for base robots and 19 for robots with arms.
+        // `examples/joint_control/constants.py`. The length must match the robots joint count,
+        // which is 12 for base robots and 19 for robots with arms.
 
         // Commanded joint details
         repeated float position = 2;
@@ -629,5 +629,37 @@ message JointCommand {
         // clear the behavior fault via the Robot Command Service. Values less than or equal to 0
         // will be considered invalid and must be sent in every UpdateRequest for use.
         google.protobuf.FloatValue velocity_safety_limit = 9;
+    }
+
+    message ContactAdvice {
+        // Usage notes for contact advice. These notes and definitions should be considered BETA and
+        // actual implementation may change in future revisions. ContactAdvice acts as hints to the
+        // robot's internal state machine determining whether a contact is on the ground. See
+        // FootState in robot_state for more details on reported contact states. If a leg is on the
+        // ground (CONTACT_MADE):
+        //   ADVICE_NONE: leg may enter CONTACT_LOST if force sensing falls below threshold
+        //   ADVICE_IN_CONTACT: no change
+        //   ADVICE_NOT_IN_CONTACT: leg will enter CONTACT_LOST state on receipt.
+        // If a leg is not on the ground (CONTACT_LOST):
+        //   ADVICE_NONE: leg will enter CONTACT_MADE if any collision is detected on the foot.
+        //   ADVICE_IN_CONTACT: leg will enter CONTACT_MADE if any collision is deteced on the foot.
+        //   ADVICE_NOT_IN_CONTACT: no change
+        // Contact states may be used by the robot to improve state estimation.
+        enum Advice {
+            // ADVICE_UNKNOWN should not be used.
+            ADVICE_UNKNOWN = 0;
+            // No advice. Contact state will be assumed based on force sensing. This is the same
+            // behavior that will be used for all legs if contact advice is not provided
+            ADVICE_NONE = 1;
+            // Advise robot that the foot is likely in contact with the ground.
+            ADVICE_IN_CONTACT = 2;
+            // Advise robot that the foot is likely not in contact with the ground.
+            ADVICE_NOT_IN_CONTACT = 3;
+        }
+
+        // (Optional) Contact advice to improve kinematic odometry. This field should either have
+        // the same length as number of contacts on the robot (4 for Spot) OR be empty. Incorrectly
+        // sized repeateds will return an error.
+        repeated Advice contact_advice = 1;
     }
 }

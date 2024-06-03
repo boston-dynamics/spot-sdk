@@ -36,7 +36,7 @@ SECRET = secrets.token_hex(32)
 @app.route('/', methods=['GET', 'POST'])
 def webhook_listener() -> Response:
     """Listens to incoming webhook requests from Orbit and processes them depending on the payload type.
-        
+
         Returns:
             A tuple containing a response message and an HTTP status code.
     """
@@ -49,14 +49,11 @@ def webhook_listener() -> Response:
     if 'type' not in data:
         return jsonify({"error": "Missing 'type' field in JSON data"}), 400
     # Check if the incoming data contains a message specific to payload types
-    if data['type'] == "ACTION_COMPLETED":
+
+    data_type = data['type']
+    if data_type in ('ACTION_COMPLETED', 'ACTION_COMPLETED_WITH_ALERT', 'TEST'):
         message = data['data']
-        LOGGER.info("ACTION_COMPLETED: ", message)
-    elif data['type'] == "ACTION_COMPLETED_WITH_ALERT":
-        message = data['data']
-        LOGGER.info("ACTION_COMPETED_WITH_ALERT: ", message)
-    elif data['type'] == "TEST":
-        LOGGER.info("TEST", message)
+        LOGGER.info('%s: %s', data_type, message)
     else:
         # If the 'type' field is not recognized, return a 400 Bad Request
         return jsonify({"error": "Unrecognized payload type"}), 400
@@ -79,7 +76,7 @@ def webhook_listener() -> Response:
 def hello_webhook(options: argparse.Namespace) -> bool:
     """A simple example to show how to use Orbit client to fetch list, create, update, and delete webhook instance on Orbit.
         This example also shows how to start the webhook listener given a webhook host IP and port number.
-        
+
         Args:
             options(Namespace) : parsed args used for webhook configuration options
         Returns:

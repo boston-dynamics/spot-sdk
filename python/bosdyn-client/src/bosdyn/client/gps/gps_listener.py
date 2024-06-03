@@ -27,17 +27,21 @@ class NMEAStreamReader(object):
     # The amount of time to wait before logging another decode error.
     LOG_THROTTLE_TIME = 2.0  # seconds.
 
-    def __init__(self, logger, stream, body_tform_gps):
+    def __init__(self, logger, stream, body_tform_gps, verbose):
         self.logger = logger
         self.stream = stream
         self.parser = NMEAParser(logger)
         self.body_tform_gps = body_tform_gps.to_proto()
         self.last_failed_read_log_time = None
+        self.verbose = verbose
 
     def read_data(self, time_converter: RobotTimeConverter) -> List[GpsDataPoint]:
         """This function returns an array of new GpsDataPoints."""
         try:
             raw_data = self.stream.readline()
+            # If the rawdata is a bytes or bytearray object, decode it into a string.
+            if type(raw_data) is not str:
+                raw_data = str(raw_data, "utf-8")
         except UnicodeDecodeError:
             # Throttle the logs.
             now = time.time()
@@ -53,7 +57,12 @@ class NMEAStreamReader(object):
 
         # Trim any leading characters before the NMEA sentence.
         raw_data = raw_data[raw_data.index('$'):]
-        self.logger.info(f"Read: {raw_data}")
+
+        # If we are being verbose, print the message we received.
+        if self.verbose:
+            self.logger.info(f"Read: {raw_data}")
+
+        # Parse the received message.
         new_points = self.parser.parse(raw_data, time_converter, check=False)
 
         # Offset for the GPS
@@ -65,11 +74,11 @@ class NMEAStreamReader(object):
 
 class GpsListener:
 
-    def __init__(self, robot, time_converter, stream, name, body_tform_gps, logger):
+    def __init__(self, robot, time_converter, stream, name, body_tform_gps, logger, verbose):
         self.logger = logger
         self.robot = robot
         self.time_converter = time_converter
-        self.reader = NMEAStreamReader(logger, stream, body_tform_gps)
+        self.reader = NMEAStreamReader(logger, stream, body_tform_gps, verbose)
         self.gps_device = GpsDevice()
         self.gps_device.name = name
         self.aggregator_client = None

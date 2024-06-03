@@ -6,8 +6,7 @@
 
 """ The client uses a web API to send HTTPs requests to a number of REStful endpoints using the Requests library.
 """
-from collections.abc import Iterable
-from typing import Dict
+from typing import Dict, Iterable
 
 import requests
 

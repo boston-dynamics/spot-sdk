@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.gps.gps_listener &mdash; Spot 4.0.1 documentation</title>
+  <title>bosdyn.client.gps.gps_listener &mdash; Spot 4.0.2 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.1
+                4.0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -91,6 +91,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/joint_control/README.html">Joint Control API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/joint_control/supplemental_data.html">Supplemental Robot Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../docs/concepts/joint_control/knee_torque_limits.html">Knee Torque Limits</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/arm/README.html">Spot Arm</a><ul>
@@ -165,6 +172,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_wasd/README.html">Arm WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -251,6 +259,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
@@ -517,17 +526,21 @@
     <span class="c1"># The amount of time to wait before logging another decode error.</span>
     <span class="n">LOG_THROTTLE_TIME</span> <span class="o">=</span> <span class="mf">2.0</span>  <span class="c1"># seconds.</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">body_tform_gps</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">body_tform_gps</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">NMEAParser</span><span class="p">(</span><span class="n">logger</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body_tform_gps</span> <span class="o">=</span> <span class="n">body_tform_gps</span><span class="o">.</span><span class="n">to_proto</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_failed_read_log_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
 
 <div class="viewcode-block" id="NMEAStreamReader.read_data"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html#bosdyn.client.gps.gps_listener.NMEAStreamReader.read_data">[docs]</a>    <span class="k">def</span> <span class="nf">read_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_converter</span><span class="p">:</span> <span class="n">RobotTimeConverter</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">GpsDataPoint</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;This function returns an array of new GpsDataPoints.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">raw_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="c1"># If the rawdata is a bytes or bytearray object, decode it into a string.</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">raw_data</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">:</span>
+                <span class="n">raw_data</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">UnicodeDecodeError</span><span class="p">:</span>
             <span class="c1"># Throttle the logs.</span>
             <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -543,7 +556,12 @@
 
         <span class="c1"># Trim any leading characters before the NMEA sentence.</span>
         <span class="n">raw_data</span> <span class="o">=</span> <span class="n">raw_data</span><span class="p">[</span><span class="n">raw_data</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">):]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Read: </span><span class="si">{</span><span class="n">raw_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If we are being verbose, print the message we received.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Read: </span><span class="si">{</span><span class="n">raw_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Parse the received message.</span>
         <span class="n">new_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">time_converter</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Offset for the GPS</span>
@@ -555,11 +573,11 @@
 
 <div class="viewcode-block" id="GpsListener"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html#bosdyn.client.gps.gps_listener.GpsListener">[docs]</a><span class="k">class</span> <span class="nc">GpsListener</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">time_converter</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">body_tform_gps</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">time_converter</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">body_tform_gps</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">robot</span> <span class="o">=</span> <span class="n">robot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_converter</span> <span class="o">=</span> <span class="n">time_converter</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">NMEAStreamReader</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">body_tform_gps</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">NMEAStreamReader</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">body_tform_gps</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gps_device</span> <span class="o">=</span> <span class="n">GpsDevice</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gps_device</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregator_client</span> <span class="o">=</span> <span class="kc">None</span>

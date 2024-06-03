@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.choreography.client.choreography &mdash; Spot 4.0.1 documentation</title>
+  <title>bosdyn.choreography.client.choreography &mdash; Spot 4.0.2 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.1
+                4.0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -91,6 +91,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/joint_control/README.html">Joint Control API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../docs/concepts/joint_control/supplemental_data.html">Supplemental Robot Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../docs/concepts/joint_control/knee_torque_limits.html">Knee Torque Limits</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../docs/concepts/arm/README.html">Spot Arm</a><ul>
@@ -165,6 +172,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/arm_wasd/README.html">Arm WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -251,6 +259,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
@@ -1023,13 +1032,17 @@
             <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ChoreographyClient.get_choreography_sequence"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">get_choreography_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ChoreographyClient.get_choreography_sequence"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence">[docs]</a>    <span class="k">def</span> <span class="nf">get_choreography_sequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="n">return_animation_names_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a sequence currently known by the robot, response includes</span>
 <span class="sd">            the full ChoreographySequence with the given name and any</span>
 <span class="sd">            Animations used in the sequence.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                seq_name (string): the name of the sequence to return.</span>
+<span class="sd">                return_animation_names_only (bool): If True, skip returning a list of the complete </span>
+<span class="sd">                    Animation protos required by the sequence and leave the &#39;animated_moves&#39; field of</span>
+<span class="sd">                    the response empty. (The repeated string field, &#39;animation_names&#39; for the list </span>
+<span class="sd">                    of the names of required animations will still be returned). </span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            The full GetChoreographySequenceResponse proto.</span>
@@ -1037,6 +1050,7 @@
 
         <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">GetChoreographySequenceRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">sequence_name</span> <span class="o">=</span> <span class="n">seq_name</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">return_animation_names_only</span> <span class="o">=</span> <span class="n">return_animation_names_only</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetChoreographySequence</span><span class="p">,</span>
             <span class="n">req</span><span class="p">,</span>
@@ -1045,12 +1059,48 @@
             <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ChoreographyClient.get_choreography_sequence_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_choreography_sequence_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="ChoreographyClient.get_choreography_sequence_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_choreography_sequence_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq_name</span><span class="p">,</span> <span class="n">return_animation_names_only</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                        <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_choreography_sequence().&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">GetChoreographySequenceRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">sequence_name</span> <span class="o">=</span> <span class="n">seq_name</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">return_animation_names_only</span> <span class="o">=</span> <span class="n">return_animation_names_only</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetChoreographySequence</span><span class="p">,</span>
+            <span class="n">req</span><span class="p">,</span>
+            <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Return the complete response message</span>
+            <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
+            <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChoreographyClient.get_animation"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.get_animation">[docs]</a>    <span class="k">def</span> <span class="nf">get_animation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an animation currently known by the robot, response includes</span>
+<span class="sd">            the full Animation proto with the given name.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                name (string): the name of the animation to return.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The full GetAnimation proto.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">GetAnimationRequest</span><span class="p">()</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetAnimation</span><span class="p">,</span>
+            <span class="n">req</span><span class="p">,</span>
+            <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Return the complete response message</span>
+            <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
+            <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChoreographyClient.get_animation_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.get_animation_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_animation_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of get_animation().&quot;&quot;&quot;</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">GetAnimationRequest</span><span class="p">()</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetAnimation</span><span class="p">,</span>
             <span class="n">req</span><span class="p">,</span>
             <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Return the complete response message</span>
             <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>

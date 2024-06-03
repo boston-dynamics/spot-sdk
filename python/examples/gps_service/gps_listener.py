@@ -13,6 +13,8 @@ import os
 import socket
 import time
 
+import serial
+
 import bosdyn.api.payload_pb2 as payload_protos
 import bosdyn.client.util
 from bosdyn.api.service_fault_pb2 import ServiceFault, ServiceFaultId
@@ -36,6 +38,8 @@ SOCKET_TIMEOUT = 10.0  # seconds.
 
 # Default serial values
 SERIAL_DEVICE = "/dev/ttyUSB0"
+SERIAL_RATE = 115200
+SERIAL_TIMEOUT = 10.0  # seconds.
 
 # Location where optional information about the build is located.
 BUILD_DATA_FILE = '/builder.txt'
@@ -83,7 +87,7 @@ def create_parser():
                             default=GPS_PORT, required=True)
     parser_tcp.add_argument(
         "--socket_timeout", type=float,
-        help='The amount of time, in seconds, to wait for data before timing out.',
+        help='The amount of time in seconds to wait for data before timing out.',
         default=SOCKET_TIMEOUT, required=False)
 
     # Arguments for UDP.
@@ -91,12 +95,18 @@ def create_parser():
                             required=True)
     parser_udp.add_argument(
         "--socket_timeout", type=float,
-        help='The amount of time, in seconds, to wait for data before timing out.',
+        help='The amount of time in seconds to wait for data before timing out.',
         default=SOCKET_TIMEOUT, required=False)
 
     # Arguments for Serial.
     parser_serial.add_argument("--serial_device", help="The path to the serial device",
                                default=SERIAL_DEVICE, required=True)
+    parser_serial.add_argument("--serial_baudrate", help="The baudrate of the serial device",
+                               default=SERIAL_RATE, required=False)
+    parser_serial.add_argument(
+        "--serial_timeout", type=float,
+        help="The amount of time in seconds to wait for data before timing out.",
+        default=SERIAL_TIMEOUT, required=False)
 
     # Arguments for the GPS Listener.
     parser.add_argument("--name", help='The name of the connected GPS payload.', required=True)
@@ -315,13 +325,13 @@ def create_udp_stream(port, timeout, max_attempts, secs_per_attempt):
 
 
 # Create an IO stream to read GPS data from a serial device.
-def create_serial_stream(serial_device, max_attempts, secs_per_attempt):
+def create_serial_stream(serial_device, baudrate, timeout, max_attempts, secs_per_attempt):
     stream = None
     num_attempts = 0
     while stream is None and num_attempts < max_attempts:
         try:
-            stream = open(serial_device, 'r')
-            logger.info(f"Connected to device {serial_device}")
+            stream = serial.Serial(serial_device, baudrate, timeout=timeout)
+            logger.info(f"Connected to device {serial_device} at rate {baudrate}")
         except OSError as e:
             if e.errno == errno.EACCES:
                 logger.error(f"Failed to connect to GPS device {serial_device}. Permission Denied.")
@@ -372,7 +382,8 @@ def create_stream(fault_client, creds, options):
             error_desc = f"Failed to listen for GPS data from {options.name}. Check network configuration."
 
     elif options.protocol == "serial":
-        stream = create_serial_stream(options.serial_device, options.num_attempts,
+        stream = create_serial_stream(options.serial_device, options.serial_baudrate,
+                                      options.serial_timeout, options.num_attempts,
                                       options.secs_per_attempt)
         if stream is None:
             has_fault = True
@@ -459,7 +470,8 @@ def main():
     clear_fault(FAULT_COMMUNICATION.format(options.name), creds, fault_client)
 
     # Run the GPS Listener.
-    gps_listener = GpsListener(robot, time_converter, stream, options.name, body_tform_gps, logger)
+    gps_listener = GpsListener(robot, time_converter, stream, options.name, body_tform_gps, logger,
+                               options.verbose)
     ok = gps_listener.run()
 
     # If we encountered a problem, trigger a fault.

@@ -149,6 +149,11 @@ class NMEAParser(object):
                     self.last_failed_read_log_time = now
                 continue
 
+            # if the message does not contain a timestamp attribute, abandon the rest of the logic
+            # and go to the beginning of the loop
+            if not hasattr(nmea_msg, 'timestamp'):
+                continue
+
             # Only use NMEA messages that have a timestamp.
             # For example, GSA and GST messages are not supported.
             if isinstance(nmea_msg.timestamp, datetime.time):

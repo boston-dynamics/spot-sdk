@@ -533,13 +533,17 @@ class ChoreographyClient(BaseClient):
             copy_request=False,
             **kwargs)
 
-    def get_choreography_sequence(self, seq_name, **kwargs):
+    def get_choreography_sequence(self, seq_name, return_animation_names_only=False, **kwargs):
         """Get a sequence currently known by the robot, response includes
             the full ChoreographySequence with the given name and any
             Animations used in the sequence.
 
             Args:
                 seq_name (string): the name of the sequence to return.
+                return_animation_names_only (bool): If True, skip returning a list of the complete 
+                    Animation protos required by the sequence and leave the 'animated_moves' field of
+                    the response empty. (The repeated string field, 'animation_names' for the list 
+                    of the names of required animations will still be returned). 
 
         Returns:
             The full GetChoreographySequenceResponse proto.
@@ -547,6 +551,7 @@ class ChoreographyClient(BaseClient):
 
         req = choreography_sequence_pb2.GetChoreographySequenceRequest()
         req.sequence_name = seq_name
+        req.return_animation_names_only = return_animation_names_only
         return self.call(
             self._stub.GetChoreographySequence,
             req,
@@ -555,12 +560,48 @@ class ChoreographyClient(BaseClient):
             copy_request=False,
             **kwargs)
 
-    def get_choreography_sequence_async(self, seq_name, **kwargs):
+    def get_choreography_sequence_async(self, seq_name, return_animation_names_only=False,
+                                        **kwargs):
         """Async version of get_choreography_sequence()."""
         req = choreography_sequence_pb2.GetChoreographySequenceRequest()
         req.sequence_name = seq_name
+        req.return_animation_names_only = return_animation_names_only
         return self.call_async(
             self._stub.GetChoreographySequence,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
+    def get_animation(self, name, **kwargs):
+        """Get an animation currently known by the robot, response includes
+            the full Animation proto with the given name.
+
+            Args:
+                name (string): the name of the animation to return.
+
+        Returns:
+            The full GetAnimation proto.
+        """
+
+        req = choreography_sequence_pb2.GetAnimationRequest()
+        req.name = name
+        return self.call(
+            self._stub.GetAnimation,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
+    def get_animation_async(self, name, **kwargs):
+        """Async version of get_animation()."""
+
+        req = choreography_sequence_pb2.GetAnimationRequest()
+        req.name = name
+        return self.call_async(
+            self._stub.GetAnimation,
             req,
             value_from_response=None,  # Return the complete response message
             error_from_response=common_header_errors,

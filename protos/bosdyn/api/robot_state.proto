@@ -838,6 +838,30 @@ message RobotStateStreamResponse {
     // IMU state
     ImuState inertial_state = 3;
 
+    message KinematicState {
+        // Robot clock timestamp corresponding to these readings.
+        google.protobuf.Timestamp acquisition_timestamp = 1;
+
+        // Transform representing the pose of the body frame in the odom frame.
+        SE3Pose odom_tform_body = 2;
+
+        // Transform representing the pose of the body frame in the vision frame.
+        SE3Pose vision_tform_body = 3;
+
+        // Velocity of the body frame with respect to vision frame. See KinematicState above for
+        // details.
+        SE3Velocity velocity_of_body_in_vision = 4;
+
+        // Velocity of the body frame with respect to odom frame and expressed in odom frame. See
+        // KinematicState above for details.
+        SE3Velocity velocity_of_body_in_odom = 5;
+    }
+
+    KinematicState kinematic_state = 5;
+
+    // Foot contact state, see FootState above for details.
+    repeated FootState.Contact contact_states = 6;
+
     message CommandState {
         uint32 user_command_key = 1;
         google.protobuf.Timestamp received_timestamp = 2;

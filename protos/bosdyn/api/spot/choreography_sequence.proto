@@ -90,6 +90,10 @@ message GetChoreographySequenceRequest {
 
     // Name of the requested sequence.
     string sequence_name = 2;
+
+    // If true, skip returning the animation protos and only return the names of the
+    // required animations. Individual Animations can be requested with GetAnimationRequest.
+    bool return_animation_names_only = 3;
 }
 
 //
@@ -110,6 +114,34 @@ message GetChoreographySequenceResponse {
 
     // All Animations used in the returned ChoreographySequence.
     repeated Animation animated_moves = 4;
+
+    // The string names of all the animations used in the choreography sequence.
+    repeated string animation_names = 5;
+}
+
+// Request an Animation proto using a given animation name.
+message GetAnimationRequest {
+    // Common request header
+    RequestHeader header = 1;
+
+    // Name of the requested animated move.
+    string name = 2;
+}
+
+message GetAnimationResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;  // Do not use.
+        STATUS_OK = 1;       // Finding + returning the animation succeeded.
+        // The requested sequence was not found.
+        STATUS_UNKNOWN_ANIMATION = 2;
+    }
+    Status status = 2;
+
+    // Animation with the name of the requested animation.
+    Animation animated_move = 3;
 }
 
 // Delete the retained file for a choreography sequence so the sequence will be forgotten on reboot

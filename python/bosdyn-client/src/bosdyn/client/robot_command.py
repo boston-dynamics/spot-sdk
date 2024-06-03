@@ -522,6 +522,21 @@ class RobotCommandClient(BaseClient):
                                                            behavior_fault_id=behavior_fault_id)
 
 
+class RobotCommandStreamingClient(BaseClient):
+    """Client for calling RobotCommand services.
+
+    This client is in BETA and may undergo changes in future releases.
+    """
+    default_service_name = 'robot-command-streaming'
+    service_type = 'bosdyn.api.RobotCommandStreamingService'
+
+    def __init__(self):
+        super(RobotCommandStreamingClient,
+              self).__init__(robot_command_service_pb2_grpc.RobotCommandStreamingServiceStub)
+        self._timesync_endpoint = None
+
+    def send_joint_control_commands(self, command_iterator):
+        return self._stub.JointControlStream(command_iterator)
 
 
 def _robot_command_value(response):

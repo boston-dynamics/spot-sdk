@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuickStart &mdash; Spot 4.0.1 documentation</title>
+  <title>QuickStart &mdash; Spot 4.0.2 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.1
+                4.0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -94,6 +94,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/joint_control/README.html">Joint Control API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../concepts/joint_control/supplemental_data.html">Supplemental Robot Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../concepts/joint_control/knee_torque_limits.html">Knee Torque Limits</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/arm/README.html">Spot Arm</a><ul>
@@ -168,6 +175,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/arm_wasd/README.html">Arm WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -254,6 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
@@ -638,14 +647,14 @@ or upgraded from PyPI with the following command.</p>
 <p>Installing the <code class="docutils literal notranslate"><span class="pre">bosdyn-client</span></code>, <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-mission</span></code> packages will also
 install <code class="docutils literal notranslate"><span class="pre">bosdyn-api</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-core</span></code> packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 4.0.1, use the following command.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>bosdyn-client<span class="o">==</span><span class="m">4</span>.0.1<span class="w"> </span>bosdyn-mission<span class="o">==</span><span class="m">4</span>.0.1<span class="w"> </span>bosdyn-choreography-client<span class="o">==</span><span class="m">4</span>.0.1<span class="w"> </span>bosdyn-orbit<span class="o">==</span><span class="m">4</span>.0.1
+example 4.0.2, use the following command.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>bosdyn-client<span class="o">==</span><span class="m">4</span>.0.2<span class="w"> </span>bosdyn-mission<span class="o">==</span><span class="m">4</span>.0.2<span class="w"> </span>bosdyn-choreography-client<span class="o">==</span><span class="m">4</span>.0.2<span class="w"> </span>bosdyn-orbit<span class="o">==</span><span class="m">4</span>.0.2
 </pre></div>
 </div>
 <p><strong>Version incompatibility:</strong></p>
 <p>If you see a version incompatibility error during pip install such as:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ERROR:<span class="w"> </span>bosdyn-core<span class="w"> </span>&lt;VERSION_STRING&gt;<span class="w"> </span>has<span class="w"> </span>requirement<span class="w"> </span>bosdyn-api<span class="o">==</span>&lt;VERSION_STRING&gt;,<span class="w"> </span>but<span class="w"> </span>you
-have<span class="w"> </span>bosdyn-api<span class="w"> </span><span class="m">4</span>.0.1<span class="w"> </span>which<span class="w"> </span>is<span class="w"> </span>incompatible.
+have<span class="w"> </span>bosdyn-api<span class="w"> </span><span class="m">4</span>.0.2<span class="w"> </span>which<span class="w"> </span>is<span class="w"> </span>incompatible.
 </pre></div>
 </div>
 <p>Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all packages) and then reinstalling:</p>
@@ -657,13 +666,13 @@ $<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </spa
 <h3>Verify your Spot packages installation<a class="headerlink" href="#verify-your-spot-packages-installation" title="Permalink to this heading"></a></h3>
 <p>Make sure that the packages have been installed.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>list<span class="w"> </span>--format<span class="o">=</span>columns<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>bosdyn
-bosdyn-api<span class="w">                    </span><span class="m">4</span>.0.1
-bosdyn-choreography-client<span class="w">    </span><span class="m">4</span>.0.1
-bosdyn-choreography-protos<span class="w">    </span><span class="m">4</span>.0.1
-bosdyn-client<span class="w">                 </span><span class="m">4</span>.0.1
-bosdyn-core<span class="w">                   </span><span class="m">4</span>.0.1
-bosdyn-mission<span class="w">                </span><span class="m">4</span>.0.1
-bosdyn-orbit<span class="w">                  </span><span class="m">4</span>.0.1
+bosdyn-api<span class="w">                    </span><span class="m">4</span>.0.2
+bosdyn-choreography-client<span class="w">    </span><span class="m">4</span>.0.2
+bosdyn-choreography-protos<span class="w">    </span><span class="m">4</span>.0.2
+bosdyn-client<span class="w">                 </span><span class="m">4</span>.0.2
+bosdyn-core<span class="w">                   </span><span class="m">4</span>.0.2
+bosdyn-mission<span class="w">                </span><span class="m">4</span>.0.2
+bosdyn-orbit<span class="w">                  </span><span class="m">4</span>.0.2
 </pre></div>
 </div>
 <p><strong>Windows users:</strong></p>

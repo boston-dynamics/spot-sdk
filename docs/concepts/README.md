@@ -46,5 +46,6 @@ Similar to the Spot API, client applications can be written in many languages an
 - [Faults](faults.md)
 - [Autonomy services](autonomy/README.md)
 - [Choreography](choreography/README.md)
+- [Joint Control API](joint_control/README.md)
 - [Spot Arm](arm/README.md)
 - [Spot Data](data.md)

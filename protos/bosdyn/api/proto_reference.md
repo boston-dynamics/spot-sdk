@@ -161,6 +161,7 @@
     - [FreezeCommand.Feedback](#bosdyn-api-FreezeCommand-Feedback)
     - [FreezeCommand.Request](#bosdyn-api-FreezeCommand-Request)
     - [JointCommand](#bosdyn-api-JointCommand)
+    - [JointCommand.ContactAdvice](#bosdyn-api-JointCommand-ContactAdvice)
     - [JointCommand.Feedback](#bosdyn-api-JointCommand-Feedback)
     - [JointCommand.Request](#bosdyn-api-JointCommand-Request)
     - [JointCommand.UpdateRequest](#bosdyn-api-JointCommand-UpdateRequest)
@@ -199,6 +200,7 @@
     - [ConstrainedManipulationCommand.Feedback.Status](#bosdyn-api-ConstrainedManipulationCommand-Feedback-Status)
     - [ConstrainedManipulationCommand.Request.ControlMode](#bosdyn-api-ConstrainedManipulationCommand-Request-ControlMode)
     - [ConstrainedManipulationCommand.Request.TaskType](#bosdyn-api-ConstrainedManipulationCommand-Request-TaskType)
+    - [JointCommand.ContactAdvice.Advice](#bosdyn-api-JointCommand-ContactAdvice-Advice)
     - [JointCommand.Feedback.Status](#bosdyn-api-JointCommand-Feedback-Status)
     - [RobotCommandFeedbackStatus.Status](#bosdyn-api-RobotCommandFeedbackStatus-Status)
     - [SE2TrajectoryCommand.Feedback.BodyMovementStatus](#bosdyn-api-SE2TrajectoryCommand-Feedback-BodyMovementStatus)
@@ -1310,6 +1312,7 @@
     - [RobotStateStreamRequest](#bosdyn-api-RobotStateStreamRequest)
     - [RobotStateStreamResponse](#bosdyn-api-RobotStateStreamResponse)
     - [RobotStateStreamResponse.CommandState](#bosdyn-api-RobotStateStreamResponse-CommandState)
+    - [RobotStateStreamResponse.KinematicState](#bosdyn-api-RobotStateStreamResponse-KinematicState)
     - [ServiceFaultState](#bosdyn-api-ServiceFaultState)
     - [ServiceFaultState.AggregatedEntry](#bosdyn-api-ServiceFaultState-AggregatedEntry)
     - [Skeleton](#bosdyn-api-Skeleton)
@@ -1496,6 +1499,8 @@
     - [DownloadRobotStateLogResponse](#bosdyn-api-spot-DownloadRobotStateLogResponse)
     - [ExecuteChoreographyRequest](#bosdyn-api-spot-ExecuteChoreographyRequest)
     - [ExecuteChoreographyResponse](#bosdyn-api-spot-ExecuteChoreographyResponse)
+    - [GetAnimationRequest](#bosdyn-api-spot-GetAnimationRequest)
+    - [GetAnimationResponse](#bosdyn-api-spot-GetAnimationResponse)
     - [GetChoreographySequenceRequest](#bosdyn-api-spot-GetChoreographySequenceRequest)
     - [GetChoreographySequenceResponse](#bosdyn-api-spot-GetChoreographySequenceResponse)
     - [LegJointAngles](#bosdyn-api-spot-LegJointAngles)
@@ -1533,6 +1538,7 @@
     - [DownloadRobotStateLogRequest.LogType](#bosdyn-api-spot-DownloadRobotStateLogRequest-LogType)
     - [DownloadRobotStateLogResponse.Status](#bosdyn-api-spot-DownloadRobotStateLogResponse-Status)
     - [ExecuteChoreographyResponse.Status](#bosdyn-api-spot-ExecuteChoreographyResponse-Status)
+    - [GetAnimationResponse.Status](#bosdyn-api-spot-GetAnimationResponse-Status)
     - [GetChoreographySequenceResponse.Status](#bosdyn-api-spot-GetChoreographySequenceResponse-Status)
     - [ModifyChoreographyInfoResponse.Status](#bosdyn-api-spot-ModifyChoreographyInfoResponse-Status)
     - [MoveInfo.TransitionState](#bosdyn-api-spot-MoveInfo-TransitionState)
@@ -1643,6 +1649,11 @@
   
 - [bosdyn/api/spot/spot_check_service.proto](#bosdyn_api_spot_spot_check_service-proto)
     - [SpotCheckService](#bosdyn-api-spot-SpotCheckService)
+  
+- [bosdyn/api/spot/spot_constants.proto](#bosdyn_api_spot_spot_constants-proto)
+    - [JointIndex](#bosdyn-api-spot-JointIndex)
+    - [LegDofOrder](#bosdyn-api-spot-LegDofOrder)
+    - [LegIndex](#bosdyn-api-spot-LegIndex)
   
 - [bosdyn/api/spot_cam/LED.proto](#bosdyn_api_spot_cam_LED-proto)
     - [GetLEDBrightnessRequest](#bosdyn-api-spot_cam-GetLEDBrightnessRequest)
@@ -4168,6 +4179,21 @@ Freeze command request takes no additional arguments.
 
 
 
+<a name="bosdyn-api-JointCommand-ContactAdvice"></a>
+
+### JointCommand.ContactAdvice
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| contact_advice | [JointCommand.ContactAdvice.Advice](#bosdyn-api-JointCommand-ContactAdvice-Advice) | repeated | (Optional) Contact advice to improve kinematic odometry. This field should either have<br>the same length as number of contacts on the robot (4 for Spot) OR be empty. Incorrectly<br>sized repeateds will return an error. |
+
+
+
+
+
+
 <a name="bosdyn-api-JointCommand-Feedback"></a>
 
 ### JointCommand.Feedback
@@ -4669,6 +4695,32 @@ to lever type objects.
 | TASK_TYPE_R3_CIRCLE_FORCE | 4 | This task type corresponds to circular tasks where<br>the end-effector position and orientation rotate about a circle<br>but the orientation does always strictly follow the circle due to slips.<br>The constrained manipulation logic will generate translational forces in this case.<br>Example tasks are: manipulating a cabinet where the grasp on handle is not very rigid<br>or can often slip.<br>This task type will require an initial force vector specified<br>in init_wrench_direction_in_frame_name. |
 | TASK_TYPE_R3_LINEAR_FORCE | 5 | This task type corresponds to linear tasks where<br>the end-effector position moves in a line<br>but the orientation does not need to change.<br>The constrained manipulation logic will generate a force in this case.<br>Example tasks are: A crank that has a loose handle, or manipulating<br>a cabinet where the grasp of the handle is loose and the end-effector is free<br>to rotate about the handle in one direction.<br>This task type will require an initial force vector specified<br>in init_wrench_direction_in_frame_name. |
 | TASK_TYPE_HOLD_POSE | 6 | This option simply holds the hand in place with stiff impedance control.<br>You can use this mode at the beginning of a constrained manipulation task or to<br>hold position while transitioning between two different constrained manipulation<br>tasks. The target pose to hold will be the measured hand pose upon transitioning to<br>constrained manipulation or upon switching to this task type. This mode should only<br>be used during constrained manipulation tasks, since it uses impedance control to<br>hold the hand in place. This is not intended to stop the arm during position control<br>moves. |
+
+
+
+<a name="bosdyn-api-JointCommand-ContactAdvice-Advice"></a>
+
+### JointCommand.ContactAdvice.Advice
+Usage notes for contact advice. These notes and definitions should be considered BETA and
+actual implementation may change in future revisions. ContactAdvice acts as hints to the
+robot's internal state machine determining whether a contact is on the ground. See
+FootState in robot_state for more details on reported contact states. If a leg is on the
+ground (CONTACT_MADE):
+  ADVICE_NONE: leg may enter CONTACT_LOST if force sensing falls below threshold
+  ADVICE_IN_CONTACT: no change
+  ADVICE_NOT_IN_CONTACT: leg will enter CONTACT_LOST state on receipt.
+If a leg is not on the ground (CONTACT_LOST):
+  ADVICE_NONE: leg will enter CONTACT_MADE if any collision is detected on the foot.
+  ADVICE_IN_CONTACT: leg will enter CONTACT_MADE if any collision is deteced on the foot.
+  ADVICE_NOT_IN_CONTACT: no change
+Contact states may be used by the robot to improve state estimation.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ADVICE_UNKNOWN | 0 | ADVICE_UNKNOWN should not be used. |
+| ADVICE_NONE | 1 | No advice. Contact state will be assumed based on force sensing. This is the same<br>behavior that will be used for all legs if contact advice is not provided |
+| ADVICE_IN_CONTACT | 2 | Advise robot that the foot is likely in contact with the ground. |
+| ADVICE_NOT_IN_CONTACT | 3 | Advise robot that the foot is likely not in contact with the ground. |
 
 
 
@@ -20728,6 +20780,7 @@ the fault or not.
 | ----- | ---- | ----- | ----------- |
 | header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
 | joint_command | [JointCommand.UpdateRequest](#bosdyn-api-JointCommand-UpdateRequest) |  | Joint command details |
+| contact_advice | [JointCommand.ContactAdvice](#bosdyn-api-JointCommand-ContactAdvice) |  | Optional contact advice which may improve kinematic odometry. |
 
 
 
@@ -21629,6 +21682,8 @@ The RobotStateStream request message to get the current state of the robot.
 | header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
 | joint_states | [CombinedJointStates](#bosdyn-api-CombinedJointStates) |  | Joint state of all robot joints. |
 | inertial_state | [ImuState](#bosdyn-api-ImuState) |  | IMU state |
+| kinematic_state | [RobotStateStreamResponse.KinematicState](#bosdyn-api-RobotStateStreamResponse-KinematicState) |  |  |
+| contact_states | [FootState.Contact](#bosdyn-api-FootState-Contact) | repeated | Foot contact state, see FootState above for details. |
 | last_command | [RobotStateStreamResponse.CommandState](#bosdyn-api-RobotStateStreamResponse-CommandState) |  | For determining latency information about the last command received is provided. |
 
 
@@ -21646,6 +21701,25 @@ The RobotStateStream request message to get the current state of the robot.
 | ----- | ---- | ----- | ----------- |
 | user_command_key | [uint32](#uint32) |  |  |
 | received_timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-RobotStateStreamResponse-KinematicState"></a>
+
+### RobotStateStreamResponse.KinematicState
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| acquisition_timestamp | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Robot clock timestamp corresponding to these readings. |
+| odom_tform_body | [SE3Pose](#bosdyn-api-SE3Pose) |  | Transform representing the pose of the body frame in the odom frame. |
+| vision_tform_body | [SE3Pose](#bosdyn-api-SE3Pose) |  | Transform representing the pose of the body frame in the vision frame. |
+| velocity_of_body_in_vision | [SE3Velocity](#bosdyn-api-SE3Velocity) |  | Velocity of the body frame with respect to vision frame. See KinematicState above for<br>details. |
+| velocity_of_body_in_odom | [SE3Velocity](#bosdyn-api-SE3Velocity) |  | Velocity of the body frame with respect to odom frame and expressed in odom frame. See<br>KinematicState above for details. |
 
 
 
@@ -24769,6 +24843,39 @@ Delete the retained file for a choreography sequence so the sequence will be for
 
 
 
+<a name="bosdyn-api-spot-GetAnimationRequest"></a>
+
+### GetAnimationRequest
+Request an Animation proto using a given animation name.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
+| name | [string](#string) |  | Name of the requested animated move. |
+
+
+
+
+
+
+<a name="bosdyn-api-spot-GetAnimationResponse"></a>
+
+### GetAnimationResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [GetAnimationResponse.Status](#bosdyn-api-spot-GetAnimationResponse-Status) |  |  |
+| animated_move | [Animation](#bosdyn-api-spot-Animation) |  | Animation with the name of the requested animation. |
+
+
+
+
+
+
 <a name="bosdyn-api-spot-GetChoreographySequenceRequest"></a>
 
 ### GetChoreographySequenceRequest
@@ -24780,6 +24887,7 @@ itself and any animations the sequence uses.
 | ----- | ---- | ----- | ----------- |
 | header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header |
 | sequence_name | [string](#string) |  | Name of the requested sequence. |
+| return_animation_names_only | [bool](#bool) |  | If true, skip returning the animation protos and only return the names of the<br>required animations. Individual Animations can be requested with GetAnimationRequest. |
 
 
 
@@ -24798,6 +24906,7 @@ itself and any animations the sequence uses.
 | status | [GetChoreographySequenceResponse.Status](#bosdyn-api-spot-GetChoreographySequenceResponse-Status) |  |  |
 | choreography_sequence | [ChoreographySequence](#bosdyn-api-spot-ChoreographySequence) |  | ChoreographySequence with the name of the requested sequence. |
 | animated_moves | [Animation](#bosdyn-api-spot-Animation) | repeated | All Animations used in the returned ChoreographySequence. |
+| animation_names | [string](#string) | repeated | The string names of all the animations used in the choreography sequence. |
 
 
 
@@ -25423,6 +25532,19 @@ displayed with.
 
 
 
+<a name="bosdyn-api-spot-GetAnimationResponse-Status"></a>
+
+### GetAnimationResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Do not use. |
+| STATUS_OK | 1 | Finding + returning the animation succeeded. |
+| STATUS_UNKNOWN_ANIMATION | 2 | The requested sequence was not found. |
+
+
+
 <a name="bosdyn-api-spot-GetChoreographySequenceResponse-Status"></a>
 
 ### GetChoreographySequenceResponse.Status
@@ -25552,7 +25674,8 @@ The status for the start recording request.
 | ----------- | ------------ | ------------- | ------------|
 | ListAllMoves | [ListAllMovesRequest](#bosdyn-api-spot-ListAllMovesRequest) | [ListAllMovesResponse](#bosdyn-api-spot-ListAllMovesResponse) | List the available dance moves and their parameter information. |
 | ListAllSequences | [ListAllSequencesRequest](#bosdyn-api-spot-ListAllSequencesRequest) | [ListAllSequencesResponse](#bosdyn-api-spot-ListAllSequencesResponse) | List the available choreography sequences currently on the robot. |
-| GetChoreographySequence | [GetChoreographySequenceRequest](#bosdyn-api-spot-GetChoreographySequenceRequest) | [GetChoreographySequenceResponse](#bosdyn-api-spot-GetChoreographySequenceResponse) | Return the ChoreographySequence with the given name and any Animations used in that sequence. |
+| GetChoreographySequence | [GetChoreographySequenceRequest](#bosdyn-api-spot-GetChoreographySequenceRequest) | [GetChoreographySequenceResponse](#bosdyn-api-spot-GetChoreographySequenceResponse) | Return the ChoreographySequence with the given name and any requested animation data. |
+| GetAnimation | [GetAnimationRequest](#bosdyn-api-spot-GetAnimationRequest) | [GetAnimationResponse](#bosdyn-api-spot-GetAnimationResponse) | Return the full Animation message with the given name. |
 | DeleteSequence | [DeleteSequenceRequest](#bosdyn-api-spot-DeleteSequenceRequest) | [DeleteSequenceResponse](#bosdyn-api-spot-DeleteSequenceResponse) | Delete a retained choreography sequence from the collection of user uploaded <br>choreography sequences. |
 | SaveSequence | [SaveSequenceRequest](#bosdyn-api-spot-SaveSequenceRequest) | [SaveSequenceResponse](#bosdyn-api-spot-SaveSequenceResponse) | Save a user uploaded choreography sequence to the robots collection of <br>retained choreography sequences. |
 | ModifyChoreographyInfo | [ModifyChoreographyInfoRequest](#bosdyn-api-spot-ModifyChoreographyInfoRequest) | [ModifyChoreographyInfoResponse](#bosdyn-api-spot-ModifyChoreographyInfoResponse) | Modify the metadata of a choreography sequence. |
@@ -27043,6 +27166,78 @@ run periodically in order to keep the system running in the best possible condit
 | CameraCalibrationFeedback | [CameraCalibrationFeedbackRequest](#bosdyn-api-spot-CameraCalibrationFeedbackRequest) | [CameraCalibrationFeedbackResponse](#bosdyn-api-spot-CameraCalibrationFeedbackResponse) | Check the status of the camera calibration procedure. |
 | GripperCameraCalibrationCommand | [GripperCameraCalibrationCommandRequest](#bosdyn-api-spot-GripperCameraCalibrationCommandRequest) | [GripperCameraCalibrationCommandResponse](#bosdyn-api-spot-GripperCameraCalibrationCommandResponse) | Send a command to the GripperCameraCalibration service. |
 | GripperCameraCalibrationFeedback | [GripperCameraCalibrationFeedbackRequest](#bosdyn-api-spot-GripperCameraCalibrationFeedbackRequest) | [GripperCameraCalibrationFeedbackResponse](#bosdyn-api-spot-GripperCameraCalibrationFeedbackResponse) | Check the status of the GripperCameraCalibration procedure. |
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_spot_spot_constants-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/spot/spot_constants.proto
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn-api-spot-JointIndex"></a>
+
+### JointIndex
+Joint indexing
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| JOINT_INDEX_FL_HX | 0 |  |
+| JOINT_INDEX_FL_HY | 1 |  |
+| JOINT_INDEX_FL_KN | 2 |  |
+| JOINT_INDEX_FR_HX | 3 |  |
+| JOINT_INDEX_FR_HY | 4 |  |
+| JOINT_INDEX_FR_KN | 5 |  |
+| JOINT_INDEX_HL_HX | 6 |  |
+| JOINT_INDEX_HL_HY | 7 |  |
+| JOINT_INDEX_HL_KN | 8 |  |
+| JOINT_INDEX_HR_HX | 9 |  |
+| JOINT_INDEX_HR_HY | 10 |  |
+| JOINT_INDEX_HR_KN | 11 |  |
+| JOINT_INDEX_A0_SH0 | 12 |  |
+| JOINT_INDEX_A0_SH1 | 13 |  |
+| JOINT_INDEX_A0_EL0 | 14 |  |
+| JOINT_INDEX_A0_EL1 | 15 |  |
+| JOINT_INDEX_A0_WR0 | 16 |  |
+| JOINT_INDEX_A0_WR1 | 17 |  |
+| JOINT_INDEX_A0_F1X | 18 |  |
+
+
+
+<a name="bosdyn-api-spot-LegDofOrder"></a>
+
+### LegDofOrder
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| HX | 0 |  |
+| HY | 1 |  |
+| KN | 2 |  |
+
+
+
+<a name="bosdyn-api-spot-LegIndex"></a>
+
+### LegIndex
+Leg indexing
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| LEG_INDEX_FL | 0 |  |
+| LEG_INDEX_FR | 1 |  |
+| LEG_INDEX_HL | 2 |  |
+| LEG_INDEX_HR | 3 |  |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 

@@ -12,6 +12,57 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 4.0.2
+
+### Breaking Changes
+
+- Same as 4.0.1
+
+### New Features
+
+#### Joint Control
+
+The Joint Control API allows for low-level control of the robot's joints. Note that this API is experimental and license-limited; the robot must have a Joint Level Control license installed in order for this API to be used. Please see the [documentation](concepts/joint_control/README.md) for more information and [supplemental](concepts/joint_control/supplemental_data.md) robot information which may be useful for development or simulation of the robot.
+
+### Bug Fixes and Improvements
+
+#### Choreography
+
+- A new field, `return_animation_names_only`, has been added to the [GetChoreographySequenceRequest](../protos/bosdyn/api/spot/choreography_sequence.proto#getchoreographysequencerequest) message. This field allows clients to save bandwidth by requesting only the animation names and not the entire animation for the specified choreography sequence. Correspondingly, a new message, `GetAnimation`, allows clients to request individual animations by name.
+
+#### Robot State
+
+- Two new fields, `kinematic_state` and `contact_states`, have been added to the [RobotStateStreamResponse](../protos/bosdyn/api/robot_state.proto#robotstatestreamresponse) message. The `kinematic_state` field contains information about the pose and velocity of the robot body frame in the odom and vision frames. The `contact_states` field contains information about the foot positions and contact state, on a per-foot basis, of the robot. The `GetRobotStateStream` RPC is a lightweight, streaming version of the `GetRobotState` RPC that clients who need the lowest latency possible can use (e.g., users of the Joint Control API).
+
+#### Orbit
+
+- The [Orbit Client](../python/bosdyn-orbit/src/bosdyn/orbit/client.py) now works on Python 3.6 and Python 3.7. Previously, it was broken on those Python versions due to an import failure. The **deprecated** [Scout Client](../python/bosdyn-orbit/src/bosdyn/orbit/client.py) had the same issue and has also been fixed.
+
+### Deprecations
+
+- Same as 4.0.1
+
+### Known Issues
+
+- Same as 4.0.1
+
+### Spot Sample Code
+
+#### New
+
+- [Joint Control: Robot Squat](../python/examples/joint_control/README.md#armless-robot-squat): An example that utilizes the joint control API to move the robot for a robot without an arm attached.
+- [Joint Control: Wiggle Arm](../python/examples/joint_control/README.md#arm-wiggle): An example that utilizes the joint control API to move the robot for a robot with an arm attached.
+
+#### Updated
+
+- [GPS Listener](../python/examples/gps_service/README.md): A bug that caused this example to crash when a GPS receiver published an NMEA message without a timestamp has been fixed. The [NMEAParser](../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.py) now ignores NMEA messages without timestamps. In addition to that, the baud rate of the GPS receiver used in conjunction with this example is now configurable via a command-line argument.
+
+### Orbit Sample Code
+
+#### Updated
+
+- [Hello Webhook](../python/examples/orbit/webhook/README.md): A bug that caused this example to crash when the webhook event type was `TEST` has been fixed. The `TEST` event type is useful for debugging webhooks without having to perform an action using the robot.
+
 ## 4.0.1
 
 ### Breaking Changes

@@ -47,4 +47,5 @@ Developers getting acquainted with the SDK may find it easier to start with cert
 - [Logging Examples](docs/logging_examples.md)
 - [Data Acquisition Examples](docs/data_acquisition_examples.md)
 - [Autonomy and Missions Examples](docs/autonomy_and_missions_examples.md)
+- [Joint Control API Examples](docs/joint_control_examples.md)
 - [Orbit](docs/orbit.md)

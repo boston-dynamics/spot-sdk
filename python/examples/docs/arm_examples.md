@@ -34,3 +34,4 @@ See the [robot services](../../../docs/concepts/robot_services.md) document and 
 - [Arm Impedance Control](../arm_impedance_control/README.md)
 - [Inverse Kinematics](../inverse_kinematics/README.md)
 - [Arm WASD](../arm_wasd/README.md)
+- [Wiggle Arm](../joint_control/README.md)

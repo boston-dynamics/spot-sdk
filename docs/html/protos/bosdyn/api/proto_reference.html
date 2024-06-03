@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Protocol Documentation &mdash; Spot 4.0.1 documentation</title>
+  <title>Protocol Documentation &mdash; Spot 4.0.2 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.1
+                4.0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -94,6 +94,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/joint_control/README.html">Joint Control API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/joint_control/supplemental_data.html">Supplemental Robot Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../docs/concepts/joint_control/knee_torque_limits.html">Knee Torque Limits</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/arm/README.html">Spot Arm</a><ul>
@@ -168,6 +175,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/arm_wasd/README.html">Arm WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -254,6 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
@@ -670,6 +679,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-FreezeCommand-Feedback">FreezeCommand.Feedback</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-FreezeCommand-Request">FreezeCommand.Request</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-JointCommand">JointCommand</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-JointCommand-ContactAdvice">JointCommand.ContactAdvice</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-JointCommand-Feedback">JointCommand.Feedback</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-JointCommand-Request">JointCommand.Request</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-JointCommand-UpdateRequest">JointCommand.UpdateRequest</a></p></li>
@@ -707,6 +717,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-ConstrainedManipulationCommand-Feedback-Status">ConstrainedManipulationCommand.Feedback.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-ConstrainedManipulationCommand-Request-ControlMode">ConstrainedManipulationCommand.Request.ControlMode</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-ConstrainedManipulationCommand-Request-TaskType">ConstrainedManipulationCommand.Request.TaskType</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-JointCommand-ContactAdvice-Advice">JointCommand.ContactAdvice.Advice</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-JointCommand-Feedback-Status">JointCommand.Feedback.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-RobotCommandFeedbackStatus-Status">RobotCommandFeedbackStatus.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-SE2TrajectoryCommand-Feedback-BodyMovementStatus">SE2TrajectoryCommand.Feedback.BodyMovementStatus</a></p></li>
@@ -1960,6 +1971,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-RobotStateStreamRequest">RobotStateStreamRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-RobotStateStreamResponse">RobotStateStreamResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-RobotStateStreamResponse-CommandState">RobotStateStreamResponse.CommandState</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-RobotStateStreamResponse-KinematicState">RobotStateStreamResponse.KinematicState</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-ServiceFaultState">ServiceFaultState</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-ServiceFaultState-AggregatedEntry">ServiceFaultState.AggregatedEntry</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-Skeleton">Skeleton</a></p></li>
@@ -2155,6 +2167,8 @@
 <li><p><a class="reference external" href="#bosdyn-api-spot-DownloadRobotStateLogResponse">DownloadRobotStateLogResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-ExecuteChoreographyRequest">ExecuteChoreographyRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-ExecuteChoreographyResponse">ExecuteChoreographyResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-GetAnimationRequest">GetAnimationRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-GetAnimationResponse">GetAnimationResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-GetChoreographySequenceRequest">GetChoreographySequenceRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-GetChoreographySequenceResponse">GetChoreographySequenceResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-LegJointAngles">LegJointAngles</a></p></li>
@@ -2191,6 +2205,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-spot-DownloadRobotStateLogRequest-LogType">DownloadRobotStateLogRequest.LogType</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-DownloadRobotStateLogResponse-Status">DownloadRobotStateLogResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-ExecuteChoreographyResponse-Status">ExecuteChoreographyResponse.Status</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-GetAnimationResponse-Status">GetAnimationResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-GetChoreographySequenceResponse-Status">GetChoreographySequenceResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-ModifyChoreographyInfoResponse-Status">ModifyChoreographyInfoResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-MoveInfo-TransitionState">MoveInfo.TransitionState</a></p></li>
@@ -2315,6 +2330,13 @@
 <li><p><a class="reference external" href="#bosdyn_api_spot_spot_check_service-proto">bosdyn/api/spot/spot_check_service.proto</a></p>
 <ul>
 <li><p><a class="reference external" href="#bosdyn-api-spot-SpotCheckService">SpotCheckService</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#bosdyn_api_spot_spot_constants-proto">bosdyn/api/spot/spot_constants.proto</a></p>
+<ul>
+<li><p><a class="reference external" href="#bosdyn-api-spot-JointIndex">JointIndex</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-LegDofOrder">LegDofOrder</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-LegIndex">LegIndex</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference external" href="#bosdyn_api_spot_cam_LED-proto">bosdyn/api/spot_cam/LED.proto</a></p>
@@ -6735,7 +6757,28 @@ forward to keep the base at the desired offset from the hand.</p>
 </section>
 <section id="jointcommand">
 <h3>JointCommand<a class="headerlink" href="#jointcommand" title="Permalink to this heading"></a></h3>
-<p><a name="bosdyn-api-JointCommand-Feedback"></a></p>
+<p><a name="bosdyn-api-JointCommand-ContactAdvice"></a></p>
+</section>
+<section id="jointcommand-contactadvice">
+<h3>JointCommand.ContactAdvice<a class="headerlink" href="#jointcommand-contactadvice" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>contact_advice</td>
+<td><a href="#bosdyn-api-JointCommand-ContactAdvice-Advice">JointCommand.ContactAdvice.Advice</a></td>
+<td>repeated</td>
+<td>(Optional) Contact advice to improve kinematic odometry. This field should either have<br>the same length as number of contacts on the robot (4 for Spot) OR be empty. Incorrectly<br>sized repeateds will return an error.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-JointCommand-Feedback"></a></p>
 </section>
 <section id="jointcommand-feedback">
 <h3>JointCommand.Feedback<a class="headerlink" href="#jointcommand-feedback" title="Permalink to this heading"></a></h3>
@@ -7482,6 +7525,53 @@ to lever type objects.</p>
 <td>TASK_TYPE_HOLD_POSE</td>
 <td>6</td>
 <td>This option simply holds the hand in place with stiff impedance control.<br>You can use this mode at the beginning of a constrained manipulation task or to<br>hold position while transitioning between two different constrained manipulation<br>tasks. The target pose to hold will be the measured hand pose upon transitioning to<br>constrained manipulation or upon switching to this task type. This mode should only<br>be used during constrained manipulation tasks, since it uses impedance control to<br>hold the hand in place. This is not intended to stop the arm during position control<br>moves.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-JointCommand-ContactAdvice-Advice"></a></p>
+</section>
+<section id="jointcommand-contactadvice-advice">
+<h3>JointCommand.ContactAdvice.Advice<a class="headerlink" href="#jointcommand-contactadvice-advice" title="Permalink to this heading"></a></h3>
+<p>Usage notes for contact advice. These notes and definitions should be considered BETA and
+actual implementation may change in future revisions. ContactAdvice acts as hints to the
+robot’s internal state machine determining whether a contact is on the ground. See
+FootState in robot_state for more details on reported contact states. If a leg is on the
+ground (CONTACT_MADE):
+ADVICE_NONE: leg may enter CONTACT_LOST if force sensing falls below threshold
+ADVICE_IN_CONTACT: no change
+ADVICE_NOT_IN_CONTACT: leg will enter CONTACT_LOST state on receipt.
+If a leg is not on the ground (CONTACT_LOST):
+ADVICE_NONE: leg will enter CONTACT_MADE if any collision is detected on the foot.
+ADVICE_IN_CONTACT: leg will enter CONTACT_MADE if any collision is deteced on the foot.
+ADVICE_NOT_IN_CONTACT: no change
+Contact states may be used by the robot to improve state estimation.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADVICE_UNKNOWN</td>
+<td>0</td>
+<td>ADVICE_UNKNOWN should not be used.</td>
+</tr>
+<tr>
+<td>ADVICE_NONE</td>
+<td>1</td>
+<td>No advice. Contact state will be assumed based on force sensing. This is the same<br>behavior that will be used for all legs if contact advice is not provided</td>
+</tr>
+<tr>
+<td>ADVICE_IN_CONTACT</td>
+<td>2</td>
+<td>Advise robot that the foot is likely in contact with the ground.</td>
+</tr>
+<tr>
+<td>ADVICE_NOT_IN_CONTACT</td>
+<td>3</td>
+<td>Advise robot that the foot is likely not in contact with the ground.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-JointCommand-Feedback-Status"></a></p>
@@ -39746,6 +39836,12 @@ the fault or not.</p>
 <td></td>
 <td>Joint command details</td>
 </tr>
+<tr>
+<td>contact_advice</td>
+<td><a href="#bosdyn-api-JointCommand-ContactAdvice">JointCommand.ContactAdvice</a></td>
+<td></td>
+<td>Optional contact advice which may improve kinematic odometry.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-JointControlStreamResponse"></a></p>
 </section>
@@ -41584,6 +41680,18 @@ the request was received.</p>
 <td>IMU state</td>
 </tr>
 <tr>
+<td>kinematic_state</td>
+<td><a href="#bosdyn-api-RobotStateStreamResponse-KinematicState">RobotStateStreamResponse.KinematicState</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>contact_states</td>
+<td><a href="#bosdyn-api-FootState-Contact">FootState.Contact</a></td>
+<td>repeated</td>
+<td>Foot contact state, see FootState above for details.</td>
+</tr>
+<tr>
 <td>last_command</td>
 <td><a href="#bosdyn-api-RobotStateStreamResponse-CommandState">RobotStateStreamResponse.CommandState</a></td>
 <td></td>
@@ -41615,6 +41723,51 @@ the request was received.</p>
 <td><a href="#google-protobuf-Timestamp">google.protobuf.Timestamp</a></td>
 <td></td>
 <td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-RobotStateStreamResponse-KinematicState"></a></p>
+</section>
+<section id="robotstatestreamresponse-kinematicstate">
+<h3>RobotStateStreamResponse.KinematicState<a class="headerlink" href="#robotstatestreamresponse-kinematicstate" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>acquisition_timestamp</td>
+<td><a href="#google-protobuf-Timestamp">google.protobuf.Timestamp</a></td>
+<td></td>
+<td>Robot clock timestamp corresponding to these readings.</td>
+</tr>
+<tr>
+<td>odom_tform_body</td>
+<td><a href="#bosdyn-api-SE3Pose">SE3Pose</a></td>
+<td></td>
+<td>Transform representing the pose of the body frame in the odom frame.</td>
+</tr>
+<tr>
+<td>vision_tform_body</td>
+<td><a href="#bosdyn-api-SE3Pose">SE3Pose</a></td>
+<td></td>
+<td>Transform representing the pose of the body frame in the vision frame.</td>
+</tr>
+<tr>
+<td>velocity_of_body_in_vision</td>
+<td><a href="#bosdyn-api-SE3Velocity">SE3Velocity</a></td>
+<td></td>
+<td>Velocity of the body frame with respect to vision frame. See KinematicState above for<br>details.</td>
+</tr>
+<tr>
+<td>velocity_of_body_in_odom</td>
+<td><a href="#bosdyn-api-SE3Velocity">SE3Velocity</a></td>
+<td></td>
+<td>Velocity of the body frame with respect to odom frame and expressed in odom frame. See<br>KinematicState above for details.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-ServiceFaultState"></a></p>
@@ -48563,6 +48716,67 @@ choreography related files</p>
 <td>Unique ID for the execution.<br>Will increment whenever an ExecuteChoreographyRequest is received.<br>Will reset upon robot boot.</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn-api-spot-GetAnimationRequest"></a></p>
+</section>
+<section id="getanimationrequest">
+<h3>GetAnimationRequest<a class="headerlink" href="#getanimationrequest" title="Permalink to this heading"></a></h3>
+<p>Request an Animation proto using a given animation name.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td></td>
+<td>Common request header</td>
+</tr>
+<tr>
+<td>name</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Name of the requested animated move.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-spot-GetAnimationResponse"></a></p>
+</section>
+<section id="getanimationresponse">
+<h3>GetAnimationResponse<a class="headerlink" href="#getanimationresponse" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td></td>
+<td>Common response header.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn-api-spot-GetAnimationResponse-Status">GetAnimationResponse.Status</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>animated_move</td>
+<td><a href="#bosdyn-api-spot-Animation">Animation</a></td>
+<td></td>
+<td>Animation with the name of the requested animation.</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn-api-spot-GetChoreographySequenceRequest"></a></p>
 </section>
 <section id="getchoreographysequencerequest">
@@ -48590,6 +48804,12 @@ itself and any animations the sequence uses.</p>
 <td><a href="#string">string</a></td>
 <td></td>
 <td>Name of the requested sequence.</td>
+</tr>
+<tr>
+<td>return_animation_names_only</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>If true, skip returning the animation protos and only return the names of the<br>required animations. Individual Animations can be requested with GetAnimationRequest.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-spot-GetChoreographySequenceResponse"></a></p>
@@ -48629,6 +48849,12 @@ itself and any animations the sequence uses.</p>
 <td><a href="#bosdyn-api-spot-Animation">Animation</a></td>
 <td>repeated</td>
 <td>All Animations used in the returned ChoreographySequence.</td>
+</tr>
+<tr>
+<td>animation_names</td>
+<td><a href="#string">string</a></td>
+<td>repeated</td>
+<td>The string names of all the animations used in the choreography sequence.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-spot-LegJointAngles"></a></p>
@@ -50155,6 +50381,35 @@ displayed with.</p>
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn-api-spot-GetAnimationResponse-Status"></a></p>
+</section>
+<section id="getanimationresponse-status">
+<h3>GetAnimationResponse.Status<a class="headerlink" href="#getanimationresponse-status" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td>Do not use.</td>
+</tr>
+<tr>
+<td>STATUS_OK</td>
+<td>1</td>
+<td>Finding + returning the animation succeeded.</td>
+</tr>
+<tr>
+<td>STATUS_UNKNOWN_ANIMATION</td>
+<td>2</td>
+<td>The requested sequence was not found.</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn-api-spot-GetChoreographySequenceResponse-Status"></a></p>
 </section>
 <section id="getchoreographysequenceresponse-status">
@@ -50439,7 +50694,13 @@ displayed with.</p>
 <td>GetChoreographySequence</td>
 <td><a href="#bosdyn-api-spot-GetChoreographySequenceRequest">GetChoreographySequenceRequest</a></td>
 <td><a href="#bosdyn-api-spot-GetChoreographySequenceResponse">GetChoreographySequenceResponse</a></td>
-<td>Return the ChoreographySequence with the given name and any Animations used in that sequence.</td>
+<td>Return the ChoreographySequence with the given name and any requested animation data.</td>
+</tr>
+<tr>
+<td>GetAnimation</td>
+<td><a href="#bosdyn-api-spot-GetAnimationRequest">GetAnimationRequest</a></td>
+<td><a href="#bosdyn-api-spot-GetAnimationResponse">GetAnimationResponse</a></td>
+<td>Return the full Animation message with the given name.</td>
 </tr>
 <tr>
 <td>DeleteSequence</td>
@@ -53609,7 +53870,185 @@ run periodically in order to keep the system running in the best possible condit
 <td>Check the status of the GripperCameraCalibration procedure.</td>
 </tr>
 </tbody>
-</table> <!-- end services --><p><a name="bosdyn_api_spot_cam_LED-proto"></a></p>
+</table> <!-- end services --><p><a name="bosdyn_api_spot_spot_constants-proto"></a></p>
+<p align="right"><a href="#top">Top</a></p></section>
+</section>
+<section id="bosdyn-api-spot-spot-constants-proto">
+<h2>bosdyn/api/spot/spot_constants.proto<a class="headerlink" href="#bosdyn-api-spot-spot-constants-proto" title="Permalink to this heading"></a></h2>
+ <!-- end messages --><p><a name="bosdyn-api-spot-JointIndex"></a></p>
+<section id="jointindex">
+<h3>JointIndex<a class="headerlink" href="#jointindex" title="Permalink to this heading"></a></h3>
+<p>Joint indexing</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JOINT_INDEX_FL_HX</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_FL_HY</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_FL_KN</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_FR_HX</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_FR_HY</td>
+<td>4</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_FR_KN</td>
+<td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_HL_HX</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_HL_HY</td>
+<td>7</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_HL_KN</td>
+<td>8</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_HR_HX</td>
+<td>9</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_HR_HY</td>
+<td>10</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_HR_KN</td>
+<td>11</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_A0_SH0</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_A0_SH1</td>
+<td>13</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_A0_EL0</td>
+<td>14</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_A0_EL1</td>
+<td>15</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_A0_WR0</td>
+<td>16</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_A0_WR1</td>
+<td>17</td>
+<td></td>
+</tr>
+<tr>
+<td>JOINT_INDEX_A0_F1X</td>
+<td>18</td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-spot-LegDofOrder"></a></p>
+</section>
+<section id="legdoforder">
+<h3>LegDofOrder<a class="headerlink" href="#legdoforder" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HX</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>HY</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>KN</td>
+<td>2</td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-spot-LegIndex"></a></p>
+</section>
+<section id="legindex">
+<h3>LegIndex<a class="headerlink" href="#legindex" title="Permalink to this heading"></a></h3>
+<p>Leg indexing</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LEG_INDEX_FL</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>LEG_INDEX_FR</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>LEG_INDEX_HL</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td>LEG_INDEX_HR</td>
+<td>3</td>
+<td></td>
+</tr>
+</tbody>
+</table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_spot_cam_LED-proto"></a></p>
 <p align="right"><a href="#top">Top</a></p></section>
 </section>
 <section id="bosdyn-api-spot-cam-led-proto">

@@ -19,8 +19,11 @@ service ChoreographyService {
     // List the available choreography sequences currently on the robot.
     rpc ListAllSequences(ListAllSequencesRequest) returns (ListAllSequencesResponse) {}
 
-    // Return the ChoreographySequence with the given name and any Animations used in that sequence.
+    // Return the ChoreographySequence with the given name and any requested animation data.
     rpc GetChoreographySequence(GetChoreographySequenceRequest) returns (GetChoreographySequenceResponse) {}
+
+    // Return the full Animation message with the given name.
+    rpc GetAnimation(GetAnimationRequest) returns (GetAnimationResponse) {}
 
     // Delete a retained choreography sequence from the collection of user uploaded 
     // choreography sequences.

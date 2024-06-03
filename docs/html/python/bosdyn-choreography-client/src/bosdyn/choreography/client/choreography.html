@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Choreography &mdash; Spot 4.0.1 documentation</title>
+  <title>Choreography &mdash; Spot 4.0.2 documentation</title>
       <link rel="stylesheet" href="../../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.1
+                4.0.2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../../search.html" method="get">
@@ -94,6 +94,13 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../../docs/concepts/joint_control/README.html">Joint Control API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../../docs/concepts/joint_control/supplemental_data.html">Supplemental Robot Information</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../../docs/concepts/joint_control/knee_torque_limits.html">Knee Torque Limits</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../../docs/concepts/arm/README.html">Spot Arm</a><ul>
@@ -168,6 +175,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/arm_impedance_control/README.html">Arm Impedance Control</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/inverse_kinematics/README.html">Inverse Kinematics</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/arm_wasd/README.html">Arm WASD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../../examples/joint_control/README.html">Wiggle Arm</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../examples/docs/payloads_examples.html">Payloads and Registration Examples</a><ul>
@@ -254,6 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
@@ -773,12 +782,18 @@ session associated with that ID.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence">
-<span class="sig-name descname"><span class="pre">get_choreography_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.get_choreography_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_choreography_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_animation_names_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.get_choreography_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence" title="Permalink to this definition"></a></dt>
 <dd><dl>
 <dt>Get a sequence currently known by the robot, response includes</dt><dd><p>the full ChoreographySequence with the given name and any
 Animations used in the sequence.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>seq_name (string): the name of the sequence to return.</p>
+<dl>
+<dt>Args:</dt><dd><p>seq_name (string): the name of the sequence to return.
+return_animation_names_only (bool): If True, skip returning a list of the complete</p>
+<blockquote>
+<div><p>Animation protos required by the sequence and leave the ‘animated_moves’ field of
+the response empty. (The repeated string field, ‘animation_names’ for the list
+of the names of required animations will still be returned).</p>
+</div></blockquote>
 </dd>
 </dl>
 </dd>
@@ -792,8 +807,32 @@ Animations used in the sequence.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence_async">
-<span class="sig-name descname"><span class="pre">get_choreography_sequence_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.get_choreography_sequence_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence_async" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_choreography_sequence_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_animation_names_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.get_choreography_sequence_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.get_choreography_sequence_async" title="Permalink to this definition"></a></dt>
 <dd><p>Async version of get_choreography_sequence().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.get_animation">
+<span class="sig-name descname"><span class="pre">get_animation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.get_animation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.get_animation" title="Permalink to this definition"></a></dt>
+<dd><dl>
+<dt>Get an animation currently known by the robot, response includes</dt><dd><p>the full Animation proto with the given name.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>name (string): the name of the animation to return.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The full GetAnimation proto.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bosdyn.choreography.client.choreography.ChoreographyClient.get_animation_async">
+<span class="sig-name descname"><span class="pre">get_animation_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../../_modules/bosdyn/choreography/client/choreography.html#ChoreographyClient.get_animation_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.choreography.client.choreography.ChoreographyClient.get_animation_async" title="Permalink to this definition"></a></dt>
+<dd><p>Async version of get_animation().</p>
 </dd></dl>
 
 <dl class="py method">
