@@ -12,6 +12,20 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 4.0.3
+
+### Breaking Changes
+
+- No changes from 4.0.2
+
+### Deprecations
+
+- No changes from 4.0.2
+
+### Known Issues
+
+- No changes from 4.0.2
+
 ## 4.0.2
 
 ### Breaking Changes
