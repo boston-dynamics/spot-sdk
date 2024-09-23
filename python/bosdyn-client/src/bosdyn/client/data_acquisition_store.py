@@ -7,20 +7,23 @@
 """Client implementation for data acquisition store service.
 """
 
-import collections
-import functools
-import json
+from os import fstat
+from pathlib import Path
 
 from google.protobuf import json_format
 
 from bosdyn.api import data_acquisition_store_pb2 as data_acquisition_store
 from bosdyn.api import data_acquisition_store_service_pb2_grpc as data_acquisition_store_service
-from bosdyn.api import image_pb2
-from bosdyn.client import data_chunk
+from bosdyn.api import data_chunk_pb2 as data_chunk
+from bosdyn.api import header_pb2, image_pb2
+from bosdyn.client.channel import DEFAULT_HEADER_BUFFER_LENGTH, DEFAULT_MAX_MESSAGE_LENGTH
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
                                   handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.data_chunk import split_serialized
 from bosdyn.client.exceptions import Error, ResponseError
 from bosdyn.util import now_timestamp
+
+DEFAULT_CHUNK_SIZE_BYTES = int(DEFAULT_MAX_MESSAGE_LENGTH - DEFAULT_HEADER_BUFFER_LENGTH)
 
 
 class DataAcquisitionStoreClient(BaseClient):
@@ -255,11 +258,64 @@ class DataAcquisitionStoreClient(BaseClient):
                                error_from_response=common_header_errors, copy_request=False,
                                **kwargs)
 
+    def store_data_as_chunks(self, data, data_id, file_extension=None, **kwargs):
+        """Store data using streaming, supports storing of large data that is too large for a single store_data rpc. Note: using this rpc means that the data must be loaded into memory.
+
+        Args:
+            data (bytes) : Arbitrary data to store.
+            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.
+            file_extension (string) : File extension to use for writing the data to a file.
+
+        Returns:
+             StoreDataResponse final successful response or first failed response.
+        """
+        return self.call(self._stub.StoreDataStream,
+                         _iterate_data_chunks(data, data_id, file_extension),
+                         error_from_response=common_header_errors, value_from_response=None,
+                         copy_request=False, **kwargs)
+
+    def store_data_as_chunks_async(self, data, data_id, file_extension=None, **kwargs):
+        """Async version of the store_data_as_chunks() RPC."""
+        return self.call_async_streaming(
+            self._stub.StoreDataStream, _iterate_data_chunks(data, data_id, file_extension),
+            error_from_response=common_header_errors, value_from_response=None,
+            assemble_type=data_acquisition_store.StoreStreamResponse, copy_request=False, **kwargs)
+
+    def store_file(self, file_path, data_id, file_extension=None, **kwargs):
+        """Store file using file path, supports storing of large files that are too large for a single store_data rpc.
+
+        Args:
+            file_path (string) : File path to arbitrary data to store.
+            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.
+            file_extension (string) : File extension to use for writing the data to a file.
+
+        Returns:
+             StoreDataResponse final successful response or first failed response.
+        """
+
+        file_abs = Path(file_path).absolute()
+        file = open(file_abs, "rb")
+        return self.call(self._stub.StoreDataStream,
+                         _iterate_store_file(file, data_id, file_extension=file_extension),
+                         error_from_response=common_header_errors, value_from_response=None,
+                         copy_request=False, **kwargs)
+
+    def store_file_async(self, file_path, data_id, file_extension=None, **kwargs):
+        """Async version of the store_file() RPC."""
+
+        file_abs = Path(file_path).absolute()
+        file = open(file_abs, "rb")
+        return self.call_async_streaming(
+            self._stub.StoreDataStream,
+            _iterate_store_file(file, data_id, file_extension=file_extension),
+            error_from_response=common_header_errors, value_from_response=None,
+            assemble_type=data_acquisition_store.StoreStreamResponse, copy_request=False, **kwargs)
+
     def query_stored_captures(self, query=None, **kwargs):
         """Query stored captures from the robot.
 
         Args:
-            query (bosdyn.api.DataQueryParams) : Query parameters.
+            query (bosdyn.api.QueryParameters) : Query parameters.
         Raises:
             RpcError: Problem communicating with the robot.
         """
@@ -269,6 +325,15 @@ class DataAcquisitionStoreClient(BaseClient):
                          error_from_response=common_header_errors,
                          assemble_type=data_acquisition_store.QueryStoredCapturesResponse,
                          copy_request=False, **kwargs)
+
+    def query_stored_captures_async(self, query=None, **kwargs):
+        """Async version of the query_stored_captures() RPC."""
+        request = data_acquisition_store.QueryStoredCapturesRequest(query=query)
+        self._apply_request_processors(request, copy_request=False)
+        return self.call_async_streaming(
+            self._stub.QueryStoredCaptures, request, error_from_response=common_header_errors,
+            assemble_type=data_acquisition_store.QueryStoredCapturesResponse, copy_request=False,
+            **kwargs)
 
     def query_max_capture_id(self, **kwargs):
         """Query max capture id from the robot.
@@ -284,11 +349,51 @@ class DataAcquisitionStoreClient(BaseClient):
 
     def query_max_capture_id_async(self, **kwargs):
         """Async version of the query_max_capture_id() RPC."""
-        request = data_acquisition_store.QueryMaxCaptureIdRequest(query=query)
+        request = data_acquisition_store.QueryMaxCaptureIdRequest()
         return self.call_async(self._stub.QueryMaxCaptureId, request,
                                value_from_response=_get_max_capture_id,
                                error_from_response=common_header_errors, copy_request=False,
                                **kwargs)
+
+
+def _iterate_store_file(file, data_id, file_extension=None):
+    """Iterator over file data and create multiple StoreStreamRequest
+
+        Args:
+            file (BufferedReader) : Reader to the file for arbitrary data to store.
+            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.
+            file_extension (string) : File extension to use for writing the data to a file.
+        Returns:
+            StoreStreamRequests iterates over these requests.
+        """
+    total_size = fstat(file.fileno()).st_size
+    while True:
+        chunk = file.read(DEFAULT_CHUNK_SIZE_BYTES)
+        if not chunk:
+            # No more data
+            break
+        data = data_chunk.DataChunk(data=chunk, total_size=total_size)
+        request = data_acquisition_store.StoreStreamRequest(chunk=data, data_id=data_id,
+                                                            file_extension=file_extension)
+        yield request
+
+
+def _iterate_data_chunks(data, data_id, file_extension=None):
+    """Iterator over data and create multiple StoreDataRequest
+
+        Args:
+            data (bytes) : Arbitrary data to store.
+            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.
+            file_extension (string) : File extension to use for writing the data to a file.
+        Returns:
+            StoreDataRequests iterates over these requests.
+        """
+    total_size = len(data)
+    for chunk in split_serialized(data, DEFAULT_CHUNK_SIZE_BYTES):
+        chunk_data = data_chunk.DataChunk(data=chunk, total_size=total_size)
+        request = data_acquisition_store.StoreStreamRequest(chunk=chunk_data, data_id=data_id,
+                                                            file_extension=file_extension)
+        yield request
 
 
 def _get_action_ids(response):

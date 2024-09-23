@@ -12,7 +12,6 @@ import "bosdyn/api/graph_nav/recording.proto";
 
 option java_outer_classname = "RecordingServiceProto";
 
-
 // The recording service can be used to record a Graph Nav map (containing waypoints and edges).
 // The recorded map can consist of the following:
 // * Chain: a topological arrangement of waypoints/edges where every waypoint has at least 1
@@ -25,28 +24,29 @@ option java_outer_classname = "RecordingServiceProto";
 // * While recording, call GetMapStatus to determine what waypoints have been created.
 // * Optionally call CreateWaypoint to create waypoints in specific locations.
 // * Call StopRecording to pause the recording service and create branches.
-// * While recording (or after completing recording), call DownloadWaypoint/Edge Snapshot rpc's
+// * While recording (or after completing recording), call DownloadWaypoint/Edge Snapshot rpcs
 // from the GraphNavService to download the large sensor data with the map.
 service GraphNavRecordingService {
     // Start recording the map from the current localization.
     // Creates a waypoint if you are starting to record. Otherwise, waits until you are
     // sufficiently far away from the previous waypoint.
-    rpc StartRecording (StartRecordingRequest) returns (StartRecordingResponse) {}
+    rpc StartRecording(StartRecordingRequest) returns (StartRecordingResponse) {}
 
     // Stop recording the map from the current localization.
-    rpc StopRecording (StopRecordingRequest) returns (StopRecordingResponse) {}
+    rpc StopRecording(StopRecordingRequest) returns (StopRecordingResponse) {}
 
     // Create a new waypoint at the current localization.
-    rpc CreateWaypoint (CreateWaypointRequest) returns (CreateWaypointResponse) {}
+    rpc CreateWaypoint(CreateWaypointRequest) returns (CreateWaypointResponse) {}
 
-    // Set the environmnent and name prefix to use for the recording.
-    rpc SetRecordingEnvironment (SetRecordingEnvironmentRequest) returns (SetRecordingEnvironmentResponse) {}
+    // Set the environment and name prefix to use for the recording.
+    rpc SetRecordingEnvironment(SetRecordingEnvironmentRequest)
+        returns (SetRecordingEnvironmentResponse) {}
 
 
     // Create an arbitrary edge between two waypoints.
-    rpc CreateEdge (CreateEdgeRequest) returns (CreateEdgeResponse) {}
+    rpc CreateEdge(CreateEdgeRequest) returns (CreateEdgeResponse) {}
 
-    // Tells the client the internal state of the record service, and the structure of the map that has been recorded
-    // so far.
-    rpc GetRecordStatus (GetRecordStatusRequest) returns (GetRecordStatusResponse) {}
+    // Tells the client the internal state of the record service, and the structure of the map that
+    // has been recorded so far.
+    rpc GetRecordStatus(GetRecordStatusRequest) returns (GetRecordStatusResponse) {}
 }

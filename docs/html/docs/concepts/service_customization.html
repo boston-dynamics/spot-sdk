@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Service Customization &mdash; Spot 4.0.3 documentation</title>
+  <title>Service Customization &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -507,7 +512,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="service-customization">
 <h1>Service Customization<a class="headerlink" href="#service-customization" title="Permalink to this heading"></a></h1>
-<p>Spot 3.3 release features a new system for parameterizing 3rd party services.  If your service has a knob that needs wiggling by a user, your service can advertise a parameter, Boston Dynamics clients will display that knob, and users will be able to wiggle it.  Services that opt into this feature will get:</p>
+<p>Spot 3.3 release features a new system for parameterizing 3rd party services. If your service has a knob that needs wiggling by a user, your service can advertise a parameter, Boston Dynamics clients will display that knob, and users will be able to wiggle it. Services that opt into this feature will get:</p>
 <ul class="simple">
 <li><p>UI on the Tablet application for actions containing parameters (either when recording a mission, or just performing actions in teleoperation).</p></li>
 <li><p>UI on the Tablet application for adjusting image parameters when streaming from a 3rd party image source.</p></li>
@@ -521,64 +526,64 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><code class="docutils literal notranslate"><span class="pre">Remote</span> <span class="pre">Mission</span></code> services.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">Callback</span></code> services.</p></li>
 </ul>
-<p>The service customization system supports several different primitive types, and hierarchical containers - it’s powerful.  All first class Boston Dynamics inspections, including our 3.3 thermal inspection (shown below), are built using the same service customization system that’s available to developers:</p>
+<p>The service customization system supports several different primitive types, and hierarchical containers - it’s powerful. All first class Boston Dynamics inspections, including our 3.3 thermal inspection (shown below), are built using the same service customization system that’s available to developers:</p>
 <p><img alt="Tablet Screenshot" src="../../_images/service_customization_thermal.jpg" /></p>
 <section id="service-customization-language">
 <h2>Service Customization Language<a class="headerlink" href="#service-customization-language" title="Permalink to this heading"></a></h2>
 <section id="spec">
 <h3>Spec<a class="headerlink" href="#spec" title="Permalink to this heading"></a></h3>
-<p>A specification, or spec, is what services advertises to clients so that the client can build a UI.  It’s how services encode what parameters that service expects - “I need a slider from 0 to 100” or “I need two sliders and a checkbox”.  The root level of any service spec is a dictionary so that parameters can be added in the future with ease.</p>
+<p>A specification, or spec, is what services advertises to clients so that the client can build a UI. It’s how services encode what parameters that service expects - “I need a slider from 0 to 100” or “I need two sliders and a checkbox”. The root level of any service spec is a dictionary so that parameters can be added in the future with ease.</p>
 </section>
 <section id="parameter">
 <h3>Parameter<a class="headerlink" href="#parameter" title="Permalink to this heading"></a></h3>
-<p>Parameters are instantiations of Specs.  Where a spec says: “I need a slider from 0 to 100 titled threshold”, a parameter says “threshold: 58”.  It’s result of a spec after it’s been turned into a UI, and a user has wiggled knobs.</p>
+<p>Parameters are instantiations of Specs. Where a spec says: “I need a slider from 0 to 100 titled threshold”, a parameter says “threshold: 58”. It’s result of a spec after it’s been turned into a UI, and a user has wiggled knobs.</p>
 </section>
 </section>
 <section id="parameter-types">
 <h2>Parameter Types<a class="headerlink" href="#parameter-types" title="Permalink to this heading"></a></h2>
 <section id="double">
 <h3>Double<a class="headerlink" href="#double" title="Permalink to this heading"></a></h3>
-<p>The double parameter allows users to enter a floating point number.  It is defined by the <code class="docutils literal notranslate"><span class="pre">DoubleParam</span></code> and <code class="docutils literal notranslate"><span class="pre">DoubleParam.Spec</span></code>  protobuf messages.  The spec for doubles allows developers to set a <em>min value</em>, and a <em>max value</em>.  The UI element displayed will differ based on the contents of <em>min value</em> and <em>max value</em>.  If both are set, the UI will provide a slider AND a numerical textbox users can type values into, otherwise, the UI will display just a numerical textbox.  <code class="docutils literal notranslate"><span class="pre">DoubleParam.Spec</span></code> also allows developers to specify units, which we’ll talk about in a second.</p>
+<p>The double parameter allows users to enter a floating point number. It is defined by the <code class="docutils literal notranslate"><span class="pre">DoubleParam</span></code> and <code class="docutils literal notranslate"><span class="pre">DoubleParam.Spec</span></code> protobuf messages. The spec for doubles allows developers to set a <em>min value</em>, and a <em>max value</em>. The UI element displayed will differ based on the contents of <em>min value</em> and <em>max value</em>. If both are set, the UI will provide a slider AND a numerical textbox users can type values into, otherwise, the UI will display just a numerical textbox. <code class="docutils literal notranslate"><span class="pre">DoubleParam.Spec</span></code> also allows developers to specify units, which we’ll talk about in a second.</p>
 </section>
 <section id="int">
 <h3>Int<a class="headerlink" href="#int" title="Permalink to this heading"></a></h3>
-<p>The int parameter is identical to the double parameter, but everything is an integer.  It is defined by the <code class="docutils literal notranslate"><span class="pre">Int64Param</span></code> and <code class="docutils literal notranslate"><span class="pre">Int64Param.Spec</span></code>  protobuf messages.</p>
+<p>The int parameter is identical to the double parameter, but everything is an integer. It is defined by the <code class="docutils literal notranslate"><span class="pre">Int64Param</span></code> and <code class="docutils literal notranslate"><span class="pre">Int64Param.Spec</span></code> protobuf messages.</p>
 </section>
 <section id="units-for-int-double">
 <h3>Units for Int &amp; Double<a class="headerlink" href="#units-for-int-double" title="Permalink to this heading"></a></h3>
-<p>Both int and double allow developers to specify units.  Units will show up on the UI next to the specified value; a units string of “%” will cause the UI to render “32%”.  If developers specify one of the first class unit enums, temperature or pressure, clients will automatically convert units to match the users preference, and do the conversion for the service.</p>
-<p>For example, imagine a service that wants a temperature parameter between 0°C and 100°C.  If the service specified the limits of 0 - 100, and the units as <code class="docutils literal notranslate"><span class="pre">TEMPERATURE_CELSIUS</span></code>, clients will either show that as 32°F to 212°F or 0°C to 100°C, depending on the users unit preferences.  Either way, the client will pack in the specified value as Celsius.  <strong>The service can assume all values are in Celsius, because they will be.</strong>  Also note that the units proto includes an <em>is_relative</em> flag, which allows developers to specify if they want the client to respect a zero point offset between units.  This mostly helps to differentiate absolute and relative temperatures.  If ensuring an object is no hotter than a specific temperature, 0°C - 100°C should map to 32°F to 212°F (what happens when <em>is_relative</em> is set to false).  If ensuring that two objects are no more than X degrees apart, 0°C - 100°C should map to 0°F to 180°F  (what happens when <em>is_relative</em> is set to true).  Note that 0 C now maps to 0 F.</p>
+<p>Both int and double allow developers to specify units. Units will show up on the UI next to the specified value; a units string of “%” will cause the UI to render “32%”. If developers specify one of the first class unit enums, temperature or pressure, clients will automatically convert units to match the users preference, and do the conversion for the service.</p>
+<p>For example, imagine a service that wants a temperature parameter between 0°C and 100°C. If the service specified the limits of 0 - 100, and the units as <code class="docutils literal notranslate"><span class="pre">TEMPERATURE_CELSIUS</span></code>, clients will either show that as 32°F to 212°F or 0°C to 100°C, depending on the users unit preferences. Either way, the client will pack in the specified value as Celsius. <strong>The service can assume all values are in Celsius, because they will be.</strong> Also note that the units proto includes an <em>is_relative</em> flag, which allows developers to specify if they want the client to respect a zero point offset between units. This mostly helps to differentiate absolute and relative temperatures. If ensuring an object is no hotter than a specific temperature, 0°C - 100°C should map to 32°F to 212°F (what happens when <em>is_relative</em> is set to false). If ensuring that two objects are no more than X degrees apart, 0°C - 100°C should map to 0°F to 180°F (what happens when <em>is_relative</em> is set to true). Note that 0 C now maps to 0 F.</p>
 </section>
 <section id="string">
 <h3>String<a class="headerlink" href="#string" title="Permalink to this heading"></a></h3>
-<p>The string parameter allows users to specify a string.  It is defined by the <code class="docutils literal notranslate"><span class="pre">StringParam</span></code> and <code class="docutils literal notranslate"><span class="pre">StringParam.Spec</span></code> protobuf messages.  A string spec can be used to let a user: (1) pick from a set of predefined options, (2) type in their own free form string, or (3) both.  Predefined options are specified using the <em>options</em> field, and whether or not the user is allowed to type in their own option is controlled by the <em>editable</em> flag.  Strings will be represented in the client UI by either a switch, a set of radio buttons, or a combo box, depending on how many options are present.</p>
+<p>The string parameter allows users to specify a string. It is defined by the <code class="docutils literal notranslate"><span class="pre">StringParam</span></code> and <code class="docutils literal notranslate"><span class="pre">StringParam.Spec</span></code> protobuf messages. A string spec can be used to let a user: (1) pick from a set of predefined options, (2) type in their own free form string, or (3) both. Predefined options are specified using the <em>options</em> field, and whether or not the user is allowed to type in their own option is controlled by the <em>editable</em> flag. Strings will be represented in the client UI by either a switch, a set of radio buttons, or a combo box, depending on how many options are present.</p>
 </section>
 <section id="bool">
 <h3>Bool<a class="headerlink" href="#bool" title="Permalink to this heading"></a></h3>
-<p>The bool parameter allows users to turn things on and off.  It is defined by the <code class="docutils literal notranslate"><span class="pre">BoolParam</span></code> and <code class="docutils literal notranslate"><span class="pre">BoolParam.Spec</span></code> protobuf messages.  It will be represented in the UI by a checkbox.</p>
+<p>The bool parameter allows users to turn things on and off. It is defined by the <code class="docutils literal notranslate"><span class="pre">BoolParam</span></code> and <code class="docutils literal notranslate"><span class="pre">BoolParam.Spec</span></code> protobuf messages. It will be represented in the UI by a checkbox.</p>
 </section>
 <section id="region-of-interest">
 <h3>Region of Interest<a class="headerlink" href="#region-of-interest" title="Permalink to this heading"></a></h3>
-<p>Region of Interest, or ROI, allows users to specify a region of an image.  It is defined by the <code class="docutils literal notranslate"><span class="pre">RegionOfInterestParam</span></code> and <code class="docutils literal notranslate"><span class="pre">RegionOfInterestParam.Spec</span></code> protobuf messages.  As of 3.3, ROI params are limited to specifying rectangular regions, and really only work well for <code class="docutils literal notranslate"><span class="pre">Network</span> <span class="pre">Compute</span> <span class="pre">Bridge</span> <span class="pre">Worker</span></code> services.  The tablet does not allow setting ROI for <code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">Callback</span></code> services, but that will likely change in the future.  Other services have limited ROI functionality.</p>
-<p>Region of interest is helpful to narrow down a search space if there is a lot going on in an image, and the camera can’t be moved or zoomed in such a way that only the thing the user care’s about is in frame.  Users will be able to draw regions on live images using the tablet UI, and on images taken at record time when editing parameters in Scout.</p>
+<p>Region of Interest, or ROI, allows users to specify a region of an image. It is defined by the <code class="docutils literal notranslate"><span class="pre">RegionOfInterestParam</span></code> and <code class="docutils literal notranslate"><span class="pre">RegionOfInterestParam.Spec</span></code> protobuf messages. As of 3.3, ROI params are limited to specifying rectangular regions, and really only work well for <code class="docutils literal notranslate"><span class="pre">Network</span> <span class="pre">Compute</span> <span class="pre">Bridge</span> <span class="pre">Worker</span></code> services. The tablet does not allow setting ROI for <code class="docutils literal notranslate"><span class="pre">Area</span> <span class="pre">Callback</span></code> services, but that will likely change in the future. Other services have limited ROI functionality.</p>
+<p>Region of interest is helpful to narrow down a search space if there is a lot going on in an image, and the camera can’t be moved or zoomed in such a way that only the thing the user care’s about is in frame. Users will be able to draw regions on live images using the tablet UI, and on images taken at record time when editing parameters in Scout.</p>
 </section>
 <section id="dictionary">
 <h3>Dictionary<a class="headerlink" href="#dictionary" title="Permalink to this heading"></a></h3>
-<p>Dictionary is the first container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">DictParam</span></code> and <code class="docutils literal notranslate"><span class="pre">DictParam.Spec</span></code> protobuf messages.  Dictionaries allow users to specify many named children of various types: string, ints, dictionaries, etc.  Note: primitives themselves don’t contain a name, but their entries inside containers do.  Each child of a dictionary is required to have a <em>key</em> string, which services will use to find particular values.  Changing a <em>key</em> has consequences for backwards compatibility, so there is a second ephemeral name field embedded into <code class="docutils literal notranslate"><span class="pre">UserInterfaceInfo</span></code> called <em>display_name</em>.  <em>display_name</em> exists so it can be changed at any time, without consequence.  If no <em>display_name</em> is specified, <em>key</em> will be used.</p>
-<p>UI’s will always allow users to specify every child of a dictionary.  Each child is independent.  Dictionaries can be told to start collapsed, which is a great way to hide advanced parameters for your inspections that most users won’t wiggle.</p>
+<p>Dictionary is the first container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">DictParam</span></code> and <code class="docutils literal notranslate"><span class="pre">DictParam.Spec</span></code> protobuf messages. Dictionaries allow users to specify many named children of various types: string, ints, dictionaries, etc. Note: primitives themselves don’t contain a name, but their entries inside containers do. Each child of a dictionary is required to have a <em>key</em> string, which services will use to find particular values. Changing a <em>key</em> has consequences for backwards compatibility, so there is a second ephemeral name field embedded into <code class="docutils literal notranslate"><span class="pre">UserInterfaceInfo</span></code> called <em>display_name</em>. <em>display_name</em> exists so it can be changed at any time, without consequence. If no <em>display_name</em> is specified, <em>key</em> will be used.</p>
+<p>UI’s will always allow users to specify every child of a dictionary. Each child is independent. Dictionaries can be told to start collapsed, which is a great way to hide advanced parameters for your inspections that most users won’t wiggle.</p>
 </section>
 <section id="one-of">
 <h3>One-Of<a class="headerlink" href="#one-of" title="Permalink to this heading"></a></h3>
-<p>One-Of is another container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">OneOfParam</span></code> and <code class="docutils literal notranslate"><span class="pre">OneOfParam.Spec</span></code> protobuf messages.  Unlike dictionary, One-Of will only let the users specify a single child at a time.  The UI will allow users to pick which child they want to specify, and allow users to specify that child.  Note that the child can be completely empty.  One-Of’s are a great way to encode optional parameters, or parameters that only exist under circumstances.  It is valid to have an empty One-Of child - that just means that if selected, that option has no additional parameters.</p>
-<p>Like dictionary children, one-of children also contain a <code class="docutils literal notranslate"><span class="pre">UserInterfaceInfo</span></code>, which allows developers to both order elements in a deterministic way, and override what string the UI uses to represent the child.  One-Of specs are constrained to ONLY contain dictionary children.</p>
+<p>One-Of is another container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">OneOfParam</span></code> and <code class="docutils literal notranslate"><span class="pre">OneOfParam.Spec</span></code> protobuf messages. Unlike dictionary, One-Of will only let the users specify a single child at a time. The UI will allow users to pick which child they want to specify, and allow users to specify that child. Note that the child can be completely empty. One-Of’s are a great way to encode optional parameters, or parameters that only exist under circumstances. It is valid to have an empty One-Of child - that just means that if selected, that option has no additional parameters.</p>
+<p>Like dictionary children, one-of children also contain a <code class="docutils literal notranslate"><span class="pre">UserInterfaceInfo</span></code>, which allows developers to both order elements in a deterministic way, and override what string the UI uses to represent the child. One-Of specs are constrained to ONLY contain dictionary children.</p>
 </section>
 <section id="list">
 <h3>List<a class="headerlink" href="#list" title="Permalink to this heading"></a></h3>
-<p>List is the final container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">ListParam</span></code> and <code class="docutils literal notranslate"><span class="pre">ListParam.Spec</span></code> protobuf messages.  Lists must be homogenous, meaning each child in the list must meet the same spec.</p>
+<p>List is the final container type, and is defined by the <code class="docutils literal notranslate"><span class="pre">ListParam</span></code> and <code class="docutils literal notranslate"><span class="pre">ListParam.Spec</span></code> protobuf messages. Lists must be homogenous, meaning each child in the list must meet the same spec.</p>
 </section>
 <section id="custom-param">
 <h3>Custom Param<a class="headerlink" href="#custom-param" title="Permalink to this heading"></a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">CustomParam</span></code> and <code class="docutils literal notranslate"><span class="pre">CustomParam.Spec</span></code> protobuf messages are container types for the various parameter types.  A custom param can either be a double, or a bool, or an int, or a dictionary, etc.  Both dictionaries and list children contain a CustomParam.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">CustomParam</span></code> and <code class="docutils literal notranslate"><span class="pre">CustomParam.Spec</span></code> protobuf messages are container types for the various parameter types. A custom param can either be a double, or a bool, or an int, or a dictionary, etc. Both dictionaries and list children contain a CustomParam.</p>
 </section>
 </section>
 <section id="example-specifications">
@@ -676,7 +681,7 @@ Development Kit License (20191101-BDSDK-SL).
 </div>
 <p>Let’s take another look at the 3.3 boston dynamic thermal inspection:</p>
 <p><img alt="Tablet Screenshot" src="../../_images/service_customization_thermal.jpg" /></p>
-<p>The UI on the left is generated with service customization.  The spec provided for the thermal NCB worker looks like this:</p>
+<p>The UI on the left is generated with service customization. The spec provided for the thermal NCB worker looks like this:</p>
 <ul class="simple">
 <li><p>A root level dictionary, containing:</p>
 <ul>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPS on Spot &mdash; Spot 4.0.3 documentation</title>
+  <title>GPS on Spot &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -542,7 +547,7 @@ recorded with these systems.</p>
 <p>GPS data are used in Spot’s SDK through the following reference frames:</p>
 <ul class="simple">
 <li><p><strong>Robot Body - “body”</strong> (see frames doc)is a frame at the geometric center of the robot’s body.</p></li>
-<li><p><strong>Odometry - “odom”</strong> (see frames doc)  is an inertial frame that estimates the fixed location in the world (relative to where the robot is booted up) using the kinematics of the robot.</p></li>
+<li><p><strong>Odometry - “odom”</strong> (see frames doc) is an inertial frame that estimates the fixed location in the world (relative to where the robot is booted up) using the kinematics of the robot.</p></li>
 <li><p><strong>Payload -</strong> is the frame of the robot’s payload computer, usually defined using the payload registration service.</p></li>
 <li><p><strong>GPS Antenna - “gps”</strong> this is the frame of the GPS receiver antenna, and is the frame that the GPS unit should be reporting positional measurements in. The orientation convention for this frame should be the same as with the robot body; that is, the x-axis should point “forward”, and the z axis should point “up”. The GPS antenna payload is defined in the GPS service itself.</p></li>
 <li><p><strong><a class="reference external" href="https://en.wikipedia.org/wiki/Earth-centered,_Earth-fixed_coordinate_system">Earth-Centered-Earth-Fixed </a></strong> <strong>- “ecef”</strong> is a standard frame defined based on the center of the Earth. Some parts of the SDK refer to the GPS antenna or robot body’s relative position and/or orientation with respect to this frame.</p></li>
@@ -565,18 +570,65 @@ orientation. In order to extract orientation information, the GPS data is
 transformed into a Cartesian coordinate system tangent to the surface of the
 Earth. A trajectory of odometry and GPS measurements is synchronized in time
 and recorded. As Spot moves through its environment, this trajectory is used
-to find a registration <em>odom_T_gps</em>  between the odom frame and the GPS frame
+to find a registration <em>odom_T_gps</em> between the odom frame and the GPS frame
 tangent to the Earth.</p>
 <p><img alt="../../../_images/gps_registration.png" src="../../../_images/gps_registration.png" /><br /><em>Figure 3: Correlation and registration of GPS and Odometry trajectories.</em></p>
 <p>The currently computed registration can be queried using the Spot API. The
-Registration service supports the <em>GetLocation</em>  RPC which returns a
+Registration service supports the <em>GetLocation</em> RPC which returns a
 <em>GetLocationResponse</em> .</p>
-<p>GetLocationResponse::Status                          |   Explanation<br />—————————————————–|—-
-<code class="docutils literal notranslate"><span class="pre">STATUS_UNKNOWN</span></code> | No registration could be computed<br /><code class="docutils literal notranslate"><span class="pre">STATUS_OK</span></code> | A (possibly invalid) registration was computed<br /><code class="docutils literal notranslate"><span class="pre">STATUS_NEEDS_DEVICE</span></code>  | No GPS device is available to compute a registration</p>
-<p>If the Registration status is STATUS_OK, a Registration object will be
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>GetLocationResponse::Status</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STATUS_UNKNOWN</code></td>
+<td>No registration could be computed</td>
+</tr>
+<tr>
+<td><code>STATUS_OK</code></td>
+<td>A (possibly invalid) registration was computed</td>
+</tr>
+<tr>
+<td><code>STATUS_NEEDS_DEVICE</code></td>
+<td>No GPS device is available to compute a registration</td>
+</tr>
+</tbody>
+</table><p>If the Registration status is STATUS_OK, a Registration object will be
 available for inspection.</p>
-<p>Registration::Status | Explanation<br />— | —<br /><code class="docutils literal notranslate"><span class="pre">STATUS_UNKNOWN</span></code>                                                           | No registration could be computed<br /><code class="docutils literal notranslate"><span class="pre">STATUS_OK</span></code>                                                                | A registration was computed<br /><code class="docutils literal notranslate"><span class="pre">STATUS_NEED_DATA</span></code>                                                         | No usable GPS data was available<br /><code class="docutils literal notranslate"><span class="pre">STATUS_NEED_MORE_DATA</span></code>                                                    | Spot has not moved far enough<br /><code class="docutils literal notranslate"><span class="pre">STATUS_STALE</span></code> |  No usable data has been received recently enough to compute a registration</p>
-</section>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Registration::Status</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STATUS_UNKNOWN</code></td>
+<td>No registration could be computed</td>
+</tr>
+<tr>
+<td><code>STATUS_OK</code></td>
+<td>A registration was computed</td>
+</tr>
+<tr>
+<td><code>STATUS_NEED_DATA</code></td>
+<td>No usable GPS data was available</td>
+</tr>
+<tr>
+<td><code>STATUS_NEED_MORE_DATA</code></td>
+<td>Spot has not moved far enough</td>
+</tr>
+<tr>
+<td><code>STATUS_STALE</code></td>
+<td>No usable data has been received recently enough to compute a registration</td>
+</tr>
+</tbody>
+</table></section>
 <section id="registration-to-graph-nav-maps">
 <h3>Registration to Graph Nav Maps<a class="headerlink" href="#registration-to-graph-nav-maps" title="Permalink to this heading"></a></h3>
 <p>While recording a Graph Nav map (see
@@ -585,18 +637,17 @@ whenever a GPS device is attached to the robot and a registration to odometry
 is found, the registration is stored in the Graph Nav Map inside individual
 waypoint snapshots.</p>
 <p>This is referred to as “raw GPS data” in examples (see
-<a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html"><span class="doc">here</span></a>).  Note
+<a class="reference internal" href="../../../python/examples/graph_nav_view_gps/README.html"><span class="doc">here</span></a>). Note
 that the raw data stored in waypoint snapshots represents the registration to
 the odometry frame at the time the waypoint snapshot was recorded, and may be
 inaccurate or missing entirely in areas where there were no satellites
 reachable from the GPS.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># World objects stored within waypoint snapshots may contain raw GPS data and</span>
-<span class="n">a</span> <span class="n">registration</span> <span class="n">to</span> <span class="n">the</span> <span class="n">odometry</span> <span class="n">frame</span><span class="o">.</span>  
-       <span class="k">for</span> <span class="n">world_object</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>  
-           <span class="k">if</span> <span class="n">world_object</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;gps_properties&#39;</span><span class="p">):</span>  
-               <span class="c1"># This is a &quot;latitude longitude height&quot; message.   </span>
-               <span class="n">llh</span> <span class="o">=</span> <span class="n">world_object</span><span class="o">.</span><span class="n">gps_properties</span><span class="o">.</span><span class="n">registration</span><span class="o">.</span><span class="n">robot_body_location</span>  
-  
+<span class="n">a</span> <span class="n">registration</span> <span class="n">to</span> <span class="n">the</span> <span class="n">odometry</span> <span class="n">frame</span><span class="o">.</span>
+       <span class="k">for</span> <span class="n">world_object</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+           <span class="k">if</span> <span class="n">world_object</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s1">&#39;gps_properties&#39;</span><span class="p">):</span>
+               <span class="c1"># This is a &quot;latitude longitude height&quot; message.</span>
+               <span class="n">llh</span> <span class="o">=</span> <span class="n">world_object</span><span class="o">.</span><span class="n">gps_properties</span><span class="o">.</span><span class="n">registration</span><span class="o">.</span><span class="n">robot_body_location</span>
 </pre></div>
 </div>
 <p>Graph Nav maps can also be registered to the ECEF frame using anchoring
@@ -609,8 +660,8 @@ OpenStreetMaps. The raw data may have noise, missing data, or systematic
 errors that anchoring optimization attempts to correct.</em></p>
 <p>Registrations to the ECEF frame obtained via this method are available in
 waypoint annotations:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The optimized GPS data is stored in each waypoint&#39;s annotations.  </span>
-<span class="n">ecef_tform_waypoint</span> <span class="o">=</span> <span class="n">waypoint</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">gps_settings</span><span class="o">.</span><span class="n">ecef_tform_waypoint</span>  
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The optimized GPS data is stored in each waypoint&#39;s annotations.</span>
+<span class="n">ecef_tform_waypoint</span> <span class="o">=</span> <span class="n">waypoint</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">gps_settings</span><span class="o">.</span><span class="n">ecef_tform_waypoint</span>
 </pre></div>
 </div>
 <p>Note that after anchoring optimization, all of the waypoints stored in the
@@ -629,8 +680,8 @@ navigation and localization.</p>
 whenever:</p>
 <ol class="simple">
 <li><p>There exists a GPS-enabled payload and GPS service running currently on the robot.</p></li>
-<li><p>The map has either raw GPS data in waypoint snapshots, or GPS data in waypoint annotations.
-1. When both exist, Graph Nav will use the data in waypoint annotations.</p></li>
+<li><p>The map has either raw GPS data in waypoint snapshots, or GPS data in waypoint annotations.</p></li>
+<li><p>When both exist, Graph Nav will use the data in waypoint annotations.</p></li>
 </ol>
 <p>Graph Nav automatically uses or ignores GPS data depending on the context. For
 example, in areas where GPS signal is lost (too few satellites, high error,
@@ -644,28 +695,97 @@ STATUS_IMPAIRED return code.</p>
 <h4>RPCs<a class="headerlink" href="#rpcs" title="Permalink to this heading"></a></h4>
 <p>The following RPCs are relevant for using and understanding GPS use in Graph
 Nav:</p>
-<ul>
-<li><p><strong>graph_nav.GetLocalizationState -</strong>  this RPC returns information about the robot’s GPS-centric localization when “request_gps_state” is set to “true” in the request.</p>
 <ul class="simple">
+<li><p><strong>graph_nav.GetLocalizationState -</strong> this RPC returns information about the robot’s GPS-centric localization when “request_gps_state” is set to “true” in the request.</p>
+<ul>
 <li><p>This returns a message of type GPSLocalization, which contains an estimate of the robot’s body in ECEF frame and LLH frame, and diagnostic information about the current GPS state and whatever GPS state happens to be in the map.</p></li>
 </ul>
-<p><strong>GPSLocalization::State</strong>                                                  |    <strong>Explanation</strong><br />—-|—-
-<code class="docutils literal notranslate"><span class="pre">STATE_OK</span></code>                                                                   |    Using GPS.<br /><code class="docutils literal notranslate"><span class="pre">STATE_BAD_FRAMES</span></code>                                                            |    Error getting frames (ko, etc.)<br /><code class="docutils literal notranslate"><span class="pre">STATE_NO_GPS_OBJECTS</span>&#160; </code>                                                     |    No GPS available.<br /><code class="docutils literal notranslate"><span class="pre">STATE_REGISTRATION_NOT_OK</span></code>                                                   |    GPS registration isn’t ready.<br /><code class="docutils literal notranslate"><span class="pre">STATE_NO_GPS_STATES</span></code>                                                         |    No GPS state measurements.<br /><code class="docutils literal notranslate"><span class="pre">STATE_NOT_ENOUGH_SATELLITES</span></code>                                                 |    Too few satellites to localize.<br /><code class="docutils literal notranslate"><span class="pre">STATE_NO_ECEF_FRAME</span></code>                                                         |    GPS registration is missing a frame.<br /><code class="docutils literal notranslate"><span class="pre">STATE_HIGH_ERROR</span></code>                                                            |    The GPS data exists, but is high error.<br /><code class="docutils literal notranslate"><span class="pre">STATE_STALE</span>&#160; </code>                                                              |    The GPS data exists, and we have not used it yet, but it is too old to use.
-<code class="docutils literal notranslate"><span class="pre">STATE_INTERNAL_ERROR</span> </code>                                                       |     Internal error (e.g. missing waypoints).</p>
 </li>
+</ul>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th><strong>GPSLocalization::State</strong></th>
+<th><strong>Explanation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STATE_OK</code></td>
+<td>Using GPS.</td>
+</tr>
+<tr>
+<td><code>STATE_BAD_FRAMES</code></td>
+<td>Error getting frames (ko, etc.)</td>
+</tr>
+<tr>
+<td><code>STATE_NO_GPS_OBJECTS</code></td>
+<td>No GPS available.</td>
+</tr>
+<tr>
+<td><code>STATE_REGISTRATION_NOT_OK</code></td>
+<td>GPS registration isn't ready.</td>
+</tr>
+<tr>
+<td><code>STATE_NO_GPS_STATES</code></td>
+<td>No GPS state measurements.</td>
+</tr>
+<tr>
+<td><code>STATE_NOT_ENOUGH_SATELLITES</code></td>
+<td>Too few satellites to localize.</td>
+</tr>
+<tr>
+<td><code>STATE_NO_ECEF_FRAME</code></td>
+<td>GPS registration is missing a frame.</td>
+</tr>
+<tr>
+<td><code>STATE_HIGH_ERROR</code></td>
+<td>The GPS data exists, but is high error.</td>
+</tr>
+<tr>
+<td><code>STATE_STALE</code></td>
+<td>The GPS data exists, and we have not used it yet, but it is too old to use.</td>
+</tr>
+<tr>
+<td><code>STATE_INTERNAL_ERROR</code></td>
+<td>Internal error (e.g. missing waypoints).</td>
+</tr>
+</tbody>
+</table><ul class="simple">
 <li><p><strong>graph_nav.NavigateToAnchor</strong> - this RPC allows Graph Nav to navigate to either a point in the “seed” frame, the ECEF frame, or the LLH frame. To navigate to a latitude and longitude, or to an ECEF coordinate, use GPSNavigationParams as the goal field.</p>
-<ul class="simple">
+<ul>
 <li><p>When navigating to a GPS coordinate, Graph Nav will use its best guess of where each waypoint is in the ECEF frame to find the closest waypoint to the goal. Graph Nav will then navigate to that waypoint, and then walk the robot in a straight line toward the goal.</p></li>
 <li><p>If the GPS command fails, NavigateToAnchor will return `INVALID_GPS_COMMAND``. Here are possible reasons the GPS command might be invalid:</p></li>
 </ul>
-<p><strong>GPSStatus</strong> |<strong>Explanation</strong>
-—-|—-<br /><code class="docutils literal notranslate"><span class="pre">GPS_STATUS_OK</span></code> | The GPS command was valid and can be executed.<br /><code class="docutils literal notranslate"><span class="pre">GPS_STATUS_NO_COORDS_IN_MAP</span></code>                        |The GPS command could not be completed because the map does not have GPScoordinates, neither in                                                  waypoint annotations nor in the waypoint snapshot data. Please record the map using a GPS-enabled robot, or annotate the waypoints with custom GPS coordinates.<br /><code class="docutils literal notranslate"><span class="pre">GPS_STATUS_TOO_FAR_FROM_MAP</span></code> | The GPS command could not be completed because the coordinates passed in weretoo far from any mapped GPS                                                  data.</p>
-<blockquote>
+</li>
+</ul>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th><strong>GPSStatus</strong></th>
+<th><strong>Explanation</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GPS_STATUS_OK</code></td>
+<td>The GPS command was valid and can be executed.</td>
+</tr>
+<tr>
+<td><code>GPS_STATUS_NO_COORDS_IN_MAP</code></td>
+<td>The GPS command could not be completed because the map does not have GPScoordinates, neither in waypoint annotations nor in the waypoint snapshot data. Please record the map using a GPS-enabled robot, or annotate the waypoints with custom GPS coordinates.</td>
+</tr>
+<tr>
+<td><code>GPS_STATUS_TOO_FAR_FROM_MAP</code></td>
+<td>The GPS command could not be completed because the coordinates passed in were too far from any mapped GPS data.</td>
+</tr>
+</tbody>
+</table><blockquote>
 <div><p>Note that LLH coordinates given to this request require sufficient precision (in the sub-meter range) for the robot to navigate successfully to them. The order of magnitude of precision required is about $1 \times 10^{-6}$ degrees. If this isn’t satisfied, GPS_STATUS_TOO_FAR_FROM_MAP is likely to be returned.</p>
 </div></blockquote>
-</li>
-<li><p><strong>map_processing.ProcessAnchoring -</strong>  this RPC may be used to find an optimized pose of every waypoint in the ECEF frame. Set “measurement_params.use_gps” to true and set “apply_gps_result_to_waypoint_on_server” to true as well to set the waypoint transforms in ECEF frame.</p>
 <ul class="simple">
+<li><p><strong>map_processing.ProcessAnchoring -</strong> this RPC may be used to find an optimized pose of every waypoint in the ECEF frame. Set “measurement_params.use_gps” to true and set “apply_gps_result_to_waypoint_on_server” to true as well to set the waypoint transforms in ECEF frame.</p>
+<ul>
 <li><p>After processing the anchoring, re-download the map using the graph_nav.DownloadGraph RPC to see the changes.</p></li>
 </ul>
 </li>

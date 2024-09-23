@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boston Dynamics Choreographer Developer Guide &mdash; Spot 4.0.3 documentation</title>
+  <title>Boston Dynamics Choreographer Developer Guide &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -516,7 +521,18 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="choreography-safety">
 <h2>Choreography safety<a class="headerlink" href="#choreography-safety" title="Permalink to this heading"></a></h2>
-<p>When testing your choreography sequence on a robot, always keep in mind basic safety procedures. Make sure there is plenty of space around your Spot and ensure that neither you nor anyone else approaches the dancing Spot. Never approach your Spot unless its motors have been powered off.  If working with multiple robots, it is recommended to also keep them far from each other when possible.</p>
+<p>CAUTION: Choreography moves can induce unpredictable or unstable motions in Spot, which may increase the risk of falls, collisions, and other hazards. Observe the following safety precautions:</p>
+<ul class="simple">
+<li><p>Before using choreography, ensure there is at least 3 meters of clearance around Spot in all directions.</p></li>
+<li><p>Stay at least 3 meters away from Spot when motors are active. Power off motors before approaching Spot.</p></li>
+<li><p>Ensure that all bystanders who are in or may enter the area where choreography is performed are adequately warned and stay at least 3 meters away from Spot at all times.</p></li>
+</ul>
+<p>WARNING: A small percentage of people may experience epileptic seizures or blackouts when exposed to certain light patterns or flashing lights. Choreography moves that include Spot’s status lights or A/V warning system lights could trigger epileptic symptoms or seizures, even in people with no history of photosensitive epilepsy. Observe the following safety precautions:</p>
+<ul class="simple">
+<li><p>When designing choreography routines that include Spot’s status lights or A/V warning system lights, avoid patterns and frequencies known to increase the risk of epileptic symptoms.</p></li>
+<li><p>Before using choreography, ensure that all bystanders are adequately warned of any risk of exposure to light patterns and flashing lights from Spot.</p></li>
+</ul>
+<p>WARNING: At higher volumes, prolonged exposure to the noise produced by the buzzer can be harmful. Refer to <em>Spot Instructions for Use</em> available at <a class="reference external" href="https://support.bostondynamics.com/s/spot/product-safety">Spot Product Safety</a></p>
 <section id="beginner-and-advanced-modes">
 <h3>Beginner and advanced modes<a class="headerlink" href="#beginner-and-advanced-modes" title="Permalink to this heading"></a></h3>
 <p>Choreographer provides as much design freedom as possible. A consequence of this freedom is that the robot cannot perform some combinations of moves, parameters, and other settings under all conditions.</p>
@@ -531,8 +547,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p><img src="../../../_images/choreography_interface.png" width="520"/> <img src="../../../_images/choreography_interface_robot_management.png" width="500"/></p>
 <p>The Choreographer interface consists of the following important key sections/buttons:</p>
 <ol class="simple">
-<li><p><strong>Moves List</strong> - Listd of predefined stock moves and animation moves sorted by general category such as “Body” or “Transition.”</p></li>
-<li><p><strong>Dance Timeline</strong> - The main user interface area of Choreographer. The timeline shows a representation of your dance over time. Each move is a different block. Blocks can be edited to set or change move parameters. Blovks can be relocated on the timeline by clicking and dragging or copied and pasted to a new location on the timeline. They can be stretched or shrunk if the move parameters allow it.</p></li>
+<li><p><strong>Moves List</strong> - List of predefined stock moves and animation moves sorted by general category such as “Body” or “Transition.”</p></li>
+<li><p><strong>Dance Timeline</strong> - The main user interface area of Choreographer. The timeline shows a representation of your dance over time. Each move is a different block. Blocks can be edited to set or change move parameters. Blocks can be relocated on the timeline by clicking and dragging or copied and pasted to a new location on the timeline. They can be stretched or shrunk if the move parameters allow it.</p></li>
 <li><p><strong>Dance Tabs</strong> - Multiple choreography sequences can be opened at once and will appear as different tabs above the timeline.</p></li>
 <li><p><strong>Move Name</strong> - When you select a move in the Moves List its name and description will appear here.</p></li>
 <li><p><strong>Robot Preview</strong> - A preview of the robot’s body and arm during your selected move. Note that this section only appears for select moves that directly position the body of the robot or moves that control the arm.</p></li>
@@ -556,20 +572,20 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>The Annotations track modifies the behavior of the other tracks.</p></li>
 <li><p>The Music track shows the audio to be played by the Choreographer application itself (not played by the robot).</p></li>
 </ul>
-<p>All dance moves control one or more tracks.  Moves that control any of the same tracks cannot run simultaneously. Moves that use different tracks can be run simultaneously.  This modular approach to defining behavior helps make it easy to produce a wide variety of behaviors from a manageable number of component moves.</p>
+<p>All dance moves control one or more tracks. Moves that control any of the same tracks cannot run simultaneously. Moves that use different tracks can be run simultaneously. This modular approach to defining behavior helps make it easy to produce a wide variety of behaviors from a manageable number of component moves.</p>
 </section>
 <section id="slices-beats-bpm-and-measures">
 <h2>Slices, beats, BPM, and measures<a class="headerlink" href="#slices-beats-bpm-and-measures" title="Permalink to this heading"></a></h2>
-<p>Choreographer divides time into slices represented by the thin dashed vertical lines in the timeline. All moves take an integer number of slices.  For convenience, we consider 4 slices a beat and adjust the pace of the dance by setting the BPM (Beats Per Minute) in the <strong>Music Controls</strong> bar.  Beats are delineated by the medium-thickness vertical lines on the timeline.  Every 4th beat is numbered and marked with a thick vertical line.</p>
-<p>For a song with a 4/4 time signature, a slice corresponds to a 16th-note, a beat to a quarter note, and the thicker lines to a measure or whole note.  For songs that are not 4/4, the thicker lines can be ignored.</p>
-<p>Some moves take a fixed number of slices.  Other moves take a fixed amount of time so the number of slices will depend on the BPM.  Some moves are adjustable, but of those some have maximum or minimum durations.  For example, this “Running Man” move has been extended from the default number of slices. It controls the legs track for the first 16 slices (4 beats; 1 measure) of this sequence:</p>
+<p>Choreographer divides time into slices represented by the thin dashed vertical lines in the timeline. All moves take an integer number of slices. For convenience, we consider 4 slices a beat and adjust the pace of the dance by setting the BPM (Beats Per Minute) in the <strong>Music Controls</strong> bar. Beats are delineated by the medium-thickness vertical lines on the timeline. Every 4th beat is numbered and marked with a thick vertical line.</p>
+<p>For a song with a 4/4 time signature, a slice corresponds to a 16th-note, a beat to a quarter note, and the thicker lines to a measure or whole note. For songs that are not 4/4, the thicker lines can be ignored.</p>
+<p>Some moves take a fixed number of slices. Other moves take a fixed amount of time so the number of slices will depend on the BPM. Some moves are adjustable, but of those some have maximum or minimum durations. For example, this “Running Man” move has been extended from the default number of slices. It controls the legs track for the first 16 slices (4 beats; 1 measure) of this sequence:</p>
 <p><img alt="Slice Diagram" src="../../../_images/running_man.png" /></p>
 </section>
 <section id="dance-timeline">
 <h2>Dance timeline<a class="headerlink" href="#dance-timeline" title="Permalink to this heading"></a></h2>
-<p>The dance timeline portrays the choreography sequence on a grid.  The rows of the grid represent the various Tracks or aspects of the behavior (see Tracks section above).  Time is represented from left to right with the columns representing individual slices (see Slices, Beats, BPM, and Measures section above).</p>
-<p>A dance sequence consists of any number of dance moves.  Each move will be represented on the timeline by a rectangle.  The left and right edges of the rectangle give the start and stop time of the move, so the width represents the duration.  The vertical extent of the rectangle shows which tracks the move controls.</p>
-<p>Moves that are stacked vertically occur simultaneously, each controlling a different aspect of the behavior to produce some combination.  Moves that are arrayed horizontally occur in sequence, one after the other.</p>
+<p>The dance timeline portrays the choreography sequence on a grid. The rows of the grid represent the various Tracks or aspects of the behavior (see Tracks section above). Time is represented from left to right with the columns representing individual slices (see Slices, Beats, BPM, and Measures section above).</p>
+<p>A dance sequence consists of any number of dance moves. Each move will be represented on the timeline by a rectangle. The left and right edges of the rectangle give the start and stop time of the move, so the width represents the duration. The vertical extent of the rectangle shows which tracks the move controls.</p>
+<p>Moves that are stacked vertically occur simultaneously, each controlling a different aspect of the behavior to produce some combination. Moves that are arrayed horizontally occur in sequence, one after the other.</p>
 </section>
 <section id="adding-moves">
 <h2>Adding moves<a class="headerlink" href="#adding-moves" title="Permalink to this heading"></a></h2>
@@ -621,8 +637,8 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="red-slider">
 <h2>Red slider<a class="headerlink" href="#red-slider" title="Permalink to this heading"></a></h2>
-<p>The red slider defines where within the sequence Spot should begin execution. It also indicates when the audio begins playing.  The red slider defaults to the beginning but can be moved to start from the middle.  This can be useful for testing just a portion of a long sequence.</p>
-<p>Any moves that start before the slider will be skipped even if they are scheduled to complete after the slider.  The line drawn at the center of the slider shows the location of the slider on the timeline, as shown in the image below. The slider can be moved by clicking on the colored boxes and dragging it to the desired location.</p>
+<p>The red slider defines where within the sequence Spot should begin execution. It also indicates when the audio begins playing. The red slider defaults to the beginning but can be moved to start from the middle. This can be useful for testing just a portion of a long sequence.</p>
+<p>Any moves that start before the slider will be skipped even if they are scheduled to complete after the slider. The line drawn at the center of the slider shows the location of the slider on the timeline, as shown in the image below. The slider can be moved by clicking on the colored boxes and dragging it to the desired location.</p>
 <p><img alt="Slider" src="../../../_images/red_slider.png" /></p>
 </section>
 <section id="previewing-moves">
@@ -639,11 +655,11 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="saving-and-loading-choreography-files">
 <h2>Saving and loading Choreography files<a class="headerlink" href="#saving-and-loading-choreography-files" title="Permalink to this heading"></a></h2>
 <p>To save a Choreographer routine, press Ctrl+S or go select Save from the File menu. Your routine will be saved in protobuf text format, which you can then open and easily read with your own scripts. To load a Choreographer file press Ctrl+L or select Load Choreography from the File menu.</p>
-<p>To append an existing choreography sequence to the end of your current dance, select Append Choreography from the File menu, or press Ctrl+E. Choreographer automatically adds all of the move blocks from the saved file to the end of your current routine. This is particularly useful if you want to construct a choreography sequence from smaller premade sequences.</p>
+<p>To append an existing choreography sequence to the end of your current dance, select Append Choreography from the File menu, or press Ctrl+E. Choreographer automatically adds all of the move blocks from the saved file to the end of your current routine. This is particularly useful if you want to construct a choreography sequence from smaller pre-made sequences.</p>
 </section>
 <section id="keyboard-controls">
 <h2>Keyboard controls<a class="headerlink" href="#keyboard-controls" title="Permalink to this heading"></a></h2>
-<p>Choreographer has specific hotkey mappings available for common editing actions.  Access the table of available hotkeys by selecting Hotkeys Documentation from the Help menu.</p>
+<p>Choreographer has specific hotkey mappings available for common editing actions. Access the table of available hotkeys by selecting Hotkeys Documentation from the Help menu.</p>
 <section id="sequence-editing">
 <h3>Sequence editing<a class="headerlink" href="#sequence-editing" title="Permalink to this heading"></a></h3>
 <table border="1" class="docutils">
@@ -802,7 +818,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>--password PASSWORD</td>
-<td>Pasword for the account(s) when initially connecting to one or more robots.</td>
+<td>Password for the account(s) when initially connecting to one or more robots.</td>
 </tr>
 <tr>
 <td>--restricted</td>
@@ -810,19 +826,19 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>--delay DELAY</td>
-<td>Delay time in seconds after pressing the Start Choreography button before starting the sequence.  Defaults to 3 seconds.</td>
+<td>Delay time in seconds after pressing the Start Choreography button before starting the sequence. Defaults to 3 seconds.</td>
 </tr>
 <tr>
-<td>--not-vebose</td>
+<td>--not-verbose</td>
 <td>Prevent printing error messages to the console.</td>
 </tr>
 <tr>
 <td>--obs-padding DISTANCE</td>
-<td>Sets the obstacle avoidance padding in meters.  Note: Obstacle avoidance is not available during most dance moves.</td>
+<td>Sets the obstacle avoidance padding in meters. Note: Obstacle avoidance is not available during most dance moves.</td>
 </tr>
 <tr>
 <td>--estop-timeout TIME</td>
-<td>Sets the duration of the E-Stop timeout in seconds for how long between losing communication with the robot and when the robot sits down and powers off.  Defaults to 9 seconds.</td>
+<td>Sets the duration of the E-Stop timeout in seconds for how long between losing communication with the robot and when the robot sits down and powers off. Defaults to 9 seconds.</td>
 </tr>
 </tbody>
 </table><p>Command line hostname, username, and password arguments can be especially convenient when repeatedly connecting to the same large set of robots. The following example connects to three different robots using three different sets of login credentials.</p>

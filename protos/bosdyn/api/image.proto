@@ -85,12 +85,13 @@ message ImageCapture {
     // The time at which the image data was acquired in the robot's time basis.
     google.protobuf.Timestamp acquisition_time = 30;
 
-    // A tree-based collection of transformations, which will include the transformations to each image's
-    // sensor in addition to transformations to the common frames ("vision", "body", "odom").
-    // All transforms within the snapshot are at the acquistion time of the image.
+    // A tree-based collection of transformations, which will include the transformations to each
+    // image's sensor in addition to transformations to the common frames ("vision", "body",
+    // "odom"). All transforms within the snapshot are at the acquisition time of the image.
     FrameTreeSnapshot transforms_snapshot = 31;
 
-    // The frame name for the image's sensor source. This will be included in the transform snapshot.
+    // The frame name for the image's sensor source. This will be included in the transform
+    // snapshot.
     string frame_name_image_sensor = 5;
 
     // Image data.
@@ -105,7 +106,6 @@ message ImageCapture {
 
 // Proto for a description of an image source on the robot.
 message ImageSource {
-
     // The camera can be modeled as a pinhole camera described with a matrix.
     // Camera Matrix can be constructed by the camera intrinsics:
     // [[focal_length.x,         skew.x, principal_point.x],
@@ -121,8 +121,47 @@ message ImageSource {
             // The skew for the intrinsic matrix.
             Vec2 skew = 3;
         }
-        // The camera intrinsics are necessary for descrbing the pinhole camera matrix.
+        // The camera intrinsics are necessary for describing the pinhole camera matrix.
         CameraIntrinsics intrinsics = 1;
+    }
+
+    // The 5 parameter Brown-Conrady or "radtan" model is used to correct radial and
+    // tangential distortions. Original paper:
+    // http://close-range.com/docs/Decentering_Distortion_of_Lenses_Brown_1966_may_444-462.pdf
+    // We use the opencv convention for naming the distortion coefficients: k1, k2, p1, p2, k3. Here
+    // k1, k2, and k3 are radial distortion terms. p1 and p2 are tangential terms.
+    message PinholeBrownConrady {
+        message PinholeBrownConradyIntrinsics {
+            // Pinhole intrinsics of the camera.
+            PinholeModel.CameraIntrinsics pinhole_intrinsics = 1;
+            // The Brown-Conrady distortion coefficients for the camera.
+            float k1 = 2;
+            float k2 = 3;
+            float p1 = 4;
+            float p2 = 5;
+            float k3 = 6;
+        }
+        // The camera intrinsics are necessary for describing the KB4 camera matrix.
+        PinholeBrownConradyIntrinsics intrinsics = 1;
+    }
+
+    // The Kannala-Brandt camera model, also called the fisheye camera model in OpenCV
+    // (https://docs.opencv.org/4.x/db/d58/group__calib3d__fisheye.html) and the equidistant
+    // distortion model (https://github.com/ethz-asl/kalibr/wiki/supported-models), fits cameras
+    // with fisheye lenses well. The projection and un-projection equations for this model can be
+    // found at: https://arxiv.org/pdf/1807.08957.pdf.
+    message KannalaBrandtModel {
+        message KannalaBrandtIntrinsics {
+            // Pinhole intrinsics of the camera.
+            PinholeModel.CameraIntrinsics pinhole_intrinsics = 1;
+            // The Kannala-Brandt distortion coefficients for the camera.
+            float k1 = 2;
+            float k2 = 3;
+            float k3 = 4;
+            float k4 = 5;
+        }
+        // The camera intrinsics are necessary for describing the KB4 camera matrix.
+        KannalaBrandtIntrinsics intrinsics = 1;
     }
 
     // The name of this image source used to get images.
@@ -143,6 +182,10 @@ message ImageSource {
     oneof camera_models {
         // Rectilinear camera model.
         PinholeModel pinhole = 8;
+        // The pinhole camera model with the 5 parameter brown Conrady distortion model.
+        PinholeBrownConrady pinhole_brown_conrady = 13;
+        // The Kannala-Brandt camera model for modeling fisheye lenses.
+        KannalaBrandtModel kannala_brandt = 14;
     }
 
     enum ImageType {
@@ -193,20 +236,25 @@ message ImageRequest {
     // Note that jpeg quality 100 is still lossy.
     double quality_percent = 2;
 
-    // Specify the desired image encoding (e.g. JPEG, RAW). If no format is specified (e.g. FORMAT_UNKNOWN), the image
-    // service will choose the best format for the data.
+    // Specify the desired image encoding (e.g. JPEG, RAW). If no format is specified (e.g.
+    // FORMAT_UNKNOWN), the image service will choose the best format for the data.
     Image.Format image_format = 3;
 
     // Optional specification of the desired image dimensions.
-    // If the original image is 1920x1080, a resize_ratio of (2/3) will return an image with size 1280x720
-    // The range is clipped to [0.01, 1] while maintaining the original aspect ratio.
-    // For backwards compatibliity, a value of 0 means no resizing.
-    // Note: this field is not supported by the robot body cameras image service (`image`).
+    // If the original image is 1920x1080, a resize_ratio of (2/3) will return an image with size
+    // 1280x720 The range is clipped to [0.01, 1] while maintaining the original aspect ratio. For
+    // backwards compatibility, a value of 0 means no resizing. Note: this field is not supported by
+    // the robot body cameras image service (`image`).
     double resize_ratio = 4;
 
     // Specify the desired pixel format (e.g. GREYSCALE_U8, RGB_U8). If no format is specified
     // (e.g. PIXEL_FORMAT_UNKNOWN), the image service will choose the best format for the data.
     Image.PixelFormat pixel_format = 5;
+
+    // Specify a pixel format that will be used if the format specified in the pixel_format field is
+    // invalid. If multiple formats are specified the valid format with the lowest index will be
+    // preferred.
+    repeated Image.PixelFormat fallback_formats = 7;
 
     // Parameters unique to the servicer that do not match any of the above fields.
     // Whether or not these are valid may depend on the values of the above fields.
@@ -224,11 +272,12 @@ message GetImageRequest {
 
 // The image response for each request, that includes image data and image source information.
 message ImageResponse {
-    // The image capture contains the image data and information about the state of the camera and robot
-    // at the time the image was collected.
+    // The image capture contains the image data and information about the state of the camera and
+    // robot at the time the image was collected.
     ImageCapture shot = 1;
 
-    // The source describes general information about the camera source the image data was collected from.
+    // The source describes general information about the camera source the image data was collected
+    // from.
     ImageSource source = 2;
 
     enum Status {
@@ -250,8 +299,8 @@ message ImageResponse {
         STATUS_IMAGE_DATA_ERROR = 4;
 
         // The requested image format is unsupported for the image-source named. The image data will
-        // not be filled out. Note, if an image request has "FORMAT_UNKNOWN", the service should choose the
-        // best format to provide the data in.
+        // not be filled out. Note, if an image request has "FORMAT_UNKNOWN", the service should
+        // choose the best format to provide the data in.
         STATUS_UNSUPPORTED_IMAGE_FORMAT_REQUESTED = 5;
 
         // The requested pixel format is unsupported for the image-source named. The image data will

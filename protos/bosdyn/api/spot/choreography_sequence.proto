@@ -565,6 +565,9 @@ message MoveParams {
         FadeColorParams fade_color_params = 41;
         IndependentColorParams independent_color_params = 42;
         CustomGaitParams custom_gait_params = 43;
+        SetAudioVisualColorParams set_audio_visual_color_params = 44;
+        SetAllColorParams set_all_color_params = 45;
+        BuzzerNoteParams buzzer_note_params = 46;
         LegJointParams leg_joint_params = 100;
 
 
@@ -667,8 +670,10 @@ message MoveInfo {
     bool controls_legs = 9;
     bool controls_body = 10;
     bool controls_gripper = 12;
-    bool controls_lights = 17;
+    bool controls_lights = 17;  // Controls the face (status) lights.
     bool controls_annotations = 18;
+    bool controls_audio_visual_lights = 20;
+    bool controls_audio_visual_buzzer = 21;
     bool is_looping = 19;
 
     // Information for the GUI tool to visualize the sequence move info.
@@ -717,6 +722,8 @@ message ChoreographerDisplayInfo {
         CATEGORY_MPC = 8;
         CATEGORY_LIGHTS = 9;
         CATEGORY_ANNOTATIONS = 10;
+        CATEGORY_AUDIO_VISUAL_LIGHTS = 11;
+        CATEGORY_AUDIO_VISUAL_BUZZER = 12;
     }
     Category category = 16;
 }

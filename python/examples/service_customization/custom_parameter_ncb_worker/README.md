@@ -72,8 +72,12 @@ An example CSV file for the Faster R-CNN model described above is included in th
 This example contains the configuration files to run the python scripts described above also in Docker containers. The docker containers accept the same arguments described above. For example, to run the server docker container and the client docker container, follow the steps below with the correct values for the <> variables:
 
 ```
+Create a .env file that specifies username and password with the following variables.
+BOSDYN_CLIENT_USERNAME={username}
+BOSDYN_CLIENT_PASSWORD={password}
+
 sudo docker build -t ncb_server -f Dockerfile.server .
-sudo docker run -it --network=host --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD -v <MODEL_DIRECTORY>:/model_dir/ ncb_server --model-dir /model_dir/ <ROBOT_IP>
+sudo docker run -it --network=host --env-file .env -v <MODEL_DIRECTORY>:/model_dir/ ncb_server --model-dir /model_dir/ <ROBOT_IP>
 ```
 
 When running ncb_server on CORE I/O, or another compute payload with GPU, pass the flag `--gpus all` to the `docker run` command to take advantage of the GPU.

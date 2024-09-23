@@ -4,10 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import io
-import json
 import logging
-import os
 import ssl
 import time
 from pathlib import Path

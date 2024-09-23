@@ -142,8 +142,38 @@ def check_manifest(manifest_path: Path, images_archive_name: str) -> bool:
     return True
 
 
+def check_docker_compose_file(docker_compose_path: Path) -> bool:
+    """Validate a docker compose file.
+
+    Args:
+        docker_compose_path (Path): Path to the docker compose file to validate
+
+    Returns:
+        bool: True if successful, False otherwise.
+    """
+    cmd = ['docker-compose', '-f', str(docker_compose_path), 'config', '-q']
+
+    try:
+        # let the output go straight to stderr/stdout
+        subprocess.run(cmd, capture_output=False, check=True, text=True)
+    except subprocess.CalledProcessError:
+        print("Docker compose file validation failed.")
+        return False
+    except FileNotFoundError as error:
+        if error.filename == 'docker-compose':
+            print("Failed to run docker-compose to validate docker-compose.yml;")
+            print("docker-compose appears to not be installed.")
+            print()
+            print("If docker-compose is not installed, please skip validation by")
+            print("adding --skip-docker-compose-validation to the command arguments.")
+        else:
+            print("Docker compose file validation failed.")
+        return False
+    return True
+
+
 def create_spx(file_directory: Path, images_archive: Path, icon: str, udev: Path, spx: Path,
-               additional_files: List[str] = []):
+               additional_files: List[str] = [], validate_docker_compose: bool = True):
     """Create a Spot Extension package by adding files to a .tar.gz archive.
 
     Args:
@@ -154,13 +184,15 @@ def create_spx(file_directory: Path, images_archive: Path, icon: str, udev: Path
         additional_files (List[str]): List of additional files to include in tar
 
     Returns:
-        None
+        True on success, False otherwise.
     """
     manifest = file_directory.joinpath('manifest.json')
     print(f"Manifest path: {manifest}")
     if not check_manifest(manifest, images_archive.name):
-        return
+        return False
     docker_compose = file_directory.joinpath('docker-compose.yml')
+    if validate_docker_compose and not check_docker_compose_file(docker_compose):
+        return False
     icon_path = file_directory.joinpath(icon)
     with tarfile.open(spx, 'w:gz') as tar:
         tar.add(images_archive, arcname=images_archive.name)
@@ -178,6 +210,7 @@ def create_spx(file_directory: Path, images_archive: Path, icon: str, udev: Path
         if udev.exists():
             tar.add(udev, arcname=udev.name)
     print(f"Extension successfully built: {str(spx)}")
+    return True
 
 
 def main():
@@ -214,6 +247,10 @@ def main():
         help='Path(s) to additional files in the package directory to include in the SPX.')
     parser.add_argument('--udev-rule', type=Path, default='udev_rule.rule',
                         help='Path to the udev rule file, defaults to udev_rule.rule')
+    parser.add_argument(
+        '--skip-docker-compose-validation', action='store_true',
+        help='Disable validation of docker-compose.yml.  This is useful on systems '
+        'in which docker-compose is not installed.')
     options = parser.parse_args()
 
     assert len(options.dockerfile_paths) == len(
@@ -244,9 +281,16 @@ def main():
         print("Error occurred when trying to save images, exiting...")
         return -1
 
-    create_spx(options.package_dir, options.image_archive, options.icon, options.udev_rule,
-               options.spx, options.additional_files)
+    if not create_spx(options.package_dir, options.image_archive, options.icon, options.udev_rule,
+                      options.spx, options.additional_files,
+                      not options.skip_docker_compose_validation):
+        return 1
+
+    return 0
 
 
 if __name__ == '__main__':
-    main()
+    import sys
+
+    result = main()
+    sys.exit(result)

@@ -11,10 +11,11 @@ import grpc
 import pytest
 
 import bosdyn.client.graph_nav
-from bosdyn.api import header_pb2, lease_pb2, time_sync_pb2
+from bosdyn.api import header_pb2, lease_pb2, license_pb2, time_sync_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2, graph_nav_service_pb2_grpc, map_pb2, nav_pb2
-from bosdyn.client.exceptions import InternalServerError, UnsetStatusError
-from bosdyn.client.graph_nav import GraphNavClient, UnrecognizedCommandError
+from bosdyn.client.exceptions import InternalServerError, InvalidRequestError, UnsetStatusError
+from bosdyn.client.graph_nav import (GraphNavClient, NoPathError, RobotNotLocalizedToRouteError,
+                                     UnknownMapInformationError, UnrecognizedCommandError)
 from bosdyn.client.time_sync import TimeSyncEndpoint
 
 
@@ -28,7 +29,6 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
         super(MockGraphNavServicer, self).__init__()
         self.common_header_code = header_pb2.CommonError.CODE_OK
         self.nav_feedback_status = graph_nav_pb2.NavigationFeedbackResponse.STATUS_REACHED_GOAL
-        self.modify_navigation_status = graph_nav_pb2.ModifyNavigationResponse.STATUS_OK
         self.nav_to_resp = graph_nav_pb2.NavigateToResponse(
             status=graph_nav_pb2.NavigateToResponse.STATUS_OK)
         self.nav_route_resp = graph_nav_pb2.NavigateRouteResponse(
@@ -82,6 +82,7 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
             resp.lease_use_result.CopyFrom(self.lease_use_result)
         return resp
 
+
     def UploadWaypointSnapshot(self, request_iterator, context):
         resp = graph_nav_pb2.UploadWaypointSnapshotResponse()
         resp.status = graph_nav_pb2.UploadWaypointSnapshotResponse.STATUS_OK
@@ -104,11 +105,6 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
         resp.status = self.nav_feedback_status
         return resp
 
-    def ModifyNavigation(self, request, context):
-        resp = graph_nav_pb2.ModifyNavigationResponse()
-        resp.header.error.code = self.common_header_code
-        resp.status = self.modify_navigation_status
-        return resp
 
     def DownloadWaypointSnapshot(self, request, context):
         resp = graph_nav_pb2.DownloadWaypointSnapshotResponse()
@@ -147,8 +143,8 @@ def time_sync():
 def server(client, service):
     server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=1))
     graph_nav_service_pb2_grpc.add_GraphNavServiceServicer_to_server(service, server)
-    port = server.add_insecure_port('localhost:0')
-    channel = grpc.insecure_channel('localhost:{}'.format(port))
+    port = server.add_insecure_port('127.0.0.1:0')
+    channel = grpc.insecure_channel('127.0.0.1:{}'.format(port))
     client.channel = channel
     server.start()
     yield server
@@ -342,6 +338,11 @@ def test_upload_graph_exceptions(client, service, server):
 
     service.upload_graph_resp.status = service.upload_graph_resp.STATUS_INVALID_GRAPH
     with pytest.raises(bosdyn.client.graph_nav.InvalidGraphError):
+        make_call()
+
+    service.upload_graph_resp.status = service.upload_graph_resp.STATUS_UNKNOWN
+    service.upload_graph_resp.license_status = license_pb2.LicenseInfo.STATUS_EXPIRED
+    with pytest.raises(bosdyn.client.LicenseError):
         make_call()
 
 

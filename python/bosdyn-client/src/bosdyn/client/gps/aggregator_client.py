@@ -5,7 +5,6 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """For clients to use the Gps Aggregator service."""
-import collections
 
 from bosdyn.api.gps import aggregator_pb2, aggregator_service_pb2_grpc, gps_pb2
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,

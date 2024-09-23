@@ -63,7 +63,7 @@ Out of the box, this example issues a command that turns the fans on to full pow
 
 ### Fan Remote Mission Service
 
-This is an example remote mission service that allows a tablet user to issue a fan command during an Autowalk that (in the out-of-the-box configuration) will turn the fans off for 10 seconds. This is heavily modeled off of the existing "power_off_mission_service" in the Remote Mission Service Examples.
+This is an example remote mission service that allows a tablet user to issue a fan command during an Autowalk that (in the out-of-the-box configuration) will turn the fans off for 10 seconds. To learn more about remote mission services, refer to the [remote mission service examples](../remote_mission_service/README.md).
 
 As with the other remote mission service examples, you will need a connection between a robot and the computer running the examples.
 

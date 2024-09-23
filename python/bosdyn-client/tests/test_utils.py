@@ -5,8 +5,6 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Unit tests for the server_utils module."""
-import datetime
-import time
 
 import pytest
 

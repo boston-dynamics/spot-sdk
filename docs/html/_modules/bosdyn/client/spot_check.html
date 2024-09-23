@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.spot_check &mdash; Spot 4.0.3 documentation</title>
+  <title>bosdyn.client.spot_check &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,7 +48,8 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -202,7 +203,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -263,11 +263,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -602,44 +607,6 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Timed out waiting for SUCCESS response from calibration.&quot;&quot;&quot;</span></div>
 
 
-<div class="viewcode-block" id="GripperCameraCalibrationResponseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationResponseError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationResponseError</span><span class="p">(</span><span class="n">SpotCheckError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;General class of errors for gripper camera calibration routines.&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="GripperCameraCalibrationUserCanceledError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationUserCanceledError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationUserCanceledError</span><span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;API client canceled calibration.&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="GripperCameraCalibrationPowerError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationPowerError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationPowerError</span><span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The robot is not powered on.&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="GripperCameraCalibrationLeaseError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationLeaseError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationLeaseError</span><span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The Lease is invalid.&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="GripperCameraCalibrationTargetNotCenteredError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationTargetNotCenteredError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationTargetNotCenteredError</span><span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Invalid starting configuration of robot.&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="GripperCameraCalibrationTargetUpsideDownError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationTargetUpsideDownError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationTargetUpsideDownError</span><span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The target is incorrectly oriented.&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="GripperCameraCalibrationCalibrationError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationCalibrationError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationCalibrationError</span><span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calibration algorithm failure occurred.&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="GripperCameraCalibrationInitializationError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationInitializationError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationInitializationError</span><span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialization error occurred .&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="GripperCameraCalibrationInternalError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationInternalError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationInternalError</span><span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Internal error occurred .&quot;&quot;&quot;</span></div>
-
-
-<div class="viewcode-block" id="GripperCameraCalibrationStuckError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.GripperCameraCalibrationStuckError">[docs]</a><span class="k">class</span> <span class="nc">GripperCameraCalibrationStuckError</span><span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Timed out waiting for robot to reach goal pose.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="SpotCheckClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.SpotCheckClient">[docs]</a><span class="k">class</span> <span class="nc">SpotCheckClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
@@ -707,43 +674,8 @@
 <div class="viewcode-block" id="SpotCheckClient.camera_calibration_feedback_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.SpotCheckClient.camera_calibration_feedback_async">[docs]</a>    <span class="k">def</span> <span class="nf">camera_calibration_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of camera_calibration_feedback().&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">CameraCalibrationFeedback</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                               <span class="n">_calibration_feedback_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+                               <span class="n">_calibration_feedback_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
-<div class="viewcode-block" id="SpotCheckClient.gripper_camera_calibration_command"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_command">[docs]</a>    <span class="k">def</span> <span class="nf">gripper_camera_calibration_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue a gripper camera calibration command to the robot.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            Error on header error or lease use result error.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GripperCameraCalibrationCommand</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                         <span class="n">_gripper_calibration_command_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SpotCheckClient.gripper_camera_calibration_command_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_command_async">[docs]</a>    <span class="k">def</span> <span class="nf">gripper_camera_calibration_command_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of gripper_camera_calibration_command()</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            Error on header error or lease use result error.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GripperCameraCalibrationCommand</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                               <span class="n">_gripper_calibration_command_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SpotCheckClient.gripper_camera_calibration_feedback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">gripper_camera_calibration_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the current status of gripper camera calibration.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            GripperCameraCalibrationResponseError on any feedback error.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedback</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                         <span class="n">_gripper_calibration_feedback_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="SpotCheckClient.gripper_camera_calibration_feedback_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_feedback_async">[docs]</a>    <span class="k">def</span> <span class="nf">gripper_camera_calibration_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of gripper_camera_calibration_feedback()</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            GripperCameraCalibrationResponseError on any feedback error.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedback</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
-                               <span class="n">_gripper_calibration_feedback_error_from_response</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="run_spot_check"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.run_spot_check">[docs]</a><span class="k">def</span> <span class="nf">run_spot_check</span><span class="p">(</span><span class="n">spot_check_client</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span> <span class="n">timeout_sec</span><span class="o">=</span><span class="mi">212</span><span class="p">,</span> <span class="n">update_frequency</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -941,88 +873,6 @@
 
 
 
-<span class="c1"># Gripper Camera calibration error handlers.</span>
-<span class="nd">@handle_common_header_errors</span>
-<span class="nd">@handle_lease_use_result_errors</span>
-<span class="k">def</span> <span class="nf">_gripper_calibration_command_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="k">return</span> <span class="kc">None</span>
-
-
-<span class="nd">@handle_common_header_errors</span>
-<span class="k">def</span> <span class="nf">_gripper_calibration_feedback_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-    <span class="c1"># Special handling of lease case.</span>
-    <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_LEASE_ERROR</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">LeaseUseError</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">_gcal_status_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
-
-
-<span class="n">_GCAL_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span>
-                                                <span class="p">(</span><span class="n">GripperCameraCalibrationResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-<span class="n">_GCAL_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>  <span class="c1"># noqa</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">:</span> <span class="p">(</span>
-            <span class="kc">None</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_PROCESSING</span><span class="p">:</span> <span class="p">(</span>
-            <span class="kc">None</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_USER_CANCELED</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">GripperCameraCalibrationUserCanceledError</span><span class="p">,</span>
-            <span class="n">GripperCameraCalibrationUserCanceledError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_NEVER_RUN</span><span class="p">:</span> <span class="p">(</span>
-            <span class="kc">None</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_POWER_ERROR</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">GripperCameraCalibrationPowerError</span><span class="p">,</span>
-            <span class="n">GripperCameraCalibrationPowerError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_LEASE_ERROR</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">GripperCameraCalibrationLeaseError</span><span class="p">,</span>
-            <span class="n">GripperCameraCalibrationLeaseError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
-        <span class="p">),</span>
-
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_TARGET_NOT_CENTERED</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">GripperCameraCalibrationTargetNotCenteredError</span><span class="p">,</span>
-            <span class="n">GripperCameraCalibrationTargetNotCenteredError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_TARGET_NOT_IN_VIEW</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">GripperCameraCalibrationTargetNotCenteredError</span><span class="p">,</span>
-            <span class="n">GripperCameraCalibrationTargetNotCenteredError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_TARGET_UPSIDE_DOWN</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">GripperCameraCalibrationTargetUpsideDownError</span><span class="p">,</span>
-            <span class="n">GripperCameraCalibrationTargetUpsideDownError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_INITIALIZATION_ERROR</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">GripperCameraCalibrationInitializationError</span><span class="p">,</span>
-            <span class="n">GripperCameraCalibrationInitializationError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_INTERNAL_ERROR</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">GripperCameraCalibrationInternalError</span><span class="p">,</span>
-            <span class="n">GripperCameraCalibrationInternalError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_STUCK</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">GripperCameraCalibrationStuckError</span><span class="p">,</span>
-            <span class="n">GripperCameraCalibrationStuckError</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">,</span>
-        <span class="p">),</span>
-<span class="p">})</span>
-
-
-<span class="nd">@handle_unset_status_error</span><span class="p">(</span>
-    <span class="n">unset</span><span class="o">=</span><span class="s2">&quot;STATUS_UNKNOWN&quot;</span><span class="p">,</span>
-    <span class="n">statustype</span><span class="o">=</span><span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="k">def</span> <span class="nf">_gcal_status_error_from_response</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on response, None if no error.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span>
-        <span class="n">response</span><span class="p">,</span>
-        <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
-        <span class="n">status_to_string</span><span class="o">=</span><span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">GripperCameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
-        <span class="n">status_to_error</span><span class="o">=</span><span class="n">_GCAL_STATUS_TO_ERROR</span><span class="p">,</span>
-    <span class="p">)</span>
 </pre></div>
 
            </div>

@@ -284,8 +284,18 @@ message CrawlParams {
 }
 
 message GotoParams {
+    // If true, motion is specified relative to location at move start.
+    // If false, motion is specified in the dance frame.
+    google.protobuf.BoolValue relative = 6;
+
+    // Ignored if absolute = false.
     Vec2Value absolute_position = 1;
     google.protobuf.DoubleValue absolute_yaw = 2;
+
+    // Ignored if absolute = true;
+    Vec2Value relative_position = 7;
+    google.protobuf.DoubleValue relative_yaw = 8;
+
     google.protobuf.DoubleValue step_position_stiffness = 3;
     google.protobuf.DoubleValue duty_cycle = 4;
     // Should we combine with the next move into a smooth trajectory.
@@ -366,7 +376,7 @@ message StepParams {
     // Should we use a second foot?  (None = 0, FL = 1, FR = 2, HL = 3, HR = 4).
     Leg second_foot = 3;
     // Where should the swing foot go?  This vector should be described in a gravity-aligned body
-    // frame relative to the centerpoint of the swing. If set to {0,0,0}, uses the default swing
+    // frame relative to the center-point of the swing. If set to {0,0,0}, uses the default swing
     // path.
     Vec3Value swing_waypoint = 5;
     // Parameters for altering swing.
@@ -638,6 +648,49 @@ message RippleColorParams {
     google.protobuf.DoubleValue increment_slices = 5;
 }
 
+message SetAudioVisualColorParams {
+    Color front_center_color = 1;
+    google.protobuf.BoolValue all_same_as_center = 2;
+    Color front_left_color = 3;
+    Color front_right_color = 4;
+    Color back_left_color = 5;
+    Color back_right_color = 6;
+    google.protobuf.DoubleValue fade_in_slices = 7;
+    google.protobuf.DoubleValue fade_out_slices = 8;
+}
+
+message SetAllColorParams {
+    Color front_center_color = 1;
+    google.protobuf.BoolValue all_same_as_center = 2;
+    Color status_left_color = 3;
+    Color status_right_color = 4;
+    Color front_left_color = 5;
+    Color front_right_color = 6;
+    Color back_left_color = 7;
+    Color back_right_color = 8;
+    google.protobuf.DoubleValue fade_in_slices = 9;
+    google.protobuf.DoubleValue fade_out_slices = 10;
+}
+
+message BuzzerNoteParams {
+    enum Note {
+        NOTE_UNKNOWN = 0;
+        NOTE_C = 1;
+        NOTE_D = 2;
+        NOTE_E = 3;
+        NOTE_F = 4;
+        NOTE_G = 5;
+        NOTE_A = 6;
+        NOTE_B = 7;
+    }
+    Note note = 1;
+
+    google.protobuf.BoolValue sharp = 2;
+    google.protobuf.BoolValue flat = 3;
+
+    google.protobuf.Int32Value octave = 4;
+}
+
 message LegJointParams {
     google.protobuf.DoubleValue fl_hx = 1;
     google.protobuf.DoubleValue fl_hy = 2;
@@ -682,6 +735,15 @@ message AnimatedCycleParams {
     google.protobuf.BoolValue enable_animation_duration = 2;
     google.protobuf.BoolValue enable_leg_timing = 3;
     google.protobuf.BoolValue enable_stance_shape = 4;
+    google.protobuf.BoolValue enable_body_offset = 5;
+    google.protobuf.BoolValue enable_body_motion = 6;
+    google.protobuf.DoubleValue body_x_multiplier = 7;
+    google.protobuf.DoubleValue body_y_multiplier = 8;
+    google.protobuf.DoubleValue body_z_multiplier = 9;
+    google.protobuf.DoubleValue body_roll_multiplier = 10;
+    google.protobuf.DoubleValue body_pitch_multiplier = 11;
+    google.protobuf.DoubleValue body_yaw_multiplier = 12;
+    google.protobuf.BoolValue enable_swings_xy = 13;
 }
 
 message CustomGaitParams {
@@ -712,6 +774,7 @@ message CustomGaitParams {
 
     // Constant posture.
     // For a phase-dependent posture, combine with a Body move.
+    // Actually hip height regardless of payload configuration.
     google.protobuf.DoubleValue com_height = 20;
     Vec3Value body_translation_offset = 21;
     EulerZYXValue body_rotation_offset = 22;
@@ -766,6 +829,7 @@ message CustomGaitParams {
     google.protobuf.DoubleValue trip_sensitivity = 141;
 
     // Using an animated cycle to define the gait style
+    google.protobuf.BoolValue show_animated_cycle_params = 160;
     AnimatedCycleParams animated_cycle_params = 161;
 }
 

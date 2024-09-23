@@ -135,7 +135,7 @@ def list_params_to_list(list_param: ListParam, list_spec: ListParam.Spec,
 
 
 def oneof_param_to_dict(oneof_param: OneOfParam, oneof_spec: OneOfParam.Spec,
-                        validate: bool = True) -> List:
+                        validate: bool = True) -> Dict:
     if validate:
         validator = _OneOfParamValidator(oneof_spec)
         validator.validate_spec()
@@ -183,7 +183,6 @@ class _ParamValidatorInterface(ABC):
         Returns:
             None for a valid spec, and raises a CustomParamError with a status besides STATUS_OK for an invalid spec
         """
-        pass
 
     @abstractmethod
     def validate_value(self, param_value) -> Optional[CustomParamError]:
@@ -196,7 +195,6 @@ class _ParamValidatorInterface(ABC):
         Returns:
             None for a valid value, and returns a service_customization_pb2.CustomParamError with a status besides STATUS_OK for an invalid value
         """
-        pass
 
 
 class _DictParamValidator(_ParamValidatorInterface):
@@ -554,6 +552,8 @@ class _OneOfParamValidator(_ParamValidatorInterface):
             return full_error
 
 
+
+
 class _CustomParamValidator(_ParamValidatorInterface):
     """
     ParamValidator class for a service_customization_pb2.CustomParam.Spec
@@ -764,6 +764,8 @@ def bool_spec_to_default(spec):
         spec (service_customization_pb2.BoolParam.Spec): spec to which the parameter should be defaulted
     """
     return BoolParam(value=spec.default_value.value)
+
+
 
 
 def one_of_spec_to_default(spec):

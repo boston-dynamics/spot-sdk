@@ -338,7 +338,7 @@ class RecordingInterface(object):
             # If we are using GPS, the GPS coordinates in the graph have been changed, so we need
             # to re-download the graph.
             if self.use_gps:
-                print(f'Downloading updated graph...')
+                print('Downloading updated graph...')
                 self._current_graph = self._graph_nav_client.download_graph()
         else:
             print(f'Error optimizing {response}')

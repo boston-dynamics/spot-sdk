@@ -49,7 +49,7 @@ Some of the clients included in this wheel can also be accessed directly from th
 python3 -m bosdyn.client hostname -h
 usage: bosdyn.client [-h] [-v] [--username USERNAME] [--password PASSWORD]
                      hostname
-                     {dir,id,state,log,time-sync,lease,become-estop,image,local_grid}
+                     {dir,payload,fault,id,license,log-status,state,log,data,time-sync,lease,become-estop,estop,image,local_grid,acquire,self-ip,power,keepalive}
                      ...
 
 Command-line interface for interacting with robot services.

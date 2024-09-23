@@ -6,6 +6,7 @@
 
 import copy
 import json
+import logging
 import operator
 import re
 from builtins import str as text
@@ -17,7 +18,7 @@ import google.protobuf.text_format
 from deprecated.sphinx import deprecated
 from google.protobuf import message_factory
 
-from bosdyn.api import data_acquisition_pb2, geometry_pb2, gripper_camera_param_pb2
+from bosdyn.api import alerts_pb2, data_acquisition_pb2, geometry_pb2, gripper_camera_param_pb2
 from bosdyn.api.autowalk import walks_pb2
 from bosdyn.api.docking import docking_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2
@@ -373,12 +374,35 @@ def define_blackboard(dict_values: Dict[str, util_pb2.Value]) -> nodes_pb2.Defin
     return node_to_return
 
 
-def set_blackboard(dict_values: Dict[str, util_pb2.Value]) -> nodes_pb2.SetBlackboard:
+def set_blackboard(dict_values: Dict[str, util_pb2.Value],
+                   subfield_values: Dict[str, util_pb2.Value] = {}) -> nodes_pb2.SetBlackboard:
     """Returns a SetBlackboard protobuf message for the key-value pairs in `dict_values`.
     """
     node_to_return = nodes_pb2.SetBlackboard()
     for (key, value) in dict_values.items():
         node_to_return.blackboard_variables.add().CopyFrom(util_pb2.KeyValue(key=key, value=value))
+    for (key, value) in subfield_values.items():
+        node_to_return.blackboard_variable_subfields.add().CopyFrom(
+            util_pb2.KeyValue(key=key, value=value))
     return node_to_return
+
+
+def severity_to_log_level(text_level):
+    """Converts alert data severity enum to a logger level for printing purposes."""
+    match text_level:
+        case alerts_pb2.AlertData.SeverityLevel.SEVERITY_LEVEL_INFO:
+            return logging.INFO
+        case alerts_pb2.AlertData.SeverityLevel.SEVERITY_LEVEL_WARN:
+            return logging.WARN
+        case alerts_pb2.AlertData.SeverityLevel.SEVERITY_LEVEL_ERROR:
+            return logging.ERROR
+        case alerts_pb2.AlertData.SeverityLevel.SEVERITY_LEVEL_CRITICAL:
+            # A critical mission prompt or text message does not indicate a critical robot failure,
+            # and is usually expected depending on how a mission plays out. For this reason, we
+            # reduce the servity from CRITICAL to ERROR for logs.
+            # See Prompt.severity in nodes.proto for more info.
+            return logging.ERROR
+        case _:
+            return logging.INFO
 
 

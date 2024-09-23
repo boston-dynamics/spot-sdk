@@ -20,24 +20,27 @@ service ChoreographyService {
     rpc ListAllSequences(ListAllSequencesRequest) returns (ListAllSequencesResponse) {}
 
     // Return the ChoreographySequence with the given name and any requested animation data.
-    rpc GetChoreographySequence(GetChoreographySequenceRequest) returns (GetChoreographySequenceResponse) {}
+    rpc GetChoreographySequence(GetChoreographySequenceRequest)
+        returns (GetChoreographySequenceResponse) {}
 
     // Return the full Animation message with the given name.
     rpc GetAnimation(GetAnimationRequest) returns (GetAnimationResponse) {}
 
-    // Delete a retained choreography sequence from the collection of user uploaded 
+    // Delete a retained choreography sequence from the collection of user uploaded
     // choreography sequences.
     rpc DeleteSequence(DeleteSequenceRequest) returns (DeleteSequenceResponse) {}
 
-    // Save a user uploaded choreography sequence to the robots collection of 
+    // Save a user uploaded choreography sequence to the robots collection of
     // retained choreography sequences.
     rpc SaveSequence(SaveSequenceRequest) returns (SaveSequenceResponse) {}
 
     // Modify the metadata of a choreography sequence.
-    rpc ModifyChoreographyInfo(ModifyChoreographyInfoRequest) returns (ModifyChoreographyInfoResponse) {}
+    rpc ModifyChoreographyInfo(ModifyChoreographyInfoRequest)
+        returns (ModifyChoreographyInfoResponse) {}
 
     // Clear all retained choreography sequence files from robot memory.
-    rpc ClearAllSequenceFiles(ClearAllSequenceFilesRequest) returns (ClearAllSequenceFilesResponse) {}
+    rpc ClearAllSequenceFiles(ClearAllSequenceFilesRequest)
+        returns (ClearAllSequenceFilesResponse) {}
 
     // Upload a dance to the robot.
     rpc UploadChoreography(UploadChoreographyRequest) returns (UploadChoreographyResponse) {}
@@ -55,7 +58,8 @@ service ChoreographyService {
     rpc StopRecordingState(StopRecordingStateRequest) returns (StopRecordingStateResponse) {}
 
     // Download log of the latest recorded robot state information.
-    rpc DownloadRobotStateLog(DownloadRobotStateLogRequest) returns (stream DownloadRobotStateLogResponse) {}
+    rpc DownloadRobotStateLog(DownloadRobotStateLogRequest)
+        returns (stream DownloadRobotStateLogResponse) {}
 
     // Report the status of a dancing robot.
     rpc ChoreographyStatus(ChoreographyStatusRequest) returns (ChoreographyStatusResponse) {}
@@ -64,6 +68,7 @@ service ChoreographyService {
     rpc ChoreographyCommand(ChoreographyCommandRequest) returns (ChoreographyCommandResponse) {}
 
     // Adjust the time when a robot should start dancing within a tolerance.
-    rpc ChoreographyTimeAdjust(ChoreographyTimeAdjustRequest) returns (ChoreographyTimeAdjustResponse) {}
+    rpc ChoreographyTimeAdjust(ChoreographyTimeAdjustRequest)
+        returns (ChoreographyTimeAdjustResponse) {}
 
 }

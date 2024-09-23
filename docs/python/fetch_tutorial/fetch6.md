@@ -31,7 +31,7 @@ Development Kit License (20191101-BDSDK-SL).
 <br />
 
 <p>
-    For this part we are going to move the inference models to run on the robot in the CORE I/O. This is to show how you could run these as part of a mission, without the need for a laptop conencted to Spot.
+    For this part we are going to move the inference models to run on the robot in the CORE I/O. This is to show how you could run these as part of a mission, without the need for a laptop connected to Spot.
 </p>
 
 <h3>The Setup</h3>
@@ -307,7 +307,7 @@ If everything is successful you should end up with a `fetch_detector.spx` file.
     <img src="img/extension_running.png" />
 </p>
 <p>
-    You should see some cosole output similar to below.
+    You should see some console output similar to below.
 </p>
 <pre><code class="language-text">
 2022-08-01T19:24:58.150841720Z 2022-08-01 19:24:58.150396: I tensorflow/stream_executor/platform/default/dso_loader.cc:53] Successfully opened dynamic library libcudart.so.10.2

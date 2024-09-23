@@ -33,7 +33,7 @@ Consider using a [simple gcode simulator](https://nraynaud.github.io/webgcode/) 
 ## Drawing with Chalk
 
 To draw with chalk, we recommend a very large piece of chalk. The image below was drawn with a
-stick of chalk 1.5 inches in diameter and 5 inches long. We taped the chalk to the gripper using gaffers tape.
+stick of chalk 1.5 inches in diameter and 5 inches long. We taped the chalk to the gripper using gaffer's tape. A tool_length value can be set in gcode.cfg to account for the length of chalk held by the gripper.
 
 ![Chalk Drawing of Boston Dynamics Logo](documentation/boston_dynamics_chalk.jpg)
 

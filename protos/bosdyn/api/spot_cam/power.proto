@@ -15,7 +15,7 @@ import "bosdyn/api/header.proto";
 
 // Power on or off of components of the SpotCam.
 message PowerStatus {
-    //these switches are 'true' for power-on, 'false' for power-off
+    // these switches are 'true' for power-on, 'false' for power-off
     google.protobuf.BoolValue ptz = 2;
     google.protobuf.BoolValue aux1 = 3;
     google.protobuf.BoolValue aux2 = 4;
@@ -32,7 +32,7 @@ message GetPowerStatusRequest {
 message GetPowerStatusResponse {
     // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    //status indicates the power status of the controllable devices
+    // status indicates the power status of the controllable devices
     //'true' for power-on, 'false' for power-off
     PowerStatus status = 2;
 }
@@ -41,7 +41,7 @@ message GetPowerStatusResponse {
 message SetPowerStatusRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-    //status indicates the requested power status of the controllable devices
+    // status indicates the requested power status of the controllable devices
     //'true' for power-on, 'false' for power-off
     PowerStatus status = 2;
 }
@@ -50,7 +50,7 @@ message SetPowerStatusRequest {
 message SetPowerStatusResponse {
     // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    //status indicates the requested changes upon success
+    // status indicates the requested changes upon success
     //'true' for power-on, 'false' for power-off
     PowerStatus status = 2;
 }
@@ -59,9 +59,10 @@ message SetPowerStatusResponse {
 message CyclePowerRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-    //status indicates the devices for which cycle-power is requested
+    // status indicates the devices for which cycle-power is requested
     //'true' for cycle-power, else no effect
-    //power cycle will not be performed on a given device if its state is power-off prior to this call
+    // power cycle will not be performed on a given device if its state is power-off prior to this
+    // call
     PowerStatus status = 2;
 }
 
@@ -69,7 +70,7 @@ message CyclePowerRequest {
 message CyclePowerResponse {
     // Common response header.
     bosdyn.api.ResponseHeader header = 1;
-    //status indicates the power status of the controllable devices after a successful power cycle
+    // status indicates the power status of the controllable devices after a successful power cycle
     //'true' for power-on, 'false' for power-off
     PowerStatus status = 2;
 }

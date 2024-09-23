@@ -77,7 +77,7 @@ service MediaLogService {
     // Tag updates the 'tag' field of the Logpoint that's passed, which must exist.
     rpc Tag(TagRequest) returns (TagResponse);
     // EnableDebug starts the periodic logging of health data to the database; this increases disk
-    // utilization, but will record data that is useful post-mortum
+    // utilization, but will record data that is useful post-mortem
     rpc EnableDebug(DebugRequest) returns (DebugResponse);
     // ListCameras returns a list of strings that identify valid cameras for logging
     rpc ListCameras(ListCamerasRequest) returns (ListCamerasResponse);
@@ -118,7 +118,7 @@ service AudioService {
     // table, PlaySound executes the sound effect.
     rpc PlaySound(PlaySoundRequest) returns (PlaySoundResponse);
     // LoadSound loads a sound effect into the system's sound table. The stream must contain a wav
-    // file, with a RIFF header describing it. The arguement is a stream, to allow for sounds that
+    // file, with a RIFF header describing it. The argument is a stream, to allow for sounds that
     // are bigger then the MTU of the network; in this case, the complete stream must contain the
     // entire sound. If the stream ends early, an error will be returned. The header and sound
     // fields of the entire stream must be the same.
@@ -145,7 +145,7 @@ service HealthService {
     // measure.
     rpc GetTemperature(GetTemperatureRequest) returns (GetTemperatureResponse);
     // GetBitStatus returns two lists; a list of system events, and a list of ways that the system
-    // is degraded; for instance, a degredation may include a missing PTZ unit, or a missing USB
+    // is degraded; for instance, a degradation may include a missing PTZ unit, or a missing USB
     // storage device.
     rpc GetBITStatus(GetBITStatusRequest) returns (GetBITStatusResponse);
     // ClearBitEvents clears out the events list of the BITStatus structure.

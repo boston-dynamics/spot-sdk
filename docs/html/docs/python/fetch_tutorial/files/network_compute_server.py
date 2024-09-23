@@ -6,37 +6,36 @@
 
 import argparse
 import io
-import os
-import sys
-import time
 import logging
+import os
+import queue
+import sys
+import threading
+import time
+from concurrent import futures
 
 import cv2
-from PIL import Image
-import numpy as np
-
-from bosdyn.api import network_compute_bridge_service_pb2_grpc
-from bosdyn.api import network_compute_bridge_pb2
-from bosdyn.api import image_pb2
-from bosdyn.api import header_pb2
-import bosdyn.client
-import bosdyn.client.util
 import grpc
-from concurrent import futures
+import numpy as np
 import tensorflow as tf
-
-import queue
-import threading
 from google.protobuf import wrappers_pb2
 from object_detection.utils import label_map_util
+from PIL import Image
+
+import bosdyn.client
+import bosdyn.client.util
+from bosdyn.api import (header_pb2, image_pb2, network_compute_bridge_pb2,
+                        network_compute_bridge_service_pb2_grpc)
 
 kServiceAuthority = "fetch-tutorial-worker.spot.robot"
 
 
 class TensorFlowObjectDetectionModel:
+
     def __init__(self, model_path, label_path):
         self.detect_fn = tf.saved_model.load(model_path)
-        self.category_index = label_map_util.create_category_index_from_labelmap(label_path, use_display_name=True)
+        self.category_index = label_map_util.create_category_index_from_labelmap(
+            label_path, use_display_name=True)
         self.name = os.path.basename(os.path.dirname(model_path))
 
     def predict(self, image):
@@ -45,6 +44,7 @@ class TensorFlowObjectDetectionModel:
         detections = self.detect_fn(input_tensor)
 
         return detections
+
 
 def process_thread(args, request_queue, response_queue):
     # Load the model(s)
@@ -66,7 +66,8 @@ def process_thread(args, request_queue, response_queue):
         if isinstance(request, network_compute_bridge_pb2.ListAvailableModelsRequest):
             out_proto = network_compute_bridge_pb2.ListAvailableModelsResponse()
             for model_name in models:
-                out_proto.models.data.append(network_compute_bridge_pb2.ModelData(model_name=model_name))
+                out_proto.models.data.append(
+                    network_compute_bridge_pb2.ModelData(model_name=model_name))
             response_queue.put(out_proto)
             continue
         else:
@@ -77,7 +78,7 @@ def process_thread(args, request_queue, response_queue):
             err_str = 'Cannot find model "' + request.input_data.model_name + '" in loaded models.'
             print(err_str)
 
-             # Set the error in the header.
+            # Set the error in the header.
             out_proto.header.error.code = header_pb2.CommonError.CODE_INVALID_REQUEST
             out_proto.header.error.message = err_str
             response_queue.put(out_proto)
@@ -97,7 +98,8 @@ def process_thread(args, request_queue, response_queue):
                 image = pil_image
 
             else:
-                print('Error: image input in unsupported pixel format: ', request.input_data.image.pixel_format)
+                print('Error: image input in unsupported pixel format: ',
+                      request.input_data.image.pixel_format)
                 response_queue.put(out_proto)
                 continue
 
@@ -121,13 +123,11 @@ def process_thread(args, request_queue, response_queue):
         # Convert to numpy arrays, and take index [0] to remove the batch dimension.
         # We're only interested in the first num_detections.
         num_detections = int(detections.pop('num_detections'))
-        detections = {key: value[0, :num_detections].numpy()
-                       for key, value in detections.items()}
+        detections = {key: value[0, :num_detections].numpy() for key, value in detections.items()}
 
         boxes = detections['detection_boxes']
         classes = detections['detection_classes']
         scores = detections['detection_scores']
-
 
         for i in range(boxes.shape[0]):
             if scores[i] < request.input_data.min_confidence:
@@ -136,7 +136,10 @@ def process_thread(args, request_queue, response_queue):
             box = tuple(boxes[i].tolist())
 
             # Boxes come in with normalized coordinates.  Convert to pixel values.
-            box = [box[0] * image_width, box[1] * image_height, box[2] * image_width, box[3] * image_height]
+            box = [
+                box[0] * image_width, box[1] * image_height, box[2] * image_width,
+                box[3] * image_height
+            ]
 
             score = scores[i]
 
@@ -148,7 +151,6 @@ def process_thread(args, request_queue, response_queue):
             num_objects += 1
 
             print('Found object with label: "' + label + '" and score: ' + str(score))
-
 
             point1 = np.array([box[1], box[0]])
             point2 = np.array([box[3], box[0]])
@@ -187,8 +189,8 @@ def process_thread(args, request_queue, response_queue):
                 caption = "{}: {:.3f}".format(label, score)
                 left_x = min(point1[0], min(point2[0], min(point3[0], point4[0])))
                 top_y = min(point1[1], min(point2[1], min(point3[1], point4[1])))
-                cv2.putText(image, caption, (int(left_x), int(top_y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                            (0, 255, 0), 2)
+                cv2.putText(image, caption, (int(left_x), int(top_y)), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5, (0, 255, 0), 2)
 
         print('Found ' + str(num_objects) + ' object(s)')
 
@@ -248,19 +250,24 @@ def register_with_robot(options):
             break
 
     # Register service
-    print('Attempting to register ' + ip + ':' + options.port + ' onto ' + options.hostname + ' directory...')
-    directory_registration_client.register(options.name, "bosdyn.api.NetworkComputeBridgeWorker", kServiceAuthority, ip, int(options.port))
-
+    print('Attempting to register ' + ip + ':' + options.port + ' onto ' + options.hostname +
+          ' directory...')
+    directory_registration_client.register(options.name, "bosdyn.api.NetworkComputeBridgeWorker",
+                                           kServiceAuthority, ip, int(options.port))
 
 
 def main(argv):
     default_port = '50051'
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-m', '--model', help='[MODEL_DIR] [LABELS_FILE.pbtxt]: Path to a model\'s directory and path to its labels .pbtxt file', action='append', nargs=2, required=True)
+    parser.add_argument(
+        '-m', '--model', help=
+        '[MODEL_DIR] [LABELS_FILE.pbtxt]: Path to a model\'s directory and path to its labels .pbtxt file',
+        action='append', nargs=2, required=True)
     parser.add_argument('-p', '--port', help='Server\'s port number, default: ' + default_port,
                         default=default_port)
-    parser.add_argument('-d', '--no-debug', help='Disable writing debug images.', action='store_true')
+    parser.add_argument('-d', '--no-debug', help='Disable writing debug images.',
+                        action='store_true')
     parser.add_argument('-n', '--name', help='Service name', default='fetch-server')
     bosdyn.client.util.add_base_arguments(parser)
 
@@ -281,7 +288,8 @@ def main(argv):
     response_queue = queue.Queue()
 
     # Start server thread
-    thread = threading.Thread(target=process_thread, args=([options, request_queue, response_queue]))
+    thread = threading.Thread(target=process_thread, args=([options, request_queue,
+                                                            response_queue]))
     thread.start()
 
     # Set up GRPC endpoint
@@ -295,6 +303,7 @@ def main(argv):
     thread.join()
 
     return True
+
 
 if __name__ == '__main__':
     logging.basicConfig()

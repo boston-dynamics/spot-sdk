@@ -7,7 +7,6 @@
 """
 Data Acquisition plugin for saving a file to the robot.
 """
-import argparse
 import asyncio
 import logging
 import os

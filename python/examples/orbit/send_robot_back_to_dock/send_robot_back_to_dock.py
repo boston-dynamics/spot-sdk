@@ -140,7 +140,8 @@ def send_robot_back_to_dock(options: argparse.Namespace):
     skip_initialization = True  # whether to skip initialization when starting the return to dock mission
     dispatch_response = client.post_dispatch_mission_to_robot(selected_nickname, current_driver_id,
                                                               mission_uuid, delete_mission,
-                                                              force_acquire_estop)
+                                                              force_acquire_estop,
+                                                              skip_initialization)
     return dispatch_response.ok
 
 

@@ -12,11 +12,9 @@ Spot uses 3D transformations to describe itself, objects around it, and its unde
 
 These transformations are expressed in 3D space using the x, y, and z axes. A translation is a 3 element vector (x, y, z) describing the difference between two frames' origins. A rotation is a quaternion (w, x, y, z) that describes the change between two frames' coordinate axes orientations. In the API geometry, we use an SE3Pose to encapsulate the translation and rotation used for transformations. Similarly, we use strings to describe different frames that can be related to each other using SE3Pose transformations.
 
-
 ![Spot frames](spotframes.png)
 
 For example, a camera frame origin may be located at the lens of the camera with the Z axis pointed out and the X and Y axes aligned with horizontal/vertical dimensions of the picture. A point at \[0, 0, 1m\] in the camera frame would be in the center of the lens and 1 meter forward of origin where the camera is pointing. A transformation could be used to describe how to express this camera frame with respect to Spot's body frame, and the API adopts a notation of body_tform_camera to denote the SE3Pose of this transformation.
-
 
 ## Frames in the Spot robot world
 
@@ -33,23 +31,24 @@ Objects can also be described using a frame. For example, a fiducial has an orig
 As the robot moves around in the world, the relationship between the two frames can either stay the same always, or be non-static and dynamically changing. The transformation between an inertial frame and the robot's body frame will change as the robot moves. In contrast, the transformation between the robot's body and the camera frame will not change regardless of whether the robot is moving or not.
 
 The following frames are known to Spot:
-* "odom" frame: An inertial frame that estimates the fixed location in the world (relative to where the robot is booted up) using the kinematics of the robot.
-* "vision" frame: An inertial frame that estimates the fixed location in the world (relative to where the robot is booted up), and is calculated using visual analysis of the world and the robot's odometry.
-* "body" frame: A frame describing the robot body's position and orientation. The frame's origin is at the geometric center of the hips with the x-axis pointing from the hip center to the middle of the front hips, as shown in the illustration above.
-* "flat_body" frame: A gravity-aligned frame describing the robot body's position and orientation. The position is at the robot's center, and the x/y-axes lie flat in the "odom" frame x-y plane. Specifically, the x-axis is the normalized projection of the robot's "body" frame x-axis to the "odom" x-y plane.
-* "gpe" frame: A frame that represents the robot's ground plane estimate. The full SE(3) pose can be converted into a plane (a point and normal).
-* "fiducial_XXX" frame: A frame that represents a raw fiducial detection, where "XXX" will be filled with the fiducial's tag ID.
-* "filtered_fiducial_XXX" frame: A frame that represents a filtered, more stable fiducial detection, where "XXX" will be filled with the fiducial's tag ID. This frame is only valid for fiducials which are static in the world and should not be used for fiducials which may be moving.
-* "frontleft_fisheye" frame: An example sensor frame; this frame name represents the frontleft fisheye camera. All five cameras on spot have their own sensor frame names, which will describe the exact camera sensor's position and orientation.
 
-In the API, other frames not listed above will often be captured by name in the proto definition. Typically, an object will have one or more fields prefixed with "frame_name_" to describe its specific frames, and the transforms associated with these frames can then be found in that object's transform snapshot. For example, the [LocalGrid](../../protos/bosdyn/api/local_grid.proto) proto has `frame_name_local_grid_data` which refers to the position and orientation of the top, left corner of the grid map.
+- "odom" frame: An inertial frame that estimates the fixed location in the world (relative to where the robot is booted up) using the kinematics of the robot.
+- "vision" frame: An inertial frame that estimates the fixed location in the world (relative to where the robot is booted up), and is calculated using visual analysis of the world and the robot's odometry.
+- "body" frame: A frame describing the robot body's position and orientation. The frame's origin is at the geometric center of the hips with the x-axis pointing from the hip center to the middle of the front hips, as shown in the illustration above.
+- "flat_body" frame: A gravity-aligned frame describing the robot body's position and orientation. The position is at the robot's center, and the x/y-axes lie flat in the "odom" frame x-y plane. Specifically, the x-axis is the normalized projection of the robot's "body" frame x-axis to the "odom" x-y plane.
+- "gpe" frame: A frame that represents the robot's ground plane estimate. The full SE(3) pose can be converted into a plane (a point and normal).
+- "feet_center" frame: A gravity-aligned frame representing the robot's footprint. The origin is at the geometric center of the robot's feet. The x-axis is aligned such that it points from the center of the rear feet to the center of the front feet in the x-y plane.
+- "fiducial_XXX" frame: A frame that represents a raw fiducial detection, where "XXX" will be filled with the fiducial's tag ID.
+- "filtered_fiducial_XXX" frame: A frame that represents a filtered, more stable fiducial detection, where "XXX" will be filled with the fiducial's tag ID. This frame is only valid for fiducials which are static in the world and should not be used for fiducials which may be moving.
+- "frontleft_fisheye" frame: An example sensor frame; this frame name represents the frontleft fisheye camera. All five cameras on spot have their own sensor frame names, which will describe the exact camera sensor's position and orientation.
+
+In the API, other frames not listed above will often be captured by name in the proto definition. Typically, an object will have one or more fields prefixed with "frame*name*" to describe its specific frames, and the transforms associated with these frames can then be found in that object's transform snapshot. For example, the [LocalGrid](../../protos/bosdyn/api/local_grid.proto) proto has `frame_name_local_grid_data` which refers to the position and orientation of the top, left corner of the grid map.
 
 ## Transformations between Spot's frames
 
 Spot has knowledge about many of the frames mentioned above and how they relate to each other. These relationships between frames can be stored in a graph-like structure, where an edge represents a transformation A_tform_B, and the nodes represent the frames "A" or "B." The API creates a tree-graph of all the relevant frames, where each frame can uniquely be described relative to a different frame using transformations and all frames are described relative to a single root frame.
 
 Different services provide a snapshot of the transformation tree graph at a given timestamp (which is described in the field acquisition_time), which includes transformations between "vision," "odom," and "body" frames in addition to any other relevant frames, such as the sensor frames for images or frames for world objects. All transformations in the snapshot are guaranteed to provide the most accurate SE3Pose for the timestamp.
-
 
 ## Transformation Math
 
@@ -60,7 +59,6 @@ Since frames are related to each other via transformations, we can change geomet
 By multiplying the transformations together, we can "cancel out" the left camera frame to determine a new transformation.
 
 A transformation can also be inverted. For the transformation vision_tform_body which describes Spot's body within the vision inertial frame. If we invert this transformation, we compute body_tform_vision. This transformation now describes the vision inertial frame with respect to the robot body, so where origin of the vision frame is relative to Spot's current body position. Inverting a transformation can be useful if you want to multiply two transformations together that do not have a matching middle element. For example, if we want to compute the transformation vision_tform_body, but only know the transformations vision_tform_odom and body_tform_odom, then we can use the inverse operation:
-
 
     vision_tform_body = vision_tform_odom * body_tform_odom.inverse()
 

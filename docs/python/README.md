@@ -27,9 +27,10 @@ The [Python reference guide](../../python/README.md) documents all of the Python
 ### Supported Platforms and Versions
 
 The Python client library is supported on the following platforms:
-  * Ubuntu 18.04 LTS
-  * Windows 10
-  * MacOS 10.14 (Mojave and Catalina)
+
+- Ubuntu 22.04 LTS
+- Windows 10
+- MacOS 10.14 (Mojave and Catalina)
 
 Python 3.6-3.10 are supported.
 
@@ -37,9 +38,9 @@ Python 2.7 is _not_ supported, since the [Python 2 End-Of-Life](https://www.pyth
 
 ## Contents
 
-* [Quickstart](quickstart.md)
-* [Understanding Spot Programming](understanding_spot_programming.md)
-* [Examples](../../python/examples/README.md)
-* [Python Reference Guide](../../python/README.md)
-* [Fetch Tutorial](fetch_tutorial/fetch1.md)
-* [Data Collection Tutorial](daq_tutorial/daq1.md)
+- [Quickstart](quickstart.md)
+- [Understanding Spot Programming](understanding_spot_programming.md)
+- [Examples](../../python/examples/README.md)
+- [Python Reference Guide](../../python/README.md)
+- [Fetch Tutorial](fetch_tutorial/fetch1.md)
+- [Data Collection Tutorial](daq_tutorial/daq1.md)

@@ -11,29 +11,31 @@ Development Kit License (20191101-BDSDK-SL).
 This guide will help you understand the programming principles that drive Spot and the Spot Python SDK.
 
 <!--ts-->
-  * [Fundamental Robot Services](#fundamental-robot-services)
-      * [Understanding the "id" command](#understanding-the-id-command)
-      * [Listing Services](#listing-services)
-  * [Understanding How to Setup and Command Spot to Move](#how-to-setup-and-command-spot-to-move)
-      * [Create the SDK object](#create-the-sdk-object)
-      * [Create a Robot object](#create-a-robot-object)
-      * [Retrieve the Robot ID](#retrieve-the-robot-id)
-      * [Blocking vs. Asynchronous Spot Python SDK functions](#blocking-vs-asynchronous-spot-python-sdk-functions)
-      * [Inspecting robot state](#inspecting-robot-state)
-        * [Services and Authentication](#services-and-authentication)
-        * [Retrieving Robot State](#retrieving-robot-state)
-        * [Robot State was a Message, Messages are defined by Protobufs](#robot-state-was-a-message-messages-are-defined-by-protobufs)
-      * [Capture and View Camera images](#capture-and-view-camera-images)
-      * [Configuring "Motor Power Authority" (software E-Stop)](#configuring-motor-power-authority-software-e-stop)
-        * [Create and register an E-Stop Endpoint](#create-and-register-an-e-stop-endpoint)
-        * [Clear the E-Stop](#clear-the-e-stop)
-      * [Taking ownership of Spot (Leases)](#taking-ownership-of-spot-leases)
-      * [Powering on the robot](#powering-on-the-robot)
-      * [Establishing timesync](#establishing-timesync)
-      * [Commanding the robot](#commanding-the-robot)
-      * [Powering off the robot](#powering-off-the-robot)
+
+- [Fundamental Robot Services](#fundamental-robot-services)
+  - [Understanding the "id" command](#understanding-the-id-command)
+  - [Listing Services](#listing-services)
+- [Understanding How to Setup and Command Spot to Move](#how-to-setup-and-command-spot-to-move)
+_ [Create the SDK object](#create-the-sdk-object)
+_ [Create a Robot object](#create-a-robot-object)
+_ [Retrieve the Robot ID](#retrieve-the-robot-id)
+_ [Blocking vs. Asynchronous Spot Python SDK functions](#blocking-vs-asynchronous-spot-python-sdk-functions)
+_ [Inspecting robot state](#inspecting-robot-state)
+_ [Services and Authentication](#services-and-authentication)
+_ [Retrieving Robot State](#retrieving-robot-state)
+_ [Robot State was a Message, Messages are defined by Protobufs](#robot-state-was-a-message-messages-are-defined-by-protobufs)
+_ [Capture and View Camera images](#capture-and-view-camera-images)
+_ [Configuring "Motor Power Authority" (software E-Stop)](#configuring-motor-power-authority-software-e-stop)
+_ [Create and register an E-Stop Endpoint](#create-and-register-an-e-stop-endpoint)
+_ [Clear the E-Stop](#clear-the-e-stop)
+_ [Taking ownership of Spot (Leases)](#taking-ownership-of-spot-leases)
+_ [Powering on the robot](#powering-on-the-robot)
+_ [Establishing timesync](#establishing-timesync)
+_ [Commanding the robot](#commanding-the-robot) \* [Powering off the robot](#powering-off-the-robot)
 <!--te-->
+
 ## Fundamental Robot Services
+
 ### Understanding the "id" command
 
 The "id" command is one of the simplest Spot commands, so it's useful to understand how it works, since every command to Spot performs many of the same basic functions.
@@ -47,13 +49,14 @@ $ python -m bosdyn.client --verbose 192.168.80.3 id
 2020-03-26 17:30:27,615 - DEBUG - Created channel to 192.168.80.3 at port 443 with authority id.spot.robot
 ...
 ```
-The first output line creates a Spot SDK object.  All Spot API programs start this way.
+
+The first output line creates a Spot SDK object. All Spot API programs start this way.
 
 Note that the output text itself demonstrates Spot's use of Python's [logging facility](https://docs.python.org/3/library/logging.html), we recommend you perform your logging with the same.
 
 The third line creates a `client` of Spot's `robot-id` service. The Spot API exposes on-robot capabilities via a set of network-accessible services - similar to a [microservice](https://en.wikipedia.org/wiki/Microservices) architecture.
 
-The final line of output above shows the command initiating a gRPC channel to Spot.  All communication to the robot is over a secure HTTPS connection.  Spot API uses [gRPC](https://grpc.io) as its underlying RPC (Remote Procedure Call) transport. gRPC is a high-performance  networking connection for services which supports a wide variety of programming environments. gRPC uses [Protocol Buffers](https://developers.google.com/protocol-buffers/) as the messaging format, which has a compact over-the-wire representation and supports backwards and forwards compatibility.
+The final line of output above shows the command initiating a gRPC channel to Spot. All communication to the robot is over a secure HTTPS connection. Spot API uses [gRPC](https://grpc.io) as its underlying RPC (Remote Procedure Call) transport. gRPC is a high-performance networking connection for services which supports a wide variety of programming environments. gRPC uses [Protocol Buffers](https://developers.google.com/protocol-buffers/) as the messaging format, which has a compact over-the-wire representation and supports backwards and forwards compatibility.
 
 ```
 2020-03-26 17:30:27,616 - DEBUG - blocking request: b'/bosdyn.api.RobotIdService/GetRobotId'
@@ -119,7 +122,7 @@ robot_id {
 
 ### Listing services
 
-The following command lists all of the services available on the robot.  Note the `robot-id` service is listed, which we just used in the previous section.  Services are what you communicate with on Spot, use them to issue commands, retrieve information, etc.
+The following command lists all of the services available on the robot. Note the `robot-id` service is listed, which we just used in the previous section. Services are what you communicate with on Spot, use them to issue commands, retrieve information, etc.
 
 ```
 $ python -m bosdyn.client --user user --password password 192.168.80.3 dir list
@@ -155,12 +158,12 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 All Boston Dynamics API programs start by creating an SDK object with a client name argument. The client name is used to help with debugging, and does not have any semantic information - so use whatever string is helpful for you.
 
-
 ```python
 >>> sdk = bosdyn.client.create_standard_sdk('understanding-spot')
 ```
 
 ### Create a robot object
+
 To retrieve the robot id like we did in [Spot Python SDK Quickstart](./quickstart.md) we'll first need to create a `robot` object, using its network address as an argument. In this example, we only create one `robot` object, but it is possible to create and control multiple robots in the same program with the Boston Dynamics API.
 
 ```python
@@ -182,6 +185,7 @@ species: "spot"
 ```
 
 ### Blocking vs. Asynchronous Spot Python SDK functions
+
 The `get_id()` call above is blocking - it will not complete until after the RPC completes. It is possible to tweak parameters for the call, such as a timeout for how long to wait. The following example sets a too short timeout and fails...
 
 ```
@@ -200,7 +204,7 @@ grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
 >
 ```
 
-In addition to blocking calls, clients support non-blocking asynchronous calls. This can be useful in high performance applications where a thread of execution can not stall waiting for an RPC to complete. Python's [futures](https://docs.python.org/3/library/concurrent.futures.html#future-objects) architecture is used as the underpinning of asynchronous communication.  See the [get_robot_state_async programming example](../../python/examples/get_robot_state_async/README.md) for how to use these functions.
+In addition to blocking calls, clients support non-blocking asynchronous calls. This can be useful in high performance applications where a thread of execution can not stall waiting for an RPC to complete. Python's [futures](https://docs.python.org/3/library/concurrent.futures.html#future-objects) architecture is used as the underpinning of asynchronous communication. See the [get_robot_state_async programming example](../../python/examples/get_robot_state_async/README.md) for how to use these functions.
 
 Let's make an asynchronous call for the robot id and wait for the result from the returned future object:
 
@@ -217,6 +221,7 @@ species: "spot"
 The `robot-state` service contains dynamic information about the robot such as location, battery status, etc.
 
 #### Services and Authentication
+
 Before robot state can be retrieved, you need to authenticate to the robot. The majority of services require the user to be authenticated - this prevents random network attackers from being able to control the robot or intercept information which might be sensitive.
 
 Assuming that the username is `user` and the password is `password`, issue the following command.
@@ -228,6 +233,7 @@ Assuming that the username is `user` and the password is `password`, issue the f
 If you provided the wrong credentials, an exception will be raised.
 
 #### Retrieving robot state
+
 Now we can create a `RobotStateClient` for the `robot-state` service, and obtain information about Spot:
 
 ```python
@@ -242,7 +248,8 @@ power_state {
 ```
 
 #### Robot State was a message, messages are defined by protobufs
-The structure of the robot state message retrieved above is defined by its *protobuf definition*.  This is the language the robot speaks.  Spot SDK completely exposes the protobuf, so to really understand Spot programming you want to look at and understand the protobufs. Take a look, they are right here in your distribution!   [../../protos/bosdyn/api/robot_state.proto](../../protos/bosdyn/api/robot_state.proto)
+
+The structure of the robot state message retrieved above is defined by its _protobuf definition_. This is the language the robot speaks. Spot SDK completely exposes the protobuf, so to really understand Spot programming you want to look at and understand the protobufs. Take a look, they are right here in your distribution! [../../protos/bosdyn/api/robot_state.proto](../../protos/bosdyn/api/robot_state.proto)
 
 ### Spot's Frames
 
@@ -250,7 +257,7 @@ Often, it is useful to know about the position of Spot and how it relates to the
 
 ### Capture and View Camera Images
 
-Spot has 5 "fisheye" cameras in addition to 5 depth cameras.  Images can be captured from the  these image sources. The 'list_image_sources' RPC returns valid camera source names.
+Spot has 5 "fisheye" cameras in addition to 5 depth cameras. Images can be captured from the these image sources. The 'list_image_sources' RPC returns valid camera source names.
 
 ```python
 >>> from bosdyn.client.image import ImageClient
@@ -260,7 +267,7 @@ Spot has 5 "fisheye" cameras in addition to 5 depth cameras.  Images can be capt
 ['back_depth', 'back_depth_in_visual_frame', 'back_fisheye_image', 'frontleft_depth', 'frontleft_depth_in_visual_frame', 'frontleft_fisheye_image', 'frontright_depth', 'frontright_depth_in_visual_frame', 'frontright_fisheye_image', 'left_depth', 'left_depth_in_visual_frame', 'left_fisheye_image', 'right_depth', 'right_depth_in_visual_frame', 'right_fisheye_image']
 ```
 
-Using the source names listed above, we can capture an image from one or more image sources. These images can be captured in RAW format or JPG format (with specified quality). Multiple images requested in a single RPC will be hardware time-synced with one another.  Let's retrieve the left_fisheye_image and display it (unless you are on MacOS or WSL)...
+Using the source names listed above, we can capture an image from one or more image sources. These images can be captured in RAW format or JPG format (with specified quality). Multiple images requested in a single RPC will be hardware time-synced with one another. Let's retrieve the left_fisheye_image and display it (unless you are on MacOS or WSL)...
 
 ```python
 >>> image_response = image_client.get_image_from_sources(["left_fisheye_image"])[0]
@@ -272,7 +279,7 @@ Using the source names listed above, we can capture an image from one or more im
 
 ### Configuring "Motor Power Authority" (software E-Stop)
 
-Before Spot can power on, an independent *Motor Power Authority* must be correctly configured.  We use the term "E-Stop" below and in our functions as shorthand for Motor Power Authority. The E-Stop is a key safety feature of Spot which lets operators kill motor power immediately if a situation calls for it. Note that in some circles the term "E-Stop" implies a hardware power short-circuit, hence our semantic dancing, as Spot's Motor Power Authority is a networked software solution, not a hardware solution.
+Before Spot can power on, an independent _Motor Power Authority_ must be correctly configured. We use the term "E-Stop" below and in our functions as shorthand for Motor Power Authority. The E-Stop is a key safety feature of Spot which lets operators kill motor power immediately if a situation calls for it. Note that in some circles the term "E-Stop" implies a hardware power short-circuit, hence our semantic dancing, as Spot's Motor Power Authority is a networked software solution, not a hardware solution.
 
 Let's take a look at the initial E-Stop state of the robot by creating a client to the E-Stop service and requesting status:
 
@@ -294,7 +301,7 @@ The `stop_level_details: "Not all endpoints are registered"` line indicates that
 >>> estop_endpoint.force_simple_setup()
 ```
 
-E-Stop endpoints are expected to regularly check in to the robot to assure the robot is safely being controlled.  If it has been more than `estop_timeout` seconds, the motor power will be cut. Tuning this number is important: too low a number, and the power may cut out due to transient network issues; too large a number and you run the risk of Spot operating without safe supervision.
+E-Stop endpoints are expected to regularly check in to the robot to assure the robot is safely being controlled. If it has been more than `estop_timeout` seconds, the motor power will be cut. Tuning this number is important: too low a number, and the power may cut out due to transient network issues; too large a number and you run the risk of Spot operating without safe supervision.
 
 The `force_simple_setup` call issues a few API calls to make your E-Stop Endpoint the sole endpoint in a new E-Stop configuration.
 
@@ -359,11 +366,11 @@ See the Concept documents for more details about [Spot's software E-Stop Service
 
 ### Taking ownership of Spot (Leases)
 
-There's one more step before powering on Spot's motors, and that's to acquire ownership of the robot.  The robot can have multiple clients but only one can control the robot even as other clients may be requesting data or acting as E-Stop endpoints.
+There's one more step before powering on Spot's motors, and that's to acquire ownership of the robot. The robot can have multiple clients but only one can control the robot even as other clients may be requesting data or acting as E-Stop endpoints.
 
 To gain control of the robot, a client needs to acquire a `Lease`. A valid lease must be presented with every mobility command to the robot. Leases can be returned when the client no longer wants to control the robot.
 
-Like the E-Stop, lease-holders need to periodically check in with Spot to indicate that they are still actively controlling the robot.  If it has been too long since a check-in, the robot will commence a Comms Loss Procedure - sitting down if it can, and then powering off.
+Like the E-Stop, lease-holders need to periodically check in with Spot to indicate that they are still actively controlling the robot. If it has been too long since a check-in, the robot will commence a Comms Loss Procedure - sitting down if it can, and then powering off.
 
 Let's make a `LeaseClient` for the `lease` service and list the current leases:
 
@@ -470,7 +477,7 @@ True
 
 ### Establishing timesync
 
-Timesync is required to coordinate clock skew between your device and Spot.   From a safety perspective, this allows users to define a period of time for which a command will be valid. The robot class maintains a timesync thread. The `wait_for_sync` call below will start a timesync thread, and block until sync is established. After timesync is established, this thread will make periodic calls to maintain timesync. Each client is issued a clock identifier which is used to validate that the client has performed timesync, for services that require this functionality. The client library is written such that most implementation details of timesync are taken care of in the background.
+Timesync is required to coordinate clock skew between your device and Spot. From a safety perspective, this allows users to define a period of time for which a command will be valid. The robot class maintains a timesync thread. The `wait_for_sync` call below will start a timesync thread, and block until sync is established. After timesync is established, this thread will make periodic calls to maintain timesync. Each client is issued a clock identifier which is used to validate that the client has performed timesync, for services that require this functionality. The client library is written such that most implementation details of timesync are taken care of in the background.
 
 ```python
 >>> robot.time_sync.wait_for_sync()
@@ -490,7 +497,7 @@ The API provides a helper function to stand Spot. This command wraps several Rob
 
 The robot should now be standing. In addition, the stand command can be modified to control the height of the body as well as the orientation of the body with respect to the **footprint frame**. The footprint frame is a gravity aligned frame with its origin located at the geometric center of the feet. The Z axis up, and the X axis is forward.
 
-The commands proto can be quite expressive, and therefore, if going beyond default parameters, non-trivial.  To increase simplicity, Spot API provides several helper functions that combine Spot API RPC commands into single line functions.
+The commands proto can be quite expressive, and therefore, if going beyond default parameters, non-trivial. To increase simplicity, Spot API provides several helper functions that combine Spot API RPC commands into single line functions.
 
 We encourage you to experiment with these various parameters, referencing the [robot_command proto](../../protos/bosdyn/api/robot_command.proto) parent class for general Boston Dynamics robots and the [robot command proto](../../protos/bosdyn/api/spot/robot_command.proto) Spot subclass.
 
@@ -508,7 +515,7 @@ We encourage you to experiment with these various parameters, referencing the [r
 
 ### Powering off the robot
 
-Power off the robot using the `power_off` command.  Note the preferred method is with `cut_immediately=False` where Spot will come to a stop and sit down gently before powering off.  The other power off option cuts motor power immediately, which causes the robot to collapse.
+Power off the robot using the `power_off` command. Note the preferred method is with `cut_immediately=False` where Spot will come to a stop and sit down gently before powering off. The other power off option cuts motor power immediately, which causes the robot to collapse.
 
 ```python
 >>> robot.power_off(cut_immediately=False)

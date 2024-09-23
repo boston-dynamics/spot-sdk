@@ -10,15 +10,15 @@ This includes building wheels, and installing them in editable mode.
 """
 import abc
 import argparse
-from functools import partial
 import glob
 import logging
 import os
 import platform
 import shutil
-import subprocess
 import stat
+import subprocess
 import sys
+from functools import partial
 
 LOGGER = logging.getLogger()
 
@@ -328,7 +328,8 @@ class Command(object, metaclass=abc.ABCMeta):
 def _wheels_to_build(wheels=None):
     if wheels:
         return wheels
-    return ['bosdyn-api', 'bosdyn-choreography-protos'] + [os.path.basename(path) for path in _list_wheel_source_directories()]
+    return ['bosdyn-api', 'bosdyn-choreography-protos'
+           ] + [os.path.basename(path) for path in _list_wheel_source_directories()]
 
 
 def _built_wheel_files(wheel):
@@ -425,9 +426,9 @@ def build_proto_wheel(wheel_name="bosdyn-api", proto_dir=PROTO_DIR, latest_requi
     # print("Installing build dependencies: you may need to type 'y' a few times")
     # Install the build dependencies.
     if install_deps and not _try_run(
-        'install build dependencies',
-        dry_run,
-        lambda: install_requirements(os.path.join(proto_dir, req_file), quiet=not verbose)):
+            'install build dependencies',
+            dry_run,
+            lambda: install_requirements(os.path.join(proto_dir, req_file), quiet=not verbose)):
         return False
 
     # Build the wheel.
@@ -464,14 +465,16 @@ class BuildWheelsCommand(Command):
         ret = True
         for wheel in _wheels_to_build(options.wheels):
             if wheel == 'bosdyn-api':
-                ret_ = build_proto_wheel(wheel_name=wheel, latest_requirements=options.latest_build_requirements,
-                                         dry_run=options.dry_run, verbose=options.verbose,
-                                         skip_git=options.skip_git_check, install_deps=options.install_deps)
+                ret_ = build_proto_wheel(
+                    wheel_name=wheel, latest_requirements=options.latest_build_requirements,
+                    dry_run=options.dry_run, verbose=options.verbose,
+                    skip_git=options.skip_git_check, install_deps=options.install_deps)
             elif wheel == 'bosdyn-choreography-protos':
                 ret_ = build_proto_wheel(wheel_name=wheel, proto_dir=CHOREOGRAPHY_PROTO_DIR,
                                          latest_requirements=options.latest_build_requirements,
                                          dry_run=options.dry_run, verbose=options.verbose,
-                                         skip_git=options.skip_git_check, install_deps=options.install_deps)
+                                         skip_git=options.skip_git_check,
+                                         install_deps=options.install_deps)
             else:
                 ret_ = build_wheel(wheel, dry_run=options.dry_run, verbose=options.verbose,
                                    skip_git=options.skip_git_check)

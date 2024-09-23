@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Autowalk Service &mdash; Spot 4.0.3 documentation</title>
+  <title>Autowalk Service &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -521,7 +526,7 @@ Development Kit License (20191101-BDSDK-SL).
 <tbody>
 <tr>
 <td><a href="../../../protos/bosdyn/api/proto_reference.html#node">Mission</a></td>
-<td>A <code>bosdyn.api.mission.Node</code> proto that fully defines a behavior tree.  The structure is infinitely recursive.</td>
+<td>A <code>bosdyn.api.mission.Node</code> proto that fully defines a behavior tree. The structure is infinitely recursive.</td>
 </tr>
 <tr>
 <td><a href="../../../protos/bosdyn/api/proto_reference.html#missionservice">Mission Service</a></td>
@@ -543,15 +548,15 @@ Development Kit License (20191101-BDSDK-SL).
 </table></section>
 <section id="how-autowalks-differs-from-missions">
 <h2>How Autowalks Differs From Missions<a class="headerlink" href="#how-autowalks-differs-from-missions" title="Permalink to this heading"></a></h2>
-<p>The mission service and missions sit on top of the API.  There is nothing you can do with the mission service that you can’t do with a python script.  The reasons to write a program using missions instead of a python script are:</p>
+<p>The mission service and missions sit on top of the API. There is nothing you can do with the mission service that you can’t do with a python script. The reasons to write a program using missions instead of a python script are:</p>
 <ol class="simple">
 <li><p>The program needs to be resilient to comms loss.</p>
 <ul class="simple">
-<li><p>Missions are run on robot and can be run with an ~infinite end time.  Clients still have to send a single PlayMission request at the start but once they do, they do not have to communicate with the robot ever again.</p></li>
+<li><p>Missions are run on robot and can be run with an ~infinite end time. Clients still have to send a single PlayMission request at the start but once they do, they do not have to communicate with the robot ever again.</p></li>
 <li><p>A client running a python script needs constant communication with the robot in order to advance to different stages of the script.</p></li>
 </ul>
 </li>
-<li><p>To deal with as few RPC calls as possible.  RPCs can fail in many ways, and writing a program that does the right thing for every different failure mode is difficult.  Also, the API requires sending many RPCs to do something and wait for it to finish.</p></li>
+<li><p>To deal with as few RPC calls as possible. RPCs can fail in many ways, and writing a program that does the right thing for every different failure mode is difficult. Also, the API requires sending many RPCs to do something and wait for it to finish.</p></li>
 <li><p>The python script has grown too complex to successfully develop on and debug.</p>
 <ul class="simple">
 <li><p>Writing and debugging boilerplate state tracking logic can be time-consuming. The behavior trees offered by the mission service might be easier to use.</p></li>
@@ -563,13 +568,13 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 </li>
 </ol>
-<p>The missions that the tablet generates as part of the autowalk application handle many different failure modes using the mission service’s behavior tree structure.  Because of that, the corresponding behavior trees are very deep (42 layers) and very wide (1000’s of nodes).  However, at their core they are very simple: go to location A, perform action 1, go to location B, perform action 2, etc. Given the complex behavior tree, suppose you would like to remove location B and action 2 from the mission. Finding the nodes that correspond to location B and action 2 would be a difficult and tedious task. Therein lies the problem. Backing out a high level understanding of what a behavior tree does is hard. This is not a new problem. Anyone familiar with programming knows that assembly code is harder to read than the C code that generated the assembly code, and that the C code is harder to read than the MATLAB code that generated the C code, even though they all express the same identical thing. Autowalk is the formalized layer above missions, and like missions it is defined using protobufs. The language layer looks like:</p>
+<p>The missions that the tablet generates as part of the autowalk application handle many different failure modes using the mission service’s behavior tree structure. Because of that, the corresponding behavior trees are very deep (42 layers) and very wide (1000’s of nodes). However, at their core they are very simple: go to location A, perform action 1, go to location B, perform action 2, etc. Given the complex behavior tree, suppose you would like to remove location B and action 2 from the mission. Finding the nodes that correspond to location B and action 2 would be a difficult and tedious task. Therein lies the problem. Backing out a high level understanding of what a behavior tree does is hard. This is not a new problem. Anyone familiar with programming knows that assembly code is harder to read than the C code that generated the assembly code, and that the C code is harder to read than the MATLAB code that generated the C code, even though they all express the same identical thing. Autowalk is the formalized layer above missions, and like missions it is defined using protobufs. The language layer looks like:</p>
 <p><img alt="Autowalk language layer" src="../../../_images/autowalk_language_layer.png" /></p>
-<p>In its basic form, the autowalk format forces programs into the “go here, do this” pattern, which is a flexibility loss compared to missions. However, the benefit is having an easy to edit structure. Autowalk and the autowalk serivce provide some methods to break “go here, do this” pattern and obtain more flexibility similar to missions. These methods will be described in a later section.</p>
+<p>In its basic form, the autowalk format forces programs into the “go here, do this” pattern, which is a flexibility loss compared to missions. However, the benefit is having an easy to edit structure. Autowalk and the autowalk service provide some methods to break “go here, do this” pattern and obtain more flexibility similar to missions. These methods will be described in a later section.</p>
 </section>
 <section id="autowalk-format">
 <h2>Autowalk Format<a class="headerlink" href="#autowalk-format" title="Permalink to this heading"></a></h2>
-<p>The walk proto defines the autowalk’s “go here, do this” format. It is a linear series of actions and their associated locations. These actions and locations are encapsulated in a list of <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#element">elements</a>. To edit the autowalk, elements can be reordered, modified, removed, and/or added to the list. See the <a class="reference internal" href="../../../python/examples/edit_autowalk/README.html"><span class="doc">Edit Autowalk Python SDK example</span></a> for further details.</p>
+<p>The Walk proto defines the autowalk’s “go here, do this” format. It is a linear series of actions and their associated locations. These actions and locations are encapsulated in a list of <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#element">elements</a>. To edit the autowalk, elements can be reordered, modified, removed, and/or added to the list. See the <a class="reference internal" href="../../../python/examples/edit_autowalk/README.html"><span class="doc">Edit Autowalk Python SDK example</span></a> for further details.</p>
 <section id="components-of-an-element">
 <h3>Components of an Element<a class="headerlink" href="#components-of-an-element" title="Permalink to this heading"></a></h3>
 <table border="1" class="docutils">
@@ -594,7 +599,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td><a href="../../../protos/bosdyn/api/proto_reference.html#target">Target</a></td>
-<td>Where the robot should go. Targets are speicified within the context of a graph nav map.</td>
+<td>Where the robot should go. Targets are specified within the context of a graph nav map.</td>
 </tr>
 <tr>
 <td><a href="../../../protos/bosdyn/api/proto_reference.html#failurebehavior">Target Failure Behavior</a></td>
@@ -606,6 +611,10 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 </tbody>
 </table></section>
+<section id="docking-in-autowalk-missions">
+<h3>Docking in Autowalk Missions<a class="headerlink" href="#docking-in-autowalk-missions" title="Permalink to this heading"></a></h3>
+<p>As of the Spot 4.1 release, autowalk supports multiple docks. The Walk proto contains a repeated <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#dock">Dock</a> field that specifies which dock(s) the robot is allowed to use during mission execution. The Dock proto contains two booleans, <code class="docutils literal notranslate"><span class="pre">disable_recharge</span></code> and <code class="docutils literal notranslate"><span class="pre">disable_end</span></code>. If <code class="docutils literal notranslate"><span class="pre">disable_recharge</span></code> is false, the robot is allowed to use the dock to recharge or as part of the return to dock and try again later failure behavior. If <code class="docutils literal notranslate"><span class="pre">disable_end</span></code> is false, the robot is allowed to end the mission on the dock. The robot is allowed to start the mission on any dock specified in the Walk proto. When the robot needs to dock during a mission, the robot will attempt to dock at the nearest allowed dock. The robot does not know the occupancy state of docks in the mission. It is the client’s responsibility to ensure robots do not compete for docks.</p>
+</section>
 </section>
 <section id="autowalk-service-rpcs">
 <h2>Autowalk Service RPCs<a class="headerlink" href="#autowalk-service-rpcs" title="Permalink to this heading"></a></h2>
@@ -634,7 +643,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="debugging-autowalk-service-rpc-failures">
 <h3>Debugging Autowalk Service RPC Failures<a class="headerlink" href="#debugging-autowalk-service-rpc-failures" title="Permalink to this heading"></a></h3>
-<p>Aside from standard gRPC errors, there are user errors that can cause the autowalk service RPCs to fail. If a walk proto is malformed, the autowalk to mission compilation will fail. The RPC responses contain a map field called <code class="docutils literal notranslate"><span class="pre">failed_elements</span></code>. Inspect the errors strings within each <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#failedelement"><code class="docutils literal notranslate"><span class="pre">FailedElement</span></code> proto</a> in the map to determine why the compilation failed. The <code class="docutils literal notranslate"><span class="pre">FailedElement</span></code> message also contains warnings. Warnings can be resolved by the compiler, but can potentially result in unexpected behavior. Compile time walk modifications are reported back to the client in the warnings field. The <code class="docutils literal notranslate"><span class="pre">LoadAutowalk</span></code> RPC can fail during mission validation. To debug validation errors, inspect the <code class="docutils literal notranslate"><span class="pre">lease_use_results</span></code> and <code class="docutils literal notranslate"><span class="pre">failed_nodes</span></code> fields in the <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#loadautowalkresponse">server response</a>.</p>
+<p>Aside from standard gRPC errors, there are user errors that can cause the autowalk service RPCs to fail. If a Walk proto is malformed, the autowalk to mission compilation will fail. The RPC responses contain a map field called <code class="docutils literal notranslate"><span class="pre">failed_elements</span></code>. Inspect the errors strings within each <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#failedelement"><code class="docutils literal notranslate"><span class="pre">FailedElement</span></code> proto</a> in the map to determine why the compilation failed. The <code class="docutils literal notranslate"><span class="pre">FailedElement</span></code> message also contains warnings. Warnings can be resolved by the compiler, but can potentially result in unexpected behavior. Compile time walk modifications are reported back to the client in the warnings field. The <code class="docutils literal notranslate"><span class="pre">LoadAutowalk</span></code> RPC can fail during mission validation. To debug validation errors, inspect the <code class="docutils literal notranslate"><span class="pre">lease_use_results</span></code> and <code class="docutils literal notranslate"><span class="pre">failed_nodes</span></code> fields in the <a class="reference external" href="../../../protos/bosdyn/api/proto_reference.html#loadautowalkresponse">server response</a>.</p>
 </section>
 </section>
 <section id="breaking-the-go-here-do-this-structure">

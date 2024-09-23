@@ -17,32 +17,32 @@ import "google/protobuf/wrappers.proto";
 
 // Signal display information.
 message SignalDisplayInfo {
-  // Optional display name typically used for signal acronyms or abbreviations.
-  // Ex: "PT1" (short name)
-  // If unset, no name will be displayed.
-  string name = 1;
+    // Optional display name typically used for signal acronyms or abbreviations.
+    // Ex: "PT1" (short name)
+    // If unset, no name will be displayed.
+    string name = 1;
 
-  // An optional description that provides additional information about the signal.
-  // Ex: "Pressure Transducer 1" (long name)
-  // If unset, no description will be displayed.
-  string description = 2;
+    // An optional description that provides additional information about the signal.
+    // Ex: "Pressure Transducer 1" (long name)
+    // If unset, no description will be displayed.
+    string description = 2;
 
-  // This is an optional sorting hint for how to display a set of signals.
-  // If unset, the list will be sorted alphabetically by name or id.
-  int64 order = 3;
+    // This is an optional sorting hint for how to display a set of signals.
+    // If unset, the list will be sorted alphabetically by name or id.
+    int64 order = 3;
 }
 
 // Sensor output specification.
 message SensorOutputSpec {
     // Min and max (lower and upper) range of the sensor.
-    bosdyn.api.Bounds bounds = 1; // Ex: 0.0 - 100.0 psia
-    google.protobuf.DoubleValue resolution = 2; // Ex: 0.02 (+/-)
+    bosdyn.api.Bounds bounds = 1;                // Ex: 0.0 - 100.0 psia
+    google.protobuf.DoubleValue resolution = 2;  // Ex: 0.02 (+/-)
 
     // The units of the sensor data.
-    Units units = 3; // Ex: "psia"
+    Units units = 3;  // Ex: "psia"
 
     // The sample rate of the sensor.
-    google.protobuf.DoubleValue sample_rate = 4; // Ex: 0.5 Hz
+    google.protobuf.DoubleValue sample_rate = 4;  // Ex: 0.5 Hz
 }
 
 // Alert condition specifications for a double, int, or boolean signal.

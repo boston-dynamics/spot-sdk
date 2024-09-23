@@ -18,13 +18,10 @@ import "google/protobuf/any.proto";
 // The robot command message to specify a basic command that requires full control of the entire
 // robot to be completed.
 message FullBodyCommand {
-
     // The full body request must be one of the basic command primitives.
     message Request {
-
         // Only one full body command can be requested at a time.
         oneof command {
-
             // Command to stop the robot.
             StopCommand.Request stop_request = 1;
 
@@ -58,11 +55,9 @@ message FullBodyCommand {
     // The feedback for the fully body command that will provide information on the progress
     // of the robot command.
     message Feedback {
-
         // The feedback message associated with the requested command. Some commands may have
         // an empty feedback message if they do not provide any updates/progress.
         oneof feedback {
-
             // Feedback for the stop command request.
             StopCommand.Feedback stop_feedback = 1;
 

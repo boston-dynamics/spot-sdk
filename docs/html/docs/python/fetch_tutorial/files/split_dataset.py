@@ -7,17 +7,20 @@
 """Split our dataset into test and train sets."""
 
 import argparse
-import sys
 import os
 import pathlib
-from shutil import copyfile
 import random
+import sys
+from shutil import copyfile
+
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-r', '--ratio', help='Test/train ratio.', default=0.9)
     parser.add_argument('-l', '--labels-dir', help='Path to the directory of labels', required=True)
-    parser.add_argument('-o', '--output-dir', help='Path to the output where we create test and train folders', default='.')
+    parser.add_argument('-o', '--output-dir',
+                        help='Path to the output where we create test and train folders',
+                        default='.')
 
     args = parser.parse_args()
 

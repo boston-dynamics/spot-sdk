@@ -12,8 +12,9 @@ from bosdyn.deprecated import moved_to
 
 
 
-@deprecated(reason='The ResponseContext helper class has moved to a common location. Please use '
-            'bosdyn.client.server_util.ResponseContext.', version='2.3.5', action="always")
+@deprecated(
+    reason='The ResponseContext helper class has moved to a common location. Please use '
+    'bosdyn.client.server_util.ResponseContext.', version='2.3.5', action="always")
 class ResponseContext(object):
 
     def __init__(self, response, request, rpc_logger=None):

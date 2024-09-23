@@ -7,7 +7,6 @@
 """For clients to the Spot CAM StreamQuality service."""
 
 import logging
-from multiprocessing.sharedctypes import Value
 
 _LOGGER = logging.getLogger(__name__)
 

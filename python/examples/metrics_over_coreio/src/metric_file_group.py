@@ -64,7 +64,7 @@ class MetricFileGroup:
             file_content = file.read()
 
         # Check it is a real object and the right data type
-        if (not isinstance(file_content, bytes)) or file_content == None:
+        if (not isinstance(file_content, bytes)) or file_content is None:
             _LOGGER.error("File content is of bad type")
             return None
 
@@ -109,7 +109,7 @@ class MetricFileGroup:
         # Get the latest sequence number on the saved to the COREIO file system
         latestonCore = self.get_sequence_num(True)
 
-        if latestonCore != None:
+        if latestonCore is not None:
             _LOGGER.info('Core has historical data stored. Getting the latest sequence.')
             latestSequenceSaved = int(latestonCore)
         else:

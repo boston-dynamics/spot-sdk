@@ -91,3 +91,15 @@ def test_base_client():
     response = client.call_async(client._stub.rpc_method, None,
                                  value_from_response=value_from_response, **kwargs)
     assert isinstance(response.result(), Response)
+
+    # Test async steaming
+    response = client.call_async_streaming(client._stub.rpc_method, None)
+    assert isinstance(response.result(), Response)
+
+    response = client.call_async_streaming(client._stub.rpc_method, None,
+                                           value_from_response=value_from_response)
+    assert isinstance(response.result(), ProcessedResponse)
+
+    response = client.call_async_streaming(client._stub.rpc_method, None,
+                                           value_from_response=value_from_response, **kwargs)
+    assert isinstance(response.result(), Response)

@@ -17,6 +17,7 @@ import bosdyn.client.util
 import bosdyn.mission.remote_client
 from bosdyn.api import service_customization_pb2
 from bosdyn.api.mission import remote_pb2
+from bosdyn.client.keepalive import KeepaliveClient, remove_all_policies
 
 _WHO_KEY = 'who'
 
@@ -26,8 +27,8 @@ def main():
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--hello-world', action='store_true',
                        help='Target the Hello World remote mission service.')
-    group.add_argument('--power-off', action='store_true',
-                       help='Target the Power Off remote mission service.')
+    group.add_argument('--robot-command', action='store_true',
+                       help='Target the Robot Command remote mission service.')
     parser.add_argument(
         '--user-string',
         help='Specify the user-string input to Tick. Set to the node name in Autowalk missions.')
@@ -47,8 +48,8 @@ def main():
     if options.hello_world:
         directory_name = 'hello-world-callback'
         lease_resources = ()
-    elif options.power_off:
-        directory_name = 'power-off-callback'
+    elif options.robot_command:
+        directory_name = 'robot-command-callback'
         lease_resources = bosdyn.client.lease.DEFAULT_RESOURCES
 
     # If attempting to communicate directly to the service.
@@ -80,9 +81,15 @@ def main():
     with ExitStack() as exit_stack:
         if lease_resources and options.host_type != 'local':
             lease_client = robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
+            # Clear keep alive policies to ensure we can power on robot
+            keepalive_client = robot.ensure_client(KeepaliveClient.default_service_name)
+            remove_all_policies(keepalive_client, attempts=3)
             exit_stack.enter_context(
                 bosdyn.client.lease.LeaseKeepAlive(lease_client, must_acquire=True,
                                                    return_at_exit=True))
+            if not robot.is_powered_on():
+                robot.power_on()
+
         # Now run through a typical sequence of calls to the remote servicer.
         # Establish the session, telling the servicer to perform any one-time tasks.
         try:

@@ -8,6 +8,7 @@
 Data Acquisition plugin with params
 """
 import logging
+import secrets
 
 import bosdyn.client.util
 from bosdyn.api import data_acquisition_pb2, data_acquisition_plugin_service_pb2_grpc
@@ -34,6 +35,14 @@ NUMBER_MAX = 100.0
 STRING_PARAMS_NAME = 'Favorite Phrase'
 STRING_DEFAULT = 'Hi spot!'
 
+DATA_NAME = 'Random Data (MB)'
+# Number of MB
+DATA_MIN_MEGABYTES_TO_STORE = 1
+DATA_MAX_MEGABYTES_TO_STORE = 125
+DATA_DEFAULT_MEGABYTES_TO_STORE = 1
+
+BYTES_PER_MB = 1024**2
+
 
 class HelloAdapter:
     """Basic plugin for saving data to DAQ"""
@@ -50,11 +59,13 @@ class HelloAdapter:
         toggle = params.get(TOGGLE_PARAM_NAME).string_value.value
         num = params.get(NUMBER_NAME).double_value.value
         phrase = params.get(STRING_PARAMS_NAME).string_value.value
+        data_size = params.get(DATA_NAME).int_value.value
 
         # Check if the request has been cancelled.
         store_helper.cancel_check()
 
         data_id = data_acquisition_pb2.DataIdentifier(action_id=action_id, channel=CHANNEL_NAME)
+        data = secrets.token_bytes(int(BYTES_PER_MB * data_size))
         message = data_acquisition_pb2.AssociatedMetadata()
         message.reference_id.action_id.CopyFrom(action_id)
         message.metadata.data.update({
@@ -63,6 +74,7 @@ class HelloAdapter:
             "Phrase": phrase,
         })
         # Store the data and manage store state.
+        store_helper.store_data_as_chunks(data, data_id)
         store_helper.store_metadata(message, data_id)
         store_helper.state.set_status(data_acquisition_pb2.GetStatusResponse.STATUS_SAVING)
 
@@ -89,6 +101,12 @@ def make_service(robot):
     string_params = custom_params.specs[STRING_PARAMS_NAME].spec.string_spec
     string_params.default_value = STRING_DEFAULT
     string_params.editable = True
+
+    # Data Slider
+    number_params = custom_params.specs[DATA_NAME].spec.int_spec
+    number_params.default_value.value = DATA_DEFAULT_MEGABYTES_TO_STORE
+    number_params.min_value.value = DATA_MIN_MEGABYTES_TO_STORE
+    number_params.max_value.value = DATA_MAX_MEGABYTES_TO_STORE
 
     adapter = HelloAdapter()
     return DataAcquisitionPluginService(robot, [capability], adapter.handle_request)

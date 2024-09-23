@@ -1584,7 +1584,7 @@ class RobotCommandBuilder(object):
         arm_cartesian_traj = arm_cartesian_command.pose_trajectory_in_task
         arm_cartesian_traj.pos_interpolation = trajectory_pb2.POS_INTERP_CUBIC
         arm_cartesian_traj.ang_interpolation = trajectory_pb2.ANG_INTERP_CUBIC_EULER
-        for i, time in enumerate(times):
+        for i, point_time in enumerate(times):
             # Add a new trajectory point to our trajectory
             traj_point = arm_cartesian_traj.points.add()
 
@@ -1604,7 +1604,7 @@ class RobotCommandBuilder(object):
                 traj_point.velocity.CopyFrom(se3_velocity)
 
             # Set our time_since_reference for this trajectory point
-            traj_point.time_since_reference.CopyFrom(seconds_to_duration(times[i]))
+            traj_point.time_since_reference.CopyFrom(seconds_to_duration(point_time))
 
         if ref_time is not None:
             # Set a reference time if desired. If not, we'll automatically set the reference time

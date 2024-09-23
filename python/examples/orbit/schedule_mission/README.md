@@ -12,7 +12,7 @@ This tutorial is a programming example for the Orbit client, which uses the Orbi
 
 ## Understanding Orbit Web API
 
-Please begin with the [Quickstart Guide](../../../../docs/python/quickstart.md) to get your Python programming environment set up properly. Additional useful information can be found in [Orbit API Docs](../../../../docs/concepts/about_orbit.md). For a complete list of resources and their methods, see the <a href="../../../../docs/orbit/docs.html">Orbit API Reference</a>.
+Please begin with the [Quickstart Guide](../../../../docs/python/quickstart.md) to get your Python programming environment set up properly. Additional useful information can be found in [Orbit API Docs](../../../../docs/concepts/orbit/orbit_api.md). For a complete list of resources and their methods, see the <a href="../../../../docs/orbit/docs.html">Orbit API Reference</a>.
 
 ## Setup Dependencies
 

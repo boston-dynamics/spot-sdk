@@ -10,8 +10,6 @@ Development Kit License (20191101-BDSDK-SL).
 
 A typical use case for the autonomous navigation API:
 
-
-
 1. A client application, the command line, or the controller tablet is used to operate the robot and record a map and any actions taken during the recording process.
 2. During recording the client navigates the intended route, assigning actions such as API callbacks to waypoints along the way.
 3. At the end of the route, recording is stopped and the recorded map and all of the associated actions and data are saved.
@@ -19,8 +17,8 @@ A typical use case for the autonomous navigation API:
 5. When the mission is concluded, the client app captures, processes, or stores data that was collected during the mission.
 6. Log files and other data may be downloaded for analysis.
 
-
 <!--- image and page reference link definitions --->
+
 [autonomous-top]: Readme.md "Spot SDK: Autonomy, GraphNav, and Missions"
 [code-examples]: autonomous_navigation_code_examples.md "Autonomous navigation code examples"
 [components]: components_of_autonomous_navigation.md "Components of autonomous navigation"

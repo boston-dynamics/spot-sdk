@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Geometry and Frames &mdash; Spot 4.0.3 documentation</title>
+  <title>Geometry and Frames &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base_services.html">Base services</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -526,11 +531,12 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>“body” frame: A frame describing the robot body’s position and orientation. The frame’s origin is at the geometric center of the hips with the x-axis pointing from the hip center to the middle of the front hips, as shown in the illustration above.</p></li>
 <li><p>“flat_body” frame: A gravity-aligned frame describing the robot body’s position and orientation. The position is at the robot’s center, and the x/y-axes lie flat in the “odom” frame x-y plane. Specifically, the x-axis is the normalized projection of the robot’s “body” frame x-axis to the “odom” x-y plane.</p></li>
 <li><p>“gpe” frame: A frame that represents the robot’s ground plane estimate. The full SE(3) pose can be converted into a plane (a point and normal).</p></li>
+<li><p>“feet_center” frame: A gravity-aligned frame representing the robot’s footprint. The origin is at the geometric center of the robot’s feet. The x-axis is aligned such that it points from the center of the rear feet to the center of the front feet in the x-y plane.</p></li>
 <li><p>“fiducial_XXX” frame: A frame that represents a raw fiducial detection, where “XXX” will be filled with the fiducial’s tag ID.</p></li>
 <li><p>“filtered_fiducial_XXX” frame: A frame that represents a filtered, more stable fiducial detection, where “XXX” will be filled with the fiducial’s tag ID. This frame is only valid for fiducials which are static in the world and should not be used for fiducials which may be moving.</p></li>
 <li><p>“frontleft_fisheye” frame: An example sensor frame; this frame name represents the frontleft fisheye camera. All five cameras on spot have their own sensor frame names, which will describe the exact camera sensor’s position and orientation.</p></li>
 </ul>
-<p>In the API, other frames not listed above will often be captured by name in the proto definition. Typically, an object will have one or more fields prefixed with “frame_name_” to describe its specific frames, and the transforms associated with these frames can then be found in that object’s transform snapshot. For example, the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-local-grid-proto">LocalGrid</a> proto has <code class="docutils literal notranslate"><span class="pre">frame_name_local_grid_data</span></code> which refers to the position and orientation of the top, left corner of the grid map.</p>
+<p>In the API, other frames not listed above will often be captured by name in the proto definition. Typically, an object will have one or more fields prefixed with “frame<em>name</em>” to describe its specific frames, and the transforms associated with these frames can then be found in that object’s transform snapshot. For example, the <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-local-grid-proto">LocalGrid</a> proto has <code class="docutils literal notranslate"><span class="pre">frame_name_local_grid_data</span></code> which refers to the position and orientation of the top, left corner of the grid map.</p>
 </section>
 <section id="transformations-between-spot-s-frames">
 <h2>Transformations between Spot’s frames<a class="headerlink" href="#transformations-between-spot-s-frames" title="Permalink to this heading"></a></h2>

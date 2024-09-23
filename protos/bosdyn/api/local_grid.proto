@@ -36,7 +36,7 @@ message LocalGridExtent {
     int32 num_cells_x = 3;
 
     // Number of cells along y extent of local grid (number of rows in local grid).
-    // Note, that the (num_cells_x)x(num_cells_y) represents the totla number of grid
+    // Note, that the (num_cells_x)x(num_cells_y) represents the total number of grid
     // cells in the local grid.
     int32 num_cells_y = 4;
 
@@ -54,13 +54,14 @@ message LocalGrid {
     google.protobuf.Timestamp acquisition_time = 30;
 
     // A tree-based collection of transformations, which will include the transformations to each of
-    // the returned local grids in addition to transformations to the common frames ("vision", "body", "odom").
-    // All transforms within the snapshot are at the acquistion time of the local grid.
+    // the returned local grids in addition to transformations to the common frames ("vision",
+    // "body", "odom"). All transforms within the snapshot are at the acquisition time of the local
+    // grid.
     FrameTreeSnapshot transforms_snapshot = 31;
 
-    // The frame name for the local grid data. This frame refers to the corner of cell (0, 0), such that
-    // the map data is in the +x, +y quadrant.
-    // The cell data is packed in x-y order, so the cell at:
+    // The frame name for the local grid data. This frame refers to the corner of cell (0, 0), such
+    // that the map data is in the +x, +y quadrant. The cell data is packed in x-y order, so the
+    // cell at:
     //   data[xi + extent.num_cells_x * yj]
     // has its center at position:
     //   {(xi + 0.5) * extent.cell_size, (yj + 0.5) * extent.cell_size}.
@@ -91,6 +92,7 @@ message LocalGrid {
 
         // Each cell of the local grid is encoded as a little-endian unsigned 16-bit integer.
         CELL_FORMAT_UINT16 = 6;
+
 
         // Only reserving these values for now, until they are used.
 
@@ -126,9 +128,9 @@ message LocalGrid {
     Encoding encoding = 5;
 
     // The encoded local grid representation.
-    // Cells are encoded according to the encoding enum, and are stored in in row-major order (x-major).
-    // This means that the data field has data entered row by row. The grid cell located at (i, j) will be
-    // at the (index = i * num_cells_x + j) within the data array.
+    // Cells are encoded according to the encoding enum, and are stored in in row-major order
+    // (x-major). This means that the data field has data entered row by row. The grid cell located
+    // at (i, j) will be at the (index = i * num_cells_x + j) within the data array.
     bytes data = 6;
 
     // RLE pixel repetition counts: use data[i] repeated rle_counts[i] times when decoding the
@@ -139,8 +141,16 @@ message LocalGrid {
     double cell_value_scale = 8;
 
     // A fixed value offset that is applied to each value of the cell data.
-    // Actual values in local grid are: (({value from data} * cell_value_scale) + cell_value_offset).
+    // Actual values in local grid are: (({value from data} * cell_value_scale) +
+    // cell_value_offset).
     double cell_value_offset = 9;
+
+    // Map of unknown cells.
+    // If unknown_cells[i] = 0, then data[i] is known. If unknown_cells[i] = 1, then data[i] is
+    // unknown. Each cell is encoded as a uint8_t.  Cells are stored in row-major order (x-major).
+    // This means that the data field has data entered row by row. The grid cell located at (i, j)
+    // will be at the (index = i * num_cells_x + j) within the data array.
+    bytes unknown_cells = 10;
 }
 
 // The local grid response message will contain either the local grid or an error status.
@@ -171,14 +181,14 @@ message LocalGridResponse {
     LocalGrid local_grid = 3;
 }
 
-
 // The GetLocalGridTypes request message asks to the local grid types.
 message GetLocalGridTypesRequest {
     // Common request header.
     RequestHeader header = 1;
 }
 
-// The GetLocalGridTypes response message returns to get all known string names for local grid types.
+// The GetLocalGridTypes response message returns to get all known string names for local grid
+// types.
 message GetLocalGridTypesResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -187,7 +197,8 @@ message GetLocalGridTypesResponse {
     repeated LocalGridType local_grid_type = 2;
 }
 
-// The GetLocalGrid request message can request for multiple different types of local grids at one time.
+// The GetLocalGrid request message can request for multiple different types of local grids at one
+// time.
 message GetLocalGridsRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -196,8 +207,9 @@ message GetLocalGridsRequest {
     repeated LocalGridRequest local_grid_requests = 2;
 }
 
-// The GetLocalGrid response message replies with all of the local grid data for the requested types, and
-// a numerical count representing the amount of status errors that occurred when getting this data.
+// The GetLocalGrid response message replies with all of the local grid data for the requested
+// types, and a numerical count representing the amount of status errors that occurred when getting
+// this data.
 message GetLocalGridsResponse {
     // Common response header.
     ResponseHeader header = 1;

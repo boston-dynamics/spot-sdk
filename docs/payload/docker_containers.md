@@ -19,7 +19,7 @@ The purpose of computation payloads is to run custom software applications on th
 
 1. Implement and test application in a development environment, such as a development computer. In this case, the development computer connected to Spot's WiFi acts as the computation payload for the robot. Testing in the development environment allows for quick iterations and updating of the application code.
 2. Dockerize the application and test the docker image with the application on the development environment. The change in this step compared to the previous one is to run the application inside a docker container, rather than on the host OS of the development environment. This step verifies that the application works correctly in a containerized environment, and it acts as a stepping stone to the final step below. The section [Create Docker Images](#create-docker-images) described how to create and test the docker images in the local development environment.
-3. If targetting the CORE I/O payload, combine all docker containers with a docker-compose configuration file and package everything into a Spot Extension, as described in the [Manage Payload Software in CORE I/O](#manage-payload-software-in-core-i-o) section.
+3. If targeting the CORE I/O payload, combine all docker containers with a docker-compose configuration file and package everything into a Spot Extension, as described in the [Manage Payload Software in CORE I/O](#manage-payload-software-in-core-i-o) section.
 4. Deploy and manage the Spot Extension in the CORE I/O payload (also described in the section linked above). Running the dockerized application on a computation payload attached to Spot removes the need for WiFi connectivity between Spot and a stationary computation environment, improving Spot's autonomy.
 
 To manage the docker images on any other compute payload, please refer to the [Command-line Configuration](#command-line-configuration) section.
@@ -28,7 +28,6 @@ Multiple Spot SDK examples support dockerization and running as docker container
 
 - [Data Acquisition Plugins](../../python/examples/data_acquisition_service/README.md)
 - [Ricoh Theta](../../python/examples/ricoh_theta/README.md)
-- [Spot Detect and Follow](../../python/examples/spot_detect_and_follow/README.md)
 - [Custom Parameter Web Cam Image Service](../../python/examples/service_customization/custom_parameter_image_server/README.md)
 
 ## Installing Docker Engine
@@ -43,7 +42,12 @@ After implementing and testing the application on the development environment, t
 
 The `Dockerfile` files in the SDK examples contain instructions to create x86/AMD-based Ubuntu docker images. On top of `Dockerfile` files, SDK examples also contain `Dockerfile.l4t` for creating ARM-based Ubuntu docker images for the CORE I/O payloads.
 
-When writing Dockerfiles for images targeted for the CORE I/O, if using [Nvidia Docker images](https://catalog.ngc.nvidia.com/containers?filters=&orderBy=scoreDESC&query=l4t) as a base, ensure that the tag matches the version of Jetpack running on the CORE I/O. As of 3.3.0, the CORE I/O is running JetPack 4.6.1 (L4T R32.7.1).
+When writing Dockerfiles for images targeted for the CORE I/O, if using [Nvidia Docker images](https://catalog.ngc.nvidia.com/containers?filters=&orderBy=scoreDESC&query=l4t) as a base, ensure that the tag matches the version of Jetpack running on the CORE I/O:
+
+| CORE I/O Version     | JetPack Version             |
+| -------------------- | --------------------------- |
+| >= 4.0.0             | JetPack 5.1.2 (L4T R35.4.1) |
+| >= 3.3.0 and < 4.0.0 | JetPack 4.6.1 (L4T R32.7.1) |
 
 **Note:** OpenCV is commonly used for processing image data on the CORE I/O. By Default, most installations of OpenCV do not have CUDA support. Nvidia's [l4t-ml](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/l4t-ml) container provides a version of OpenCV with CUDA support built-in, but is also fairly large. To build a more lightweight container with CUDA support in OpenCV, follow the instructions provided [here](https://github.com/dusty-nv/jetson-containers/blob/93c5b397f8daeeb9218ba49acefc23f4ad19965f/Dockerfile.opencv), replacing `BASE_IMAGE` and `OPENCV_VERSION` with the desired versions (see above).
 
@@ -159,7 +163,12 @@ An Extension is a set of docker images configured with a docker-compose yaml con
 - Udev rules file to install in the CORE I/O OS if the Extension is associated with a hardware payload to be attached to CORE I/O.
 - Other files needed by the software or the udev rules included in the Extension
 
-The name of the spx file represents the name of the extension.
+If populated, the `extension_name` field in `manifest.json` represents the name of the extension. Otherwise, the name of the spx file represents the name of the extension. The name of the extension is subject to the following restrictions:
+
+- Can only contain letters (a-z, A-Z), numbers (0-9), hyphens (-), and underscores (\_)
+- Cannot contain the special strings, `coreio` and `mission_control`
+
+Please note that these restrictions do not apply to the Extension filename when `extension_name` is populated.
 
 ##### Manifest file
 
@@ -170,6 +179,7 @@ The `manifest.json` file is the Extension parameterization file with the followi
 - icon: Name of the file included in the extension that should be used as the icon for the extension
 - udev_rules: Name of the udev file included in the extension that contains the updated udev rules to install in host OS
 - images: Optional list of tgz file names included in the extension that represent the docker images to load for running the extension. Parameter is omitted if the images are available from a public location, such as dockerhub.
+- extension_name: Name of the extension, subject to the restrictions in [Extension Structure](#extension-structure)
 
 ##### Docker Images
 
@@ -177,7 +187,7 @@ The docker images listed in the `images` field of the `manifest.json` file also 
 
 ##### Docker Compose YAML configuration file
 
-The `docker-compose.yml` file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together.
+The `docker-compose.yml` file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together. As of 4.1.0, the `journald` logging driver is supported for Extensions and its usage is strongly recommended. because it enables developers to retrieve logs for containers that are no longer running, even after a power cycle. If no logging driver is specified in the `docker-compose.yml` file, the Extension uses the `journald` logging driver.
 
 ##### Other files
 

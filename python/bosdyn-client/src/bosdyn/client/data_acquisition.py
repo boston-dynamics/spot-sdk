@@ -7,9 +7,6 @@
 """General client implementation for the main, on-robot data-acquisition service."""
 
 import collections
-import functools
-import json
-import time
 
 from google.protobuf import json_format
 

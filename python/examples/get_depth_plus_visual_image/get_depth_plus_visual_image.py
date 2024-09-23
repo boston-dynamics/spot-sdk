@@ -25,17 +25,24 @@ def main():
                         help='Convert to the depth frame. Default is convert to visual.',
                         action='store_true')
     parser.add_argument('--camera', help='Camera to acquire image from.', default='frontleft',\
-                        choices=['frontleft', 'frontright', 'left', 'right', 'back',
-                        ])
+                        choices=['frontleft', 'frontright', 'left', 'right', 'back', 'hand'])
     parser.add_argument('--auto-rotate', help='rotate right and front images to be upright',
                         action='store_true')
     options = parser.parse_args()
 
-    if options.to_depth:
-        sources = [options.camera + '_depth', options.camera + '_visual_in_depth_frame']
-    else:
-        sources = [options.camera + '_depth_in_visual_frame', options.camera + '_fisheye_image']
+    if options.camera != 'hand' and options.to_depth:
+        print('Error: `--to-depth` is only supported for `--camera hand`.')
+        return False
 
+    if options.camera != 'hand':
+        sources = [options.camera + '_depth_in_visual_frame', options.camera + '_fisheye_image']
+    else:
+        if options.to_depth:
+            sources = [options.camera + '_depth', options.camera + '_color_in_hand_depth_frame']
+        else:
+            sources = [
+                options.camera + '_depth_in_hand_color_frame', options.camera + '_color_image'
+            ]
 
     # Create robot object with an image client.
     sdk = bosdyn.client.create_standard_sdk('image_depth_plus_visual')

@@ -11,7 +11,6 @@ Development Kit License (20191101-BDSDK-SL).
 <link href="prism.css" rel="stylesheet" />
 <script src="prism.js"></script>
 
-
 <script type="text/javascript">
 function update_checklist(element, output_id) {
     // Iterate through all checkboxes in the form
@@ -34,7 +33,6 @@ function update_checklist(element, output_id) {
 }
 </script>
 
-
 <div class="section line-numbers">
 
 <p>
@@ -42,10 +40,10 @@ function update_checklist(element, output_id) {
 </p>
 <hr />
 
-
 # Fetch Part 2: Training the Model
 
 In this portion of the tutorial, you will:
+
 <ul>
     <li>Install TensorFlow.</li>
     <li>Download pre-trained model weights (for transfer learning).</li>
@@ -290,7 +288,6 @@ To help keep you on track, here is a checklist:
 </ul>
 </form>
 
-
 <h4>Train the Model</h4>
 <ul>
     <li>Copy the training script into a more convenient location:</li>
@@ -416,6 +413,7 @@ CUDA_VISIBLE_DEVICES="-1" python3 model_main_tf2.py --model_dir=dogtoy/models/my
 </p>
 
 <a id="troubleshooting"></a>
+
 <h3>Troubleshooting</h3>
 <ul>
 <pre><code class="language-text wrap">Failed to get convolution algorithm. This is probably because cuDNN failed to initialize</code></pre>
@@ -448,7 +446,6 @@ CUDA_VISIBLE_DEVICES="-1" python3 model_main_tf2.py --model_dir=dogtoy/models/my
                         ^^^^<---- not zero!
 </code></pre>
 
-
 <hr />
 <p>
     Once training is complete, head to <a href="fetch3.html">Part 3</a> to take the latest checkpoint, convert it to an online model, and visualize the results.
@@ -463,4 +460,3 @@ CUDA_VISIBLE_DEVICES="-1" python3 model_main_tf2.py --model_dir=dogtoy/models/my
 <hr />
 
 </div>
-

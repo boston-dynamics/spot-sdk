@@ -5,13 +5,13 @@ services:
     volumes:
       - "/opt/payload_credentials:/creds"
     devices:
-      - "/dev/ttyUSB2:/dev/leica"
+      - /dev/leica1:/dev/leica
     restart: unless-stopped
     command:
       [
         "--name",
         "Leica GA03",
-        "--payload_tform_gps",
+        "--payload-tform-gps",
         "0",
         "0",
         "0.032",
@@ -22,6 +22,7 @@ services:
         "--payload-credentials-file",
         "/creds/payload_guid_and_secret",
         "192.168.50.3",
+        "--register-payload",
         "--mass",
         ".671",
         "--description",
@@ -34,12 +35,12 @@ services:
         "0",
         "0",
         "0",
-        "--position_of_mass",
+        "--position-of-mass",
         "-.083",
         "0",
         ".02595",
-        "--bounding_boxes",
-        "-.604",
+        "--bounding-box",
+        "-.083",
         "0",
         ".02595",
         "1",
@@ -50,12 +51,12 @@ services:
         ".053",
         "0.03844",
         "--gps-credentials-file",
-        "leica-gps-payload-credentials.txt",
+        "/creds/leica-gps-payload-credentials.txt",
         "--version",
         "1",
         "0",
         "0",
         "serial",
-        "--serial_device",
+        "--serial-device",
         "/dev/leica",
       ]

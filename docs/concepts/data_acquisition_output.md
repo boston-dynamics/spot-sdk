@@ -8,11 +8,12 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Data Acquisition Output
 
- The data stored from data acquisition captures can be downloaded over a REST endpoint from the robot. When downloading the data, the result will be returned in a zip file containing all data that matches the particular query parameters sent to the endpoint.
+The data stored from data acquisition captures can be downloaded over a REST endpoint from the robot. When downloading the data, the result will be returned in a zip file containing all data that matches the particular query parameters sent to the endpoint.
 
 ## Zip file structure
 
 An example zip file with data from both a teleoperation session and a run of a mission named "Inspection":
+
 ```
 downloaded_file.zip
 └───teleop_2020-10-29T183020Z
@@ -32,7 +33,6 @@ downloaded_file.zip
     │   SpotCAM ir nodata 2 spot-cam-ir.jpg
         ...
 ```
-
 
 Each separate group from the stored data will be in its own directory. The directory name will be the `group_name`, formatted as `<mission start timestamp>_<mission name>` for Autowalk missions, or `teleop_<session start timestamp>` for teleop captures.
 
@@ -62,6 +62,7 @@ The json data is structured around actions, and the data within those actions. M
   ]
 }
 ```
+
 The "data" member will contain entries that map to the files stored in the zip, while the "metadata" member will contain json data that is associated with the action.
 Within the "data" or "metadata" members of an action, the individual entries will be stored in a list inside a member with the name of the channel. In general there will only be a single element inside this list, unless you separately store multiple pieces of data or metadata to the same channel during a particular capture action.
 Any json saved as part of the `metadata` field in `AcquireDataRequest` or the `metadata` argument to `DataAcquisitionClient.acquire_data()` will be saved on the "metadata" channel. Autowalk action tags are stored in this manner in a "custom_metadata" member.
@@ -112,6 +113,7 @@ Note that these pieces of data or metadata can have their own set of "metadata",
 ```
 
 Data from an example mission:
+
 ```javascript
 {
   "actions": [
@@ -198,6 +200,7 @@ Data from an example mission:
       ],
       ...
 ```
+
 ## CSV structure
 
 The csv files will have one row for every file in the group. The columns of the csv file will be a flattened version of the basic-position-data or detailed-position-data metadata, as well as any custom Autowalk tags entered during recording.

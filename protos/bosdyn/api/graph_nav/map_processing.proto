@@ -23,13 +23,21 @@ package bosdyn.api.graph_nav;
 // sessions so long as they share fiducial observations.
 message ProcessTopologyRequest {
     // Parameters for how to refine loop closure edges using iterative
-    // closest point matching.
+    // closest point matching. If both ICP and Feature matching are used, feature matching
+    // will be performed first for a coarse alignment, followed by ICP for a local refinement.
     message ICPParams {
         // The maximum number of iterations to run. Set to zero to skip ICP processing.
         google.protobuf.Int32Value icp_iters = 1;
         // The maximum distance between points in the point cloud we are willing to
         // accept for matches.
         google.protobuf.DoubleValue max_point_match_distance = 2;
+    }
+    // Parameters to control point cloud sparse feature matching.
+    message FeatureMatchingParams {
+        // If true, feature matching will be performed. If both ICP and Feature matching are used,
+        // feature matching
+        // will be performed first for a coarse alignment, followed by ICP for a local refinement.
+        google.protobuf.BoolValue do_feature_matching = 1;
     }
     // Parameters for how to close loops using odometry. This infers which waypoints
     // should be connected to one another based on the odometry measurements in the map.
@@ -59,7 +67,7 @@ message ProcessTopologyRequest {
         google.protobuf.Int32Value num_extra_loop_closure_iterations = 5;
         // If true, redundant edges will be ignored, and only the "best" in a small area
         // will be selected (true by default).
-        google.protobuf.BoolValue  prune_edges = 6;
+        google.protobuf.BoolValue prune_edges = 6;
     }
     // Parameters for how to close a loop using fiducials (AprilTags). This infers
     // which waypoints should be connected to one another based on shared observations
@@ -85,7 +93,7 @@ message ProcessTopologyRequest {
         google.protobuf.DoubleValue max_loop_closure_height_change = 4;
         // If true, redundant edges will be ignored, and only the "best" in a small area
         // will be selected (true by default).
-        google.protobuf.BoolValue  prune_edges = 5;
+        google.protobuf.BoolValue prune_edges = 5;
     }
     // Parameters for how to check for collisions when creating loop closures. The system
     // will avoid creating edges in the map that the robot cannot actually traverse due to
@@ -119,11 +127,13 @@ message ProcessTopologyRequest {
         // Parameters which control rejecting loop closure candidates which
         // collide with obstacles.
         CollisionCheckingParams collision_check_params = 6;
-        // Causes the processing to time out after this many seconds. If not set, a default of 45 seconds
-        // will be used. If this timeout occurs before the overall RPC timeout, a partial result will be
-        // returned with ProcessTopologyResponse.timed_out set to true. Processing can be continued by
-        // calling ProcessTopology again.
+        // Causes the processing to time out after this many seconds. If not set, a default of 45
+        // seconds will be used. If this timeout occurs before the overall RPC timeout, a partial
+        // result will be returned with ProcessTopologyResponse.timed_out set to true. Processing
+        // can be continued by calling ProcessTopology again.
         double timeout_seconds = 7;
+        // Controls whether and how the service performs sparse feature matching.
+        FeatureMatchingParams feature_matching_params = 8;
     }
     // Standard message header.
     RequestHeader header = 1;
@@ -144,11 +154,15 @@ message ProcessTopologyResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        STATUS_UNKNOWN = 0; // Programming error.
-        STATUS_OK = 1; // Success.
-        STATUS_MISSING_WAYPOINT_SNAPSHOTS = 2; // Not all of the waypoint snapshots exist on the server. Upload them to continue.
-        STATUS_INVALID_GRAPH = 3; // The graph is invalid topologically, for example containing missing waypoints referenced by edges.
-        STATUS_MAP_MODIFIED_DURING_PROCESSING = 4; // Tried to write the anchoring after processing, but another client may have modified the map. Try again
+        STATUS_UNKNOWN = 0;  // Programming error.
+        STATUS_OK = 1;       // Success.
+        STATUS_MISSING_WAYPOINT_SNAPSHOTS =
+            2;  // Not all of the waypoint snapshots exist on the server. Upload them to continue.
+        STATUS_INVALID_GRAPH = 3;  // The graph is invalid topologically, for example containing
+                                   // missing waypoints referenced by edges.
+        STATUS_MAP_MODIFIED_DURING_PROCESSING =
+            4;  // Tried to write the anchoring after processing, but another client may have
+                // modified the map. Try again
     }
     // Result of the processing.
     Status status = 2;
@@ -159,10 +173,10 @@ message ProcessTopologyResponse {
     Graph new_subgraph = 3;
 
     // If modify_map_on_server was set to true in the request, then the map currently on the server
-    // was modified using map processing. If this is set to false, then either an error occurred during
-    // processing, or modify_map_on_server was set to false in the request.
-    // When map_on_server_was_modified is set to false, the client is expected to upload the results
-    // back to the server to commit the changes.
+    // was modified using map processing. If this is set to false, then either an error occurred
+    // during processing, or modify_map_on_server was set to false in the request. When
+    // map_on_server_was_modified is set to false, the client is expected to upload the results back
+    // to the server to commit the changes.
     bool map_on_server_was_modified = 4;
     // When there are missing waypoint snapshots, these are the IDs of the missing snapshots.
     // Upload them to continue.
@@ -170,8 +184,8 @@ message ProcessTopologyResponse {
     // When there are missing waypoints, these are the IDs of the missing waypoints. Upload them
     // to continue.
     repeated string missing_waypoint_ids = 11;
-    // If true, the processing timed out. Note that this is not considered an error. Run topology processing again
-    // to continue adding edges.
+    // If true, the processing timed out. Note that this is not considered an error. Run topology
+    // processing again to continue adding edges.
     bool timed_out = 12;
 }
 
@@ -188,10 +202,11 @@ message PoseBounds {
     // Bounds on the z position in meters.
     double z_bounds = 3;
     // Bounds on the yaw (rotation around z axis) in radians.
-    double yaw_bounds= 4;
+    double yaw_bounds = 4;
 }
 
-// Controls how certain the user is of an anchor's pose. If left empty, a reasonable default will be chosen.
+// Controls how certain the user is of an anchor's pose. If left empty, a reasonable default will be
+// chosen.
 message AnchorHintUncertainty {
     oneof uncertainty {
         // A full 6x6 Gaussian covariance matrix representing uncertainty of an anchoring.
@@ -205,11 +220,11 @@ message AnchorHintUncertainty {
 
 // Waypoints may be anchored to a particular seed frame. The user may request that a waypoint
 // be anchored in a particular place with some Gaussian uncertainty.
-// Note on gravity alignment: optimization is sensitive to bad alignment with respect to gravity. By default, the
-// orientation of the seed frame assumes gravity is pointing in the negative z direction. Take care to ensure that
-// the orientation of the waypoint is correct with respect to gravity. By convention, waypoints' orientation
-// is defined as: Z up, X forward, Y left. So, if the robot is flat on the ground, the waypoint's z axis should
-// align with the seed frame's z axis.
+// Note on gravity alignment: optimization is sensitive to bad alignment with respect to gravity. By
+// default, the orientation of the seed frame assumes gravity is pointing in the negative z
+// direction. Take care to ensure that the orientation of the waypoint is correct with respect to
+// gravity. By convention, waypoints' orientation is defined as: Z up, X forward, Y left. So, if the
+// robot is flat on the ground, the waypoint's z axis should align with the seed frame's z axis.
 //   z             z
 //   ^             ^
 //   |             |
@@ -224,21 +239,21 @@ message WaypointAnchorHint {
     // This is the uncertainty of the anchor's pose in the seed frame.
     // If left empty, a reasonable default uncertainty will be generated.
     AnchorHintUncertainty seed_tform_waypoint_uncertainty = 2;
-    // Normally, the optimizer will move the anchorings of waypoints based on context, to minimize the
-    // overall cost of the optimization problem. By providing a constraint on pose, the user can ensure
-    // that the anchors stay within a certain region in the seed frame.
-    // Leaving this empty will allow the optimizer to move the anchoring from the hint as far as it likes.
+    // Normally, the optimizer will move the anchorings of waypoints based on context, to minimize
+    // the overall cost of the optimization problem. By providing a constraint on pose, the user can
+    // ensure that the anchors stay within a certain region in the seed frame. Leaving this empty
+    // will allow the optimizer to move the anchoring from the hint as far as it likes.
     PoseBounds seed_tform_waypoint_constraint = 3;
 }
 
-// World objects (such as fiducials) may be anchored to a particular seed frame. The user may request that an object
-// be anchored in a particular place with some Gaussian uncertainty.
-// Note on gravity alignment: optimization is sensitive to bad alignment with respect to gravity. By default, the
-// orientation of the seed frame assumes gravity is pointing in the negative z direction. Take care to ensure that
-// the orientation of the world object is correct with respect to gravity. By convention, fiducials' orientation
-// is defined as: Z out of the page, X up and Y left (when looking at the fiducial). So, if a fiducial is mounted
-// perfectly flat against a wall, its orientation w.r.t the seed frame would have the top of the fiducial facing
-// positive Z.
+// World objects (such as fiducials) may be anchored to a particular seed frame. The user may
+// request that an object be anchored in a particular place with some Gaussian uncertainty. Note on
+// gravity alignment: optimization is sensitive to bad alignment with respect to gravity. By
+// default, the orientation of the seed frame assumes gravity is pointing in the negative z
+// direction. Take care to ensure that the orientation of the world object is correct with respect
+// to gravity. By convention, fiducials' orientation is defined as: Z out of the page, X up and Y
+// left (when looking at the fiducial). So, if a fiducial is mounted perfectly flat against a wall,
+// its orientation w.r.t the seed frame would have the top of the fiducial facing positive Z.
 // +-----------+       z
 // |      ^x   |       ^
 // |      |    |       |
@@ -256,14 +271,14 @@ message WorldObjectAnchorHint {
     // If left empty, a reasonable default uncertainty will be generated.
     AnchorHintUncertainty seed_tform_object_uncertainty = 2;
     // Normally, the optimizer will move the anchorings of object based on context, to minimize the
-    // overall cost of the optimization problem. By providing a constraint on pose, the user can ensure
-    // that the anchors stay within a certain region in the seed frame.
-    // Leaving this empty will allow the optimizer to move the anchoring from the hint as far as it likes.
+    // overall cost of the optimization problem. By providing a constraint on pose, the user can
+    // ensure that the anchors stay within a certain region in the seed frame. Leaving this empty
+    // will allow the optimizer to move the anchoring from the hint as far as it likes.
     PoseBounds seed_tform_object_constraint = 3;
 }
 
-// The user may assign a number of world objects and waypoints a guess at where they are in the seed frame.
-// These hints will be respected by the ProcessAnchoringRequest.
+// The user may assign a number of world objects and waypoints a guess at where they are in the seed
+// frame. These hints will be respected by the ProcessAnchoringRequest.
 message AnchoringHint {
     // List of waypoints and hints as to where they are in the seed frame.
     repeated WaypointAnchorHint waypoint_anchors = 1;
@@ -271,11 +286,12 @@ message AnchoringHint {
     repeated WorldObjectAnchorHint world_objects = 2;
 }
 
-// Causes the server to optimize an existing anchoring, or generate a new anchoring for the map using the given parameters.
-// In general, if parameters are not provided, reasonable defaults will be used.
-// The new anchoring will be streamed back to the client, or modified on the server if desired.
+// Causes the server to optimize an existing anchoring, or generate a new anchoring for the map
+// using the given parameters. In general, if parameters are not provided, reasonable defaults will
+// be used. The new anchoring will be streamed back to the client, or modified on the server if
+// desired.
 message ProcessAnchoringRequest {
-    // Parameters for procesing an anchoring.
+    // Parameters for processing an anchoring.
     message Params {
         // Parameters affecting the underlying optimizer.
         message OptimizerParams {
@@ -284,7 +300,7 @@ message ProcessAnchoringRequest {
             // Maximum time the optimizer is allowed to run before giving up.
             google.protobuf.DoubleValue max_time_seconds = 2;
         }
-        // Parameters which affect the measurements the optimzier uses to process the anchoring.
+        // Parameters which affect the measurements the optimizer uses to process the anchoring.
         message MeasurementParams {
             // If true, waypoints which share the same kinematic odometry
             // frame will be constrained to one another using it.
@@ -305,9 +321,9 @@ message ProcessAnchoringRequest {
             // help constrain the anchoring.
             google.protobuf.BoolValue use_gps = 6;
         }
-        // Relative weights to use for each of the optimizer's terms. These can be any positive value.
-        // If set to zero, a reasonable default will be used. In general, the higher the weight, the more
-        // the optimizer will care about that particular measurement.
+        // Relative weights to use for each of the optimizer's terms. These can be any positive
+        // value. If set to zero, a reasonable default will be used. In general, the higher the
+        // weight, the more the optimizer will care about that particular measurement.
         message Weights {
             double kinematic_odometry_weight = 1;
             double visual_odometry_weight = 2;
@@ -343,32 +359,43 @@ message ProcessAnchoringRequest {
     // If true, the anchoring will be streamed back to the user after every iteration.
     // This is useful for debug visualization.
     bool stream_intermediate_results = 5;
-    // If true, the GPSSettings inside waypoint annotations will be modified based on the optimization.
-    // Every waypoint will have waypoint.gps_settings set, with ecef_tform_waypoint applied form this
-    // optimization. To get these results, call the DownloadGraph RPC. Alternatively, the ecef_tform_waypoint
-    // can be found using: response.gps_result.ecef_tform_seed * seed_tform_waypoint[waypoint_id].
-    // Note that after this operation completes successfully, all waypoints in the graph can be used to navigate
-    // using GPS, even if they didn't have GPS data in their waypoint snapshots.
+    // If true, the GPSSettings inside waypoint annotations will be modified based on the
+    // optimization. Every waypoint will have waypoint.gps_settings set, with ecef_tform_waypoint
+    // applied form this optimization. To get these results, call the DownloadGraph RPC.
+    // Alternatively, the ecef_tform_waypoint can be found using:
+    // response.gps_result.ecef_tform_seed * seed_tform_waypoint[waypoint_id]. Note that after this
+    // operation completes successfully, all waypoints in the graph can be used to navigate using
+    // GPS, even if they didn't have GPS data in their waypoint snapshots.
     bool apply_gps_result_to_waypoints_on_server = 6;
 }
 
-// Streamed response from the ProcessAnchoringRequest. These will be streamed until optimization is complete.
-// New anchorings will be streamed as they become available.
+// Streamed response from the ProcessAnchoringRequest. These will be streamed until optimization is
+// complete. New anchorings will be streamed as they become available.
 message ProcessAnchoringResponse {
     ResponseHeader header = 1;
     enum Status {
-        STATUS_UNKNOWN = 0; // Programming error.
-        STATUS_OK = 1; // Success.
-        STATUS_MISSING_WAYPOINT_SNAPSHOTS = 2; // Not all of the waypoint snapshots exist on the server. Upload them to continue.
-        STATUS_INVALID_GRAPH = 3; // The graph is invalid topologically, for example containing missing waypoints referenced by edges.
-        STATUS_OPTIMIZATION_FAILURE = 4; // The optimization failed due to local minima or an ill-conditioned problem definition.
-        STATUS_INVALID_PARAMS = 5; // The parameters passed to the optimizer do not make sense (e.g negative weights).
-        STATUS_CONSTRAINT_VIOLATION = 6; // One or more anchors were moved outside of the desired constraints.
-        STATUS_MAX_ITERATIONS = 7; // The optimizer reached the maximum number of iterations before converging.
-        STATUS_MAX_TIME = 8; // The optimizer timed out before converging.
-        STATUS_INVALID_HINTS = 9; // One or more of the hints passed in to the optimizer are invalid (do not correspond to real waypoints or objects).
-        STATUS_MAP_MODIFIED_DURING_PROCESSING = 10; // Tried to write the anchoring after processing, but another client may have modified the map. Try again.
-        STATUS_INVALID_GRAVITY_ALIGNMENT = 11; // An anchor hint (waypoint or fiducial) had an invalid orientation with respect to gravity.
+        STATUS_UNKNOWN = 0;  // Programming error.
+        STATUS_OK = 1;       // Success.
+        STATUS_MISSING_WAYPOINT_SNAPSHOTS =
+            2;  // Not all of the waypoint snapshots exist on the server. Upload them to continue.
+        STATUS_INVALID_GRAPH = 3;  // The graph is invalid topologically, for example containing
+                                   // missing waypoints referenced by edges.
+        STATUS_OPTIMIZATION_FAILURE = 4;  // The optimization failed due to local minima or an
+                                          // ill-conditioned problem definition.
+        STATUS_INVALID_PARAMS =
+            5;  // The parameters passed to the optimizer do not make sense (e.g negative weights).
+        STATUS_CONSTRAINT_VIOLATION =
+            6;  // One or more anchors were moved outside of the desired constraints.
+        STATUS_MAX_ITERATIONS =
+            7;  // The optimizer reached the maximum number of iterations before converging.
+        STATUS_MAX_TIME = 8;       // The optimizer timed out before converging.
+        STATUS_INVALID_HINTS = 9;  // One or more of the hints passed in to the optimizer are
+                                   // invalid (do not correspond to real waypoints or objects).
+        STATUS_MAP_MODIFIED_DURING_PROCESSING =
+            10;  // Tried to write the anchoring after processing, but another client may have
+                 // modified the map. Try again.
+        STATUS_INVALID_GRAVITY_ALIGNMENT = 11;  // An anchor hint (waypoint or fiducial) had an
+                                                // invalid orientation with respect to gravity.
     }
     Status status = 2;
     // Contains new anchorings for waypoint(s) processed by the server.
@@ -377,11 +404,11 @@ message ProcessAnchoringResponse {
     // Contains new anchorings for object(s) (e.g april tags) processed by the server.
     // These will be streamed back to the user as they become available
     repeated AnchoredWorldObject world_object_results = 4;
-    // If modify_anchoring_on_server was set to true in the request, then the anchoring currently on the server
-    // was modified using map processing. If this is set to false, then either an error occurred during
-    // processing, or modify_anchoring_on_server was set to false in the request.
-    // When anchoring_on_server_was_modified is set to false, the client is expected to upload the results
-    // back to the server to commit the changes.
+    // If modify_anchoring_on_server was set to true in the request, then the anchoring currently on
+    // the server was modified using map processing. If this is set to false, then either an error
+    // occurred during processing, or modify_anchoring_on_server was set to false in the request.
+    // When anchoring_on_server_was_modified is set to false, the client is expected to upload the
+    // results back to the server to commit the changes.
     bool anchoring_on_server_was_modified = 5;
     // The current optimizer iteration that produced these data.
     int32 iteration = 6;
@@ -405,26 +432,28 @@ message ProcessAnchoringResponse {
     // Unorganized list of waypoints and object IDs which were invalid (missing from the map).
     repeated string invalid_hints = 13;
     // List of edges that are inconsistent with the optimized result. This can happen when incorrect
-    // loop closures have been made before optimization, when inconsistent anchoring hints were passed in,
-    // or because the optmizer ended up in a local minimum.
+    // loop closures have been made before optimization, when inconsistent anchoring hints were
+    // passed in, or because the optimizer ended up in a local minimum.
     repeated Edge.Id inconsistent_edges = 14;
 
     message GPSResult {
         // Status of the GPS embedding optimization.
         enum GPSStatus {
             GPS_STATUS_UNKNOWN = 0;
-            GPS_STATUS_OK = 1; // Managed to find an ECEF transform.
-            GPS_STATUS_NOT_ENOUGH_MEASUREMENTS = 2; // Not enough high quality GPS measurements in the map.
+            GPS_STATUS_OK = 1;  // Managed to find an ECEF transform.
+            GPS_STATUS_NOT_ENOUGH_MEASUREMENTS =
+                2;  // Not enough high quality GPS measurements in the map.
         }
         // Overall status of the GPS embedding optimization.
         GPSStatus status = 1;
-        // Pose of the "seed" frame of this optimization in the Earth-Centered-Earth-Fixed (ECEF) frame.
-        // This can be used to estimate the pose of every waypoint in the ECEF frame via:
-        // ecef_tform_waypoint = ecef_tform_seed * anchoring.waypoints[waypoint_id].seed_tform_waypoint
+        // Pose of the "seed" frame of this optimization in the Earth-Centered-Earth-Fixed (ECEF)
+        // frame. This can be used to estimate the pose of every waypoint in the ECEF frame via:
+        // ecef_tform_waypoint = ecef_tform_seed *
+        // anchoring.waypoints[waypoint_id].seed_tform_waypoint
         api.SE3Pose ecef_tform_seed = 2;
         // This is the number of GPS measurements actually used to compute the GPS embedding.
         int32 num_measurements_used = 3;
     };
-    // If GPS embedding optimzation was enabled, this is the result of that process.
+    // If GPS embedding optimization was enabled, this is the result of that process.
     GPSResult gps_result = 15;
 }

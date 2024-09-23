@@ -10,6 +10,7 @@ package bosdyn.api;
 
 option java_outer_classname = "DataAcquisitionStoreProto";
 
+import "bosdyn/api/data_chunk.proto";
 import "google/protobuf/timestamp.proto";
 import "bosdyn/api/header.proto";
 import "bosdyn/api/image.proto";
@@ -78,6 +79,19 @@ message QueryParameters {
     bool include_data = 7;
     bool include_metadata = 8;
     bool include_alerts = 9;
+
+    // Setting this value will return results that are classified as large data. If this value is
+    // not set these captures will not be returned even when none of the other captures types are
+    // set.
+    bool include_large = 11;
+
+    // Boolean that specifies how to order the query results based on capture id field, ascending
+    // (default) or descending.
+    // Ascending: Captures with lowest id are first, meaning oldest stored captures are ordered
+    // first.
+    // Descending: Captures with highest id are first, meaning newest stored captures are
+    // ordered first.
+    bool order_descending = 10;
 }
 
 
@@ -150,6 +164,27 @@ message StoreDataRequest {
 }
 
 message StoreDataResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    uint64 id = 2;
+}
+
+message StoreStreamRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Data identifier of the data.
+    DataIdentifier data_id = 2;
+
+    // File extension to use when writing the data to file.
+    string file_extension = 4;
+
+    // The piece of the data to store.
+    DataChunk chunk = 3;
+}
+
+message StoreStreamResponse {
     // Common response header.
     ResponseHeader header = 1;
 
@@ -250,6 +285,17 @@ message StoredCapturedData {
     string file_extension = 2;
 }
 
+message StoredLargeCapturedData {
+    // Data related to capture.
+    DataChunk chunk = 1;
+
+    // Start index of resulting bytes.
+    uint64 offset = 2;
+
+    // File extension to use for writing the data to a file.
+    string file_extension = 3;
+
+}
 message QueryStoredCaptureResult {
     DataIdentifier data_id = 1;
 
@@ -258,6 +304,7 @@ message QueryStoredCaptureResult {
         AssociatedMetadata metadata = 4;
         AssociatedAlertData alert_data = 5;
         StoredCapturedData data = 6;
+        StoredLargeCapturedData large_data = 7;
     }
 }
 

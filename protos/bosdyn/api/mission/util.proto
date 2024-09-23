@@ -12,6 +12,8 @@ option java_outer_classname = "UtilProto";
 
 import "google/protobuf/any.proto";
 
+import "bosdyn/api/alerts.proto";
+
 // Key/Value pair, used in other messages.
 message KeyValue {
     string key = 1;
@@ -21,12 +23,11 @@ message KeyValue {
 // A value of a run-time or compile-time variable.
 message Value {
     oneof source {
-        ConstantValue constant = 2;   // A constant value.
+        ConstantValue constant = 2;           // A constant value.
         VariableDeclaration runtime_var = 3;  // Look up a variable provided at run-time.
-        VariableDeclaration parameter = 4; // Look up a Node Parameter.
+        VariableDeclaration parameter = 4;    // Look up a Node Parameter.
     }
 }
-
 
 // Declaration of a run-time or compile-time variable.
 message VariableDeclaration {
@@ -45,7 +46,6 @@ message VariableDeclaration {
     Type type = 2;
 }
 
-
 // A constant value. Corresponds to the VariableDeclaration Type enum.
 message ConstantValue {
     oneof value {
@@ -55,6 +55,26 @@ message ConstantValue {
         bool bool_value = 4;
         google.protobuf.Any msg_value = 5;
     }
+}
+
+// Nodes can pass arbitrary text back through the mission state.
+message MissionText {
+    // The text of the message.
+    string text = 1;
+
+    // Severity level of the text message.
+    // Here are guidelines for severity as it pertains to missions:
+    // INFO: Normal operation.  For example, waiting for charge; waiting on the dock for logs to
+    //       download.
+    // WARN: Something went wrong, but the mission will try to recover autonomously.
+    // ERROR: Something went wrong, and the mission can't recover without human intervention.
+    //        Intervention is not time sensitive and can be resolved when convenient.
+    // CRITICAL: Something went wrong, and the mission can't recover without human intervention.
+    //           Human needs to rescue the robot before battery runs out because it's not charging.
+    AlertData.SeverityLevel severity = 2;
+
+    // The node which produced the update message.
+    int64 node_id = 3;
 }
 
 
@@ -71,7 +91,6 @@ message UserData {
     //      - Nothing
     //      - A [bosdyn.api.autowalk.Walk] if the mission was compiled using the Autowalk service.
     google.protobuf.Any source_representation = 4;
-
 }
 
 // Results from executing / ticking / running a single node.

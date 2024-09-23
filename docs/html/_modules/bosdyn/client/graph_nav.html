@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.graph_nav &mdash; Spot 4.0.3 documentation</title>
+  <title>bosdyn.client.graph_nav &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,7 +48,8 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -202,7 +203,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -263,11 +263,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -516,8 +521,9 @@
                                   <span class="n">map_pb2</span><span class="p">,</span> <span class="n">nav_pb2</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">common_lease_errors</span><span class="p">,</span>
                                   <span class="n">error_factory</span><span class="p">,</span> <span class="n">error_pair</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">,</span>
-                                  <span class="n">handle_lease_use_result_errors</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">ResponseError</span>
+                                  <span class="n">handle_lease_use_result_errors</span><span class="p">,</span> <span class="n">handle_license_errors_if_present</span><span class="p">,</span>
+                                  <span class="n">handle_unset_status_error</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">UnimplementedError</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.lease</span> <span class="kn">import</span> <span class="n">add_lease_wallet_processors</span>
 
 
@@ -530,6 +536,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">GraphNavClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">graph_nav_service_pb2_grpc</span><span class="o">.</span><span class="n">GraphNavServiceStub</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_chunk_size</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span>  <span class="c1"># bytes = 1 MB</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_use_streaming_graph_upload</span> <span class="o">=</span> <span class="kc">True</span>
 
 <div class="viewcode-block" id="GraphNavClient.update_from"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.update_from">[docs]</a>    <span class="k">def</span> <span class="nf">update_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">GraphNavClient</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">update_from</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
@@ -735,18 +742,31 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">NavigateRoute</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">_navigate_route_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GraphNavClient.navigate_route_full_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.navigate_route_full_async">[docs]</a>    <span class="k">def</span> <span class="nf">navigate_route_full_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">route_follow_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                  <span class="n">travel_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">leases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                  <span class="n">command_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">destination_waypoint_tform_body_goal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="GraphNavClient.navigate_route_full_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/graph_nav.html#bosdyn.client.graph_nav.GraphNavClient.navigate_route_full_async">[docs]</a>    <span class="k">def</span> <span class="nf">navigate_route_full_async</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">route</span><span class="p">,</span>
+            <span class="n">cmd_duration</span><span class="p">,</span>
+            <span class="n">route_follow_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">travel_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">leases</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">timesync_endpoint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">command_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">destination_waypoint_tform_body_goal</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of navigate_route_full().&quot;&quot;&quot;</span>
         <span class="n">used_endpoint</span> <span class="o">=</span> <span class="n">timesync_endpoint</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_timesync_endpoint</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">used_endpoint</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">GraphNavServiceResponseError</span><span class="p">(</span><span class="n">response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">error_message</span><span class="o">=</span><span class="s1">&#39;No timesync endpoint!&#39;</span><span class="p">)</span>
-        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_navigate_route_request</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">route_follow_params</span><span class="p">,</span> <span class="n">travel_params</span><span class="p">,</span>
-                                                     <span class="n">cmd_duration</span><span class="p">,</span> <span class="n">leases</span><span class="p">,</span> <span class="n">used_endpoint</span><span class="p">,</span>
-                                                     <span class="n">command_id</span><span class="p">,</span>
-                                                     <span class="n">destination_waypoint_tform_body_goal</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_navigate_route_request</span><span class="p">(</span>
+            <span class="n">route</span><span class="p">,</span>
+            <span class="n">route_follow_params</span><span class="p">,</span>
+            <span class="n">travel_params</span><span class="p">,</span>
+            <span class="n">cmd_duration</span><span class="p">,</span>
+            <span class="n">leases</span><span class="p">,</span>
+            <span class="n">used_endpoint</span><span class="p">,</span>
+            <span class="n">command_id</span><span class="p">,</span>
+            <span class="n">destination_waypoint_tform_body_goal</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">NavigateRoute</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">_navigate_route_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -956,9 +976,30 @@
 <span class="sd">            The response, which includes waypoint and edge id&#39;s sorted by whether it was cached.</span>
 <span class="sd">        Raises:</span>
 <span class="sd">            RpcError: Problem communicating with the robot.</span>
+<span class="sd">            UploadGraphError: Indicates a problem with the map provided.</span>
+<span class="sd">            IncompatibleSensorsError: The map was recorded with different sensors than the robot.</span>
+<span class="sd">            AreaCallbackError: The map includes area callback services not present on the robot.</span>
 <span class="sd">            LeaseUseError: Error using provided lease.</span>
+<span class="sd">            LicenseError: The robot&#39;s license is not valid.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_upload_graph_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">generate_new_anchoring</span><span class="p">)</span>
+        <span class="c1"># Use streaming to upload the graph, if applicable.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_streaming_graph_upload</span><span class="p">:</span>
+            <span class="c1"># Need to manually apply request processors since this will be serialized and chunked.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">serialized</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">SerializeToString</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UploadGraphStreaming</span><span class="p">,</span>
+                    <span class="n">GraphNavClient</span><span class="o">.</span><span class="n">_data_chunk_iterator_upload_graph</span><span class="p">(</span><span class="n">serialized</span><span class="p">,</span>
+                                                                     <span class="bp">self</span><span class="o">.</span><span class="n">_data_chunk_size</span><span class="p">),</span>
+                    <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="n">_upload_graph_error</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">UnimplementedError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;UploadGraphStreaming unimplemented. Old robot release?&#39;</span><span class="p">)</span>
+                <span class="c1"># Recreate the request so that we clear any state that might have happened during our attempt to stream.</span>
+                <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_upload_graph_request</span><span class="p">(</span><span class="n">lease</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">generate_new_anchoring</span><span class="p">)</span>
+                <span class="c1"># Continue to regular UploadGraph.</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">UploadGraph</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_response</span><span class="p">,</span>
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">_upload_graph_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -1019,6 +1060,17 @@
 <span class="sd">            RpcError: Problem communicating with the robot</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">request</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_download_graph_request</span><span class="p">()</span>
+        <span class="c1"># Use streaming to download the graph, if applicable.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_streaming_graph_upload</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DownloadGraphStreaming</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
+                                 <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_streamed_download_graph</span><span class="p">,</span>
+                                 <span class="n">error_from_response</span><span class="o">=</span><span class="n">_download_graph_stream_errors</span><span class="p">,</span>
+                                 <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">resp</span>
+            <span class="k">except</span> <span class="n">UnimplementedError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DownloadGraphStreaming unimplemented. Old robot release?&#39;</span><span class="p">)</span>
+                <span class="c1"># Continue to regular DownloadGraph.</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">DownloadGraph</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_graph</span><span class="p">,</span>
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -1143,9 +1195,16 @@
             <span class="n">request_gps_state</span><span class="o">=</span><span class="n">request_gps_state</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_build_navigate_route_request</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">route_follow_params</span><span class="p">,</span> <span class="n">travel_params</span><span class="p">,</span> <span class="n">end_time_secs</span><span class="p">,</span>
-                                      <span class="n">leases</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">,</span> <span class="n">command_id</span><span class="p">,</span>
-                                      <span class="n">destination_waypoint_tform_body_goal</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_build_navigate_route_request</span><span class="p">(</span>
+        <span class="n">route</span><span class="p">,</span>
+        <span class="n">route_follow_params</span><span class="p">,</span>
+        <span class="n">travel_params</span><span class="p">,</span>
+        <span class="n">end_time_secs</span><span class="p">,</span>
+        <span class="n">leases</span><span class="p">,</span>
+        <span class="n">timesync_endpoint</span><span class="p">,</span>
+        <span class="n">command_id</span><span class="p">,</span>
+        <span class="n">destination_waypoint_tform_body_goal</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="n">converter</span> <span class="o">=</span> <span class="n">timesync_endpoint</span><span class="o">.</span><span class="n">get_robot_time_converter</span><span class="p">()</span>
         <span class="n">request</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">NavigateRouteRequest</span><span class="p">(</span>
             <span class="n">route</span><span class="o">=</span><span class="n">route</span><span class="p">,</span> <span class="n">route_follow_params</span><span class="o">=</span><span class="n">route_follow_params</span><span class="p">,</span>
@@ -1217,6 +1276,22 @@
         <span class="n">lease</span> <span class="o">=</span> <span class="n">lease</span> <span class="ow">or</span> <span class="n">lease_pb2</span><span class="o">.</span><span class="n">Lease</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">UploadGraphRequest</span><span class="p">(</span><span class="n">lease</span><span class="o">=</span><span class="n">lease</span><span class="p">,</span> <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span>
                                                 <span class="n">generate_new_anchoring</span><span class="o">=</span><span class="n">generate_new_anchoring</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_data_chunk_iterator_upload_graph</span><span class="p">(</span><span class="n">serialized_upload_graph</span><span class="p">,</span> <span class="n">data_chunk_byte_size</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a serialized UploadGraphRequest into a series of UploadGraphStreamingRequests.&quot;&quot;&quot;</span>
+        <span class="n">total_bytes_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">serialized_upload_graph</span><span class="p">)</span>
+        <span class="n">num_chunks</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">total_bytes_size</span> <span class="o">/</span> <span class="n">data_chunk_byte_size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_chunks</span><span class="p">):</span>
+            <span class="n">start_index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="n">data_chunk_byte_size</span>
+            <span class="n">end_index</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">data_chunk_byte_size</span>
+            <span class="n">chunk</span> <span class="o">=</span> <span class="n">data_chunk_pb2</span><span class="o">.</span><span class="n">DataChunk</span><span class="p">(</span><span class="n">total_size</span><span class="o">=</span><span class="n">total_bytes_size</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">end_index</span> <span class="o">&gt;</span> <span class="n">total_bytes_size</span><span class="p">):</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">serialized_upload_graph</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">total_bytes_size</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">chunk</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">serialized_upload_graph</span><span class="p">[</span><span class="n">start_index</span><span class="p">:</span><span class="n">end_index</span><span class="p">]</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">UploadGraphStreamingRequest</span><span class="p">(</span><span class="n">chunk</span><span class="o">=</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">req</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_data_chunk_iterator_upload_waypoint_snapshot</span><span class="p">(</span><span class="n">serialized_waypoint_snapshot</span><span class="p">,</span> <span class="n">lease</span><span class="p">,</span>
@@ -1494,36 +1569,26 @@
     <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">graph</span>
 
 
+<span class="k">def</span> <span class="nf">_get_streamed_data</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">data_type</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a list of streamed responses, return an instance of the given data type that is parsed from those responses.&quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">+=</span> <span class="n">resp</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">proto_instance</span> <span class="o">=</span> <span class="n">data_type</span><span class="p">()</span>
+    <span class="n">proto_instance</span><span class="o">.</span><span class="n">ParseFromString</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">proto_instance</span>
+
+
+
+
 <span class="k">def</span> <span class="nf">_get_streamed_waypoint_snapshot</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads a streamed response to recreate a waypoint snapshot.&quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="n">num_chunks</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">num_chunks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">+=</span> <span class="n">resp</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span>
-        <span class="n">num_chunks</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">waypoint_snapshot</span> <span class="o">=</span> <span class="n">map_pb2</span><span class="o">.</span><span class="n">WaypointSnapshot</span><span class="p">()</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">num_chunks</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">waypoint_snapshot</span><span class="o">.</span><span class="n">ParseFromString</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">waypoint_snapshot</span>
+    <span class="k">return</span> <span class="n">_get_streamed_data</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">map_pb2</span><span class="o">.</span><span class="n">WaypointSnapshot</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_get_streamed_edge_snapshot</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads a streamed response to recreate an edge snapshot.&quot;&quot;&quot;</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-    <span class="n">num_chunks</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">resp</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">num_chunks</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">=</span> <span class="n">resp</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">data</span> <span class="o">+=</span> <span class="n">resp</span><span class="o">.</span><span class="n">chunk</span><span class="o">.</span><span class="n">data</span>
-        <span class="n">num_chunks</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="n">edge_snapshot</span> <span class="o">=</span> <span class="n">map_pb2</span><span class="o">.</span><span class="n">EdgeSnapshot</span><span class="p">()</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">num_chunks</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">):</span>
-        <span class="n">edge_snapshot</span><span class="o">.</span><span class="n">ParseFromString</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">edge_snapshot</span>
+    <span class="k">return</span> <span class="n">_get_streamed_data</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">map_pb2</span><span class="o">.</span><span class="n">EdgeSnapshot</span><span class="p">)</span>
 
 
 <span class="n">_UPLOAD_GRAPH_STATUS_TO_ERROR</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">ResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
@@ -1542,6 +1607,7 @@
 
 <span class="nd">@handle_common_header_errors</span>
 <span class="nd">@handle_lease_use_result_errors</span>
+<span class="nd">@handle_license_errors_if_present</span>
 <span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">_upload_graph_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on upload graph response, None if no error.&quot;&quot;&quot;</span>

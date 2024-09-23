@@ -1,0 +1,64 @@
+services:
+  app:
+    image: "gps_listener_image_arm64:latest"
+    network_mode: "host"
+    volumes:
+      - "/opt/payload_credentials:/creds"
+    devices:
+      - /dev/ublox_f9r:/dev/ublox_f9r
+    restart: unless-stopped
+    command:
+      [
+        "--name",
+        "Ublox F9R",
+        "--payload-tform-gps",
+        "0.1",
+        "0",
+        "0.1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "--payload-credentials-file",
+        "/creds/payload_guid_and_secret",
+        "192.168.50.3",
+        "--register-payload",
+        "--mass",
+        "0.5",
+        "--description",
+        "Ublox F9R GNSS Receiver",
+        "--position",
+        "-0.18",
+        "0.024",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "--position-of-mass",
+        "0",
+        "0",
+        "0.1",
+        "--bounding-box",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "--version",
+        "1",
+        "0",
+        "0",
+        "--gps-credentials-file",
+        "/creds/ublox-f9r-gps-payload-credentials.txt",
+        "serial",
+        "--serial-device",
+        "/dev/ublox_f9r",
+        "--serial-baudrate",
+        "38400",
+      ]

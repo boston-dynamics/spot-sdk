@@ -7,7 +7,6 @@
 """data-buffer pytests"""
 import logging
 import struct
-import sys
 import time
 import types
 from unittest import mock

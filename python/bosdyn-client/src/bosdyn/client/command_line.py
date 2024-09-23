@@ -13,16 +13,19 @@ import argparse
 import datetime
 import os
 import signal
+import socket
 import sys
 import threading
 import time
 
+from deprecated.sphinx import deprecated
 from google.protobuf import json_format
 
 import bosdyn.client
 from bosdyn.api import data_acquisition_pb2, image_pb2
 from bosdyn.api.data_buffer_pb2 import Event, TextMessage
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
+from bosdyn.api.keepalive import keepalive_pb2
 from bosdyn.api.robot_state_pb2 import BehaviorFault
 from bosdyn.util import duration_str, timestamp_to_datetime
 
@@ -38,6 +41,7 @@ from .estop import EstopClient, EstopEndpoint, EstopKeepAlive
 from .exceptions import Error, InvalidRequestError, ProxyConnectionError
 from .image import (ImageClient, ImageResponseError, UnknownImageSourceError, build_image_request,
                     save_images_as_files)
+from .keepalive import KeepaliveClient
 from .lease import LeaseClient
 from .license import LicenseClient
 from .local_grid import LocalGridClient
@@ -1704,6 +1708,81 @@ class LeaseListCommand(Command):
         return str(resource)
 
 
+class EstopCommands(Subcommands):
+    """Commands for interacting with robot estop service."""
+
+    NAME = 'estop'
+
+    def __init__(self, subparsers, command_dict):
+        """Commands for interacting with robot estop service.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(EstopCommands,
+              self).__init__(subparsers, command_dict,
+                             [BecomeEstopCommand, GetEstopConfigCommand, GetEstopStatusCommand])
+
+
+class GetEstopConfigCommand(Command):
+    """Get estop config of estop service."""
+
+    NAME = 'config'
+
+    def __init__(self, subparsers, command_dict):
+        """Call EstopService GetEstopConfig RPC.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(GetEstopConfigCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True.
+        """
+        client = robot.ensure_client(EstopClient.default_service_name)
+        config = client.get_config()
+        print(config)
+
+
+class GetEstopStatusCommand(Command):
+    """Get estop status of estop service."""
+
+    NAME = 'status'
+
+    def __init__(self, subparsers, command_dict):
+        """Call EstopService GetEstopSystemStatus RPC.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(GetEstopStatusCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True.
+        """
+        client = robot.ensure_client(EstopClient.default_service_name)
+        status = client.get_status()
+        print(status)
+
+
 class BecomeEstopCommand(Command):
     """Grab and hold estop until Ctl-C."""
 
@@ -1754,7 +1833,7 @@ class BecomeEstopCommand(Command):
         # Create the endpoint to the robot estop system.
         # Timeout should be chosen to balance safety considerations with expected service latency.
         # See the estop documentation for details.
-        endpoint = EstopEndpoint(client, 'command-line', options.timeout)
+        endpoint = EstopEndpoint(client, f"command-line-{socket.gethostname()}", options.timeout)
         # Have this endpoint to set up the robot's estop system such that it is the sole estop.
         # See the function's docstring and the estop documentation for details.
         endpoint.force_simple_setup()
@@ -1786,6 +1865,14 @@ class BecomeEstopCommand(Command):
         endpoint.deregister()
 
         return True
+
+
+class OldBecomeEstopCommand(BecomeEstopCommand):
+    """Old version of BecomeEstopCommand."""
+
+    def run(self, robot, options):
+        print('DEPRECATION WARNING: This command is now "bosdyn.client estop become-estop"')
+        return BecomeEstopCommand.run(self, robot, options)
 
 
 class ImageCommands(Subcommands):
@@ -2276,6 +2363,175 @@ class PowerCommand(Subcommands):
             ])
 
 
+class KeepaliveCommand(Subcommands):
+    """Send keepalive commands to the robot."""
+
+    NAME = 'keepalive'
+
+    def __init__(self, subparsers, command_dict):
+        """Send keepalive commands to the robot.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(KeepaliveCommand, self).__init__(subparsers, command_dict, [
+            KeepaliveGetStatusCommand,
+            KeepaliveRemovePoliciesCommand,
+        ])
+
+
+def lease_details(leases):
+    """Returns list of <resource_name>:<sequence>, ...N."""
+    lease_strings = []
+    for lease in leases:
+        sequence_string = ", ".join([str(lease_seq) for lease_seq in lease.sequence])
+        lease_strings.append(f"{lease.resource}:[{sequence_string}]")
+    return ", ".join(lease_strings)
+
+
+class KeepaliveGetStatusCommand(Command):
+    """Get status of keepalive service."""
+
+    NAME = 'status'
+
+    def __init__(self, subparsers, command_dict):
+        """Call KeepaliveService GetStatus RPC.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(KeepaliveGetStatusCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('-f', '--full', action='store_true', default=False,
+                                  help='Show full GetStatus proto as json.')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True.
+        """
+        client = robot.ensure_client(KeepaliveClient.default_service_name)
+        status = client.get_status()
+
+        # Give the option to print out the full message.
+        if options.full:
+            print(json_format.MessageToJson(status))
+            return True
+
+        # If there are no policies, there probably isn't anything interesting here.
+        if len(status.status) == 0:
+            print("No active policies")
+            return True
+
+        # List all live policies in a concise message.
+        if len(status.status) == 1:
+            print("Robot returned 1 live policy:")
+        else:
+            print(f"Robot returned {len(status.status)} live policies:")
+        for live_policy in status.status:
+            rough_robot_timestamp = status.header.response_timestamp.ToSeconds()
+            last_checkin = live_policy.last_checkin.ToSeconds()
+            time_elapsed = rough_robot_timestamp - last_checkin
+            # Go through each action, and create a helpful message describing the status.
+            action_list = []
+            for action in live_policy.policy.actions:
+                name = action.WhichOneof("action")
+                # If this is a lease_stale or auto_return action, include some lease info.
+                name_maybe_with_details = name
+                if action.HasField("lease_stale"):
+                    name_maybe_with_details = f"{name_maybe_with_details} ({lease_details(action.lease_stale.leases)})"
+                if action.HasField("auto_return"):
+                    name_maybe_with_details = f"{name_maybe_with_details} ({lease_details(action.auto_return.leases)})"
+                # Add an indicator if the policy action is active or not.
+                action_after_time = action.after.ToSeconds()
+                active_message = "NOT active"
+                if time_elapsed > action.after.ToSeconds():
+                    active_message = "ACTIVE"
+                action_list.append(
+                    f"{name_maybe_with_details} after {action_after_time} seconds, {active_message}"
+                )
+            formatted_string = f"id: {live_policy.policy_id}\n client_name: {live_policy.client_name}\n last checkin {time_elapsed}s ago"
+            # Only the supervisor policy seems to have a name.
+            if live_policy.policy.name:
+                formatted_string = formatted_string + f"\n policy name: '{live_policy.policy.name}'"
+            if live_policy.policy.user_id:
+                formatted_string = formatted_string + f"\n user_id: '{live_policy.policy.user_id}'"
+            if len(live_policy.policy.associated_leases) > 0:
+                formatted_string = formatted_string + f"\n associated_leases: {lease_details(live_policy.policy.associated_leases)}"
+            print(formatted_string)
+            print(" actions:")
+            for index, action in enumerate(action_list):
+                print(f"   {action}")
+            print("")
+
+        # If there is an action control action, we should indicate that.
+        if len(status.active_control_actions) == 0:
+            return True
+        for action in status.active_control_actions:
+            enum_name = keepalive_pb2.GetStatusResponse.PolicyControlAction.Name(action)
+            print(f"Active control action: {enum_name}")
+        return True
+
+
+class KeepaliveRemovePoliciesCommand(Command):
+    """Remove keepalive policies."""
+
+    NAME = 'remove'
+
+    def __init__(self, subparsers, command_dict):
+        """Remove keepalive policies.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(KeepaliveRemovePoliciesCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('--policy-id', type=int, nargs='+',
+                                  help='Specify specific policy ids to remove.')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True.
+        """
+        client = robot.ensure_client(KeepaliveClient.default_service_name)
+        current_policies = client.get_status().status
+        current_policy_ids = [s.policy_id for s in current_policies]
+
+        # If there are no policies, there probably isn't anything interesting here.
+        if len(current_policies) == 0:
+            print("No active policies")
+            return True
+
+        to_rm = []
+        if options.policy_id:
+            # Remove specific policies.
+            for policy_id in options.policy_id:
+                if policy_id in current_policy_ids:
+                    to_rm.append(policy_id)
+                else:
+                    print(f"Policy '{policy_id}' not found.")
+        else:
+            # Remove all current policies.
+            to_rm = current_policy_ids
+
+        client.modify_policy(policy_ids_to_remove=to_rm)
+        print(f"Removed {len(to_rm)} policies")
+
+        return True
+
+
 class PowerRobotCommand(Command):
     """Control the power of the entire robot."""
 
@@ -2405,12 +2661,14 @@ def main(args=None):
     DataServiceCommands(subparsers, command_dict)
     TimeSyncCommand(subparsers, command_dict)
     LeaseCommands(subparsers, command_dict)
-    BecomeEstopCommand(subparsers, command_dict)
+    OldBecomeEstopCommand(subparsers, command_dict)
+    EstopCommands(subparsers, command_dict)
     ImageCommands(subparsers, command_dict)
     LocalGridCommands(subparsers, command_dict)
     DataAcquisitionCommand(subparsers, command_dict)
     HostComputerIPCommand(subparsers, command_dict)
     PowerCommand(subparsers, command_dict)
+    KeepaliveCommand(subparsers, command_dict)
 
     options = parser.parse_args(args=args)
 

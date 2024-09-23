@@ -11,7 +11,8 @@ from bosdyn.api import world_object_pb2, world_object_service_pb2
 from bosdyn.api import world_object_service_pb2_grpc as world_object_service
 from bosdyn.client.common import BaseClient, common_header_errors
 from bosdyn.client.frame_helpers import *
-from bosdyn.client.robot_command import NoTimeSyncError, _TimeConverter
+from bosdyn.client.robot_command import NoTimeSyncError
+from bosdyn.client.time_sync import update_time_filter, update_timestamp_filter
 from bosdyn.util import now_timestamp
 
 
@@ -63,7 +64,7 @@ class WorldObjectClient(BaseClient):
                 time.
         """
         if time_start_point is not None:
-            time_start_point = self._update_time_filter(time_start_point, self.timesync_endpoint)
+            time_start_point = update_time_filter(self, time_start_point, self.timesync_endpoint)
         req = world_object_pb2.ListWorldObjectRequest(object_type=object_type,
                                                       timestamp_filter=time_start_point)
         return self.call(self._stub.ListWorldObjects, req,
@@ -73,7 +74,7 @@ class WorldObjectClient(BaseClient):
     def list_world_objects_async(self, object_type=None, time_start_point=None, **kwargs):
         """Async version of list_world_objects()."""
         if time_start_point is not None:
-            time_start_point = self._update_time_filter(time_start_point, self.timesync_endpoint)
+            time_start_point = update_time_filter(self, time_start_point, self.timesync_endpoint)
         req = world_object_pb2.ListWorldObjectRequest(object_type=object_type,
                                                       timestamp_filter=time_start_point)
         return self.call_async(self._stub.ListWorldObjects, req,
@@ -100,7 +101,7 @@ class WorldObjectClient(BaseClient):
             # Ensure the mutation request's object's time of detection is in robot time.
             client_timestamp = mutation_req.mutation.object.acquisition_time
             mutation_req.mutation.object.acquisition_time.CopyFrom(
-                self._update_timestamp_filter(client_timestamp, self.timesync_endpoint))
+                update_timestamp_filter(self, client_timestamp, self.timesync_endpoint))
         return self.call(self._stub.MutateWorldObjects, mutation_req,
                          value_from_response=_get_status, error_from_response=common_header_errors,
                          **kwargs)
@@ -111,45 +112,11 @@ class WorldObjectClient(BaseClient):
             # Ensure the mutation request's object's time of detection is in robot time.
             client_timestamp = mutation_req.mutation.object.acquisition_time
             mutation_req.mutation.object.acquisition_time.CopyFrom(
-                self._update_timestamp_filter(client_timestamp, self.timesync_endpoint))
+                update_timestamp_filter(self, client_timestamp, self.timesync_endpoint))
         return self.call_async(self._stub.MutateWorldObjects, mutation_req,
                                value_from_response=_get_status,
                                error_from_response=common_header_errors, **kwargs)
 
-
-    def _update_time_filter(self, timestamp, timesync_endpoint):
-        """Set or convert fields of the proto that need timestamps in the robot's clock.
-
-        Args:
-            timestamp (float): Client time, such as from time.time().
-            timesync_endpoint (TimeSyncEndpoint): A timesync endpoint associated with the robot object.
-
-        Raises:
-            NoTimeSyncError: Could not find the timesync endpoint for the robot to convert the time.
-        """
-        # Input timestamp is a float. (from time.time())
-        if not timesync_endpoint:
-            raise NoTimeSyncError("[world object service] No timesync endpoint set for the robot.")
-        # Lazy RobotTimeConverter: initialized only if needed to make a conversion.
-        converter = _TimeConverter(self, timesync_endpoint)
-        return converter.robot_timestamp_from_local_secs(timestamp)
-
-    def _update_timestamp_filter(self, timestamp, timesync_endpoint):
-        """Set or convert fields of the proto that need timestamps in the robot's clock.
-
-        Args:
-            timestamp (google.protobuf.Timestamp): Client time.
-            timesync_endpoint (TimeSyncEndpoint): A timesync endpoint associated with the robot object.
-
-        Raises:
-            NoTimeSyncError: Could not find the timesync endpoint for the robot to convert the time.
-        """
-        # Input timestamp is a google.protobuf.Timestamp
-        if not timesync_endpoint:
-            raise NoTimeSyncError("[world object service] No timesync endpoint set for the robot.")
-        converter = _TimeConverter(self, timesync_endpoint)
-        converter.convert_timestamp_from_local_to_robot(timestamp)
-        return timestamp
 
     def draw_sphere(self, name, x_rt_frame_name, y_rt_frame_name, z_rt_frame_name, frame_name,
                     radius=0.05, rgba=(255, 0, 0, 1), list_objects_now=True):

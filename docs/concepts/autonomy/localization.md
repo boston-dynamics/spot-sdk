@@ -12,7 +12,6 @@ Once the robot’s location has been initialized in GraphNav, clients can use th
 
 A map's waypoints are combined with the cumulative point cloud data captured at each waypoint. It's important to understand that this point cloud data does not result in global consistency.
 
-
 ## Localization update interval
 
 GraphNav updates localization at least twice a second. Internally, GraphNav uses the localization estimate to decide whether or not to switch the localization frame to a different waypoint on the map.
@@ -21,15 +20,13 @@ Localization is computed by combining prior information from the map, the robot�
 
 Situations that can have a negative effect on localization:
 
-
-*   The robot is far enough away from the recorded map that it cannot see any features recorded in the map for a long period of time
-*   The robot slips and falls or is carried to a new location while unpowered
-*   The environment has changed dramatically since the map was recorded
-*   The environment has few features
-*   The environment is too dark
+- The robot is far enough away from the recorded map that it cannot see any features recorded in the map for a long period of time
+- The robot slips and falls or is carried to a new location while unpowered
+- The environment has changed dramatically since the map was recorded
+- The environment has few features
+- The environment is too dark
 
 A robot equipped with a LIDAR payload can operate in darker environments than a robot without such a payload.
-
 
 ## Feature Deserts
 
@@ -39,7 +36,6 @@ For example, every position on a snow-covered field looks the same — there isn
 
 GraphNav will not attempt to localize in feature deserts. Instead, it will rely on odometry to allow the robot to cross small feature deserts.
 
-
 ## Lost robots
 
 The GraphNav service maintains an internal assessment of whether or not it believes the robot is lost or stuck. When lost, the service will refuse to navigate autonomously.
@@ -48,13 +44,11 @@ This determination is correlated with the amount of change in the environment wh
 
 When site changes cause the localization status to be `STATUS_LOST`, a new map of the site should be recorded.
 
-
 ## Stuck robots
 
 The GraphNav service uses a system of constraints to keep the robot relatively close to the recorded route (roughly within a 3m corridor).
 
 If a large object is placed in the robot’s path, the robot may not be able to get around it. If the robot takes longer than expected to get to its next destination, GraphNav will declare the robot stuck. This does NOT stop the robot, which will keep trying to return to the route. However, the API client may wish to intervene or prompt the operator.
-
 
 ## Stairs and other edge constraints
 
@@ -65,9 +59,10 @@ Edges may also be annotated with related constraints to maintain direction. For 
 The robot must have enough space to turn around in between up- and down- stairs, otherwise the robot will report a navigation status of `STATUS_CONSTRAINT_FAULT`.
 
 ## GraphNav Origin
+
 The localization object includes an additional field `seed_tform_body` since the 2.1.0 release. This field returns the pose of the robot body with respect to the starting fiducial frame as an SE3Pose, which can be considered the "origin" or "seed" of the GraphNav map.
 
-Please reference this [document](https://support.bostondynamics.com/s/article/Site-inspection-with-teleoperation) for how to initialize and define a custom origin using the Tablet App outside of Autowalk since the 2.1.0 release. 
+Please reference this [document](https://support.bostondynamics.com/s/article/Site-inspection-with-teleoperation) for how to initialize and define a custom origin using the Tablet App outside of Autowalk since the 2.1.0 release.
 
 An example of how to access this field with the Spot API is available below. Please remember to initialize the GraphNav map first or the SE3Pose will be not be populated.
 
@@ -81,6 +76,7 @@ def get_graphnav_origin(self):
 ```
 
 <!--- image and page reference link definitions --->
+
 [autonomous-top]: Readme.md "Spot SDK: Autonomy, GraphNav, and Missions"
 [code-examples]: autonomous_navigation_code_examples.md "Autonomous navigation code examples"
 [components]: components_of_autonomous_navigation.md "Components of autonomous navigation"

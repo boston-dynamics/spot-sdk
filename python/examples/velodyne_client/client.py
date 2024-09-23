@@ -135,7 +135,7 @@ def main():
     aggregate_data = collections.deque(maxlen=5)
     while True:
         if _point_cloud_task.proto[0].point_cloud:
-            data = np.fromstring(_point_cloud_task.proto[0].point_cloud.data, dtype=np.float32)
+            data = np.frombuffer(_point_cloud_task.proto[0].point_cloud.data, dtype=np.float32)
             aggregate_data.append(data)
             plot_data = np.concatenate(aggregate_data)
             ax.clear()

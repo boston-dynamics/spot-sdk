@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Custom Gait &mdash; Spot 4.0.3 documentation</title>
+  <title>Custom Gait &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -508,29 +513,29 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="custom-gait">
 <h1>Custom Gait<a class="headerlink" href="#custom-gait" title="Permalink to this heading"></a></h1>
-<p>Custom Gait is Choreography Move that behaves like a gait that can be greatly customized in its appearance and can be actively steered during operation (e.g. via a joystick).  It can represent any gait pattern that has one or two steps per gait cycle for each leg.</p>
+<p>Custom Gait is Choreography Move that behaves like a gait that can be greatly customized in its appearance and can be actively steered during operation (e.g. via a joystick). It can represent any gait pattern that has one or two steps per gait cycle for each leg.</p>
 <section id="behavior-within-a-sequence">
 <h2>Behavior Within a Sequence<a class="headerlink" href="#behavior-within-a-sequence" title="Permalink to this heading"></a></h2>
-<p>Custom Gait is integrated as a legs-track move within the Choreography API.  It can therefore be combined with other moves that occupy the body, arm, gripper, and lights tracks.  The Custom Gait move can be adjusted to occupy any number of slices within the timeline, however the sequence clock will not advance normally while Custom Gait is executing.  Instead, the section of the sequence occupied by Custom Gait will represent one gait cycle (duration set by the <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code> parameter).  This portion of the sequence, including moves in other tracks, will loop until Custom Gait is commanded to stop.  This behavior is denoted by the black repeat symbols in the timeline view within Choreographer and will be reflected by the red cursor during execution.</p>
-<p>This means that Body and Arm-track moves will result in a cyclic motion phase-locked to Custom Gait, providing further options for customizing the appearance of the behavior.  It is not possible for other moves to span the beginning or end of Custom Gait within the timeline.</p>
+<p>Custom Gait is integrated as a legs-track move within the Choreography API. It can therefore be combined with other moves that occupy the body, arm, gripper, and lights tracks. The Custom Gait move can be adjusted to occupy any number of slices within the timeline, however the sequence clock will not advance normally while Custom Gait is executing. Instead, the section of the sequence occupied by Custom Gait will represent one gait cycle (duration set by the <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code> parameter). This portion of the sequence, including moves in other tracks, will loop until Custom Gait is commanded to stop. This behavior is denoted by the black repeat symbols in the timeline view within Choreographer and will be reflected by the red cursor during execution.</p>
+<p>This means that Body and Arm-track moves will result in a cyclic motion phase-locked to Custom Gait, providing further options for customizing the appearance of the behavior. It is not possible for other moves to span the beginning or end of Custom Gait within the timeline.</p>
 </section>
 <section id="driving-custom-gait">
 <h2>Driving Custom Gait<a class="headerlink" href="#driving-custom-gait" title="Permalink to this heading"></a></h2>
-<p>CustomGait responds to the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyCommand</span></a> RPC.  When operating through Choreographer with an attached XBox controller, steering commands will be sent based on joystick position (left joystick for translation, right for turning), and the d-pad down button will command Custom Gait to stop, allowing the sequence to proceed.  Steering commands will be scaled by the <code class="docutils literal notranslate"><span class="pre">CustomGaitCommandLimits</span></code> message returned as part of the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyStatus</span></a> RPC.  Those will generally be the values specified for <code class="docutils literal notranslate"><span class="pre">max_velocity</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw_rate</span></code> in the parameters, but may be limited based on a determination of what that gait pattern is capable of.</p>
-<p>The custom gait move can also be driven through the tablet’s choreograpy drive screen using the tablet’s joysticks. See <a class="reference internal" href="choreography_in_tablet.html"><span class="doc">Tablet Choreography Mode</span></a> for further details on playing choreography sequences through the tablet.</p>
+<p>CustomGait responds to the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyCommand</span></a> RPC. When operating through Choreographer with an attached XBox controller, steering commands will be sent based on joystick position (left joystick for translation, right for turning), and the d-pad down button will command Custom Gait to stop, allowing the sequence to proceed. Steering commands will be scaled by the <code class="docutils literal notranslate"><span class="pre">CustomGaitCommandLimits</span></code> message returned as part of the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyStatus</span></a> RPC. Those will generally be the values specified for <code class="docutils literal notranslate"><span class="pre">max_velocity</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw_rate</span></code> in the parameters, but may be limited based on a determination of what that gait pattern is capable of.</p>
+<p>The custom gait move can also be driven through the tablet’s choreography drive screen using the tablet’s joysticks. See <a class="reference internal" href="choreography_in_tablet.html"><span class="doc">Tablet Choreography Mode</span></a> for further details on playing choreography sequences through the tablet.</p>
 </section>
 <section id="gait-diagram">
 <h2>Gait Diagram<a class="headerlink" href="#gait-diagram" title="Permalink to this heading"></a></h2>
-<p>A Hildebrand-style gait diagram (see <a class="reference external" href="https://en.wikipedia.org/wiki/Gait">wikipedia</a> is provided for Custom Gait as currently configured in the left panel of the Move Configuration tab in Choreographer.  For each foot in the diagram (FL, FR, HL, HR), black regions of the diagram indicate periods of time when a foot is in contact with the ground, and white regions indicate periods of time when a foot is in the air.  The phase sliders control the beginning and end of the white region.  Some types of configuration errors will be indicated in red on the diagram.</p>
+<p>A Hildebrand-style gait diagram (see <a class="reference external" href="https://en.wikipedia.org/wiki/Gait">wikipedia</a> is provided for Custom Gait as currently configured in the left panel of the Move Configuration tab in Choreographer. For each foot in the diagram (FL, FR, HL, HR), black regions of the diagram indicate periods of time when a foot is in contact with the ground, and white regions indicate periods of time when a foot is in the air. The phase sliders control the beginning and end of the white region. Some types of configuration errors will be indicated in red on the diagram.</p>
 </section>
 <section id="presets">
 <h2>Presets<a class="headerlink" href="#presets" title="Permalink to this heading"></a></h2>
-<p>Several preset gait patterns are provided in a pulldown menu where the “Reset to Default Parameters” button is for most moves.  Select the desired preset, then click the “Apply” button.  Note that presets only modify a subset of parameters.  Presets with the prefix “gait” will only impact <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code> and phase parameters.</p>
+<p>Several preset gait patterns are provided in a pulldown menu where the “Reset to Default Parameters” button is for most moves. Select the desired preset, then click the “Apply” button. Note that presets only modify a subset of parameters. Presets with the prefix “gait” will only impact <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code> and phase parameters.</p>
 </section>
 <section id="tips-for-configuring-custom-gait">
 <h2>Tips for Configuring Custom Gait<a class="headerlink" href="#tips-for-configuring-custom-gait" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p>Fast stepping is often easier than slow stepping, especially when fewer feet are on the ground.  Try starting with a faster <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code>, then gradually increasing that value to slow the cadence to your preferred speed.  Exact value will depend on gait pattern, especially the duty factor, but <code class="docutils literal notranslate"><span class="pre">cycle_duration</span> <span class="pre">=</span> <span class="pre">0.6</span> <span class="pre">seconds</span></code> or even faster may be required from some patterns.</p></li>
+<li><p>Fast stepping is often easier than slow stepping, especially when fewer feet are on the ground. Try starting with a faster <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code>, then gradually increasing that value to slow the cadence to your preferred speed. Exact value will depend on gait pattern, especially the duty factor, but <code class="docutils literal notranslate"><span class="pre">cycle_duration</span> <span class="pre">=</span> <span class="pre">0.6</span> <span class="pre">seconds</span></code> or even faster may be required from some patterns.</p></li>
 <li><p>Swing Duration is <code class="docutils literal notranslate"><span class="pre">(touchdown_phase</span> <span class="pre">-</span> <span class="pre">liftoff_phase</span> <span class="pre">*</span> <span class="pre">cycle_duration)</span></code>.</p></li>
 <li><p>Individual swings shorter than 250 ms will make it difficult to operate off of flat ground.</p></li>
 <li><p>Individual swings shorter than 150 ms will make it difficult to move quickly, even on flat ground.</p></li>
@@ -539,53 +544,174 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>The maximum duration both left or both right feet can be off the ground simultaneously is about 500ms.</p></li>
 <li><p>The maximum duration a diagonal pair of feet can be off the ground simultaneously is about 800ms.</p></li>
 <li><p>The “duty factor” is the fraction of the time that a foot is on the ground.</p></li>
-<li><p>The average duty factor of either the two front legs or the two hind legs should be at least 30%.  Increasing duty factor will generally improve stability (with decreasing returns after 65%).</p></li>
-<li><p>More challenging gaits may only work well at low speeds and/or low accelerations.  Consider lowering the speed limits using the <code class="docutils literal notranslate"><span class="pre">max_velocity</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw_rate</span></code> sliders and lowering the acceleration limit with the <code class="docutils literal notranslate"><span class="pre">acceleration_scaling</span></code> slider during initial testing.</p></li>
+<li><p>The average duty factor of either the two front legs or the two hind legs should be at least 30%. Increasing duty factor will generally improve stability (with decreasing returns after 65%).</p></li>
+<li><p>More challenging gaits may only work well at low speeds and/or low accelerations. Consider lowering the speed limits using the <code class="docutils literal notranslate"><span class="pre">max_velocity</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw_rate</span></code> sliders and lowering the acceleration limit with the <code class="docutils literal notranslate"><span class="pre">acceleration_scaling</span></code> slider during initial testing.</p></li>
 </ul>
 </section>
 <section id="parameter-reference">
 <h2>Parameter Reference<a class="headerlink" href="#parameter-reference" title="Permalink to this heading"></a></h2>
-<p>Parameter | Effect
-–|–
-cycle_duration | The duration (s) of a full gait cycle.
-liftoff_phase | When within the gait cycle a particular leg lifts off the ground.
-touchdown_phase | When within the gait cycle a particular leg steps onto the ground.
-two_LEG_swings | Determines whether that particular leg will have two steps within the gait cycle.  If active, a second set of liftoff_phase and touchdown_phase must be specified.
-max_velocity | The maximum translational velocity (m/s) command that will be accepted.
-max_yaw_rate | The maximum turn rate (rad/s) command that will be accepted.
-acceleration_scaling | How much to limit steering acceleration.  1 is normal.  Smaller is less acceleration.
-com_height | Height (m) of the Center-of-Mass above the ground.
-body_translation_offset | Horizontal offset (m) of the Center-of-Mass from a neutral posture. (x-forward, y-left).  This is a constant offset that is additive with any phase-dependent offset specified in a Body-track move.
-body_rotation_offset | Orientation offset (rad) from a neutral posture. This is a constant offset that is additive with any phase-dependent offset specified in a Body-track move.
-low_speed_body_fraction | How much to scale down the body motion when navigating at low speeds.
-stance_shape | The relative position of the feet when they are on the ground.
-stance_shape.length | Distance (m) between front and hind feet.
-stance_shape.width | Distance (m) between left and right feet.
-stance_shape.front_wider_than_hind | Difference (m) between the FL&lt;–&gt;FR distance and the HL&lt;–&gt;HR distance.  Positive means front feet are wider.
-stance_shape.left_longer_than_right | Difference (m) between the FL&lt;–&gt;HL distance and the FR&lt;–&gt;HR distance.  Positive means the left feet are farther apart.
-stance_shape.left_forward_of_right | Distance (m) to shift the FL and HL feet forward relative to the FR and HR feet.  Negative means shifted backwards.
-general_swing_params | Swing parameters that apply to all legs not configured to use leg-specific swing parameters.
-use_LEG_swing_params | Configures a particular leg to use leg-speciic swing parameters rather than the general set.
-LEG_swing_params | Swing parameters used by a particular leg if configured to use leg-specific swing parameters.
-SwingParams.height | How high (m) to lift the foot.  Request may not be achievable due to configured vertical_speed, vertical_acceleration, and swing duration.
-SwingParams.liftoff_speed | How fast (m/s) to start lifting the foot at the moment of liftoff.
-SwingParams.vertical_speed | How fast (m/s) to lift and lower the foot.
-SwingParams.vertical_acceleration | How fast to accelerate (m/s/s) the foot vertically to achieve the configured vertical_speed.
-SwingParams.overlay_outside | How far (m) to swing the foot to the outside (negative for inside) relative to a straight-line step.
-SwingParams.overlay_forward | How far (m) to swing the foot forward (negative for backward) relative to a straight-line step.
-SwingParams.low_speed_fraction | How much to reduce the swing parameters when navigating at low speed.
-mu | Estimated coefficient of friction between the ground and the feet.  Setting this accurately will improve reliability.
-timing_stiffness | How much the robot is allowed to deviate from the specified timing. 0 means no deviation. Otherwise, large values mean less deviation and small values mean more is acceptable.<br>Too much timing adjustment (low, non-zero values) may make the gait unstable.<br>At least a little timing adjustment is recommended for gaits with flight phases (periods with 0 feet on the ground).
-step_position_stiffness | How much the robot is allowed to deviate from the specified stance shape.<br>0 means no deviation.<br>Otherwise: large values mean less deviation and small values mean more is acceptable.<br>Too much position adjustment (low, non-zero values) may make the gait unstable.
-enable_perception_obstacle_avoidance | If enabled, CustomGait will attempt to avoid obstacles.<br>More challenging gaits may require significant obstacle avoidance padding to reliably avoid collisions.
-obstacle_avoidance_padding | How far (m) to stay away from obstacles.<br>More challenging gaits may require significant padding to reliably avoid collisions.
-enable_perception_terrain_height | If enabled, will use perception to determine the shape of the terrain.<br>Can be disabled if operating on a flat floor.
-enable_perception_step_placement | If enabled, will use perception to determine good vs bad locations to step.<br>Can be disabled if operating on a flat floor.
-maximum_stumble_distance | If Spot stumbles more than this distance (m), it will give up and freeze.
-stand_in_place | Stand rather than stepping in place when not moving.
-standard_final_stance | Go back to a standard rectangular stance when ending the gait.<br>Otherwise maintains the customized stance shape.
-trip_sensitivity | How sensitive we should be to trip detection.<br>On the range [0, 1], where 1 is normal sensitivity and 0 is ignoring all trips.<br>Useful for very aggressive gaits or when a costume is restricting leg motion.</p>
-</section>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cycle_duration</td>
+<td>The duration (s) of a full gait cycle.</td>
+</tr>
+<tr>
+<td>liftoff_phase</td>
+<td>When within the gait cycle a particular leg lifts off the ground.</td>
+</tr>
+<tr>
+<td>touchdown_phase</td>
+<td>When within the gait cycle a particular leg steps onto the ground.</td>
+</tr>
+<tr>
+<td>two_LEG_swings</td>
+<td>Determines whether that particular leg will have two steps within the gait cycle. If active, a second set of liftoff_phase and touchdown_phase must be specified.</td>
+</tr>
+<tr>
+<td>max_velocity</td>
+<td>The maximum translational velocity (m/s) command that will be accepted.</td>
+</tr>
+<tr>
+<td>max_yaw_rate</td>
+<td>The maximum turn rate (rad/s) command that will be accepted.</td>
+</tr>
+<tr>
+<td>acceleration_scaling</td>
+<td>How much to limit steering acceleration. 1 is normal. Smaller is less acceleration.</td>
+</tr>
+<tr>
+<td>com_height</td>
+<td>Height (m) of the Center-of-Mass above the ground.</td>
+</tr>
+<tr>
+<td>body_translation_offset</td>
+<td>Horizontal offset (m) of the Center-of-Mass from a neutral posture. (x-forward, y-left). This is a constant offset that is additive with any phase-dependent offset specified in a Body-track move.</td>
+</tr>
+<tr>
+<td>body_rotation_offset</td>
+<td>Orientation offset (rad) from a neutral posture. This is a constant offset that is additive with any phase-dependent offset specified in a Body-track move.</td>
+</tr>
+<tr>
+<td>low_speed_body_fraction</td>
+<td>How much to scale down the body motion when navigating at low speeds.</td>
+</tr>
+<tr>
+<td>stance_shape</td>
+<td>The relative position of the feet when they are on the ground.</td>
+</tr>
+<tr>
+<td>stance_shape.length</td>
+<td>Distance (m) between front and hind feet.</td>
+</tr>
+<tr>
+<td>stance_shape.width</td>
+<td>Distance (m) between left and right feet.</td>
+</tr>
+<tr>
+<td>stance_shape.front_wider_than_hind</td>
+<td>Difference (m) between the FL&lt;--&gt;FR distance and the HL&lt;--&gt;HR distance. Positive means front feet are wider.</td>
+</tr>
+<tr>
+<td>stance_shape.left_longer_than_right</td>
+<td>Difference (m) between the FL&lt;--&gt;HL distance and the FR&lt;--&gt;HR distance. Positive means the left feet are farther apart.</td>
+</tr>
+<tr>
+<td>stance_shape.left_forward_of_right</td>
+<td>Distance (m) to shift the FL and HL feet forward relative to the FR and HR feet. Negative means shifted backwards.</td>
+</tr>
+<tr>
+<td>general_swing_params</td>
+<td>Swing parameters that apply to all legs not configured to use leg-specific swing parameters.</td>
+</tr>
+<tr>
+<td>use_LEG_swing_params</td>
+<td>Configures a particular leg to use leg-specific swing parameters rather than the general set.</td>
+</tr>
+<tr>
+<td>LEG_swing_params</td>
+<td>Swing parameters used by a particular leg if configured to use leg-specific swing parameters.</td>
+</tr>
+<tr>
+<td>SwingParams.height</td>
+<td>How high (m) to lift the foot. Request may not be achievable due to configured vertical_speed, vertical_acceleration, and swing duration.</td>
+</tr>
+<tr>
+<td>SwingParams.liftoff_speed</td>
+<td>How fast (m/s) to start lifting the foot at the moment of liftoff.</td>
+</tr>
+<tr>
+<td>SwingParams.vertical_speed</td>
+<td>How fast (m/s) to lift and lower the foot.</td>
+</tr>
+<tr>
+<td>SwingParams.vertical_acceleration</td>
+<td>How fast to accelerate (m/s/s) the foot vertically to achieve the configured vertical_speed.</td>
+</tr>
+<tr>
+<td>SwingParams.overlay_outside</td>
+<td>How far (m) to swing the foot to the outside (negative for inside) relative to a straight-line step.</td>
+</tr>
+<tr>
+<td>SwingParams.overlay_forward</td>
+<td>How far (m) to swing the foot forward (negative for backward) relative to a straight-line step.</td>
+</tr>
+<tr>
+<td>SwingParams.low_speed_fraction</td>
+<td>How much to reduce the swing parameters when navigating at low speed.</td>
+</tr>
+<tr>
+<td>mu</td>
+<td>Estimated coefficient of friction between the ground and the feet. Setting this accurately will improve reliability.</td>
+</tr>
+<tr>
+<td>timing_stiffness</td>
+<td>How much the robot is allowed to deviate from the specified timing. 0 means no deviation. Otherwise, large values mean less deviation and small values mean more is acceptable.<br>Too much timing adjustment (low, non-zero values) may make the gait unstable.<br>At least a little timing adjustment is recommended for gaits with flight phases (periods with 0 feet on the ground).</td>
+</tr>
+<tr>
+<td>step_position_stiffness</td>
+<td>How much the robot is allowed to deviate from the specified stance shape.<br>0 means no deviation.<br>Otherwise: large values mean less deviation and small values mean more is acceptable.<br>Too much position adjustment (low, non-zero values) may make the gait unstable.</td>
+</tr>
+<tr>
+<td>enable_perception_obstacle_avoidance</td>
+<td>If enabled, CustomGait will attempt to avoid obstacles.<br>More challenging gaits may require significant obstacle avoidance padding to reliably avoid collisions.</td>
+</tr>
+<tr>
+<td>obstacle_avoidance_padding</td>
+<td>How far (m) to stay away from obstacles.<br>More challenging gaits may require significant padding to reliably avoid collisions.</td>
+</tr>
+<tr>
+<td>enable_perception_terrain_height</td>
+<td>If enabled, will use perception to determine the shape of the terrain.<br>Can be disabled if operating on a flat floor.</td>
+</tr>
+<tr>
+<td>enable_perception_step_placement</td>
+<td>If enabled, will use perception to determine good vs bad locations to step.<br>Can be disabled if operating on a flat floor.</td>
+</tr>
+<tr>
+<td>maximum_stumble_distance</td>
+<td>If Spot stumbles more than this distance (m), it will give up and freeze.</td>
+</tr>
+<tr>
+<td>stand_in_place</td>
+<td>Stand rather than stepping in place when not moving.</td>
+</tr>
+<tr>
+<td>standard_final_stance</td>
+<td>Go back to a standard rectangular stance when ending the gait.<br>Otherwise maintains the customized stance shape.</td>
+</tr>
+<tr>
+<td>trip_sensitivity</td>
+<td>How sensitive we should be to trip detection.<br>On the range [0, 1], where 1 is normal sensitivity and 0 is ignoring all trips.<br>Useful for very aggressive gaits or when a costume is restricting leg motion.</td>
+</tr>
+</tbody>
+</table></section>
 </section>
 
 

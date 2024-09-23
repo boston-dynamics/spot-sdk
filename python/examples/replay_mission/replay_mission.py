@@ -299,7 +299,7 @@ def upload_graph_and_snapshots(robot, client, path, disable_alternate_route_find
         if len(edge.snapshot_id) == 0:
             continue
         snapshot_filename = os.path.join(path, 'edge_snapshots', edge.snapshot_id)
-        robot.logger.info(f'Loading edge snapshot from [snapshot_filename]')
+        robot.logger.info(f'Loading edge snapshot from {snapshot_filename}')
 
         with open(snapshot_filename, 'rb') as snapshot_file:
             edge_snapshot = map_pb2.EdgeSnapshot()

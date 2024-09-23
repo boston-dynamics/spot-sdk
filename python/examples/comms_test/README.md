@@ -86,6 +86,6 @@ Run the image:
 sudo docker run -it -v $(pwd):/comms_out/ --network host comms_test:l4t ROBOT_IP --server-hostname SERVER_IP
 ```
 
-which will ask for username/password, or pass the environment variables `--env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD` to the command above.
+which will ask for username/password, or pass the environment variables `BOSDYN_CLIENT_USERNAME` and `BOSDYN_CLIENT_PASSWORD` from a .env file with `--env-file .env` in the command above.
 
 The argument `-v $(pwd):/comms_out/` allows the Docker container to save files to the current directory, so the resulting csv output file will be in the directory you just ran from. For different configurations of the comms test, see above.

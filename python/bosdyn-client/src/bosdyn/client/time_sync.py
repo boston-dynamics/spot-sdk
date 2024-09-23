@@ -18,6 +18,7 @@ from google.protobuf import duration_pb2
 
 from bosdyn.api import time_sync_pb2, time_sync_service_pb2_grpc
 from bosdyn.api.time_range_pb2 import TimeRange
+from bosdyn.client.robot_command import NoTimeSyncError, _TimeConverter
 from bosdyn.util import (RobotTimeConverter, now_nsec, now_sec, nsec_to_timestamp, parse_timespan,
                          set_timestamp_from_nsec, timestamp_to_nsec)
 
@@ -159,6 +160,42 @@ def timespec_to_robot_timespan(timespan_spec, time_sync_endpoint=None):
     """
     start_datetime, end_datetime = parse_timespan(timespan_spec)
     return robot_time_range_from_datetimes(start_datetime, end_datetime, time_sync_endpoint)
+
+
+def update_time_filter(client, timestamp, timesync_endpoint):
+    """Set or convert fields of the proto that need timestamps in the robot's clock.
+
+    Args:
+        timestamp (float): Client time, such as from time.time().
+        timesync_endpoint (TimeSyncEndpoint): A timesync endpoint associated with the robot object.
+
+    Raises:
+        bosdyn.client.robot_command.NoTimeSyncError: Could not find the timesync endpoint for the robot to convert the time.
+    """
+    # Input timestamp is a float. (from time.time())
+    if not timesync_endpoint:
+        raise NoTimeSyncError("[world object service] No timesync endpoint set for the robot.")
+    # Lazy RobotTimeConverter: initialized only if needed to make a conversion.
+    converter = _TimeConverter(client, timesync_endpoint)
+    return converter.robot_timestamp_from_local_secs(timestamp)
+
+
+def update_timestamp_filter(client, timestamp, timesync_endpoint):
+    """Set or convert fields of the proto that need timestamps in the robot's clock.
+
+    Args:
+        timestamp (google.protobuf.Timestamp): Client time.
+        timesync_endpoint (TimeSyncEndpoint): A timesync endpoint associated with the robot object.
+
+    Raises:
+        bosdyn.client.robot_command.NoTimeSyncError: Could not find the timesync endpoint for the robot to convert the time.
+    """
+    # Input timestamp is a google.protobuf.Timestamp
+    if not timesync_endpoint:
+        raise NoTimeSyncError("[world object service] No timesync endpoint set for the robot.")
+    converter = _TimeConverter(client, timesync_endpoint)
+    converter.convert_timestamp_from_local_to_robot(timestamp)
+    return timestamp
 
 
 
@@ -524,6 +561,7 @@ class TimeSyncThread:
                 else:
                     # When sync has been established, use default wait time.
                     self._event.wait(self.time_sync_interval_sec)
+                self._event.clear()
 
                 # Do RPC call to update time-sync information.
                 if not self.should_exit:

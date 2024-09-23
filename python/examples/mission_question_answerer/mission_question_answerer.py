@@ -11,8 +11,8 @@ import time
 
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.mission.client import MissionClient
 from bosdyn.api import service_customization_pb2
+from bosdyn.mission.client import MissionClient
 
 LOGGER = logging.getLogger(__name__)
 
@@ -38,7 +38,9 @@ def monitor_loop(client, interval_seconds=1):
         elif question.HasField('custom_params'):
             custom_params = ask_user_for_custom_param_answer(question)
         else:
-            LOGGER.warning('Encountered malformed question %i. Question must suppy either an options list or custom_params spec.', question.id)
+            LOGGER.warning(
+                'Encountered malformed question %i. Question must suppy either an options list or custom_params spec.',
+                question.id)
             continue
         LOGGER.info('Replying to question %i', question.id)
         try:
@@ -64,6 +66,7 @@ def ask_user_for_options_answer(question_proto):
     idx = int(input(text)) - 1
     return user_options[idx][1]
 
+
 def ask_user_for_custom_param_answer(question_proto):
     """Ask the user for a custom_params DictParam response to the given Question message with a 'custom_params' spec.
     This example only parses BoolParam specs to support the accompanying example mission.
@@ -75,7 +78,7 @@ def ask_user_for_custom_param_answer(question_proto):
 
     question_spec = question_proto.custom_params
     if len(question_proto.text) > 0:
-        print(f'{question_proto.text}\n').
+        print(f'{question_proto.text}\n')
     for child_spec_key in question_spec.specs:
         child_spec = question_spec.specs[child_spec_key]
         spec_type = child_spec.spec.WhichOneof('spec')
@@ -99,21 +102,18 @@ def ask_user_for_custom_param_answer(question_proto):
                 LOGGER.warning(f'Spec type {spec_type} is not supported by this example client.')
     return result
 
+
 # A helper for prompting and processing yes/no input
 def query_bool_yes_no(question):
-    valid_answers = {
-        "yes": True,
-        "y": True,
-        "no": False,
-        "n": False
-    }
+    valid_answers = {"yes": True, "y": True, "no": False, "n": False}
     while True:
         choice = input(f'{question} [y/n]\n').lower()
         if choice in valid_answers:
             return valid_answers[choice]
         else:
             print("Please respond with '[y]es' or '[n]o'.\n")
-            
+
+
 def main():
     """Run the program."""
     parser = argparse.ArgumentParser()

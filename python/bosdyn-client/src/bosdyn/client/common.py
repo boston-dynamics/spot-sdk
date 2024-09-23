@@ -5,10 +5,10 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Contains elements common to all service clients."""
+import concurrent
 import copy
 import functools
 import logging
-import math
 import socket
 import types
 
@@ -232,6 +232,37 @@ def handle_custom_params_errors(*args, status_value=None, status_field_name='sta
     return decorator
 
 
+def handle_license_errors(func):
+    """Decorate "error from response" functions to handle typical license errors."""
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        return common_license_errors(*args) or func(*args, **kwargs)
+
+    return wrapper
+
+
+def handle_license_errors_if_present(func):
+    """Decorate "error from response" functions to handle typical license errors.
+    Does not raise an error for STATUS_UNKNOWN.
+    Use for responses that may only sometimes fill out the license status."""
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        return common_license_errors(*args, allow_unset=True) or func(*args, **kwargs)
+
+    return wrapper
+
+
+def common_license_errors(response, allow_unset=False):
+    license_status = response.license_status
+    if allow_unset and license_status == license_pb2.LicenseInfo.STATUS_UNKNOWN:
+        return None
+    elif license_status != license_pb2.LicenseInfo.STATUS_VALID:
+        return LicenseError(response)
+    return None
+
+
 def maybe_raise(exc):
     """raise the provided exception if it is not None"""
     if exc is not None:
@@ -300,6 +331,7 @@ class BaseClient(object):
         self.response_processors = []
         self.lease_wallet = None
         self.client_name = None
+        self.executor = None
 
     @staticmethod
     @deprecated(reason='Forces serialization even if the logging is not happening.  Do not use.',
@@ -331,6 +363,7 @@ class BaseClient(object):
         self.logger = other.logger.getChild(self._name or self._service_type_short)
         self.lease_wallet = other.lease_wallet
         self.client_name = other.client_name
+        self.executor = other.executor
 
     def update_request_iterator(self, request_iterator, logger, rpc_method, is_blocking,
                                 copy_request=True):
@@ -444,7 +477,7 @@ class BaseClient(object):
 
         value_from_response and error_from_response should not raise their own exceptions!
 
-        Asynchronous calls cannot be done with streaming rpcs right now.
+        call_async does not accept streaming rpcs, see 'call_async_streaming'.
         """
         request = self._apply_request_processors(request, copy_request=copy_request)
         logger = self._get_logger(rpc_method)
@@ -467,6 +500,25 @@ class BaseClient(object):
 
         response_future.add_done_callback(on_finish)
         return FutureWrapper(response_future, value_from_response, error_from_response)
+
+    @process_kwargs
+    def call_async_streaming(self, rpc_method, request, value_from_response=None,
+                             error_from_response=None, assemble_type=None, copy_request=False,
+                             **kwargs):
+        """Returns a Future for rpc_method(request, kwargs) after running processors.
+
+        value_from_response and error_from_response should not raise their own exceptions.
+
+        A version of 'call_async' for streaming rpcs. True async streaming calls are not supported by
+        python grpc. Instead, this call creates a thread that runs the synchronous 'call' function.
+        """
+        request = self._apply_request_processors(request, copy_request=copy_request)
+        if self.executor is None:
+            self.executor = concurrent.futures.ThreadPoolExecutor()
+
+        future = self.executor.submit(self.call, rpc_method, request, assemble_type=assemble_type,
+                                      copy_request=copy_request, **kwargs)
+        return FutureWrapper(future, value_from_response, error_from_response, is_streaming=True)
 
     def _apply_request_processors(self, request, copy_request=True):
         if request is None:
@@ -498,10 +550,11 @@ class BaseClient(object):
 class FutureWrapper():
     """Wraps a Future to aid more complicated clients' async calls."""
 
-    def __init__(self, future, value_from_response, error_from_response):
+    def __init__(self, future, value_from_response, error_from_response, is_streaming=False):
         self.original_future = future
         self._error_from_response = error_from_response
         self._value_from_response = value_from_response
+        self._is_streaming = is_streaming
 
     def __repr__(self):
         return self.original_future.__repr__()
@@ -521,7 +574,7 @@ class FutureWrapper():
     def traceback(self, **kwargs):
         return self.original_future.traceback(**kwargs)
 
-    def add_done_callback(self, cb):
+    def add_done_callback(self, cb, assemble_type=None):
         """Add callback executed on FutureWrapper when future is done."""
         self.original_future.add_done_callback(lambda not_used_original_future: cb(self))
 
@@ -535,7 +588,6 @@ class FutureWrapper():
 
         if self._value_from_response is None:
             return base_result
-
         return self._value_from_response(base_result)
 
     def exception(self, **kwargs):
@@ -546,6 +598,11 @@ class FutureWrapper():
             if self._error_from_response is None:
                 return None
             return self._error_from_response(self.original_future.result())
+
+        # 'call_async_streaming' uses the non-async 'call' function. 'call' does all of it's
+        # own error handling so just return any errors from that call as is.
+        if self._is_streaming:
+            return error
 
         return translate_exception(error)
 

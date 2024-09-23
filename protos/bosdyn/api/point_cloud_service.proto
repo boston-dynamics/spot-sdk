@@ -17,9 +17,10 @@ import "bosdyn/api/point_cloud.proto";
 // and it supports requesting the latest point cloud data for each source by name.
 service PointCloudService {
     // Obtain the list of PointCloudSources for this given service.
-    // Note that there may be multiple PointCloudServices running, each with their own set of sources
-    // The name field keys access to individual point clouds when calling GetPointCloud.
-    rpc ListPointCloudSources(ListPointCloudSourcesRequest) returns (ListPointCloudSourcesResponse) {}
+    // Note that there may be multiple PointCloudServices running, each with their own set of
+    // sources The name field keys access to individual point clouds when calling GetPointCloud.
+    rpc ListPointCloudSources(ListPointCloudSourcesRequest)
+        returns (ListPointCloudSourcesResponse) {}
 
     // Request point clouds by source name.
     rpc GetPointCloud(GetPointCloudRequest) returns (GetPointCloudResponse) {}

@@ -12,4 +12,4 @@ These protos are the Boston Dynamics Public API.
 
 ## Contents
 
-* [Protos](proto_reference)
+- [Protos](proto_reference)

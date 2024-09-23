@@ -75,10 +75,10 @@ The server will print out "Hello Spot!" instead of "Hello World!"
 
 ### Running with a robot
 
-There is another example servicer that will power the robot down safely. To run this example, you will need a connection between a robot and the computer running the examples.
+There is another example servicer that will command the robot to perform preset stand in-place movements for a duration. To run this example, you will need a connection between a robot and the computer running the examples.
 
 ```
-python3 power_off_mission_service.py ROBOT_IP --port {PORT} --host-ip {ENDPOINT_IP}
+python3 robot_command_mission_service.py {ROBOT_IP} --port {PORT} --host-ip {ENDPOINT_IP}
 ```
 
 A port number for the service can be specified using the --port argument. It is possible to bypass the port argument and allow a random port number to be selected, but it is discouraged since restarts may result in unexpected changes to a services listening port. This port number will be used with the host-ip ("ENDPOINT_IP") to fully specify where the service is running. The port must be open and cannot be blocked by a local firewall. If the port is blocked, the service will be unreachable from the robot and the directory registration service.
@@ -94,22 +94,16 @@ The other IP address is the traditional robot hostname ("ROBOT_IP") argument, wh
 Now if you run the example client with:
 
 ```
-python3 remote_mission_client.py --power-off robot ROBOT_IP
+python3 remote_mission_client.py --robot-command robot {ROBOT_IP}
 ```
 
-The robot should shut down and you will see this output from the client:
+The robot should perform the "wiggle" movement and you will see this output from the client:
 
 ```
 Servicer stopped with status STATUS_SUCCESS
 ```
 
-To see the servicer actually power the robot off, you will have to perform the following steps:
-
-1. Use the wasd example to power the robot on and stand it up.
-2. Return wasd's lease with the [l] key.
-3. Run the client.
-
-You must run the client within 3 seconds of returning wasd's lease, otherwise the normal comms loss policy will kick in. To avoid Lease errors when triggering the callback via the tablet, select the "3rd Party" option before confirming the action.
+To avoid lease errors when triggering the callback via the tablet, select the `Robot Body Control` -> `No Control` option before confirming the action.
 
 ### Incorporating Service Customization
 

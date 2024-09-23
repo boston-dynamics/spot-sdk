@@ -92,13 +92,14 @@ class NMEAParser(object):
                 data_point.timestamp_gps.FromDatetime(gps_timestamp_no_tz)
                 has_timestamp = True
 
-            # Populate client and robot timestamps.
+            # Populate client and robot timestamps. If we are not using TimeSync, the robot
+            # timestamp will be the same as the client timestamp.
             data_point.timestamp_client.CopyFrom(seconds_to_timestamp(client_timestamp))
             if time_converter is not None:
                 data_point.timestamp_robot.CopyFrom(
                     time_converter.robot_timestamp_from_local_secs(client_timestamp))
             else:
-                data_point.timestamp_robot.CopyFrom(now_timestamp())
+                data_point.timestamp_robot.CopyFrom(data_point.timestamp_client)
 
 
         if not has_timestamp and not has_warned_no_zda:
@@ -110,8 +111,8 @@ class NMEAParser(object):
 
     def parse(self, new_data: str, time_converter: RobotTimeConverter,
               check: bool = True) -> List[GpsDataPoint]:
-        self.data = self.data + new_data
         timestamp = time.time()  # Client timestamp when received.
+        self.data = self.data + new_data
 
         if len(self.data) == 0:
             return []  # Protection because empty_string.splitlines() returns empty array

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spot Check &mdash; Spot 4.0.3 documentation</title>
+  <title>Spot Check &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -657,76 +662,6 @@
 <p>Timed out waiting for SUCCESS response from calibration.</p>
 </dd></dl>
 
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationResponseError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationResponseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationResponseError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.SpotCheckError" title="bosdyn.client.spot_check.SpotCheckError"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpotCheckError</span></code></a></p>
-<p>General class of errors for gripper camera calibration routines.</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationUserCanceledError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationUserCanceledError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationUserCanceledError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationUserCanceledError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="bosdyn.client.spot_check.GripperCameraCalibrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GripperCameraCalibrationResponseError</span></code></a></p>
-<p>API client canceled calibration.</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationPowerError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationPowerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationPowerError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationPowerError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="bosdyn.client.spot_check.GripperCameraCalibrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GripperCameraCalibrationResponseError</span></code></a></p>
-<p>The robot is not powered on.</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationLeaseError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationLeaseError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationLeaseError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationLeaseError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="bosdyn.client.spot_check.GripperCameraCalibrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GripperCameraCalibrationResponseError</span></code></a></p>
-<p>The Lease is invalid.</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationTargetNotCenteredError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationTargetNotCenteredError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationTargetNotCenteredError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationTargetNotCenteredError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="bosdyn.client.spot_check.GripperCameraCalibrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GripperCameraCalibrationResponseError</span></code></a></p>
-<p>Invalid starting configuration of robot.</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationTargetUpsideDownError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationTargetUpsideDownError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationTargetUpsideDownError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationTargetUpsideDownError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="bosdyn.client.spot_check.GripperCameraCalibrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GripperCameraCalibrationResponseError</span></code></a></p>
-<p>The target is incorrectly oriented.</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationCalibrationError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationCalibrationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationCalibrationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationCalibrationError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="bosdyn.client.spot_check.GripperCameraCalibrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GripperCameraCalibrationResponseError</span></code></a></p>
-<p>Calibration algorithm failure occurred.</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationInitializationError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationInitializationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationInitializationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationInitializationError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="bosdyn.client.spot_check.GripperCameraCalibrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GripperCameraCalibrationResponseError</span></code></a></p>
-<p>Initialization error occurred .</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationInternalError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationInternalError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationInternalError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationInternalError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="bosdyn.client.spot_check.GripperCameraCalibrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GripperCameraCalibrationResponseError</span></code></a></p>
-<p>Internal error occurred .</p>
-</dd></dl>
-
-<dl class="py exception">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.GripperCameraCalibrationStuckError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">GripperCameraCalibrationStuckError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">response</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#GripperCameraCalibrationStuckError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.GripperCameraCalibrationStuckError" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#bosdyn.client.spot_check.GripperCameraCalibrationResponseError" title="bosdyn.client.spot_check.GripperCameraCalibrationResponseError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GripperCameraCalibrationResponseError</span></code></a></p>
-<p>Timed out waiting for robot to reach goal pose.</p>
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="bosdyn.client.spot_check.SpotCheckClient">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.spot_check.</span></span><span class="sig-name descname"><span class="pre">SpotCheckClient</span></span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#SpotCheckClient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.SpotCheckClient" title="Permalink to this definition"></a></dt>
@@ -808,50 +743,6 @@
 <dt class="sig sig-object py" id="bosdyn.client.spot_check.SpotCheckClient.camera_calibration_feedback_async">
 <span class="sig-name descname"><span class="pre">camera_calibration_feedback_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#SpotCheckClient.camera_calibration_feedback_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.SpotCheckClient.camera_calibration_feedback_async" title="Permalink to this definition"></a></dt>
 <dd><p>Async version of camera_calibration_feedback().</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_command">
-<span class="sig-name descname"><span class="pre">gripper_camera_calibration_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#SpotCheckClient.gripper_camera_calibration_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_command" title="Permalink to this definition"></a></dt>
-<dd><p>Issue a gripper camera calibration command to the robot.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Error on header error</strong><strong> or </strong><strong>lease use result error.</strong> – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_command_async">
-<span class="sig-name descname"><span class="pre">gripper_camera_calibration_command_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#SpotCheckClient.gripper_camera_calibration_command_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_command_async" title="Permalink to this definition"></a></dt>
-<dd><p>Async version of gripper_camera_calibration_command()</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Error on header error</strong><strong> or </strong><strong>lease use result error.</strong> – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_feedback">
-<span class="sig-name descname"><span class="pre">gripper_camera_calibration_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#SpotCheckClient.gripper_camera_calibration_feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_feedback" title="Permalink to this definition"></a></dt>
-<dd><p>Check the current status of gripper camera calibration.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>GripperCameraCalibrationResponseError on any feedback error.</strong> – </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_feedback_async">
-<span class="sig-name descname"><span class="pre">gripper_camera_calibration_feedback_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/spot_check.html#SpotCheckClient.gripper_camera_calibration_feedback_async"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.spot_check.SpotCheckClient.gripper_camera_calibration_feedback_async" title="Permalink to this definition"></a></dt>
-<dd><p>Async version of gripper_camera_calibration_feedback()</p>
-<dl class="field-list simple">
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>GripperCameraCalibrationResponseError on any feedback error.</strong> – </p>
-</dd>
-</dl>
 </dd></dl>
 
 </dd></dl>

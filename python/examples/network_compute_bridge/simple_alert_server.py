@@ -46,7 +46,8 @@ class SimpleNetworkComputeBridgeWorkerServicer(
 
     def WorkerCompute(self, request, context):
         # Create a simple response including AlertData
-        out_proto = network_compute_bridge_pb2.WorkerComputeResponse()
+        out_proto = network_compute_bridge_pb2.WorkerComputeResponse(
+            status=network_compute_bridge_pb2.NETWORK_COMPUTE_STATUS_SUCCESS)
         out_img = out_proto.output_images.get_or_create("output")
         # Use the input image as the output image.
         out_img.image_response.shot.CopyFrom(request.input_data.images[0].shot)

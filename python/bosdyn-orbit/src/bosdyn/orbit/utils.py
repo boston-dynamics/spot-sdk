@@ -304,3 +304,24 @@ def validate_webhook_payload(payload: Dict, signature_header: str, secret: str,
     if not time_safe_equal:
         raise WebhookSignatureVerificationError(
             "The received HMAC did not match the expected value")
+
+
+def print_json_response(response: 'requests.Response') -> bool:
+    """ A helper function to print the json response.
+
+        Args:
+            options(Namespace) : parsed args used for configuration options.
+        Returns:
+            Boolean that indicates the response is okay with status code 200.
+    """
+    if response.ok:
+        try:
+            json_data = response.json()
+            print(f"JSON Response: {json_data}")
+            return True
+        except ValueError:
+            print("Response is ok but not in JSON format.")
+            return False
+    else:
+        print(f"Request failed with status : {response.text}")
+        return False

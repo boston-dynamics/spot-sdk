@@ -26,7 +26,6 @@ message Temperature {
 message ClearBITEventsRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-
 }
 
 // Response to clearing built-in test events.
@@ -39,7 +38,6 @@ message ClearBITEventsResponse {
 message GetBITStatusRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-
 }
 
 // Data on the current status of built-in tests.
@@ -49,11 +47,11 @@ message GetBITStatusResponse {
 
     // Fault events that have been reported.
     repeated bosdyn.api.SystemFault events = 2;
-    // Degredations are not necessesarily faults; a unit
+    // Degradations are not necessarily faults; a unit
     // with no installed mechanical PTZ will behave differently,
     // but nothing's actually wrong.
     message Degradation {
-        // Systems that can experience performance degredations.
+        // Systems that can experience performance degradations.
         enum DegradationType {
             STORAGE = 0;
             PTZ = 1;
@@ -71,7 +69,6 @@ message GetBITStatusResponse {
 message GetTemperatureRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
-
 }
 
 message GetTemperatureResponse {

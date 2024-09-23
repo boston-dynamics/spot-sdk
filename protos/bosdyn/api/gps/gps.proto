@@ -45,26 +45,26 @@ message GpsDataPoint {
     Accuracy accuracy = 4;
     // Information about a GNSS satellite measurement.
     message Satellite {
-        uint32 prn=1; //satellite identifier
-        float elevation=2; //Degrees from -90 to 90
-        float azimuth=3; //Degrees from true north
-        float snr=4; //in dB
-        enum Constellation{
-            UNKNOWN=0;
-            GPS_L1CA=1;
-            GPS_L2CM=2;
-            SBAS_L1CA=3;
-            GLONASS_L1CA=4;
-            GLONASS_L2CA=5;
-            GPS_L1P=6;
-            GPS_L2P=7;
-            //BDS stands for the BeiDou Navigation Satellite System
-            BDS2_B1=8;
-            BDS2_B2=9;
-            GALILEO_E1B=10;
-            GALILEO_E7I=11;
+        uint32 prn = 1;       // satellite identifier
+        float elevation = 2;  // Degrees from -90 to 90
+        float azimuth = 3;    // Degrees from true north
+        float snr = 4;        // in dB
+        enum Constellation {
+            UNKNOWN = 0;
+            GPS_L1CA = 1;
+            GPS_L2CM = 2;
+            SBAS_L1CA = 3;
+            GLONASS_L1CA = 4;
+            GLONASS_L2CA = 5;
+            GPS_L1P = 6;
+            GPS_L2P = 7;
+            // BDS stands for the BeiDou Navigation Satellite System
+            BDS2_B1 = 8;
+            BDS2_B2 = 9;
+            GALILEO_E1B = 10;
+            GALILEO_E7I = 11;
         }
-        Constellation constellation=5;
+        Constellation constellation = 5;
     }
     // Satellites used in the location solution.
     repeated Satellite satellites = 5;
@@ -72,15 +72,15 @@ message GpsDataPoint {
         // Types of fixes possible.
         enum Mode {
             Invalid = 0;
-            SPP = 1; //Single Point Positioning
-            DGNSS = 2; //Differential Global Navigation Satellite System
-            PPS = 3; //Precise Positioning System Fix
-            FIXED_RTK = 4; //Fixed-Point Real-Time Kinematics
-            FLOAT_RTK = 5; //Floating-Point Real-Time Kinematics
+            SPP = 1;        // Single Point Positioning
+            DGNSS = 2;      // Differential Global Navigation Satellite System
+            PPS = 3;        // Precise Positioning System Fix
+            FIXED_RTK = 4;  // Fixed-Point Real-Time Kinematics
+            FLOAT_RTK = 5;  // Floating-Point Real-Time Kinematics
             DEAD_RECKONING = 6;
             FIXED_POSITION = 7;
             SIMULATED = 8;
-            SBAS = 9; //Satellite Based Augmentation System
+            SBAS = 9;  // Satellite Based Augmentation System
         }
         // The current type of fix.
         Mode value = 1;

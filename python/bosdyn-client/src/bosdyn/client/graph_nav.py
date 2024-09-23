@@ -17,8 +17,9 @@ from bosdyn.api.graph_nav import (graph_nav_pb2, graph_nav_service_pb2, graph_na
                                   map_pb2, nav_pb2)
 from bosdyn.client.common import (BaseClient, common_header_errors, common_lease_errors,
                                   error_factory, error_pair, handle_common_header_errors,
-                                  handle_lease_use_result_errors, handle_unset_status_error)
-from bosdyn.client.exceptions import Error, InvalidRequestError, ResponseError
+                                  handle_lease_use_result_errors, handle_license_errors_if_present,
+                                  handle_unset_status_error)
+from bosdyn.client.exceptions import Error, InvalidRequestError, ResponseError, UnimplementedError
 from bosdyn.client.lease import add_lease_wallet_processors
 
 
@@ -31,6 +32,7 @@ class GraphNavClient(BaseClient):
         super(GraphNavClient, self).__init__(graph_nav_service_pb2_grpc.GraphNavServiceStub)
         self._timesync_endpoint = None
         self._data_chunk_size = 1024 * 1024  # bytes = 1 MB
+        self._use_streaming_graph_upload = True
 
     def update_from(self, other):
         super(GraphNavClient, self).update_from(other)
@@ -236,18 +238,31 @@ class GraphNavClient(BaseClient):
         return self.call(self._stub.NavigateRoute, request,
                          error_from_response=_navigate_route_error, copy_request=False, **kwargs)
 
-    def navigate_route_full_async(self, route, cmd_duration, route_follow_params=None,
-                                  travel_params=None, leases=None, timesync_endpoint=None,
-                                  command_id=None, destination_waypoint_tform_body_goal=None,
-                                  **kwargs):
+    def navigate_route_full_async(
+            self,
+            route,
+            cmd_duration,
+            route_follow_params=None,
+            travel_params=None,
+            leases=None,
+            timesync_endpoint=None,
+            command_id=None,
+            destination_waypoint_tform_body_goal=None,
+            **kwargs):
         """Async version of navigate_route_full()."""
         used_endpoint = timesync_endpoint or self._timesync_endpoint
         if not used_endpoint:
             raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
-        request = self._build_navigate_route_request(route, route_follow_params, travel_params,
-                                                     cmd_duration, leases, used_endpoint,
-                                                     command_id,
-                                                     destination_waypoint_tform_body_goal)
+        request = self._build_navigate_route_request(
+            route,
+            route_follow_params,
+            travel_params,
+            cmd_duration,
+            leases,
+            used_endpoint,
+            command_id,
+            destination_waypoint_tform_body_goal,
+        )
         return self.call_async(self._stub.NavigateRoute, request,
                                error_from_response=_navigate_route_error, copy_request=False,
                                **kwargs)
@@ -457,9 +472,30 @@ class GraphNavClient(BaseClient):
             The response, which includes waypoint and edge id's sorted by whether it was cached.
         Raises:
             RpcError: Problem communicating with the robot.
+            UploadGraphError: Indicates a problem with the map provided.
+            IncompatibleSensorsError: The map was recorded with different sensors than the robot.
+            AreaCallbackError: The map includes area callback services not present on the robot.
             LeaseUseError: Error using provided lease.
+            LicenseError: The robot's license is not valid.
         """
         request = self._build_upload_graph_request(lease, graph, generate_new_anchoring)
+        # Use streaming to upload the graph, if applicable.
+        if self._use_streaming_graph_upload:
+            # Need to manually apply request processors since this will be serialized and chunked.
+            self._apply_request_processors(request, copy_request=False)
+            serialized = request.SerializeToString()
+            try:
+                return self.call(
+                    self._stub.UploadGraphStreaming,
+                    GraphNavClient._data_chunk_iterator_upload_graph(serialized,
+                                                                     self._data_chunk_size),
+                    value_from_response=_get_response, error_from_response=_upload_graph_error,
+                    **kwargs)
+            except UnimplementedError:
+                print('UploadGraphStreaming unimplemented. Old robot release?')
+                # Recreate the request so that we clear any state that might have happened during our attempt to stream.
+                request = self._build_upload_graph_request(lease, graph, generate_new_anchoring)
+                # Continue to regular UploadGraph.
         return self.call(self._stub.UploadGraph, request, value_from_response=_get_response,
                          error_from_response=_upload_graph_error, copy_request=False, **kwargs)
 
@@ -520,6 +556,17 @@ class GraphNavClient(BaseClient):
             RpcError: Problem communicating with the robot
         """
         request = self._build_download_graph_request()
+        # Use streaming to download the graph, if applicable.
+        if self._use_streaming_graph_upload:
+            try:
+                resp = self.call(self._stub.DownloadGraphStreaming, request,
+                                 value_from_response=_get_streamed_download_graph,
+                                 error_from_response=_download_graph_stream_errors,
+                                 copy_request=False, **kwargs)
+                return resp
+            except UnimplementedError:
+                print('DownloadGraphStreaming unimplemented. Old robot release?')
+                # Continue to regular DownloadGraph.
         return self.call(self._stub.DownloadGraph, request, value_from_response=_get_graph,
                          error_from_response=common_header_errors, copy_request=False, **kwargs)
 
@@ -644,9 +691,16 @@ class GraphNavClient(BaseClient):
             request_gps_state=request_gps_state)
 
     @staticmethod
-    def _build_navigate_route_request(route, route_follow_params, travel_params, end_time_secs,
-                                      leases, timesync_endpoint, command_id,
-                                      destination_waypoint_tform_body_goal):
+    def _build_navigate_route_request(
+        route,
+        route_follow_params,
+        travel_params,
+        end_time_secs,
+        leases,
+        timesync_endpoint,
+        command_id,
+        destination_waypoint_tform_body_goal,
+    ):
         converter = timesync_endpoint.get_robot_time_converter()
         request = graph_nav_pb2.NavigateRouteRequest(
             route=route, route_follow_params=route_follow_params,
@@ -718,6 +772,22 @@ class GraphNavClient(BaseClient):
         lease = lease or lease_pb2.Lease()
         return graph_nav_pb2.UploadGraphRequest(lease=lease, graph=graph,
                                                 generate_new_anchoring=generate_new_anchoring)
+
+    @staticmethod
+    def _data_chunk_iterator_upload_graph(serialized_upload_graph, data_chunk_byte_size):
+        """Converts a serialized UploadGraphRequest into a series of UploadGraphStreamingRequests."""
+        total_bytes_size = len(serialized_upload_graph)
+        num_chunks = math.ceil(total_bytes_size / data_chunk_byte_size)
+        for i in range(num_chunks):
+            start_index = i * data_chunk_byte_size
+            end_index = (i + 1) * data_chunk_byte_size
+            chunk = data_chunk_pb2.DataChunk(total_size=total_bytes_size)
+            if (end_index > total_bytes_size):
+                chunk.data = serialized_upload_graph[start_index:total_bytes_size]
+            else:
+                chunk.data = serialized_upload_graph[start_index:end_index]
+            req = graph_nav_pb2.UploadGraphStreamingRequest(chunk=chunk)
+            yield req
 
     @staticmethod
     def _data_chunk_iterator_upload_waypoint_snapshot(serialized_waypoint_snapshot, lease,
@@ -995,36 +1065,26 @@ def _get_graph(response):
     return response.graph
 
 
+def _get_streamed_data(response, data_type):
+    """Given a list of streamed responses, return an instance of the given data type that is parsed from those responses."""
+    data = bytes()
+    for resp in response:
+        data += resp.chunk.data
+    proto_instance = data_type()
+    proto_instance.ParseFromString(data)
+    return proto_instance
+
+
+
+
 def _get_streamed_waypoint_snapshot(response):
     """Reads a streamed response to recreate a waypoint snapshot."""
-    data = ''
-    num_chunks = 0
-    for resp in response:
-        if num_chunks == 0:
-            data = resp.chunk.data
-        else:
-            data += resp.chunk.data
-        num_chunks += 1
-    waypoint_snapshot = map_pb2.WaypointSnapshot()
-    if (num_chunks > 0):
-        waypoint_snapshot.ParseFromString(data)
-    return waypoint_snapshot
+    return _get_streamed_data(response, map_pb2.WaypointSnapshot)
 
 
 def _get_streamed_edge_snapshot(response):
     """Reads a streamed response to recreate an edge snapshot."""
-    data = ''
-    num_chunks = 0
-    for resp in response:
-        if num_chunks == 0:
-            data = resp.chunk.data
-        else:
-            data += resp.chunk.data
-        num_chunks += 1
-    edge_snapshot = map_pb2.EdgeSnapshot()
-    if (num_chunks > 0):
-        edge_snapshot.ParseFromString(data)
-    return edge_snapshot
+    return _get_streamed_data(response, map_pb2.EdgeSnapshot)
 
 
 _UPLOAD_GRAPH_STATUS_TO_ERROR = collections.defaultdict(lambda: (ResponseError, None))
@@ -1043,6 +1103,7 @@ _UPLOAD_GRAPH_STATUS_TO_ERROR.update({
 
 @handle_common_header_errors
 @handle_lease_use_result_errors
+@handle_license_errors_if_present
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _upload_graph_error(response):
     """Return a custom exception based on upload graph response, None if no error."""

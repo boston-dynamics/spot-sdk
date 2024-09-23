@@ -38,7 +38,6 @@ message DockingCommandRequest {
     // This is a required field and used to prevent runaway commands.
     google.protobuf.Timestamp end_time = 5;
 
-    
 
     // [Optional] Specify the prep pose behavior
     PrepPoseBehavior prep_pose_behavior = 9;
@@ -49,7 +48,6 @@ message DockingCommandRequest {
 
 // Response to a DockingCommandRequest
 message DockingCommandResponse {
-
     enum Status {
         // Status is not specified.
         STATUS_UNKNOWN = 0;
@@ -70,7 +68,7 @@ message DockingCommandResponse {
         STATUS_ERROR_GRIPPER_HOLDING_ITEM = 8;
 
         // ERROR: The dock is not available for docking.
-        STATUS_ERROR_NOT_AVAILABLE =  9;
+        STATUS_ERROR_NOT_AVAILABLE = 9;
 
         // ERROR: Internal system error during execution
         // This error cannot be resolved by issuing a new DockingCommand
@@ -108,9 +106,8 @@ message DockingCommandFeedbackRequest {
     UpdateDockingParams update_docking_params = 3;
 }
 
-// Response to a DockingCommandFeedbackRequest for a particualar docking command ID
+// Response to a DockingCommandFeedbackRequest for a particular docking command ID
 message DockingCommandFeedbackResponse {
-
     enum Status {
         // Status is not specified.
         STATUS_UNKNOWN = 0;
@@ -125,7 +122,8 @@ message DockingCommandFeedbackResponse {
         STATUS_AT_PREP_POSE = 11;
 
         // Misaligned was detected between the robot and the dock.
-        // The docking command was aborted to save an ending up in an unrecoverable state, please try again.
+        // The docking command was aborted to save an ending up in an unrecoverable state, please
+        // try again.
         STATUS_MISALIGNED = 10;
 
         // This DockingCommand overridden by new docking command.
@@ -147,7 +145,7 @@ message DockingCommandFeedbackResponse {
         STATUS_ERROR_TOO_DISTANT = 8;
 
         // ERROR: The dock is not available for docking.
-        STATUS_ERROR_NOT_AVAILABLE =   12;
+        STATUS_ERROR_NOT_AVAILABLE = 12;
 
         // ERROR: The prior could not be confirmed as a real dock
         STATUS_ERROR_UNREFINED_PRIOR = 13;
@@ -211,11 +209,12 @@ message GetDockingConfigResponse {
 
 // Defines how and whether we use the "pre-docking" pose.
 enum PrepPoseBehavior {
-    PREP_POSE_UNKNOWN = 0;      // Default behavior, equivalent to PREP_POSE_USE_POSE.
-    PREP_POSE_USE_POSE = 1;     // Goes to the pre-docking pose before docking.
-    PREP_POSE_SKIP_POSE = 2;    // Docks before going to the pre-docking pose.
-    PREP_POSE_ONLY_POSE = 3;    // Goes to the pre-docking pose, and then returns SUCCESS without docking.
-    PREP_POSE_UNDOCK = 4;       // Use this enum to undock a currently docked robot.
+    PREP_POSE_UNKNOWN = 0;    // Default behavior, equivalent to PREP_POSE_USE_POSE.
+    PREP_POSE_USE_POSE = 1;   // Goes to the pre-docking pose before docking.
+    PREP_POSE_SKIP_POSE = 2;  // Docks before going to the pre-docking pose.
+    PREP_POSE_ONLY_POSE =
+        3;  // Goes to the pre-docking pose, and then returns SUCCESS without docking.
+    PREP_POSE_UNDOCK = 4;  // Use this enum to undock a currently docked robot.
 }
 
 // Message describing the overall dock state of the robot, including power & comms connections.  \
@@ -224,40 +223,40 @@ enum PrepPoseBehavior {
 // or DOCK_STATUS_UNDOCKING. \
 // Note: [^] indicates fields which are only valid if the status is DOCK_STATUS_DOCKED.  \
 message DockState {
-    enum DockedStatus {
-        // Unknown
-        DOCK_STATUS_UNKNOWN = 0;
-        // Robot is detected as on a dock
-        DOCK_STATUS_DOCKED = 1;
-        // Robot is currently running a docking command
-        DOCK_STATUS_DOCKING = 2;
-        // Robot is not detected as on dock
-        DOCK_STATUS_UNDOCKED = 3;
-        // Robot is currently running an undocking command
-        DOCK_STATUS_UNDOCKING = 4;
-    }
-    enum LinkStatus {
-        // Unknown or Not applicable
-        LINK_STATUS_UNKNOWN = 0;
-        // The link status is being detected
-        LINK_STATUS_DETECTING = 3;
-        // The link is detected as connected
-        LINK_STATUS_CONNECTED = 1;
-        // The link could not be detected
-        LINK_STATUS_ERROR = 2;
-    }
+enum DockedStatus {
+    // Unknown
+    DOCK_STATUS_UNKNOWN = 0;
+    // Robot is detected as on a dock
+    DOCK_STATUS_DOCKED = 1;
+    // Robot is currently running a docking command
+    DOCK_STATUS_DOCKING = 2;
+    // Robot is not detected as on dock
+    DOCK_STATUS_UNDOCKED = 3;
+    // Robot is currently running an undocking command
+    DOCK_STATUS_UNDOCKING = 4;
+}
+enum LinkStatus {
+    // Unknown or Not applicable
+    LINK_STATUS_UNKNOWN = 0;
+    // The link status is being detected
+    LINK_STATUS_DETECTING = 3;
+    // The link is detected as connected
+    LINK_STATUS_CONNECTED = 1;
+    // The link could not be detected
+    LINK_STATUS_ERROR = 2;
+}
 
-    // Status of if the robot is on dock
-    DockedStatus status = 1;
+// Status of if the robot is on dock
+DockedStatus status = 1;
 
-    // [*] Type of the dock
-    DockType dock_type = 2;
-    // [*] ID of the dock
-    uint32 dock_id = 3;
-    
-    // [^] Status of power detection from the dock
-    LinkStatus power_status = 4;
-    
+// [*] Type of the dock
+DockType dock_type = 2;
+// [*] ID of the dock
+uint32 dock_id = 3;
+
+// [^] Status of power detection from the dock
+LinkStatus power_status = 4;
+
 }
 
 // Message to get the overall docking state

@@ -58,8 +58,8 @@ def service():
 def server(client, service):
     server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=1))
     auto_return_service_pb2_grpc.add_AutoReturnServiceServicer_to_server(service, server)
-    port = server.add_insecure_port('localhost:0')
-    channel = grpc.insecure_channel('localhost:{}'.format(port))
+    port = server.add_insecure_port('127.0.0.1:0')
+    channel = grpc.insecure_channel('127.0.0.1:{}'.format(port))
     client.channel = channel
     server.start()
     return server

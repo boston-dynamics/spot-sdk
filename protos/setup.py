@@ -4,12 +4,13 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import setuptools.command.build_py
 import distutils.cmd
 import os
+import sys
+
 import pkg_resources
 import setuptools
-import sys
+import setuptools.command.build_py
 
 try:
     SDK_VERSION = os.environ['BOSDYN_SDK_VERSION']
@@ -58,8 +59,8 @@ class proto_build(distutils.cmd.Command, object):
         except ImportError:
             # Try to grab pathlib2, which should have been grabbed as part of install dependencies.
             import pathlib2 as pathlib
+
         from grpc_tools import protoc
-        import os
 
         def make_init(directory, do_pkg_extension=False):
             pkg = pathlib.Path(directory)
@@ -80,7 +81,8 @@ class proto_build(distutils.cmd.Command, object):
         for cwd, dirs, files in os.walk(protos_root):
             cwd_relative_to_root = cwd[len(root) + 1:]
             for d in dirs:
-                make_init(os.path.join(root, output_dir, cwd_relative_to_root, d), do_pkg_extension=True)
+                make_init(os.path.join(root, output_dir, cwd_relative_to_root, d),
+                          do_pkg_extension=True)
 
             for f in files:
                 if not f.endswith('.proto'):
@@ -113,7 +115,8 @@ setuptools.setup(
     author="Boston Dynamics",
     author_email="support@bostondynamics.com",
     description="Boston Dynamics API definition of protobuf messages",
-    install_requires=["protobuf>=3.19.4,!=4.24.0"],
+    # 5.28.0 crashes on windows https://github.com/protocolbuffers/protobuf/issues/18045
+    install_requires=["protobuf>=3.19.4,!=4.24.0,!=5.28.0"],
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://dev.bostondynamics.com/",

@@ -9,6 +9,7 @@ syntax = "proto3";
 package bosdyn.api.graph_nav;
 option java_outer_classname = "AreaCallbackProto";
 
+import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
@@ -157,6 +158,12 @@ message RegionInformation {
 
     // The planned route through the region.
     bosdyn.api.graph_nav.Route route = 3;
+
+    // Flag that indicates that the robot is already inside the callback region at the beginning of
+    // the callback, rather than starting from the edge of the region as usual.  This can happen in
+    // some cases when the robot gets stuck inside the region, and restarts with a new navigation
+    // command.
+    bool starting_inside_region = 4;
 }
 
 message BeginCallbackRequest {
@@ -170,11 +177,15 @@ message BeginCallbackRequest {
     // If unset, a AreaCallback implementation may pick a reasonable value.
     google.protobuf.Timestamp end_time = 3;
 
+    // Deprecated in 4.1, the relevant data is set in custom_params and config_data instead.
     // Configuration data associated with this area callback region
-    AreaCallbackData recorded_data = 5;
+    AreaCallbackData recorded_data = 5 [deprecated = true];
 
     // Any other custom parameters to the callback.
     DictParam custom_params = 6;
+
+    // Custom config data used by the service to do its job.
+    google.protobuf.Any config_data = 7;
 }
 
 message BeginCallbackResponse {

@@ -43,7 +43,7 @@ message SpotCheckCommandResponse {
     enum Status {
         STATUS_UNKNOWN = 0;  // Unknown
         STATUS_OK = 1;       // Request was accepted.
-        STATUS_ERROR = 2;    // An error ocurred.
+        STATUS_ERROR = 2;    // An error occurred.
     }
 
     // Command status
@@ -204,7 +204,7 @@ message JointKinematicCheckResult {
         ERROR_CLUTCH_SLIP = 2;              // Error detected in clutch performance.
         ERROR_INVALID_RANGE_OF_MOTION = 3;  // Error if a joint has an incorrect range of motion.
         ERROR_ENCODER_SHIFTED = 4;          // Error if the measured endstops shifted from kin cal.
-        ERROR_COLLISION = 5;                // Error if checking the joint would have a collsion.
+        ERROR_COLLISION = 5;                // Error if checking the joint would have a collision.
     }
     // A flag to indicate if results has an error.
     Error error = 2;
@@ -359,87 +359,3 @@ message CameraCalibrationFeedbackResponse {
     float progress = 3;
 }
 
-// Request for the GripperCameraCalibrationCommand service.
-message GripperCameraCalibrationCommandRequest {
-    // Common request header.
-    RequestHeader header = 1;
-
-    // The Lease to show ownership of the robot. Lease required to issue any
-    // GripperCameraCalibration command.
-    Lease lease = 2;
-
-    enum Command {
-        COMMAND_UNKNOWN = 0;  // Unused enum.
-        COMMAND_START = 1;    // Start calibration routine.
-        COMMAND_CANCEL = 2;   // Cancel calibration routine.
-    }
-    // The command describing what the GripperCameraCalibration service should do.
-    Command command = 3;
-}
-
-// Response for the GripperCameraCalibrationCommand service.
-message GripperCameraCalibrationCommandResponse {
-    // Common response header.
-    ResponseHeader header = 1;
-
-    // Details about how the lease was used.
-    LeaseUseResult lease_use_result = 2;
-}
-
-// Request for the GripperCameraCalibrationFeedback service.
-message GripperCameraCalibrationFeedbackRequest {
-    // Common request header.
-    RequestHeader header = 1;
-}
-
-// Response for the GripperCameraCalibrationFeedback service.
-message GripperCameraCalibrationFeedbackResponse {
-    // Common response header.
-    ResponseHeader header = 1;
-    enum Status {
-        // Unused enum.
-        STATUS_UNKNOWN = 0;
-        // The robot is actively running calibration routine.
-        STATUS_PROCESSING = 1;
-        // The robot successfully ran calibration routine and
-        // is ready to use again.
-        STATUS_SUCCESS = 2;
-        // Calibration routine has never been run. No feedback to give.
-        STATUS_NEVER_RUN = 3;
-        // Calibration routine has been canceled mid-routine.
-        STATUS_USER_CANCELED = 4;
-        // The robot is not powered on.
-        STATUS_POWER_ERROR = 5;
-        // Ownership error during calibration.
-        STATUS_LEASE_ERROR = 6;
-        // Calibration procedure produced an invalid result.
-        // This may occur in poor lighting conditions or if
-        // calibration target moved during calibration
-        // procedure.
-        STATUS_CALIBRATION_ERROR = 8;
-        // Something went wrong during initialization. Try running the command again or, if it
-        // persists, restarting the robot.
-        STATUS_INITIALIZATION_ERROR = 9;
-        // Something extraordinary happened. Try power cycling robot or contact BD.
-        STATUS_INTERNAL_ERROR = 10;
-        // Target partially, but not fully, in view when starting calibration.
-        STATUS_TARGET_NOT_CENTERED = 11;
-        // Target not visible when starting calibration.
-        STATUS_TARGET_NOT_IN_VIEW = 12;
-        // Target not aligned with gravity when starting calibration.
-        STATUS_TARGET_NOT_GRAVITY_ALIGNED = 13;
-        // Target upside down when starting calibration.
-        STATUS_TARGET_UPSIDE_DOWN = 14;
-        // The robot took too long to reach the goal pose.
-        STATUS_STUCK = 15;
-    }
-    // Status of camera calibration procedure.
-    Status status = 2;
-
-    // The approximate progress of the calibration routine, range [0-1].
-    // Status takes precedence over progress value.
-    float progress = 3;
-
-    // Details about how the lease was used.
-    LeaseUseResult lease_use_result = 4;
-}

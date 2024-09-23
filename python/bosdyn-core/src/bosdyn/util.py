@@ -6,9 +6,7 @@
 
 """Common utilities for API Python code."""
 import datetime
-import os
 import re
-import sys
 import time
 from typing import Callable
 

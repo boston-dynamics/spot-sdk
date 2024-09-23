@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BDDF data format &mdash; Spot 4.0.3 documentation</title>
+  <title>BDDF data format &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -510,26 +515,26 @@ Development Kit License (20191101-BDSDK-SL).
 <h1>BDDF data format<a class="headerlink" href="#bddf-data-format" title="Permalink to this heading"></a></h1>
 <section id="motivation">
 <h2>Motivation<a class="headerlink" href="#motivation" title="Permalink to this heading"></a></h2>
-<p>Data stored on Spot robots is downloaded in the BDDF format. BDDF is a file format created by Boston Dynamics for storing timestamped data, along with metadata.  It supports both binary blobs and POD (”plain old data”) such as integers or floating point numbers.</p>
+<p>Data stored on Spot robots is downloaded in the BDDF format. BDDF is a file format created by Boston Dynamics for storing timestamped data, along with metadata. It supports both binary blobs and POD (”plain old data”) such as integers or floating point numbers.</p>
 <p>BDDF was created to satisfy the following set of requirements:</p>
 <ul class="simple">
-<li><p><strong>Safe and cheap to write</strong>.  This format is used internally on the robot as well as externally.  Thus, it was designed for minimal, predictable disk and CPU usage while saving data to disk.  Additionally, it is designed so that all data that is written into the file is recoverable (e.g., for when software dies or computer power is cut while the file is being written).</p></li>
-<li><p><strong>No additional processing required.</strong> BDDF is meant to be usable by user tools without processing into other formats.  Thus, it contains an index so that arbitrary data may be accessed efficiently.  The index:</p>
+<li><p><strong>Safe and cheap to write</strong>. This format is used internally on the robot as well as externally. Thus, it was designed for minimal, predictable disk and CPU usage while saving data to disk. Additionally, it is designed so that all data that is written into the file is recoverable (e.g., for when software dies or computer power is cut while the file is being written).</p></li>
+<li><p><strong>No additional processing required.</strong> BDDF is meant to be usable by user tools without processing into other formats. Thus, it contains an index so that arbitrary data may be accessed efficiently. The index:</p>
 <ul>
 <li><p>Can be used to determine the kinds and time spans of data contained in the file.</p></li>
 <li><p>Supports efficiently extracting data by kind and time span.</p></li>
 </ul>
 </li>
-<li><p><strong>Secure</strong>.  Little or no parsing logic.  Reading a BDDF requires only handling simple framing, and parsing a few protobuf messages.</p></li>
-<li><p><strong>General</strong>.  BDDF can store data with any encoding.</p></li>
-<li><p><strong>Streamable.</strong>  Data is streamed from the robot in this format based on queries, so it is designed such that the format can be written without seeking backwards in the stream.  This is why the index and checksums are at the end of the file.</p></li>
+<li><p><strong>Secure</strong>. Little or no parsing logic. Reading a BDDF requires only handling simple framing, and parsing a few protobuf messages.</p></li>
+<li><p><strong>General</strong>. BDDF can store data with any encoding.</p></li>
+<li><p><strong>Streamable.</strong> Data is streamed from the robot in this format based on queries, so it is designed such that the format can be written without seeking backwards in the stream. This is why the index and checksums are at the end of the file.</p></li>
 </ul>
 </section>
 <section id="organization">
 <h2>Organization<a class="headerlink" href="#organization" title="Permalink to this heading"></a></h2>
-<p>The structure of the file is a sequence of “blocks” with simple framing.  Some blocks store descriptive information about the file and its contents, and some blocks store data.</p>
+<p>The structure of the file is a sequence of “blocks” with simple framing. Some blocks store descriptive information about the file and its contents, and some blocks store data.</p>
 <p>BDDF can store both binary “blobs” and “plain old data” (POD) values such as integers or floating point numbers.</p>
-<p>Stored data is organized into “data series”.  A data series:</p>
+<p>Stored data is organized into “data series”. A data series:</p>
 <ul class="simple">
 <li><p>Is either of message type or POD type.</p></li>
 <li><p>Consists of a sequence of timestamped data blocks.</p></li>
@@ -537,32 +542,32 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Has a series identifier to “name” the data series within the file.</p></li>
 <li><p>Has a set of index-names for a list of index-values (int64) attached to each data block in the series.</p></li>
 </ul>
-<p>Within a data file, a data series is addressed with a series-index.  Within a data series, a data block is addressed by an integer index-in-series.  At the end of the BDDF file, a file index lists all the data series and locations of the series indexes in the file.</p>
+<p>Within a data file, a data series is addressed with a series-index. Within a data series, a data block is addressed by an integer index-in-series. At the end of the BDDF file, a file index lists all the data series and locations of the series indexes in the file.</p>
 </section>
 <section id="identifying-data-series">
 <h2>Identifying data series<a class="headerlink" href="#identifying-data-series" title="Permalink to this heading"></a></h2>
-<p>Depending on the broad class of content which may be stored in a data series, the series might be described in different ways.  For this reason, instead of requiring a unique string name to identify a series, we use a slightly more flexible identifier: a unique mapping of {key -&gt; value}.</p>
-<p>A BDDF SeriesIdentifier has a <code class="docutils literal notranslate"><span class="pre">series_type</span></code>, which describes the kind of series, and a <code class="docutils literal notranslate"><span class="pre">spec</span></code> which is a mapping of {key -&gt; value} further identifying the series.  The <code class="docutils literal notranslate"><span class="pre">series_type</span></code> implies the set of keys which should be used in the <code class="docutils literal notranslate"><span class="pre">spec</span></code>.</p>
+<p>Depending on the broad class of content which may be stored in a data series, the series might be described in different ways. For this reason, instead of requiring a unique string name to identify a series, we use a slightly more flexible identifier: a unique mapping of {key -&gt; value}.</p>
+<p>A BDDF SeriesIdentifier has a <code class="docutils literal notranslate"><span class="pre">series_type</span></code>, which describes the kind of series, and a <code class="docutils literal notranslate"><span class="pre">spec</span></code> which is a mapping of {key -&gt; value} further identifying the series. The <code class="docutils literal notranslate"><span class="pre">series_type</span></code> implies the set of keys which should be used in the <code class="docutils literal notranslate"><span class="pre">spec</span></code>.</p>
 <p>For example:</p>
 <ul class="simple">
 <li><p>A series containing GRPC robot-id request messages might thus be specified as: <code class="docutils literal notranslate"><span class="pre">series_type=&quot;bosdyn:grpc:requests&quot;</span></code> and
 <code class="docutils literal notranslate"><span class="pre">spec={&quot;bosdyn:grpc:service&quot;:</span> <span class="pre">&quot;robot_id&quot;,</span> <span class="pre">&quot;bosdyn:message-type&quot;:</span> <span class="pre">&quot;bosdyn.api.RobotIdRequest&quot;}</span></code>.</p></li>
 <li><p>A series containing OperatorComment messages might be specified as <code class="docutils literal notranslate"><span class="pre">series_type=&quot;bosdyn:message-channel&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">spec={&quot;bosdyn:channel&quot;:</span> <span class="pre">&quot;bosdyn.api.OperatorComment&quot;}</span></code></p></li>
 </ul>
-<p>Because BDDF SeriesIdentifier is a structure, the BDDF format provides a method to hash this structure to make it easier to index.  The hash is the first 64 bits of <code class="docutils literal notranslate"><span class="pre">SHA1(S</span> <span class="pre">K1</span> <span class="pre">V1</span> <span class="pre">K2</span> <span class="pre">V2</span> <span class="pre">...)</span></code> where <code class="docutils literal notranslate"><span class="pre">S</span></code> is series identifier text, <code class="docutils literal notranslate"><span class="pre">K1</span></code> and <code class="docutils literal notranslate"><span class="pre">V1</span></code> are the key and value of the first key and value of the <code class="docutils literal notranslate"><span class="pre">spec</span></code>, <code class="docutils literal notranslate"><span class="pre">K2</span></code> and <code class="docutils literal notranslate"><span class="pre">V2</span></code> are the second key and value of the spec, etc…  Here, all strings are encoded as utf-8, and keys are sorted least-to-greatest using this encoding.</p>
+<p>Because BDDF SeriesIdentifier is a structure, the BDDF format provides a method to hash this structure to make it easier to index. The hash is the first 64 bits of <code class="docutils literal notranslate"><span class="pre">SHA1(S</span> <span class="pre">K1</span> <span class="pre">V1</span> <span class="pre">K2</span> <span class="pre">V2</span> <span class="pre">...)</span></code> where <code class="docutils literal notranslate"><span class="pre">S</span></code> is series identifier text, <code class="docutils literal notranslate"><span class="pre">K1</span></code> and <code class="docutils literal notranslate"><span class="pre">V1</span></code> are the key and value of the first key and value of the <code class="docutils literal notranslate"><span class="pre">spec</span></code>, <code class="docutils literal notranslate"><span class="pre">K2</span></code> and <code class="docutils literal notranslate"><span class="pre">V2</span></code> are the second key and value of the spec, etc… Here, all strings are encoded as utf-8, and keys are sorted least-to-greatest using this encoding.</p>
 </section>
 <section id="data-series-annotations">
 <h2>Data series annotations<a class="headerlink" href="#data-series-annotations" title="Permalink to this heading"></a></h2>
-<p>Annotations, in the form of a set of string key -&gt; value mappings, should be used to express further information about a data series.  The format of annotation keys should be {project-or-organization}:{annotation-name}.  For example, ‘bosdyn:channel-name’, ‘bosdyn:protobuf-type’.  Annotation keys without a ‘:’ or starting with ‘:’ are reserved.  The only current key in the reserved namespace is <code class="docutils literal notranslate"><span class="pre">units</span></code>: e.g., <code class="docutils literal notranslate"><span class="pre">{'units':</span> <span class="pre">'m/s2'}</span></code>.</p>
+<p>Annotations, in the form of a set of string key -&gt; value mappings, should be used to express further information about a data series. The format of annotation keys should be {project-or-organization}:{annotation-name}. For example, ‘bosdyn:channel-name’, ‘bosdyn:protobuf-type’. Annotation keys without a ‘:’ or starting with ‘:’ are reserved. The only current key in the reserved namespace is <code class="docutils literal notranslate"><span class="pre">units</span></code>: e.g., <code class="docutils literal notranslate"><span class="pre">{'units':</span> <span class="pre">'m/s2'}</span></code>.</p>
 <p>Units should be specified using the <a class="reference external" href="https://unitsofmeasure.org/ucum.html">Unified Code for Units of Measure</a>.</p>
 </section>
 <section id="file-structure">
 <h2>File structure<a class="headerlink" href="#file-structure" title="Permalink to this heading"></a></h2>
 <p>There are three basic kinds of blocks in the file:</p>
 <ul class="simple">
-<li><p><strong>DescriptorBlocks</strong>.  These describe either the file as a whole, a data series or a file index.</p></li>
-<li><p><strong>DataDescriptors</strong>.  These describe a following block of data, including its timestamp and which series it belongs to.</p></li>
-<li><p><strong>Data</strong>.  These are blocks of raw binary message data.</p></li>
+<li><p><strong>DescriptorBlocks</strong>. These describe either the file as a whole, a data series or a file index.</p></li>
+<li><p><strong>DataDescriptors</strong>. These describe a following block of data, including its timestamp and which series it belongs to.</p></li>
+<li><p><strong>Data</strong>. These are blocks of raw binary message data.</p></li>
 </ul>
 <p>All binary values are little-endian.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">File</span><span class="o">&gt;</span>     <span class="p">:</span><span class="o">:=</span> <span class="o">&lt;</span><span class="n">Magic</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">FileFormatDescriptor</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">blocks</span><span class="o">&gt;</span> \
@@ -600,9 +605,9 @@ Development Kit License (20191101-BDSDK-SL).
 <span class="o">&lt;</span><span class="n">descriptor</span><span class="o">-</span><span class="n">size</span><span class="o">&gt;</span> <span class="p">:</span><span class="o">:=</span> <span class="mi">32</span><span class="o">-</span><span class="n">bit</span> <span class="n">unsigned</span> <span class="nb">int</span>
 </pre></div>
 </div>
-<p>The first <code class="docutils literal notranslate"><span class="pre">&lt;block&gt;</span></code> in the file should be a <code class="docutils literal notranslate"><span class="pre">DescriptorBlock</span></code> containing a <code class="docutils literal notranslate"><span class="pre">FileFormatDescriptor</span></code>.  This specifies the file format version (currently 1.0.0) and a list of <code class="docutils literal notranslate"><span class="pre">{key</span> <span class="pre">-&gt;</span> <span class="pre">value}</span></code> (<code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">-&gt;</span> <span class="pre">string</span></code>) which for a robot log could be used to specify from which robot the log came from, the release running, etc….   The format of annotation keys should be {project-or-organization}:{annotation-name}.  For example, <code class="docutils literal notranslate"><span class="pre">bosdyn:robot-serial-number</span></code>.</p>
-<p>The final <code class="docutils literal notranslate"><span class="pre">&lt;block&gt;</span></code> in the file should be a <code class="docutils literal notranslate"><span class="pre">DescriptorBlock</span></code> containing a <code class="docutils literal notranslate"><span class="pre">FileIndex</span></code>.  This structure lists the <code class="docutils literal notranslate"><span class="pre">SeriesIdentifier</span></code> for each series of messages and a list of <code class="docutils literal notranslate"><span class="pre">(timestamp_nsec,</span> <span class="pre">file_offset)</span></code> pairs for each message in the series.  If  <code class="docutils literal notranslate"><span class="pre">&lt;Offset&gt;</span></code> is zero, this means that the file does not have an index block.</p>
-<p>The index helps make it easier to find data in the file.  The offset at the end of the file shows where start of the index block is. So you can seek 20 bytes from the end of the file, read the index offset, seek to the index block and read it, and then you have a map to the rest of the data in the file. The index offset is at the end of the file to allow the file to be written purely as a stream. You thus never need to seek to the beginning to insert the offset.</p>
+<p>The first <code class="docutils literal notranslate"><span class="pre">&lt;block&gt;</span></code> in the file should be a <code class="docutils literal notranslate"><span class="pre">DescriptorBlock</span></code> containing a <code class="docutils literal notranslate"><span class="pre">FileFormatDescriptor</span></code>. This specifies the file format version (currently 1.0.0) and a list of <code class="docutils literal notranslate"><span class="pre">{key</span> <span class="pre">-&gt;</span> <span class="pre">value}</span></code> (<code class="docutils literal notranslate"><span class="pre">string</span> <span class="pre">-&gt;</span> <span class="pre">string</span></code>) which for a robot log could be used to specify from which robot the log came from, the release running, etc…. The format of annotation keys should be {project-or-organization}:{annotation-name}. For example, <code class="docutils literal notranslate"><span class="pre">bosdyn:robot-serial-number</span></code>.</p>
+<p>The final <code class="docutils literal notranslate"><span class="pre">&lt;block&gt;</span></code> in the file should be a <code class="docutils literal notranslate"><span class="pre">DescriptorBlock</span></code> containing a <code class="docutils literal notranslate"><span class="pre">FileIndex</span></code>. This structure lists the <code class="docutils literal notranslate"><span class="pre">SeriesIdentifier</span></code> for each series of messages and a list of <code class="docutils literal notranslate"><span class="pre">(timestamp_nsec,</span> <span class="pre">file_offset)</span></code> pairs for each message in the series. If <code class="docutils literal notranslate"><span class="pre">&lt;Offset&gt;</span></code> is zero, this means that the file does not have an index block.</p>
+<p>The index helps make it easier to find data in the file. The offset at the end of the file shows where start of the index block is. So you can seek 20 bytes from the end of the file, read the index offset, seek to the index block and read it, and then you have a map to the rest of the data in the file. The index offset is at the end of the file to allow the file to be written purely as a stream. You thus never need to seek to the beginning to insert the offset.</p>
 </section>
 </section>
 

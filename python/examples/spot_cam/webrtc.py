@@ -5,17 +5,11 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import asyncio
-import base64
-import json
 import logging
 import sys
 import threading
-import time
 
-import cv2
-import numpy as np
-import requests
-from aiortc import MediaStreamTrack, RTCConfiguration, RTCPeerConnection, RTCSessionDescription
+from aiortc import RTCConfiguration
 from aiortc.contrib.media import MediaRecorder
 from webrtc_client import WebRTCClient
 
@@ -166,19 +160,10 @@ async def process_frame(client, options, shutdown_flag):
     while asyncio.get_event_loop().is_running():
         try:
             frame = await client.video_frame_queue.get()
-
-            if options.count == 0:
-                pil_image = frame.to_image()
-                cv_image = np.array(pil_image)
-                # OpenCV needs BGR
-                cv_image = cv2.cvtColor(cv_image, cv2.COLOR_RGB2BGR)
-                cv2.imshow('display', cv_image)
-                cv2.waitKey(1)
-            else:
-                frame.to_image().save(f'{options.dst_prefix}-{count}.jpg')
-                count += 1
-                if count >= options.count:
-                    break
+            frame.to_image().save(f'{options.dst_prefix}-{count}.jpg')
+            count += 1
+            if count >= options.count:
+                break
         except Exception as e:
             print(e)
         try:

@@ -52,7 +52,7 @@ class Uploader:
         """
 
         # Check we have a passed in data path
-        if (self.data_path == None):
+        if (self.data_path is None):
             _LOGGER.info('Data path not correctly passed in')
             return False
 
@@ -177,9 +177,9 @@ class Uploader:
             range_start = range_step.get("start")
             range_end = range_step.get("end")
 
-            if range_start == None:
+            if range_start is None:
                 range_start = -math.inf
-            if range_end == None:
+            if range_end is None:
                 range_end = math.inf
 
             # Next farthest start is the largest between the range start and the start of the range of our local file system

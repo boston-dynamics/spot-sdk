@@ -77,6 +77,8 @@ class ResponseContext(object):
             else:
                 channel = self.channel_prefix + "/" + self.response.DESCRIPTOR.full_name
             self.rpc_logger.add_protobuf_async(self.response, channel)
+        if not self.response.header.HasField("response_timestamp"):
+            self.response.header.response_timestamp.CopyFrom(bosdyn.util.now_timestamp())
 
 
 class GrpcServiceRunner(object):

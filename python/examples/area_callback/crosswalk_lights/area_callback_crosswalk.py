@@ -29,25 +29,29 @@ class AreaCallbackCrossWalkService(AreaCallbackRegionHandlerBase):
         # Set the policies at the start & end of the Area Callback region
         self.robot = robot
         self.logger = logging.getLogger(__name__)
-
+        self.starting_inside_region = False
         self.stop_at_start()
         self.continue_past_end()
 
     def begin(
         self, request: area_callback_pb2.BeginCallbackRequest
     ) -> area_callback_pb2.BeginCallbackResponse.Status:
+        self.starting_inside_region = request.region_info.starting_inside_region
         # Unpack any configuration settings
         return area_callback_pb2.BeginCallbackResponse.STATUS_OK
 
     def run(self):
-        # Actions to be executed while approaching the Area Callback region
-        self.block_until_arrived_at_start()  # block the code until the robot reaches the start
+        # If the robot is starting inside the region, it should skip the initial flashing and
+        # proceed to exit the region right away.
+        if not self.starting_inside_region:
+            # Actions to be executed while approaching the Area Callback region
+            self.block_until_arrived_at_start()  # block the code until the robot reaches the start
 
-        # Pass in robot object, desired light frequency (Hz), and desired light brightness for waiting
-        # Lights will flash at 0.5Hz with brightness of 20%
-        with LightsHelper(self.robot, 0.5, 0.2):
-            self.safe_sleep(5.0)
-        # Lights will be turned off upon exiting from LightsHelper
+            # Pass in robot object, desired light frequency (Hz), and desired light brightness for waiting
+            # Lights will flash at 0.5Hz with brightness of 20%
+            with LightsHelper(self.robot, 0.5, 0.2):
+                self.safe_sleep(5.0)
+            # Lights will be turned off upon exiting from LightsHelper
 
         # proceed walking to the end of the Area callback region
         self.continue_past_start()

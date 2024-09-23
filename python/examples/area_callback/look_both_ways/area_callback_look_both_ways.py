@@ -15,24 +15,37 @@ from bosdyn.client.area_callback_service_servicer import AreaCallbackServiceServ
 from bosdyn.client.area_callback_service_utils import AreaCallbackServiceConfig
 from bosdyn.client.robot import Robot
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient
+from bosdyn.client.service_customization_helpers import dict_params_to_dict
+
+DEFAULT_YAW = 1
 
 
 class AreaCallbackRegionHandlerLookBothWays(AreaCallbackRegionHandlerBase):
     """An example AreaCallbackRegionHandler implementation which looks both ways.
     """
-    DEFAULT_YAW = 1
 
     def __init__(self, config: AreaCallbackServiceConfig, robot: Robot):
         super().__init__(config, robot)
-        self.yaw = self.DEFAULT_YAW
+        self.yaw = DEFAULT_YAW
+        self.starting_inside_region = False
         # Set up initial policy
         self.control_at_start()
         self.continue_past_end()
 
     def begin(self, request: BeginCallbackRequest) -> BeginCallbackResponse.Status:
+        self.starting_inside_region = request.region_info.starting_inside_region
+        # Read any custom yaw from provided params.
+        params = dict_params_to_dict(request.custom_params,
+                                     self._config.area_callback_information.custom_params)
+        self.yaw = params.get('yaw', DEFAULT_YAW)
         return BeginCallbackResponse.STATUS_OK
 
     def run(self):
+        # If the robot is starting inside the region, it should just exit the region right away,
+        # rather than look around.
+        if self.starting_inside_region:
+            return
+
         # In order to send a robot command, the AreaCallback requires a lease. This helper function
         # blocks until a lease is given to the callback.
         self.control_at_start()
@@ -115,6 +128,14 @@ def main():
     # The robot should face along the route it is going to cross, so that we look left and
     # right of the crossing direction.
     info.default_stop.face_direction = info.default_stop.FACE_DIRECTION_ALONG_ROUTE
+
+    # Allow the amount of yaw to be configured.
+    yaw_spec = info.custom_params.specs['yaw'].spec.double_spec
+    yaw_spec.default_value.value = DEFAULT_YAW
+    yaw_spec.min_value.value = 0
+    yaw_spec.max_value.value = 1.2
+    yaw_spec.units.name = 'radians'
+    info.custom_params.specs['yaw'].ui_info.description = "Amount to yaw back and forth"
 
     servicer = AreaCallbackServiceServicer(robot, config, AreaCallbackRegionHandlerLookBothWays)
 

@@ -6,7 +6,6 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-
 # Animations in Choreography
 
 The Choreography service is a framework for producing scripted motion through a list of customizable, predetermined moves. The sequences can be customized through the track layering system, the parameters associated with each move, and the adjustable beats per minute of the sequences.
@@ -22,7 +21,6 @@ For the intro sequence of the video [Spot’s On It](https://www.youtube.com/wat
 <iframe width="600" height="400" allow="autoplay"
 src="https://www.youtube.com/embed/7atZfX85nd4">
 </iframe>
-
 
 ## Text files for representing animations
 
@@ -50,7 +48,7 @@ The `animation_file_to_proto.py` python script file in the `bosdyn-choreography-
 
 ## Automatic animation uploading in Choreographer
 
-When Choreographer connects to a robot, it begins uploading all animations automatically to every connected robot. This includes connecting to a robot at startup from command line arguments and connecting to a robot at run time through the connection interface.  Once an animation is uploaded, it is stored on the robot until it is rebooted.  
+When Choreographer connects to a robot, it begins uploading all animations automatically to every connected robot. This includes connecting to a robot at startup from command line arguments and connecting to a robot at run time through the connection interface. Once an animation is uploaded, it is stored on the robot until it is rebooted.
 
 A dialog indicates the status of all animations being uploaded (example below). If an animation fails to upload, check the terminal where the Choreographer executable is running. It should contain an error message describing why the animation is invalid.
 
@@ -60,9 +58,9 @@ A dialog indicates the status of all animations being uploaded (example below). 
 
 To aid in creating animated moves without 3D animation software, we provide choreography logs. These logs can be recorded through the Choreography service at any time, including:
 
-* While driving the robot with the tablet
-* Moving the robot arm manually (while it is powered off)
-* Running an existing choreography sequence.
+- While driving the robot with the tablet
+- Moving the robot arm manually (while it is powered off)
+- Running an existing choreography sequence.
 
 A choreography log contains high-rate timestamped key frames with the robot's joint state, foot contacts, and body pose relative to the animation frame (defined by the robot's foot state when the choreography log started). These key frames can be used directly for the animation file's key frames.
 

@@ -26,14 +26,14 @@ message Vec3 {
     double z = 3;
 }
 
-// Cylindrical coordinates are a generalization of polar coordiates, adding a
+// Cylindrical coordinates are a generalization of polar coordinates, adding a
 // height
 // axis. See (http://mathworld.wolfram.com/CylindricalCoordinates.html) for
 // more details.
 message CylindricalCoordinate {
     double r = 1;      // Radial coordinate
     double theta = 2;  // Azimuthal coordinate
-    double z = 3;      // Vertical coordiante
+    double z = 3;      // Vertical coordinate
 }
 
 // Quaternion primitive. A quaternion can be used to describe the rotation.
@@ -161,8 +161,8 @@ message FrameTreeSnapshot {
      * The two properties above reduce data size. Instead of having to send N^2
      * edge_map entries to represent all relationships between N frames,
      * only N edge_map entries need to be sent. Clients will need to determine
-     * the chain of edges to follow to get from one frame to another frae,
-     * and then do inversion and concatentation to generate the appropriate pose. \
+     * the chain of edges to follow to get from one frame to another frame,
+     * and then do inversion and concatenation to generate the appropriate pose. \
      *
      * Note that all FrameTreeSnapshots are expected to be a single rooted tree.
      * The syntax for FrameTreeSnapshot could also support graphs with
@@ -190,6 +190,12 @@ message FrameTreeSnapshot {
 // Geometric primitive describing a two-dimensional box.
 message Box2 {
     Vec2 size = 1;
+}
+
+// Two-dimensional box with an angle
+message OrientedBox2 {
+    Box2 box = 1;
+    float angle = 2;
 }
 
 // Geometric primitive to describe a 2D box in a specific frame.
@@ -327,6 +333,17 @@ message PolygonWithExclusions {
 message Circle {
     bosdyn.api.Vec2 center_pt = 1;
     double radius = 2;  // Dimensions in m from center_pt.
+}
+
+// Geometric primitive to describe a 2D circle in a specific frame.
+message CircleWithFrame {
+    // The circle is specified with a radius and center point in x-y coordinates.
+    Circle circle = 1;
+    // The pose of the circle is in 'frame_name'.
+    string frame_name = 2;
+    // The transformation of the circle into the desired frame
+    // (specified above).
+    SE3Pose frame_name_tform_circle = 3;
 }
 
 // Represents an area in the XY plane.

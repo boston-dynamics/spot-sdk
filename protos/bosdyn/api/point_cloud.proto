@@ -15,8 +15,8 @@ import "google/protobuf/timestamp.proto";
 
 // Information about a sensor or process that produces point clouds.
 message PointCloudSource {
-    // The name of the point cloud source. This is intended to be unique accross all point cloud sources,
-    // and should be human readable.
+    // The name of the point cloud source. This is intended to be unique across all point cloud
+    // sources, and should be human readable.
     string name = 1;
 
     // The frame name of the sensor. The transformation from vision_tform_sensor can be computed
@@ -44,9 +44,10 @@ message PointCloud {
     enum Encoding {
         // The point cloud has an unknown encoding.
         ENCODING_UNKNOWN = 0;
-        // Each point is x,y,z float32 value (12 bytes, little-endian) stored sequentially. This allows
-        // the point cloud to be expressed in any range and resolution represented by floating point
-        // numbers, but the point cloud will be larger than if one of the other encodings is used.
+        // Each point is x,y,z float32 value (12 bytes, little-endian) stored sequentially. This
+        // allows the point cloud to be expressed in any range and resolution represented by
+        // floating point numbers, but the point cloud will be larger than if one of the other
+        // encodings is used.
         ENCODING_XYZ_32F = 1;
         // Each point is 3 signed int8s plus an extra shared signed int8s (4 byte).
         // byte layout: [..., p1_x, p1_y, p1_z, x, ...]
@@ -117,13 +118,15 @@ message ListPointCloudSourcesRequest {
     RequestHeader header = 1;
 }
 
-// The GetPointCloud response message which returns any point cloud data associated with that service.
+// The GetPointCloud response message which returns any point cloud data associated with that
+// service.
 message ListPointCloudSourcesResponse {
     // Common response Header.
     ResponseHeader header = 1;
 
     // The set of PointCloudSources available from this service.
-    // May be empty if the service serves no point clouds (e.g., if no sensors were found on startup).
+    // May be empty if the service serves no point clouds (e.g., if no sensors were found on
+    // startup).
     repeated PointCloudSource point_cloud_sources = 2;
 }
 
@@ -143,7 +146,6 @@ message GetPointCloudRequest {
 }
 
 message PointCloudResponse {
-
     enum Status {
         // UNKNOWN should never be used.
         // An internal PointCloudService issue has happened if UNKNOWN is set.

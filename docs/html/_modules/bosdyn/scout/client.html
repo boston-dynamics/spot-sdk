@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.scout.client &mdash; Spot 4.0.3 documentation</title>
+  <title>bosdyn.scout.client &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,7 +48,8 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -202,7 +203,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -263,11 +263,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -993,7 +998,8 @@
 <span class="sd">            Returns:</span>
 <span class="sd">                requests.Response: the response associated with the post request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/export_as_walk/</span><span class="si">{</span><span class="n">site_walk_uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/export_as_walk&#39;</span><span class="p">,</span>
+                                  <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;siteWalkUuid&quot;</span><span class="p">:</span> <span class="n">site_walk_uuid</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ScoutClient.post_import_from_walk"><a class="viewcode-back" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html#bosdyn.scout.client.ScoutClient.post_import_from_walk">[docs]</a>    <span class="k">def</span> <span class="nf">post_import_from_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a walk data, imports it to the specified scout instance</span>
@@ -1230,7 +1236,7 @@
 
 <div class="viewcode-block" id="ScoutClient.post_dispatch_mission_to_robot"><a class="viewcode-back" href="../../../python/bosdyn-scout/src/bosdyn/scout/client.html#bosdyn.scout.client.ScoutClient.post_dispatch_mission_to_robot">[docs]</a>    <span class="k">def</span> <span class="nf">post_dispatch_mission_to_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">driver_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mission_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                        <span class="n">delete_mission</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">force_acquire_estop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-                                       <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+                                       <span class="n">skip_initialization</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Dispatch the robot to a mission given a mission uuid</span>
 
 <span class="sd">            Args:</span>
@@ -1239,10 +1245,11 @@
 <span class="sd">                mission_uuid: uuid of the mission(also known as Site Walk) to dispatch</span>
 <span class="sd">                delete_mission: whether to delete the mission after playback</span>
 <span class="sd">                force_acquire_estop: whether to force acquire E-stop from the previous client</span>
+<span class="sd">                skip_initialization: whether to skip initialization when starting the return to dock mission</span>
 <span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
 <span class="sd">            Raises:</span>
 <span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedScoutClientError:  indicates that the scout client is not authenticated properly</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
 <span class="sd">            Returns:</span>
 <span class="sd">                requests.Response: the response associated with the post request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1267,10 +1274,11 @@
                 <span class="s2">&quot;missionId&quot;</span><span class="p">:</span> <span class="n">mission_uuid</span><span class="p">,</span>
                 <span class="s2">&quot;forceAcquireEstop&quot;</span><span class="p">:</span> <span class="n">force_acquire_estop</span><span class="p">,</span>
                 <span class="s2">&quot;deleteMission&quot;</span><span class="p">:</span> <span class="n">delete_mission</span><span class="p">,</span>
-                <span class="s2">&quot;requireDocked&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;requireDocked&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;skipInitialization&quot;</span><span class="p">:</span> <span class="n">skip_initialization</span>
             <span class="p">},</span>
             <span class="s2">&quot;eventMetadata&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Scout API Triggered Mission&quot;</span>
+                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;API Triggered Mission&quot;</span>
             <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span>
@@ -1347,7 +1355,7 @@
         <span class="n">verify</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">verify</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;The provided value for the argument verify [</span><span class="si">%s</span><span class="s2">] is not either &#39;True&#39; or &#39;False&#39;. Assuming verify is set to &#39;path/to/CA bundle&#39;&quot;</span>
+            <span class="s2">&quot;The provided value for the argument verify [</span><span class="si">{}</span><span class="s2">] is not either &#39;True&#39; or &#39;False&#39;. Assuming verify is set to &#39;path/to/CA bundle&#39;&quot;</span>
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">verify</span><span class="p">))</span>
         <span class="n">verify</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">verify</span>
 

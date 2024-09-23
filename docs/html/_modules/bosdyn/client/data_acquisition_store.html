@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.data_acquisition_store &mdash; Spot 4.0.3 documentation</title>
+  <title>bosdyn.client.data_acquisition_store &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,7 +48,8 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -202,7 +203,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -263,11 +263,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -506,20 +511,23 @@
 <span class="sd">&quot;&quot;&quot;Client implementation for data acquisition store service.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">collections</span>
-<span class="kn">import</span> <span class="nn">functools</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">fstat</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">json_format</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">data_acquisition_store_pb2</span> <span class="k">as</span> <span class="n">data_acquisition_store</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">data_acquisition_store_service_pb2_grpc</span> <span class="k">as</span> <span class="n">data_acquisition_store_service</span>
-<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">image_pb2</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client</span> <span class="kn">import</span> <span class="n">data_chunk</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">data_chunk_pb2</span> <span class="k">as</span> <span class="n">data_chunk</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">header_pb2</span><span class="p">,</span> <span class="n">image_pb2</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.channel</span> <span class="kn">import</span> <span class="n">DEFAULT_HEADER_BUFFER_LENGTH</span><span class="p">,</span> <span class="n">DEFAULT_MAX_MESSAGE_LENGTH</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">error_pair</span><span class="p">,</span>
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.data_chunk</span> <span class="kn">import</span> <span class="n">split_serialized</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ResponseError</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">now_timestamp</span>
+
+<span class="n">DEFAULT_CHUNK_SIZE_BYTES</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">DEFAULT_MAX_MESSAGE_LENGTH</span> <span class="o">-</span> <span class="n">DEFAULT_HEADER_BUFFER_LENGTH</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="DataAcquisitionStoreClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient">[docs]</a><span class="k">class</span> <span class="nc">DataAcquisitionStoreClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
@@ -754,11 +762,64 @@
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="DataAcquisitionStoreClient.store_data_as_chunks"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.store_data_as_chunks">[docs]</a>    <span class="k">def</span> <span class="nf">store_data_as_chunks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store data using streaming, supports storing of large data that is too large for a single store_data rpc. Note: using this rpc means that the data must be loaded into memory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (bytes) : Arbitrary data to store.</span>
+<span class="sd">            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
+<span class="sd">            file_extension (string) : File extension to use for writing the data to a file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">             StoreDataResponse final successful response or first failed response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StoreDataStream</span><span class="p">,</span>
+                         <span class="n">_iterate_data_chunks</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="p">),</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionStoreClient.store_data_as_chunks_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.store_data_as_chunks_async">[docs]</a>    <span class="k">def</span> <span class="nf">store_data_as_chunks_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the store_data_as_chunks() RPC.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async_streaming</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StoreDataStream</span><span class="p">,</span> <span class="n">_iterate_data_chunks</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="p">),</span>
+            <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">assemble_type</span><span class="o">=</span><span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">StoreStreamResponse</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionStoreClient.store_file"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.store_file">[docs]</a>    <span class="k">def</span> <span class="nf">store_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store file using file path, supports storing of large files that are too large for a single store_data rpc.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file_path (string) : File path to arbitrary data to store.</span>
+<span class="sd">            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
+<span class="sd">            file_extension (string) : File extension to use for writing the data to a file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">             StoreDataResponse final successful response or first failed response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">file_abs</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_abs</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StoreDataStream</span><span class="p">,</span>
+                         <span class="n">_iterate_store_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">),</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                         <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionStoreClient.store_file_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.store_file_async">[docs]</a>    <span class="k">def</span> <span class="nf">store_file_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the store_file() RPC.&quot;&quot;&quot;</span>
+
+        <span class="n">file_abs</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_abs</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async_streaming</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StoreDataStream</span><span class="p">,</span>
+            <span class="n">_iterate_store_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">),</span>
+            <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">assemble_type</span><span class="o">=</span><span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">StoreStreamResponse</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="DataAcquisitionStoreClient.query_stored_captures"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.query_stored_captures">[docs]</a>    <span class="k">def</span> <span class="nf">query_stored_captures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Query stored captures from the robot.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            query (bosdyn.api.DataQueryParams) : Query parameters.</span>
+<span class="sd">            query (bosdyn.api.QueryParameters) : Query parameters.</span>
 <span class="sd">        Raises:</span>
 <span class="sd">            RpcError: Problem communicating with the robot.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -768,6 +829,15 @@
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
                          <span class="n">assemble_type</span><span class="o">=</span><span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">QueryStoredCapturesResponse</span><span class="p">,</span>
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DataAcquisitionStoreClient.query_stored_captures_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.query_stored_captures_async">[docs]</a>    <span class="k">def</span> <span class="nf">query_stored_captures_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the query_stored_captures() RPC.&quot;&quot;&quot;</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">QueryStoredCapturesRequest</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_request_processors</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async_streaming</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">QueryStoredCaptures</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
+            <span class="n">assemble_type</span><span class="o">=</span><span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">QueryStoredCapturesResponse</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DataAcquisitionStoreClient.query_max_capture_id"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.query_max_capture_id">[docs]</a>    <span class="k">def</span> <span class="nf">query_max_capture_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Query max capture id from the robot.</span>
@@ -783,11 +853,51 @@
 
 <div class="viewcode-block" id="DataAcquisitionStoreClient.query_max_capture_id_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.html#bosdyn.client.data_acquisition_store.DataAcquisitionStoreClient.query_max_capture_id_async">[docs]</a>    <span class="k">def</span> <span class="nf">query_max_capture_id_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of the query_max_capture_id() RPC.&quot;&quot;&quot;</span>
-        <span class="n">request</span> <span class="o">=</span> <span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">QueryMaxCaptureIdRequest</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">QueryMaxCaptureIdRequest</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">QueryMaxCaptureId</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span>
                                <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_max_capture_id</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+
+
+<span class="k">def</span> <span class="nf">_iterate_store_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator over file data and create multiple StoreStreamRequest</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            file (BufferedReader) : Reader to the file for arbitrary data to store.</span>
+<span class="sd">            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
+<span class="sd">            file_extension (string) : File extension to use for writing the data to a file.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            StoreStreamRequests iterates over these requests.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">total_size</span> <span class="o">=</span> <span class="n">fstat</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">fileno</span><span class="p">())</span><span class="o">.</span><span class="n">st_size</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">chunk</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">DEFAULT_CHUNK_SIZE_BYTES</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
+            <span class="c1"># No more data</span>
+            <span class="k">break</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data_chunk</span><span class="o">.</span><span class="n">DataChunk</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">chunk</span><span class="p">,</span> <span class="n">total_size</span><span class="o">=</span><span class="n">total_size</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">StoreStreamRequest</span><span class="p">(</span><span class="n">chunk</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">data_id</span><span class="o">=</span><span class="n">data_id</span><span class="p">,</span>
+                                                            <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">request</span>
+
+
+<span class="k">def</span> <span class="nf">_iterate_data_chunks</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data_id</span><span class="p">,</span> <span class="n">file_extension</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterator over data and create multiple StoreDataRequest</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data (bytes) : Arbitrary data to store.</span>
+<span class="sd">            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.</span>
+<span class="sd">            file_extension (string) : File extension to use for writing the data to a file.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            StoreDataRequests iterates over these requests.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">total_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">split_serialized</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">DEFAULT_CHUNK_SIZE_BYTES</span><span class="p">):</span>
+        <span class="n">chunk_data</span> <span class="o">=</span> <span class="n">data_chunk</span><span class="o">.</span><span class="n">DataChunk</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">chunk</span><span class="p">,</span> <span class="n">total_size</span><span class="o">=</span><span class="n">total_size</span><span class="p">)</span>
+        <span class="n">request</span> <span class="o">=</span> <span class="n">data_acquisition_store</span><span class="o">.</span><span class="n">StoreStreamRequest</span><span class="p">(</span><span class="n">chunk</span><span class="o">=</span><span class="n">chunk_data</span><span class="p">,</span> <span class="n">data_id</span><span class="o">=</span><span class="n">data_id</span><span class="p">,</span>
+                                                            <span class="n">file_extension</span><span class="o">=</span><span class="n">file_extension</span><span class="p">)</span>
+        <span class="k">yield</span> <span class="n">request</span>
 
 
 <span class="k">def</span> <span class="nf">_get_action_ids</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>

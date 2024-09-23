@@ -12,12 +12,14 @@ import logging
 import os
 import socket
 import time
+from itertools import product
 
 import serial
 
 import bosdyn.api.payload_pb2 as payload_protos
 import bosdyn.client.util
 from bosdyn.api.service_fault_pb2 import ServiceFault, ServiceFaultId
+from bosdyn.client import RetryableUnavailableError, TooManyRequestsError
 from bosdyn.client.exceptions import ProxyConnectionError
 from bosdyn.client.fault import (FaultClient, ServiceFaultAlreadyExistsError,
                                  ServiceFaultDoesNotExistError)
@@ -25,6 +27,7 @@ from bosdyn.client.gps.gps_listener import GpsListener
 from bosdyn.client.math_helpers import Quat, SE3Pose
 from bosdyn.client.payload import PayloadClient
 from bosdyn.client.payload_registration import (PayloadAlreadyExistsError,
+                                                PayloadNotAuthorizedError,
                                                 PayloadRegistrationClient,
                                                 PayloadRegistrationKeepAlive)
 from bosdyn.client.robot import UnregisteredServiceNameError
@@ -47,11 +50,14 @@ BUILD_DATA_FILE = '/builder.txt'
 # Format strings for possible faults.
 FAULT_CONNECTION = "{} Connection Fault"
 FAULT_COMMUNICATION = "{} Communication Fault"
+FAULT_CONFIGURATION = "{} Configuration Fault"
 
 # Attempt to connect to a device this many times.
 NUM_ATTEMPTS = 30
 # In case of failure, wait this long before trying again.
 SECS_PER_ATTEMPT = 1.0  # seconds.
+# Number of seconds to wait while we are checking for payload authorization.
+SECS_PER_AUTH = 3.0  # seconds.
 
 # Attribute used in service faults to prevent autonomous navigation.
 IMPAIR_ATTRIBUTE = "impair_navigation"
@@ -59,7 +65,27 @@ IMPAIR_ATTRIBUTE = "impair_navigation"
 # Payload T Frame
 PAYLOAD_FRAME_NAME = 'payload'
 
+# Default argument list for bounding box. Note that the default is not a valid configuration, and
+# the value here is just a placeholder for when no bounding box is specified on the command line.
+# position x y z qw qx qy qz and extent (half width) x y z
+DEFAULT_BOUNDING_BOX = [0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
+
 logger = logging.getLogger()
+
+
+# Populate the x, y, z values of the given vector with the values from the given list.
+def populate_vec_from_list(dst_vec, src_list):
+    dst_vec.x = src_list[0]
+    dst_vec.y = src_list[1]
+    dst_vec.z = src_list[2]
+
+
+# Populate the w, x, y, z values of the given quaternion with the values from the given list.
+def populate_quat_from_list(dst_quat, src_list):
+    dst_quat.w = src_list[0]
+    dst_quat.x = src_list[1]
+    dst_quat.y = src_list[2]
+    dst_quat.z = src_list[3]
 
 
 # Create a command line parser used to configure the GPS listener.
@@ -81,12 +107,12 @@ def create_parser():
         name='serial', help='Required arguments for listening to a Serial NMEA stream.')
 
     # Arguments for TCP.
-    parser_tcp.add_argument("--gps_host", help='The hostname or IP address of the GPS.',
+    parser_tcp.add_argument("--gps-host", help='The hostname or IP address of the GPS.',
                             default=GPS_HOST, required=True)
-    parser_tcp.add_argument("--gps_port", type=int, help='The TCP server port on the GPS.',
+    parser_tcp.add_argument("--gps-port", type=int, help='The TCP server port on the GPS.',
                             default=GPS_PORT, required=True)
     parser_tcp.add_argument(
-        "--socket_timeout", type=float,
+        "--socket-timeout", type=float,
         help='The amount of time in seconds to wait for data before timing out.',
         default=SOCKET_TIMEOUT, required=False)
 
@@ -94,49 +120,57 @@ def create_parser():
     parser_udp.add_argument("--port", type=int, help='The port on which to listen.', default=PORT,
                             required=True)
     parser_udp.add_argument(
-        "--socket_timeout", type=float,
+        "--socket-timeout", type=float,
         help='The amount of time in seconds to wait for data before timing out.',
         default=SOCKET_TIMEOUT, required=False)
 
     # Arguments for Serial.
-    parser_serial.add_argument("--serial_device", help="The path to the serial device",
+    parser_serial.add_argument("--serial-device", help="The path to the serial device",
                                default=SERIAL_DEVICE, required=True)
-    parser_serial.add_argument("--serial_baudrate", help="The baudrate of the serial device",
+    parser_serial.add_argument("--serial-baudrate", help="The baudrate of the serial device",
                                default=SERIAL_RATE, required=False)
     parser_serial.add_argument(
-        "--serial_timeout", type=float,
+        "--serial-timeout", type=float,
         help="The amount of time in seconds to wait for data before timing out.",
         default=SERIAL_TIMEOUT, required=False)
 
     # Arguments for the GPS Listener.
     parser.add_argument("--name", help='The name of the connected GPS payload.', required=True)
-    parser.add_argument('--payload_tform_gps',
+    parser.add_argument('--payload-tform-gps',
                         help='Pose of the GPS relative to the payload frame. (x y z qw qx qy qz)',
                         nargs=7, type=float, default=[0, 0, 0, 0, 0, 0, 1])
-    parser.add_argument("--num_attempts", type=int,
+    parser.add_argument("--num-attempts", type=int,
                         help='The number of attempts to connect to the GPS device.',
                         default=NUM_ATTEMPTS, required=False)
     parser.add_argument(
-        "--secs_per_attempt", type=float,
+        "--secs-per-attempt", type=float,
         help='The number of seconds to wait per attempt to connect to the GPS device.',
         default=SECS_PER_ATTEMPT, required=False)
-    parser.add_argument("--mass", type=float, help='The mass of the payload in kg', default=0,
+    parser.add_argument(
+        "--disable-time-sync", action='store_true', help=
+        "Flag indicating if the TimeSync service should be disabled for this client. Note: Only use this if the client and robot clocks are synchronized using some other method, such as NTP."
+    )
+
+    # Payload registration arguments.
+    parser.add_argument("--register-payload", action='store_true',
+                        help='Flag indicating if the GPS unit should be registered as a payload')
+    parser.add_argument("--mass", type=float, help='The mass of the payload in kg', default=False,
                         required=False)
     parser.add_argument("--description", help='Description of the payload', type=str,
                         default='GPS Payload', required=False)
     parser.add_argument("--version", help='Version number for software. (major minor patch_level)',
                         nargs=3, type=int, default=[0, 0, 0], required=False)
     parser.add_argument(
-        "--position_of_mass",
+        "--position-of-mass",
         help='Position of the payload center of mass in the payload reference frame (x y z)',
         nargs=3, type=float, default=[0, 0, 0], required=False)
     parser.add_argument(
         "--position", help=
         'Position of payload refrence frame with respect to payload mount reference frame. (x y z qw qx qy qz)',
         nargs=7, type=float, default=[0, 0, 0, 1, 0, 0, 0], required=False)
-    parser.add_argument("--bounding_boxes",
+    parser.add_argument("--bounding-box",
                         help='Bounding box. (x y z qw qx qy qz size_x size_y size_z)', nargs=10,
-                        type=float, default=[0, 0, 0, 1, 0, 0, 0, 0, 0, 0], required=False)
+                        type=float, default=DEFAULT_BOUNDING_BOX, required=False)
     parser.add_argument("--gps-credentials-file",
                         help='Credentials file for the specified GPS payload.', required=False,
                         default='gps-credentials.txt')
@@ -145,82 +179,188 @@ def create_parser():
 
 # Create an object used to communicate with a Boston Dynamics robot.
 def create_robot(creds, options):
-    sdk = bosdyn.client.create_standard_sdk(options.name + 'Client')
+    sdk = bosdyn.client.create_standard_sdk(options.name + ' Client')
     robot = sdk.create_robot(options.hostname)
     robot.authenticate_from_payload_credentials(*creds)
-    logger.info('Starting Timesync')
-    robot.time_sync.wait_for_sync()
-    time_converter = robot.time_sync.get_robot_time_converter()
-    current_skew = duration_to_seconds(robot.time_sync.get_robot_clock_skew())
-    logger.info('Got Timesync!  Skew: %d', current_skew)
+
+    if not options.disable_time_sync:
+        logger.info('Starting Timesync')
+        robot.time_sync.wait_for_sync()
+        current_skew = duration_to_seconds(robot.time_sync.get_robot_clock_skew())
+        logger.info('Got Timesync!  Skew: %d', current_skew)
+
     return robot
 
 
-# Registers the payload
-def register_payload(robot, options):
+# Check the given payload registration options and ensure they are valid.
+def check_payload_options(options):
+    MAX_NAME_LEN = 50  # characters
+    MAX_DESC_LEN = 250  # characters
+    MIN_POS = -2  # meters
+    MAX_POS = 2  # meters
+    X = 0
+    Y = 1
+    Z = 2
+    EXTENT_X = 7
+    EXTENT_Y = 8
+    EXTENT_Z = 9
+    MIN_MASS = 0  # kg
+    MAX_MASS = 25  # kg
+
+    # Determine if we have a bounding box by checking if we have the default values.
+    has_bounding_box = options.bounding_box != DEFAULT_BOUNDING_BOX
+
+    # Name cannot exceed 50 characters.
+    if len(options.name) > MAX_NAME_LEN:
+        logger.error(f"GPS payload name is too long. Max length is {MAX_NAME_LEN} characters.")
+        return False
+
+    # Description cannot exceed 250 characters.
+    if len(options.description) > MAX_DESC_LEN:
+        logger.error(
+            f"GPS payload description is too long. Max length is {MAX_DESC_LEN} characters.")
+        return False
+
+    # All positions must fall within the range [-2, 2].
+    error_format = "Incorrect payload specification, position values must be within bounds [{}, {}]. {}[{}] set to {}"
+
+    def check_position(field, idx):
+        pos = getattr(options, field)[idx]
+        if not (MIN_POS <= pos <= MAX_POS):
+            logger.error(error_format.format(MIN_POS, MAX_POS, field, idx, pos))
+            return False
+        return True
+
+    distance_fields = ["position", "position_of_mass"]
+    if has_bounding_box:
+        distance_fields.append("bounding_box")
+    distance_field_comps = product(distance_fields, [X, Y, Z])
+    positions_ok = all(check_position(f, i) for f, i in distance_field_comps)
+    if not positions_ok:
+        return False
+
+    # If we have a bounding box, the extents must be greater than zero.
+    if has_bounding_box:
+        error_format = "Incorrect payload specification, bounding box extents must be greater than 0. Extent {} is set to: {}"
+
+        def check_extent(idx):
+            extent = options.bounding_box[idx]
+            if extent <= 0:
+                logger.error(error_format.format(idx - EXTENT_X, extent))
+                return False
+            return True
+
+        extents_ok = all(check_extent(i) for i in [EXTENT_X, EXTENT_Y, EXTENT_Z])
+        if not extents_ok:
+            return False
+
+    # The mass must be within 0 and 25 kg.
+    mass = options.mass
+    if not (MIN_MASS <= mass <= MAX_MASS):
+        logger.error(
+            f"Incorrect payload specification, mass must be in range [{MIN_MASS}, {MAX_MASS}] kg. Total mass set to: {mass} kg"
+        )
+        return False
+
+    # Payload configuration is valid.
+    return True
+
+
+# Register the GPS device as a payload on Spot with the given specifications.
+def register_payload(robot, fault_client, creds, options):
+    payload_client = robot.ensure_client(PayloadClient.default_service_name)
+
+    # Check if the payload already exists and is authorized.
+    payload_already_authorized = False
+    try:
+        payloads = payload_client.list_payloads()
+        payload_already_authorized = any(
+            (payload.name == options.name and payload.is_authorized) for payload in payloads)
+    except:
+        # If we failed to get the payloads, assume the payload has not been authorized.
+        pass
+
+    # If the payload is already authorized or if we have valid registration options, clear any
+    # existing configuration faults.
+    if payload_already_authorized or check_payload_options(options):
+        clear_fault(FAULT_CONFIGURATION.format(options.name), creds, fault_client)
+    else:
+        # Payload does not already exist and the given configuration is invalid. Trigger a fault.
+        error_desc = "GPS Payload Configuration is invalid. Check logs for details."
+        trigger_fault(FAULT_CONFIGURATION.format(options.name), error_desc, creds, fault_client)
+        return False
+
+    if payload_already_authorized:
+        return True
+
+    # Create and register the payload.
     payload = payload_protos.Payload()
     payload.GUID, payload_secret = bosdyn.client.util.read_or_create_payload_credentials(
         options.gps_credentials_file)
     payload.name = options.name
     payload.description = options.description
-    # Version number
+    payload.label_prefix.append('gps')
+    payload.is_noncompute_payload = True
+
+    # Set the version number.
     payload.version.major_version = options.version[0]
     payload.version.minor_version = options.version[1]
     payload.version.patch_level = options.version[2]
 
+    # Set the position of the payload with respect to the body frame.
+    payload.mount_frame_name = payload_protos.MountFrameName.MOUNT_FRAME_BODY_PAYLOAD
+    populate_vec_from_list(payload.mount_tform_payload.position, options.position[:3])
+    populate_quat_from_list(payload.mount_tform_payload.rotation, options.position[3:])
+
+    # Set the mass properties.
     payload.mass_volume_properties.total_mass = options.mass
+    populate_vec_from_list(payload.mass_volume_properties.com_pos_rt_payload,
+                           options.position_of_mass)
 
-    # Position
-    payload.mount_tform_payload.position.x = options.position[0]
-    payload.mount_tform_payload.position.y = options.position[1]
-    payload.mount_tform_payload.position.z = options.position[2]
-    payload.mount_tform_payload.rotation.w = options.position[3]
-    payload.mount_tform_payload.rotation.x = options.position[4]
-    payload.mount_tform_payload.rotation.y = options.position[5]
-    payload.mount_tform_payload.rotation.z = options.position[6]
+    # If the bounding box is not the default, populate it.
+    if options.bounding_box != DEFAULT_BOUNDING_BOX:
+        bb = payload.mass_volume_properties.bounding_box.add()
+        bb.frame_name = PAYLOAD_FRAME_NAME
+        populate_vec_from_list(bb.frame_name_tform_box.position, options.bounding_box[:3])
+        populate_quat_from_list(bb.frame_name_tform_box.rotation, options.bounding_box[3:7])
 
-    # Position of mass
-    payload.mass_volume_properties.com_pos_rt_payload.x = options.position_of_mass[0]
-    payload.mass_volume_properties.com_pos_rt_payload.y = options.position_of_mass[1]
-    payload.mass_volume_properties.com_pos_rt_payload.z = options.position_of_mass[2]
+        # The input is half the dimension of the box like the UI
+        extents = [x * 2 for x in options.bounding_box[7:]]
+        populate_vec_from_list(bb.box.size, extents)
 
-    # Bounding boxes
-    bb = payload.mass_volume_properties.bounding_box.add()
-    bb.frame_name = PAYLOAD_FRAME_NAME
-    bb.frame_name_tform_box.position.x = options.bounding_boxes[0]
-    bb.frame_name_tform_box.position.y = options.bounding_boxes[1]
-    bb.frame_name_tform_box.position.z = options.bounding_boxes[2]
-    bb.frame_name_tform_box.rotation.w = options.bounding_boxes[3]
-    bb.frame_name_tform_box.rotation.x = options.bounding_boxes[4]
-    bb.frame_name_tform_box.rotation.y = options.bounding_boxes[5]
-    bb.frame_name_tform_box.rotation.z = options.bounding_boxes[6]
-
-    # The input is half the dimension of the box like the UI
-    bb.box.size.x = options.bounding_boxes[7] * 2
-    bb.box.size.y = options.bounding_boxes[8] * 2
-    bb.box.size.z = options.bounding_boxes[9] * 2
-
-    # Create a payload registration client
+    # Register the payload.
     payload_registration_client = robot.ensure_client(
         PayloadRegistrationClient.default_service_name)
 
     try:
         payload_registration_client.register_payload(payload, payload_secret)
-        print('Payload has been authorized by admin.')
     except PayloadAlreadyExistsError:
-        print(
-            f"Payload config for {payload.GUID} already exists. Continuing with pre-existing configuration."
-        )
+        # Update payload version, in case the payload was already registered with an older version.
+        payload_registration_client.update_payload_version(payload.GUID, payload_secret,
+                                                           payload.version)
 
-    # Create and start the keep alive
-    keep_alive = PayloadRegistrationKeepAlive(payload_registration_client, payload, payload_secret)
-    keep_alive.start()
+    limited_token = None
+    waiting_for_auth = False
+    while not limited_token:
+        try:
+            # Request payload user token.
+            limited_token = payload_registration_client.get_payload_auth_token(
+                payload.GUID, payload_secret)
+        except PayloadNotAuthorizedError:
+            if not waiting_for_auth:
+                logger.info("Waiting for admin to authorize payload")
+                waiting_for_auth = True
+        time.sleep(SECS_PER_AUTH)
+
+    if waiting_for_auth:
+        logger.info('Payload authorized.')
+    return True
 
 
 # Create a client for triggering and clearing payload faults.
-def create_fault_client(robot, options):
+def create_fault_client(robot):
     fault_client = None
-    while fault_client == None:
+    while fault_client is None:
         try:
             return robot.ensure_client(FaultClient.default_service_name)
         except (UnregisteredServiceNameError, ProxyConnectionError):
@@ -361,7 +501,7 @@ def create_serial_stream(serial_device, baudrate, timeout, max_attempts, secs_pe
 
 # Create a stream to communicate with the GPS device.
 def create_stream(fault_client, creds, options):
-    # The stream we will return
+    # The stream we will return.
     stream = None
 
     # Flag indicating if we encountered a fault while connecting.
@@ -447,11 +587,16 @@ def main():
     # Set up the Robot Client.
     robot = create_robot(creds, options)
 
-    # Register the Payload
-    register_payload(robot, options)
-
     # Create a Fault Client for errors.
-    fault_client = create_fault_client(robot, options)
+    fault_client = create_fault_client(robot)
+
+    # Register the Payload
+    if options.register_payload:
+        # The user can modify and correct the payload configuration in the web UI, so it is
+        # possible that this will eventually succeed even though the programmed configuration is
+        # wrong.
+        while not register_payload(robot, fault_client, creds, options):
+            time.sleep(SECS_PER_ATTEMPT)
 
     # Set up the data stream.
     stream = None
@@ -463,8 +608,12 @@ def main():
     # Calculate the transform from the body frame to the GPS receiver.
     body_tform_gps = calculate_body_tform_gps(robot, options)
 
-    # Get the time converter, used to sync times between the payload and robot.
-    time_converter = robot.time_sync.get_robot_time_converter()
+    # Get the time converter, used to sync times between the payload and robot. If the payload and
+    # the robot have their clocks synchronized by some other means, such as NTP, the user may choose
+    # to disable time sync. In that case, just leave time_converter as None.
+    time_converter = None
+    if not options.disable_time_sync:
+        time_converter = robot.time_sync.get_robot_time_converter()
 
     # If we previously had a fault, clear it.
     clear_fault(FAULT_COMMUNICATION.format(options.name), creds, fault_client)

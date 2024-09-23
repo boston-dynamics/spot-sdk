@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Robot Services &mdash; Spot 4.0.3 documentation</title>
+  <title>Robot Services &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -507,14 +512,14 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="robot-services">
 <h1>Robot Services<a class="headerlink" href="#robot-services" title="Permalink to this heading"></a></h1>
-<p>Spot tracks knowledge about multiple sources of state, including the robot’s current physical state, the images captured by its cameras, and the terrain and objects around it.  This state information can be used to make decisions about how to control the robot or how to command the robot from a higher level application. The different state services available on Spot are:</p>
+<p>Spot tracks knowledge about multiple sources of state, including the robot’s current physical state, the images captured by its cameras, and the terrain and objects around it. This state information can be used to make decisions about how to control the robot or how to command the robot from a higher level application. The different state services available on Spot are:</p>
 <ul class="simple">
 <li><p>Robot State Service</p></li>
 <li><p>Image Service</p></li>
 <li><p>Local Grid Service</p></li>
 <li><p>World Object Service</p></li>
 </ul>
-<p>To command and operate Spot, a client must take additional steps beyond authentication.  The client establishes application-layer time synchronization and acquires a lease; both processes are streamlined by the SDK.  Once fully in control of the robot, the client will need to maintain the software stop, enable motor power and send commands.</p>
+<p>To command and operate Spot, a client must take additional steps beyond authentication. The client establishes application-layer time synchronization and acquires a lease; both processes are streamlined by the SDK. Once fully in control of the robot, the client will need to maintain the software stop, enable motor power and send commands.</p>
 <ul class="simple">
 <li><p>E-Stop Service</p></li>
 <li><p>Power Service</p></li>
@@ -523,8 +528,8 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="estop">
 <h2>estop<a class="headerlink" href="#estop" title="Permalink to this heading"></a></h2>
 <p>The E-Stop service provides a secondary keep-alive mechanism by acting as a software stop.</p>
-<p>First the E-Stop configuration is set; this specifies the expected endpoints (at least one) and their timeout.  Before enabling motor power all endpoints must be registered and checking in.</p>
-<p>During operation all endpoints will be periodically checking in.  If an endpoint fails to check in (or does check in but denies the authority to operate) then the robot will turn off motor power.</p>
+<p>First the E-Stop configuration is set; this specifies the expected endpoints (at least one) and their timeout. Before enabling motor power all endpoints must be registered and checking in.</p>
+<p>During operation all endpoints will be periodically checking in. If an endpoint fails to check in (or does check in but denies the authority to operate) then the robot will turn off motor power.</p>
 <p>Note:</p>
 <ul class="simple">
 <li><p>Abruptly turning off motor power will cause the robot to drop, clients are encouraged to use <code class="docutils literal notranslate"><span class="pre">stop_level=SETTLE_THEN_CUT</span></code> or the <code class="docutils literal notranslate"><span class="pre">SafePowerOffCommand</span></code> where possible.</p></li>
@@ -535,14 +540,14 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="power">
 <h2>power<a class="headerlink" href="#power" title="Permalink to this heading"></a></h2>
 <p>The power service allows a client to power the motors on and off.</p>
-<p>To turn on, the client should send a <code class="docutils literal notranslate"><span class="pre">PowerCommandRequest</span></code> RPC with <code class="docutils literal notranslate"><span class="pre">REQUEST_ON</span></code>.  This may take a few seconds.</p>
-<p>To turn off, clients are encouraged to use the <code class="docutils literal notranslate"><span class="pre">SafePowerOffCommand</span></code> RPC from the robot-command service in nominal operation.  This RPC part of the robot-command service because it coordinates gently sitting the robot down prior to turning off motor power.  To turn off quickly, the client should send a <code class="docutils literal notranslate"><span class="pre">PowerCommandRequest</span></code> RPC with <code class="docutils literal notranslate"><span class="pre">REQUEST_OFF</span></code>.</p>
+<p>To turn on, the client should send a <code class="docutils literal notranslate"><span class="pre">PowerCommandRequest</span></code> RPC with <code class="docutils literal notranslate"><span class="pre">REQUEST_ON</span></code>. This may take a few seconds.</p>
+<p>To turn off, clients are encouraged to use the <code class="docutils literal notranslate"><span class="pre">SafePowerOffCommand</span></code> RPC from the robot-command service in nominal operation. This RPC part of the robot-command service because it coordinates gently sitting the robot down prior to turning off motor power. To turn off quickly, the client should send a <code class="docutils literal notranslate"><span class="pre">PowerCommandRequest</span></code> RPC with <code class="docutils literal notranslate"><span class="pre">REQUEST_OFF</span></code>.</p>
 </section>
 <section id="robot-command">
 <h2>robot-command<a class="headerlink" href="#robot-command" title="Permalink to this heading"></a></h2>
 <p>The robot command service allows a client to move the robot.</p>
-<p>There are many commands exposed to clients to make the robot self-right, sit, stand, move to a position, move with a velocity, stop and power off.  Most commands have associated parameters, for example the stand command contains an optional offset allowing the client to orient the robot’s body.</p>
-<p>Clients are encouraged to send short-lived commands and continuously resend them so that the robot stops in the even of a client-side issue.  For longer commands, client should cache the id returned by the CommandResponse and poll the associated CommandFeedbackRequest to monitor the command.</p>
+<p>There are many commands exposed to clients to make the robot self-right, sit, stand, move to a position, move with a velocity, stop and power off. Most commands have associated parameters, for example the stand command contains an optional offset allowing the client to orient the robot’s body.</p>
+<p>Clients are encouraged to send short-lived commands and continuously resend them so that the robot stops in the even of a client-side issue. For longer commands, client should cache the id returned by the CommandResponse and poll the associated CommandFeedbackRequest to monitor the command.</p>
 </section>
 <section id="robot-state">
 <h2>robot-state<a class="headerlink" href="#robot-state" title="Permalink to this heading"></a></h2>

@@ -5,7 +5,6 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Unit tests for the image client."""
-import logging
 import time
 
 import grpc

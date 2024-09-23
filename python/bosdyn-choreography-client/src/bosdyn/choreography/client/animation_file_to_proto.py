@@ -369,7 +369,8 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
 
     Args:
         animated_file (string): The filepath to the animation text file.
-        animate_move_params_file (string): [Optional] The filepath to a default set of move parameters.
+        animate_move_params_file (string): [Required if needing default param values. Otherwise optional] 
+            The filepath to a default set of move parameters or move parameters as a string.
 
     Returns:
         The Animation class, which contains the animation proto to be uploaded to the robot, as well

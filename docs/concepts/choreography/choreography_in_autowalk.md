@@ -10,9 +10,20 @@ Development Kit License (20191101-BDSDK-SL).
 
 As of Spot Release 4.0.0, choreography sequences can be added as Execute Choreography Actions in autowalk missions.
 
-*Only users with a Spot choreography license have access to choreography actions within the tablet autowalk application.*
+_Only users with a Spot choreography license have access to choreography actions within the tablet autowalk application._
 
 ## Choreography safety
+
+CAUTION: Choreography moves can induce unpredictable or unstable motions in Spot, which may increase the risk of falls, collisions, and other hazards. Observe the following safety precautions:
+
+- Before using choreography, ensure there is at least 3 meters of clearance around Spot in all directions.
+- Stay at least 3 meters away from Spot when motors are active. Power off motors before approaching Spot.
+- Ensure that all bystanders who are in or may enter the area where choreography is performed are adequately warned and stay at least 3 meters away from Spot at all times.
+
+WARNING: A small percentage of people may experience epileptic seizures or blackouts when exposed to certain light patterns or flashing lights. Choreography moves that include Spot’s status lights or A/V warning system lights could trigger epileptic symptoms or seizures, even in people with no history of photosensitive epilepsy. Observe the following safety precautions:
+
+- When designing choreography routines that include Spot’s status lights or A/V warning system lights, avoid patterns and frequencies known to increase the risk of epileptic symptoms.
+- Before using choreography, ensure that all bystanders are adequately warned of any risk of exposure to light patterns and flashing lights from Spot.
 
 When playing any mission containing choreography actions on a robot, always keep in mind basic safety procedures. Make sure there is plenty of space around your Spot where a choreography action will be played. Make sure that neither you nor anyone else will approach the dancing Spot during the mission. Remember that robots running choreography actions are not capable of reacting to their surroundings, and will hit obstacles if they are in the path of the dancing robot. Missions with Choreography Actions should not run unsupervised.
 
@@ -34,7 +45,7 @@ Use the Choreography Action screen to select a choreography sequence to add to t
 
 1. Select the name of the sequence to add.
 
-    note: Sequences must be loaded to the robot before they will be available during the autowalk recording process. To see details on playing choreography sequences through the tablet, see the [Choreography in Tablet](../choreography/choreography_in_tablet.md) documentation.
+   note: Sequences must be loaded to the robot before they will be available during the autowalk recording process. To see details on playing choreography sequences through the tablet, see the [Choreography in Tablet](../choreography/choreography_in_tablet.md) documentation.
 
 2. The **Preview** button will play the selected choreography sequence, without adding it to the mission as an action.
 

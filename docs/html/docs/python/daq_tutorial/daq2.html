@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Part 2: Capturing Images &mdash; Spot 4.0.3 documentation</title>
+  <title>Part 2: Capturing Images &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../concepts/orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -520,13 +525,13 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Run the image service, connecting to the robot.</p></li>
 <li><p>Test that the image service functions properly.</p></li>
 </ul>
-<p>If you do not have a webcam available, please skip ahead to <a class="reference internal" href="daq3.html"><span class="doc">capturing other data</span></a>.  To skip the explanation and just run the service, jump ahead to <a class="reference external" href="#testing-the-service">testing the service</a>.</p>
+<p>If you do not have a webcam available, please skip ahead to <a class="reference internal" href="daq3.html"><span class="doc">capturing other data</span></a>. To skip the explanation and just run the service, jump ahead to <a class="reference external" href="#testing-the-service">testing the service</a>.</p>
 <section id="understanding-image-services">
 <h2>Understanding Image Services<a class="headerlink" href="#understanding-image-services" title="Permalink to this heading"></a></h2>
-<p>An image service is a grpc service that implements the [bosdyn.api.ImageService] interface.  A single image service can handle multiple cameras, exposing them as image sources. It then responds to GetImage requests by providing the images for the requested sources.  The on-robot “image” service is exactly this interface, and provides access to the images from the robot’s on-board cameras.  Note that image services are expected to return images “quickly”.  If you have an image sensor that takes significant time to capture its images (more than several seconds), then you should instead implement a data acquisition plugin which can report on its capture status, and is not used for live views.</p>
-<p>We have several helper classes to simplify the creation of new image services.  These classes are found in <code class="docutils literal notranslate"><span class="pre">bosdyn.client.image_service_helpers</span></code>.</p>
+<p>An image service is a grpc service that implements the [bosdyn.api.ImageService] interface. A single image service can handle multiple cameras, exposing them as image sources. It then responds to GetImage requests by providing the images for the requested sources. The on-robot “image” service is exactly this interface, and provides access to the images from the robot’s on-board cameras. Note that image services are expected to return images “quickly”. If you have an image sensor that takes significant time to capture its images (more than several seconds), then you should instead implement a data acquisition plugin which can report on its capture status, and is not used for live views.</p>
+<p>We have several helper classes to simplify the creation of new image services. These classes are found in <code class="docutils literal notranslate"><span class="pre">bosdyn.client.image_service_helpers</span></code>.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">CameraInterface</span></code>:  This is the abstract interface you will need to implement to read from particular camera hardware.  This is the interface that we will implement in this tutorial. This implementation will require two methods:</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">CameraInterface</span></code>: This is the abstract interface you will need to implement to read from particular camera hardware. This is the interface that we will implement in this tutorial. This implementation will require two methods:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">blocking_capture()</span></code>: Takes the data from the camera and returns image data and a timestamp.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">image_decode()</span></code>: Converts the image data into the correct format for returning a response to clients.</p></li>
@@ -537,7 +542,7 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 <section id="preparing-the-environment">
 <h3>Preparing the environment<a class="headerlink" href="#preparing-the-environment" title="Permalink to this heading"></a></h3>
-<p>For initial development, it is usually easiest to first connect the webcam (or other sensor) to your development machine and test and debug everything in that environment before deploying to the payload computer.  Connect your webcam to your machine and verify that it works.</p>
+<p>For initial development, it is usually easiest to first connect the webcam (or other sensor) to your development machine and test and debug everything in that environment before deploying to the payload computer. Connect your webcam to your machine and verify that it works.</p>
 <p>For this example, we will use OpenCV to read from the camera hardware.</p>
 <section id="enter-your-spot-api-virtualenv">
 <h4>Enter your Spot API virtualenv<a class="headerlink" href="#enter-your-spot-api-virtualenv" title="Permalink to this heading"></a></h4>
@@ -555,7 +560,7 @@ Development Kit License (20191101-BDSDK-SL).
 <span class="nb">cd</span><span class="w"> </span>~/data_capture
 </pre></div>
 </div>
-<p>Copy (or <a href="files/web_cam_image_service.py">download</a>) the script below into a file called <code class="docutils literal notranslate"><span class="pre">web_cam_image_service.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">~/data_capture</span></code> folder.  This is a simplified version of the <a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html"><span class="doc">web cam example</span></a> (which includes some extra options to control how images are captured).</p>
+<p>Copy (or <a href="files/web_cam_image_service.py">download</a>) the script below into a file called <code class="docutils literal notranslate"><span class="pre">web_cam_image_service.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">~/data_capture</span></code> folder. This is a simplified version of the <a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html"><span class="doc">web cam example</span></a> (which includes some extra options to control how images are captured).</p>
 </section>
 </section>
 <section id="web-cam-image-service">
@@ -586,14 +591,14 @@ Development Kit License (20191101-BDSDK-SL).
 <span class="n">_LOGGER</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now we will create the CameraInterface that does the work.  The OpenCV VideoCapture class will handle the bulk of interfacing with standard webcams.</p>
+<p>Now we will create the CameraInterface that does the work. The OpenCV VideoCapture class will handle the bulk of interfacing with standard webcams.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">WebCam</span><span class="p">(</span><span class="n">CameraInterface</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Provide access to the latest web cam data using openCV&#39;s VideoCapture.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_name</span><span class="p">):</span>
 </pre></div>
 </div>
-<p>OpenCV device names can be either an integer index or a device name string (such as /dev/video0 on linux or even the name of a video file), For usage simplicity, we will allow either and attempt to open the camera, raising an exception if that fails.  We also generate a name for the image source from the device name, the details of which will be defined later.</p>
+<p>OpenCV device names can be either an integer index or a device name string (such as /dev/video0 on linux or even the name of a video file), For usage simplicity, we will allow either and attempt to open the camera, raising an exception if that fails. We also generate a name for the image source from the device name, the details of which will be defined later.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="k">try</span><span class="p">:</span>
             <span class="n">device_name</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">device_name</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
@@ -629,7 +634,7 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="bp">self</span><span class="o">.</span><span class="n">default_jpeg_quality</span> <span class="o">=</span> <span class="mi">75</span>
 </pre></div>
 </div>
-<p>Next we define the actual capture function.  For simplicity we only use <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> as an approximation of the true capture time.</p>
+<p>Next we define the actual capture function. For simplicity we only use <code class="docutils literal notranslate"><span class="pre">time.time()</span></code> as an approximation of the true capture time.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">blocking_capture</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">capture_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="n">success</span><span class="p">,</span> <span class="n">image</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capture</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -639,7 +644,7 @@ Development Kit License (20191101-BDSDK-SL).
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unsuccessful call to cv2.VideoCapture().read()&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Lastly, we need to decode that data into the output proto.  For this method, <code class="docutils literal notranslate"><span class="pre">image_data</span></code> is the same data we returned from a <code class="docutils literal notranslate"><span class="pre">blocking_capture()</span></code> call.  Image_proto is the output Image protobuf that we need to fill out, and image_req is the ImageRequest that contains image_format, quality_percent, pixel_format and resize_ratio options requested by the client.</p>
+<p>Lastly, we need to decode that data into the output proto. For this method, <code class="docutils literal notranslate"><span class="pre">image_data</span></code> is the same data we returned from a <code class="docutils literal notranslate"><span class="pre">blocking_capture()</span></code> call. Image_proto is the output Image protobuf that we need to fill out, and image_req is the ImageRequest that contains image_format, quality_percent, pixel_format and resize_ratio options requested by the client.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">image_decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_data</span><span class="p">,</span> <span class="n">image_proto</span><span class="p">,</span> <span class="n">image_req</span><span class="p">):</span>
 </pre></div>
 </div>
@@ -668,7 +673,7 @@ Development Kit License (20191101-BDSDK-SL).
             <span class="n">converted_image_data</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">converted_image_data</span><span class="p">,</span> <span class="p">(</span><span class="n">image_proto</span><span class="o">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">image_proto</span><span class="o">.</span><span class="n">rows</span><span class="p">),</span> <span class="n">interpolation</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">INTER_AREA</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Next, we set the actual image data.  If raw data was requested, we set the same bytes that we get from the camera.</p>
+<p>Next, we set the actual image data. If raw data was requested, we set the same bytes that we get from the camera.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="c1"># Set the image data.</span>
         <span class="n">image_format</span> <span class="o">=</span> <span class="n">image_req</span><span class="o">.</span><span class="n">image_format</span>
         <span class="k">if</span> <span class="n">image_format</span> <span class="o">==</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">FORMAT_RAW</span><span class="p">:</span>
@@ -676,7 +681,7 @@ Development Kit License (20191101-BDSDK-SL).
             <span class="n">image_proto</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">FORMAT_RAW</span>
 </pre></div>
 </div>
-<p>If JPEG encoding was requested, we encode it with OpenCV.  If the quality_percent was not filled out in the request, we’ll use our default quality.</p>
+<p>If JPEG encoding was requested, we encode it with OpenCV. If the quality_percent was not filled out in the request, we’ll use our default quality.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>        <span class="k">elif</span> <span class="n">image_format</span> <span class="o">==</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">FORMAT_JPEG</span> <span class="ow">or</span> <span class="n">image_format</span> <span class="o">==</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">FORMAT_UNKNOWN</span> <span class="ow">or</span> <span class="n">image_format</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">quality</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_jpeg_quality</span>
             <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">quality_percent</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">:</span>
@@ -701,7 +706,7 @@ Development Kit License (20191101-BDSDK-SL).
         <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">device_name</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now it’s time to create the image service.  We take a list of device names and create our new WebCam class for each one, along with a VisualImageSource instance to run each one. We hard-code supported pixel formats in this tutorial when we create the VisualImageSource object. Please refer to SDK example on how to determine correct list of supported pixel formats.</p>
+<p>Now it’s time to create the image service. We take a list of device names and create our new WebCam class for each one, along with a VisualImageSource instance to run each one. We hard-code supported pixel formats in this tutorial when we create the VisualImageSource object. Please refer to SDK example on how to determine correct list of supported pixel formats.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">make_webcam_image_service</span><span class="p">(</span><span class="n">bosdyn_sdk_robot</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">device_names</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">image_sources</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">device_names</span><span class="p">:</span>
@@ -718,7 +723,7 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="k">return</span> <span class="n">CameraBaseImageServicer</span><span class="p">(</span><span class="n">bosdyn_sdk_robot</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">image_sources</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Now that we have a way to create our image service (what gRPC calls a <em>servicer</em>), let’s make a function to run it.  For this case we use the GrpcServiceRunner helper, which handles all the details of creating a gRPC server, adding the servicer to it, and running the service.</p>
+<p>Now that we have a way to create our image service (what gRPC calls a <em>servicer</em>), let’s make a function to run it. For this case we use the GrpcServiceRunner helper, which handles all the details of creating a gRPC server, adding the servicer to it, and running the service.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_service</span><span class="p">(</span><span class="n">bosdyn_sdk_robot</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">device_names</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">add_servicer_to_server_fn</span> <span class="o">=</span> <span class="n">image_service_pb2_grpc</span><span class="o">.</span><span class="n">add_ImageServiceServicer_to_server</span>
     <span class="n">service_servicer</span> <span class="o">=</span> <span class="n">make_webcam_image_service</span><span class="p">(</span><span class="n">bosdyn_sdk_robot</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">device_names</span><span class="p">,</span>
@@ -726,7 +731,7 @@ Development Kit License (20191101-BDSDK-SL).
     <span class="k">return</span> <span class="n">GrpcServiceRunner</span><span class="p">(</span><span class="n">service_servicer</span><span class="p">,</span> <span class="n">add_servicer_to_server_fn</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>All that is left is creating the command line interface for this script to run it.  Here are the options for configuring the devices. As a convenience, if no devices are specified we will default to index 0.</p>
+<p>All that is left is creating the command line interface for this script to run it. Here are the options for configuring the devices. As a convenience, if no devices are specified we will default to index 0.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">add_web_cam_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">):</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
         <span class="s1">&#39;--device-name&#39;</span><span class="p">,</span>
@@ -734,7 +739,7 @@ Development Kit License (20191101-BDSDK-SL).
               <span class="s1">&#39;source.&#39;</span><span class="p">),</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-<p>Now let’s create the main entry point.  First we will set up and parse all command line arguments.  These include our common arguments for connecting to a robot and creating a service.</p>
+<p>Now let’s create the main entry point. First we will set up and parse all command line arguments. These include our common arguments for connecting to a robot and creating a service.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">argparse</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">allow_abbrev</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -759,7 +764,7 @@ Development Kit License (20191101-BDSDK-SL).
     <span class="n">robot</span> <span class="o">=</span> <span class="n">sdk</span><span class="o">.</span><span class="n">create_robot</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">hostname</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>We need to authenticate with the robot. Instead of using a username and password, we want to identify as a payload.  In order for this to work, the payload must be registered and have been authorized through Spot’s web service.</p>
+<p>We need to authenticate with the robot. Instead of using a username and password, we want to identify as a payload. In order for this to work, the payload must be registered and have been authorized through Spot’s web service.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">robot</span><span class="o">.</span><span class="n">authenticate_from_payload_credentials</span><span class="p">(</span><span class="o">*</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">get_guid_and_secret</span><span class="p">(</span><span class="n">options</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -767,7 +772,7 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">service_runner</span> <span class="o">=</span> <span class="n">run_service</span><span class="p">(</span><span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="n">DIRECTORY_NAME</span><span class="p">,</span> <span class="n">devices</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">_LOGGER</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Lastly, we need to register our new service with the robot and run it.  We will use the <code class="docutils literal notranslate"><span class="pre">DirectoryRegistrationKeepAlive</span></code> helper to handle the registration.</p>
+<p>Lastly, we need to register our new service with the robot and run it. We will use the <code class="docutils literal notranslate"><span class="pre">DirectoryRegistrationKeepAlive</span></code> helper to handle the registration.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>    <span class="n">dir_reg_client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">DirectoryRegistrationClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
     <span class="n">keep_alive</span> <span class="o">=</span> <span class="n">DirectoryRegistrationKeepAlive</span><span class="p">(</span><span class="n">dir_reg_client</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">_LOGGER</span><span class="p">)</span>
     <span class="n">keep_alive</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">DIRECTORY_NAME</span><span class="p">,</span> <span class="n">SERVICE_TYPE</span><span class="p">,</span> <span class="n">AUTHORITY</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">host_ip</span><span class="p">,</span> <span class="n">service_runner</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
@@ -786,7 +791,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h3>Registering a payload<a class="headerlink" href="#registering-a-payload" title="Permalink to this heading"></a></h3>
 <p>In order to test these services, we need payload authentication credentials. Those credentials are created by registering a payload with the robot. The payload can represent an actual physical payload with mass and dimensions specified in the payload registration request, or a massless payload. To register a massless payload, please run the payload SDK example https://github.com/boston-dynamics/spot-sdk/tree/master/python/examples/payloads.</p>
 <p>For more information on registering payloads, please take a look at <a class="reference internal" href="../../payload/configuring_payload_software.html"><span class="doc">this SDK documentation article</span></a>.</p>
-<p>The SpotCORE  payload credentials can also be used to authenticate these image and data acquisition plugin services. They are located in <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code> in SpotCORE.</p>
+<p>The SpotCORE payload credentials can also be used to authenticate these image and data acquisition plugin services. They are located in <code class="docutils literal notranslate"><span class="pre">/opt/payload_credentials/payload_guid_and_secret</span></code> in SpotCORE.</p>
 <p>For testing on our development machine, we will use the credentials created and registered in <a class="reference external" href="daq1.html#register-a-payload-for-development">Part 1</a>.</p>
 </section>
 <section id="running-the-service">
@@ -796,7 +801,7 @@ Development Kit License (20191101-BDSDK-SL).
 python3<span class="w"> </span>web_cam_image_service.py<span class="w"> </span>--payload-credentials-file<span class="w"> </span><span class="nv">$CRED_FILE</span><span class="w"> </span><span class="nv">$ROBOT_IP</span><span class="w"> </span>--host-ip<span class="w"> </span><span class="nv">$SELF_IP</span><span class="w"> </span>--port<span class="w"> </span><span class="nv">$WEBCAM_PORT</span>
 </pre></div>
 </div>
-<p>This will use the first webcam found by OpenCV.  Note that you will need to either disable any firewall or open the specified port to allow the robot to contact the service.  If you are unsure of the correct ip address to use for <code class="docutils literal notranslate"><span class="pre">--host-ip</span></code>, you can discover it via the bosdyn.client command line program:</p>
+<p>This will use the first webcam found by OpenCV. Note that you will need to either disable any firewall or open the specified port to allow the robot to contact the service. If you are unsure of the correct ip address to use for <code class="docutils literal notranslate"><span class="pre">--host-ip</span></code>, you can discover it via the bosdyn.client command line program:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>bosdyn.client<span class="w"> </span><span class="nv">$ROBOT_IP</span><span class="w"> </span>self-ip
 </pre></div>
 </div>

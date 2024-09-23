@@ -10,16 +10,13 @@ Development Kit License (20191101-BDSDK-SL).
 
 This summary provides information about the technical implementation and use of the Spot Autonomy SDK to create autonomous behaviors. Boston Dynamics customers are using GraphNav for data gathering and inspection in a variety of industrial and commercial contexts. Localization, maps, graphs and other concepts are explained in the context of autonomy in commercial robotics.
 
-
 ## About GraphNav
 
 Spot features a mapping, localization, and autonomous traverse system collectively known as GraphNav. This capability is being used today by Boston Dynamics customers in the construction, oil and gas, and utilities industries for data gathering and controls monitoring applications.
 
 GraphNav consists of a service that runs on the robot, and an API that developers use to exercise GraphNav capabilities. Robot operators can use a feature called Autowalk in the tablet app that is provided with the robot, which builds upon GraphNav and the mission service to quickly record and replay traversals of an environment while performing useful actions along the way.
 
-
 ## Key concepts
-
 
 ![waypoints and edges](images/tech_summary1.png)
 
@@ -39,9 +36,7 @@ Edges in the map represent how the robot moves between waypoints. They contain b
 
 The robot navigates by moving from waypoint to waypoint across edges and is constrained to stay within a corridor defined by each edge.
 
-
 ![isometric top view](images/tech_summary2.png)
-
 
 Graph edges are created in a locally consistent manner. However, there is no "global frame" of the map as a whole. If there are multiple paths through the graph from one waypoint to another, accumulating the transforms along the different paths may lead to different resulting transforms between the two waypoints.
 
@@ -51,11 +46,9 @@ The robot must be manually driven in order to map and record the environment. Th
 
 Recorded maps do not persist across reboots. To be saved, maps need to be downloaded from Spot. For example, Autowalk downloads the recorded map to the tablet. Recorded maps can be uploaded to and used by other robots. Note: Robot-side caching makes subsequent uploads fast in the common case.
 
-
 ## Initialization and localization
 
-After uploading a new map, the robot must have its localization explicitly set. One way to set the localization is by providing a transform to a specific waypoint.  Another way is to trigger an initialization after positioning the robot near a fiducial that was stored in the prior map during the recording process.
-
+After uploading a new map, the robot must have its localization explicitly set. One way to set the localization is by providing a transform to a specific waypoint. Another way is to trigger an initialization after positioning the robot near a fiducial that was stored in the prior map during the recording process.
 
 ![fiducials](images/tech_summary3.png)
 
@@ -69,14 +62,12 @@ The robot may become lost while navigating a recorded map. Recovery from this co
 
 Lost events depend largely on the environment in which the robot is operating. When the scene has few features or has changed significantly, the localization process produces inaccurate results. Operators can update the map by recording new waypoints with new data and removing old ones.
 
-
 ## Notes on Using Localization Data
 
 The Spot robot's approach to localization differs from other common localization approaches.
 
-For Spot, the world is represented as a graph of waypoints and edges, and the robot's localization is a pose relative to one of those waypoints.  There is no position within a "global" map frame. To determine the robot's position relative to another waypoint, follow the edges along a path from the robot's localization waypoint to the desired waypoint, accumulating the transforms along the way.
+For Spot, the world is represented as a graph of waypoints and edges, and the robot's localization is a pose relative to one of those waypoints. There is no position within a "global" map frame. To determine the robot's position relative to another waypoint, follow the edges along a path from the robot's localization waypoint to the desired waypoint, accumulating the transforms along the way.
 
 The robot will switch its localization from one waypoint to another as the robot navigates through a map, but it does not update the map while it does so. The map is fixed at record time and used from then on as a navigational aid.
 
 The robot's localization estimate is regularly updated from the latest available data. This estimate is computed to produce the best available position estimate, without trying to achieve smooth position or velocity estimates. If your application needs a smooth position estimate or velocity, the best source is the robot-state service and relying on the estimates of the body position and velocity in the "odom" frame.
-

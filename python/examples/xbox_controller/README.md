@@ -64,7 +64,7 @@ The `xboxdrv` driver supports only Xbox360 controllers. Newer controllers are no
 
 #### Installation Instructions
 
-To install this example on Ubuntu 18.04 and Windows, follow these instructions:
+To install this example on Ubuntu and Windows, follow these instructions:
 
 - Create virtual environment as described in this
   [Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments-with-virtualenv)

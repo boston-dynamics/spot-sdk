@@ -13,8 +13,8 @@ option java_outer_classname = "DirectoryRegistrationProto";
 import "bosdyn/api/directory.proto";
 import "bosdyn/api/header.proto";
 
-// The RegisterService request message sends the service's entry and endpoint to the robot's directory.
-// This Request serves as a heartbeat to the Directory.
+// The RegisterService request message sends the service's entry and endpoint to the robot's
+// directory. This Request serves as a heartbeat to the Directory.
 message RegisterServiceRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -26,13 +26,15 @@ message RegisterServiceRequest {
     ServiceEntry service_entry = 3;
 }
 
-// The RegisterService response message has information of whether the service was registered correctly.
+// The RegisterService response message has information of whether the service was registered
+// correctly.
 message RegisterServiceResponse {
     // Common response Header.
     ResponseHeader header = 1;
 
     enum Status {
-        // UNKNOWN should never be used. An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal DirectoryRegistrationService issue has happened
+        // if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success. The new service record is available.
@@ -74,8 +76,8 @@ message UnregisterServiceResponse {
     Status status = 2;
 }
 
-// The UpdateService request message will update a service based on name to include the new endpoint and service entry.
-// This Request serves as a heartbeat to the Directory.
+// The UpdateService request message will update a service based on name to include the new endpoint
+// and service entry. This Request serves as a heartbeat to the Directory.
 message UpdateServiceRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -93,7 +95,8 @@ message UpdateServiceResponse {
     ResponseHeader header = 1;
 
     enum Status {
-        // UNKNOWN should never be used. An internal DirectoryRegistrationService issue has happened if UNKNOWN is set.
+        // UNKNOWN should never be used. An internal DirectoryRegistrationService issue has happened
+        // if UNKNOWN is set.
         STATUS_UNKNOWN = 0;
 
         // Success.  The new service record is available.

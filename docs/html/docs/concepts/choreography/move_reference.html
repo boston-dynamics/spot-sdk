@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Choreography moves reference &mdash; Spot 4.0.3 documentation</title>
+  <title>Choreography moves reference &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -519,7 +524,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="rotate-body">
 <h3>rotate_body<a class="headerlink" href="#rotate-body" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image1.gif" src="../../../_images/image1.gif" /></p>
-<p>Rotates the body to a desired orientation.  Nominally takes one beat (4 slices) but can be extended to go slower.</p>
+<p>Rotates the body to a desired orientation. Nominally takes one beat (4 slices) but can be extended to go slower.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -534,7 +539,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>return_to_start_pose</td>
-<td>If true, returns to the previous body pose by the end of this move.  If false, remains in the specified position.</td>
+<td>If true, returns to the previous body pose by the end of this move. If false, remains in the specified position.</td>
 </tr>
 </tbody>
 </table></section>
@@ -542,7 +547,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h3>rotate_body_sharp<a class="headerlink" href="#rotate-body-sharp" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image20.gif" src="../../../_images/image20.gif" /></p>
 <p>Identical to the rotate_body move, but moves to the desired position quickly and returns (unless configured not to return) more slowly.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="body-hold">
 <h3>body_hold<a class="headerlink" href="#body-hold" title="Permalink to this heading"></a></h3>
@@ -566,19 +571,19 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>exit_slices</td>
-<td>How quickly to transition back to the original pose.  If set to 0, remains at the specified pose.</td>
+<td>How quickly to transition back to the original pose. If set to 0, remains at the specified pose.</td>
 </tr>
 </tbody>
 </table></section>
 <section id="body-const">
 <h3>body_const<a class="headerlink" href="#body-const" title="Permalink to this heading"></a></h3>
-<p>Holds the body at the pose from the immediately preceding body-track move.  Applies to both orientation and translation.  Can be extended to any desired duration.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Holds the body at the pose from the immediately preceding body-track move. Applies to both orientation and translation. Can be extended to any desired duration.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="sway">
 <h3>sway<a class="headerlink" href="#sway" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image15.gif" src="../../../_images/image15.gif" /></p>
-<p>Sway back and forth to the beat.  A full back/forth cycle takes 2 beats.</p>
+<p>Sway back and forth to the beat. A full back/forth cycle takes 2 beats.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -601,18 +606,18 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>pronounced</td>
-<td>How exaggerated the style is.  Smaller values will be closer to the SWAY_STYLE_STANDARD.</td>
+<td>How exaggerated the style is. Smaller values will be closer to the SWAY_STYLE_STANDARD.</td>
 </tr>
 <tr>
 <td>hold_zero_axes</td>
-<td>If set to true, maintains the previous pose in whichever axes 0 motion is specified.  If false, those axes return to nominal.</td>
+<td>If set to true, maintains the previous pose in whichever axes 0 motion is specified. If false, those axes return to nominal.</td>
 </tr>
 </tbody>
 </table></section>
 <section id="random-rotate">
 <h3>random_rotate<a class="headerlink" href="#random-rotate" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image7.gif" src="../../../_images/image7.gif" /></p>
-<p>Rotate the body in a random, chaotic manner.  Rotation in each axis is generated independently.  Can be extended to any desired duration.</p>
+<p>Rotate the body in a random, chaotic manner. Rotation in each axis is generated independently. Can be extended to any desired duration.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -631,7 +636,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>speed_variation</td>
-<td>How much to vary the speed.  Controls the ratio between the slowest and fastest moves.  When 0, no variation (all moves are the same speed).</td>
+<td>How much to vary the speed. Controls the ratio between the slowest and fastest moves. When 0, no variation (all moves are the same speed).</td>
 </tr>
 <tr>
 <td>num_speed_tiers</td>
@@ -646,7 +651,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="twerk">
 <h3>twerk<a class="headerlink" href="#twerk" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image9.gif" src="../../../_images/image9.gif" /></p>
-<p>Lowers the robutt down and back up once.  Lasts for one beat (4 slices).</p>
+<p>Lowers the robutt down and back up once. Lasts for one beat (4 slices).</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -664,7 +669,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="butt-circle">
 <h3>butt_circle<a class="headerlink" href="#butt-circle" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image23.gif" src="../../../_images/image23.gif" /></p>
-<p>Move the robutt, head, or both head and robutt in a circle.  Extendable to the desired duration.  Rotates about the previous pose.</p>
+<p>Move the robutt, head, or both head and robutt in a circle. Extendable to the desired duration. Rotates about the previous pose.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -679,15 +684,15 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>beats_per_circle</td>
-<td>The duration of a circle in beats (4 slices each).  Mutually exclusive with number_of_circles.  Will be ignored unless number_of_circles = 0.</td>
+<td>The duration of a circle in beats (4 slices each). Mutually exclusive with number_of_circles. Will be ignored unless number_of_circles = 0.</td>
 </tr>
 <tr>
 <td>number_of_circles</td>
-<td>The number of circles to perform.  Mutually exclusive with beats_per_circle.  If number_of_circles = 0, beats_per_circle will be used instead.</td>
+<td>The number of circles to perform. Mutually exclusive with beats_per_circle. If number_of_circles = 0, beats_per_circle will be used instead.</td>
 </tr>
 <tr>
 <td>pivot</td>
-<td>What part of the robot to pivot around.  Pivoting around the front means the robutt moves in circles.</td>
+<td>What part of the robot to pivot around. Pivoting around the front means the robutt moves in circles.</td>
 </tr>
 <tr>
 <td>clockwise</td>
@@ -695,13 +700,13 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>starting_angle</td>
-<td>Where in the circle to start rotation.  Since it spirals outwards, it may not be obvious exactly where it starts.</td>
+<td>Where in the circle to start rotation. Since it spirals outwards, it may not be obvious exactly where it starts.</td>
 </tr>
 </tbody>
 </table></section>
 <section id="fidget-stand">
 <h3>fidget_stand<a class="headerlink" href="#fidget-stand" title="Permalink to this heading"></a></h3>
-<p>A procedurally-generated idle animation.  It looks around, breathes, shifts its weight, and stamps.  Can use one of the preset configurations or customize the parameters.</p>
+<p>A procedurally-generated idle animation. It looks around, breathes, shifts its weight, and stamps. Can use one of the preset configurations or customize the parameters.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -712,7 +717,7 @@ Development Kit License (20191101-BDSDK-SL).
 <tbody>
 <tr>
 <td>preset</td>
-<td>Pre-designed parameter combinations that attempt to convey a specific emotion.  NOTE: All other sliders are only active if this is set to "Custom".</td>
+<td>Pre-designed parameter combinations that attempt to convey a specific emotion. NOTE: All other sliders are only active if this is set to "Custom".</td>
 </tr>
 <tr>
 <td>min_gaze_pitch</td>
@@ -770,7 +775,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="step">
 <h3>step<a class="headerlink" href="#step" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image18.gif" src="../../../_images/image18.gif" /></p>
-<p>Take a single step with one or two feet.  Nominally requires one beat (4 slices) but can be extended to step slower.  If stepping with two feet, especially both front or both hind feet, longer steps will be unreliable.  Lifts off one slice after the move begins and touches down one slice before it ends.</p>
+<p>Take a single step with one or two feet. Nominally requires one beat (4 slices) but can be extended to step slower. If stepping with two feet, especially both front or both hind feet, longer steps will be unreliable. Lifts off one slice after the move begins and touches down one slice before it ends.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -781,7 +786,7 @@ Development Kit License (20191101-BDSDK-SL).
 <tbody>
 <tr>
 <td>foot/second_foot</td>
-<td>Which feet to step with.  If only a single foot is desired, second_foot should be set to LEG_NO_LEG.</td>
+<td>Which feet to step with. If only a single foot is desired, second_foot should be set to LEG_NO_LEG.</td>
 </tr>
 <tr>
 <td>offset</td>
@@ -797,11 +802,11 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>mirror_x, mirror_y</td>
-<td>Determines whether the second_foot (if there is one) has the same offset and touch_offset as the first foot (false) or the opposite offset (true).  Specified independently for the x and y axis.</td>
+<td>Determines whether the second_foot (if there is one) has the same offset and touch_offset as the first foot (false) or the opposite offset (true). Specified independently for the x and y axis.</td>
 </tr>
 <tr>
 <td>swing_waypoint</td>
-<td>Defines a waypoint that the swing leg must go through between liftoff and touchdown.  If left at {0,0,0}, no waypoint will be added and the system will take a normal swing.</td>
+<td>Defines a waypoint that the swing leg must go through between liftoff and touchdown. If left at {0,0,0}, no waypoint will be added and the system will take a normal swing.</td>
 </tr>
 <tr>
 <td>waypoint_dwell</td>
@@ -809,7 +814,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>swing_height</td>
-<td>How high to lift the foot/feet.  Does nothing if a swing_waypoint is specified.</td>
+<td>How high to lift the foot/feet. Does nothing if a swing_waypoint is specified.</td>
 </tr>
 <tr>
 <td>liftoff_velocity</td>
@@ -824,7 +829,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="goto">
 <h3>goto<a class="headerlink" href="#goto" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/Goto.gif" src="../../../_images/Goto.gif" /></p>
-<p>Trot to a specified position in the dance frame.  Unless explicitly set, the dance frame is defined by where the dance begins.  Takes 1 step per beat.  Extend the duration to successfully move farther.</p>
+<p>Trot to a specified position in the dance frame. Unless explicitly set, the dance frame is defined by where the dance begins. Takes 1 step per beat. Extend the duration to successfully move farther.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -834,12 +839,24 @@ Development Kit License (20191101-BDSDK-SL).
 </thead>
 <tbody>
 <tr>
+<td>relative</td>
+<td>Relative to starting pose if true. Target specified in dance frame if false.</td>
+</tr>
+<tr>
 <td>absolute_position</td>
-<td>Position the robot moves to in the dance frame.</td>
+<td>Position the robot moves to in the dance frame. Ignored if absolute = false.</td>
 </tr>
 <tr>
 <td>absolute_yaw</td>
-<td>Yaw orientation the robot moves to in the dance frame.</td>
+<td>Yaw orientation the robot moves to in the dance frame. Ignored if absolute = false.</td>
+</tr>
+<tr>
+<td>relative_position</td>
+<td>Position the robot moves to relative to where it started this move. Ignored if absolute = true.</td>
+</tr>
+<tr>
+<td>relative_yaw</td>
+<td>Yaw orientation the robot moves to relative to where it started this move. Ignored if absolute = true.</td>
 </tr>
 <tr>
 <td>step_position_stiffness</td>
@@ -847,7 +864,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>duty_cycle</td>
-<td>What fraction of the time a foot is on the ground.  0.5 is a standard trot.</td>
+<td>What fraction of the time a foot is on the ground. 0.5 is a standard trot.</td>
 </tr>
 <tr>
 <td>link_to_next</td>
@@ -873,7 +890,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>stand_time</td>
-<td>Duration before the end of the nominal move to start going to a stand.  If set too short, the robot may not finish transitioning and could fall.</td>
+<td>Duration before the end of the nominal move to start going to a stand. If set too short, the robot may not finish transitioning and could fall.</td>
 </tr>
 </tbody>
 </table></section>
@@ -895,14 +912,14 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>stand_time</td>
-<td>Duration before the end of the nominal move to start going to a stand.  If set too short, it may not finish transitioning and could fall.</td>
+<td>Duration before the end of the nominal move to start going to a stand. If set too short, it may not finish transitioning and could fall.</td>
 </tr>
 </tbody>
 </table></section>
 <section id="turn-2step">
 <h3>turn_2step<a class="headerlink" href="#turn-2step" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image14.gif" src="../../../_images/image14.gif" /></p>
-<p>Take two steps to turn in place.  Requires 2 beats (8 slices).</p>
+<p>Take two steps to turn in place. Requires 2 beats (8 slices).</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -937,7 +954,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>swing_height</td>
-<td>How to pick up the feet.  Zero indicates to use a default swing.</td>
+<td>How to pick up the feet. Zero indicates to use a default swing.</td>
 </tr>
 <tr>
 <td>swing_velocity</td>
@@ -949,7 +966,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="pace-2step">
 <h2>pace_2step<a class="headerlink" href="#pace-2step" title="Permalink to this heading"></a></h2>
 <p><img alt="../../../_images/image21.gif" src="../../../_images/image21.gif" /></p>
-<p>Take two steps to translate using a pace gait (legs on the same side of the robot move together).  Requires 2 beats (8 slices).  Caution: Large lateral steps require a high-traction floor.</p>
+<p>Take two steps to translate using a pace gait (legs on the same side of the robot move together). Requires 2 beats (8 slices). Caution: Large lateral steps require a high-traction floor.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -984,7 +1001,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>swing_height</td>
-<td>How to pick up the feet.  Zero indicates to use a default swing.</td>
+<td>How to pick up the feet. Zero indicates to use a default swing.</td>
 </tr>
 <tr>
 <td>swing_velocity</td>
@@ -994,7 +1011,7 @@ Development Kit License (20191101-BDSDK-SL).
 </table><section id="crawl">
 <h3>crawl<a class="headerlink" href="#crawl" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image11.gif" src="../../../_images/image11.gif" /></p>
-<p>Locomotes, taking one step every beat.  Can be extended to run for any desired duration.</p>
+<p>Locomotes, taking one step every beat. Can be extended to run for any desired duration.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1009,7 +1026,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>swing_slices</td>
-<td>Duration of a swing in slices.  An entire gait cycle takes 4 beats (16 slices). At the maximum value of 8 slices two of the robot's feet will always be on the ground, as in the Amble gait.  With a value of 4, the robot will always have one foot on the ground, as in the Crawl gait.</td>
+<td>Duration of a swing in slices. An entire gait cycle takes 4 beats (16 slices). At the maximum value of 8 slices two of the robot's feet will always be on the ground, as in the Amble gait. With a value of 4, the robot will always have one foot on the ground, as in the Crawl gait.</td>
 </tr>
 <tr>
 <td>stance_width, stance_length</td>
@@ -1017,13 +1034,17 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 </tbody>
 </table></section>
+<section id="custom-gait">
+<h3>custom_gait<a class="headerlink" href="#custom-gait" title="Permalink to this heading"></a></h3>
+<p>See <a class="reference internal" href="custom_gait.html"><span class="doc">CustomGait</span></a></p>
+</section>
 </section>
 <section id="dynamic-moves">
 <h2>Dynamic moves<a class="headerlink" href="#dynamic-moves" title="Permalink to this heading"></a></h2>
 <section id="running-man">
 <h3>running_man<a class="headerlink" href="#running-man" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image16.gif" src="../../../_images/image16.gif" /></p>
-<p>Spot’s version of the “running man” dance move.  Can be extended to run for any desired duration.</p>
+<p>Spot’s version of the “running man” dance move. Can be extended to run for any desired duration.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1106,7 +1127,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>stand_time</td>
-<td>The duration before the end of the nominal move to start going to a stand.  If set too short, the robot may not finish transitioning and could fall.</td>
+<td>The duration before the end of the nominal move to start going to a stand. If set too short, the robot may not finish transitioning and could fall.</td>
 </tr>
 </tbody>
 </table></section>
@@ -1128,7 +1149,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>stand_time</td>
-<td>The duration before the end of the nominal move to start going to a stand.  If set too short, the robot may not finish transitioning and could fall.</td>
+<td>The duration before the end of the nominal move to start going to a stand. If set too short, the robot may not finish transitioning and could fall.</td>
 </tr>
 </tbody>
 </table></section>
@@ -1150,14 +1171,14 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>stand_time</td>
-<td>The duration before the end of the nominal move to start going to a stand.  If set too short, the robot may not finish transitioning and could fall.</td>
+<td>The duration before the end of the nominal move to start going to a stand. If set too short, the robot may not finish transitioning and could fall.</td>
 </tr>
 </tbody>
 </table></section>
 <section id="front-up">
 <h3>front_up<a class="headerlink" href="#front-up" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image19.gif" src="../../../_images/image19.gif" /></p>
-<p>Lifts the front feet then returns to a stand. Can be extended to adjust the duration of the hind-feet-only stance. Longer durations are unreliable.  Lifts off 2 slices from the start of the move and touches down one slice from the end of the move.</p>
+<p>Lifts the front feet then returns to a stand. Can be extended to adjust the duration of the hind-feet-only stance. Longer durations are unreliable. Lifts off 2 slices from the start of the move and touches down one slice from the end of the move.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1175,7 +1196,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="jump">
 <h3>jump<a class="headerlink" href="#jump" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image17.gif" src="../../../_images/image17.gif" /></p>
-<p>Jumps in place.  Nominally lasts one beat but may take more slices at faster tempos.</p>
+<p>Jumps in place. Nominally lasts one beat but may take more slices at faster tempos.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1210,7 +1231,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>flight_slices</td>
-<td>How long the jump should last with all feet off the ground measured in slices.  Depending on tempo, higher values will be unreliable.</td>
+<td>How long the jump should last with all feet off the ground measured in slices. Depending on tempo, higher values will be unreliable.</td>
 </tr>
 <tr>
 <td>stance_width/stance_length</td>
@@ -1222,7 +1243,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>split_fraction</td>
-<td>Splits the liftoff and touchdown into two pairs of two legs.  In fraction of of swing with two legs in flight, so 0 means all legs fully synchronized.</td>
+<td>Splits the liftoff and touchdown into two pairs of two legs. In fraction of of swing with two legs in flight, so 0 means all legs fully synchronized.</td>
 </tr>
 <tr>
 <td>lead_leg_pair</td>
@@ -1236,18 +1257,18 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="sit">
 <h3>sit<a class="headerlink" href="#sit" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image10.gif" src="../../../_images/image10.gif" /></p>
-<p>Sit the robot down or remain seated.  Requires at least 3 seconds.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Sit the robot down or remain seated. Requires at least 3 seconds.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="stand-up">
 <h3>stand_up<a class="headerlink" href="#stand-up" title="Permalink to this heading"></a></h3>
-<p>Stand the robot up from a seated position.   Requires at least 2 seconds.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Stand the robot up from a seated position. Requires at least 2 seconds.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="sit-to-sprawl">
 <h3>sit_to_sprawl<a class="headerlink" href="#sit-to-sprawl" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image12.gif" src="../../../_images/image12.gif" /></p>
-<p>Starting from a seated position, rolls the robot onto its side/back.  Intended to prep the robot for a more dramatic self-right.</p>
+<p>Starting from a seated position, rolls the robot onto its side/back. Intended to prep the robot for a more dramatic self-right.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1264,36 +1285,36 @@ Development Kit License (20191101-BDSDK-SL).
 </table></section>
 <section id="random-stretch">
 <h3>random_stretch<a class="headerlink" href="#random-stretch" title="Permalink to this heading"></a></h3>
-<p>Extends any extendable moves immediately prior to it by a random number of slices between 0 and the duration of the stretch move.  The robot then immediately jumps to the end of this move.  Note: This changes the duration of a choreography sequence.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Extends any extendable moves immediately prior to it by a random number of slices between 0 and the duration of the stretch move. The robot then immediately jumps to the end of this move. Note: This changes the duration of a choreography sequence.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="stand-to-kneel">
 <h3>stand_to_kneel<a class="headerlink" href="#stand-to-kneel" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image3.gif" src="../../../_images/image3.gif" /></p>
-<p>Transitions from standing to kneeling on the hind legs.  Requires 2 seconds.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Transitions from standing to kneeling on the hind legs. Requires 2 seconds.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="kneel-to-stand">
 <h3>kneel_to_stand<a class="headerlink" href="#kneel-to-stand" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image5.gif" src="../../../_images/image5.gif" /></p>
-<p>Transitions from kneeling on the hind legs to a stand.  Requires 2.4 seconds.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Transitions from kneeling on the hind legs to a stand. Requires 2.4 seconds.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="kneel-to-stand-fast">
 <h3>kneel_to_stand_fast<a class="headerlink" href="#kneel-to-stand-fast" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/kneel2standFast.gif" src="../../../_images/kneel2standFast.gif" /></p>
-<p>Transitions from kneeling on the hind legs to a stand.  Faster and smoother than kneel_To_stand, but might be less reliable in some combinations.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Transitions from kneeling on the hind legs to a stand. Faster and smoother than kneel_To_stand, but might be less reliable in some combinations.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="self-right">
 <h3>self_right<a class="headerlink" href="#self-right" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image22.gif" src="../../../_images/image22.gif" /></p>
-<p>Activate the self-right behavior.  Primarily useful as the first move in a dance if you wish to start from a non-standard posture.  Nominally requires 5 seconds, but can be extended to ensure that it completes.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Activate the self-right behavior. Primarily useful as the first move in a dance if you wish to start from a non-standard posture. Nominally requires 5 seconds, but can be extended to ensure that it completes.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="leg-pose">
 <h3>leg_pose<a class="headerlink" href="#leg-pose" title="Permalink to this heading"></a></h3>
-<p>Directly pose Spot’s legs by specifying joint angles.  Spot will make no attempt to balance.</p>
+<p>Directly pose Spot’s legs by specifying joint angles. Spot will make no attempt to balance.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1314,7 +1335,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="kneel-leg-move">
 <h3>kneel_leg_move<a class="headerlink" href="#kneel-leg-move" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image8.gif" src="../../../_images/image8.gif" /></p>
-<p>While kneeling, move the front legs to a specified joint configuration.  Nominally takes one beat (4 slices) but can be extended to go slower.</p>
+<p>While kneeling, move the front legs to a specified joint configuration. Nominally takes one beat (4 slices) but can be extended to go slower.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1329,7 +1350,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>mirror</td>
-<td>If true, move the legs in a mirrored manner.  If false, front-right leg moves to the same joint configuration as the front-left.  If true, the front-right hip_x angle has the opposite sign: The front-left leg and the other joint angles will be the same.</td>
+<td>If true, move the legs in a mirrored manner. If false, front-right leg moves to the same joint configuration as the front-left. If true, the front-right hip_x angle has the opposite sign: The front-left leg and the other joint angles will be the same.</td>
 </tr>
 <tr>
 <td>easing</td>
@@ -1340,7 +1361,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="kneel-leg-move2">
 <h3>kneel_leg_move2<a class="headerlink" href="#kneel-leg-move2" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image8.gif" src="../../../_images/image8.gif" /></p>
-<p>Similar to kneel_leg_move, but allows you to independently set the front-left and front-right leg joint angles.  Additionally allows linking for smoother transitions between multiple consecutive moves.</p>
+<p>Similar to kneel_leg_move, but allows you to independently set the front-left and front-right leg joint angles. Additionally allows linking for smoother transitions between multiple consecutive moves.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1359,19 +1380,18 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>easing</td>
-<td>Controls the velocity profile of the motion.  Does nothing for linked moves.</td>
+<td>Controls the velocity profile of the motion. Does nothing for linked moves.</td>
 </tr>
 <tr>
 <td>link_to_next</td>
-<td>Links this move to a second kneel_leg_move2 that immediately follows it if there is one.  Multiple moves can be linked in this way.  Linked moves form a combined trajectory where the joints travel through each waypoint but not necessarily come to a zero-velocity stop at the end of each move.</td>
-</tr>
-<tr>
-<td>### kneel_clap</td>
-<td></td>
+<td>Links this move to a second kneel_leg_move2 that immediately follows it if there is one. Multiple moves can be linked in this way. Linked moves form a combined trajectory where the joints travel through each waypoint but not necessarily come to a zero-velocity stop at the end of each move.</td>
 </tr>
 </tbody>
-</table><p><img alt="../../../_images/image2.gif" src="../../../_images/image2.gif" /></p>
-<p>While kneeling, clap the front feet together.  Takes one beat (4 slices).</p>
+</table></section>
+<section id="kneel-clap">
+<h3>kneel_clap<a class="headerlink" href="#kneel-clap" title="Permalink to this heading"></a></h3>
+<p><img alt="../../../_images/image2.gif" src="../../../_images/image2.gif" /></p>
+<p>While kneeling, clap the front feet together. Takes one beat (4 slices).</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1401,7 +1421,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="kneel-circles">
 <h3>kneel_circles<a class="headerlink" href="#kneel-circles" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/image6.gif" src="../../../_images/image6.gif" /></p>
-<p>While kneeling, move the front feet in circles in the body-XZ (sagittal) plane.  The two feet will be 180 degrees out of phase. Can be extended to run for any duration.</p>
+<p>While kneeling, move the front feet in circles in the body-XZ (sagittal) plane. The two feet will be 180 degrees out of phase. Can be extended to run for any duration.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1416,11 +1436,11 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>beats_per_circle</td>
-<td>The duration of a full circle in beats.  Ignored unless number_of_circles = 0.</td>
+<td>The duration of a full circle in beats. Ignored unless number_of_circles = 0.</td>
 </tr>
 <tr>
 <td>number_of_circles</td>
-<td>Number of circles to perform.  If 0, then use beats_per_circle.</td>
+<td>Number of circles to perform. If 0, then use beats_per_circle.</td>
 </tr>
 <tr>
 <td>offset</td>
@@ -1432,7 +1452,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>reverse</td>
-<td>Reverses the circle direction.  Nominal direction is away from the body on top.</td>
+<td>Reverses the circle direction. Nominal direction is away from the body on top.</td>
 </tr>
 </tbody>
 </table></section>
@@ -1442,36 +1462,36 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="nod">
 <h3>nod<a class="headerlink" href="#nod" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/nod.gif" src="../../../_images/nod.gif" /></p>
-<p>Moves the WR0 joint up and back down for one beat (4 slices).  If done from a stow pose, will raise the hand.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Moves the WR0 joint up and back down for one beat (4 slices). If done from a stow pose, will raise the hand.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="stow">
 <h3>stow<a class="headerlink" href="#stow" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/stow.gif" src="../../../_images/stow.gif" /></p>
-<p>Returns the arm to a stowed configuration.  Nominally takes one beat (4 slices) but can be extended to go slower.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Returns the arm to a stowed configuration. Nominally takes one beat (4 slices) but can be extended to go slower.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="unstow">
 <h3>unstow<a class="headerlink" href="#unstow" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/unstow.gif" src="../../../_images/unstow.gif" /></p>
 <p>Moves the arm to a deployed configuration. Nominally takes one beat (4 slices) but can be extended to go slower.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="shoulder-left">
 <h3>shoulder_left<a class="headerlink" href="#shoulder-left" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/shoulder-lft.gif" src="../../../_images/shoulder-lft.gif" /></p>
-<p>Rotate the SH0 joint to move the gripper to the left.   Nominally takes one beat (4 slices) but can be extended to go slower.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Rotate the SH0 joint to move the gripper to the left. Nominally takes one beat (4 slices) but can be extended to go slower.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="shoulder-right">
 <h3>shoulder_right<a class="headerlink" href="#shoulder-right" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/shoulder-rt.gif" src="../../../_images/shoulder-rt.gif" /></p>
-<p>Rotate the SH0 joint to move the gripper to the right.   Nominally takes one beat (4 slices) but can be extended to go slower.</p>
-<p><em><strong>No Parameters</strong></em></p>
+<p>Rotate the SH0 joint to move the gripper to the right. Nominally takes one beat (4 slices) but can be extended to go slower.</p>
+<p><strong><em>No Parameters</em></strong></p>
 </section>
 <section id="arm-move">
 <h3>arm_move<a class="headerlink" href="#arm-move" title="Permalink to this heading"></a></h3>
-<p>Moves the arm to the specified joint angles.   Nominally takes one beat (4 slices) but can be adjusted to go faster or slower.</p>
+<p>Moves the arm to the specified joint angles. Nominally takes one beat (4 slices) but can be adjusted to go faster or slower.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1496,7 +1516,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="arm-move-relative">
 <h3>arm_move_relative<a class="headerlink" href="#arm-move-relative" title="Permalink to this heading"></a></h3>
-<p>Moves the arm incrementally, relative to the previous pose.   Nominally takes one beat (4 slices) but can be adjusted to go faster or slower.</p>
+<p>Moves the arm incrementally, relative to the previous pose. Nominally takes one beat (4 slices) but can be adjusted to go faster or slower.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1532,7 +1552,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>absolute</td>
-<td>If true goes to a position/orientation relative to the origin of the given frame.  If false, direction is defined by the specified frame, but motion is relative to previous pose.</td>
+<td>If true goes to a position/orientation relative to the origin of the given frame. If false, direction is defined by the specified frame, but motion is relative to previous pose.</td>
 </tr>
 <tr>
 <td>rotation, translation</td>
@@ -1547,7 +1567,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="figure8-move">
 <h3>figure8_move<a class="headerlink" href="#figure8-move" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/fig8.gif" src="../../../_images/fig8.gif" /></p>
-<p>Moves the gripper in a figure-8 pattern centered on the previous pose.  Repeats for the specified duration.</p>
+<p>Moves the gripper in a figure-8 pattern centered on the previous pose. Repeats for the specified duration.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1569,7 +1589,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="gripper">
 <h3>gripper<a class="headerlink" href="#gripper" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/gripper.gif" src="../../../_images/gripper.gif" /></p>
-<p>Moves the gripper to the specified angle.  Duration can be set to any number of slices but speed will be determined by parameter.  Once the gripper reaches the specified angle it will stop.  If the selected duration is too short to complete the move given the configured speed, the robot remains at whatever angle it reaches when move ends.</p>
+<p>Moves the gripper to the specified angle. Duration can be set to any number of slices but speed will be determined by parameter. Once the gripper reaches the specified angle it will stop. If the selected duration is too short to complete the move given the configured speed, the robot remains at whatever angle it reaches when move ends.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1590,7 +1610,7 @@ Development Kit License (20191101-BDSDK-SL).
 </table></section>
 <section id="frame-snapshot">
 <h3>frame_snapshot<a class="headerlink" href="#frame-snapshot" title="Permalink to this heading"></a></h3>
-<p>This move sets the frame to be used by future moves that are in an absolute frame.  Some moves will always be in the dance frame (frame_id = 0) and some allow you to explicitly select a frame_id.  This move can set frames relative to either a fiducial or to the robot’s footprint.</p>
+<p>This move sets the frame to be used by future moves that are in an absolute frame. Some moves will always be in the dance frame (frame_id = 0) and some allow you to explicitly select a frame_id. This move can set frames relative to either a fiducial or to Spot’s footprint.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1605,7 +1625,7 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>fiducial_number</td>
-<td>Which fiducial to set the frame relative to.  If set to -1 or if the fiducial has not been seen recently, the fiducial number is set according to the robot's footprint.</td>
+<td>Which fiducial to set the frame relative to. If set to -1 or if the fiducial has not been seen recently, the fiducial number is set according Spot's footprint.</td>
 </tr>
 <tr>
 <td>include_each_leg</td>
@@ -1613,14 +1633,14 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 <tr>
 <td>compensated</td>
-<td>If a foot is not included, should we offset the footprint as if that foot were in a nominal stance?  Otherwise, we'll take the center of the included feet.</td>
+<td>If a foot is not included, should we offset the footprint as if that foot were in a nominal stance? Otherwise, we'll take the center of the included feet.</td>
 </tr>
 </tbody>
 </table></section>
 <section id="chicken-head">
 <h3>chicken_head<a class="headerlink" href="#chicken-head" title="Permalink to this heading"></a></h3>
 <p><img alt="../../../_images/chickenhead-opt.gif" src="../../../_images/chickenhead-opt.gif" /></p>
-<p>Holds the arm stationary in the world while the body is moving.  Can also be configured to move in a fixed oscillation in the world.</p>
+<p>Holds the arm stationary in the world while the body is moving. Can also be configured to move in a fixed oscillation in the world.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1644,12 +1664,12 @@ Development Kit License (20191101-BDSDK-SL).
 </tbody>
 </table></section>
 </section>
-<section id="lights-moves">
-<h2>Lights moves<a class="headerlink" href="#lights-moves" title="Permalink to this heading"></a></h2>
+<section id="face-lights-moves">
+<h2>Face Lights moves<a class="headerlink" href="#face-lights-moves" title="Permalink to this heading"></a></h2>
 <p>All colors are specified as RGB on a 0-255 scale.</p>
 <section id="set-color">
 <h3>set_color<a class="headerlink" href="#set-color" title="Permalink to this heading"></a></h3>
-<p>Sets the color of the robot’s face lights.  Left and right lights can be independently set.  Lights can be set to fade in and out.</p>
+<p>Sets the color of Spot’s face (status) lights. Left and right lights can be independently set. Lights can be set to fade in and out.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1660,15 +1680,15 @@ Development Kit License (20191101-BDSDK-SL).
 <tbody>
 <tr>
 <td>left_color</td>
-<td>Color of the left lights. Color of all lights if right_same_as_left specified.</td>
+<td>Color of the left face lights. Color of all face lights if right_same_as_left specified.</td>
 </tr>
 <tr>
 <td>right_same_as_left</td>
-<td>If true, all lights are left_color.  If false, left and right are independently specified.</td>
+<td>If true, all face lights are left_color. If false, left and right are independently specified.</td>
 </tr>
 <tr>
 <td>right_color</td>
-<td>Color of the right lights.  Does nothing if right_same_as_left specified.</td>
+<td>Color of the right face lights. Does nothing if right_same_as_left specified.</td>
 </tr>
 <tr>
 <td>fade_in_slices</td>
@@ -1682,7 +1702,7 @@ Development Kit License (20191101-BDSDK-SL).
 </table></section>
 <section id="fade-color">
 <h3>fade_color<a class="headerlink" href="#fade-color" title="Permalink to this heading"></a></h3>
-<p>Sets the lights to show one color at the top fading towards another color at the bottom.</p>
+<p>Sets the face (status) lights to show one color at the top fading towards another color at the bottom.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1711,7 +1731,7 @@ Development Kit License (20191101-BDSDK-SL).
 </table></section>
 <section id="independent-color">
 <h3>independent_color<a class="headerlink" href="#independent-color" title="Permalink to this heading"></a></h3>
-<p>Independently specifies the color of all 8 lights.</p>
+<p>Independently specifies the color of all 8 face (status) lights.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1764,7 +1784,7 @@ Development Kit License (20191101-BDSDK-SL).
 </table></section>
 <section id="ripple-color">
 <h3>ripple_color<a class="headerlink" href="#ripple-color" title="Permalink to this heading"></a></h3>
-<p>Sets the lights in a variety of moving patterns.</p>
+<p>Sets the face (status) lights in a variety of moving patterns.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -1775,11 +1795,11 @@ Development Kit License (20191101-BDSDK-SL).
 <tbody>
 <tr>
 <td>main</td>
-<td>Color to make the lights.</td>
+<td>Color to make the face lights.</td>
 </tr>
 <tr>
 <td>secondary</td>
-<td>Second color to make the lights, used only by some patterns.</td>
+<td>Second color to make the face lights, used only by some patterns.</td>
 </tr>
 <tr>
 <td>pattern</td>
@@ -1795,10 +1815,140 @@ Development Kit License (20191101-BDSDK-SL).
 </tr>
 </tbody>
 </table></section>
-<section id="custom-gait">
-<h3>custom_gait<a class="headerlink" href="#custom-gait" title="Permalink to this heading"></a></h3>
-<p>See <a class="reference internal" href="custom_gait.html"><span class="doc">CustomGait</span></a></p>
 </section>
+<section id="audio-visual-lights-moves">
+<h2>Audio Visual Lights moves<a class="headerlink" href="#audio-visual-lights-moves" title="Permalink to this heading"></a></h2>
+<p>All colors are specified as RGB on a 0-255 scale.</p>
+<section id="set-audio-visual-color">
+<h3>set_audio_visual_color<a class="headerlink" href="#set-audio-visual-color" title="Permalink to this heading"></a></h3>
+<p>Sets the color of the audio visual system’s lights. Lights can be independently set. Lights can be set to fade in and out.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>front_center_color</td>
+<td>Color of the front center audio visual light. Color of all audio visual lights if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>all_same_as_center</td>
+<td>If true, all lights are front_center_color. If false, lights are independently specified.</td>
+</tr>
+<tr>
+<td>front_left_color</td>
+<td>Color of the front left audio visual light. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>front_right_color</td>
+<td>Color of the front right audio visual light. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>back_left_color</td>
+<td>Color of the back left audio visual light. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>back_right_color</td>
+<td>Color of the back right audio visual light. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>fade_in_slices</td>
+<td>How long to brighten, measured in slices (1/4 beats).</td>
+</tr>
+<tr>
+<td>fade_out_slices</td>
+<td>How long to dim at the end, measured in slices (1/4 beats).</td>
+</tr>
+</tbody>
+</table></section>
+<section id="set-all-color">
+<h3>set_all_color<a class="headerlink" href="#set-all-color" title="Permalink to this heading"></a></h3>
+<p>Sets the color of the audio visual system’s lights and the face (status) lights. Lights can be independently set. Lights can be set to fade in and out.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>front_center_color</td>
+<td>Color of the front center audio visual light. Color of all audio visual lights if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>all_same_as_center</td>
+<td>If true, all lights are front_center_color. If false, lights are independently specified.</td>
+</tr>
+<tr>
+<td>status_left_color</td>
+<td>Color of the left face lights. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>status_right_color</td>
+<td>Color of the right face lights. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>front_left_color</td>
+<td>Color of the front left audio visual light. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>front_right_color</td>
+<td>Color of the front right audio visual light. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>back_left_color</td>
+<td>Color of the back left audio visual light. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>back_right_color</td>
+<td>Color of the back right audio visual light. Does nothing if all_same_as_center specified.</td>
+</tr>
+<tr>
+<td>fade_in_slices</td>
+<td>How long to brighten, measured in slices (1/4 beats).</td>
+</tr>
+<tr>
+<td>fade_out_slices</td>
+<td>How long to dim at the end, measured in slices (1/4 beats).</td>
+</tr>
+</tbody>
+</table></section>
+</section>
+<section id="audio-visual-buzzer-moves">
+<h2>Audio Visual Buzzer moves<a class="headerlink" href="#audio-visual-buzzer-moves" title="Permalink to this heading"></a></h2>
+<section id="buzzer-note">
+<h3>buzzer_note<a class="headerlink" href="#buzzer-note" title="Permalink to this heading"></a></h3>
+<p>Play a note from the Audio Visual System Buzzer for the duration of the move.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>note</td>
+<td>The musical note that will be played.</td>
+</tr>
+<tr>
+<td>sharp</td>
+<td>If true, raises the note by a half step, or semitone. If both sharp and flat are true, there is no effect.</td>
+</tr>
+<tr>
+<td>flat</td>
+<td>If true, lowers the note by a half step, or semitone. If both sharp and flat are true, there is no effect.</td>
+</tr>
+<tr>
+<td>octave</td>
+<td>The octave of the note.</td>
+</tr>
+</tbody>
+</table></section>
 </section>
 </section>
 

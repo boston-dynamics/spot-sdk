@@ -14,6 +14,7 @@ BODY_FRAME_NAME = "body"
 # string identifier.
 GRAV_ALIGNED_BODY_FRAME_NAME = "flat_body"
 ODOM_FRAME_NAME = "odom"
+SEED_FRAME_NAME = "seed"
 GROUND_PLANE_FRAME_NAME = "gpe"
 HAND_FRAME_NAME = "hand"
 UNKNOWN_FRAME_NAME = "unknown"
@@ -33,6 +34,7 @@ FOOT_FRAME_NAMES = [
     HIND_RIGHT_FOOT_FRAME_NAME
 ]
 WR1_FRAME_NAME = "arm0.link_wr1"
+WAYPOINT_FRAME_NAME = "waypoint"
 
 
 class Error(Exception):

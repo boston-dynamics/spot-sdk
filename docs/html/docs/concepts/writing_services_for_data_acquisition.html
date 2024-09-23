@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Integrate a Payload with the Data Acquisition Pipeline &mdash; Spot 4.0.3 documentation</title>
+  <title>Integrate a Payload with the Data Acquisition Pipeline &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="README.html">Concepts</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -514,7 +519,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="camera-payloads">
 <h2>Camera Payloads<a class="headerlink" href="#camera-payloads" title="Permalink to this heading"></a></h2>
 <p>To integrate a camera payload which outputs image data in a known format (e.g. raw bytes or JPEG) with the data acquisition pipeline, a developer needs to implement an <a class="reference external" href="../../protos/bosdyn/api/proto_reference.html#bosdyn-api-image-service-proto">ImageService</a>.</p>
-<p>The data acquisition service will automatically recognize any directory-registered image services, create <code class="docutils literal notranslate"><span class="pre">ImageAcquistionCapabilities</span></code> for the image sources, and be able to collect image data for each service using the standard <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> RPCs. For a camera payload, a developer will need to implement an image servicer class. To simplify the implementation of an image service, a set of base image service helper functions are provided in <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html"><span class="doc">image_service_helpers.py</span></a>.</p>
+<p>The data acquisition service will automatically recognize any directory-registered image services, create <code class="docutils literal notranslate"><span class="pre">ImageAcquisitionCapabilities</span></code> for the image sources, and be able to collect image data for each service using the standard <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> RPCs. For a camera payload, a developer will need to implement an image servicer class. To simplify the implementation of an image service, a set of base image service helper functions are provided in <a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html"><span class="doc">image_service_helpers.py</span></a>.</p>
 <p>For each image source that will be available in the image service, a <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code> helper class should be created to create the necessary protos for responding to gRPC requests from an image service, request and decode image data from the specific image source, and create or clear faults specific to the image source. The constructor requires the image source name to be provided (as a string), and then a class inheriting from the <code class="docutils literal notranslate"><span class="pre">CameraInterface</span></code> and overriding the functions for capturing image data and decoding the data. Optionally, the number of pixel rows and columns in the image can be provided as integer values in the <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code> constructor. The gain and exposure time can be provided as either a function which dynamically determines the values or fixed float values in the <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code> constructor as well.</p>
 <p>The image service can be created with the <code class="docutils literal notranslate"><span class="pre">CameraBaseImageServicer</span></code> class, which is a helper class that will manage state and respond to the RPCs required of an image service (<code class="docutils literal notranslate"><span class="pre">ListImageSources</span></code> RPC and <code class="docutils literal notranslate"><span class="pre">GetImage</span></code> RPC). The constructor of the image service helper class requires a developer to provide the sdk robot instance, the service name, and a list of <code class="docutils literal notranslate"><span class="pre">VisualImageSource</span></code>’s which will represent the image sources available for capture from this image service.</p>
 <section id="camerainterface">
@@ -534,7 +539,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The <code class="docutils literal notranslate"><span class="pre">image_format</span></code> is the requested format (e.g. jpeg, raw); if the image data cannot be decoded into a specific format, an Exception should be raised within the <code class="docutils literal notranslate"><span class="pre">image_decode</span></code> function providing an error message (e.x. <code class="docutils literal notranslate"><span class="pre">raise</span> <span class="pre">Exception(&quot;Unable</span> <span class="pre">to</span> <span class="pre">decode</span> <span class="pre">to</span> <span class="pre">FORMAT_RAW</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">web</span> <span class="pre">cam&quot;)</span></code>). If the requested image format is <code class="docutils literal notranslate"><span class="pre">None</span></code>, then the <code class="docutils literal notranslate"><span class="pre">image_decode</span></code> function should choose the best/preferred format for the image data and decode it into that format.</p>
 <p>Lastly, the <code class="docutils literal notranslate"><span class="pre">quality_percent</span></code> may be provided as a parameter for decoding the image data.</p>
 <p><strong>Note:</strong> The tablet and the on-robot data acquisition service makes requests for JPEG formatted images, so the <code class="docutils literal notranslate"><span class="pre">image_decode</span></code> function must at least be able to respond to a <code class="docutils literal notranslate"><span class="pre">image_format=image_pb2.Image.FORMAT_JPEG</span></code> to ensure that the camera payload can be viewed on the tablet.</p>
-<p><strong>Note:</strong> Does your camera service require inputs or parameters?  Do you want controls or widgets for those parameters to show up on the SpotApp android application or on Scout?  Please refer to <a class="reference internal" href="service_customization.html"><span class="doc">this document</span></a> to learn how to add parameters to a camera service.</p>
+<p><strong>Note:</strong> Does your camera service require inputs or parameters? Do you want controls or widgets for those parameters to show up on the SpotApp android application or on Scout? Please refer to <a class="reference internal" href="service_customization.html"><span class="doc">this document</span></a> to learn how to add parameters to a camera service.</p>
 </section>
 <section id="using-background-capture-threads">
 <h3>Using Background Capture Threads<a class="headerlink" href="#using-background-capture-threads" title="Permalink to this heading"></a></h3>
@@ -575,7 +580,7 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Description: a short, human-readable description of what data is being collected. This description will be displayed on the tablet when configuring data collection actions during teleop and autowalk.</p></li>
 <li><p>Channel name: a string that will be associated with all data collected and stored by this plugin service in the data buffer.</p>
 <ul>
-<li><p>It is recommended to put different kinds of captures on different channels.  If you want to store multiple pieces of data on the same channel during the same capture action, please set the <code class="docutils literal notranslate"><span class="pre">data_name</span></code> in the <code class="docutils literal notranslate"><span class="pre">DataIdentifier</span></code>, so that the pieces of data can still be uniquely identified.</p></li>
+<li><p>It is recommended to put different kinds of captures on different channels. If you want to store multiple pieces of data on the same channel during the same capture action, please set the <code class="docutils literal notranslate"><span class="pre">data_name</span></code> in the <code class="docutils literal notranslate"><span class="pre">DataIdentifier</span></code>, so that the pieces of data can still be uniquely identified.</p></li>
 </ul>
 </li>
 </ul>
@@ -618,14 +623,14 @@ Development Kit License (20191101-BDSDK-SL).
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>message = data_acquisition_pb2.AssociatedMetadata()
 message.reference_id.action_id.CopyFrom(request.action_id)
 message.metadata.data.update({
-    &quot;data&quot;: “special_data”
+  &quot;data&quot;: “special_data”
 })
 store_helper.store_metadata(message, data_id)
 </pre></div>
 </div>
+<p>Note, the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> class will wait to respond to the <code class="docutils literal notranslate"><span class="pre">AcquirePluginData</span></code> RPC until all data is collected and all store calls have been completed.</p>
 </li>
 </ol>
-<p>Note, the <code class="docutils literal notranslate"><span class="pre">DataAcquisitionPluginService</span></code> class will wait to respond to the <code class="docutils literal notranslate"><span class="pre">AcquirePluginData</span></code> RPC until all data is collected and all store calls have been completed.</p>
 </section>
 <section id="example-plugins">
 <h3>Example Plugins<a class="headerlink" href="#example-plugins" title="Permalink to this heading"></a></h3>

@@ -20,11 +20,17 @@ from bosdyn.bddf import (DataReader, DataWriter, PodSeriesReader, PodSeriesWrite
 from bosdyn.util import now_nsec, now_timestamp, timestamp_to_nsec
 
 
+def gettempdir():
+    if "TEST_TMPDIR" in os.environ:
+        return os.environ["TEST_TMPDIR"]
+    return tempfile.gettempdir()
+
+
 def test_write_read():
     """Test writing a data to a file, and reading it back."""
     file_annotations = {'robot': 'spot', 'individual': 'spot-BD-99990001'}
     channel_annotations = {'ccc': '3', 'd': '4444'}
-    filename = os.path.join(tempfile.gettempdir(), 'test1.bdf')
+    filename = os.path.join(gettempdir(), 'test1.bdf')
     series1_type = 'bosdyn/test/1'
     series1_spec = {'channel': 'channel_a'}
     series1_content_type = 'text/plain'

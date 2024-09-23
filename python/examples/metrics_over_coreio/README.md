@@ -30,8 +30,7 @@ Development Kit License (20191101-BDSDK-SL).
 2. Run
 
 ```sh
-python3 ../extensions/build_extension.py --dockerfile-paths Dockerfile --build-image-tags metrics_over_coreio:arm64  --image-archive  metrics_over_coreio.tar.gz --icon ./extension/icon.png --package-dir ./extension/  --spx ~/Downloads/metric_over_coreio.spx
-
+python3 ../extensions/build_extension.py --dockerfile-paths Dockerfile --build-image-tags metrics_over_coreio:arm64  --image-archive  metrics_over_coreio.tar.gz --icon ./extension/icon.png --package-dir ./extension/  --spx metrics_over_modem.spx
 ```
 
 - Note: Please see helper messages in build_extension.py to customize file paths as needed.
@@ -43,7 +42,7 @@ python3 ../extensions/build_extension.py --dockerfile-paths Dockerfile --build-i
 
 At a high level, `src` contains the fundamental code to pull metrics from the robot and upload them to the bosdyn server. The root folder contains the Dockerfile and base script to generate the extension, and `extension` contains supporting files to be included directly in the spx, such as the docker compose file.
 
-Most of the logic is contained in `src/metric_over_coreio.py`,`src/metric_over_coreio.py` and `src/metric_over_coreio.py`. In these file, we have the following classes:
+Most of the logic is contained in `src/metric_file_group.py`, `src/uploader.py`, and `src/metrics_over_coreio.py`. In this file, we have the following classes:
 
 1. `MetricFileGroup`: Manages querying and writing metric files to the core I/O file system.
 2. `Uploader`: Manages uploading metrics. Sends the latest metric on the core, recieves missing metrics sequence numbers and uploads them.

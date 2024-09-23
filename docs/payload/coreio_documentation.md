@@ -181,7 +181,7 @@ In table form:
 | 10         | GND               | GND            | GND          | GND          |
 | 11         |                   |                | GND          | GND          |
 
-All loop backs must ensure continuity to like-named loop back connections i.e. jumpered. 
+All loop backs must ensure continuity to like-named loop back connections i.e. jumpered.
 
 The easiest way to control the voltage output pins in CN3 and CN4 is through the GPIO page in the web server. At this time, PWM control has not yet been built into the web server.
 
@@ -215,7 +215,7 @@ Example of a Docker Compose file that provides voltage output control:
 version: "3.5"
 services:
   gpio_container:
-    image: ubuntu:18.04
+    image: ubuntu:20.04
     restart: unless-stopped
     volumes:
       - /dev:/dev

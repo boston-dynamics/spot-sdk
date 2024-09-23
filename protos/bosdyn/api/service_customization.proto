@@ -34,7 +34,7 @@ message CustomParam {
         // Type and type-specific specifications of this parameter.
         oneof spec {
             // This parameter is actually a set of sub-parameters.
-            // Useful for setting up a paramter hierarchy, e.g.
+            // Useful for setting up a parameter hierarchy, e.g.
             //           param A
             //          /       \
             //         /         \
@@ -68,7 +68,7 @@ message CustomParam {
 message UserInterfaceInfo {
     // This string is an optional display name for the UI.  If left unset, UI will use the
     // DictParam key to label the corresponding UI element.  DictParam key is meant to be
-    // machine readable, and shouldn't change accross releases.  display_name is meant to be
+    // machine readable, and shouldn't change across releases.  display_name is meant to be
     // human readable, and can change from release to release if needed.
     string display_name = 1;
 
@@ -117,11 +117,11 @@ message DictParam {
 //
 // Example 1 - A camera that advertises an "exposure" parameter:
 //      OneOf Option 1: Auto exposure [no additional parameters]
-//      OneOf Option 2: Manual exposure [additonal exposure double parameter from 0 - 100 ms]
+//      OneOf Option 2: Manual exposure [additional exposure double parameter from 0 - 100 ms]
 //
 // Example 2 - A NCB worker that will alert if temperature outside a specified bound:
 //      OneOf Option 1: No alert [no additional parameters]
-//      OneOf Option 2: Alert if above max [addional max_temp parameter]
+//      OneOf Option 2: Alert if above max [additional max_temp parameter]
 //      OneOf Option 3: Alert if below min [additional min_temp parameter]
 //      OneOf Option 4: Alert if above max or below min [additional max_temp and min_temp
 //      parameters]
@@ -269,7 +269,7 @@ message RegionOfInterestParam {
         //   - Image services
         //   - Network compute bridge workers that accept a single image
         //
-        // Othertimes, it might not be clear which image an ROI is supposed to reference.  In those
+        // Other times, it might not be clear which image an ROI is supposed to reference.  In those
         // cases, the Spec for the ROI can advertise which image it wants.
         ServiceAndSource service_and_source = 1;
 
@@ -277,8 +277,8 @@ message RegionOfInterestParam {
         // selection.
         AreaI default_area = 2;
 
-        // Area may eventually contain many shape primatives.  In that case, services can constrain
-        // which primatives they accept.  These will be opt in, so that adding new primative types
+        // Area may eventually contain many shape primitives.  In that case, services can constrain
+        // which primitives they accept.  These will be opt in, so that adding new primitive types
         // won't be automatically advertised by older services.
         bool allows_rectangle = 3;
     }
@@ -324,5 +324,4 @@ message CustomParamError {
 
     // List of error messages from this parameter and its children
     repeated string error_messages = 5;
-
 }

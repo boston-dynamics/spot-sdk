@@ -12,28 +12,28 @@ option java_outer_classname = "GraphNavServiceProto";
 
 import "bosdyn/api/graph_nav/graph_nav.proto";
 
-// The GraphNav service service is a place-based localization and locomotion service. The service can
-// be used to get/set the localization, upload and download the current graph nav maps, and send navigation
-// requests to move around the map.
+// The GraphNav service service is a place-based localization and locomotion service. The service
+// can be used to get/set the localization, upload and download the current graph nav maps, and send
+// navigation requests to move around the map.
 service GraphNavService {
     // Trigger a manual localization. Typically done to provide the initial localization.
-    rpc SetLocalization (SetLocalizationRequest) returns (SetLocalizationResponse) {}
+    rpc SetLocalization(SetLocalizationRequest) returns (SetLocalizationResponse) {}
 
     // Tell GraphNav to navigate/traverse a given route.
-    rpc NavigateRoute (NavigateRouteRequest) returns (NavigateRouteResponse) {}
+    rpc NavigateRoute(NavigateRouteRequest) returns (NavigateRouteResponse) {}
 
     // Tell GraphNav to navigate to a waypoint along a route it chooses.
-    rpc NavigateTo (NavigateToRequest) returns (NavigateToResponse) {}
+    rpc NavigateTo(NavigateToRequest) returns (NavigateToResponse) {}
 
     // Tell GraphNav to navigate to a goal with respect to the current anchoring.
-    rpc NavigateToAnchor (NavigateToAnchorRequest) returns (NavigateToAnchorResponse) {}
+    rpc NavigateToAnchor(NavigateToAnchorRequest) returns (NavigateToAnchorResponse) {}
 
     // Get feedback on active navigation command.
-    rpc NavigationFeedback (NavigationFeedbackRequest) returns (NavigationFeedbackResponse) {}
+    rpc NavigationFeedback(NavigationFeedbackRequest) returns (NavigationFeedbackResponse) {}
 
 
     // Get the localization status and data.
-    rpc GetLocalizationState (GetLocalizationStateRequest) returns (GetLocalizationStateResponse) {}
+    rpc GetLocalizationState(GetLocalizationStateRequest) returns (GetLocalizationStateResponse) {}
 
     // Clears the local graph structure. Also erases any snapshots currently in RAM.
     rpc ClearGraph(ClearGraphRequest) returns (ClearGraphResponse) {}
@@ -41,26 +41,44 @@ service GraphNavService {
     // Download the graph structure.
     rpc DownloadGraph(DownloadGraphRequest) returns (DownloadGraphResponse) {}
 
+    // This is a streaming version of the DownloadGraph RPC.
+    rpc DownloadGraphStreaming(DownloadGraphRequest)
+        returns (stream DownloadGraphStreamingResponse) {}
+
     // Upload the full list of waypoint IDs, graph topology and other small info.
-    rpc UploadGraph (UploadGraphRequest) returns (UploadGraphResponse) {}
+    // Note: if multiple clients/RPCs are attempting to upload a graph at the same time, uploads
+    // will be performed synchronously in the order in which they are received, and the later
+    // UploadGraph request will block until the earlier completes.
+    rpc UploadGraph(UploadGraphRequest) returns (UploadGraphResponse) {}
+
+    // This is a streaming version of UploadGraph to allow uploading larger graphs.
+    // Note: as with UploadWaypointSnapshot, this streaming process involves serializing a full
+    // UploadGraph message from chunks. After all the chunks have been uploaded, a regular
+    // UploadGraph RPC will be performed internally, so UploadGraphStreaming has the same semantics
+    // as UploadGraph when it completes. That is, UploadGraphStreaming is *not* to be used for
+    // incrementally uploading graph data as the robot is navigating -- this is merely a streaming
+    // wrapper around UploadGraph.
+    rpc UploadGraphStreaming(stream UploadGraphStreamingRequest) returns (UploadGraphResponse) {}
 
     // Uploads large waypoint snapshot as a stream for a particular waypoint.
-    rpc UploadWaypointSnapshot (stream UploadWaypointSnapshotRequest) returns (UploadWaypointSnapshotResponse) {}
+    rpc UploadWaypointSnapshot(stream UploadWaypointSnapshotRequest)
+        returns (UploadWaypointSnapshotResponse) {}
 
     // Uploads large edge snapshot as a stream for a particular edge.
-    rpc UploadEdgeSnapshot (stream UploadEdgeSnapshotRequest) returns (UploadEdgeSnapshotResponse) {}
+    rpc UploadEdgeSnapshot(stream UploadEdgeSnapshotRequest) returns (UploadEdgeSnapshotResponse) {}
 
-    // Download waypoint data from the server. If the snapshot exists in disk cache, it will be loaded.
-    rpc DownloadWaypointSnapshot (DownloadWaypointSnapshotRequest) returns (stream DownloadWaypointSnapshotResponse) {}
+    // Download waypoint data from the server. If the snapshot exists in disk cache, it will be
+    // loaded.
+    rpc DownloadWaypointSnapshot(DownloadWaypointSnapshotRequest)
+        returns (stream DownloadWaypointSnapshotResponse) {}
 
     // Download edge data from the server. If the snapshot exists in disk cache, it will be loaded.
-    rpc DownloadEdgeSnapshot (DownloadEdgeSnapshotRequest) returns (stream DownloadEdgeSnapshotResponse) {}
+    rpc DownloadEdgeSnapshot(DownloadEdgeSnapshotRequest)
+        returns (stream DownloadEdgeSnapshotResponse) {}
 
     // Verify that the graph is still valid and all required external services are still available.
-    // A map that was valid at upload time may not still be valid if required services are no longer running.
+    // A map that was valid at upload time may not still be valid if required services are no longer
+    // running.
     rpc ValidateGraph(ValidateGraphRequest) returns (ValidateGraphResponse) {}
-
-
-
 
 }

@@ -98,6 +98,9 @@ message RobotState {
     // Temperature data for the motors.
     SystemState system_state = 13;
 
+    // Robot behavior states
+    BehaviorState behavior_state = 14;
+
 
     reserved 9;
 }
@@ -396,7 +399,7 @@ message KinematicState {
 
     // A tree-based collection of transformations.  See
     // https://dev.bostondynamics.com/docs/concepts/geometry_and_frames for conceptual
-    // documentation on frames.  The snapshop will include the following frames:
+    // documentation on frames.  The snapshot will include the following frames:
     // “odom”: An inertial frame that estimates the fixed location in the world (relative to where
     // the robot is booted up) using the kinematics of the robot.
     //
@@ -416,12 +419,16 @@ message KinematicState {
     // "gpe”: A frame that represents the robot’s ground plane estimate. The full SE(3) pose can be
     // converted into a plane (a point and normal).
     //
+    // “feet_center”: A gravity-aligned frame representing the robot's footprint. The position is at
+    // the geometric center of the robot's feet. The x-axis is aligned such that it points from the
+    // center of the rear feet to the center of the front feet in the x-y plane.
+    //
     // For robots with a SpotArm attached, see
     // https://support.bostondynamics.com/s/article/Spot-Arm-specifications-and-concepts conceptual
-    // documentation on SpotArm specific frames. The snaphot will also include the following frames:
-    // "hand":  The hand frame is used by many of the ArmCommand requests available in the API.  The
-    // origin is slightly in front of the gripper's palm plate and its oreination is aligned with
-    // 'arm0.link_wr1'.
+    // documentation on SpotArm specific frames. The snapshot will also include the following
+    // frames: "hand":  The hand frame is used by many of the ArmCommand requests available in the
+    // API.  The origin is slightly in front of the gripper's palm plate and its orientation is
+    // aligned with 'arm0.link_wr1'.
     //
     // "arm0.link_wr1": A frame describing the robot's distal wrist link's position and orientation.
     // The origin of the frame is at the end of the link on its rotational axis.  It's x-axis is
@@ -467,7 +474,7 @@ message MotorTemperature {
     double temperature = 2;
 }
 
-// This describes any current behaviror faults on the robot, which would block any robot commands
+// This describes any current behavior faults on the robot, which would block any robot commands
 // from going through. These can be cleared using the ClearBehaviorFault rpc in the robot command
 // service.
 message BehaviorFaultState {
@@ -475,7 +482,7 @@ message BehaviorFaultState {
     repeated BehaviorFault faults = 1;
 }
 
-// The details of what the behavior fault consistents of, and the id for the fault. The unique
+// The details of what the behavior fault consists of, and the id for the fault. The unique
 // behavior_fault_id can be used to clear the fault in robot command service ClearBehaviorFault rpc.
 message BehaviorFault {
     // Behavior fault unique id
@@ -725,11 +732,11 @@ message RobotHardwareConfigurationResponse {
 message RobotLinkModelRequest {
     // Common request header.
     RequestHeader header = 1;
-    // The link name of which the OBJ file shoould represent.
+    // The link name of which the OBJ file should represent.
     string link_name = 2;
 }
 
-// The RobotLinkModel response message returns the OBJ file for a specifc robot link.
+// The RobotLinkModel response message returns the OBJ file for a specific robot link.
 message RobotLinkModelResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -784,7 +791,8 @@ message CombinedJointStates {
     // Robot clock timestamp corresponding to these readings.
     google.protobuf.Timestamp acquisition_timestamp = 1;
 
-    // The ordering of joints in these repeated fields are the same as (TODO  where)
+    // The ordering of joints in these repeated fields follows the order defined by the
+    // bosdyn.api.spot.JointIndex enum.
     repeated float position = 2;
     repeated float velocity = 3;
     repeated float load = 4;
@@ -870,3 +878,15 @@ message RobotStateStreamResponse {
     CommandState last_command = 4;
 }
 
+
+// The current state of the behavior
+message BehaviorState {
+    enum State {
+        STATE_UNKNOWN = 0;     // Unknown behavior state
+        STATE_NOT_READY = 1;   // The robot is not ready to move
+        STATE_TRANSITION = 2;  // The robot is in transition from sit to stand or from stand to sit
+        STATE_STANDING = 3;    // The robot is standing in place
+        STATE_STEPPING = 4;    // The robot is stepping
+    }
+    State state = 1;
+}

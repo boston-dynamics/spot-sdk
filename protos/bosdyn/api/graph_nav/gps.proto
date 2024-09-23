@@ -15,23 +15,24 @@ import "bosdyn/api/gps/gps.proto";
 message GPSLocalization {
     enum State {
         STATE_UNKNOWN = 0;
-        STATE_OK = 1; // Using GPS.
-        STATE_BAD_FRAMES = 2; // Error getting frames (ko, etc.)
-        STATE_NO_GPS_OBJECTS = 3; // No GPS available.
-        STATE_REGISTRATION_NOT_OK = 4; // GPS registration isn't ready.
-        STATE_NO_GPS_STATES = 5; // No GPS state measurements.
-        STATE_NOT_ENOUGH_SATELLITES = 6; // Too few satellites to localize.
-        STATE_NO_ECEF_FRAME = 7; // GPS registration is missing a frame.
-        STATE_HIGH_ERROR = 8; // The GPS data exists, but is high error.
-        STATE_STALE = 9; // The GPS data exists, and we have not used it yet, but it is too old to use.
-        STATE_INTERNAL_ERROR = 10; // Internal error (e.g. missing waypoints).
+        STATE_OK = 1;                     // Using GPS.
+        STATE_BAD_FRAMES = 2;             // Error getting frames (ko, etc.)
+        STATE_NO_GPS_OBJECTS = 3;         // No GPS available.
+        STATE_REGISTRATION_NOT_OK = 4;    // GPS registration isn't ready.
+        STATE_NO_GPS_STATES = 5;          // No GPS state measurements.
+        STATE_NOT_ENOUGH_SATELLITES = 6;  // Too few satellites to localize.
+        STATE_NO_ECEF_FRAME = 7;          // GPS registration is missing a frame.
+        STATE_HIGH_ERROR = 8;             // The GPS data exists, but is high error.
+        STATE_STALE =
+            9;  // The GPS data exists, and we have not used it yet, but it is too old to use.
+        STATE_INTERNAL_ERROR = 10;  // Internal error (e.g. missing waypoints).
     };
     // State of the live GPS data.
     State live_gps_state = 1;
     // State of GPS data at the current waypoint.
     State map_gps_state = 2;
-    // Estimate of where the robot body is in the Earth-Centered-Earth-Fixed (ECEF) frame at the time
-    // of localization.
+    // Estimate of where the robot body is in the Earth-Centered-Earth-Fixed (ECEF) frame at the
+    // time of localization.
     bosdyn.api.SE3Pose ecef_tform_body = 3;
     // Estimate of the latitude/longitude/height of the robot at the time of localization.
     bosdyn.api.gps.LLH latitude_longitude_height = 4;

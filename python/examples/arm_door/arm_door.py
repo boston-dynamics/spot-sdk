@@ -372,8 +372,8 @@ def open_door(robot, request_manager, snapshot):
     end_time = time.time() + timeout_sec
     while time.time() < end_time:
         feedback_response = door_client.open_door_feedback(feedback_request)
-        if (feedback_response.status !=
-                basic_command_pb2.RobotCommandFeedbackStatus.STATUS_PROCESSING):
+        if (feedback_response.status
+                != basic_command_pb2.RobotCommandFeedbackStatus.STATUS_PROCESSING):
             raise Exception('Door command reported status ')
         if (feedback_response.feedback.status == door_pb2.DoorCommand.Feedback.STATUS_COMPLETED):
             robot.logger.info('Opened door.')

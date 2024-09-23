@@ -54,8 +54,10 @@ enum SwingHeight {
         1;  // Low-stepping. Robot will try to only swing legs a few cm away from ground.
     SWING_HEIGHT_MEDIUM = 2;  // Default for most cases, use other values with caution.
     SWING_HEIGHT_HIGH = 3;    // High-stepping. Possibly useful with degraded vision operation.
-    SWING_HEIGHT_AUTO = 4;    // Swing height is automatically adjusted depending on the current state of the robot and environment.
+    SWING_HEIGHT_AUTO = 4;  // Swing height is automatically adjusted depending on the current state
+                            // of the robot and environment.
 }
+
 
 // Params common across spot movement and mobility.
 message MobilityParams {
@@ -78,7 +80,8 @@ message MobilityParams {
         STAIRS_MODE_UNKNOWN = 0;  // Invalid; do not use.
         STAIRS_MODE_OFF = 1;
         STAIRS_MODE_ON = 2;
-        STAIRS_MODE_AUTO = 3;  // Robot will automatically turn mode on or off
+        STAIRS_MODE_AUTO = 3;        // Robot will automatically turn mode on or off.
+        STAIRS_MODE_PROHIBITED = 4;  // Stairs will be detected and avoided.
     }
     // The selected option for stairs mode.
     // If unset, will use the deprecated stair_hint instead.
@@ -115,6 +118,22 @@ message MobilityParams {
     // Disable the secondary nearmap-based cliff avoidance that runs while on stairs.
     bool disable_nearmap_cliff_avoidance = 12;
 
+    // Semantic hazard detection can detect and classify objects or regions in the world as
+    // obstacles or areas to avoid that would not normally be classified as such. Obstacle avoidance
+    // still needs to be on for the robot to avoid these additional hazards. A CORE I/O is necessary
+    // for semantic hazard detection. Using HAZARD_DETECTION_MODE_COST will prevent detected hazards
+    // from becoming blocking obstacles, and instead add areas to try and avoid when navigating
+    // autonomously.
+    enum HazardDetectionMode {
+        HAZARD_DETECTION_MODE_UNKNOWN = 0;
+        HAZARD_DETECTION_MODE_OFF = 1;
+        HAZARD_DETECTION_MODE_ON = 2;
+        HAZARD_DETECTION_MODE_COST = 3;
+    }
+    // The selected option for hazard detection.
+    HazardDetectionMode hazard_detection_mode = 18;
+
+
 }
 
 // Parameters for offsetting the body from the normal default.
@@ -123,7 +142,7 @@ message BodyControlParams {
         // Desired base offset relative to the footprint pseudo-frame.
         // The footprint pseudo-frame is a gravity aligned frame with its origin located at the
         // geometric center of the feet in the X-Y axis, and at the nominal height of the hips in
-        // the Z axis. The yaw of the frame (wrt the world) is calcuated by the average foot
+        // the Z axis. The yaw of the frame (wrt the world) is calculated by the average foot
         // locations, and is aligned with the feet.
         SE3Trajectory base_offset_rt_footprint = 1;
 
@@ -161,7 +180,7 @@ message BodyControlParams {
     RotationSetting rotation_setting = 2;
 
     // Instead of directly specify the base offset trajectory, these options allow the robot to
-    // calcuate offsets based on the hand's location.  If the robot does not have a SpotArm
+    // calculate offsets based on the hand's location.  If the robot does not have a SpotArm
     // attached, sending this request will have no effect.
     message BodyAssistForManipulation {
         // Enable the use of body yaw to assist with manipulation.
@@ -202,7 +221,7 @@ message ObstacleParams {
 
 // Ground contact parameters that describe the terrain.
 message TerrainParams {
-    // Terrain coefficient of friction user hint. This value must be postive and will clamped if
+    // Terrain coefficient of friction user hint. This value must be positive and will be clamped if
     // necessary on the robot side. Best suggested values lie in the range between 0.4 and 0.8
     // (which is the robot's default.)
     google.protobuf.DoubleValue ground_mu_hint = 2;

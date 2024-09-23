@@ -170,7 +170,7 @@ class ImageClient(BaseClient):
 
 
 def build_image_request(image_source_name, quality_percent=75, image_format=None, pixel_format=None,
-                        resize_ratio=None):
+                        resize_ratio=None, fallback_formats=None):
     """Helper function which builds an ImageRequest from an image source name.
 
     By default the robot will choose an appropriate format when no image format
@@ -184,13 +184,16 @@ def build_image_request(image_source_name, quality_percent=75, image_format=None
                                                data, such as JPEG, RAW, or RLE.
         pixel_format (image_pb2.Image.PixelFormat) The pixel format of the image.
         resize_ratio (double): Resize ratio for image dimensions.
+        fallback_formats (image_pb2.Image.PixelFormat) Fallback pixel formats to use
+        if the pixel_format is invalid.
 
     Returns:
         The ImageRequest protobuf message for the given parameters.
     """
     return image_pb2.ImageRequest(image_source_name=image_source_name,
                                   quality_percent=quality_percent, image_format=image_format,
-                                  pixel_format=pixel_format, resize_ratio=resize_ratio)
+                                  pixel_format=pixel_format, fallback_formats=fallback_formats,
+                                  resize_ratio=resize_ratio)
 
 
 def _list_image_sources_value(response):

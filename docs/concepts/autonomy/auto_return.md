@@ -9,12 +9,15 @@ Development Kit License (20191101-BDSDK-SL).
 # AutoReturn Service
 
 ## What is AutoReturn?
+
 AutoReturn is a service that will walk Spot back along a recently traversed path. It can be configured to happen automatically when Spot stops receiving commands from a user.
 
 ## Why would I want to use AutoReturn?
+
 If you are piloting Spot through an area inaccessible to people and suddenly lose the communication link to Spot, the standard behavior is for Spot to sit down and power off. It may be valuable to instead tell Spot to automatically come back along the path it walked, hopefully putting Spot back into communication range.
 
 ## Why would I NOT want to use AutoReturn?
+
 Depending on the environment Spot is in when AutoReturn activates, Spot may make things worse by trying to autonomously navigate. It’s very likely that AutoReturn will activate when there is poor or no communication to Spot, leaving it walking around unsupervised.
 
 It's also important to note the following:
@@ -23,6 +26,7 @@ It's also important to note the following:
 - **AutoReturn will behave better in certain environments than others.** For example, if Spot becomes trapped while executing AutoReturn, Spot will continue to try and return, possibly until the battery drops below the operation threshold, at which point Spot will sit down and power off. If the environment around Spot changes and blocks Spot's previous path, Spot may end up in a worse location than before.
 
 ## How do I use AutoReturn?
+
 AutoReturn must be explicitly enabled, and will only work for the user that is driving Spot when AutoReturn is enabled. For example, if user A enables AutoReturn and then user B takes control of Spot, AutoReturn will not automatically run. If user B wants to enable AutoReturn, they must do it themselves.
 
 ### Configuring AutoReturn
@@ -50,12 +54,15 @@ but will only walk Spot up to or before the boundary in this example, omitting t
 Tablet users will find AutoReturn settings under the “Comms” section of the main menu.
 
 ## What happens when AutoReturn finishes?
+
 It depends on whether communication to a user has been restored. If Spot does not hear from a user by the time AutoReturn finishes, Spot’s normal comms loss behavior will begin.
 
 ## Using AutoReturn Safely
+
 **AutoReturn can potentially cause the robot to operate autonomously for unexpected distances. This can be dangerous for anyone nearby.**
 
 Tips for safe use of AutoReturn:
+
 - Set the max displacement as low as possible to minimize the potential for the robot to venture any further than necessary.
 - Keep the E-stop Service timeout as low as possible to limit the amount of time the robot is moving without Operator control. This setting can be found under "Autowalk Replay Supervision" in the tablet, alongside the AutoReturn settings.
 

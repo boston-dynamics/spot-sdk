@@ -16,16 +16,16 @@ import "google/protobuf/wrappers.proto";
 
 // Parameters for how positional trajectories will be interpolated on robot.
 enum PositionalInterpolation {
-    POS_INTERP_UNKNOWN = 0; // Unknown interpolation, do not use.
-    POS_INTERP_LINEAR = 1;  // Linear interpolation for positional data.
-    POS_INTERP_CUBIC = 2;   // Cubic interpolation for positional data.
+    POS_INTERP_UNKNOWN = 0;  // Unknown interpolation, do not use.
+    POS_INTERP_LINEAR = 1;   // Linear interpolation for positional data.
+    POS_INTERP_CUBIC = 2;    // Cubic interpolation for positional data.
 }
 
 // Parameters for how angular trajectories will be interpolated on robot.
 enum AngularInterpolation {
-    ANG_INTERP_UNKNOWN = 0;     // Unknown interpolation, do not use.
-    ANG_INTERP_LINEAR = 1;      // Linear interpolation for angular data.
-    ANG_INTERP_CUBIC_EULER = 2; // Cubic interpolation (using Euler method) for angular data.
+    ANG_INTERP_UNKNOWN = 0;      // Unknown interpolation, do not use.
+    ANG_INTERP_LINEAR = 1;       // Linear interpolation for angular data.
+    ANG_INTERP_CUBIC_EULER = 2;  // Cubic interpolation (using Euler method) for angular data.
 }
 
 // A 2D pose trajectory, which specified multiple points and the desired times the robot should
@@ -80,6 +80,7 @@ message SE3TrajectoryPoint {
     SE3Pose pose = 1;
 
     // Optional velocity (linear and angular) the robot will try and achieve.
+    // Linear and angular velocity is expressed with respect to the base frame of the pose.
     SE3Velocity velocity = 2;
 
     // The duration to reach the point relative to the trajectory reference time.
@@ -121,7 +122,6 @@ message Vec3TrajectoryPoint {
 
     // The duration to reach the point relative to the trajectory reference time.
     google.protobuf.Duration time_since_reference = 3;
-
 }
 
 // A time-based trajectories of wrenches.
@@ -142,7 +142,6 @@ message WrenchTrajectoryPoint {
     // The duration to reach the point relative to the trajectory reference time.
     google.protobuf.Duration time_since_reference = 2;
 }
-
 
 // A Point trajectory.
 message ScalarTrajectory {

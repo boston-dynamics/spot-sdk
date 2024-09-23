@@ -13,7 +13,7 @@ from bosdyn.api.graph_nav import map_pb2, nav_pb2, recording_pb2, recording_serv
 from bosdyn.api.graph_nav import recording_service_pb2_grpc as recording_service
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory,
                                   handle_common_header_errors, handle_lease_use_result_errors,
-                                  handle_unset_status_error)
+                                  handle_license_errors_if_present, handle_unset_status_error)
 from bosdyn.client.exceptions import ResponseError
 
 
@@ -275,14 +275,13 @@ class GraphNavRecordingServiceClient(BaseClient):
     @staticmethod
     def make_edge_environment(
             vel_limit=None, direction_constraint=map_pb2.Edge.Annotations.DIRECTION_CONSTRAINT_NONE,
-            require_alignment=False, flat_ground=False, ground_mu_hint=.8, grated_floor=False):
+            require_alignment=False, ground_mu_hint=.8, grated_floor=False):
         """Create an edge environment.
 
         Args:
             vel_limit: A SE2VelocityLimit to use while traversing the edge. Note this is not a target speed, just a max/min.
             direction_constraint: A direction constraints on the robot's orientation when traversing the edge.
             require_alignment: Boolean where if true, the robot must be aligned with the edge in yaw before traversing it.
-            flat_ground: Boolean where if true, the edge crosses flat ground and the robot shouldn't try to climb over obstacles.
             ground_mu_hint: Terrain coefficient of friction user hint. Suggested values lie between [.4, .8].
             grated_floor: Boolean where if true, the edge crosses over grated metal.
         Returns:
@@ -290,7 +289,6 @@ class GraphNavRecordingServiceClient(BaseClient):
         """
         edge_env = map_pb2.Edge.Annotations()
         edge_env.require_alignment.value.CopyFrom(require_alignment)
-        edge_env.flat_ground.value.CopyFrom(flat_ground)
         edge_env.grated_floor.value.CopyFrom(grated_floor)
         if (ground_mu_hint > 0):
             edge_env.ground_mu_hint.value.CopyFrom(ground_mu_hint)
@@ -438,6 +436,7 @@ _START_RECORDING_STATUS_TO_ERROR.update({
 
 @handle_common_header_errors
 # @handle_lease_use_result_errors
+@handle_license_errors_if_present
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _start_recording_error(response):
     """Return a custom exception based on start recording response, None if no error."""
@@ -482,6 +481,7 @@ _CREATE_WAYPOINT_STATUS_TO_ERROR.update({
 
 @handle_common_header_errors
 # @handle_lease_use_result_errors
+@handle_license_errors_if_present
 @handle_unset_status_error(unset='STATUS_UNKNOWN')
 def _create_waypoint_error(response):
     """Return a custom exception based on create waypoint response, None if no error."""

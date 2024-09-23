@@ -31,7 +31,6 @@ message GetStoreSequenceRangeResponse {
     int32 last_sequence_number = 3;
 }
 
-
 message GetAbsoluteMetricSnapshotRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -41,7 +40,6 @@ message GetAbsoluteMetricSnapshotRequest {
     repeated int32 sequence_numbers = 2;
 }
 
-
 message GetAbsoluteMetricSnapshotResponse {
     // Common response header.
     ResponseHeader header = 1;
@@ -49,7 +47,8 @@ message GetAbsoluteMetricSnapshotResponse {
     // Signed AbsoluteMetricsSnapshot messages corresponding to the request timestamps.
     // The robot will exclude snapshots if:
     //    * They don't exist on the robot
-    //    * If included, the snapshot would push the total response message size over the GRPC limit.
+    //    * If included, the snapshot would push the total response message size over the GRPC
+    //    limit.
     repeated SignedProto snapshots = 2;
 }
 
@@ -69,7 +68,7 @@ message GetMetricsResponse {
     // Common response header.
     ResponseHeader header = 1;
 
-    // Current parameters for metrics. 
+    // Current parameters for metrics.
     repeated Parameter parameters = 2;
 
     // If any keys specified in the GetMetricsRequest are not present in the database,

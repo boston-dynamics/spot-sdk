@@ -5,7 +5,6 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import concurrent.futures
-import logging
 import time
 
 import grpc
@@ -66,9 +65,9 @@ def _setup_server_and_client(rpc_delay=0, endpoint_name='test-endpoint'):
     server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=10))
     bosdyn.api.estop_service_pb2_grpc.add_EstopServiceServicer_to_server(
         MockEstopServicer(rpc_delay), server)
-    port = server.add_insecure_port('localhost:0')
+    port = server.add_insecure_port('127.0.0.1:0')
     server.start()
-    channel = grpc.insecure_channel('localhost:{}'.format(port))
+    channel = grpc.insecure_channel('127.0.0.1:{}'.format(port))
     client = bosdyn.client.estop.EstopClient()
     client.channel = channel
     endpoint = bosdyn.client.estop.EstopEndpoint(client, endpoint_name, estop_timeout=1)

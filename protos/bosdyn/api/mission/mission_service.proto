@@ -13,23 +13,25 @@ option java_outer_classname = "MissionServiceProto";
 import "bosdyn/api/data_chunk.proto";
 import "bosdyn/api/mission/mission.proto";
 
-// The MissionService can be used to specify high level autonomous behaviors for Spot using behavior trees.
+// The MissionService can be used to specify high level autonomous behaviors for Spot using behavior
+// trees.
 service MissionService {
     // RPCs for loading missions to the robot. NOTE: LoadMission and LoadMissionAsChunks may fail
     // for large missions because the request and response may exceed the maximum message size. Use
     // LoadMissionAsChunks2 instead.
     rpc LoadMission(LoadMissionRequest) returns (LoadMissionResponse) {}
 
-    // This RPC may be deprecated in the future, please use LoadMissionAsChunks2 instead. Non-preferred
-    // method for loading large missions to the robot because only the request is a streaming RPC. The data
-    // chunks are deserialized into a LoadMissionRequest. NOTE: LoadMissionAsChunks may fail for large missions
-    // because the response may exceed the maximum message size.
-    rpc LoadMissionAsChunks (stream DataChunk) returns (LoadMissionResponse) {}
+    // This RPC may be deprecated in the future, please use LoadMissionAsChunks2 instead.
+    // Non-preferred method for loading large missions to the robot because only the request is a
+    // streaming RPC. The data chunks are deserialized into a LoadMissionRequest. NOTE:
+    // LoadMissionAsChunks may fail for large missions because the response may exceed the maximum
+    // message size.
+    rpc LoadMissionAsChunks(stream DataChunk) returns (LoadMissionResponse) {}
 
     // Preferred RPC for loading large missions to the robot because both the request and response
     // are streaming RPCs, allowing you to break the message up into multiple streamed messages. The
     // data chunks are deserialized into a LoadMissionRequest and LoadMissionResponse.
-    rpc LoadMissionAsChunks2 (stream DataChunk) returns (stream DataChunk) {}
+    rpc LoadMissionAsChunks2(stream DataChunk) returns (stream DataChunk) {}
 
     // Start executing a loaded mission.
     // Will not restart a mission that has run to completion. Use RestartMission to do that.
@@ -50,13 +52,13 @@ service MissionService {
     rpc GetState(GetStateRequest) returns (GetStateResponse) {}
 
     // RPCs for getting static information regarding the mission. Used to interpret mission state.
-    // NOTE: GetInfo may fail for large missions because the response may exceed the maximum message size.
-    // Use GetInfoAsChunks instead.
+    // NOTE: GetInfo may fail for large missions because the response may exceed the maximum message
+    // size. Use GetInfoAsChunks instead.
     rpc GetInfo(GetInfoRequest) returns (GetInfoResponse) {}
 
-    // Preferred RPC for getting the status of large missions from the robot because the response is a streaming
-    // streaming RPC, allowing you to break the message up into multiple streamed messages. THe data chunks are
-    // deserialized into a GetInfoResponse.
+    // Preferred RPC for getting the status of large missions from the robot because the response is
+    // a streaming streaming RPC, allowing you to break the message up into multiple streamed
+    // messages. THe data chunks are deserialized into a GetInfoResponse.
     rpc GetInfoAsChunks(GetInfoRequest) returns (stream DataChunk) {}
 
     // Download the mission as it was uploaded to the service.

@@ -6,15 +6,11 @@
 
 """Helper functions and classes for creating client applications."""
 
-import copy
 import getpass
-import glob
 import logging
 import os
-import pathlib
 import signal
 import sys
-import threading
 import time
 from concurrent import futures
 from secrets import token_urlsafe
@@ -406,8 +402,9 @@ def safe_pb_enum_to_string(value, pb_enum_obj):
     return '<unknown> (value: {})'.format(value)
 
 
-@deprecated(reason='The GrpcServiceRunner class helper has moved to server_util.py. Please use '
-            'bosdyn.client.server_util.GrpcServiceRunner.', version='3.0.0', action="always")
+@deprecated(
+    reason='The GrpcServiceRunner class helper has moved to server_util.py. Please use '
+    'bosdyn.client.server_util.GrpcServiceRunner.', version='3.0.0', action="always")
 class GrpcServiceRunner(object):
     """A runner to start a gRPC server on a background thread and allow easy cleanup.
 

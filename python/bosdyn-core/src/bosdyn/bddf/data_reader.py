@@ -90,9 +90,9 @@ class DataReader(BaseDataReader):  # pylint: disable=too-many-instance-attribute
         if self._index_offset < len(MAGIC):
             raise ParseError('Invalid offset to index: {})'.format(self._index_offset))
         self._file_index = self._read_desc_block_at("file_index", self._index_offset)
-        self._spec_index = [{key: value
-                             for key, value in desc.spec.items()}
-                            for desc in self._file_index.series_identifiers]
+        self._spec_index = [{
+            key: value for key, value in desc.spec.items()
+        } for desc in self._file_index.series_identifiers]
 
     def _seek_to(self, location):
         if location < len(MAGIC):

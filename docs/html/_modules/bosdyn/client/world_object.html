@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.world_object &mdash; Spot 4.0.3 documentation</title>
+  <title>bosdyn.client.world_object &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,7 +48,8 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -202,7 +203,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -263,11 +263,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -510,7 +515,8 @@
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">world_object_service_pb2_grpc</span> <span class="k">as</span> <span class="n">world_object_service</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.frame_helpers</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.robot_command</span> <span class="kn">import</span> <span class="n">NoTimeSyncError</span><span class="p">,</span> <span class="n">_TimeConverter</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.robot_command</span> <span class="kn">import</span> <span class="n">NoTimeSyncError</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.time_sync</span> <span class="kn">import</span> <span class="n">update_time_filter</span><span class="p">,</span> <span class="n">update_timestamp_filter</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">now_timestamp</span>
 
 
@@ -562,7 +568,7 @@
 <span class="sd">                time.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">time_start_point</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">time_start_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_time_filter</span><span class="p">(</span><span class="n">time_start_point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="p">)</span>
+            <span class="n">time_start_point</span> <span class="o">=</span> <span class="n">update_time_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_start_point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="p">)</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">ListWorldObjectRequest</span><span class="p">(</span><span class="n">object_type</span><span class="o">=</span><span class="n">object_type</span><span class="p">,</span>
                                                       <span class="n">timestamp_filter</span><span class="o">=</span><span class="n">time_start_point</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListWorldObjects</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
@@ -572,7 +578,7 @@
 <div class="viewcode-block" id="WorldObjectClient.list_world_objects_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.list_world_objects_async">[docs]</a>    <span class="k">def</span> <span class="nf">list_world_objects_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_type</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">time_start_point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of list_world_objects().&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">time_start_point</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">time_start_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_update_time_filter</span><span class="p">(</span><span class="n">time_start_point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="p">)</span>
+            <span class="n">time_start_point</span> <span class="o">=</span> <span class="n">update_time_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_start_point</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="p">)</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">world_object_pb2</span><span class="o">.</span><span class="n">ListWorldObjectRequest</span><span class="p">(</span><span class="n">object_type</span><span class="o">=</span><span class="n">object_type</span><span class="p">,</span>
                                                       <span class="n">timestamp_filter</span><span class="o">=</span><span class="n">time_start_point</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">ListWorldObjects</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
@@ -599,7 +605,7 @@
             <span class="c1"># Ensure the mutation request&#39;s object&#39;s time of detection is in robot time.</span>
             <span class="n">client_timestamp</span> <span class="o">=</span> <span class="n">mutation_req</span><span class="o">.</span><span class="n">mutation</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">acquisition_time</span>
             <span class="n">mutation_req</span><span class="o">.</span><span class="n">mutation</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">acquisition_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_update_timestamp_filter</span><span class="p">(</span><span class="n">client_timestamp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="p">))</span>
+                <span class="n">update_timestamp_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_timestamp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">MutateWorldObjects</span><span class="p">,</span> <span class="n">mutation_req</span><span class="p">,</span>
                          <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_status</span><span class="p">,</span> <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -610,45 +616,11 @@
             <span class="c1"># Ensure the mutation request&#39;s object&#39;s time of detection is in robot time.</span>
             <span class="n">client_timestamp</span> <span class="o">=</span> <span class="n">mutation_req</span><span class="o">.</span><span class="n">mutation</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">acquisition_time</span>
             <span class="n">mutation_req</span><span class="o">.</span><span class="n">mutation</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">acquisition_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_update_timestamp_filter</span><span class="p">(</span><span class="n">client_timestamp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="p">))</span>
+                <span class="n">update_timestamp_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client_timestamp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">timesync_endpoint</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">MutateWorldObjects</span><span class="p">,</span> <span class="n">mutation_req</span><span class="p">,</span>
                                <span class="n">value_from_response</span><span class="o">=</span><span class="n">_get_status</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-
-    <span class="k">def</span> <span class="nf">_update_time_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or convert fields of the proto that need timestamps in the robot&#39;s clock.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            timestamp (float): Client time, such as from time.time().</span>
-<span class="sd">            timesync_endpoint (TimeSyncEndpoint): A timesync endpoint associated with the robot object.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            NoTimeSyncError: Could not find the timesync endpoint for the robot to convert the time.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Input timestamp is a float. (from time.time())</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">timesync_endpoint</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NoTimeSyncError</span><span class="p">(</span><span class="s2">&quot;[world object service] No timesync endpoint set for the robot.&quot;</span><span class="p">)</span>
-        <span class="c1"># Lazy RobotTimeConverter: initialized only if needed to make a conversion.</span>
-        <span class="n">converter</span> <span class="o">=</span> <span class="n">_TimeConverter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">converter</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_update_timestamp_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or convert fields of the proto that need timestamps in the robot&#39;s clock.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            timestamp (google.protobuf.Timestamp): Client time.</span>
-<span class="sd">            timesync_endpoint (TimeSyncEndpoint): A timesync endpoint associated with the robot object.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            NoTimeSyncError: Could not find the timesync endpoint for the robot to convert the time.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Input timestamp is a google.protobuf.Timestamp</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">timesync_endpoint</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">NoTimeSyncError</span><span class="p">(</span><span class="s2">&quot;[world object service] No timesync endpoint set for the robot.&quot;</span><span class="p">)</span>
-        <span class="n">converter</span> <span class="o">=</span> <span class="n">_TimeConverter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">)</span>
-        <span class="n">converter</span><span class="o">.</span><span class="n">convert_timestamp_from_local_to_robot</span><span class="p">(</span><span class="n">timestamp</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">timestamp</span>
 
 <div class="viewcode-block" id="WorldObjectClient.draw_sphere"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html#bosdyn.client.world_object.WorldObjectClient.draw_sphere">[docs]</a>    <span class="k">def</span> <span class="nf">draw_sphere</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">x_rt_frame_name</span><span class="p">,</span> <span class="n">y_rt_frame_name</span><span class="p">,</span> <span class="n">z_rt_frame_name</span><span class="p">,</span> <span class="n">frame_name</span><span class="p">,</span>
                     <span class="n">radius</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">rgba</span><span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">list_objects_now</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>

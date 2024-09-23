@@ -525,7 +525,7 @@ def test_get_live_data_if_applicable(capabilities, client):
                          index + 1, GET_LIVE_DATA_ATTEMPTS)
             response = client.get_live_data(request)
         except UnimplementedError as exc:
-            _LOGGER.warning(f"Double check your robot is running 4.0.0 or newer.")
+            _LOGGER.warning("Double check your robot is running 4.0.0 or newer.")
             return False
         total_time = time.time() - start_time
         _LOGGER.info("Total time: %0.3f seconds.", total_time)

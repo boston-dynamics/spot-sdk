@@ -38,14 +38,13 @@ class SaveFileAdapter:
     def __init__(self, save_file_service_name, file_path):
         self._service_name = save_file_service_name
         self._file_extension = pathlib.Path(file_path).suffix
-        with open(file_path, "rb") as f:
-            self._file_data = f.read()
+        self._file_path = file_path
 
     def get_file_data(self, request, store_helper):
         """Save the file data to the data store."""
         data_id = data_acquisition_pb2.DataIdentifier(action_id=request.action_id,
                                                       channel=CAPABILITY.channel_name)
-        store_helper.store_data(self._file_data, data_id, file_extension=self._file_extension)
+        store_helper.store_file(self._file_path, data_id, file_extension=self._file_extension)
         store_helper.state.set_status(data_acquisition_pb2.GetStatusResponse.STATUS_SAVING)
 
 

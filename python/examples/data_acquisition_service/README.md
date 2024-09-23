@@ -111,10 +111,17 @@ python3 data_acquisition_example.py {ROBOT_IP}
 
 ## Downloading from the Data Acquisition Store
 
-The data acquisition download script allows users to download data from the DataAcquisitionStore service using REST calls. The script supports only time-based queries for filtering which data is downloaded and saved locally. The following command is an example of a time-based query and download. The timestamps are specified in RFC 3339 date string format (YYYY-MM-DDTHH:MM::SS.SZ, Y:year, M:month, D:day, H:hours, M:minutes, S:seconds as double, Z:zulu timezone)
+The data acquisition download script allows users to download data from the DataAcquisitionStore service.
+
+There are two different methods in which the data is downloaded from the DataAcquisitionStore service:
+
+- REST: Uses REST calls to download a zip file.
+- gRPC Streaming: Uses [DataAcquisitionStoreClient.query_stored_captures()](../../bosdyn-client/src/bosdyn/client/data_acquisition_store.py) call to download & save capture data directly.
+
+The script supports only time-based queries for filtering which data is downloaded and saved locally, though the "data" command can be modified to filter based on other fields listed in [QueryParameters](../../../protos/bosdyn/api/data_acquisition_store.proto#queryparameters) in [data_acquisition_store.proto](../../../protos/bosdyn/api/data_acquisition_store.proto). The following command is an example of a time-based query and download. The timestamps are specified in RFC 3339 date string format (YYYY-MM-DDTHH:MM::SS.SZ, Y:year, M:month, D:day, H:hours, M:minutes, S:seconds as double, Z:zulu timezone). Zulu clock time is the same as UTC time (UTC+0).
 
 ```
-python3 data_acquisition_download.py {ROBOT_IP} --query-from-timestamp 2020-09-01T00:00:00.0Z --query-to-timestamp 2020-09-04T00:00:00.0Z
+python3 data_acquisition_download.py --query-from-timestamp 2020-09-01T00:00:00.0Z --query-to-timestamp 2020-09-04T00:00:00.0Z {ROBOT_IP} {rest,grpc}
 ```
 
 Note, by default, the download script will save the data to the current directory, however the `--destination-folder` argument can be used to change where the downloaded data is saved.

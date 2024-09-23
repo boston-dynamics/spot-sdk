@@ -48,10 +48,14 @@ To run this example on a Spot CORE, run:
 ./start_server.sh
 ```
 
-Otherwise, run:
+Otherwise, create a .env file that specifies username and password with the following variables.
+BOSDYN_CLIENT_USERNAME={username}
+BOSDYN_CLIENT_PASSWORD={password}
+
+Then run:
 
 ```
-sudo docker run -d --name retinanet_server --network host --env BOSDYN_CLIENT_USERNAME --env BOSDYN_CLIENT_PASSWORD --restart unless-stopped fire_ext_detector -d . --port $PORT $ROBOT_IP
+sudo docker run -d --name retinanet_server --network host --env-file .env --restart unless-stopped fire_ext_detector -d . --port $PORT $ROBOT_IP
 ```
 
 - `$PORT` is the port to use for the server on the machine the server is running on

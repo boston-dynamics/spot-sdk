@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>QuickStart &mdash; Spot 4.0.3 documentation</title>
+  <title>QuickStart &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -51,7 +51,8 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../concepts/orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -205,7 +206,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -266,11 +266,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -507,7 +512,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="quickstart">
 <h1>QuickStart<a class="headerlink" href="#quickstart" title="Permalink to this heading"></a></h1>
-<p>This guide will help you set up your programming environment to successfully command and control Boston Dynamics’ <code class="docutils literal notranslate"><span class="pre">Spot</span></code> robot using the <code class="docutils literal notranslate"><span class="pre">Spot</span> <span class="pre">Python</span> <span class="pre">SDK</span></code>.  The guide defaults to a Linux setup.</p>
+<p>This guide will help you set up your programming environment to successfully command and control Boston Dynamics’ <code class="docutils literal notranslate"><span class="pre">Spot</span></code> robot using the <code class="docutils literal notranslate"><span class="pre">Spot</span> <span class="pre">Python</span> <span class="pre">SDK</span></code>. The guide defaults to a Linux setup.</p>
 <p><strong>Windows users:</strong> Please find notes like this to help you where Windows may differ from Linux.</p>
 <!--ts--><ul class="simple">
 <li><p><a class="reference external" href="#system-setup">System Setup</a></p>
@@ -546,7 +551,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h3>System requirements<a class="headerlink" href="#system-requirements" title="Permalink to this heading"></a></h3>
 <p>The Boston Dynamics Spot Python SDK works with most operating systems including:</p>
 <ul class="simple">
-<li><p>Linux Ubuntu 18.04 LTS</p></li>
+<li><p>Linux Ubuntu 22.04 LTS</p></li>
 <li><p>Windows 10</p></li>
 <li><p>MacOS 10.14 (Mojave)</p></li>
 </ul>
@@ -554,10 +559,10 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="python-requirements">
 <h3>Python requirements<a class="headerlink" href="#python-requirements" title="Permalink to this heading"></a></h3>
-<p>Spot Python SDK works with Python 3.6, Python 3.7 and 3.8.</p>
+<p>Spot Python SDK works with Python 3.6-3.10.</p>
 <p>Downloads and instructions for installing Python can be found at https://www.python.org/.</p>
-<p><strong>We use “python” in this guide but</strong>…if you have multiple versions of Python installed then running <code class="docutils literal notranslate"><span class="pre">python</span></code> might reference an incorrect version (e.g. version 2.7).  For example, to run python 3 on Ubuntu 18.04 you would run <code class="docutils literal notranslate"><span class="pre">python3</span></code> and on Windows you could use the <a class="reference external" href="https://docs.python.org/3/using/windows.html#launcher">Python launcher</a> and run <code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">-3</span></code>. Our documentation uses <code class="docutils literal notranslate"><span class="pre">python</span></code> assuming that the command launches a compatible version of Python.  <code class="docutils literal notranslate"><span class="pre">Virtualenv</span></code> (described below), is an excellent way to resolve these issues.</p>
-<p>Verify your python install is the correct version.  Open a command prompt or start your python IDE:</p>
+<p><strong>We use “python” in this guide but</strong>…if you have multiple versions of Python installed then running <code class="docutils literal notranslate"><span class="pre">python</span></code> might reference an incorrect version (e.g. version 2.7). For example, to run python 3 on Ubuntu 18.04 you would run <code class="docutils literal notranslate"><span class="pre">python3</span></code> and on Windows you could use the <a class="reference external" href="https://docs.python.org/3/using/windows.html#launcher">Python launcher</a> and run <code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">-3</span></code>. Our documentation uses <code class="docutils literal notranslate"><span class="pre">python</span></code> assuming that the command launches a compatible version of Python. <code class="docutils literal notranslate"><span class="pre">Virtualenv</span></code> (described below), is an excellent way to resolve these issues.</p>
+<p>Verify your python install is the correct version. Open a command prompt or start your python IDE:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python --version
 Python 3.6.8
 </pre></div>
@@ -573,7 +578,7 @@ line. First, launch a terminal: Start &gt; Command Prompt. At the command prompt
 </div>
 <p>The former will directly call the <code class="docutils literal notranslate"><span class="pre">python.exe</span></code> that is the highest priority in the PATH environment variable. (Note you could also supply a full pathname <code class="docutils literal notranslate"><span class="pre">c:\path\to\install\python.exe</span></code> to directly call the executable).</p>
 <p>The latter uses the Python launcher, which by default starts the most recent version of Python
-installed.  You can also optionally pass arguments to the launcher to control what version of
+installed. You can also optionally pass arguments to the launcher to control what version of
 python to launch:</p>
 <p><code class="docutils literal notranslate"><span class="pre">py.exe</span> <span class="pre">-2</span></code> (launches Python 2)</p>
 <p><code class="docutils literal notranslate"><span class="pre">py.exe</span> <span class="pre">-3</span></code> (launches Python 3)</p>
@@ -602,7 +607,7 @@ pip 19.2.1 from &lt;PATH_ON_YOUR_COMPUTER&gt;
 <section id="manage-multiple-python-environments-with-virtualenv">
 <h3>Manage multiple Python environments with virtualenv<a class="headerlink" href="#manage-multiple-python-environments-with-virtualenv" title="Permalink to this heading"></a></h3>
 <p><strong>This section is optional, but recommended.</strong></p>
-<p>Users with multiple python versions, anaconda, etc., are responsible for maintaining separation between those installs.  Common failures include using the wrong version of python, installing python packages to the wrong python, or using pip associated with the wrong python.  One way to improve the stability of your Spot code and your pre-existing python code is to keep them separate using virtual environments.  Here are some tips to working with <a class="reference external" href="https://pypi.org/project/virtualenv">virtualenv</a>.</p>
+<p>Users with multiple python versions, anaconda, etc., are responsible for maintaining separation between those installs. Common failures include using the wrong version of python, installing python packages to the wrong python, or using pip associated with the wrong python. One way to improve the stability of your Spot code and your pre-existing python code is to keep them separate using virtual environments. Here are some tips to working with <a class="reference external" href="https://pypi.org/project/virtualenv">virtualenv</a>.</p>
 <ul class="simple">
 <li><p>Install virtualenv.</p></li>
 <li><p>Create a virtualenv, being careful to point at the proper python executable.</p></li>
@@ -647,14 +652,14 @@ or upgraded from PyPI with the following command.</p>
 <p>Installing the <code class="docutils literal notranslate"><span class="pre">bosdyn-client</span></code>, <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-mission</span></code> packages will also
 install <code class="docutils literal notranslate"><span class="pre">bosdyn-api</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-core</span></code> packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 4.0.3, use the following command.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>bosdyn-client<span class="o">==</span><span class="m">4</span>.0.3<span class="w"> </span>bosdyn-mission<span class="o">==</span><span class="m">4</span>.0.3<span class="w"> </span>bosdyn-choreography-client<span class="o">==</span><span class="m">4</span>.0.3<span class="w"> </span>bosdyn-orbit<span class="o">==</span><span class="m">4</span>.0.3
+example 4.1.0, use the following command.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>bosdyn-client<span class="o">==</span><span class="m">4</span>.1.0<span class="w"> </span>bosdyn-mission<span class="o">==</span><span class="m">4</span>.1.0<span class="w"> </span>bosdyn-choreography-client<span class="o">==</span><span class="m">4</span>.1.0<span class="w"> </span>bosdyn-orbit<span class="o">==</span><span class="m">4</span>.1.0
 </pre></div>
 </div>
 <p><strong>Version incompatibility:</strong></p>
 <p>If you see a version incompatibility error during pip install such as:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ERROR:<span class="w"> </span>bosdyn-core<span class="w"> </span>&lt;VERSION_STRING&gt;<span class="w"> </span>has<span class="w"> </span>requirement<span class="w"> </span>bosdyn-api<span class="o">==</span>&lt;VERSION_STRING&gt;,<span class="w"> </span>but<span class="w"> </span>you
-have<span class="w"> </span>bosdyn-api<span class="w"> </span><span class="m">4</span>.0.3<span class="w"> </span>which<span class="w"> </span>is<span class="w"> </span>incompatible.
+have<span class="w"> </span>bosdyn-api<span class="w"> </span><span class="m">4</span>.1.0<span class="w"> </span>which<span class="w"> </span>is<span class="w"> </span>incompatible.
 </pre></div>
 </div>
 <p>Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all packages) and then reinstalling:</p>
@@ -666,13 +671,13 @@ $<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </spa
 <h3>Verify your Spot packages installation<a class="headerlink" href="#verify-your-spot-packages-installation" title="Permalink to this heading"></a></h3>
 <p>Make sure that the packages have been installed.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>list<span class="w"> </span>--format<span class="o">=</span>columns<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>bosdyn
-bosdyn-api<span class="w">                    </span><span class="m">4</span>.0.3
-bosdyn-choreography-client<span class="w">    </span><span class="m">4</span>.0.3
-bosdyn-choreography-protos<span class="w">    </span><span class="m">4</span>.0.3
-bosdyn-client<span class="w">                 </span><span class="m">4</span>.0.3
-bosdyn-core<span class="w">                   </span><span class="m">4</span>.0.3
-bosdyn-mission<span class="w">                </span><span class="m">4</span>.0.3
-bosdyn-orbit<span class="w">                  </span><span class="m">4</span>.0.3
+bosdyn-api<span class="w">                    </span><span class="m">4</span>.1.0
+bosdyn-choreography-client<span class="w">    </span><span class="m">4</span>.1.0
+bosdyn-choreography-protos<span class="w">    </span><span class="m">4</span>.1.0
+bosdyn-client<span class="w">                 </span><span class="m">4</span>.1.0
+bosdyn-core<span class="w">                   </span><span class="m">4</span>.1.0
+bosdyn-mission<span class="w">                </span><span class="m">4</span>.1.0
+bosdyn-orbit<span class="w">                  </span><span class="m">4</span>.1.0
 </pre></div>
 </div>
 <p><strong>Windows users:</strong></p>
@@ -710,7 +715,7 @@ PACKAGE<span class="w"> </span>CONTENTS
 </pre></div>
 </div>
 <p>If that’s the case, run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">list</span></code> again to make sure that the Boston Dynamics Python packages are installed.</p>
-<p>If you can’t import bosdyn.client without an error, you may have multiple instances of Python on your computer and have installed bosdyn to one while running the other.  Check the pathnames of your python executables. Are they where you’d expect them to be?  If not, this is a potential sign that you may have multiple python installs.  Consider using virtual environments (see above).</p>
+<p>If you can’t import bosdyn.client without an error, you may have multiple instances of Python on your computer and have installed bosdyn to one while running the other. Check the pathnames of your python executables. Are they where you’d expect them to be? If not, this is a potential sign that you may have multiple python installs. Consider using virtual environments (see above).</p>
 </section>
 </section>
 <section id="verify-you-can-command-and-query-spot">
@@ -726,13 +731,13 @@ PACKAGE<span class="w"> </span>CONTENTS
 </section>
 <section id="get-a-user-account-on-the-robot">
 <h3>Get a user account on the robot<a class="headerlink" href="#get-a-user-account-on-the-robot" title="Permalink to this heading"></a></h3>
-<p>If you just unboxed your Spot robot, you will find a sticker inside the battery cavity with wifi, admin, and username “user” credentials.  Please note however that Boston Dynamics recommends that you first have your designated robot administrator log onto the robot with admin credentials and change passwords to increase security.</p>
+<p>If you just unboxed your Spot robot, you will find a sticker inside the battery cavity with wifi, admin, and username “user” credentials. Please note however that Boston Dynamics recommends that you first have your designated robot administrator log onto the robot with admin credentials and change passwords to increase security.</p>
 <p>NOTE: The following examples will assume username “user” and password “password.”</p>
 </section>
 <section id="ping-spot">
 <h3>Ping Spot<a class="headerlink" href="#ping-spot" title="Permalink to this heading"></a></h3>
 <ol class="simple">
-<li><p>Power on Spot by holding the power button down until the fans start.  Wait for the fans to turn off (and maybe 10-20 seconds after that)</p></li>
+<li><p>Power on Spot by holding the power button down until the fans start. Wait for the fans to turn off (and maybe 10-20 seconds after that)</p></li>
 <li><p>Connect to Spot via wifi.</p></li>
 <li><p>Ping spot at 192.168.80.3</p></li>
 </ol>
@@ -749,7 +754,7 @@ Software:<span class="w"> </span><span class="m">2</span>.3.4<span class="w"> </
 Installed:<span class="w"> </span><span class="m">2020</span>-12-11<span class="w"> </span><span class="m">15</span>:06:57
 </pre></div>
 </div>
-<p>If this worked for you, SUCCESS!  You are now successfully communicating with Spot via Python!  Note that the output returned shows your Spot robot’s unique serial number, its nickname and robot type (Boston Dynamics has multiple robots), the software version, and install date.</p>
+<p>If this worked for you, SUCCESS! You are now successfully communicating with Spot via Python! Note that the output returned shows your Spot robot’s unique serial number, its nickname and robot type (Boston Dynamics has multiple robots), the software version, and install date.</p>
 <p>If you see one of the following:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>bosdyn.client<span class="w"> </span><span class="m">192</span>.168.80.3<span class="w"> </span>id
 Could<span class="w"> </span>not<span class="w"> </span>contact<span class="w"> </span>robot<span class="w"> </span>with<span class="w"> </span>hostname<span class="w"> </span><span class="s2">&quot;192.168.80.3&quot;</span>
@@ -759,11 +764,11 @@ Could<span class="w"> </span>not<span class="w"> </span>contact<span class="w"> 
 RetryableUnavailableError:<span class="w"> </span>_InactiveRpcError:<span class="w"> </span>gRPC<span class="w"> </span>service<span class="w"> </span>unavailable.<span class="w"> </span>Likely<span class="w"> </span>transient<span class="w"> </span>and<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>resolved<span class="w"> </span>by<span class="w"> </span>retrying<span class="w"> </span>the<span class="w"> </span>request.
 </pre></div>
 </div>
-<p>The robot is not powered on or is unreachable.  Go back and try to get your ping to work.  You can also try the <code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> to get more information to debug the issue.</p>
+<p>The robot is not powered on or is unreachable. Go back and try to get your ping to work. You can also try the <code class="docutils literal notranslate"><span class="pre">-v</span></code> or <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> to get more information to debug the issue.</p>
 </section>
 <section id="get-a-copy-of-the-full-sdk-distribution-from-github">
 <h3>Get a copy of the full SDK distribution from github<a class="headerlink" href="#get-a-copy-of-the-full-sdk-distribution-from-github" title="Permalink to this heading"></a></h3>
-<p>While simply installing the Boston Dynamics Python packages is sufficient to deploy solutions, developers need to download the full Spot SDK distribution to actually develop solutions.  The distribution contains programming examples, protobuf definitions and API documentation.</p>
+<p>While simply installing the Boston Dynamics Python packages is sufficient to deploy solutions, developers need to download the full Spot SDK distribution to actually develop solutions. The distribution contains programming examples, protobuf definitions and API documentation.</p>
 <p>The Spot Python SDK distribution is available at https://github.com/boston-dynamics/spot-sdk.</p>
 <p>Users can either:</p>
 <ul class="simple">
@@ -785,8 +790,8 @@ RetryableUnavailableError:<span class="w"> </span>_InactiveRpcError:<span class=
 <p><strong>HELPFUL HINT: When working with any Spot SDK programming example, always use the associated <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> to install dependent third party packages.</strong></p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/spot-sdk/python/examples/hello_spot<span class="w"> </span><span class="c1"># or wherever you installed Spot SDK</span>
 $<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span><span class="c1"># will install dependent packages</span>
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">BOSDYN_CLIENT_USERNAME</span><span class="o">=</span>user<span class="w"> </span>
-$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">BOSDYN_CLIENT_PASSWORD</span><span class="o">=</span>password<span class="w"> </span>
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">BOSDYN_CLIENT_USERNAME</span><span class="o">=</span>user
+$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">BOSDYN_CLIENT_PASSWORD</span><span class="o">=</span>password
 $<span class="w"> </span>python3<span class="w"> </span>hello_spot.py<span class="w"> </span><span class="m">192</span>.168.80.3
 </pre></div>
 </div>
@@ -822,21 +827,21 @@ $<span class="w"> </span>python3<span class="w"> </span>estop_nogui.py<span clas
 $<span class="w"> </span>python3<span class="w"> </span>hello_spot.py<span class="w"> </span><span class="m">192</span>.168.80.3
 </pre></div>
 </div>
-<p>Your Spot robot should have powered up its motors, stood up, made a few poses, taken a picture, and sat down.  If it didn’t, be sure to check that the <strong>Motor power enable</strong> button on the back of Spot was properly turned on.</p>
-<p>Try it again, and this time, push the E-Stop button and watch the robot do a “glide-stop.”  Remember, E-Stop is your friend.</p>
+<p>Your Spot robot should have powered up its motors, stood up, made a few poses, taken a picture, and sat down. If it didn’t, be sure to check that the <strong>Motor power enable</strong> button on the back of Spot was properly turned on.</p>
+<p>Try it again, and this time, push the E-Stop button and watch the robot do a “glide-stop.” Remember, E-Stop is your friend.</p>
 <p><strong>Congratulations, you are now a full-fledged Spot Programming Example Operator!</strong></p>
-<p>But, if you also want to be a full-fledged Spot Programmer, you need to understand more about how Spot works.  Here are the next steps we recommend:</p>
+<p>But, if you also want to be a full-fledged Spot Programmer, you need to understand more about how Spot works. Here are the next steps we recommend:</p>
 </section>
 </section>
 </section>
 <section id="next-steps">
 <h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this heading"></a></h2>
 <ol class="simple">
-<li><p>Read our next section, <a class="reference internal" href="understanding_spot_programming.html"><span class="doc">Spot Programming</span></a>  Highly recommended!</p></li>
+<li><p>Read our next section, <a class="reference internal" href="understanding_spot_programming.html"><span class="doc">Spot Programming</span></a> Highly recommended!</p></li>
 <li><p>Take time to explore the <a class="reference internal" href="../../python/examples/README.html"><span class="doc">programming examples</span></a> which all launch in essentially the same manner as hello_spot.</p>
 <ul class="simple">
-<li><p>Try making simple modifications to the code.  NOTE: If you installed the SDK using a zipfile, be careful to understand what changes you’ve made, as users sometimes inject errors into the SDK code unintentionally.  Git users can simply use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">diff</span></code> to understand all changes they have made.</p></li>
-<li><p>Try out the <a class="reference internal" href="../../python/examples/wasd/README.html"><span class="doc">wasd programming example</span></a>. This is a more detailed example built on top of the Python API which lets you interactively control Spot using the keyboard on your development machine. It covers issuing commands in far more detail than this quick start.  And it is fun!</p></li>
+<li><p>Try making simple modifications to the code. NOTE: If you installed the SDK using a zipfile, be careful to understand what changes you’ve made, as users sometimes inject errors into the SDK code unintentionally. Git users can simply use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">diff</span></code> to understand all changes they have made.</p></li>
+<li><p>Try out the <a class="reference internal" href="../../python/examples/wasd/README.html"><span class="doc">wasd programming example</span></a>. This is a more detailed example built on top of the Python API which lets you interactively control Spot using the keyboard on your development machine. It covers issuing commands in far more detail than this quick start. And it is fun!</p></li>
 </ul>
 </li>
 <li><p>Read through the <a class="reference internal" href="../protos/README.html"><span class="doc">protocol buffer definitions</span></a> and the Spot Python SDK <a class="reference internal" href="../../python/README.html"><span class="doc">source code documentation</span></a> to understand even more.</p></li>

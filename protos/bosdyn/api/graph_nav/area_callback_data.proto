@@ -20,9 +20,16 @@ message AreaCallbackMapConfig {
 message AreaCallbackData {
     // Custom config data used by the service to do its job.
     google.protobuf.Any config_data = 1;
+
+    // Deprecated in 4.1, use param_collection instead so that the
+    // parameter specs are available for building editors.
     // Any other custom parameters to the callback. This will be copied into
     // custom_params inside the BeginCallback RPC if it exists.
-    DictParam custom_params = 2;
+    DictParam custom_params = 2 [deprecated = true];
+
+    // Any other custom parameters to the callback. This will be copied into
+    // custom_params inside the BeginCallback RPC if it exists.
+    CustomParamCollection parameters = 4;
 
     // Configuration data for how this area callback should be treated in the map.
     AreaCallbackMapConfig map_config = 3;

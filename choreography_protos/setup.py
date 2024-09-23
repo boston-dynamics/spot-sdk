@@ -4,18 +4,20 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import setuptools.command.build_py
 import distutils.cmd
 import os
+import sys
+
 import pkg_resources
 import setuptools
-import sys
+import setuptools.command.build_py
 
 try:
     SDK_VERSION = os.environ['BOSDYN_SDK_VERSION']
 except KeyError:
     print('Do not run setup.py directly - use wheels.py to build API wheels')
     raise
+
 
 class BuildPy(setuptools.command.build_py.build_py, object):
     """Grabs and overwrites the package directory."""
@@ -56,8 +58,9 @@ class proto_build(distutils.cmd.Command, object):
         except ImportError:
             # Try to grab pathlib2, which should have been grabbed as part of install dependencies.
             import pathlib2 as pathlib
-        from grpc_tools import protoc
         import os
+
+        from grpc_tools import protoc
 
         def make_init(directory, do_pkg_extension=False):
             pkg = pathlib.Path(directory)
@@ -74,11 +77,12 @@ class proto_build(distutils.cmd.Command, object):
         output_dir = self.build_base
         make_init(os.path.join(root, output_dir, 'bosdyn'), do_pkg_extension=True)
         protos_root = os.path.join(root, 'bosdyn')
-        api_protos_dir =os.path.join(os.path.dirname(root), 'protos')
+        api_protos_dir = os.path.join(os.path.dirname(root), 'protos')
         for cwd, dirs, files in os.walk(protos_root):
             cwd_relative_to_root = cwd[len(root) + 1:]
             for d in dirs:
-                make_init(os.path.join(root, output_dir, cwd_relative_to_root, d), do_pkg_extension=True)
+                make_init(os.path.join(root, output_dir, cwd_relative_to_root, d),
+                          do_pkg_extension=True)
 
             for f in files:
                 if not f.endswith('.proto'):
@@ -88,7 +92,7 @@ class proto_build(distutils.cmd.Command, object):
                 args = ('garbage', file_relative_to_root, "--python_out=" + output_dir,
                         "--grpc_python_out=" + output_dir, "-I.",
                         "-I" + pkg_resources.resource_filename('grpc_tools', '_proto'),
-                        "-I"+api_protos_dir)
+                        "-I" + api_protos_dir)
                 if self.verbose:
                     print('Building {}'.format(f))
                 protoc.main(args)
@@ -104,6 +108,7 @@ def add_pathlib_version(requirements_list):
     if sys.version_info.major == 2 or (sys.version_info.major == 3 and sys.version_info.minor < 5):
         return requirements_list + ['pathlib2']
     return requirements_list
+
 
 setuptools.setup(
     name="bosdyn-choreography-protos",
@@ -125,7 +130,7 @@ setuptools.setup(
     package_dir={},
     setup_requires=add_pathlib_version(['grpcio-tools', 'wheel']),
     classifiers=[
-        "Programming Language :: Python :: 3.6",        
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",

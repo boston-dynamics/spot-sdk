@@ -190,9 +190,9 @@ if __name__ == '__main__':
     plot_data(action_data, graph, image_size=args.image_size)
 ```
 
-The final result will be the map with the data collection overlayed. Tweak the `--image-size` parameter to get something that looks good for your map size and collection density.
+The final result will be the map with the data collection overlaid. Tweak the `--image-size` parameter to get something that looks good for your map size and collection density.
 
-![Collected data overlayed on the map](img/map1.png)
+![Collected data overlaid on the map](img/map1.png)
 
 ## Further Reading
 

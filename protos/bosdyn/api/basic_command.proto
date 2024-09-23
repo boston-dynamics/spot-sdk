@@ -155,7 +155,7 @@ message SE2TrajectoryCommand {
         // The name of the frame that trajectory is relative to. The trajectory
         // must be expressed in a gravity aligned frame, so either "vision",
         // "odom", or "body". Any other provided se2_frame_name will be rejected
-        // and the trajectory command will not be exectuted.
+        // and the trajectory command will not be executed.
         string se2_frame_name = 3;
 
         // The trajectory that the robot should follow, expressed in the frame
@@ -567,7 +567,7 @@ message ConstrainedManipulationCommand {
 
 message JointCommand {
     message Request {
-        // Empty message, no paramaters required to activate.
+        // Empty message, no parameters required to activate.
     }
 
     message Feedback {
@@ -642,8 +642,8 @@ message JointCommand {
         //   ADVICE_NOT_IN_CONTACT: leg will enter CONTACT_LOST state on receipt.
         // If a leg is not on the ground (CONTACT_LOST):
         //   ADVICE_NONE: leg will enter CONTACT_MADE if any collision is detected on the foot.
-        //   ADVICE_IN_CONTACT: leg will enter CONTACT_MADE if any collision is deteced on the foot.
-        //   ADVICE_NOT_IN_CONTACT: no change
+        //   ADVICE_IN_CONTACT: leg will enter CONTACT_MADE if any collision is detected on the
+        //   foot. ADVICE_NOT_IN_CONTACT: no change
         // Contact states may be used by the robot to improve state estimation.
         enum Advice {
             // ADVICE_UNKNOWN should not be used.

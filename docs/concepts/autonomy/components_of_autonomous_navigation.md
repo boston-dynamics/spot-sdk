@@ -10,15 +10,13 @@ Development Kit License (20191101-BDSDK-SL).
 
 To get started with autonomous navigation, you'll need a grasp of the following concepts:
 
-
-*  [Maps](#maps)
-*  [Waypoints](#waypoints)
-*  [Edges](#edges)
-*  [Localization](#localization)
-*  [Initialization](#initialization)
-*  [Missions](#missions)
-*  [(Advanced) Area Callbacks](#area_callbacks)
-
+- [Maps](#maps)
+- [Waypoints](#waypoints)
+- [Edges](#edges)
+- [Localization](#localization)
+- [Initialization](#initialization)
+- [Missions](#missions)
+- [(Advanced) Area Callbacks](#area_callbacks)
 
 <h2 id="maps">Maps</h2>
 
@@ -50,12 +48,12 @@ See [Missions service][missions] for details.
 
 <h2 id="area_callbacks">Advanced – Area Callbacks</h2>
 
-Edges can be annotated with Area Callback regions, which specify that GraphNav should call out to a particular callback service in order to safely enter, cross, and exit that region.  These services allow users to integrate new capabilities into GraphNav, such as checking whether it is safe to cross a crosswalk, opening doors, or flashing lights or playing sounds in a particular area.
+Edges can be annotated with Area Callback regions, which specify that GraphNav should call out to a particular callback service in order to safely enter, cross, and exit that region. These services allow users to integrate new capabilities into GraphNav, such as checking whether it is safe to cross a crosswalk, opening doors, or flashing lights or playing sounds in a particular area.
 
 See [Area Callbacks][area-callbacks] for more information.
 
-
 <!--- image and page reference link definitions --->
+
 [autonomous-top]: Readme.md "Spot SDK: Autonomy, GraphNav, and Missions"
 [code-examples]: autonomous_navigation_code_examples.md "Autonomous navigation code examples"
 [components]: components_of_autonomous_navigation.md "Components of autonomous navigation"

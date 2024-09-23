@@ -45,7 +45,8 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         self.coerce = coerce
 
         # Create the custom parameters. If no hello_options are provided, allow the text to be edited.
-        who_param = make_string_param_spec(options=hello_options, default_value=default_name)
+        who_param = make_string_param_spec(options=hello_options, default_value=default_name,
+                                           editable=True)
         who_ui_info = make_user_interface_info(display_name, 'Who Spot will say hello to')
         dict_spec = make_dict_param_spec({_WHO_KEY: make_dict_child_spec(who_param, who_ui_info)},
                                          is_hidden_by_default=False)

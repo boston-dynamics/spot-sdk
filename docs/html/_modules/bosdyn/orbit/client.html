@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.orbit.client &mdash; Spot 4.0.3 documentation</title>
+  <title>bosdyn.orbit.client &mdash; Spot 4.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.0.3
+                4.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -48,7 +48,8 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../docs/concepts/README.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_spot.html">About Spot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/about_orbit.html">About Orbit (formerly Scout)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/orbit/orbit_api.html">Orbit API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/networking.html">Networking</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/base_services.html">Base services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/geometry_and_frames.html">Geometry and Frames</a></li>
@@ -202,7 +203,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/fiducial_follow/README.html">Fiducial Follow</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_detect_and_follow/README.html">Spot Detect and Follow</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_tensorflow_detector/README.html">Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_ncb_worker/README.html">Custom Parameter Tensorflow Detector</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_compute_bridge/README.html">Machine Learning with the Network Compute Bridge</a></li>
@@ -263,11 +263,16 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/orbit.html">Orbit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/hello_orbit/README.html">Hello Orbit</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_run_archives/README.html">Export Run Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/export_site_walk_archives/README.html">Export Sitewalk Archives</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/anomalies/README.html">Anomalies</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/schedule_mission/README.html">Schedule Mission</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/runs_response/README.html">Runs Response</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/send_robot_back_to_dock/README.html">Return to Dock</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/toggle_mission_based_on_weather/README.html">Mission Toggle</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook/README.html">Webhook</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
 </ul>
 </li>
 </ul>
@@ -525,13 +530,13 @@
 <span class="sd">            Args:</span>
 <span class="sd">                hostname: the IP address associated with the instance</span>
 <span class="sd">                verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate</span>
-<span class="sd">                    Note that verify=False makes your application vulnerable to man-in-the-middle (MitM) attacks</span>
-<span class="sd">                    Defaults to True</span>
+<span class="sd">                    Note that verify=False makes your application vulnerable to man-in-the-middle (MitM) attacks.</span>
+<span class="sd">                    Defaults to True.</span>
 <span class="sd">                cert(.pem file or a tuple with (&#39;cert&#39;, &#39;key&#39;) pair): a local cert to use as client side certificate</span>
 <span class="sd">                    Note that the private key to your local certificate must be unencrypted because Requests does not support using encrypted keys.</span>
-<span class="sd">                    Defaults to None. For additional configurations, use the member Session object &quot;_session&quot; in accordance with Requests library</span>
+<span class="sd">                    Defaults to None. For additional configurations, use the member Session object &quot;_session&quot; in accordance with Requests library.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># The hostname of the instance</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span> <span class="o">=</span> <span class="n">hostname</span>
@@ -555,9 +560,9 @@
 <span class="sd">            Must call before using other client functions.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                api_token: the API token obtained from the instance</span>
+<span class="sd">                api_token: the API token obtained from the instance.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">api_token</span><span class="p">:</span>
             <span class="n">api_token</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_api_token</span><span class="p">()</span>
@@ -576,46 +581,62 @@
         <span class="k">return</span> <span class="n">authenticate_response</span></div>
 
 <div class="viewcode-block" id="Client.get_resource"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_resource">[docs]</a>    <span class="k">def</span> <span class="nf">get_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for getting a resource in /api/v0/</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for getting a resource in /api/v0/.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                path: the path appended to /api/v0/</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                path: the path appended to /api/v0/.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">UnauthenticatedClientError</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span><span class="si">}</span><span class="s1">/api/v0/</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">/&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_resource"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_resource">[docs]</a>    <span class="k">def</span> <span class="nf">post_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for posting a resource in /api/v0/</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for posting a resource in /api/v0/.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                path: the path appended to /api/v0/</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                The response associated with the post request</span>
+<span class="sd">                The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span> <span class="ow">and</span> <span class="n">path</span> <span class="o">!=</span> <span class="s2">&quot;login&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">UnauthenticatedClientError</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span><span class="si">}</span><span class="s1">/api/v0/</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.delete_resource"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_resource">[docs]</a>    <span class="k">def</span> <span class="nf">delete_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for deleting a resource in /api/v0/</span>
+<div class="viewcode-block" id="Client.patch_resource"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.patch_resource">[docs]</a>    <span class="k">def</span> <span class="nf">patch_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for patching a resource in /api/v0/</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                path: the path appended to /api/v0/</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the patch request</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                The response associated with the patch request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_authenticated</span> <span class="ow">and</span> <span class="n">path</span> <span class="o">!=</span> <span class="s2">&quot;login&quot;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UnauthenticatedClientError</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;https://</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_hostname</span><span class="si">}</span><span class="s1">/api/v0/</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_resource"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_resource">[docs]</a>    <span class="k">def</span> <span class="nf">delete_resource</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Base function for deleting a resource in /api/v0/.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                path: the path appended to /api/v0/</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request.</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
 <span class="sd">                The response associated with the delete request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -627,12 +648,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Retrieves version info.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;version&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -640,12 +661,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the current system time.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;settings/system-time&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -653,12 +674,12 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns robots on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;robots&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -666,34 +687,47 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns a robot on given a hostname of a specific robot.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                hostname: the IP address associated with the desired robot on the instance</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                hostname: the IP address associated with the desired robot on the instance.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;robots/</span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_site_walks"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_walks">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_walks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site walks on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site walks on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;site_walks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_site_walk_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_walk_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_walk_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site walk uuid, returns a site walk on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a SiteWalk uuid, returns a SiteWalk on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                uuid: the ID associated with the site walk</span>
+<span class="sd">                uuid: the ID associated with the SiteWalk.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_site_walk_archive_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_walk_archive_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_walk_archive_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns SiteWalk as a zip archive which represents a collection of graph and mission data</span>
+
+<span class="sd">            Args:</span>
 <span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
 <span class="sd">            Raises:</span>
 <span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
@@ -701,179 +735,179 @@
 <span class="sd">            Returns:</span>
 <span class="sd">                requests.Response: the response associated with the get request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;site_walks/archive&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;uuids&quot;</span><span class="p">:</span> <span class="n">uuid</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_site_elements"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_elements">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site elements on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site elements on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;site_elements&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_site_element_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_element_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_element_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site element uuid, returns a site element on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a SiteElement uuid, returns a SiteElement on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                uuid: the ID associated with the site element</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                uuid: the ID associated with the SiteElement.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_elements/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_site_docks"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_docks">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_docks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site docks on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site docks on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;site_docks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_site_dock_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_dock_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_dock_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site dock uuid, returns a site dock on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a SiteDock uuid, returns a SiteDock on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                uuid: the ID associated with the site dock</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                uuid: the ID associated with the SiteDock</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_docks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_calendar"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_calendar">[docs]</a>    <span class="k">def</span> <span class="nf">get_calendar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns calendar events on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns calendar events on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;calendar/schedule&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_run_events"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_events">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns run events</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns run events.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;run_events&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_run_event_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_event_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_event_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runEventUuid, returns a run event</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runEventUuid, returns a run event.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                uuid: the ID associated with the run event</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                uuid: the ID associated with the run event.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;run_events/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_run_captures"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_captures">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_captures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns run captures</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns run captures.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;run_captures&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_run_capture_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_capture_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_capture_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runCaptureUuid, returns a run capture</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runCaptureUuid, returns a run capture.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                uuid: the ID associated with the run capture</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;run_captures/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_runs"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_runs">[docs]</a>    <span class="k">def</span> <span class="nf">get_runs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns runs</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns runs.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;runs&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_run_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runUuid, returns a run</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runUuid, returns a run.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                uuid: the ID associated with the run</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;runs/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_run_archives_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_archives_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_archives_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runUuid, returns run archives</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runUuid, returns run archives.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                uuid: the ID associated with the run</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;run_archives/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_image"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_image">[docs]</a>    <span class="k">def</span> <span class="nf">get_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;urllib3.response.HTTPResponse&#39;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a data capture url, returns a decoded image</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a data capture url, returns a decoded image.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                url: the url associated with the data capture in the form of https://hostname + RunCapture[&quot;dataUrl&quot;].</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
 <span class="sd">                urllib3.response.HTTPResponse: the decoded response associated with the get request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -885,14 +919,14 @@
         <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">raw</span></div>
 
 <div class="viewcode-block" id="Client.get_image_response"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_image_response">[docs]</a>    <span class="k">def</span> <span class="nf">get_image_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a data capture url, returns an image response</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a data capture url, returns an image response.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                url: the url associated with the data capture in the form of https://hostname + RunCapture[&quot;dataUrl&quot;]</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
 <span class="sd">                requests.Response: the image response associated with the get request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -902,122 +936,123 @@
         <span class="k">return</span> <span class="n">response</span></div>
 
 <div class="viewcode-block" id="Client.get_webhook"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_webhook">[docs]</a>    <span class="k">def</span> <span class="nf">get_webhook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns webhook on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns webhook on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;webhooks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_webhook_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_webhook_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_webhook_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a uuid, returns a specific webhook instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a uuid, returns a specific webhook instance.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                uuid: the ID associated with the webhook</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the get request</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;webhooks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_robot_info"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_robot_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_robot_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a robot nickname, returns information about the robot</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a robot nickname, returns information about the robot.</span>
 
 <span class="sd">            Args:</span>
 <span class="sd">                robot_nickname: the nickname of the robot</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;robot-session/</span><span class="si">{</span><span class="n">robot_nickname</span><span class="si">}</span><span class="s1">/session&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_export_as_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_export_as_walk">[docs]</a>    <span class="k">def</span> <span class="nf">post_export_as_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_walk_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site walk uuid, it exports the walks_pb2.Walk equivalent</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a SiteWalk uuid, it exports the walks_pb2.Walk equivalent.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                site_walk_uuid: the ID associated with the site walk</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request</span>
+<span class="sd">                site_walk_uuid: the ID associated with the SiteWalk.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
 <span class="sd">                UnauthenticatedClientError: indicates that the client is not authenticated properly</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/export_as_walk/</span><span class="si">{</span><span class="n">site_walk_uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/export_as_walk&#39;</span><span class="p">,</span>
+                                  <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;siteWalkUuid&quot;</span><span class="p">:</span> <span class="n">site_walk_uuid</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_import_from_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_import_from_walk">[docs]</a>    <span class="k">def</span> <span class="nf">post_import_from_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a walk data, imports it to the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a walk data, imports it to the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;site_walks/import_from_walk&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_site_element"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_site_element">[docs]</a>    <span class="k">def</span> <span class="nf">post_site_element</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a site element. It also updates a pre-existing Site Element using the associated UUID.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a SiteElement. It also updates a pre-existing SiteElement using the associated UUID.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;site_elements&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_site_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_site_walk">[docs]</a>    <span class="k">def</span> <span class="nf">post_site_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a site walk. It also updates a pre-existing Site Walk using the associated UUID.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a SiteWalk. It also updates a pre-existing SiteWalk using the associated UUID.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;site_walks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_site_dock"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_site_dock">[docs]</a>    <span class="k">def</span> <span class="nf">post_site_dock</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a site element. It also updates a pre-existing Site Dock using the associated UUID.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a SiteElement. It also updates a pre-existing SiteDock using the associated UUID.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;site_docks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_robot"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_robot">[docs]</a>    <span class="k">def</span> <span class="nf">post_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Add a robot to the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Add a robot to the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;robots&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -1032,26 +1067,26 @@
 <span class="sd">             the function overwrites the attributes of the pre-existing calendar event.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                nickname: the name associated with the robot</span>
-<span class="sd">                time_ms: the first kickoff time in terms of milliseconds since epoch</span>
-<span class="sd">                repeat_ms:the delay time in milliseconds for repeating calendar events</span>
-<span class="sd">                mission_id: the UUID associated with the mission( also known as Site Walk)</span>
-<span class="sd">                force_acquire_estop: instructs the system to force acquire the estop when the mission kicks off</span>
-<span class="sd">                require_docked: determines whether the event will require the robot to be docked to start</span>
-<span class="sd">                schedule_name: the desired name of the calendar event</span>
+<span class="sd">                nickname: the name associated with the robot.</span>
+<span class="sd">                time_ms: the first kickoff time in terms of milliseconds since epoch.</span>
+<span class="sd">                repeat_ms:the delay time in milliseconds for repeating calendar events.</span>
+<span class="sd">                mission_id: the UUID associated with the mission( also known as SiteWalk).</span>
+<span class="sd">                force_acquire_estop: instructs the system to force acquire the estop when the mission kicks off.</span>
+<span class="sd">                require_docked: determines whether the event will require the robot to be docked to start.</span>
+<span class="sd">                schedule_name: the desired name of the calendar event.</span>
 <span class="sd">                blackout_times: a specification for a time period over the course of a week when a schedule should not run</span>
 <span class="sd">                                  specified as list of a dictionary defined as {&quot;startMs&quot;: &lt;int&gt;, &quot;endMs&quot; : &lt;int&gt;}</span>
 <span class="sd">                                  with startMs (inclusive) being the millisecond offset from the beginning of the week (Sunday) when this blackout period starts</span>
-<span class="sd">                                  and endMs (exclusive) being the millisecond offset from beginning of the week(Sunday) when this blackout period ends</span>
-<span class="sd">                disable_reason: (optional) a reason for disabling the calendar event</span>
+<span class="sd">                                  and endMs (exclusive) being the millisecond offset from beginning of the week(Sunday) when this blackout period ends.</span>
+<span class="sd">                disable_reason: (optional) a reason for disabling the calendar event.</span>
 <span class="sd">                event_id: the auto-generated ID for a calendar event that is already posted on the instance.</span>
 <span class="sd">                            This is only useful when editing a pre-existing calendar event.</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check if the input contains the json param that is constructed outside the function</span>
         <span class="k">if</span> <span class="s1">&#39;json&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
@@ -1080,33 +1115,33 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/schedule&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_calendar_events_disable_all"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_calendar_events_disable_all">[docs]</a>    <span class="k">def</span> <span class="nf">post_calendar_events_disable_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disable_reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Disable all scheduled missions</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Disable all scheduled missions.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                disable_reason: Reason for disabling all scheduled missions</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                disable_reason: Reason for disabling all scheduled missions.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/disable-enable&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;disableReason&quot;</span><span class="p">:</span> <span class="n">disable_reason</span><span class="p">},</span>
                                   <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_calendar_event_disable_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_calendar_event_disable_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">post_calendar_event_disable_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">disable_reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                           <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Disable specific scheduled mission by event ID</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Disable specific scheduled mission by event ID.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                event_id: eventId associated with a mission to disable</span>
-<span class="sd">                disable_reason: Reason for disabling a scheduled mission</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                event_id: eventId associated with a mission to disable.</span>
+<span class="sd">                disable_reason: Reason for disabling a scheduled mission.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/disable-enable&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;disableReason&quot;</span><span class="p">:</span> <span class="n">disable_reason</span><span class="p">,</span>
@@ -1114,29 +1149,29 @@
         <span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_calendar_events_enable_all"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_calendar_events_enable_all">[docs]</a>    <span class="k">def</span> <span class="nf">post_calendar_events_enable_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Enable all scheduled missions</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Enable all scheduled missions.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/disable-enable&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;disableReason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_calendar_event_enable_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_calendar_event_enable_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">post_calendar_event_enable_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Enable specific scheduled mission by event ID</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Enable specific scheduled mission by event ID.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                event_id: eventId associated with a mission to enable</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                event_id: eventId associated with a mission to enable.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;calendar/disable-enable&quot;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;disableReason&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -1144,45 +1179,45 @@
         <span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_webhook"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_webhook">[docs]</a>    <span class="k">def</span> <span class="nf">post_webhook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a webhook instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a webhook instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s2">&quot;webhooks&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_webhook_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_webhook_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">post_webhook_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Update an existing webhook instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Update an existing webhook instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                uuid: the ID associated with the desired webhook instance</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                uuid: the ID associated with the desired webhook instance.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;webhooks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_return_to_dock_mission"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_return_to_dock_mission">[docs]</a>    <span class="k">def</span> <span class="nf">post_return_to_dock_mission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">site_dock_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                     <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Generate a mission to send the robot back to the dock</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Generate a mission to send the robot back to the dock.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                robot_nickname: the nickname of the robot</span>
-<span class="sd">                site_dock_uuid: the uuid of the dock to send robot to</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                robot_nickname: the nickname of the robot.</span>
+<span class="sd">                site_dock_uuid: the uuid of the dock to send robot to.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s1">&#39;graph/send-robot&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;nickname&quot;</span><span class="p">:</span> <span class="n">robot_nickname</span><span class="p">,</span>
@@ -1191,21 +1226,22 @@
 
 <div class="viewcode-block" id="Client.post_dispatch_mission_to_robot"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_dispatch_mission_to_robot">[docs]</a>    <span class="k">def</span> <span class="nf">post_dispatch_mission_to_robot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">driver_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mission_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
                                        <span class="n">delete_mission</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">force_acquire_estop</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-                                       <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Dispatch the robot to a mission given a mission uuid</span>
+                                       <span class="n">skip_initialization</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Dispatch the robot to a mission given a mission uuid.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                robot_nickname: the nickname of the robot</span>
-<span class="sd">                driver_id: the current driver ID of the mission</span>
-<span class="sd">                mission_uuid: uuid of the mission(also known as Site Walk) to dispatch</span>
-<span class="sd">                delete_mission: whether to delete the mission after playback</span>
-<span class="sd">                force_acquire_estop: whether to force acquire E-stop from the previous client</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request</span>
+<span class="sd">                robot_nickname: the nickname of the robot.</span>
+<span class="sd">                driver_id: the current driver ID of the mission.</span>
+<span class="sd">                mission_uuid: uuid of the mission(also known as SiteWalk) to dispatch.</span>
+<span class="sd">                delete_mission: whether to delete the mission after playback.</span>
+<span class="sd">                force_acquire_estop: whether to force acquire E-stop from the previous client.</span>
+<span class="sd">                skip_initialization: whether to skip initialization when starting the return to dock mission.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the post request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the post request</span>
+<span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Payload required for dispatching a mission</span>
         <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
@@ -1228,7 +1264,8 @@
                 <span class="s2">&quot;missionId&quot;</span><span class="p">:</span> <span class="n">mission_uuid</span><span class="p">,</span>
                 <span class="s2">&quot;forceAcquireEstop&quot;</span><span class="p">:</span> <span class="n">force_acquire_estop</span><span class="p">,</span>
                 <span class="s2">&quot;deleteMission&quot;</span><span class="p">:</span> <span class="n">delete_mission</span><span class="p">,</span>
-                <span class="s2">&quot;requireDocked&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;requireDocked&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;skipInitialization&quot;</span><span class="p">:</span> <span class="n">skip_initialization</span>
             <span class="p">},</span>
             <span class="s2">&quot;eventMetadata&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;API Triggered Mission&quot;</span>
@@ -1238,17 +1275,70 @@
             <span class="sa">f</span><span class="s1">&#39;calendar/mission/dispatch/</span><span class="si">{</span><span class="n">robot_nickname</span><span class="si">}</span><span class="s1">?currentDriverId=</span><span class="si">{</span><span class="n">driver_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Client.delete_site_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_site_walk">[docs]</a>    <span class="k">def</span> <span class="nf">delete_site_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a site walk uuid, deletes the site walk associated with the uuid on the specified instance</span>
+<div class="viewcode-block" id="Client.post_backup_task"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_backup_task">[docs]</a>    <span class="k">def</span> <span class="nf">post_backup_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_missions</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">include_captures</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Starts creating a backup zip file.</span>
+<span class="sd">        </span>
+<span class="sd">            Args: </span>
+<span class="sd">                include_missions: Specifies whether to include missions and maps in the backup.</span>
+<span class="sd">                include_captures: Specifies whether to include all inspection data captures in the backup.</span>
+<span class="sd">                **kwargs: Additional keyword arguments for the backup request.</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: Exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError: Indicates that the client is not authenticated properly.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: The response associated with the backup request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;includeMissions&quot;</span><span class="p">:</span> <span class="n">include_missions</span><span class="p">,</span>
+            <span class="s2">&quot;includeCaptures&quot;</span><span class="p">:</span> <span class="n">include_captures</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;backup_tasks/&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_bulk_close_anomalies"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.patch_bulk_close_anomalies">[docs]</a>    <span class="k">def</span> <span class="nf">patch_bulk_close_anomalies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Bulk close Anomalies by Element ID.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                uuid: the ID associated with the desired site walk</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">                element_ids: the element ids of each anomaly to be closed.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the patch request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the delete request</span>
+<span class="sd">                requests.Response: The response associated with the patch request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_resource</span><span class="p">(</span><span class="s1">&#39;anomalies&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;command&quot;</span><span class="p">:</span> <span class="s2">&quot;close&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;elementIds&quot;</span><span class="p">:</span> <span class="n">element_ids</span>
+        <span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.patch_anomaly_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.patch_anomaly_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">patch_anomaly_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anomaly_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">patched_fields</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Patch an Anomaly by uuid.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                anomaly_uuid: The uuid of the anomaly to patch fields in.</span>
+<span class="sd">                patched_fields: A dictionary of fields and new values to change in the specified anomaly.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the patch request.</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: The response associated with the patch request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patch_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;anomalies/</span><span class="si">{</span><span class="n">anomaly_uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">patched_fields</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_site_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_site_walk">[docs]</a>    <span class="k">def</span> <span class="nf">delete_site_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a SiteWalk uuid, deletes the SiteWalk associated with the uuid on the specified instance.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID associated with the desired SiteWalk</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request.</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the delete request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
@@ -1256,43 +1346,57 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a robot hostname, deletes the robot associated with the hostname on the specified instance</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                robot_hostname: the IP address associated with the robot</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">                robot_hostname: the IP address associated with the robot.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the delete request</span>
+<span class="sd">                requests.Response: the response associated with the delete request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;robots/</span><span class="si">{</span><span class="n">robot_hostname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.delete_calendar_event"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_calendar_event">[docs]</a>    <span class="k">def</span> <span class="nf">delete_calendar_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Delete the specified calendar event on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Delete the specified calendar event on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                event_id(string): the ID associated with the calendar event</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">                event_id(string): the ID associated with the calendar event.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the delete request</span>
+<span class="sd">                requests.Response: the response associated with the delete request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;calendar/schedule/</span><span class="si">{</span><span class="n">event_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.delete_webhook"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_webhook">[docs]</a>    <span class="k">def</span> <span class="nf">delete_webhook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Delete the specified webhook instance on the specified instance</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Delete the specified webhook instance on the specified instance.</span>
 
 <span class="sd">            Args:</span>
-<span class="sd">                uuid: the ID associated with the desired webhook</span>
-<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request</span>
+<span class="sd">                uuid: the ID associated with the desired webhook.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the delete request.</span>
 <span class="sd">            Raises:</span>
-<span class="sd">                RequestExceptions: exceptions thrown by the Requests library</span>
-<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
 <span class="sd">            Returns:</span>
-<span class="sd">                requests.Response: the response associated with the delete request</span>
+<span class="sd">                requests.Response: the response associated with the delete request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;webhooks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;webhooks/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.delete_backup"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.delete_backup">[docs]</a>    <span class="k">def</span> <span class="nf">delete_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Deletes the backup zip file from the Orbit instance. </span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                hostname: the IP address associated with the desired robot on the instance.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;backups/</span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="create_client"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.create_client">[docs]</a><span class="k">def</span> <span class="nf">create_client</span><span class="p">(</span><span class="n">options</span><span class="p">:</span> <span class="s1">&#39;argparse.Namespace&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;bosdyn.orbit.client.Client&#39;</span><span class="p">:</span>
@@ -1308,7 +1412,7 @@
         <span class="n">verify</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">verify</span> <span class="o">==</span> <span class="s2">&quot;True&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;The provided value for the argument verify [</span><span class="si">%s</span><span class="s2">] is not either &#39;True&#39; or &#39;False&#39;. Assuming verify is set to &#39;path/to/CA bundle&#39;&quot;</span>
+            <span class="s2">&quot;The provided value for the argument verify [</span><span class="si">{}</span><span class="s2">] is not either &#39;True&#39; or &#39;False&#39;. Assuming verify is set to &#39;path/to/CA bundle&#39;&quot;</span>
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">verify</span><span class="p">))</span>
         <span class="n">verify</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">verify</span>
 

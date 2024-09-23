@@ -31,9 +31,9 @@ def setup_client_and_service(client, service, service_adder):
     """
     server = grpc.server(concurrent.futures.ThreadPoolExecutor(max_workers=10))
     service_adder(service, server)
-    port = server.add_insecure_port('localhost:0')
+    port = server.add_insecure_port('127.0.0.1:0')
     server.start()
-    channel = grpc.insecure_channel('localhost:{}'.format(port))
+    channel = grpc.insecure_channel('127.0.0.1:{}'.format(port))
     client.channel = channel
     return server
 

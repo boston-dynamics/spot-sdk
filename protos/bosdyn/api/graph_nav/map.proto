@@ -9,6 +9,8 @@ syntax = "proto3";
 package bosdyn.api.graph_nav;
 option java_outer_classname = "MapProto";
 
+import "bosdyn/api/graph_nav/lost_detection.proto";
+import "bosdyn/api/graph_nav/visual_features.proto";
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/graph_nav/area_callback_data.proto";
 import "bosdyn/api/image.proto";
@@ -129,21 +131,30 @@ message Waypoint {
         // a particular intersection or near a dock.
         LoopClosureSettings loop_closure_settings = 7;
 
-        // Waypoints can optionally define where they are in an Earth-Centered-Earth-Fixed (ECEF) frame, which
-        // can aid in localization.
+        // Waypoints can optionally define where they are in an Earth-Centered-Earth-Fixed (ECEF)
+        // frame, which can aid in localization.
         message GPSSettings {
-            // If the annotation state is set, the GPS settings will be applied. Otherwise, they will be ignored.
-            // If ignored, GPS will only be used at this waypoint if data from a GPS exists in the waypoint snapshot, and the
-            // robot has a GPS payload installed and running. Set the annotation state to override this behavior.
+            // If the annotation state is set, the GPS settings will be applied. Otherwise, they
+            // will be ignored. If ignored, GPS will only be used at this waypoint if data from a
+            // GPS exists in the waypoint snapshot, and the robot has a GPS payload installed and
+            // running. Set the annotation state to override this behavior.
             AnnotationState state = 1;
             // This defines the pose of the waypoint in the Earth-Centered-Earth-Fixed (ECEF) frame.
             SE3Pose ecef_tform_waypoint = 2;
-            // If true, GPS localization will be disabled at this waypoint. If false, the robot will use GPS when available
-            // to localize to this waypoint.
+            // If true, GPS localization will be disabled at this waypoint. If false, the robot will
+            // use GPS when available to localize to this waypoint.
             bool disable_gps_localization = 5;
         }
         // Optional GPS navigation settings for this waypoint.
         GPSSettings gps_settings = 8;
+
+        // Regions may be defined around the waypoint which affect how scan matching or other
+        // parameters work.
+        repeated RegionWithFrame regions = 9;
+
+        // Strictness of the lost detector to use while traversing this waypoint. If unset, the
+        // default strictness will be used.
+        LostDetectorStrictness lost_detector_strictness = 10;
     }
     // Annotations specific to the current waypoint.
     Annotations annotations = 4;
@@ -216,6 +227,7 @@ message WaypointSnapshot {
     // Information about when the recording session started in robot time basis.
     // This will be filled out by the recording service when StartRecording is called.
     google.protobuf.Timestamp recording_started_on = 15;
+
 }
 
 
@@ -263,7 +275,6 @@ message Edge {
 
     // Annotations understood by BostonDynamics systems.
     message Annotations {
-
         // Defines any parameters of the stairs
         message StairData {
             // Check this before reading other fields.
@@ -327,6 +338,7 @@ message Edge {
         // If true, the edge crosses flat ground and the robot shouldn't try to climb over
         // obstacles.
         // DEPRECATED as of 3.3.  Replaced by ground_clutter_mode.
+        // As of 4.1, no longer functional.
         google.protobuf.BoolValue flat_ground = 6 [deprecated = true];
 
         // Overrides the following fields of the mobility parameters to whatever is
@@ -359,6 +371,12 @@ message Edge {
 
         // Path following mode for this edge.
         PathFollowingMode path_following_mode = 14;
+
+        // Max distance from the recorded edge that the robot is allowed to travel when avoiding
+        // obstacles or optimized its path. This is half of the full width of the corridor the robot
+        // may walk within. If this value is not set, the robot will choose a default corridor
+        // width.
+        double max_corridor_distance = 18;
 
         // Disable directed exploration for this edge.
         bool disable_directed_exploration = 15;
@@ -495,4 +513,59 @@ message MapStats {
     // The total distance travelled along recorded edges by the robot in the loaded
     // map.
     double total_path_length = 9;
+}
+
+// Defines a region in a map. Regions are shapes, commonly they are boxes. Many waypoints may share
+// the same regions. Regions do not need to cover the waypoint itself. A common use for such regions
+// is to define certain parts of the point cloud as being unreliable for localization. Note that
+// this is a different concept than the LocalizeRegion, which is used to determine where the robot's
+// body must be relative to the waypoint for it to localize -- the RegionWithFrame instead can be
+// used to label data near the waypoint. *Regions and Reference Frames* -- regions are stored inside
+// waypoint annotations as "RegionWithFrames". These consist of a region and a named reference frame
+// relative to the waypoint (such as "odom" or "seed", or "waypoint" etc).
+message Region {
+    // Unique identifier of the region within a map. This will be used to deduplicate
+    // regions that many waypoints may reference. Note that the transform of the region is
+    // defined with respect to this waypoint's KO frame, so the same region may exist in several
+    // waypoints while having different transforms in each case. Regions with the same ID are not
+    // guaranteed to be unique. Graph Nav will use whatever regions exist in the current waypoint
+    // only, and will ignore all other regions; so if you want Graph Nav to use a region in multiple
+    // waypoints, you must duplicate the region into each waypoint in which it is to be used.
+    string region_id = 1;
+
+    oneof shape {
+        // Oriented bounding box defining the region. The axes are defined relative to the "base
+        // frame" for this region. See RegionWithFrame for how this frame may be defined.
+        Box3 bounding_box = 2;
+    };
+
+    // Defines how scan match data is filtered near this waypoint. Data filters are logical set
+    // operators expressed on sets of data near the waypoint. Notes on interactions: If there are
+    // multiple regions marked as INCLUDE_ONLY, data that falls within any of these regions will be
+    // used, that is the operation of many DATA_FILTER_INCLUDE_ONLY regions is a logical set union.
+    // Conversely, DATA_FILTER_IGNORE operators override DATA_FILTER_INCLUDE_ONLY.
+    // For example, if there are 3 regions, A, B and C; and region A is marked as INCLUDE_ONLY, B is
+    // marked as INCLUDE_ONLY, and C is marked as IGNORE, the data that will be used for scan
+    // matching is: (A _u_ B) ~ C (that is, union(A, B) excluding C).
+    enum DataFilter {
+        DATA_FILTER_UNKNOWN = 0;  // Defaults to DATA_FILTER_NONE.
+        DATA_FILTER_NONE = 1;     // No special considerations for scan matching in this region.
+        DATA_FILTER_IGNORE = 2;   // No scan match data falling within this region will be used.
+        DATA_FILTER_INCLUDE_ONLY = 3;  // Only data from within this region will be used.
+    }
+    // How (if at all) the region affects data filtering for scan matching.
+    DataFilter data_filter = 3;
+}
+
+// Defines a region and a transform near a specific waypoint. Regions will only be used if they are
+// attached to waypoint annotations. Regions may be duplicated over many waypoints.
+message RegionWithFrame {
+    // The region attached to this waypoint.
+    Region region = 1;
+    // Reference frame that the region's transform is defined with respect to. For example,
+    // "waypoint" for the waypoint's reference frame, or "odom" for the odometry frame at the time
+    // of waypoint recording.
+    string base_frame_name = 2;
+    // Transform of the region in the base frame.
+    SE3Pose base_frame_tform_region = 3;
 }

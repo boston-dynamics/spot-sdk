@@ -145,11 +145,12 @@ The rear ethernet port can be configured to a user-desired IP address via the we
 
 Payload devices should use the following network configurations:
 
- - Spot CORE I/O and Spot EAP 2: 192.168.50.5 (default from Boston Dynamics).
- - Spot CAM: 192.168.50.6 (default from Boston Dynamics).
- - Fluke SV600: 192.168.50.8 (default from Fluke).
- - Netmask: 255.255.255.0.
- - Default gateway will be set to 192.168.50.3.
+- Spot CORE I/O and Spot EAP 2: 192.168.50.5 (default from Boston Dynamics).
+- Spot CAM: 192.168.50.6 (default from Boston Dynamics).
+- Fluke SV600: 192.168.50.8 (default from Fluke).
+- Rajant ES1 Radio: 192.168.50.9 (default from Boston Dynamics).
+- Netmask: 255.255.255.0.
+- Default gateway will be set to 192.168.50.3.
 
 Ports actively in use and reserved for other payloads can only be used once. For example, attempting to use port 192.168.50.6 for both an attached Spot CAM and another custom payload will cause both payloads to fail.
 

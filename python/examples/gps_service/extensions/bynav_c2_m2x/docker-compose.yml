@@ -1,0 +1,64 @@
+services:
+  app:
+    image: "gps_listener_image_arm64:latest"
+    network_mode: "host"
+    volumes:
+      - "/opt/payload_credentials:/creds"
+    devices:
+      - /dev/bynav_c2_m2x1:/dev/bynav_c2_m2x1
+    restart: unless-stopped
+    command:
+      [
+        "--name",
+        "Bynav C2 M2x",
+        "--payload-tform-gps",
+        "0.1",
+        "0",
+        "0.1",
+        "1",
+        "0",
+        "0",
+        "0",
+        "--payload-credentials-file",
+        "/creds/payload_guid_and_secret",
+        "192.168.50.3",
+        "--register-payload",
+        "--mass",
+        "0.5",
+        "--description",
+        "Bynav C2 M2x GNSS Receiver",
+        "--position",
+        "-0.18",
+        "0.024",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "--position-of-mass",
+        "0",
+        "0",
+        "0.1",
+        "--bounding-box",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "--version",
+        "1",
+        "0",
+        "0",
+        "--gps-credentials-file",
+        "/creds/bynav-c2-m2x-gps-payload-credentials.txt",
+        "serial",
+        "--serial-device",
+        "/dev/bynav_c2_m2x1",
+        "--serial-baudrate",
+        "115200",
+      ]

@@ -13,24 +13,24 @@ import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 
 message LogStatus {
-
     // Status of a previous request for log bundler generation. Terminal statuses start at 100, such
     // that if a status >= DONE, it can be concluded that the request is no longer active.
     enum Status {
-        STATUS_UNKNOWN = 0; // The status was not set, so something went wrong.
-        STATUS_RECEIVED = 1; // Request received, thread is not created for bundling the logs.
-        STATUS_IN_PROGRESS = 2; // Request in progress, thread is actively creating the bundle.
-        STATUS_SYNCING = 3; // Log end_time has passed, server post processing taking place.
-        STATUS_DONE = 100; // Bundling process is complete with no failures and was terminated by API.
-        STATUS_FAILED = 101; // Failure encountered while generating bundle.
-        STATUS_TERMINATED = 102; // Bundle creation was terminated by API prior to completion.
+        STATUS_UNKNOWN = 0;      // The status was not set, so something went wrong.
+        STATUS_RECEIVED = 1;     // Request received, thread is not created for bundling the logs.
+        STATUS_IN_PROGRESS = 2;  // Request in progress, thread is actively creating the bundle.
+        STATUS_SYNCING = 3;      // Log end_time has passed, server post processing taking place.
+        STATUS_DONE =
+            100;  // Bundling process is complete with no failures and was terminated by API.
+        STATUS_FAILED = 101;      // Failure encountered while generating bundle.
+        STATUS_TERMINATED = 102;  // Bundle creation was terminated by API prior to completion.
     }
 
     // Types of logs
     enum Type {
         TYPE_UNKNOWN = 0;
-        TYPE_EXPERIMENT = 1; // A log into the future.
-        TYPE_RETRO = 2; // A retroactive log.
+        TYPE_EXPERIMENT = 1;  // A log into the future.
+        TYPE_RETRO = 2;       // A retroactive log.
     }
 
     // Id of the response log.
@@ -52,11 +52,10 @@ message GetLogStatusRequest {
 }
 
 message GetLogStatusResponse {
-
     enum Status {
         STATUS_UNKNOWN = 0;
         STATUS_OK = 1;
-        STATUS_ID_NOT_FOUND = 2; // This log is not available on the robot.
+        STATUS_ID_NOT_FOUND = 2;  // This log is not available on the robot.
     }
 
     // Common response header.
@@ -75,7 +74,6 @@ message GetActiveLogStatusesRequest {
 }
 
 message GetActiveLogStatusesResponse {
-
     enum Status {
         STATUS_UNKNOWN = 0;
         STATUS_OK = 1;
@@ -92,7 +90,6 @@ message GetActiveLogStatusesResponse {
 }
 
 message StartRetroLogRequest {
-
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
 
@@ -101,12 +98,11 @@ message StartRetroLogRequest {
 }
 
 message StartRetroLogResponse {
-
     enum Status {
         STATUS_UNKNOWN = 0;
         STATUS_OK = 1;
-        STATUS_EXPERIMENT_LOG_RUNNING = 2; // An experiment log is already running.
-        STATUS_CONCURRENCY_LIMIT_REACHED = 3; // Maximum retro logs running concurrently.
+        STATUS_EXPERIMENT_LOG_RUNNING = 2;     // An experiment log is already running.
+        STATUS_CONCURRENCY_LIMIT_REACHED = 3;  // Maximum retro logs running concurrently.
     }
 
     // Common response header.
@@ -123,7 +119,6 @@ message StartRetroLogResponse {
 }
 
 message StartExperimentLogRequest {
-
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
 
@@ -132,11 +127,11 @@ message StartExperimentLogRequest {
 }
 
 message StartExperimentLogResponse {
-
     enum Status {
         STATUS_UNKNOWN = 0;
         STATUS_OK = 1;
-        STATUS_EXPERIMENT_LOG_RUNNING = 2; // Cannot start another experiment log, one is already running.
+        STATUS_EXPERIMENT_LOG_RUNNING =
+            2;  // Cannot start another experiment log, one is already running.
     }
 
     // Common response header.
@@ -164,12 +159,11 @@ message UpdateExperimentLogRequest {
 }
 
 message UpdateExperimentLogResponse {
-
     enum Status {
         STATUS_UNKNOWN = 0;
         STATUS_OK = 1;
-        STATUS_ID_NOT_FOUND = 2; // This log is not available on the robot
-        STATUS_LOG_TERMINATED = 3; // Log has already terminated
+        STATUS_ID_NOT_FOUND = 2;    // This log is not available on the robot
+        STATUS_LOG_TERMINATED = 3;  // Log has already terminated
     }
 
     // Common response header.
@@ -194,11 +188,10 @@ message TerminateLogRequest {
 }
 
 message TerminateLogResponse {
-
     enum Status {
         STATUS_UNKNOWN = 0;
         STATUS_OK = 1;
-        STATUS_ID_NOT_FOUND = 2; // This log is not available on the robot.
+        STATUS_ID_NOT_FOUND = 2;  // This log is not available on the robot.
     }
 
     // Common response header.

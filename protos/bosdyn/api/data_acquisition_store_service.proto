@@ -27,6 +27,9 @@ service DataAcquisitionStoreService {
     rpc ListStoredData(ListStoredDataRequest) returns (ListStoredDataResponse);
     // Store arbitrary data associated with a DataIdentifier.
     rpc StoreData(StoreDataRequest) returns (StoreDataResponse);
+    // Store arbitrary data associated with a DataIdentifier through a stream. Supports files > 100
+    // MB and below the Data Acquisition Store capacity.
+    rpc StoreDataStream(stream StoreStreamRequest) returns (StoreStreamResponse);
 
     // Type-safe to images: list data identifiers (which identify specific images
     // from an action) for stored images that satisfy the

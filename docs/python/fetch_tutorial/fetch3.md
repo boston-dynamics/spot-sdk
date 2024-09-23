@@ -11,7 +11,6 @@ Development Kit License (20191101-BDSDK-SL).
 <link href="prism.css" rel="stylesheet" />
 <script src="prism.js"></script>
 
-
 <div class="section line-numbers">
 
 <p>
@@ -22,6 +21,7 @@ Development Kit License (20191101-BDSDK-SL).
 # Fetch Part 3: Evaluating the Model
 
 In this portion of the tutorial, you will:
+
 <ul>
     <li>Evaluate your model on test data.</li>
     <li>Connect your model to Spot.</li>
@@ -371,7 +371,6 @@ kServiceAuthority = "fetch-tutorial-worker.spot.robot"
 </p>
 <br />
 
-
 <pre><code class="language-python">            if not args.no_debug:
                 polygon = np.array([point1, point2, point3, point4], np.int32)
                 polygon = polygon.reshape((-1, 1, 2))
@@ -401,7 +400,6 @@ kServiceAuthority = "fetch-tutorial-worker.spot.robot"
 </p>
 <br />
 
-
 <pre><code class="language-python">        response_queue.put(out_proto)
 </code></pre>
 
@@ -409,7 +407,6 @@ kServiceAuthority = "fetch-tutorial-worker.spot.robot"
     Lastly, we send the output proto back to the GRPC servicer using another python queue.  After this, we're ready for the next request.
 </p>
 <br />
-
 
 <pre><code class="language-python">class NetworkComputeBridgeWorkerServicer(
         network_compute_bridge_service_pb2_grpc.NetworkComputeBridgeWorkerServicer):
@@ -516,7 +513,6 @@ kServiceAuthority = "fetch-tutorial-worker.spot.robot"
 </p>
 <br />
 
-
 <pre><code class="language-python">    # Set up GRPC endpoint
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     network_compute_bridge_service_pb2_grpc.add_NetworkComputeBridgeWorkerServicer_to_server(
@@ -573,10 +569,10 @@ python3 -m bosdyn.client 192.168.80.3 dir list</code></pre>
     Fill in your IP, username, and password.  If it worked, you should see an entry like this:
 </p>
 
-<pre><code class="language-text">name                       type                                                      authority                             tokens
---------------------------------------------------------------------------------------------------------------------------------
+## <pre><code class="language-text">name type authority tokens
+
 [...]
-fetch-server              bosdyn.api.NetworkComputeBridgeWorker                     fetch-tutorial-worker.spot.robot      user
+fetch-server bosdyn.api.NetworkComputeBridgeWorker fetch-tutorial-worker.spot.robot user
 [...]
 </code></pre>
 
@@ -638,7 +634,6 @@ fetch-server              bosdyn.api.NetworkComputeBridgeWorker                 
     <source src="videos/tablet_ml_model_viewer_garage.mp4" type="video/mp4">
 </video>
 
-
 <p>
     Once you're satisfied with your model, head over to <a href="fetch4.html">Part 4</a> where we'll integrate the Spot Manipulation API to pick up the dog-toy.
 </p>
@@ -653,4 +648,3 @@ fetch-server              bosdyn.api.NetworkComputeBridgeWorker                 
 <hr />
 
 </div>
-

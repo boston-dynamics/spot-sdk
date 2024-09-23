@@ -185,13 +185,18 @@ class ChoreographyClient(BaseClient):
 
     def get_choreography_status_async(self, **kwargs):
         """Async version of get_choreography_status."""
+
+        def _return_response_and_validity_time(result):
+            client_time = _TimeConverter(self,
+                                         self.timesync_endpoint).local_seconds_from_robot_timestamp(
+                                             result.validity_time)
+            return result, client_time
+
         request = choreography_sequence_pb2.ChoreographyStatusRequest()
-        status = self.call_async(self._stub.ChoreographyStatus, request, value_from_response=None,
+        status = self.call_async(self._stub.ChoreographyStatus, request,
+                                 value_from_response=_return_response_and_validity_time,
                                  error_from_response=None, copy_request=False, **kwargs)
-        client_time = _TimeConverter(self,
-                                     self.timesync_endpoint).local_seconds_from_robot_timestamp(
-                                         status.result().validity_time)
-        return (status, client_time)
+        return status
 
     def choreography_log_to_animation_file(self, name, fpath, has_arm, *args):
         """Turn the choreography log from the proto into an animation `cha` file type.
@@ -246,7 +251,8 @@ class ChoreographyClient(BaseClient):
 
         #format the complete header with all the options to be included in the *.cha file
         joint_spacer = "{:<60}"
-        header = (controls_header + "\n" "description: " + description + "\n")
+        header = (controls_header + "\n"
+                  "description: " + description + "\n")
 
         for option in option_list(*args):
             header = header + option + "\n"

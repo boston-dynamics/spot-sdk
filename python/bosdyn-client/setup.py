@@ -17,6 +17,26 @@ except KeyError:
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+
+def get_requirements():
+
+    # requirements with versions extracted from BD's internal requirements.
+    reqs = [
+        'bosdyn-api=={}'.format(SDK_VERSION),
+        'bosdyn-core=={}'.format(SDK_VERSION),
+    ]
+    reqs += [
+        'grpcio',
+        'pyjwt',
+        'numpy',
+        'Deprecated~=1.2.10',
+        'requests>=2.26.0',
+        'pynmea2>=1.16.0',
+    ]
+
+    return reqs
+
+
 setuptools.setup(
     name="bosdyn-client",
     version=SDK_VERSION,
@@ -33,16 +53,7 @@ setuptools.setup(
     packages=setuptools.find_packages('src'),
     package_dir={'': 'src'},
     package_data={'': ['*.pem']},
-    install_requires=[
-        'bosdyn-api=={}'.format(SDK_VERSION),
-        'bosdyn-core=={}'.format(SDK_VERSION),
-        'grpcio',
-        'pyjwt',
-        'numpy',
-        'Deprecated~=1.2.10',
-        'requests>=2.26.0',
-        'pynmea2>=1.16.0',
-    ],
+    install_requires=get_requirements(),
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",

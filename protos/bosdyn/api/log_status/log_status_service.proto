@@ -17,16 +17,15 @@ import "bosdyn/api/log_status/log_status.proto";
 //   - Start, extend and stop experiment logs
 //   - Terminate logs before their expiration time
 service LogStatusService {
-
     // Retrieve log status by id.
     rpc GetLogStatus(GetLogStatusRequest) returns (GetLogStatusResponse);
 
     // View statuses of active logs.
     rpc GetActiveLogStatuses(GetActiveLogStatusesRequest) returns (GetActiveLogStatusesResponse);
 
-    // Given a duration T, StartRetroLog(T) triggers a log covering the timespan [logStartTime, t_rpc],
-    // where logStartTime = max(t_rpc - T, t_buffer), t_rpc = time of RPC reception,
-    // and t_buffer = time of first log on the buffer.
+    // Given a duration T, StartRetroLog(T) triggers a log covering the timespan [logStartTime,
+    // t_rpc], where logStartTime = max(t_rpc - T, t_buffer), t_rpc = time of RPC reception, and
+    // t_buffer = time of first log on the buffer.
     rpc StartRetroLog(StartRetroLogRequest) returns (StartRetroLogResponse);
 
     // Given a duration T, StartExperimentLog(T) starts logging all data to
@@ -36,7 +35,6 @@ service LogStatusService {
     // If any retro logs are running, they will be terminated by starting an experiment log.
     // Only one experiment log can be run at a time.
     rpc StartExperimentLog(StartExperimentLogRequest) returns (StartExperimentLogResponse);
-
 
     // UpdateExperimentLog(id, T) will update the keepalive/watchdog timer of
     // the log with the provided id if the log is active. The updated duration

@@ -26,14 +26,15 @@ Finally, payloads allow for expansion of services beyond those provided by Spot 
 
 ## Orbit API
 
-Orbit collects, organizes, and stores data from every mission and teleoperation session executed by a Spot fleet - this information is open to Orbit customers through a programmatic web API called the [Orbit API](about_orbit.md).
+Orbit collects, organizes, and stores data from every mission and teleoperation session executed by a Spot fleet - this information is open to Orbit customers through a programmatic web API called the [Orbit API](orbit/orbit_api.md).
 
 Similar to the Spot API, client applications can be written in many languages and run on most devices that can establish a network connection to Orbit.
 
 ## Contents
 
 - [About Spot](about_spot.md)
-- [About Orbit (formerly Scout)](about_orbit.md)
+- [About Orbit (formerly Scout)](orbit/about_orbit.md)
+- [Orbit API](orbit/orbit_api.md)
 - [Networking](networking.md)
 - [Base services](base_services.md)
 - [Geometry and Frames](geometry_and_frames.md)

@@ -48,15 +48,14 @@ message Walk {
     repeated Element elements = 5;
 
     // The docks the mission can dock at.
-    // AT THE MOMENT AUTOWALK ONLY SUPPORTS A SINGLE DOCK.
-    // However, this is subject to change.
     repeated Dock docks = 6;
 
     // Unique identifier for this walk.  This will be embedded in various Data Acquisition captures
     // and various logging bundles.  This should be globally unique across all walks.
     string id = 8;
 
-    // Choreography related dependencies (any sequences and animations a robot needs to play this walk).
+    // Choreography related dependencies (any sequences and animations a robot needs to play this
+    // walk).
     ChoreographyItems choreography_items = 9;
 
 }
@@ -91,6 +90,10 @@ message GlobalParameters {
     // target of each element, however it will not actually perform the associated
     // action & action wrappers.
     bool skip_actions = 5;
+
+    // Configurable options for Spot to perform extra behaviors in missions to
+    // communicate with nearby observers.
+    HriBehaviors hri_behaviors = 6;
 }
 
 // The dock itself and the target associated with it
@@ -125,6 +128,25 @@ message Dock {
     // This parameter also controls how long robot will wait to retry to undock on
     // a failed undock.
     google.protobuf.Duration prompt_duration = 4;
+
+
+    // Whether the robot can use this dock for recharging or executing a return to dock and try
+    // again later failure behavior.
+    bool disable_recharge = 9;
+
+    // Whether the robot can end a mission on this dock.
+    bool disable_end = 10;
+}
+
+// Options for Spot to perform additional human-robot interaction behaviors in missions
+// to help communicate with observers.
+message HriBehaviors {
+    // If true, Spot will tap its front-left foot twice if anomalies are discovered
+    // during an inspection. Alerts can be viewed in Orbit.
+    bool play_alert_behaviors = 1;
+
+    // If true, Spot will lift its legs twice before undocking.
+    bool play_undock_behaviors = 2;
 }
 
 // Choreography elements required for the mission.
@@ -143,8 +165,10 @@ message ChoreographyItems {
 message PlaybackMode {
     // The mission should be played back once.
     message Once {
+        // Deprecated as of 4.1. To skip docking after completion, set disable_end
+        // to true for all docks in the walk proto.
         // Boolean to allow the robot to not dock after completing a mission.
-        bool skip_docking_after_completion = 1;
+        bool skip_docking_after_completion = 1 [deprecated = true];
     }
 
     // The mission should be played back periodically.
@@ -314,7 +338,7 @@ message Action {
         // while last_known_capabilities should be updated as time progresses and services
         // evolve.
         //
-        // This data is meant to allow UI's to give users context about their actions, AND
+        // This data is meant to allow UIs to give users context about their actions, AND
         // provide them a canvas to edit region of interests with after the fact.  It is
         // not used at mission playback time.
         repeated ImageCaptureAndSource record_time_images = 4;
@@ -348,13 +372,13 @@ message Action {
         // if the RemoteGRPC advertises parameters that require a region of interest for a specific
         // camera.
         //
-        // This data is meant to allow UI's to give users context about their actions, AND
+        // This data is meant to allow UIs to give users context about their actions, AND
         // provide them a canvas to edit region of interests with after the fact.  It is
         // not used at mission playback time.
         repeated ImageCaptureAndSource record_time_images = 6;
     }
 
-    message ExecuteChoreography{
+    message ExecuteChoreography {
         // The name of the sequence to play.
         string sequence_name = 1;
     }

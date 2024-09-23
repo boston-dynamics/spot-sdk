@@ -93,6 +93,7 @@ python3 build_extension.py \
     [--extra-image-tags {extra_image:tag}] \
     --image-archive {images_tarball.tar.gz} \
     --icon {icon.png} \
+    --udev-rule {udev_rule.rule} \
     --package-dir {/path/to/assets} \
     --spx {/path/to/output/extension.spx} \
     [--additional-files {file1.txt} {file2.jpg}]

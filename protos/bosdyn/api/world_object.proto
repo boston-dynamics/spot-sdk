@@ -67,7 +67,8 @@ message WorldObject {
     RayProperties ray_properties = 11;
     // Bounding box in the world, oriented at the location provided in the transforms_snapshot.
     BoundingBoxProperties bounding_box_properties = 12;
-    // The staircase properties provide information that helps the robot traverse or see a staircase.
+    // The staircase properties provide information that helps the robot traverse or see a
+    // staircase.
     StaircaseProperties staircase_properties = 15;
     // Information about the Earth relative to the robot, localized by GPS.
     GpsProperties gps_properties = 16;
@@ -79,13 +80,13 @@ message WorldObject {
 // includes. This can be used to request specific kinds of objects; for example, a request for only
 // fiducials.
 enum WorldObjectType {
-  WORLD_OBJECT_UNKNOWN = 0;
-  WORLD_OBJECT_DRAWABLE = 1;
-  WORLD_OBJECT_APRILTAG = 2;
-  WORLD_OBJECT_IMAGE_COORDINATES = 5;
-  WORLD_OBJECT_DOCK = 6;
-  WORLD_OBJECT_USER_NOGO = 8;
-  WORLD_OBJECT_STAIRCASE = 9;
+    WORLD_OBJECT_UNKNOWN = 0;
+    WORLD_OBJECT_DRAWABLE = 1;
+    WORLD_OBJECT_APRILTAG = 2;
+    WORLD_OBJECT_IMAGE_COORDINATES = 5;
+    WORLD_OBJECT_DOCK = 6;
+    WORLD_OBJECT_USER_NOGO = 8;
+    WORLD_OBJECT_STAIRCASE = 9;
 }
 
 // The ListWorldObject request message, which can optionally include filters for the object type or
@@ -180,12 +181,13 @@ message MutateWorldObjectResponse {
     int32 mutated_object_id = 4;
 }
 
-// A box no-go region
+// A box or circle no-go region
 message NoGoRegionProperties {
     // Define the geometry of the region.  Note that currently, these regions may only be defined in
     // the Vision world frame, or Odometry world frame.
     oneof region {
         Box2WithFrame box = 1;
+        CircleWithFrame circle = 5;
     }
 
     // Nominally, setting a NoGoRegion will create both a body obstacle of the specified size, as

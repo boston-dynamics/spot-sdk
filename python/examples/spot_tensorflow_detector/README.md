@@ -32,7 +32,7 @@ For your best learning experience, please use the [Quickstart Guide](../../../do
 found in the SDK's docs/python directory. That will help you get your Python programming
 environment setup properly.
 
-To install this example on Ubuntu 18.04, follow these instructions:
+To install this example on Ubuntu, follow these instructions:
 
 - Create virtual environment as described in this
   [Quickstart Guide virtualenv section](../../../docs/python/quickstart.md#manage-multiple-python-environments-with-virtualenv)

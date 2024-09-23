@@ -18,7 +18,18 @@ To run the program, double-click the executable. Choreographer is supported only
 
 ## Choreography safety
 
-When testing your choreography sequence on a robot, always keep in mind basic safety procedures. Make sure there is plenty of space around your Spot and ensure that neither you nor anyone else approaches the dancing Spot. Never approach your Spot unless its motors have been powered off.  If working with multiple robots, it is recommended to also keep them far from each other when possible.
+CAUTION: Choreography moves can induce unpredictable or unstable motions in Spot, which may increase the risk of falls, collisions, and other hazards. Observe the following safety precautions:
+
+- Before using choreography, ensure there is at least 3 meters of clearance around Spot in all directions.
+- Stay at least 3 meters away from Spot when motors are active. Power off motors before approaching Spot.
+- Ensure that all bystanders who are in or may enter the area where choreography is performed are adequately warned and stay at least 3 meters away from Spot at all times.
+
+WARNING: A small percentage of people may experience epileptic seizures or blackouts when exposed to certain light patterns or flashing lights. Choreography moves that include Spot’s status lights or A/V warning system lights could trigger epileptic symptoms or seizures, even in people with no history of photosensitive epilepsy. Observe the following safety precautions:
+
+- When designing choreography routines that include Spot’s status lights or A/V warning system lights, avoid patterns and frequencies known to increase the risk of epileptic symptoms.
+- Before using choreography, ensure that all bystanders are adequately warned of any risk of exposure to light patterns and flashing lights from Spot.
+
+WARNING: At higher volumes, prolonged exposure to the noise produced by the buzzer can be harmful. Refer to _Spot Instructions for Use_ available at [Spot Product Safety](https://support.bostondynamics.com/s/spot/product-safety)
 
 ### Beginner and advanced modes
 
@@ -38,8 +49,8 @@ It is highly recommended that Choreographer users start in Beginner mode until t
 
 The Choreographer interface consists of the following important key sections/buttons:
 
-1. **Moves List** - Listd of predefined stock moves and animation moves sorted by general category such as "Body" or "Transition."
-1. **Dance Timeline** - The main user interface area of Choreographer. The timeline shows a representation of your dance over time. Each move is a different block. Blocks can be edited to set or change move parameters. Blovks can be relocated on the timeline by clicking and dragging or copied and pasted to a new location on the timeline. They can be stretched or shrunk if the move parameters allow it.
+1. **Moves List** - List of predefined stock moves and animation moves sorted by general category such as "Body" or "Transition."
+1. **Dance Timeline** - The main user interface area of Choreographer. The timeline shows a representation of your dance over time. Each move is a different block. Blocks can be edited to set or change move parameters. Blocks can be relocated on the timeline by clicking and dragging or copied and pasted to a new location on the timeline. They can be stretched or shrunk if the move parameters allow it.
 1. **Dance Tabs** - Multiple choreography sequences can be opened at once and will appear as different tabs above the timeline.
 1. **Move Name** - When you select a move in the Moves List its name and description will appear here.
 1. **Robot Preview** - A preview of the robot’s body and arm during your selected move. Note that this section only appears for select moves that directly position the body of the robot or moves that control the arm.
@@ -57,37 +68,37 @@ The Choreographer interface consists of the following important key sections/but
 
 Choreographer has several tracks, each describing some aspect of Spot's behavior.
 
-* The Legs, Body, Arm, and Gripper tracks describe the physical motion of the robot.  
-* The Lights track describes the behavior of the lights near Spot's front cameras.  
-* The Annotations track modifies the behavior of the other tracks.  
-* The Music track shows the audio to be played by the Choreographer application itself (not played by the robot).  
+- The Legs, Body, Arm, and Gripper tracks describe the physical motion of the robot.
+- The Lights track describes the behavior of the lights near Spot's front cameras.
+- The Annotations track modifies the behavior of the other tracks.
+- The Music track shows the audio to be played by the Choreographer application itself (not played by the robot).
 
-All dance moves control one or more tracks.  Moves that control any of the same tracks cannot run simultaneously. Moves that use different tracks can be run simultaneously.  This modular approach to defining behavior helps make it easy to produce a wide variety of behaviors from a manageable number of component moves.
+All dance moves control one or more tracks. Moves that control any of the same tracks cannot run simultaneously. Moves that use different tracks can be run simultaneously. This modular approach to defining behavior helps make it easy to produce a wide variety of behaviors from a manageable number of component moves.
 
 ## Slices, beats, BPM, and measures
 
-Choreographer divides time into slices represented by the thin dashed vertical lines in the timeline. All moves take an integer number of slices.  For convenience, we consider 4 slices a beat and adjust the pace of the dance by setting the BPM (Beats Per Minute) in the **Music Controls** bar.  Beats are delineated by the medium-thickness vertical lines on the timeline.  Every 4th beat is numbered and marked with a thick vertical line.
+Choreographer divides time into slices represented by the thin dashed vertical lines in the timeline. All moves take an integer number of slices. For convenience, we consider 4 slices a beat and adjust the pace of the dance by setting the BPM (Beats Per Minute) in the **Music Controls** bar. Beats are delineated by the medium-thickness vertical lines on the timeline. Every 4th beat is numbered and marked with a thick vertical line.
 
-For a song with a 4/4 time signature, a slice corresponds to a 16th-note, a beat to a quarter note, and the thicker lines to a measure or whole note.  For songs that are not 4/4, the thicker lines can be ignored.
+For a song with a 4/4 time signature, a slice corresponds to a 16th-note, a beat to a quarter note, and the thicker lines to a measure or whole note. For songs that are not 4/4, the thicker lines can be ignored.
 
-Some moves take a fixed number of slices.  Other moves take a fixed amount of time so the number of slices will depend on the BPM.  Some moves are adjustable, but of those some have maximum or minimum durations.  For example, this "Running Man" move has been extended from the default number of slices. It controls the legs track for the first 16 slices (4 beats; 1 measure) of this sequence:
+Some moves take a fixed number of slices. Other moves take a fixed amount of time so the number of slices will depend on the BPM. Some moves are adjustable, but of those some have maximum or minimum durations. For example, this "Running Man" move has been extended from the default number of slices. It controls the legs track for the first 16 slices (4 beats; 1 measure) of this sequence:
 
 ![Slice Diagram](images/running_man.png)
 
 ## Dance timeline
 
-The dance timeline portrays the choreography sequence on a grid.  The rows of the grid represent the various Tracks or aspects of the behavior (see Tracks section above).  Time is represented from left to right with the columns representing individual slices (see Slices, Beats, BPM, and Measures section above).  
+The dance timeline portrays the choreography sequence on a grid. The rows of the grid represent the various Tracks or aspects of the behavior (see Tracks section above). Time is represented from left to right with the columns representing individual slices (see Slices, Beats, BPM, and Measures section above).
 
-A dance sequence consists of any number of dance moves.  Each move will be represented on the timeline by a rectangle.  The left and right edges of the rectangle give the start and stop time of the move, so the width represents the duration.  The vertical extent of the rectangle shows which tracks the move controls.  
+A dance sequence consists of any number of dance moves. Each move will be represented on the timeline by a rectangle. The left and right edges of the rectangle give the start and stop time of the move, so the width represents the duration. The vertical extent of the rectangle shows which tracks the move controls.
 
-Moves that are stacked vertically occur simultaneously, each controlling a different aspect of the behavior to produce some combination.  Moves that are arrayed horizontally occur in sequence, one after the other.
+Moves that are stacked vertically occur simultaneously, each controlling a different aspect of the behavior to produce some combination. Moves that are arrayed horizontally occur in sequence, one after the other.
 
 ## Adding moves
 
 There are different methods for adding moves to the timeline.
 
-* You can single click the move in the Moves List. This opens the move name, description, and parameters in the **Move Configuration** tab, but does not add it to the timeline.
-* Use the up and down arrow keys to navigate between different moves in the Moves List once one is selected. While you have a move selected in the Moves List, you can adjust its parameters in the **Move Parameters** section.
+- You can single click the move in the Moves List. This opens the move name, description, and parameters in the **Move Configuration** tab, but does not add it to the timeline.
+- Use the up and down arrow keys to navigate between different moves in the Moves List once one is selected. While you have a move selected in the Moves List, you can adjust its parameters in the **Move Parameters** section.
 
 Once the parameters are adjusted to the desired values, the move can be added to the dance timeline by any of the following methods:
 
@@ -139,9 +150,9 @@ After loading a dance, you must manually set the BPM (Beats Per Minute) of your 
 
 ## Red slider
 
-The red slider defines where within the sequence Spot should begin execution. It also indicates when the audio begins playing.  The red slider defaults to the beginning but can be moved to start from the middle.  This can be useful for testing just a portion of a long sequence.  
+The red slider defines where within the sequence Spot should begin execution. It also indicates when the audio begins playing. The red slider defaults to the beginning but can be moved to start from the middle. This can be useful for testing just a portion of a long sequence.
 
-Any moves that start before the slider will be skipped even if they are scheduled to complete after the slider.  The line drawn at the center of the slider shows the location of the slider on the timeline, as shown in the image below. The slider can be moved by clicking on the colored boxes and dragging it to the desired location.
+Any moves that start before the slider will be skipped even if they are scheduled to complete after the slider. The line drawn at the center of the slider shows the location of the slider on the timeline, as shown in the image below. The slider can be moved by clicking on the colored boxes and dragging it to the desired location.
 
 ![Slider](images/red_slider.png)
 
@@ -163,69 +174,67 @@ To stop a choreography routine (or stop the music from playing if no robot is co
 
 To save a Choreographer routine, press Ctrl+S or go select Save from the File menu. Your routine will be saved in protobuf text format, which you can then open and easily read with your own scripts. To load a Choreographer file press Ctrl+L or select Load Choreography from the File menu.
 
-To append an existing choreography sequence to the end of your current dance, select Append Choreography from the File menu, or press Ctrl+E. Choreographer automatically adds all of the move blocks from the saved file to the end of your current routine. This is particularly useful if you want to construct a choreography sequence from smaller premade sequences.
-
+To append an existing choreography sequence to the end of your current dance, select Append Choreography from the File menu, or press Ctrl+E. Choreographer automatically adds all of the move blocks from the saved file to the end of your current routine. This is particularly useful if you want to construct a choreography sequence from smaller pre-made sequences.
 
 ## Keyboard controls
 
-Choreographer has specific hotkey mappings available for common editing actions.  Access the table of available hotkeys by selecting Hotkeys Documentation from the Help menu.
-
+Choreographer has specific hotkey mappings available for common editing actions. Access the table of available hotkeys by selecting Hotkeys Documentation from the Help menu.
 
 ### Sequence editing
 
-Key | Function
-----|-----
-i | Enter insert mode
-Esc | Exit insert mode
-p | Play music
-Shift + Click | Select multiple moves, adding each one to the selected group when clicked.
-Left/Right Arrow Keys | Nudge a move (or group of selected moves) left/right by one slice in the timeline. Cannot cross other moves with nudging; this can only be done when dragging a move (or group).
-Shift + Left/Right Arrow Keys | Expand a move on the left/right side by one slice if possible. This only works when a single move is selected (and not a group of moves).
-Ctrl + Left/Right Arrow Keys | Shrink a move on the left/right side by one slice if possible. This only works when a single move is selected (and not a group of moves).
-Ctrl+C | Copy the move (or group of selected moves).
-Ctrl+V | Paste the copied move (or group of selected moves).
+| Key                           | Function                                                                                                                                                                         |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| i                             | Enter insert mode                                                                                                                                                                |
+| Esc                           | Exit insert mode                                                                                                                                                                 |
+| p                             | Play music                                                                                                                                                                       |
+| Shift + Click                 | Select multiple moves, adding each one to the selected group when clicked.                                                                                                       |
+| Left/Right Arrow Keys         | Nudge a move (or group of selected moves) left/right by one slice in the timeline. Cannot cross other moves with nudging; this can only be done when dragging a move (or group). |
+| Shift + Left/Right Arrow Keys | Expand a move on the left/right side by one slice if possible. This only works when a single move is selected (and not a group of moves).                                        |
+| Ctrl + Left/Right Arrow Keys  | Shrink a move on the left/right side by one slice if possible. This only works when a single move is selected (and not a group of moves).                                        |
+| Ctrl+C                        | Copy the move (or group of selected moves).                                                                                                                                      |
+| Ctrl+V                        | Paste the copied move (or group of selected moves).                                                                                                                              |
 
 ### Robot control
 
-Key | Function
-----|-----
-Space | Stop the robot (and music, if playing)
-k | Power on the robot.
-l | Power off the robot.
-y | Stand the robot up.
-x | Start the choreography.
-[ | Sit the robot down.
-] | Self-right the robot.
-v | Enable WASD driving.
-b | Enable joystick mode.
+| Key   | Function                               |
+| ----- | -------------------------------------- |
+| Space | Stop the robot (and music, if playing) |
+| k     | Power on the robot.                    |
+| l     | Power off the robot.                   |
+| y     | Stand the robot up.                    |
+| x     | Start the choreography.                |
+| [     | Sit the robot down.                    |
+| ]     | Self-right the robot.                  |
+| v     | Enable WASD driving.                   |
+| b     | Enable joystick mode.                  |
 
 ### WASD driving mode
 
-Key | Function
-----|-----
-w | Walk forward
-a | Sidestep left
-s | Walk backward
-d | Sidestep right
-q | Turn left
-e | Turn right
+| Key | Function       |
+| --- | -------------- |
+| w   | Walk forward   |
+| a   | Sidestep left  |
+| s   | Walk backward  |
+| d   | Sidestep right |
+| q   | Turn left      |
+| e   | Turn right     |
 
 ## Command-line arguments
 
 Command line options for starting Choreographer from the command line:
 
-Argument | Description
-----|-----
--h, --help | Print this information to the console.
---hostname HOSTNAME | Hostname or IIP address of robot(s) to initially connect to
---username USERNAME | User name(s) of the account(s) to get credentials for when initially connecting to one or more robots.
---password PASSWORD | Pasword for the account(s) when initially connecting to one or more robots.
---restricted | Load Choreographer in Beginner (Restricted) mode (also available through the Help menu)
---delay DELAY | Delay time in seconds after pressing the Start Choreography button before starting the sequence.  Defaults to 3 seconds.
---not-vebose | Prevent printing error messages to the console.
---obs-padding DISTANCE | Sets the obstacle avoidance padding in meters.  Note: Obstacle avoidance is not available during most dance moves.
---estop-timeout TIME | Sets the duration of the E-Stop timeout in seconds for how long between losing communication with the robot and when the robot sits down and powers off.  Defaults to 9 seconds.
+| Argument               | Description                                                                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| -h, --help             | Print this information to the console.                                                                                                                                          |
+| --hostname HOSTNAME    | Hostname or IIP address of robot(s) to initially connect to                                                                                                                     |
+| --username USERNAME    | User name(s) of the account(s) to get credentials for when initially connecting to one or more robots.                                                                          |
+| --password PASSWORD    | Password for the account(s) when initially connecting to one or more robots.                                                                                                    |
+| --restricted           | Load Choreographer in Beginner (Restricted) mode (also available through the Help menu)                                                                                         |
+| --delay DELAY          | Delay time in seconds after pressing the Start Choreography button before starting the sequence. Defaults to 3 seconds.                                                         |
+| --not-verbose          | Prevent printing error messages to the console.                                                                                                                                 |
+| --obs-padding DISTANCE | Sets the obstacle avoidance padding in meters. Note: Obstacle avoidance is not available during most dance moves.                                                               |
+| --estop-timeout TIME   | Sets the duration of the E-Stop timeout in seconds for how long between losing communication with the robot and when the robot sits down and powers off. Defaults to 9 seconds. |
 
-Command line hostname, username, and password arguments can be especially convenient when repeatedly connecting to the same large set of robots. The following example connects to three different robots using three different sets of login credentials.  
+Command line hostname, username, and password arguments can be especially convenient when repeatedly connecting to the same large set of robots. The following example connects to three different robots using three different sets of login credentials.
 
-```./choreographer --hostname hn1 --username un1 --password pw1 --hostname hn2 --username un2 --password pw2 --hostname hn3 --username un3 --password pw3```
+`./choreographer --hostname hn1 --username un1 --password pw1 --hostname hn2 --username un2 --password pw2 --hostname hn3 --username un3 --password pw3`

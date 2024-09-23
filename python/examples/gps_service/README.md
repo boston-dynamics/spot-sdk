@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # GPS Listener
 
-This is an example program for consuming GPS data from a device and making it available through the Spot API. Data can be provided in one of three ways, through a TCP server, a UDP client, or a USB serial connection. Two example GPS device configurations are provided for the Trimble SPS986 and the Leica GA03 demonstrating TCP and Serial connections respectively.
+This is an example program for consuming GPS data from a device and making it available through the Spot API. GPS devices can provide data in one of three ways, through a TCP server, a UDP client, or a serial connection. Two example GPS device configurations are provided for the Trimble SPS986 and the Leica GA03 demonstrating TCP and Serial connections respectively.
 
 The GPS devices must output data in the [NMEA-0183](https://www.nmea.org/nmea-0183.html) format. [GGA](https://receiverhelp.trimble.com/alloy-gnss/en-us/NMEA-0183messages_GGA.html) messages are required, but for best performance it is highly recommended to use devices which provide [GST](https://receiverhelp.trimble.com/alloy-gnss/en-us/NMEA-0183messages_GST.html) and [ZDA](https://receiverhelp.trimble.com/alloy-gnss/en-us/NMEA-0183messages_ZDA.html) messages as well.
 
@@ -22,22 +22,22 @@ python3 -m pip install -r requirements.txt
 
 ## Running the Example
 
-Before running the example, you must register the GPS payload with the Spot payload system. See [here](../payloads/README.md) for more details.
+Before running the example, you must either register the GPS payload with the Spot payload system using the Web UI or specify the payload configuration as part of the arguments to this example. See [here](../payloads/README.md) for more details about payload registration. Take care in specifying the correct values for the position of the GPS payload and antenna. Errors in the specified mounting position will negatively affect the quality of localization solutions which use the GPS data.
 
 The GPS Listener requires that the following arguments be provided:
 
-- The name of the registered GPS payload
-- The transformation from the payload coordinate frame to the antenna
-- The payload credentials
-- The communication protocol
-  - Each communication protocol has its own additional options, see the help
+- The name of the registered GPS payload.
+- The transformation from the payload coordinate frame to the antenna.
+- The payload credentials.
+- The communication protocol.
+  - Each communication protocol has its own additional options, see the help.
 
 The transformation from the GPS payload frame to the GPS antenna includes a translation and a rotation as a Quaternion and takes the following form: `x y z qw qx qy qz`.
 
 An example using the Trimble SPS986:
 
 ```sh
-python3 gps_listener.py --name "Trimble SPS986" --payload_tform_gps 0 0 0.4 1 0 0 0 --payload-credentials-file PAYLOAD_GUID_AND_SECRET_FILE ROBOT_HOSTNAME tcp --gps_host 192.168.144.1 --gps_port 5018
+python3 gps_listener.py --name "Trimble SPS986" --payload-tform-gps 0 0 0.4 1 0 0 0 --payload-credentials-file PAYLOAD_GUID_AND_SECRET_FILE ROBOT_HOSTNAME tcp --gps-host 192.168.144.1 --gps-port 5018
 ```
 
 For more information, see the gps_listener.py help page:
@@ -57,7 +57,7 @@ python3 gps_listener.py --name "" "" udp --help
 The Trimble SPS986 and Leica GA03 examples are intended to be run as ARM architecture Core IO extensions. To build these extensions on an x86/AMD development environment, first run the commands in the section about "creating docker images on a development environment for a different architecture" [here](https://dev.bostondynamics.com/docs/payload/docker_containers.html#build-docker-images). After this one-time setup, you can use the `build_extension.py` script to create the Docker image via the command below, with further instructions [here](../extensions/README.md).
 
 ```sh
-python3 build_extension.py --dockerfile-paths ../gps_service/Dockerfile --build-image-tags gps_listener:trimble_sps986 --image-archive gps_listener_image_arm64.tgz --package-dir ../gps_service/extensions/trimble_sps986/ --spx trimble_listener.spx
+python3 build_extension.py --dockerfile-paths ../gps_service/Dockerfile --build-image-tags gps_listener_image_arm64:latest --image-archive gps_listener_image_arm64.tgz --package-dir ../gps_service/extensions/trimble_sps986/ --spx trimble_listener.spx
 ```
 
 The trimble_listener.spx file can then be uploaded to the Core IO through its webpage.
@@ -74,7 +74,19 @@ creds = bosdyn.client.util.get_guid_and_secret(options)
 robot = create_robot(creds, options)
 
 # Create a Fault Client for errors.
-fault_client = create_fault_client(robot, options)
+fault_client = create_fault_client(robot)
+```
+
+Optionally, the GPS Listener example can self-register the GPS device as a payload on Spot. This is useful if the GPS payload will be swapped on and off the robot often and the user does not want to use the Web UI to register and authorize the payload every time the device is mounted. The payload configuration given to the GPS Listener must be valid, or a fault will be thrown. The user can fix the offending configuration value in the Web UI and authorize the payload manually to get around a bad configuration, but be sure to fix the code after.
+
+```python
+# Register the Payload
+if options.register_payload:
+    # The user can modify and correct the payload configuration in the web UI, so it is
+    # possible that this will eventually succeed even though the programmed configuration is
+    # wrong.
+    while not register_payload(robot, fault_client, creds, options):
+        time.sleep(SECS_PER_ATTEMPT)
 ```
 
 The next step is to connect to the GPS device. There are three supported communication protocols: TCP, UDP, and USB Serial. The code used to connect to the device depends on which option is provided through the command line arguments. Once opened, the data stream is made available through a Python IO Stream. If the device cannot be connected to, a fault will be triggered and the connection will be retried at a frequency of 1Hz.
@@ -93,27 +105,27 @@ body_tform_gps = calculate_body_tform_gps(robot, options)
 time_converter = robot.time_sync.get_robot_time_converter()
 ```
 
-With the data stream opened and the required system information collected, the data is ready to be provided to Spot. The GPS Listener reads data from the data stream, applies the required spatial and temporal transformations, and uses the Spot API to provide the data to the robot. Namely, the Aggregator service accepts GPS data in the form of a NewGpsDataRequest GRPC request.
+With the data stream opened and the required system information collected, the data is ready to be provided to Spot. The GPS Listener reads data from the data stream, applies the required spatial and temporal transformations, and uses the Spot API to provide the data to the robot. Namely, the `Aggregator` service accepts GPS data in the form of a `NewGpsDataRequest` gRPC request.
 
-As the robot moves, it builds a trajectory of positions using its odometry and GPS measurements. The pose of the robot with respect to the Earth can be calculated by registering the GPS trajectory to the odometry trajectory. This registration can be queried using Spot's Registration service.
+As the robot moves, it builds a trajectory of positions using its odometry and GPS measurements. The pose of the robot with respect to the Earth can be calculated by registering the GPS trajectory to the odometry trajectory. This registration can be queried using Spot's `Registration` service.
 
 ```sh
 python3 get_location.py ROBOT_HOSTNAME
 ```
 
-The returned GetLocationResponse has a status enumeration with the following values:
+The returned `GetLocationResponse` has a status enumeration with the following values:
 
-- STATUS_UNKNOWN: An unknown error occurred getting the robot's location.
-- STATUS_OK: A (maybe invalid) Registration was retrieved.
-- STATUS_NEED_DEVICE: Could not get a Registration because no GPS device is connected.
+- `STATUS_UNKNOWN`: An unknown error occurred getting the robot's location.
+- `STATUS_OK`: A (maybe invalid) Registration was retrieved.
+- `STATUS_NEED_DEVICE`: Could not get a Registration because no GPS device is connected.
 
-If the request is successful, the response will contain a Registration message. The Registration has a Status enumeration with the following values:
+If the request is successful, the response will contain a `Registration` message. The registration has a `Status` enumeration with the following values:
 
-- STATUS_UNKNOWN: There is no registration.
-- STATUS_OK: A registration between the robot's odometry and GPS trajectories has been found.
-- STATUS_NEED_DATA: The robot has not received any GPS data to use for the registration.
-- STATUS_NEED_MORE_DATA: The robot has not moved far enough to calculate a registration.
-- STATUS_STALE: The data used to calculate the registration is too old.
+- `STATUS_UNKNOWN`: There is no registration.
+- `STATUS_OK`: A registration between the robot's odometry and GPS trajectories has been found.
+- `STATUS_NEED_DATA`: The robot has not received any GPS data to use for the registration.
+- `STATUS_NEED_MORE_DATA`: The robot has not moved far enough to calculate a registration.
+- `STATUS_STALE`: The data used to calculate the registration is too old.
 
 ## GPS in Graph Nav
 

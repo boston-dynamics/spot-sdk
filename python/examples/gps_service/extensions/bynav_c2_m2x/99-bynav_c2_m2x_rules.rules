@@ -1,0 +1,10 @@
+# If this matches the Vendor ID = "Nanjing Qinheng Microelectronics Co., Ltd." (No string for 
+# product ID) skip ahead.
+SUBSYSTEMS=="usb", DRIVERS=="usb", ATTRS{idProduct}=="55d2", ATTRS{idVendor}=="1a86", GOTO="bynav"
+# Did not match, skip the next block
+SUBSYSTEMS=="usb", GOTO="bynav_end"
+
+LABEL="bynav"
+ATTRS{bInterfaceNumber}=="00", SYMLINK+="bynav_c2_m2x0", MODE="0666"
+ATTRS{bInterfaceNumber}=="02", SYMLINK+="bynav_c2_m2x1", MODE="0666"
+LABEL="bynav_end"

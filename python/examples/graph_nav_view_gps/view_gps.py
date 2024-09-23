@@ -101,15 +101,18 @@ def timestamp_to_seconds(timestamp: any) -> float:
     return timestamp.seconds + 1.0e-9 * timestamp.nanos
 
 
-def get_raw_gps_data(current_waypoint_snapshots: dict) -> list:
+def get_raw_gps_data(current_waypoint_snapshots: dict, time_threshold_seconds=30) -> list[list]:
     """
-    Returns a list of latitude/longitude coordinates in the waypoint snapshots.
+    Returns a list of latitude/longitude coordinate segments in the waypoint snapshots. Each segment corresponds to a run of data
+    where each data point is no more than time_threshold_seconds apart.
     Waypoint snapshots may contain a world object called "gps_properties" that has raw measurements of latitude
     and longitude at the time of recording of that waypoint snapshot.
     This function returns a list of tuples where each tuple is a (latitude, longitude) pair, one for each waypoint snapshot.
     The latitude/longitude coordinates will be sorted by time.
     """
-    raw_latitude_longitude = []
+    raw_latitude_longitudes = []
+    curr_raw_array = []
+    prev_time = None
     sorted_waypoint_snapshots = list(current_waypoint_snapshots.values())
     # Sort waypoint snapshots by time.
     sorted_waypoint_snapshots = sorted(
@@ -119,21 +122,29 @@ def get_raw_gps_data(current_waypoint_snapshots: dict) -> list:
     for snapshot in sorted_waypoint_snapshots:
         for world_object in snapshot.objects:
             if world_object.HasField('gps_properties'):
+                registration = world_object.gps_properties.registration
                 # This is a "latitude longitude height" message.
-                llh = world_object.gps_properties.registration.robot_body_location
-                raw_latitude_longitude.append([llh.latitude, llh.longitude])
+                llh = registration.robot_body_location
+                t = registration.timestamp.seconds
+                if prev_time is None or (t - prev_time) > time_threshold_seconds:
+                    curr_raw_array = []
+                    raw_latitude_longitudes.append(curr_raw_array)
+                    prev_time = t
+                curr_raw_array.append([llh.latitude, llh.longitude])
 
-    return raw_latitude_longitude
+    return raw_latitude_longitudes
 
 
-def get_annotated_gps_data(current_waypoints: dict) -> list:
+def get_annotated_gps_data(current_waypoints: dict, time_threshold_seconds=30) -> list[list]:
     """
-    Returns a list of waypoint coordinates from waypoint annotations. The annotated GPS data
+    Returns a list of latitude/longitude coordinate segments of waypoint coordinates from waypoint annotations. The annotated GPS data
     may have come from an optimization process, or may have been manually annotated by an editor.
     This function returns a list of tuples where each tuple is a (latitude, longitude) pair, one for each waypoint.
     The latitude/longitude coordinates will be sorted by time.
     """
-    latitude_longitude = []
+    latitude_longitudes = []
+    curr_annotated_array = []
+    prev_time = None
     sorted_waypoints = list(current_waypoints.values())
     # Sort waypoints by time.
     sorted_waypoints = sorted(sorted_waypoints,
@@ -144,13 +155,19 @@ def get_annotated_gps_data(current_waypoints: dict) -> list:
             ecef_T_waypoint = waypoint.annotations.gps_settings.ecef_tform_waypoint
             llh_T_waypoint = ecef_to_llh(ecef_T_waypoint.position.x, ecef_T_waypoint.position.y,
                                          ecef_T_waypoint.position.z)
-            latitude_longitude.append([llh_T_waypoint.latitude, llh_T_waypoint.longitude])
+            t = waypoint.annotations.creation_time.seconds
+            if prev_time is None or (t - prev_time) > time_threshold_seconds:
+                curr_annotated_array = []
+                latitude_longitudes.append(curr_annotated_array)
+                prev_time = t
+            curr_annotated_array.append([llh_T_waypoint.latitude, llh_T_waypoint.longitude])
 
-    return latitude_longitude
+    return latitude_longitudes
 
 
-def plot_gps_web_document(raw_gps_data_array: np.array, annotated_gps_data_array: np.array):
-    raw_gps_center = numpy.mean(raw_gps_data_array, axis=0)
+def plot_gps_web_document(raw_gps_data_arrays: list[np.array],
+                          annotated_gps_data_arrays: list[np.array]):
+    raw_gps_center = numpy.mean(raw_gps_data_arrays[0], axis=0)
     print(f'Plotting centered at latitude/longitude {raw_gps_center}')
 
     # Create a raw HTML document with an Open Street Map inside. This uses the leaflet.js library, which
@@ -192,9 +209,13 @@ def plot_gps_web_document(raw_gps_data_array: np.array, annotated_gps_data_array
         return doc
 
     # Draw the raw GPS data.
-    html_doc = draw_polyline(raw_gps_data_array, 'raw_gps', 'blue', html_doc)
+    for idx, raw_gps_data_array in enumerate(raw_gps_data_arrays):
+        html_doc = draw_polyline(numpy.array(raw_gps_data_array), f'raw_gps_{idx}', 'blue',
+                                 html_doc)
     # Draw the annotated gps data.
-    html_doc = draw_polyline(annotated_gps_data_array, 'annotated_gps', 'red', html_doc)
+    for idx, optimized_gps_data_array in enumerate(annotated_gps_data_arrays):
+        html_doc = draw_polyline(numpy.array(optimized_gps_data_array), f'optimized_gps_{idx}',
+                                 'red', html_doc)
 
     # HTML/javascript footer.
     html_doc += """
@@ -249,7 +270,8 @@ def main():
 
     # Now we will draw the GPS data. This opens a web server to an Open Street Maps page. This blocks until
     # KeyboardInterrupt.
-    plot_gps_web_document(np.array(raw_data), np.array(annotated_data))
+    plot_gps_web_document([np.array(data) for data in raw_data],
+                          [np.array(data) for data in annotated_data])
 
 
 if __name__ == '__main__':

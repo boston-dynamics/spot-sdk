@@ -24,7 +24,6 @@ The following examples show how to use Spot's perception system, through image s
 - [Project Depth Data on Visual Images](../get_depth_plus_visual_image/README.md)
 - [Custom Parameter Image Server](../service_customization/custom_parameter_image_server/README.md)
 - [Fiducial Follow](../fiducial_follow/README.md)
-- [Spot Detect and Follow](../spot_detect_and_follow/README.md)
 - [Tensorflow Detector](../spot_tensorflow_detector/README.md)
 - [Custom Parameter Tensorflow Detector](../service_customization/custom_parameter_ncb_worker/README.md)
 - [Machine Learning with the Network Compute Bridge](../network_compute_bridge/README.md)

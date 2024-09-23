@@ -23,8 +23,8 @@ message GpsState {
     // What GPS device generated the latest data
     GpsDevice gps_device = 3;
 
-    // Estimate of where the robot's body is in the ECEF frame given this measurement. Note this must be a position
-    // and not a pose because of the lack of orientation data.
+    // Estimate of where the robot's body is in the ECEF frame given this measurement. Note this
+    // must be a position and not a pose because of the lack of orientation data.
     bosdyn.api.Vec3 ecef_p_body = 4;
 
     // Collection of all GPS data received by this device within some window.
@@ -36,9 +36,9 @@ message Registration {
     enum Status {
         STATUS_UNKNOWN = 0;
         STATUS_OK = 1;
-        STATUS_NEED_DATA = 2;      // No data has been reported to perform registration.
-        STATUS_NEED_MORE_DATA = 3; // Data has been reported, but not enough to get a fix.
-        STATUS_STALE = 4;          // We have a registration, but it is based on old data.
+        STATUS_NEED_DATA = 2;       // No data has been reported to perform registration.
+        STATUS_NEED_MORE_DATA = 3;  // Data has been reported, but not enough to get a fix.
+        STATUS_STALE = 4;           // We have a registration, but it is based on old data.
     }
 
     Status status = 1;

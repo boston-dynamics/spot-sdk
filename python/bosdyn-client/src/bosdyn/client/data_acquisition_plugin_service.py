@@ -42,7 +42,6 @@ However, the data_collect_fn function should update the status to STATUS_SAVING 
 storing the data.
 """
 
-import concurrent.futures
 import logging
 import threading
 import time
@@ -240,6 +239,34 @@ class DataAcquisitionStoreHelper(object):
             RPCError: Problem communicating with the robot.
         """
         future = self.store_client.store_data_async(message, data_id, file_extension)
+        self.data_id_future_pairs.append((data_id, future))
+
+    def store_data_as_chunks(self, message, data_id, file_extension=None):
+        """Store a data message by streaming with the data acquisition store service.
+
+        Args:
+            message (bytes): Data to store.
+            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this data.
+            file_extension (string) : File extension to use for writing the data to a file.
+
+        Raises:
+            RPCError: Problem communicating with the robot.
+        """
+        future = self.store_client.store_data_as_chunks_async(message, data_id, file_extension)
+        self.data_id_future_pairs.append((data_id, future))
+
+    def store_file(self, file_path, data_id, file_extension=None):
+        """Store a file with the data acquisition store service.
+
+        Args:
+            file_path (string): Path to the file to store.
+            data_id (bosdyn.api.DataIdentifier) : Data identifier to use for storing this file.
+            file_extension (string) : File extension to use for writing the data to the file.
+
+        Raises:
+            RPCError: Problem communicating with the robot.
+        """
+        future = self.store_client.store_file_async(file_path, data_id, file_extension)
         self.data_id_future_pairs.append((data_id, future))
 
     def cancel_check(self):

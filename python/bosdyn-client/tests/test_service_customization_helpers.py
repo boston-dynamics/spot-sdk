@@ -150,6 +150,7 @@ bool_spec_inputs = [
 roi_spec_inputs = [(roi_spec(allows_rectangle), _RegionOfInterestParamValidator, allows_rectangle)
                    for allows_rectangle in [True, False]]
 
+
 #type_string, element_spec, is_valid
 custom_spec_test_cases = [
     ("int", int_spec_inputs[0][0], True),
@@ -256,6 +257,7 @@ all_input_specs = (int_spec_inputs + double_spec_inputs + string_spec_inputs + b
                    one_of_spec_inputs)
 
 
+
 @pytest.mark.parametrize("spec,spec_helper,is_valid", all_input_specs)
 def test_custom_parameter_spec(spec, spec_helper, is_valid):
     if is_valid:
@@ -310,6 +312,7 @@ string_value_inputs = [
 bool_value_inputs = [
     (service_customization_pb2.BoolParam(value=True), bool_spec_inputs[0][0], _BoolParamValidator, True)
 ] #yapf: disable
+
 
 good_roi_val = service_customization_pb2.RegionOfInterestParam(
     area=image_geometry_pb2.AreaI(
@@ -441,6 +444,7 @@ one_of_value_inputs = [
 all_input_values = (int_value_inputs + double_value_inputs + string_value_inputs +
                     bool_value_inputs + roi_value_inputs + custom_value_inputs + list_value_inputs +
                     dict_value_inputs + one_of_value_inputs)
+
 
 
 @pytest.mark.parametrize("value,spec,spec_helper,is_valid", all_input_values)

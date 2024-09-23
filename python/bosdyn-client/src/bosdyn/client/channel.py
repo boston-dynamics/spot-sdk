@@ -5,7 +5,6 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import logging
-import warnings
 
 import grpc
 
@@ -24,6 +23,9 @@ _LOGGER = logging.getLogger(__name__)
 # Set default max message length for sending and receiving. This value is used when
 # creating channels in the bosdyn.client.Robot class.
 DEFAULT_MAX_MESSAGE_LENGTH = 100 * (1024**2)
+
+# Useful for clients to ensure there is enough room left in a message for other fields like headers
+DEFAULT_HEADER_BUFFER_LENGTH = 4 * (1024**2)
 
 # Period in milliseconds after which a keepalive ping is sent on the transport.
 DEFAULT_KEEP_ALIVE_TIME_MS = 5000
