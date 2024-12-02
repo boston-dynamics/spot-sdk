@@ -42,8 +42,8 @@ class Vec2(object):
         self.x = x
         self.y = y
 
-    def __str__(self):
-        return 'X: %0.3f Y: %0.3f' % (self.x, self.y)
+    def __repr__(self):
+        return 'Vec2(X: %0.3f, Y: %0.3f)' % (self.x, self.y)
 
     def __neg__(self):
         return Vec2(-self.x, -self.y)
@@ -122,8 +122,8 @@ class Vec3(object):
         self.y = y
         self.z = z
 
-    def __str__(self):
-        return 'X: %0.3f Y: %0.3f Z: %0.3f' % (self.x, self.y, self.z)
+    def __repr__(self):
+        return 'Vec3(X: %0.3f Y: %0.3f Z: %0.3f)' % (self.x, self.y, self.z)
 
     def __neg__(self):
         return Vec3(-self.x, -self.y, -self.z)
@@ -217,9 +217,9 @@ class SE2Pose(object):
         self.y = y
         self.angle = angle
 
-    def __str__(self):
-        return 'position -- X: %0.3f Y: %0.3f Yaw: %0.1f deg' % (self.x, self.y,
-                                                                 math.degrees(self.angle))
+    def __repr__(self):
+        return 'SE2Pose(X: %0.3f Y: %0.3f Yaw: %0.1f deg)' % (self.x, self.y,
+                                                              math.degrees(self.angle))
 
     @staticmethod
     def flatten(se3pose):
@@ -366,8 +366,8 @@ class SE2Velocity(object):
         self.linear_velocity_y = float(y)
         self.angular_velocity = float(angular)
 
-    def __str__(self):
-        return 'Linear velocity -- X: %0.3f Y: %0.3f Angular velocity -- %0.3f ' % (
+    def __repr__(self):
+        return 'SE2Velocity(Linear -- X: %0.3f Y: %0.3f Angular -- %0.3f)' % (
             self.linear_velocity_x, self.linear_velocity_y, self.angular_velocity)
 
     def to_obj(self, proto):
@@ -445,8 +445,8 @@ class SE3Velocity(object):
         self.angular_velocity_y = float(ang_y)
         self.angular_velocity_z = float(ang_z)
 
-    def __str__(self):
-        return 'Linear velocity -- X: %0.3f Y: %0.3f Z: %0.3f Angular velocity -- X: %0.3f Y: %0.3f Z: %0.3f' % (
+    def __repr__(self):
+        return 'SE3Velocity(Linear -- X: %0.3f Y: %0.3f Z: %0.3f Angular -- X: %0.3f Y: %0.3f Z: %0.3f)' % (
             self.linear_velocity_x, self.linear_velocity_y, self.linear_velocity_z,
             self.angular_velocity_x, self.angular_velocity_y, self.angular_velocity_z)
 
@@ -538,10 +538,10 @@ class SE3Pose(object):
         if isinstance(rot, geometry_pb2.Quaternion):
             rot = Quat.from_proto(rot)
         self.rot = rot
-
-    def __str__(self):
-        return 'position -- X: %0.3f Y: %0.3f Z: %0.3f rotation -- %s' % (self.x, self.y, self.z,
-                                                                          str(self.rot))
+ 
+    def __repr__(self):
+        return 'SE3Pose(Position -- X: %0.3f Y: %0.3f Z: %0.3f Rotation -- %s)' % (self.x, self.y, self.z,
+                                                                                   str(self.rot))
 
     def __iter__(self):
         return iter([self.x, self.y, self.z, self.rot.w, self.rot.x, self.rot.y, self.rot.z])
@@ -762,7 +762,7 @@ class Quat(object):
         self.z = z
 
     def __repr__(self):
-        return 'W: %0.4f X: %0.4f Y: %0.4f Z: %0.4f' % (self.w, self.x, self.y, self.z)
+        return 'Quat(W: %0.4f X: %0.4f Y: %0.4f Z: %0.4f)' % (self.w, self.x, self.y, self.z)
 
     def inverse(self):
         """Computes the inverse of the current math_helpers.Quat."""
