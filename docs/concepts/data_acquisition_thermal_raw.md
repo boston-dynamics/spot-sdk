@@ -54,7 +54,7 @@ with open(filename, 'rb') as f:
     buffer = f.read()
 
     try:
-        # For .pgm and .raw files transferred from the tablet or downloaded from Scout
+        # For .pgm and .raw files transferred from the tablet or downloaded from Orbit
         processed_data = numpy.frombuffer(buffer, dtype=f'{endianness}u2')
     except ValueError:
         # For .pgm and .raw files from the SpotCam+IR itself (using the Media Log service)

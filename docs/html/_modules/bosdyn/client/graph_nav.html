@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.graph_nav &mdash; Spot 4.1.0 documentation</title>
+  <title>bosdyn.client.graph_nav &mdash; Spot 4.1.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.0
+                4.1.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -1579,6 +1579,10 @@
     <span class="k">return</span> <span class="n">proto_instance</span>
 
 
+<span class="k">def</span> <span class="nf">_get_streamed_download_graph</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reads a streamed response to recreate a DownloadGraphRequest&quot;&quot;&quot;</span>
+    <span class="n">download_graph</span> <span class="o">=</span> <span class="n">_get_streamed_data</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">graph_nav_pb2</span><span class="o">.</span><span class="n">DownloadGraphResponse</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">download_graph</span><span class="o">.</span><span class="n">graph</span>
 
 
 <span class="k">def</span> <span class="nf">_get_streamed_waypoint_snapshot</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
@@ -1829,6 +1833,12 @@
     <span class="k">return</span> <span class="kc">None</span>
 
 
+
+
+<span class="nd">@handle_common_header_errors</span>
+<span class="k">def</span> <span class="nf">_download_graph_stream_errors</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on download graph streaming response, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span>
 
 
 <span class="nd">@handle_common_header_errors</span>

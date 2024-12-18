@@ -44,6 +44,8 @@ This determination is correlated with the amount of change in the environment wh
 
 When site changes cause the localization status to be `STATUS_LOST`, a new map of the site should be recorded.
 
+The lost detector can be adjusted for individual edges in the map or for an entire navigation command by setting the `LostDetectorStrictness` in either the edge `Annotations`, or the `TravelParams` of a command. This adjustment can be used to make the detector more sensitive or more permissive depending on the needs of the application.
+
 ## Stuck robots
 
 The GraphNav service uses a system of constraints to keep the robot relatively close to the recorded route (roughly within a 3m corridor).

@@ -18621,6 +18621,7 @@ This node represents a request for information from ANY listeners that may be ou
 | child | [Node](#bosdyn-api-mission-Node) |  | Child node, run after the prompt has been responded to.<br>Children will have access to the answer code provided by the response. |
 | for_autonomous_processing | [bool](#bool) |  | Hint that Question posed by this Prompt is meant to be answered by some automated system.<br>See the Question message for details. |
 | severity | [bosdyn.api.AlertData.SeverityLevel](#bosdyn-api-AlertData-SeverityLevel) |  | Severity for this prompt. Used to determine what sort of alerting<br>this prompt will trigger.<br>Here are guidelines for severity as it pertains to missions:<br>INFO: Normal operation. For example, waiting for charge; waiting on the dock for logs to<br>download. WARN: Something went wrong, but the mission will try to recover autonomously.<br>ERROR: Something went wrong, and the mission can't recover without human intervention.<br>Intervention is not time sensitive and can be resolved when convenient.<br>CRITICAL: Something went wrong, and the mission can't recover without human intervention.<br>Human needs to rescue the robot before battery runs out because it's not charging. |
+| severity_in_blackboard | [string](#string) |  | If specified, this node will read the severity out of the blackboard at<br>the specified location. |
 | question_name_in_blackboard | [string](#string) |  | If specified, this node will write its current question (bosdyn.api.mission.Question proto)<br>to the blackboard while it is being ticked. |
 
 
@@ -23437,6 +23438,7 @@ Wraps specification-related messages, and contains fields for the value sent by 
 | options | [string](#string) | repeated | A value sent by the client must be equal to one of these. |
 | editable | [bool](#bool) |  | Whether or not this parameter accepts a freeform string.<br>If set to true, clients can pick one of the given options OR type their own value.<br>If set to false, clients have to pick one of the given options.<br>If no options are specified, clients should type their own value (ignoring this bool). |
 | default_value | [string](#string) |  | Default value. If empty, UIs can pick their own default OR force user to make a<br>selection. |
+| is_multiline | [bool](#bool) |  | A hint to the UI to use a textarea / multiline EditText. |
 
 
 
@@ -27191,6 +27193,7 @@ Params common across spot movement and mobility.
 | external_force_params | [BodyExternalForceParams](#bosdyn-api-spot-BodyExternalForceParams) |  | Robot Body External Force parameters |
 | disallow_non_stairs_pitch_limiting | [bool](#bool) |  | Prevent the robot from pitching to get a better look at rearward terrain except in stairs<br>mode. |
 | disable_nearmap_cliff_avoidance | [bool](#bool) |  | Disable the secondary nearmap-based cliff avoidance that runs while on stairs. |
+| disable_missing_data_cliffs | [bool](#bool) |  | When true, allows the robot to traverse large areas with no stereo data. When false, these<br>regions of missing data are assumed to be cliffs which the robot avoids. |
 | hazard_detection_mode | [MobilityParams.HazardDetectionMode](#bosdyn-api-spot-MobilityParams-HazardDetectionMode) |  | The selected option for hazard detection. |
 
 
@@ -29804,7 +29807,7 @@ Network configuration data.
 ### SetICEConfigurationRequest
 Modify the ICE configuration.
 Note: this configuration replaces any configuration currently present.
-It is *not* appended.
+It is *not* appended. This may also cause existing connections to close.
 
 
 | Field | Type | Label | Description |

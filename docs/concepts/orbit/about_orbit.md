@@ -39,7 +39,25 @@ If done correctly, the web view should populate in the "Custom Web Views" button
 
 ### Custom WebViews
 
-Developers have the option to host web servers as an orbit extension (ports 21000-22000) that can then be pointed to as a web view. Due to these servers likely not have verified TLS certificates, the user will have to visit the direct URL, `https://ORBIT_IP:PORT/`, of the web server first to get around the privacy error described above.
+Developers can create and deploy web applications to Orbit using an Extension. The extension should serve the web application via HTTP on a port in the range 22101-22200. Orbit will proxy HTTPS requests on the port range 22001-22100 to the respective ports in the range 22101-22200. Clients should make requests to the range 22001-22100. `Custom WebViews` can be configured using this URL to present the extension's web application within the Orbit application itself.
+Note that the client requests are HTTPS. Orbit will use the same TLS certificate as the Orbit web application when proxying for the extension's web application.
+The port mapping is as follows:
+
+| Frontend | Backend |
+| -------- | ------- |
+| 22001    | 22101   |
+| 22002    | 22102   |
+| ...      | ...     |
+| 22100    | 22200   |
+
+In production environments, it is recommended to use the following in the `docker-compose.yml` of the Orbit Extension to ensure that the HTTP server is not accessible by external clients:
+
+    ...
+    ports:
+      - "127.0.0.1:<backend_port>:<backend_port>"
+    ...
+
+Extensions can also host web servers as an Orbit extension within the port ranges 21000-22000 that can then be pointed to as a web view, though the user will have to visit the direct URL, `https://ORBIT_IP:PORT/`, of the web server first to get around the privacy error described in the [WebViews](#webviews) section. This port range does not support unencrypted HTTP servers as web views.
 
 #### Note
 

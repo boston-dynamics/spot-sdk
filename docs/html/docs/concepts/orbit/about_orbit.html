@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Orbit (formerly Scout) &mdash; Spot 4.1.0 documentation</title>
+  <title>About Orbit (formerly Scout) &mdash; Spot 4.1.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.0
+                4.1.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -535,7 +535,42 @@ Development Kit License (20191101-BDSDK-SL).
 <p><code class="docutils literal notranslate"><span class="pre">WebViews</span></code> rely on the user’s browser for things like networking, cookies and caching. This means that clients interact with external websites independently and are able to access web views for websites that Orbit does not have proper routing to. In the example above, the Orbit instance is unable to <code class="docutils literal notranslate"><span class="pre">curl</span> <span class="pre">https://dev.bostondynamics.com/</span></code> but the web view still works as intended on the client browser.</p>
 <section id="custom-webviews">
 <h3>Custom WebViews<a class="headerlink" href="#custom-webviews" title="Permalink to this heading"></a></h3>
-<p>Developers have the option to host web servers as an orbit extension (ports 21000-22000) that can then be pointed to as a web view. Due to these servers likely not have verified TLS certificates, the user will have to visit the direct URL, <code class="docutils literal notranslate"><span class="pre">https://ORBIT_IP:PORT/</span></code>, of the web server first to get around the privacy error described above.</p>
+<p>Developers can create and deploy web applications to Orbit using an Extension. The extension should serve the web application via HTTP on a port in the range 22101-22200. Orbit will proxy HTTPS requests on the port range 22001-22100 to the respective ports in the range 22101-22200. Clients should make requests to the range 22001-22100. <code class="docutils literal notranslate"><span class="pre">Custom</span> <span class="pre">WebViews</span></code> can be configured using this URL to present the extension’s web application within the Orbit application itself.
+Note that the client requests are HTTPS. Orbit will use the same TLS certificate as the Orbit web application when proxying for the extension’s web application.
+The port mapping is as follows:</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Frontend</th>
+<th>Backend</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>22001</td>
+<td>22101</td>
+</tr>
+<tr>
+<td>22002</td>
+<td>22102</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<td>22100</td>
+<td>22200</td>
+</tr>
+</tbody>
+</table><p>In production environments, it is recommended to use the following in the <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> of the Orbit Extension to ensure that the HTTP server is not accessible by external clients:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="n">ports</span><span class="p">:</span>
+  <span class="o">-</span> <span class="s2">&quot;127.0.0.1:&lt;backend_port&gt;:&lt;backend_port&gt;&quot;</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>Extensions can also host web servers as an Orbit extension within the port ranges 21000-22000 that can then be pointed to as a web view, though the user will have to visit the direct URL, <code class="docutils literal notranslate"><span class="pre">https://ORBIT_IP:PORT/</span></code>, of the web server first to get around the privacy error described in the <a class="reference external" href="#webviews">WebViews</a> section. This port range does not support unencrypted HTTP servers as web views.</p>
 <section id="note">
 <h4>Note<a class="headerlink" href="#note" title="Permalink to this heading"></a></h4>
 <p>Orbit does not save any credentials or payloads passed to external websites.</p>

@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api.spot_cam;
+option go_package = "bosdyn/api/spot_cam/network";
 
 option java_outer_classname = "NetworkProto";
 
@@ -109,7 +110,7 @@ message GetICEConfigurationResponse {
 
 // Modify the ICE configuration.
 // Note: this configuration replaces any configuration currently present.
-// It is *not* appended.
+// It is *not* appended. This may also cause existing connections to close.
 message SetICEConfigurationRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;

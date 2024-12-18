@@ -46,4 +46,4 @@ The workers return any processed data through the `output_images` and `other_dat
 
 ## Parameterization
 
-Does your service require inputs or parameters? Do you want controls or widgets for those parameters to show up on the SpotApp android application or on Scout? Please refer to [this document](service_customization.md) to learn how to add parameters to a network compute bridge worker.
+Does your service require inputs or parameters? Do you want controls or widgets for those parameters to show up on the SpotApp android application or on Orbit? Please refer to [this document](service_customization.md) to learn how to add parameters to a network compute bridge worker.

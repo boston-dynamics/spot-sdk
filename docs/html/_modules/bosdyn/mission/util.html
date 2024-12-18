@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.mission.util &mdash; Spot 4.1.0 documentation</title>
+  <title>bosdyn.mission.util &mdash; Spot 4.1.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.0
+                4.1.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -891,23 +891,31 @@
     <span class="k">return</span> <span class="n">node_to_return</span></div>
 
 
+<span class="n">_SEVERITY_TO_LOG_LEVEL</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">alerts_pb2</span><span class="o">.</span><span class="n">AlertData</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">SEVERITY_LEVEL_INFO</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+    <span class="n">alerts_pb2</span><span class="o">.</span><span class="n">AlertData</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">SEVERITY_LEVEL_WARN</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span>
+    <span class="n">alerts_pb2</span><span class="o">.</span><span class="n">AlertData</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">SEVERITY_LEVEL_ERROR</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span>
+    <span class="c1"># A critical mission prompt or text message does not indicate a critical robot failure,</span>
+    <span class="c1"># and is usually expected depending on how a mission plays out. For this reason, we</span>
+    <span class="c1"># reduce the severity from CRITICAL to ERROR for logs.</span>
+    <span class="c1"># See Prompt.severity in nodes.proto for more info.</span>
+    <span class="n">alerts_pb2</span><span class="o">.</span><span class="n">AlertData</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">SEVERITY_LEVEL_CRITICAL</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">,</span>
+<span class="p">}</span>
+
+
 <div class="viewcode-block" id="severity_to_log_level"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.severity_to_log_level">[docs]</a><span class="k">def</span> <span class="nf">severity_to_log_level</span><span class="p">(</span><span class="n">text_level</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts alert data severity enum to a logger level for printing purposes.&quot;&quot;&quot;</span>
-    <span class="k">match</span> <span class="n">text_level</span><span class="p">:</span>
-        <span class="k">case</span> <span class="n">alerts_pb2</span><span class="o">.</span><span class="n">AlertData</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">SEVERITY_LEVEL_INFO</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span>
-        <span class="k">case</span> <span class="n">alerts_pb2</span><span class="o">.</span><span class="n">AlertData</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">SEVERITY_LEVEL_WARN</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARN</span>
-        <span class="k">case</span> <span class="n">alerts_pb2</span><span class="o">.</span><span class="n">AlertData</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">SEVERITY_LEVEL_ERROR</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span>
-        <span class="k">case</span> <span class="n">alerts_pb2</span><span class="o">.</span><span class="n">AlertData</span><span class="o">.</span><span class="n">SeverityLevel</span><span class="o">.</span><span class="n">SEVERITY_LEVEL_CRITICAL</span><span class="p">:</span>
-            <span class="c1"># A critical mission prompt or text message does not indicate a critical robot failure,</span>
-            <span class="c1"># and is usually expected depending on how a mission plays out. For this reason, we</span>
-            <span class="c1"># reduce the servity from CRITICAL to ERROR for logs.</span>
-            <span class="c1"># See Prompt.severity in nodes.proto for more info.</span>
-            <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span>
-        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span></div>
+    <span class="k">return</span> <span class="n">_SEVERITY_TO_LOG_LEVEL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">text_level</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span></div>
+
+
+<span class="c1"># We want to be able to port spotcam-ptz missions to the argos-ptz sensor.</span>
+<div class="viewcode-block" id="append_alternate_sensor_names"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.append_alternate_sensor_names">[docs]</a><span class="k">def</span> <span class="nf">append_alternate_sensor_names</span><span class="p">(</span><span class="n">sensor_names</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;argos-ptz&quot;</span> <span class="ow">in</span> <span class="n">sensor_names</span><span class="p">:</span>
+        <span class="n">sensor_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;spotcam-ptz&quot;</span><span class="p">)</span></div>
 
 
 </pre></div>

@@ -193,6 +193,7 @@ message Int64Param {
         // ERROR: It is an error to specify a min_value larger than the max_value.
         google.protobuf.Int64Value min_value = 4;
         google.protobuf.Int64Value max_value = 5;
+
     }
 
     // Value should be provided in the same units as defined by the spec.
@@ -217,6 +218,7 @@ message DoubleParam {
         // ERROR: It is an error to specify a min_value larger than the max_value.
         google.protobuf.DoubleValue min_value = 4;
         google.protobuf.DoubleValue max_value = 5;
+
     }
 
     // Value should be provided in the same units as defined by the spec.
@@ -227,6 +229,7 @@ message DoubleParam {
 // Wraps specification-related messages, and contains fields for the value sent by a client.
 message StringParam {
     message Spec {
+
         // A value sent by the client must be equal to one of these.
         repeated string options = 1;
 
@@ -239,6 +242,10 @@ message StringParam {
         // Default value. If empty, UIs can pick their own default OR force user to make a
         // selection.
         string default_value = 3;
+
+
+        // A hint to the UI to use a textarea / multiline EditText.
+        bool is_multiline = 5;
     }
 
     // The value sent by a client.
@@ -251,6 +258,7 @@ message BoolParam {
         // Default value. If unset, UIs can pick their own default OR force user to make a
         // selection.
         google.protobuf.BoolValue default_value = 1;
+
     }
 
     // The value sent by a client.

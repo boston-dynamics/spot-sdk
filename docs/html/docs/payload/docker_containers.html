@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Running Custom Applications with Spot &mdash; Spot 4.1.0 documentation</title>
+  <title>Running Custom Applications with Spot &mdash; Spot 4.1.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.0
+                4.1.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -617,7 +617,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </section>
 <section id="ports-for-incoming-traffic">
 <h3>Ports For Incoming Traffic<a class="headerlink" href="#ports-for-incoming-traffic" title="Permalink to this heading"></a></h3>
-<p>Both the CORE I/O and the Scout platforms uses firewall rules that control the ports on which incoming traffic is allowed. If a custom application needs to open a port for incoming traffic, for example when hosting a server that external clients can connect to, it must choose a port from within the port ranges below. Docker’s host networking mode is used to simplify networking and allow deployed containers to communicate with each other. The port ranges below are allowed to accept incoming traffic on the host networking stack.</p>
+<p>Both the CORE I/O and the Orbit platforms uses firewall rules that control the ports on which incoming traffic is allowed. If a custom application needs to open a port for incoming traffic, for example when hosting a server that external clients can connect to, it must choose a port from within the port ranges below. Docker’s host networking mode is used to simplify networking and allow deployed containers to communicate with each other. The port ranges below are allowed to accept incoming traffic on the host networking stack.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Allowed</span> <span class="n">Port</span> <span class="n">Ranges</span>
 <span class="o">-------------------</span>
 <span class="n">TCP</span><span class="p">:</span> <span class="mi">21000</span><span class="o">-</span><span class="mi">22000</span> <span class="p">(</span><span class="k">except</span> <span class="mi">21443</span> <span class="n">on</span> <span class="n">CORE</span> <span class="n">I</span><span class="o">/</span><span class="n">O</span> <span class="n">which</span> <span class="ow">is</span> <span class="n">reserved</span> <span class="k">for</span> <span class="n">an</span> <span class="n">internal</span> <span class="n">use</span> <span class="n">case</span><span class="p">)</span>
@@ -631,9 +631,9 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <p>This section describes two ways to manage docker containers on a computation payload, using CORE I/O extensions or command-line tools. Using CORE I/O Extensions is the recommended approach for any release software intended to be used on multiple CORE I/O’s.</p>
 <section id="core-i-o-extensions-configuration">
 <h3>CORE I/O Extensions Configuration<a class="headerlink" href="#core-i-o-extensions-configuration" title="Permalink to this heading"></a></h3>
-<p>Extensions are software packages or static files introduced in 3.2 that can be installed or simply uploaded in CORE I/O or Scout platforms.</p>
-<p>Configured as software packages, Extensions provide the functionality for external developers to easily install applications onto CORE I/O and Scout platforms. On the CORE I/O, these software packages can integrate a newly-mounted payload with the Spot API, or not be associated with any payload functionality at all, such as uploading data to an AWS bucket.</p>
-<p>Extensions can also simply be static files that developers need to upload into CORE I/O or Scout platform. This configuration supports two important use cases:</p>
+<p>Extensions are software packages or static files introduced in 3.2 that can be installed or simply uploaded in CORE I/O or Orbit platforms.</p>
+<p>Configured as software packages, Extensions provide the functionality for external developers to easily install applications onto CORE I/O and Orbit platforms. On the CORE I/O, these software packages can integrate a newly-mounted payload with the Spot API, or not be associated with any payload functionality at all, such as uploading data to an AWS bucket.</p>
+<p>Extensions can also simply be static files that developers need to upload into CORE I/O or Orbit platform. This configuration supports two important use cases:</p>
 <ol class="simple">
 <li><p>It allows the developers to split their Extensions into a smaller Extension with the software components that needs to be updated frequently and one or more larger Extensions with static files needed by the Extension with the software component. This configuration simplifies the process of updating Extensions by decoupling static large files from the frequently-updatable files and installing them once, or less frequently.</p></li>
 <li><p>It allows the developers to split their Extensions into a generic software package that is identical for all customers, and separate Extensions with configuration files that are applicable to one of a subset of customers. This configuration simplifies the process of installing customer-specific Extensions by maintaining the common part of the package in one Extension and the customer-specific configuration in another Extension.</p></li>
@@ -659,6 +659,12 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <li><p>Cannot contain the special strings, <code class="docutils literal notranslate"><span class="pre">coreio</span></code> and <code class="docutils literal notranslate"><span class="pre">mission_control</span></code></p></li>
 </ul>
 <p>Please note that these restrictions do not apply to the Extension filename when <code class="docutils literal notranslate"><span class="pre">extension_name</span></code> is populated.</p>
+<p>One known issue in CORE I/O version 4.1.0 is that Extensions with names that violate the naming requirements cannot be uninstalled through the web portal. To resolve this, you can use one of the following workarounds (be sure to back anything up you are not confident you have stored elsewhere prior to deleting it on the CORE I/O):</p>
+<ul class="simple">
+<li><p><strong>Before upgrading to CORE I/O version 4.1.0</strong>: Uninstall the affected Extensions. Then, update the Extension’s name (as specified in the <code class="docutils literal notranslate"><span class="pre">extension_name</span></code> field in <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>) or its filename. After upgrading to CORE I/O version 4.1.0, reinstall the updated Extension.</p></li>
+<li><p><strong>Using SSH</strong>: Connect to the CORE I/O via SSH and delete the corresponding directories manually. Run the following command: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">rm</span> <span class="pre">-rf</span> <span class="pre">/data/.extensions/replace_this_string_with_the_extension_you_want_to_delete</span></code>, where <code class="docutils literal notranslate"><span class="pre">replace_this_string_with_the_extension_you_want_to_delete</span></code> should be replaced with the name(s) of the Extension(s) you want to delete (one command per Extension). Be aware that any related configurations (e.g., a Docker volume associated with the Extension) may also need to be removed.</p></li>
+<li><p><strong>Downgrade the CORE I/O to 4.0.2</strong>: Downgrade the CORE I/O to 4.0.2, delete the affected Extensions, then upgrade the CORE I/O to the desired version.</p></li>
+</ul>
 <section id="manifest-file">
 <h5>Manifest file<a class="headerlink" href="#manifest-file" title="Permalink to this heading"></a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file is the Extension parameterization file with the following parameters:</p>
@@ -677,14 +683,23 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </section>
 <section id="docker-compose-yaml-configuration-file">
 <h5>Docker Compose YAML configuration file<a class="headerlink" href="#docker-compose-yaml-configuration-file" title="Permalink to this heading"></a></h5>
-<p>The <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together. As of 4.1.0, the <code class="docutils literal notranslate"><span class="pre">journald</span></code> logging driver is supported for Extensions and its usage is strongly recommended. because it enables developers to retrieve logs for containers that are no longer running, even after a power cycle. If no logging driver is specified in the <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file, the Extension uses the <code class="docutils literal notranslate"><span class="pre">journald</span></code> logging driver.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together. If no logging driver is specified in the <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file, the Extension uses the <code class="docutils literal notranslate"><span class="pre">journald</span></code> logging driver as of 4.1.0.</p>
+</section>
+<section id="docker-logs">
+<h5>Docker Logs<a class="headerlink" href="#docker-logs" title="Permalink to this heading"></a></h5>
+<p>As of 4.1.0, the <code class="docutils literal notranslate"><span class="pre">journald</span></code> logging driver is supported for Extensions. Its usage is strongly recommended because it enables developers to retrieve logs for containers that are no longer running. If the CORE I/O has not been power cycled, logs for an individual run of a container may be retrieved by:</p>
+<ul class="simple">
+<li><p>Executing <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">events</span></code>, and noting the full Docker container ID(s) of interest</p></li>
+<li><p>For each ID, executing <code class="docutils literal notranslate"><span class="pre">journalctl</span> <span class="pre">CONTAINER_ID_FULL={ID}</span> <span class="pre">-u</span> <span class="pre">docker.service</span> <span class="pre">--until</span> <span class="pre">now</span></code>, where <code class="docutils literal notranslate"><span class="pre">{ID}</span></code> is the full Docker container ID from the previous step</p></li>
+</ul>
+<p>If the CORE I/O has been power cycled, logs may be retrieved by executing <code class="docutils literal notranslate"><span class="pre">journalctl</span> <span class="pre">-u</span> <span class="pre">docker.service</span> <span class="pre">--until</span> <span class="pre">now</span></code>.</p>
 </section>
 <section id="other-files">
 <h5>Other files<a class="headerlink" href="#other-files" title="Permalink to this heading"></a></h5>
 <p>Extensions can also include the following files:</p>
 <ul class="simple">
 <li><p>Icon file: Optional image file with the icon to show for the extension in the UI. The icon filename is specified in the <code class="docutils literal notranslate"><span class="pre">icon</span></code> field in the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file. If omitted, a generic icon will be used for the extension.</p></li>
-<li><p>Udev rules file: Optional file with udev rules to copy to host OS /etc/udev/rules.d in order to support devices connected to Spot platform as a requirement to run the Extension. The udev filename is specified in the <code class="docutils literal notranslate"><span class="pre">udev_rules</span></code> field in the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file. Udev rules are ignored in Extensions installations in Scout.</p></li>
+<li><p>Udev rules file: Optional file with udev rules to copy to host OS /etc/udev/rules.d in order to support devices connected to Spot platform as a requirement to run the Extension. The udev filename is specified in the <code class="docutils literal notranslate"><span class="pre">udev_rules</span></code> field in the <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file. Udev rules are ignored in Extensions installations in Orbit.</p></li>
 <li><p>Any other files needed to run the extension: The creators of the Spot Extensions can include any other files in the extension bundle that is necessary for the software applications in the extension to run.</p></li>
 </ul>
 </section>
@@ -769,7 +784,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </section>
 <section id="command-line-configuration">
 <h3>Command-line Configuration<a class="headerlink" href="#command-line-configuration" title="Permalink to this heading"></a></h3>
-<p>Users can also manage their applications manually on the CORE I/O, or other compute payloads, by ssh-ing into it (<code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-p</span> <span class="pre">20022</span> <span class="pre">192.168.80.3</span></code> from the robot’s WiFi) and starting their applications using the options described below. The Extensions functionality included in CORE I/O and Scout platforms simplify the process of managing applications on these platforms, but users can also use the instructions below for debugging and testing purposes.</p>
+<p>Users can also manage their applications manually on the CORE I/O, or other compute payloads, by ssh-ing into it (<code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-p</span> <span class="pre">20022</span> <span class="pre">192.168.80.3</span></code> from the robot’s WiFi) and starting their applications using the options described below. The Extensions functionality included in CORE I/O and Orbit platforms simplify the process of managing applications on these platforms, but users can also use the instructions below for debugging and testing purposes.</p>
 <section id="run-application-s-directly-on-compute-payload">
 <h4>Run Application(s) Directly on Compute Payload<a class="headerlink" href="#run-application-s-directly-on-compute-payload" title="Permalink to this heading"></a></h4>
 <p>Users can copy their application to the CORE I/O:</p>

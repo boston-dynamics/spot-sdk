@@ -12,6 +12,32 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## 4.1.1
+
+### Bug Fixes and Improvements
+
+#### Autowalk / Missions
+
+- Prompt severity can now be read from the blackboard using the `severity_in_blackboard` field (if specified) in the [Prompt](../protos/bosdyn/api/mission/nodes.proto#prompt) message.
+
+#### Navigation
+
+- The robot can now be commanded to traverse large areas with no stereo data by setting the `disable_missing_data_cliffs` field in the [MobilityParams](../protos/bosdyn/api/spot/robot_command.proto#mobilityparams) message to `true`. Users must exercise extreme caution when setting this field to `true`.
+
+#### Graph Nav
+
+- The `_get_streamed_download_graph` method is now defined, thereby fixing the issue with the `recording_command_line.py` example in 4.1.0.
+
+### Known Issues
+
+#### Preexisting, but undiscovered prior to 4.1.1
+
+- One known issue in CORE I/O version 4.1.0 is that Extensions with names that violate the naming requirements cannot be uninstalled through the web portal. Please see [here](payload/docker_containers.md#extension-structure) for more information.
+
+#### Preexisting
+
+- Same as 4.1.0
+
 ## 4.1.0
 
 ### Breaking Changes
@@ -48,7 +74,7 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 - Support for uploading and downloading [graphs](../protos/bosdyn/api/graph_nav/map.proto#graph) larger than 4 MB has been added via the [UploadGraphStreaming](../protos/bosdyn/api/graph_nav/graph_nav_service.proto#uploadgraphstreaming) and [DownloadGraphStreaming](../protos/bosdyn/api/graph_nav/graph_nav_service.proto#downloadgraphstreaming) RPCs, respectively.
 
-- Area Callback implementations are now informed of whether the robot is already inside the callback region at the beginning of the callback, rather than starting from the edge of the region as usual. This can be used by the callback to provide [better behavior for restarting or re-routing](concepts/autonomy/graphnav_area_callbacks.md#handling-re-routing. This can happen in some cases when the robot gets stuck inside the region, and restarts navigation with a new navigation command.
+- Area Callback implementations are now informed of whether the robot is already inside the callback region at the beginning of the callback, rather than starting from the edge of the region as usual. This can be used by the callback to provide [better behavior for restarting or re-routing](concepts/autonomy/graphnav_area_callbacks.md#handling-re-routing). This can happen in some cases when the robot gets stuck inside the region, and restarts navigation with a new navigation command.
 
 #### Keepalive Service
 
@@ -56,11 +82,13 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 #### Navigation
 
-- The robot can now detect and classify objects or regions in the world as obstacles or areas to avoid that previously would not have been classified as such. The `hazard_detection_mode` field in the [MobilityParams](../protos/bosdyn/api/robot_command.proto) message controls whether the feature is on, and if it is on, the strictness of navigation around the detected hazards.
+- The robot can now detect and classify objects or regions in the world as obstacles or areas to avoid that previously would not have been classified as such. The `hazard_detection_mode` field in the [MobilityParams](../protos/bosdyn/api/spot/robot_command.proto#mobilityparams) message controls whether the feature is on, and if it is on, the strictness of navigation around the detected hazards.
 
-- The robot can now be restricted from ascending or descending stairs by using the new `STAIRS_MODE_PROHIBITED` enumerator in the `StairsMode` enum type in the [MobilityParams](../protos/bosdyn/api/robot_command.proto) message.
+- The robot can now be restricted from ascending or descending stairs by using the new `STAIRS_MODE_PROHIBITED` enumerator in the `StairsMode` enum type in the [MobilityParams](../protos/bosdyn/api/spot/robot_command.proto#mobilityparams) message.
 
 - No-go regions now support circles via the new field, `circle`, in the [NoGoRegionProperties](../protos/bosdyn/api/world_object.proto#nogoregionproperties) message.
+
+- A new planner_mode field has been added to the TravelParams message. If this is set to PLANNER_MODE_DEFAULT or PLANNER_MODE_SHORT_RANGE, the default navigation path planner will be used. If this is set to PLANNER_MODE_LONG_RANGE, the new experimental Long Range Planner will be used. The Long Range Planner allows the robot to navigate around large obstacles that were not present during mission recording. When the Long Range Planner is enabled, the robot will be allowed to deviate up to 6 m from the recorded path, as compared to 1.5 m when using the default path planner, and 0.25 m when strict path following is enabled. Caution is recommended when using the Long Range Planner, since the robot may walk into a hazardous or undesired area.
 
 ### Bug Fixes and Improvements
 
@@ -146,8 +174,6 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 ### Spot Sample Code
 
-#### New
-
 #### Updated
 
 - [Area Callback Crosswalk](../python/examples/area_callback/README.md) and [Area Callback Look Both Ways](../python/examples/area_callback/README.md): The `area_callback_crosswalk.py` and `area_callback_look_both_ways.py` examples now utilize the new `starting_inside_region` field mentioned above in the [4.1.0](#410) release notes. Custom parameters have also been added to the latter example to allow the user to configure the yaw.
@@ -164,7 +190,7 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 - [Save File Plugin Service](../python/examples/data_acquisition_service/README.md#save-file-plugin) and [Data Acquisition Plugin - Custom Params](../python/examples/service_customization/custom_parameters_data_acquisition/README.md): These examples now use methods that use the new [StoreDataStream](../protos/bosdyn/api/data_acquisition_store_service.proto#StoreDataStream) RPC under the hood. Please note that these examples will no longer work if the robot software version is before 4.1.0.
 
-[Data Acquisition Download](../python/examples/data_acquisition_service/README.md): This example now additionally supports the [QueryStoredCaptures](../protos/bosdyn/api/data_acquisition_store_service.proto#querystoredcaptures) RPC.
+- [Data Acquisition Download](../python/examples/data_acquisition_service/README.md): This example now additionally supports the [QueryStoredCaptures](../protos/bosdyn/api/data_acquisition_store_service.proto#querystoredcaptures) RPC.
 
 - [Simple Alert Server](../python/examples/network_compute_bridge/README.md): The breaking change reported in [4.0.1](#401), but present since [4.0.0](#400) has been fixed for the `simple_alert_server.py` example. The `status` in the `WorkerComputeResponse` is set to `NETWORK_COMPUTE_STATUS_SUCCESS`.
 

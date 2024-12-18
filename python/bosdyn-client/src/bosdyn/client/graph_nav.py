@@ -1075,6 +1075,10 @@ def _get_streamed_data(response, data_type):
     return proto_instance
 
 
+def _get_streamed_download_graph(response):
+    """Reads a streamed response to recreate a DownloadGraphRequest"""
+    download_graph = _get_streamed_data(response, graph_nav_pb2.DownloadGraphResponse)
+    return download_graph.graph
 
 
 def _get_streamed_waypoint_snapshot(response):
@@ -1325,6 +1329,12 @@ def _navigate_feedback_error(response):
     return None
 
 
+
+
+@handle_common_header_errors
+def _download_graph_stream_errors(response):
+    """Return a custom exception based on download graph streaming response, None if no error."""
+    return None
 
 
 @handle_common_header_errors

@@ -12,7 +12,7 @@ Spot 3.3 release features a new system for parameterizing 3rd party services. If
 
 - UI on the Tablet application for actions containing parameters (either when recording a mission, or just performing actions in teleoperation).
 - UI on the Tablet application for adjusting image parameters when streaming from a 3rd party image source.
-- UI on Scout for editing any autowalk action with parameters.
+- UI on Orbit for editing any autowalk action with parameters.
 
 The following services support service customization:
 
@@ -64,7 +64,7 @@ The bool parameter allows users to turn things on and off. It is defined by the 
 
 Region of Interest, or ROI, allows users to specify a region of an image. It is defined by the `RegionOfInterestParam` and `RegionOfInterestParam.Spec` protobuf messages. As of 3.3, ROI params are limited to specifying rectangular regions, and really only work well for `Network Compute Bridge Worker` services. The tablet does not allow setting ROI for `Area Callback` services, but that will likely change in the future. Other services have limited ROI functionality.
 
-Region of interest is helpful to narrow down a search space if there is a lot going on in an image, and the camera can't be moved or zoomed in such a way that only the thing the user care's about is in frame. Users will be able to draw regions on live images using the tablet UI, and on images taken at record time when editing parameters in Scout.
+Region of interest is helpful to narrow down a search space if there is a lot going on in an image, and the camera can't be moved or zoomed in such a way that only the thing the user care's about is in frame. Users will be able to draw regions on live images using the tablet UI, and on images taken at record time when editing parameters in Orbit.
 
 ### Dictionary
 

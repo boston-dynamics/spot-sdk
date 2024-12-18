@@ -118,6 +118,10 @@ message MobilityParams {
     // Disable the secondary nearmap-based cliff avoidance that runs while on stairs.
     bool disable_nearmap_cliff_avoidance = 12;
 
+    // When true, allows the robot to traverse large areas with no stereo data. When false, these
+    // regions of missing data are assumed to be cliffs which the robot avoids.
+    bool disable_missing_data_cliffs = 21;
+
     // Semantic hazard detection can detect and classify objects or regions in the world as
     // obstacles or areas to avoid that would not normally be classified as such. Obstacle avoidance
     // still needs to be on for the robot to avoid these additional hazards. A CORE I/O is necessary

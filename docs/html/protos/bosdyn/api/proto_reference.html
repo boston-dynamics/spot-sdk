@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Protocol Documentation &mdash; Spot 4.1.0 documentation</title>
+  <title>Protocol Documentation &mdash; Spot 4.1.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.0
+                4.1.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -35621,6 +35621,12 @@ This node represents a request for information from ANY listeners that may be ou
 <td>Severity for this prompt. Used to determine what sort of alerting<br>this prompt will trigger.<br>Here are guidelines for severity as it pertains to missions:<br>INFO: Normal operation. For example, waiting for charge; waiting on the dock for logs to<br>download. WARN: Something went wrong, but the mission will try to recover autonomously.<br>ERROR: Something went wrong, and the mission can't recover without human intervention.<br>Intervention is not time sensitive and can be resolved when convenient.<br>CRITICAL: Something went wrong, and the mission can't recover without human intervention.<br>Human needs to rescue the robot before battery runs out because it's not charging.</td>
 </tr>
 <tr>
+<td>severity_in_blackboard</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>If specified, this node will read the severity out of the blackboard at<br>the specified location.</td>
+</tr>
+<tr>
 <td>question_name_in_blackboard</td>
 <td><a href="#string">string</a></td>
 <td></td>
@@ -45194,6 +45200,12 @@ Wraps specification-related messages, and contains fields for the value sent by 
 <td></td>
 <td>Default value. If empty, UIs can pick their own default OR force user to make a<br>selection.</td>
 </tr>
+<tr>
+<td>is_multiline</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>A hint to the UI to use a textarea / multiline EditText.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-UserInterfaceInfo"></a></p>
 </section>
@@ -53891,6 +53903,12 @@ behaviors. By default, the external force estimator is disabled on the robot.</p
 <td>Disable the secondary nearmap-based cliff avoidance that runs while on stairs.</td>
 </tr>
 <tr>
+<td>disable_missing_data_cliffs</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>When true, allows the robot to traverse large areas with no stereo data. When false, these<br>regions of missing data are assumed to be cliffs which the robot avoids.</td>
+</tr>
+<tr>
 <td>hazard_detection_mode</td>
 <td><a href="#bosdyn-api-spot-MobilityParams-HazardDetectionMode">MobilityParams.HazardDetectionMode</a></td>
 <td></td>
@@ -58794,7 +58812,7 @@ remount the encrypted filesystem layer.</p>
 <h3>SetICEConfigurationRequest<a class="headerlink" href="#seticeconfigurationrequest" title="Permalink to this heading"></a></h3>
 <p>Modify the ICE configuration.
 Note: this configuration replaces any configuration currently present.
-It is <em>not</em> appended.</p>
+It is <em>not</em> appended. This may also cause existing connections to close.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>

@@ -124,7 +124,7 @@ sudo docker run -it --platform linux/arm64 --network=host {IMAGE_NAME} {ROBOT_IP
 
 ### Ports For Incoming Traffic
 
-Both the CORE I/O and the Scout platforms uses firewall rules that control the ports on which incoming traffic is allowed. If a custom application needs to open a port for incoming traffic, for example when hosting a server that external clients can connect to, it must choose a port from within the port ranges below. Docker's host networking mode is used to simplify networking and allow deployed containers to communicate with each other. The port ranges below are allowed to accept incoming traffic on the host networking stack.
+Both the CORE I/O and the Orbit platforms uses firewall rules that control the ports on which incoming traffic is allowed. If a custom application needs to open a port for incoming traffic, for example when hosting a server that external clients can connect to, it must choose a port from within the port ranges below. Docker's host networking mode is used to simplify networking and allow deployed containers to communicate with each other. The port ranges below are allowed to accept incoming traffic on the host networking stack.
 
 ```
 Allowed Port Ranges
@@ -139,11 +139,11 @@ This section describes two ways to manage docker containers on a computation pay
 
 ### CORE I/O Extensions Configuration
 
-Extensions are software packages or static files introduced in 3.2 that can be installed or simply uploaded in CORE I/O or Scout platforms.
+Extensions are software packages or static files introduced in 3.2 that can be installed or simply uploaded in CORE I/O or Orbit platforms.
 
-Configured as software packages, Extensions provide the functionality for external developers to easily install applications onto CORE I/O and Scout platforms. On the CORE I/O, these software packages can integrate a newly-mounted payload with the Spot API, or not be associated with any payload functionality at all, such as uploading data to an AWS bucket.
+Configured as software packages, Extensions provide the functionality for external developers to easily install applications onto CORE I/O and Orbit platforms. On the CORE I/O, these software packages can integrate a newly-mounted payload with the Spot API, or not be associated with any payload functionality at all, such as uploading data to an AWS bucket.
 
-Extensions can also simply be static files that developers need to upload into CORE I/O or Scout platform. This configuration supports two important use cases:
+Extensions can also simply be static files that developers need to upload into CORE I/O or Orbit platform. This configuration supports two important use cases:
 
 1. It allows the developers to split their Extensions into a smaller Extension with the software components that needs to be updated frequently and one or more larger Extensions with static files needed by the Extension with the software component. This configuration simplifies the process of updating Extensions by decoupling static large files from the frequently-updatable files and installing them once, or less frequently.
 2. It allows the developers to split their Extensions into a generic software package that is identical for all customers, and separate Extensions with configuration files that are applicable to one of a subset of customers. This configuration simplifies the process of installing customer-specific Extensions by maintaining the common part of the package in one Extension and the customer-specific configuration in another Extension.
@@ -170,6 +170,12 @@ If populated, the `extension_name` field in `manifest.json` represents the name 
 
 Please note that these restrictions do not apply to the Extension filename when `extension_name` is populated.
 
+One known issue in CORE I/O version 4.1.0 is that Extensions with names that violate the naming requirements cannot be uninstalled through the web portal. To resolve this, you can use one of the following workarounds (be sure to back anything up you are not confident you have stored elsewhere prior to deleting it on the CORE I/O):
+
+- **Before upgrading to CORE I/O version 4.1.0**: Uninstall the affected Extensions. Then, update the Extension's name (as specified in the `extension_name` field in `manifest.json`) or its filename. After upgrading to CORE I/O version 4.1.0, reinstall the updated Extension.
+- **Using SSH**: Connect to the CORE I/O via SSH and delete the corresponding directories manually. Run the following command: `sudo rm -rf /data/.extensions/replace_this_string_with_the_extension_you_want_to_delete`, where `replace_this_string_with_the_extension_you_want_to_delete` should be replaced with the name(s) of the Extension(s) you want to delete (one command per Extension). Be aware that any related configurations (e.g., a Docker volume associated with the Extension) may also need to be removed.
+- **Downgrade the CORE I/O to 4.0.2**: Downgrade the CORE I/O to 4.0.2, delete the affected Extensions, then upgrade the CORE I/O to the desired version.
+
 ##### Manifest file
 
 The `manifest.json` file is the Extension parameterization file with the following parameters:
@@ -187,14 +193,23 @@ The docker images listed in the `images` field of the `manifest.json` file also 
 
 ##### Docker Compose YAML configuration file
 
-The `docker-compose.yml` file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together. As of 4.1.0, the `journald` logging driver is supported for Extensions and its usage is strongly recommended. because it enables developers to retrieve logs for containers that are no longer running, even after a power cycle. If no logging driver is specified in the `docker-compose.yml` file, the Extension uses the `journald` logging driver.
+The `docker-compose.yml` file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together. If no logging driver is specified in the `docker-compose.yml` file, the Extension uses the `journald` logging driver as of 4.1.0.
+
+##### Docker Logs
+
+As of 4.1.0, the `journald` logging driver is supported for Extensions. Its usage is strongly recommended because it enables developers to retrieve logs for containers that are no longer running. If the CORE I/O has not been power cycled, logs for an individual run of a container may be retrieved by:
+
+- Executing `docker events`, and noting the full Docker container ID(s) of interest
+- For each ID, executing `journalctl CONTAINER_ID_FULL={ID} -u docker.service --until now`, where `{ID}` is the full Docker container ID from the previous step
+
+If the CORE I/O has been power cycled, logs may be retrieved by executing `journalctl -u docker.service --until now`.
 
 ##### Other files
 
 Extensions can also include the following files:
 
 - Icon file: Optional image file with the icon to show for the extension in the UI. The icon filename is specified in the `icon` field in the `manifest.json` file. If omitted, a generic icon will be used for the extension.
-- Udev rules file: Optional file with udev rules to copy to host OS /etc/udev/rules.d in order to support devices connected to Spot platform as a requirement to run the Extension. The udev filename is specified in the `udev_rules` field in the `manifest.json` file. Udev rules are ignored in Extensions installations in Scout.
+- Udev rules file: Optional file with udev rules to copy to host OS /etc/udev/rules.d in order to support devices connected to Spot platform as a requirement to run the Extension. The udev filename is specified in the `udev_rules` field in the `manifest.json` file. Udev rules are ignored in Extensions installations in Orbit.
 - Any other files needed to run the extension: The creators of the Spot Extensions can include any other files in the extension bundle that is necessary for the software applications in the extension to run.
 
 #### Extension Management
@@ -290,7 +305,7 @@ To uninstall and remove an extension, click the “Trash Bin” icon for the Ext
 
 ### Command-line Configuration
 
-Users can also manage their applications manually on the CORE I/O, or other compute payloads, by ssh-ing into it (`ssh -p 20022 192.168.80.3` from the robot's WiFi) and starting their applications using the options described below. The Extensions functionality included in CORE I/O and Scout platforms simplify the process of managing applications on these platforms, but users can also use the instructions below for debugging and testing purposes.
+Users can also manage their applications manually on the CORE I/O, or other compute payloads, by ssh-ing into it (`ssh -p 20022 192.168.80.3` from the robot's WiFi) and starting their applications using the options described below. The Extensions functionality included in CORE I/O and Orbit platforms simplify the process of managing applications on these platforms, but users can also use the instructions below for debugging and testing purposes.
 
 #### Run Application(s) Directly on Compute Payload
 

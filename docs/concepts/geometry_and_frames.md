@@ -26,7 +26,7 @@ The "body" frame describes the robot's position and orientation, as shown in the
 
 Sensor frames describe the origin of a given sensor and its coordinate axes. The sensor messages from the robot, such as camera images or point clouds, will include the string frame name of the sensor. Sensor frames are commonly used to describe objects that were detected using the sensor.
 
-Objects can also be described using a frame. For example, a fiducial has an origin in the center of the tag, and x,y axes aligning with the tag axes and the z-axis pointing out of the page.
+Objects can also be described using a frame. For example, when looking directly at a fiducial, its origin is in the center of the tag, and it has an x-axis that points upwards, a y-axis that points left, and a z-axis that points out of the page.
 
 As the robot moves around in the world, the relationship between the two frames can either stay the same always, or be non-static and dynamically changing. The transformation between an inertial frame and the robot's body frame will change as the robot moves. In contrast, the transformation between the robot's body and the camera frame will not change regardless of whether the robot is moving or not.
 

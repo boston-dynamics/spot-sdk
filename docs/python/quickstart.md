@@ -166,10 +166,10 @@ $ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreogra
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 4.1.0, use the following command.
+example 4.1.1, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==4.1.0 bosdyn-mission==4.1.0 bosdyn-choreography-client==4.1.0 bosdyn-orbit==4.1.0
+$ python3 -m pip install bosdyn-client==4.1.1 bosdyn-mission==4.1.1 bosdyn-choreography-client==4.1.1 bosdyn-orbit==4.1.1
 ```
 
 **Version incompatibility:**
@@ -178,7 +178,7 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 4.1.0 which is incompatible.
+have bosdyn-api 4.1.1 which is incompatible.
 ```
 
 Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all packages) and then reinstalling:
@@ -194,13 +194,13 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    4.1.0
-bosdyn-choreography-client    4.1.0
-bosdyn-choreography-protos    4.1.0
-bosdyn-client                 4.1.0
-bosdyn-core                   4.1.0
-bosdyn-mission                4.1.0
-bosdyn-orbit                  4.1.0
+bosdyn-api                    4.1.1
+bosdyn-choreography-client    4.1.1
+bosdyn-choreography-protos    4.1.1
+bosdyn-client                 4.1.1
+bosdyn-core                   4.1.1
+bosdyn-mission                4.1.1
+bosdyn-orbit                  4.1.1
 ```
 
 **Windows users:**

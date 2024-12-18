@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Custom Gait &mdash; Spot 4.1.0 documentation</title>
+  <title>Custom Gait &mdash; Spot 4.1.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.0
+                4.1.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -532,6 +532,25 @@ Development Kit License (20191101-BDSDK-SL).
 <h2>Presets<a class="headerlink" href="#presets" title="Permalink to this heading"></a></h2>
 <p>Several preset gait patterns are provided in a pulldown menu where the “Reset to Default Parameters” button is for most moves. Select the desired preset, then click the “Apply” button. Note that presets only modify a subset of parameters. Presets with the prefix “gait” will only impact <code class="docutils literal notranslate"><span class="pre">cycle_duration</span></code> and phase parameters.</p>
 </section>
+<section id="animated-custom-gaits">
+<h2>Animated Custom Gaits<a class="headerlink" href="#animated-custom-gaits" title="Permalink to this heading"></a></h2>
+<p>Custom Gait can also be defined using animation data as input, which the controller will then seek to imitate.
+If you create a valid .cha file with a Spot gait cycle (See section <a class="reference external" href="#valid-cha-for-custom-gait-cycles">Valid CHA for custom gait cycles</a>) you can then load it in Choreographer and choose that file as the basis for Custom Gait by clicking <code class="docutils literal notranslate"><span class="pre">Show</span> <span class="pre">animated</span> <span class="pre">cycle</span> <span class="pre">params</span></code> on a Custom Gait Move and picking the animation from the <code class="docutils literal notranslate"><span class="pre">Animation</span> <span class="pre">name</span></code> dropdown. The rest of the <code class="docutils literal notranslate"><span class="pre">Animated</span> <span class="pre">Cycle</span></code> section contains a number of checkboxes and sliders to enable/disable various components of the input animation and to make small adjustments to offsets and amplitude (See each parameter’s help text in Choreographer for more details). Enabling all checkboxes and leaving the sliders at their default values will make the Custom Gait controller do its best to match the input animation. However, be aware that most of the same limitations apply as if the gait was defined by sliders (e.g. duty cycle, body offset limits, and cycle duration).
+A current limitation is that while animations can have 2 swing phases for each leg, only the 1st swing can currently be used for swing-xy motion from animation.</p>
+<section id="valid-cha-for-custom-gait-cycles">
+<h3>Valid CHA for custom gait cycles<a class="headerlink" href="#valid-cha-for-custom-gait-cycles" title="Permalink to this heading"></a></h3>
+<p>See <a class="reference internal" href="animation_file_specification.html"><span class="doc">Animation File Specification</span></a> for details about the CHA format and <a class="reference internal" href="animations_in_choreographer.html"><span class="doc">Animations In Choreographer</span></a> for a high-level overview.
+Beyond that, a valid CHA file to use with custom gait requires the following:</p>
+<ul class="simple">
+<li><p>The CHA file needs to have the <code class="docutils literal notranslate"><span class="pre">custom_gait_cycle</span></code> option set in the header. <br><strong>NB</strong>: CHA files with the <code class="docutils literal notranslate"><span class="pre">custom_gait_cycle</span></code> option does <strong>NOT</strong> show up in the <code class="docutils literal notranslate"><span class="pre">Animation</span></code> section of the Choreographer library. It will instead show up in the <code class="docutils literal notranslate"><span class="pre">animated_cycle_params.animation_name</span></code> drop down menu of a CustomGait move.</p></li>
+<li><p>each foot must lift off and touch down at least once, but no more than twice</p></li>
+<li><p>the first and last keyframe should match with the exception of base translate x, in case the animation moves forward.</p></li>
+<li><p>unlike other cha files, it is valid for feet to be in the air at the first and last frame, which allows for swings to cross the transition point of the custom gait loop</p></li>
+<li><p>the robot can be either translating forward or stepping in place with feet sliding backwards during the animated gait cycle cha, but for the best result the animation should be meant to translate at a constant velocity</p></li>
+<li><p>Some swing data still can not be pulled from the cha, so you may still need to adjust swing velocities and velocity limits…”, “</p></li>
+</ul>
+</section>
+</section>
 <section id="tips-for-configuring-custom-gait">
 <h2>Tips for Configuring Custom Gait<a class="headerlink" href="#tips-for-configuring-custom-gait" title="Permalink to this heading"></a></h2>
 <ul class="simple">
@@ -709,6 +728,58 @@ Development Kit License (20191101-BDSDK-SL).
 <tr>
 <td>trip_sensitivity</td>
 <td>How sensitive we should be to trip detection.<br>On the range [0, 1], where 1 is normal sensitivity and 0 is ignoring all trips.<br>Useful for very aggressive gaits or when a costume is restricting leg motion.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.animation_name</td>
+<td>Name of animation gait cycle file to use for extracting parameters.<br>This list only shows CHA files that include the option: 'custom_gait_cycle'.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.enable_animation_duration</td>
+<td>Use cycle duration from the animated gait cycle. This will overwrite the parameter: \n'Cycle duration'.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.enable_leg_timing</td>
+<td>Use leg timing from the animated gait cycle. This will overwrite all swing parameters: \n['Fl swing', 'two fl swing', 'fr swing', 'two fr swing', 'hl swing', 'two hl swing', 'hr swing', 'two hr swing'].</td>
+</tr>
+<tr>
+<td>animated_cycle_params.enable_stance_shape</td>
+<td>Use stance shape from the animated gait cycle. This will overwrite all Stance Shape parameters: \n['length', 'width', 'front wider than hind', 'left longer than right', 'left forward of right'].</td>
+</tr>
+<tr>
+<td>animated_cycle_params.enable_body_offset</td>
+<td>The body offset refers to the offset from the nominal standing posture to the average of the animated position and orientation of the body.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.enable_body_motion</td>
+<td>The body motion refers to the cyclic part of the body animation relative to the average body posture of the animation.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.enable_swing_xy</td>
+<td>Use XY swing trajectories from the animated custom gait cycle. This will override the swing overlay sliders, both in General swing params, and those specific to each leg.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.body_x_multiplier</td>
+<td>Multiplier for body animation on translational x in body frame.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.body_y_multiplier</td>
+<td>Multiplier for body animation on translational y in body frame.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.body_z_multiplier</td>
+<td>Multiplier for body animation on translational z in body frame.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.body_roll_multiplier</td>
+<td>Multiplier for body animation on roll.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.body_pitch_multiplier</td>
+<td>Multiplier for body animation on pitch.</td>
+</tr>
+<tr>
+<td>animated_cycle_params.body_yaw_multiplier</td>
+<td>Multiplier for body animation on yaw.</td>
 </tr>
 </tbody>
 </table></section>

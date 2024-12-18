@@ -49,8 +49,9 @@ class PtzGetPtzPositionCommand(Command):
     def __init__(self, subparsers, command_dict):
         super(PtzGetPtzPositionCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument(
-            'ptz_name', default='digi', const='digi', nargs='?',
-            choices=['digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'])
+            'ptz_name', default='digi', const='digi', nargs='?', choices=[
+                'digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano', 'sv600'
+            ])
 
     def _run(self, robot, options):
         ptz_desc = ptz_pb2.PtzDescription(name=options.ptz_name)
@@ -85,8 +86,9 @@ class PtzSetPtzPositionCommand(Command):
     def __init__(self, subparsers, command_dict):
         super(PtzSetPtzPositionCommand, self).__init__(subparsers, command_dict)
         self._parser.add_argument(
-            'ptz_name', default='digi', const='digi', nargs='?',
-            choices=['digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano'])
+            'ptz_name', default='digi', const='digi', nargs='?', choices=[
+                'digi', 'full_digi', 'mech', 'overlay_digi', 'full_pano', 'overlay_pano', 'sv600'
+            ])
         self._parser.add_argument('pan', help='[0, 360] Degrees', default=0.0, type=float)
         self._parser.add_argument('tilt', help='[-30, 100] Degrees', default=0.0, type=float)
         self._parser.add_argument('zoom', help='[1, 30]', default=1.0, type=float)

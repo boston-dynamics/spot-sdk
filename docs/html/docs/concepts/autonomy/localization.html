@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GraphNav Localization &mdash; Spot 4.1.0 documentation</title>
+  <title>GraphNav Localization &mdash; Spot 4.1.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.0
+                4.1.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -540,6 +540,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The GraphNav service maintains an internal assessment of whether or not it believes the robot is lost or stuck. When lost, the service will refuse to navigate autonomously.</p>
 <p>This determination is correlated with the amount of change in the environment where the map was recorded. A site that has changed significantly since recording will look very different to the robot. For example, a map of an empty parking lot will look different when cars are parked there.</p>
 <p>When site changes cause the localization status to be <code class="docutils literal notranslate"><span class="pre">STATUS_LOST</span></code>, a new map of the site should be recorded.</p>
+<p>The lost detector can be adjusted for individual edges in the map or for an entire navigation command by setting the <code class="docutils literal notranslate"><span class="pre">LostDetectorStrictness</span></code> in either the edge <code class="docutils literal notranslate"><span class="pre">Annotations</span></code>, or the <code class="docutils literal notranslate"><span class="pre">TravelParams</span></code> of a command. This adjustment can be used to make the detector more sensitive or more permissive depending on the needs of the application.</p>
 </section>
 <section id="stuck-robots">
 <h2>Stuck robots<a class="headerlink" href="#stuck-robots" title="Permalink to this heading"></a></h2>
