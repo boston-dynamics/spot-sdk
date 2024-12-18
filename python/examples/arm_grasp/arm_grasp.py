@@ -95,7 +95,7 @@ def arm_object_grasp(config):
             dtype = np.uint16
         else:
             dtype = np.uint8
-        img = np.fromstring(image.shot.image.data, dtype=dtype)
+        img = np.frombuffer(image.shot.image.data, dtype=dtype)
         if image.shot.image.format == image_pb2.Image.FORMAT_RAW:
             img = img.reshape(image.shot.image.rows, image.shot.image.cols)
         else:
