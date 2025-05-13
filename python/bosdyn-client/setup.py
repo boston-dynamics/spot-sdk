@@ -54,8 +54,8 @@ setuptools.setup(
     package_dir={'': 'src'},
     package_data={'': ['*.pem']},
     install_requires=get_requirements(),
+    python_requires=">=3.7",
     classifiers=[
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",

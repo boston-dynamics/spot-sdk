@@ -10,7 +10,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 API examples for how to interact with the [Inverse Kinematics Service](../../../docs/concepts/arm/arm_services.md#inverse-kinematics-service).
 
-- reachability.py: Shows how to use the API to make rechability queries. The service will return a robot configuration (joint angles and body pose) that satisfies the requested reach or indicate that it did not find a solution. Also shows how to use the solution returned by the IK service in [robot commands](../../../docs/concepts/robot_services.md#robot-command).
+- reachability.py: Shows how to use the API to make reachability queries. The service will return a robot configuration (joint angles and body pose) that satisfies the requested reach or indicate that it did not find a solution. Also shows how to use the solution returned by the IK service in [robot commands](../../../docs/concepts/robot_services.md#robot-command).
 
 ## Understanding Spot Programming
 

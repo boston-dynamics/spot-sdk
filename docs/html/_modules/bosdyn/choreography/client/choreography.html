@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.choreography.client.choreography &mdash; Spot 4.1.1 documentation</title>
+  <title>bosdyn.choreography.client.choreography &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -257,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -316,6 +317,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -336,6 +338,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -985,6 +989,83 @@
             <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="ChoreographyClient.leg_size_configuration"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.leg_size_configuration">[docs]</a>    <span class="k">def</span> <span class="nf">leg_size_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">front_left_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">front_right_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                               <span class="n">hind_left_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hind_right_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Tell the robot its legs are a non-standard size to help avoid self-collision. Typically used for robots that are wearing costumes.</span>
+<span class="sd">            Configuration will be permanently stored (persisting through reboot) until cleared by sending an empty request.</span>
+<span class="sd">        Args: </span>
+<span class="sd">            front_left_size: New leg configuration dimensions for the front left leg. Either </span>
+<span class="sd">                a LegSize message or a list of 4 floats. If None, all config values are set to zero.</span>
+<span class="sd">            front_right_size: Same as front_left_size, but for the front right leg.</span>
+<span class="sd">            hind_left_size: Same as front_left_size, but for the hind left leg.</span>
+<span class="sd">            hind_right_size: Same as front_left_size, but for the hind right leg.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The full LegSizeConfigurationResponse message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_leg_size_configuration_request</span><span class="p">(</span><span class="n">front_left_size</span><span class="o">=</span><span class="n">front_left_size</span><span class="p">,</span>
+                                                        <span class="n">front_right_size</span><span class="o">=</span><span class="n">front_right_size</span><span class="p">,</span>
+                                                        <span class="n">hind_left_size</span><span class="o">=</span><span class="n">hind_left_size</span><span class="p">,</span>
+                                                        <span class="n">hind_right_size</span><span class="o">=</span><span class="n">hind_right_size</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">LegSizeConfiguration</span><span class="p">,</span>
+            <span class="n">req</span><span class="p">,</span>
+            <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Return the complete response message</span>
+            <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
+            <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChoreographyClient.leg_size_configuration_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.leg_size_configuration_async">[docs]</a>    <span class="k">def</span> <span class="nf">leg_size_configuration_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">front_left_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">front_right_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                     <span class="n">hind_left_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hind_right_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of leg_size_configuration()&quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_leg_size_configuration_request</span><span class="p">(</span><span class="n">front_left_size</span><span class="o">=</span><span class="n">front_left_size</span><span class="p">,</span>
+                                                        <span class="n">front_right_size</span><span class="o">=</span><span class="n">front_right_size</span><span class="p">,</span>
+                                                        <span class="n">hind_left_size</span><span class="o">=</span><span class="n">hind_left_size</span><span class="p">,</span>
+                                                        <span class="n">hind_right_size</span><span class="o">=</span><span class="n">hind_right_size</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">LegSizeConfiguration</span><span class="p">,</span>
+            <span class="n">req</span><span class="p">,</span>
+            <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Return the complete response message</span>
+            <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
+            <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChoreographyClient.leg_size_configuration_state"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.leg_size_configuration_state">[docs]</a>    <span class="k">def</span> <span class="nf">leg_size_configuration_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Read the current leg size configuration from the robot. On a robot with the default leg size configuration the </span>
+<span class="sd">        values for each leg&#39;s LegSize will be:</span>
+
+<span class="sd">            distance_inward = 0.02 m</span>
+<span class="sd">            distance_outward = 0.02 m</span>
+<span class="sd">            distance_forward = 0.035 m                                          </span>
+<span class="sd">            distance_backward = 0.035 m</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The full LegSizeConfigurationStateResponse message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">LegSizeConfigurationStateRequest</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">LegSizeConfigurationState</span><span class="p">,</span>
+            <span class="n">req</span><span class="p">,</span>
+            <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Return the complete response message</span>
+            <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
+            <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChoreographyClient.leg_size_configuration_state_async"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.leg_size_configuration_state_async">[docs]</a>    <span class="k">def</span> <span class="nf">leg_size_configuration_state_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of leg_size_configuration_state()&quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">LegSizeConfigurationStateRequest</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">LegSizeConfigurationState</span><span class="p">,</span>
+            <span class="n">req</span><span class="p">,</span>
+            <span class="n">value_from_response</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># Return the complete response message</span>
+            <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span>
+            <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="ChoreographyClient.start_recording_state"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.start_recording_state">[docs]</a>    <span class="k">def</span> <span class="nf">start_recording_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration_secs</span><span class="p">,</span> <span class="n">continue_session_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Start (or continue) a manually recorded robot state log.</span>
 
@@ -1272,6 +1353,55 @@
         <span class="n">request</span><span class="o">.</span><span class="n">add_labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">add_labels</span><span class="p">)</span>
         <span class="n">request</span><span class="o">.</span><span class="n">remove_labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">remove_labels</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">request</span></div>
+
+<div class="viewcode-block" id="ChoreographyClient.build_leg_size"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.build_leg_size">[docs]</a>    <span class="k">def</span> <span class="nf">build_leg_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dist_inward</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dist_outward</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">dist_forward</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+                       <span class="n">dist_backward</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build and return a LegSize message from provided dimentions.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">LegSize</span><span class="p">(</span><span class="n">distance_inward</span><span class="o">=</span><span class="n">dist_inward</span><span class="p">,</span>
+                                                 <span class="n">distance_outward</span><span class="o">=</span><span class="n">dist_outward</span><span class="p">,</span>
+                                                 <span class="n">distance_forward</span><span class="o">=</span><span class="n">dist_forward</span><span class="p">,</span>
+                                                 <span class="n">distance_backward</span><span class="o">=</span><span class="n">dist_backward</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ChoreographyClient.build_leg_size_configuration_request"><a class="viewcode-back" href="../../../../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.html#bosdyn.choreography.client.choreography.ChoreographyClient.build_leg_size_configuration_request">[docs]</a>    <span class="k">def</span> <span class="nf">build_leg_size_configuration_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">front_left_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">front_right_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                             <span class="n">hind_left_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">hind_right_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build a LegSizeConfigurationRequest. </span>
+
+<span class="sd">        Args: </span>
+<span class="sd">            front_left_size: New leg configuration dimensions for the front left leg. Either </span>
+<span class="sd">                a LegSize message or a list of 4 floats. If None, all config values are set to zero.</span>
+<span class="sd">            front_right_size: Same as front_left_size, but for the front right leg.</span>
+<span class="sd">            hind_left_size: Same as front_left_size, but for the hind left leg.</span>
+<span class="sd">            hind_right_size: Same as front_left_size, but for the hind right leg.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The LegSizeConfigurationRequest message built from provided parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">LegSizeConfigurationRequest</span><span class="p">()</span>
+
+        <span class="c1"># Check for a list input for each foot.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">front_left_size</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">front_left_size</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">front_left_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_leg_size</span><span class="p">(</span><span class="n">front_left_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">front_left_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                  <span class="n">front_left_size</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">front_left_size</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">front_right_size</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">front_right_size</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">front_right_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_leg_size</span><span class="p">(</span><span class="n">front_right_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">front_right_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                   <span class="n">front_right_size</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">front_right_size</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hind_left_size</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">hind_left_size</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">hind_left_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_leg_size</span><span class="p">(</span><span class="n">hind_left_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hind_left_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                 <span class="n">hind_left_size</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">hind_left_size</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hind_right_size</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">hind_right_size</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">hind_right_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">build_leg_size</span><span class="p">(</span><span class="n">hind_right_size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hind_right_size</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                  <span class="n">hind_right_size</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">hind_right_size</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+        <span class="c1"># Copy the LegSize message for each foot to the request if it was provided and valid.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">front_left_size</span><span class="p">,</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">LegSize</span><span class="p">):</span>
+            <span class="n">req</span><span class="o">.</span><span class="n">front_left_size</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">front_left_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">front_right_size</span><span class="p">,</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">LegSize</span><span class="p">):</span>
+            <span class="n">req</span><span class="o">.</span><span class="n">front_right_size</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">front_right_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hind_left_size</span><span class="p">,</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">LegSize</span><span class="p">):</span>
+            <span class="n">req</span><span class="o">.</span><span class="n">hind_left_size</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">hind_left_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">hind_right_size</span><span class="p">,</span> <span class="n">choreography_sequence_pb2</span><span class="o">.</span><span class="n">LegSize</span><span class="p">):</span>
+            <span class="n">req</span><span class="o">.</span><span class="n">hind_right_size</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">hind_right_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">req</span></div>
 
     <span class="k">def</span> <span class="nf">_update_timestamp_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">,</span> <span class="n">timesync_endpoint</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set or convert fields of the proto that need timestamps in the robot&#39;s clock.&quot;&quot;&quot;</span>
@@ -1573,7 +1703,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

@@ -45,7 +45,7 @@ At the end, you'll have a fully-functional API example that enables Spot to auto
     <ul>
         <li>has a distinct visual appearance</li>
         <li>is easy to see in the tablet view</li>
-        <li>Spot's arm is capable of picking using the <a href="https://support.bostondynamics.com/s/article/Spot-Arm-quick-start#pickupandcarry">Pick Up Object</a> option in the tablet</li>
+        <li>Spot's arm is capable of picking using the <a href="https://support.bostondynamics.com/s/article/Grasp-Objects-with-Spot-Arm-151688">Pick Up Object</a> option in the tablet</li>
     </ul>
     <li>A computer running an officially supported Ubuntu version</li>
     <li>CUDA enabled GPU</li>

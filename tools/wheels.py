@@ -78,7 +78,7 @@ def run_pip(args, quiet=False, verbose=False):
     Raises:
        subprocess.CalledProcessError    if pip returns non-zero exit status
     """
-    cmd = [sys.executable, "-m", "pip"]
+    cmd = [sys.executable, "-S", "-m", "pip"]
     if quiet:
         cmd.append('-q')
     if verbose:
@@ -228,7 +228,7 @@ def show(package_name):
 
     Returns the std output of the command, may be None if package_name is not installed (str).
     """
-    proc = subprocess.Popen([sys.executable, "-m", "pip", "show", package_name],
+    proc = subprocess.Popen([sys.executable, "-S", "-m", "pip", "show", package_name],
                             stdout=subprocess.PIPE)
     (stdoutdata, _stderrdata) = proc.communicate()
     return stdoutdata
@@ -382,7 +382,7 @@ def build_wheel(wheel, srcdir=None, dry_run=False, verbose=False, skip_git=False
         return False
 
     # setup.py is deprecated.  For now we'll just suppress the warnings from that.
-    cmd = [sys.executable, '-W', 'ignore::Warning', 'setup.py']
+    cmd = [sys.executable, '-S', '-W', 'ignore::Warning', 'setup.py']
     if not verbose:
         cmd.append('-q')
     cmd += ['bdist_wheel', '-b', BUILD_DIR, '-d', DIST_DIR]
@@ -407,7 +407,8 @@ def build_wheel(wheel, srcdir=None, dry_run=False, verbose=False, skip_git=False
 
 
 def build_proto_wheel(wheel_name="bosdyn-api", proto_dir=PROTO_DIR, latest_requirements=False,
-                      dry_run=False, verbose=False, skip_git=False, install_deps=False):
+                      dry_run=False, verbose=False, skip_git=False, install_deps=False,
+                      uninstall_existing=False):
     """Build the API protobuf wheel."""
     print('building proto wheel', wheel_name)
     req_file = "requirements-setup-linux-pinned.txt"
@@ -417,11 +418,12 @@ def build_proto_wheel(wheel_name="bosdyn-api", proto_dir=PROTO_DIR, latest_requi
     if not (skip_git or _check_git_status(PROTO_DIR)):
         return False
 
-    _try_run("uninstall {}".format(pkg_name), dry_run,
-             lambda: uninstall_if_installed(pkg_name, yes=True, quiet=not verbose))
+    if uninstall_existing:
+        _try_run("uninstall {}".format(pkg_name), dry_run,
+                 lambda: uninstall_if_installed(pkg_name, yes=True, quiet=not verbose))
 
-    _run_or_log("clean '{}'".format(BUILD_DIR), dry_run,
-                lambda: shutil.rmtree(BUILD_DIR, ignore_errors=True))
+        _run_or_log("clean '{}'".format(BUILD_DIR), dry_run,
+                    lambda: shutil.rmtree(BUILD_DIR, ignore_errors=True))
 
     # print("Installing build dependencies: you may need to type 'y' a few times")
     # Install the build dependencies.
@@ -459,6 +461,8 @@ class BuildWheelsCommand(Command):
             '--install-deps', action='store_true', help=
             'Install build dependencies.  If not set, the python environment should already be set '
             'up for building.')
+        self.parser.add_argument('--uninstall-existing', action='store_true',
+                                 help='Uninstall existing wheels before building.')
         self._parser.add_argument('wheels', nargs='*', help="Names of wheels to build.")
 
     def run(self, options):
@@ -468,13 +472,15 @@ class BuildWheelsCommand(Command):
                 ret_ = build_proto_wheel(
                     wheel_name=wheel, latest_requirements=options.latest_build_requirements,
                     dry_run=options.dry_run, verbose=options.verbose,
-                    skip_git=options.skip_git_check, install_deps=options.install_deps)
+                    skip_git=options.skip_git_check, install_deps=options.install_deps,
+                    uninstall_existing=options.uninstall_existing)
             elif wheel == 'bosdyn-choreography-protos':
                 ret_ = build_proto_wheel(wheel_name=wheel, proto_dir=CHOREOGRAPHY_PROTO_DIR,
                                          latest_requirements=options.latest_build_requirements,
                                          dry_run=options.dry_run, verbose=options.verbose,
                                          skip_git=options.skip_git_check,
-                                         install_deps=options.install_deps)
+                                         install_deps=options.install_deps,
+                                         uninstall_existing=options.uninstall_existing)
             else:
                 ret_ = build_wheel(wheel, dry_run=options.dry_run, verbose=options.verbose,
                                    skip_git=options.skip_git_check)

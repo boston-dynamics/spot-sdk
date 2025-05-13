@@ -159,6 +159,12 @@ The `ChoreographyTimeAdjust` RPC can be used to slightly modify the start time o
 
 In nearly all cases the `ChoreographyTimeAdjust` RPC will not be necessary. The purpose of this RPC is the rare case where one isolated system will be sending the `ExecuteChoreography` RPC, and using a separate system the user would like to make a small adjustment to the start time of that request. If it's possible to set the desired start time using the system that sends the `ExecuteChoreography` RPC the user should just set that `start_time` in the `ExecuteChoreography` RPC and avoid using the `ChoreographyTimeAdjust` RPC.
 
+### Leg Size Configuration API
+
+The `LegSizeConfiguration` RPC can be used to modify Spot's internal model of its leg size to help avoid self-collision when its legs have non-standard dimensions. This is typically used for Spot's wearing costumes that cover the all or part of the leg, but it could also be used to specify that the leg has been modified to have a smaller area. Default values for Spot's foot dimensions are estimated at 4 centimeters in width and 7 centimeters length, (measured around the widest point of the foot). The requested configuration is permanently stored (persisting through reboot) until cleared by sending an empty request, and affects all Spot behaviors.
+
+Leg size configuration for individual robots can be adjusted through [Choreographer](choreographer.md) by selecting the "Spot Leg Size Configuration" option in the "Settings" menu.
+
 ### Choreography client
 
 The choreography service python client library provides helper functions for each RPC as well as functions that help convert the choreography sequence from a protobuf message into either a binary or text file.

@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api.spot;
+option go_package = "bosdyn/api/spot/choreography_sequence";
 
 option java_outer_classname = "ChoreographyProto";
 
@@ -1096,4 +1097,60 @@ message ChoreographyTimeAdjustResponse {
     // parameters other than the override_start_time there may be warnings even if the response
     // status was STATUS_OK.
     repeated string warnings = 3;
+}
+
+// Size and shape of a specific individual leg.
+message LegSize {
+    // Horizontal distances from the center of the foot sphere to the edge of the collision
+    // geometry.  Meters.
+    float distance_inward = 1;    // Toward the front/back centerline.      Baseline robot: 0.02 m
+    float distance_outward = 2;   // Away from the front/back centerline.   Baseline robot: 0.02 m
+    float distance_forward = 3;   //                                        Baseline robot: 0.035m
+    float distance_backward = 4;  //                                        Baseline robot: 0.035m
+}
+
+// Tell the robot its legs are a non-standard size to help avoid self-collision.
+// Typically used for robots that are wearing costumes.
+// Configuration will be permanently stored (persisting through reboot) until cleared by sending an
+// empty request.
+message LegSizeConfigurationRequest {
+    // Common request header
+    RequestHeader header = 1;
+
+    LegSize front_left_size = 2;
+    LegSize front_right_size = 3;
+    LegSize hind_left_size = 4;
+    LegSize hind_right_size = 5;
+}
+
+message LegSizeConfigurationResponse {
+    // Common response header
+    ResponseHeader header = 1;
+
+    enum Status {
+        // Status unknown. Do not use.
+        STATUS_UNKNOWN = 0;
+        // The new leg size configuration value was accepted and stored.
+        STATUS_OK = 1;
+        // The new leg size configuration value either contained values below 0 or above the
+        // maximum dimension size of .20 meters. The configuration was not stored.
+        STATUS_EXCEEDS_LIMITS = 2;
+    }
+    Status status = 2;
+}
+
+// Check the state of the current leg size configuration.
+message LegSizeConfigurationStateRequest {
+    // Common request header
+    RequestHeader header = 1;
+}
+
+message LegSizeConfigurationStateResponse {
+    // Common response header
+    ResponseHeader header = 1;
+
+    LegSize front_left_size = 2;
+    LegSize front_right_size = 3;
+    LegSize hind_left_size = 4;
+    LegSize hind_right_size = 5;
 }

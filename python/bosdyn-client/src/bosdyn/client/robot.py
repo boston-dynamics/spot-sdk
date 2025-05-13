@@ -385,7 +385,7 @@ class Robot(object):
         self.update_user_token(user_token, username)
 
     def authenticate_from_payload_credentials(self, guid, secret, payload_registration_client=None,
-                                              timeout=None):
+                                              timeout=None, retry_interval=1.0):
         """Authenticate to this Robot with the guid/secret of the hosting payload.
 
         This call is used to authenticate to a robot using payload credentials. If a payload is
@@ -413,7 +413,7 @@ class Robot(object):
                     self.logger.warning(
                         'Payload is not authorized. Authentication will block until an'
                         ' operator authorizes the payload in the Admin Console.')
-            time.sleep(0.1)
+            time.sleep(retry_interval)
         self.update_user_token(user_token)
 
     def update_user_token(self, user_token, username=None):
@@ -467,7 +467,8 @@ class Robot(object):
         return self.service_type_by_name
 
 
-    def register_payload_and_authenticate(self, payload, secret, timeout=None):
+    def register_payload_and_authenticate(self, payload, secret, timeout=None,
+                                          auth_retry_interval=1.0):
         """Register a payload with the robot and request a user_token.
 
         This method will block until the payload is authorized by an operator in the robot webpage.
@@ -486,7 +487,7 @@ class Robot(object):
             pass
         self.authenticate_from_payload_credentials(
             payload.GUID, secret, payload_registration_client=payload_registration_client,
-            timeout=timeout)
+            timeout=timeout, retry_interval=auth_retry_interval)
 
     def start_time_sync(self, time_sync_interval_sec=None):
         """Start time sync thread if needed.

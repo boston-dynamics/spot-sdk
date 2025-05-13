@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.service_customization_helpers &mdash; Spot 4.1.1 documentation</title>
+  <title>bosdyn.client.service_customization_helpers &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -257,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -316,6 +317,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -336,6 +338,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -908,6 +912,10 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">default_area</span><span class="o">.</span><span class="n">rectangle</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">InvalidCustomParamSpecError</span><span class="p">(</span>
                     <span class="p">[</span><span class="s2">&quot;Default area is a rectangle despite not being allowed&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">allows_polygon</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">default_area</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">InvalidCustomParamSpecError</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s2">&quot;Default area is a polygon despite not being allowed&quot;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">validate_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">param_value</span><span class="p">):</span>
         <span class="n">err</span> <span class="o">=</span> <span class="n">check_types_match</span><span class="p">(</span><span class="n">param_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">proto_type</span><span class="p">)</span>
@@ -919,6 +927,13 @@
                 <span class="k">return</span> <span class="n">CustomParamError</span><span class="p">(</span>
                     <span class="n">status</span><span class="o">=</span><span class="n">CustomParamError</span><span class="o">.</span><span class="n">STATUS_INVALID_VALUE</span><span class="p">,</span>
                     <span class="n">error_messages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Chosen area is a rectangle despite not being allowed&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">param_spec</span><span class="o">.</span><span class="n">allows_polygon</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_value</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">polygon</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">CustomParamError</span><span class="p">(</span>
+                    <span class="n">status</span><span class="o">=</span><span class="n">CustomParamError</span><span class="o">.</span><span class="n">STATUS_INVALID_VALUE</span><span class="p">,</span>
+                    <span class="n">error_messages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Chosen area is a polygon despite not being allowed&quot;</span><span class="p">])</span>
+
         <span class="k">if</span> <span class="n">param_value</span><span class="o">.</span><span class="n">image_cols</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">CustomParamError</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">CustomParamError</span><span class="o">.</span><span class="n">STATUS_INVALID_VALUE</span><span class="p">,</span>
                                     <span class="n">error_messages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Number of columns in image must be positive&quot;</span><span class="p">])</span>
@@ -1669,10 +1684,10 @@
     <span class="k">return</span> <span class="n">spec</span></div>
 
 
-<div class="viewcode-block" id="make_region_of_interest_param_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_region_of_interest_param_spec">[docs]</a><span class="k">def</span> <span class="nf">make_region_of_interest_param_spec</span><span class="p">(</span>
-        <span class="n">service_and_source</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">ServiceAndSource</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">default_area</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AreaI</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">allows_rectangle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
+<div class="viewcode-block" id="make_region_of_interest_param_spec"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.html#bosdyn.client.service_customization_helpers.make_region_of_interest_param_spec">[docs]</a><span class="k">def</span> <span class="nf">make_region_of_interest_param_spec</span><span class="p">(</span><span class="n">service_and_source</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+    <span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">ServiceAndSource</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">default_area</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AreaI</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                       <span class="n">allows_rectangle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                                       <span class="n">allows_polygon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helper function to create a RegionOfInterestParam.Spec</span>
 
@@ -1680,10 +1695,12 @@
 <span class="sd">         service_and_source: service and source to which the RegionOfInterestParam should adhere</span>
 <span class="sd">         default_area: starting area for the RegionOfInterestParam</span>
 <span class="sd">         allows_rectangle: whether a rectangle may be drawn for the selected area</span>
+<span class="sd">         allows_polygon: whether a polygon may be drawn for the selected area</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">RegionOfInterestParam</span><span class="o">.</span><span class="n">Spec</span><span class="p">(</span><span class="n">default_area</span><span class="o">=</span><span class="n">default_area</span><span class="p">,</span>
                                       <span class="n">service_and_source</span><span class="o">=</span><span class="n">service_and_source</span><span class="p">,</span>
-                                      <span class="n">allows_rectangle</span><span class="o">=</span><span class="n">allows_rectangle</span><span class="p">)</span></div>
+                                      <span class="n">allows_rectangle</span><span class="o">=</span><span class="n">allows_rectangle</span><span class="p">,</span>
+                                      <span class="n">allows_polygon</span><span class="o">=</span><span class="n">allows_polygon</span><span class="p">)</span></div>
 
 
 
@@ -1730,7 +1747,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

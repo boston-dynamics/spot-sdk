@@ -64,7 +64,7 @@ The robot must have enough space to turn around in between up- and down- stairs,
 
 The localization object includes an additional field `seed_tform_body` since the 2.1.0 release. This field returns the pose of the robot body with respect to the starting fiducial frame as an SE3Pose, which can be considered the "origin" or "seed" of the GraphNav map.
 
-Please reference this [document](https://support.bostondynamics.com/s/article/Site-inspection-with-teleoperation) for how to initialize and define a custom origin using the Tablet App outside of Autowalk since the 2.1.0 release.
+Please reference this [document](https://support.bostondynamics.com/s/article/Manual-Site-Inspection-With-Spot-72042) for how to initialize and define a custom origin using the Tablet App outside of Autowalk since the 2.1.0 release.
 
 An example of how to access this field with the Spot API is available below. Please remember to initialize the GraphNav map first or the SE3Pose will be not be populated.
 

@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api;
+option go_package = "bosdyn/api/image";
 option java_outer_classname = "ImageProto";
 
 import "bosdyn/api/header.proto";
@@ -225,6 +226,11 @@ message ListImageSourcesResponse {
     // The set of ImageSources available from this service.
     // May be empty if the service serves no cameras (e.g., if no cameras were found on startup).
     repeated ImageSource image_sources = 2;
+
+    // A tree-based collection of transformations, which will include the transformations to each
+    // image sources sensors in addition to transformations to the common frames ("vision", "body",
+    // "odom"). All transforms within the snapshot are at the time of the request.
+    FrameTreeSnapshot transforms_snapshot = 3;
 }
 
 // The image request specifying the image source and data format desired.

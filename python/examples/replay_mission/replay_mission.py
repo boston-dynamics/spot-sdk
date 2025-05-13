@@ -27,6 +27,7 @@ from bosdyn.api import robot_state_pb2
 from bosdyn.api.autowalk import walks_pb2
 from bosdyn.api.graph_nav import graph_nav_pb2, map_pb2, nav_pb2
 from bosdyn.api.mission import mission_pb2, nodes_pb2
+from bosdyn.client.autowalk import AutowalkResponseError
 from bosdyn.client.power import PowerClient, power_on_motors, safe_power_off_motors
 from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
 from bosdyn.client.robot_state import RobotStateClient
@@ -339,10 +340,16 @@ def upload_autowalk(robot, autowalk_client, filename, upload_timeout):
         except google.protobuf.message.DecodeError as exc:
             raise exc
 
-    # Upload the mission to the robot
+    # Upload the mission to the robot and report the load_autowalk_response
     robot.logger.info('Uploading the autowalk to the robot...')
-    autowalk_client.load_autowalk(autowalk_proto, timeout=upload_timeout)
-    robot.logger.info('Uploaded autowalk to robot.')
+    try:
+        load_autowalk_response = autowalk_client.load_autowalk(autowalk_proto,
+                                                               timeout=upload_timeout)
+    except AutowalkResponseError as resp_err:
+        load_autowalk_response = resp_err.response
+        print(f'failed_nodes:\n{load_autowalk_response.failed_nodes}')
+        print(f'failed_elements: {load_autowalk_response.failed_elements}')
+        raise resp_err
 
 
 def upload_mission(robot, client, filename, upload_timeout):

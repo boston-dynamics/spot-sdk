@@ -6,9 +6,13 @@
 
 """Create a Spot Extension from an existing docker file."""
 
+import io
 import json
+import re
+import shutil
 import subprocess
 import tarfile
+from datetime import datetime
 from json import JSONDecodeError
 from pathlib import Path
 from typing import List
@@ -19,6 +23,9 @@ import docker
 
 _IMAGES_MANIFEST_FIELD_NAME = "images"
 _VERSION_FIELD_NAME = "version"
+_EXTENSION_NAME_FIELD_ = "extension_name"
+_DATE_FIELD_NAME = "date"
+_INSTALLATION_TARGET_FIELD_NAME = "installation_target"
 
 
 def build_image(client: docker.DockerClient, dockerfile_path: Path, tag: str, amd64: bool = False):
@@ -104,11 +111,11 @@ def save_images(client: docker.DockerClient, image_tags: List[str], images_archi
     # If the final archive needs to be gzipped (suffix was either .gz or .tgz), do that now
     if save_dest != images_archive:
         with pgzip.open(images_archive, 'wb') as gzfile, open(save_dest, "rb") as tarfile:
-            gzfile.write(tarfile.read())
+            shutil.copyfileobj(tarfile, gzfile)
     return True
 
 
-def check_manifest(manifest_path: Path, images_archive_name: str) -> bool:
+def check_manifest(manifest_path: Path, images_archive_name: str):
     """Validates the contents of the manifest.json file.
 
     Args:
@@ -116,7 +123,8 @@ def check_manifest(manifest_path: Path, images_archive_name: str) -> bool:
         images_archive_name (str): Name of the image archive.
 
     Returns:
-        bool: True if successful, False otherwise.
+        JSON string of updated and checked manifest data if successful, 
+        False otherwise.
     """
 
     with open(manifest_path) as manifest_file:
@@ -134,12 +142,63 @@ def check_manifest(manifest_path: Path, images_archive_name: str) -> bool:
         )
         return False
 
-    # Check that version string is present
-    if not manifest_dict[_VERSION_FIELD_NAME]:
-        print("manifest.json does not provide a version string")
+    # Ensure that all required fields are present
+    for field in [_VERSION_FIELD_NAME, _INSTALLATION_TARGET_FIELD_NAME, _DATE_FIELD_NAME]:
+        got_error = check_is_field_present(manifest_dict, field)
+        if (got_error):
+            print(got_error)
+            return False
+
+    # Check that all fields are formatted properly
+    format_error = check_is_formatted(manifest_dict)
+    if (format_error):
+        print(format_error)
         return False
 
-    return True
+    return json.dumps(manifest_dict)
+
+
+def check_is_field_present(manifest_dict, field):
+    if not manifest_dict.get(field, None):
+        if field == _DATE_FIELD_NAME:
+            # Add date if not provided
+            manifest_dict[field] = datetime.now().isoformat()
+
+        elif field == _INSTALLATION_TARGET_FIELD_NAME:
+            # Default install target to Spot
+            manifest_dict[field] = "spot"
+
+        else:
+            return (f"Error: manifest.json must include {field}")
+
+    return False
+
+
+def check_is_formatted(manifest_dict):
+    # Check extension name format if included
+    if manifest_dict.get(_EXTENSION_NAME_FIELD_, None):
+        if not re.match(r'^[A-Za-z0-9_-]+$', manifest_dict[_EXTENSION_NAME_FIELD_]):
+            return (
+                "Error: extension_name in manifest.json can only contain alphanumeric characters, hyphens, and underscores"
+            )
+
+    # Check version format
+    elif not re.match(r'^\d+\.\d+\.\d+$', manifest_dict[_VERSION_FIELD_NAME]):
+        return (
+            "Error: version string in manifest.json must be in format X.Y.Z where X, Y, and Z are integers"
+        )
+
+    # Check that date is parseable
+    try:
+        datetime.fromisoformat(manifest_dict[_DATE_FIELD_NAME])
+    except:
+        return ("Error: date in manifest.json not parseable, should be in ISO format")
+
+    # Check that installation target is valid
+    if manifest_dict[_INSTALLATION_TARGET_FIELD_NAME] not in ["orbit", "spot"]:
+        return ("Error: installation_target in manifest.json must be [spot] or [orbit]")
+
+    return False
 
 
 def check_docker_compose_file(docker_compose_path: Path) -> bool:
@@ -188,15 +247,23 @@ def create_spx(file_directory: Path, images_archive: Path, icon: str, udev: Path
     """
     manifest = file_directory.joinpath('manifest.json')
     print(f"Manifest path: {manifest}")
-    if not check_manifest(manifest, images_archive.name):
+    clean_manifest = check_manifest(manifest, images_archive.name)
+    if not clean_manifest:
         return False
+
+    tar_manifest = io.BytesIO()
+    tar_manifest.write(clean_manifest.encode('utf-8'))
+    tar_manifest.seek(0)
+    tar_manifest_info = tarfile.TarInfo(name=manifest.name)
+    tar_manifest_info.size = len(tar_manifest.getvalue())
+
     docker_compose = file_directory.joinpath('docker-compose.yml')
     if validate_docker_compose and not check_docker_compose_file(docker_compose):
         return False
     icon_path = file_directory.joinpath(icon)
     with tarfile.open(spx, 'w:gz') as tar:
+        tar.addfile(tar_manifest_info, fileobj=tar_manifest)
         tar.add(images_archive, arcname=images_archive.name)
-        tar.add(manifest, arcname=manifest.name)
         tar.add(docker_compose, arcname=docker_compose.name)
         if icon_path.exists():
             tar.add(icon_path, arcname=icon_path.name)
@@ -253,9 +320,10 @@ def main():
         'in which docker-compose is not installed.')
     options = parser.parse_args()
 
-    assert len(options.dockerfile_paths) == len(
-        options.build_image_tags
-    ), "Error: --dockerfile-paths and --build-image-tags must be the same length!"
+    if (options.dockerfile_paths):
+        assert len(options.dockerfile_paths) == len(
+            options.build_image_tags
+        ), "Error: --dockerfile-paths and --build-image-tags must be the same length!"
 
     # Initialize Docker daemon client
     client = docker.from_env()
@@ -266,11 +334,16 @@ def main():
                               privileged=True, remove=False)
 
     # Build images
-    for dockerfile_path, image_tag in zip(options.dockerfile_paths, options.build_image_tags):
-        build_image(client, dockerfile_path, image_tag, options.amd64)
+    if (options.dockerfile_paths):
+        for dockerfile_path, image_tag in zip(options.dockerfile_paths, options.build_image_tags):
+            build_image(client, dockerfile_path, image_tag, options.amd64)
 
     # Save images
-    image_tags_to_save = options.build_image_tags
+    if (options.dockerfile_paths):
+        image_tags_to_save = options.build_image_tags
+    else:
+        image_tags_to_save = []
+
     if options.extra_image_tags:
         if not pull_extra_images(client, options.extra_image_tags):
             print("Error occurred when trying to pull images, exiting...")

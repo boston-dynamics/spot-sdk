@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api.mission;
+option go_package = "bosdyn/api/mission/util";
 
 option java_outer_classname = "UtilProto";
 
@@ -41,19 +42,36 @@ message VariableDeclaration {
         TYPE_INT = 3;
         TYPE_BOOL = 4;
         TYPE_MESSAGE = 5;
+        TYPE_LIST = 6;
+        TYPE_DICT = 7;
     }
+    // Subtype of the variable if it is a list or dict type. This would be type of the elements of
+    // that collection
+    message SubType {
+        Type type = 1;
+        SubType sub_type = 2;
+    }
+    SubType sub_type = 3;
     // Type that this variable is expected to have. Used to verify assignments and comparisons.
     Type type = 2;
 }
 
 // A constant value. Corresponds to the VariableDeclaration Type enum.
 message ConstantValue {
+    message ListValue {
+        repeated ConstantValue values = 1;
+    }
+    message DictValue {
+        map<string, ConstantValue> values = 1;
+    }
     oneof value {
         double float_value = 1;
         string string_value = 2;
         int64 int_value = 3;
         bool bool_value = 4;
         google.protobuf.Any msg_value = 5;
+        ListValue list_value = 6;
+        DictValue dict_value = 7;
     }
 }
 

@@ -12,7 +12,7 @@ import sys
 import time
 
 from bosdyn.orbit.client import Client, create_client
-from bosdyn.orbit.utils import print_json_response
+from bosdyn.orbit.utils import add_base_arguments, print_json_response
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
@@ -124,18 +124,7 @@ def get_backup(orbit_client: Client, file_path: str, include_missions: bool,
 def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--hostname', help='IP address associated with the Orbit instance',
-                        required=True, type=str)
-    parser.add_argument(
-        '--verify',
-        help=
-        'verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate',
-        default=False,
-    )
-    parser.add_argument(
-        '--cert', help=
-        "(a .pem file or a tuple with ('cert', 'key') pair): a local cert to use as client side certificate ",
-        nargs='+', default=None)
+    add_base_arguments(parser)
     parser.add_argument('--file-path',
                         help='Full path to where the tar file should be saved on your disk.',
                         default=None, required=False, type=str)

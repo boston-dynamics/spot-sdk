@@ -72,7 +72,7 @@ def main():
     import argparse
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
-    bosdyn.client.util.add_payload_credentials_arguments(parser)
+    bosdyn.client.util.add_payload_credentials_arguments(parser, False)
     bosdyn.client.util.add_service_hosting_arguments(parser)
     options = parser.parse_args()
     bosdyn.client.util.setup_logging(options.verbose)
@@ -83,8 +83,11 @@ def main():
     sdk = bosdyn.client.create_standard_sdk('AreaCallbackCrosswalkLightsService')
     spot_cam.register_all_service_clients(sdk)  # register service client for spotcam light
     robot = sdk.create_robot(options.hostname)
-    robot.authenticate_from_payload_credentials(*bosdyn.client.util.get_guid_and_secret(options))
-    #bosdyn.client.util.authenticate(robot)
+    if options.guid and options.secret or options.payload_credentials_file:
+        robot.authenticate_from_payload_credentials(
+            *bosdyn.client.util.get_guid_and_secret(options))
+    else:
+        bosdyn.client.util.authenticate(robot)
     robot.start_time_sync()
     robot.time_sync.wait_for_sync()
 

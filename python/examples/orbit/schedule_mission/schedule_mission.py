@@ -18,6 +18,7 @@ from typing import Iterable
 import pytz
 
 from bosdyn.orbit.client import create_client
+from bosdyn.orbit.utils import add_base_arguments
 
 # Set up logging
 LOGGER = logging.getLogger()
@@ -216,7 +217,7 @@ def select_first_start_time() -> int:
     """ Asks for user input to select a first start time for the mission.
 
         Returns:
-            time_since_epoch_ms: first start time since epoch in miliseconds.
+            time_since_epoch_ms: first start time since epoch in milliseconds.
     """
     start_time_input = input("Enter the desired start time in HH:MM format (24-hour): ")
 
@@ -513,19 +514,7 @@ def create_calendar_event(client: 'bosdyn.orbit.client.Client') -> None:
 def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--hostname", help="Orbit instance IP address", required=True, type=str)
-    parser.add_argument(
-        "--verify",
-        help=
-        "verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate",
-        default=True,
-    )
-    parser.add_argument(
-        "--cert",
-        help="Client-side certificate (PEM file or tuple with cert and key)",
-        nargs="+",
-        default=None,
-    )
+    add_base_arguments(parser)
     options = parser.parse_args()
 
     command_dictionary = {

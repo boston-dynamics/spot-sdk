@@ -108,7 +108,7 @@ class MetricManager:
         # get the range of files on the Core and their delta from what's on the robot
         sequenceRange = metricFileGroup.getSequenceRangeToDownload(robot_sequence_range)
 
-        # Check if we are in range, update ([first, last] arrangment)
+        # Check if we are in range, update ([first, last] arrangement)
         if sequenceRange[1] - sequenceRange[0] > 0:
 
             _LOGGER.info("Metric range to download: {}".format(sequenceRange))

@@ -8,8 +8,6 @@ import distutils.cmd
 import os
 import sys
 
-import pkg_resources
-import setuptools
 import setuptools.command.build_py
 
 try:
@@ -90,9 +88,7 @@ class proto_build(distutils.cmd.Command, object):
                 file_relative_to_root = os.path.join(cwd_relative_to_root, f)
                 # the protoc.main discards the first argument, assuming it's the program.
                 args = ('garbage', file_relative_to_root, "--python_out=" + output_dir,
-                        "--grpc_python_out=" + output_dir, "-I.",
-                        "-I" + pkg_resources.resource_filename('grpc_tools', '_proto'),
-                        "-I" + api_protos_dir)
+                        "--grpc_python_out=" + output_dir, "-I.", "-I" + api_protos_dir)
                 if self.verbose:
                     print('Building {}'.format(f))
                 protoc.main(args)

@@ -52,3 +52,37 @@ class GripperCameraParamClient(BaseClient):
         """Async version of gripper_camera_get_param_service_command()."""
         return self.call_async(self._stub.GetParams, gripper_camera_get_param_request,
                                error_from_response=common_header_errors, **kwargs)
+
+    def set_camera_calib(self, set_gripper_camera_calib_request, **kwargs):
+        """Issue gripper camera calibration
+
+        Args:
+            set_gripper_camera_calib_request (gripper_camera_params_pb2.GripperCameraCalibrationRequest) : The command request to set gripper camera calibration
+
+        Returns:
+            The GripperCameraCalibrationResponse message.
+        """
+        return self.call(self._stub.SetCamCalib, set_gripper_camera_calib_request,
+                         error_from_response=common_header_errors, **kwargs)
+
+    def set_camera_calib_async(self, set_gripper_camera_calib_request, **kwargs):
+        """Async version of set_camera_calib()."""
+        return self.call_async(self._stub.SetCamCalib, set_gripper_camera_calib_request,
+                               error_from_response=common_header_errors, **kwargs)
+
+    def get_camera_calib(self, get_gripper_camera_calib_request, **kwargs):
+        """Issue gripper camera get calibration
+
+        Arge:
+            get_gripper_camera_calib_request (gripper_camera_params_pb2.GripperCameraGetCalibrationRequest) : The command reqeust to get gripper camera calibration
+
+        Returns:
+            The GripperCameraGetCalibrationResponse message, which contains the GripperCameraCalibrationProto 
+        """
+        return self.call(self._stub.GetCamCalib, get_gripper_camera_calib_request,
+                         error_from_response=common_header_errors, **kwargs)
+
+    def get_camera_calib_asnyc(self, get_gripper_camera_calib_request, **kwargs):
+        """Asnyc version of get_camera_calib()."""
+        return self.call_async(self._stub.GetCamCalib, get_gripper_camera_calib_request,
+                               error_from_response=common_header_errors, **kwargs)

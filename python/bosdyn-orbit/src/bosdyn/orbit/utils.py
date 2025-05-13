@@ -36,6 +36,29 @@ def get_api_token() -> str:
     return api_token
 
 
+def add_base_arguments(parser):
+    """ Adds the most common arguments to the parser
+
+        This includes the hostname, verify, and cert arguments.
+
+        Args:
+            parser: the argument parser
+    """
+    parser.add_argument('--hostname', help='IP address associated with the Orbit instance',
+                        required=True, type=str)
+    parser.add_argument(
+        '--verify',
+        help=
+        "verify(path to a CA bundle or Boolean): controls whether we verify the server's TLS certificate",
+        default=True,
+    )
+    parser.add_argument(
+        '--cert', help=
+        "a client certificate file for authentication (a .pem file containing the certificate and "
+        "key pair, or two separate files containing the certificate and key respectively and in "
+        "that order)", nargs='+', default=None)
+
+
 def get_latest_created_at_for_run_events(client: 'bosdyn.orbit.client.Client',
                                          params: Dict = {}) -> datetime.datetime:
     """ Given a dictionary of query params, returns the max created at time for run events

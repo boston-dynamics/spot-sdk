@@ -13,7 +13,7 @@ This section describes each Choreographer move at a high level, including:
 - Parameters used by the move
 - Animated GIFs demonstrating the move with default parameters (for most moves)
 
-More information about choreography moves can be found by looking at the choreography protos in the Spot [proto reference](../../../protos/bosdyn/api/README).
+More information about choreography moves can be found by looking at the choreography protos in the Spot [proto reference](../../../protos/bosdyn/api/README.md).
 
 ## Body moves
 

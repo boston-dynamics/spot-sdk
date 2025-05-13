@@ -1,0 +1,62 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option go_package = "bosdyn/api/payload_software_update";
+option java_outer_classname = "PayloadSoftwareUpdateProto";
+
+import "bosdyn/api/header.proto";
+import "bosdyn/api/software_package.proto";
+
+// Send payload's current software version to the robot software updater.
+message SendCurrentVersionInfoRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    SoftwarePackageVersion package_version = 2;
+}
+
+message SendCurrentVersionInfoResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}
+
+// Request version information for staged packages matching the supplied package names.  Typically
+// this is a single package name representing the payload, but if the payload hosts additional
+// installable components, these may also be queried.
+message GetAvailableSoftwareUpdatesRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Unique strings identifying units of payload software.
+    repeated string package_names = 2;
+}
+
+// Software updater returns information about the staged software packages matching the supplied
+// package names in the request.
+message GetAvailableSoftwareUpdatesResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Information about staged software updates matching the requested package names.
+    repeated StagedSoftwarePackage staged_packages = 2;
+}
+
+// Send the status of an update process to the robot.
+message SendSoftwareUpdateStatusRequest {
+    // Common request header.
+    RequestHeader header = 1;
+
+    // Current status of the software update process for this payload.
+    SoftwareUpdateStatus update_status = 2;
+}
+
+message SendSoftwareUpdateStatusResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}

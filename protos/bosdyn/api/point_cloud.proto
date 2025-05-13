@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api;
+option go_package = "bosdyn/api/point_cloud";
 option java_outer_classname = "PointCloudProto";
 
 import "bosdyn/api/header.proto";
@@ -29,6 +30,9 @@ message PointCloudSource {
     // A tree-based collection of transformations, which will include the transformations
     // to the point cloud data frame and the point cloud sensor frame.
     FrameTreeSnapshot transforms_snapshot = 31;
+
+    // If non-empty, the cloud types that can be returned by this service.
+    repeated PointCloudRequest.PointCloudType supported_cloud_types = 4;
 
     reserved 2;
 }
@@ -113,6 +117,42 @@ message PointCloud {
     reserved 8, 9;
 }
 
+// A structured point cloud obtained from a series of scans from a LIDAR.
+message LidarPointCloud {
+    // Information to track where the LIDAR was over time.
+    message LidarPoseSample {
+        // Position of the lidar in the vision world frame at acquisition_time.
+        Vec3 lidar_pos_in_vision = 1;
+
+        // Robot time of this pose sample.
+        google.protobuf.Timestamp acquisition_time = 2;
+
+        // Which scan in point_cloud corresponds to this pose sample.
+        int32 scan_number = 3;
+    }
+
+    // The point cloud data, where the points are stored in row-major order
+    // as num_beams x num_scans, and a point is three floats XYZ.
+    // # rows == num_beams and # columns == num_scans
+    // Each row corresponds to a beam from the LIDAR.
+    // Each column corresponds to a scan from the LIDAR.
+    // Beams will be ordered from lowest to highest.
+    // Scans will be order from oldest to newest.
+    // Missing data will be returned as all-zeros (0.0, 0.0, 0.0).
+    PointCloud point_cloud = 1;
+
+    // Number of beams produced by the LIDAR.
+    int32 num_beams = 2;
+
+    // Number of scans included in the cloud.
+    int32 num_scans = 3;
+
+    // Subsampled trajectory of the lidar position over time.
+    // Will always include the first & last scan poses.
+    repeated LidarPoseSample lidar_pose_history = 4;
+}
+
+
 message ListPointCloudSourcesRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -133,6 +173,28 @@ message ListPointCloudSourcesResponse {
 message PointCloudRequest {
     // Name of the point cloud source to request from.
     string point_cloud_source_name = 1;
+
+    // How to format the returned point cloud.
+    // Not all services may support every format, in
+    // which case they will treat the requet as CLOUD_TYPE_POINTS.
+    enum PointCloudType {
+        // No specified type, treated same as CLOUD_TYPE_POINTS.
+        CLOUD_TYPE_UNKNOWN = 0;
+
+        // Request point cloud as unstructured list of points.
+        // This will not include entries for missing returns.
+        CLOUD_TYPE_POINTS = 1;
+
+        // Request data as a structured tensor retaining scan & beam information.
+        // This will include entries for missing returns.
+        CLOUD_TYPE_LIDAR = 2;
+    }
+
+    PointCloudType cloud_type = 2;
+
+    // Skip every downsample_rate-1 scans, if supported by the service.
+    // Has no effect if less than or equal to 1.
+    int32 downsample_rate = 3;
 
 }
 
@@ -161,14 +223,28 @@ message PointCloudResponse {
         // There was a problem with the point cloud data.  Only the PointCloudSource is filled out.
         STATUS_POINT_CLOUD_DATA_ERROR = 3;
 
-        // Provided point cloud source was not found. One
+        // Provided point cloud source was not found.
         STATUS_UNKNOWN_SOURCE = 4;
+
+        // Service does not support the requested cloud type.
+        STATUS_UNSUPPORTED_CLOUD_TYPE = 5;
     }
     // Return status for the request.
     Status status = 1;
 
-    // The current point cloud from the service.
-    PointCloud point_cloud = 2;
+    // The current point cloud from the service. Currently lidar_cloud is set if CLOUD_TYPE_LIDAR
+    // was requested, otherwise point_cloud is set.
+    oneof cloud_data {
+        PointCloud point_cloud = 2;
+        LidarPointCloud lidar_cloud = 3;
+    }
+
+    // True if the client already received the latest cloud from the service.
+    // In this case, cloud_data will be empty.
+    bool no_update = 4;
+
+    // If positive, the expected nanoseconds until new cloud data will be ready.
+    int32 expected_time_to_next_update = 5;
 }
 
 message GetPointCloudResponse {

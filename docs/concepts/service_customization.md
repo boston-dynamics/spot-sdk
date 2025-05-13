@@ -74,7 +74,7 @@ UI's will always allow users to specify every child of a dictionary. Each child 
 
 ### One-Of
 
-One-Of is another container type, and is defined by the `OneOfParam` and `OneOfParam.Spec` protobuf messages. Unlike dictionary, One-Of will only let the users specify a single child at a time. The UI will allow users to pick which child they want to specify, and allow users to specify that child. Note that the child can be completely empty. One-Of's are a great way to encode optional parameters, or parameters that only exist under circumstances. It is valid to have an empty One-Of child - that just means that if selected, that option has no additional parameters.
+One-Of is another container type, and is defined by the `OneOfParam` and `OneOfParam.Spec` protobuf messages. Unlike dictionary, One-Of will only let the users specify a single child at a time. The UI will allow users to pick which child they want to specify, and allow users to specify that child. Note that the child can be completely empty. One-Of's are a great way to encode optional parameters, or parameters that only exist under circumstances. It is valid to have an empty One-Of child - that just means that if selected, that option has no additional parameters. Please see [hello_world_mission_service.py](../../python/examples/remote_mission_service/README.md) for an example of such a toggle.
 
 Like dictionary children, one-of children also contain a `UserInterfaceInfo`, which allows developers to both order elements in a deterministic way, and override what string the UI uses to represent the child. One-Of specs are constrained to ONLY contain dictionary children.
 

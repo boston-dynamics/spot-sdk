@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.gripper_camera_param &mdash; Spot 4.1.1 documentation</title>
+  <title>bosdyn.client.gripper_camera_param &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -257,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -316,6 +317,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -336,6 +338,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -555,6 +559,40 @@
 <div class="viewcode-block" id="GripperCameraParamClient.get_camera_params_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html#bosdyn.client.gripper_camera_param.GripperCameraParamClient.get_camera_params_async">[docs]</a>    <span class="k">def</span> <span class="nf">get_camera_params_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gripper_camera_get_param_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of gripper_camera_get_param_service_command().&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetParams</span><span class="p">,</span> <span class="n">gripper_camera_get_param_request</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GripperCameraParamClient.set_camera_calib"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html#bosdyn.client.gripper_camera_param.GripperCameraParamClient.set_camera_calib">[docs]</a>    <span class="k">def</span> <span class="nf">set_camera_calib</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set_gripper_camera_calib_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue gripper camera calibration</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            set_gripper_camera_calib_request (gripper_camera_params_pb2.GripperCameraCalibrationRequest) : The command request to set gripper camera calibration</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The GripperCameraCalibrationResponse message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetCamCalib</span><span class="p">,</span> <span class="n">set_gripper_camera_calib_request</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GripperCameraParamClient.set_camera_calib_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html#bosdyn.client.gripper_camera_param.GripperCameraParamClient.set_camera_calib_async">[docs]</a>    <span class="k">def</span> <span class="nf">set_camera_calib_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">set_gripper_camera_calib_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of set_camera_calib().&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">SetCamCalib</span><span class="p">,</span> <span class="n">set_gripper_camera_calib_request</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GripperCameraParamClient.get_camera_calib"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html#bosdyn.client.gripper_camera_param.GripperCameraParamClient.get_camera_calib">[docs]</a>    <span class="k">def</span> <span class="nf">get_camera_calib</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_gripper_camera_calib_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Issue gripper camera get calibration</span>
+
+<span class="sd">        Arge:</span>
+<span class="sd">            get_gripper_camera_calib_request (gripper_camera_params_pb2.GripperCameraGetCalibrationRequest) : The command reqeust to get gripper camera calibration</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The GripperCameraGetCalibrationResponse message, which contains the GripperCameraCalibrationProto </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetCamCalib</span><span class="p">,</span> <span class="n">get_gripper_camera_calib_request</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GripperCameraParamClient.get_camera_calib_asnyc"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.html#bosdyn.client.gripper_camera_param.GripperCameraParamClient.get_camera_calib_asnyc">[docs]</a>    <span class="k">def</span> <span class="nf">get_camera_calib_asnyc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_gripper_camera_calib_request</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Asnyc version of get_camera_calib().&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">GetCamCalib</span><span class="p">,</span> <span class="n">get_gripper_camera_calib_request</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">common_header_errors</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
 </pre></div>
 
@@ -568,7 +606,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

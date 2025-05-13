@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.gps.NMEAParser &mdash; Spot 4.1.1 documentation</title>
+  <title>bosdyn.client.gps.NMEAParser &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -257,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -316,6 +317,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -336,6 +338,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -518,7 +522,7 @@
 <span class="kn">from</span> <span class="nn">google.protobuf.timestamp_pb2</span> <span class="kn">import</span> <span class="n">Timestamp</span>
 
 <span class="kn">from</span> <span class="nn">bosdyn.api.gps.gps_pb2</span> <span class="kn">import</span> <span class="n">GpsDataPoint</span>
-<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">RobotTimeConverter</span><span class="p">,</span> <span class="n">now_timestamp</span><span class="p">,</span> <span class="n">seconds_to_timestamp</span>
+<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">RobotTimeConverter</span><span class="p">,</span> <span class="n">now_sec</span><span class="p">,</span> <span class="n">seconds_to_timestamp</span>
 
 
 <span class="n">has_warned_no_zda</span> <span class="o">=</span> <span class="kc">False</span>
@@ -540,6 +544,7 @@
         <span class="c1"># If your GPS outputs data at 20 Hz, this constant must be less than 0.050 seconds.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grouping_timeout</span> <span class="o">=</span> <span class="mf">0.025</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_failed_read_log_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_gga</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="NMEAParser.nmea_message_group_to_gps_data_point"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html#bosdyn.client.gps.NMEAParser.NMEAParser.nmea_message_group_to_gps_data_point">[docs]</a>    <span class="k">def</span> <span class="nf">nmea_message_group_to_gps_data_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nmea_messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span>
                                              <span class="n">time_converter</span><span class="p">:</span> <span class="n">RobotTimeConverter</span><span class="p">):</span>
@@ -557,12 +562,13 @@
             <span class="n">data</span><span class="p">,</span> <span class="n">raw_nmea_msg</span><span class="p">,</span> <span class="n">client_timestamp</span> <span class="o">=</span> <span class="n">nmea_message_list</span>
 
             <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">sentence_type</span> <span class="o">==</span> <span class="s1">&#39;GGA&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">last_gga</span> <span class="o">=</span> <span class="n">raw_nmea_msg</span>
                 <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">latitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">longitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">altitude</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">data_point</span><span class="o">.</span><span class="n">llh</span><span class="o">.</span><span class="n">latitude</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">latitude</span>
                     <span class="n">data_point</span><span class="o">.</span><span class="n">llh</span><span class="o">.</span><span class="n">longitude</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">longitude</span>
                     <span class="n">data_point</span><span class="o">.</span><span class="n">llh</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">altitude</span>
 
-                <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">num_sats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">num_sats</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">num_sats</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">num_sats</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">num_sats</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">num_sats</span><span class="p">)):</span>
                         <span class="n">sat</span> <span class="o">=</span> <span class="n">data_point</span><span class="o">.</span><span class="n">satellites</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
 
@@ -590,7 +596,12 @@
                     <span class="n">data_point</span><span class="o">.</span><span class="n">accuracy</span><span class="o">.</span><span class="n">vertical</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">std_dev_altitude</span>
 
             <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">sentence_type</span> <span class="o">==</span> <span class="s1">&#39;ZDA&#39;</span><span class="p">:</span>
-                <span class="n">gps_timestamp</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">datetime</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">gps_timestamp</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">datetime</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to extract datetime from ZDA message.&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+
                 <span class="c1"># Protobuf timestamp does not use timezone aware timestamps.</span>
                 <span class="n">gps_timestamp_no_tz</span> <span class="o">=</span> <span class="n">gps_timestamp</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
                 <span class="n">data_point</span><span class="o">.</span><span class="n">timestamp_gps</span><span class="o">.</span><span class="n">FromDatetime</span><span class="p">(</span><span class="n">gps_timestamp_no_tz</span><span class="p">)</span>
@@ -615,7 +626,7 @@
 
 <div class="viewcode-block" id="NMEAParser.parse"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html#bosdyn.client.gps.NMEAParser.NMEAParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_data</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">time_converter</span><span class="p">:</span> <span class="n">RobotTimeConverter</span><span class="p">,</span>
               <span class="n">check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">GpsDataPoint</span><span class="p">]:</span>
-        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>  <span class="c1"># Client timestamp when received.</span>
+        <span class="n">timestamp</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>  <span class="c1"># Client timestamp when received.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">+</span> <span class="n">new_data</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -647,14 +658,14 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="c1"># Parsing error, log and skip.</span>
                 <span class="c1"># Throttle the logs.</span>
-                <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+                <span class="n">now</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_failed_read_log_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="p">(</span>
                         <span class="n">now</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_failed_read_log_time</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">LOG_THROTTLE_TIME</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to parse </span><span class="si">{</span><span class="n">stripped</span><span class="si">}</span><span class="s2">. Is it NMEA?&quot;</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">last_failed_read_log_time</span> <span class="o">=</span> <span class="n">now</span>
                 <span class="k">continue</span>
 
-            <span class="c1"># if the message does not contain a timestamp attribute, abandon the rest of the logic</span>
+            <span class="c1"># If the message does not contain a timestamp attribute, abandon the rest of the logic</span>
             <span class="c1"># and go to the beginning of the loop</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">nmea_msg</span><span class="p">,</span> <span class="s1">&#39;timestamp&#39;</span><span class="p">):</span>
                 <span class="k">continue</span>
@@ -696,7 +707,10 @@
                     <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
 
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nmea_message_group_to_gps_data_point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">time_converter</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">found_subsets</span><span class="p">]</span></div></div>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">nmea_message_group_to_gps_data_point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">time_converter</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">found_subsets</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="NMEAParser.get_latest_gga"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html#bosdyn.client.gps.NMEAParser.NMEAParser.get_latest_gga">[docs]</a>    <span class="k">def</span> <span class="nf">get_latest_gga</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_gga</span></div></div>
 </pre></div>
 
            </div>
@@ -709,7 +723,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

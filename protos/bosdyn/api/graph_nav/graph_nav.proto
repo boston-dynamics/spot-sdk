@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api.graph_nav;
+option go_package = "bosdyn/api/graph_nav/graph_nav";
 
 option java_outer_classname = "GraphNavProto";
 
@@ -105,6 +106,7 @@ message SetLocalizationRequest {
         // Improve localization based on images from body cameras
         VisualRefinementOptions refine_with_visual_features = 12;
     }
+
 }
 
 // Info on whether the robot's current sensor setup is compatible with the recorded data
@@ -114,6 +116,10 @@ message SensorCompatibilityStatus {
     bool map_has_lidar_data = 1;
     // If true, the robot is currently configured to use LIDAR data.
     bool robot_configured_for_lidar = 2;
+    // If true, the loaded map has GPS data in it.
+    bool map_has_gps_data = 3;
+    // If true, the robot is currently configured to use GPS data.
+    bool robot_configured_for_gps = 4;
 }
 
 // The SetLocalization response message contains the resulting localization to the map.
@@ -137,8 +143,8 @@ message SetLocalizationResponse {
         STATUS_UNKNOWN_WAYPOINT = 3;
         // Localization was aborted, likely because of a new request.
         STATUS_ABORTED = 4;
-        // Failed to localize for some other reason; see the error_report for details.
-        // This is often because the initial guess was incorrect.
+        // Failed to localize for some other reason. This is often because the initial guess was
+        // incorrect.
         STATUS_FAILED = 5;
         // Failed to localize because the fiducial requested by 'use_fiducial_id' was too far away
         // from the robot.
@@ -168,7 +174,7 @@ message SetLocalizationResponse {
     Status status = 3;
 
     // If set, describes the reason the status is not OK.
-    string error_report = 4;
+    string error_report = 4 [deprecated = true];
 
     // Result of localization.
     Localization localization = 5;
@@ -303,6 +309,9 @@ message TravelParams {
         // around large obstacles that were not present during mission recording.
         // NOTE: Alternate route-finding waypoints are disabled when using the long range planner.
         PLANNER_MODE_LONG_RANGE = 3;
+
+        // Use long range planner with live data only.
+        PLANNER_MODE_LONG_RANGE_LIVE_ONLY = 4;
     };
     PathPlannerMode planner_mode = 17;
 }
@@ -353,6 +362,9 @@ message NavigateToRequest {
     // Note that the robot will treat this as a simple goto request. It will first arrive at the
     // destination waypoint, and then travel in a straight line from the destination waypoint to the
     // offset goal, attempting to avoid obstacles along the way.
+    //
+    // Also note that the waypoint frame will be flattened before this transform is applied.
+    // This is relevant in cases where the destination_waypoint is not gravity alligned.
     SE2Pose destination_waypoint_tform_body_goal = 8;
 
     // Unique identifier for the command. If 0, this is a new command, otherwise it is a
@@ -362,6 +374,7 @@ message NavigateToRequest {
 
     // Defines robot behavior when route is blocked. Defaults to reroute when route is blocked.
     RouteFollowingParams.RouteBlockedBehavior route_blocked_behavior = 10;
+
 }
 
 // Response to a NavigateToRequest. This is returned immediately after the request is processed. A
@@ -684,6 +697,9 @@ message NavigateToAnchorRequest {
 
     // Identifier provided by the time sync service to verify time sync between robot and client.
     string clock_identifier = 9;
+
+    // Defines robot behavior when route is blocked. Defaults to reroute when route is blocked.
+    RouteFollowingParams.RouteBlockedBehavior route_blocked_behavior = 12;
 
     // Unique identifier for the command. If 0, this is a new command, otherwise it is a
     // continuation of an existing command. If this is a continuation of an existing command, all
@@ -1030,6 +1046,8 @@ message LostDetectorState {
     Localization last_accepted_localization = 6;
     // This is the most recent localization that the lost detector rejected.
     Localization last_rejected_localization = 7;
+    // This is the most recent localization that would have been accepted with strict parameters.
+    Localization last_accepted_strict_localization = 10;
     // The number of edges the LostDetector believes the robot has crossed without first getting an
     // accepted localization.
     int32 num_consecutive_bad_edges = 8;

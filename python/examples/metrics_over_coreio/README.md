@@ -45,7 +45,7 @@ At a high level, `src` contains the fundamental code to pull metrics from the ro
 Most of the logic is contained in `src/metric_file_group.py`, `src/uploader.py`, and `src/metrics_over_coreio.py`. In this file, we have the following classes:
 
 1. `MetricFileGroup`: Manages querying and writing metric files to the core I/O file system.
-2. `Uploader`: Manages uploading metrics. Sends the latest metric on the core, recieves missing metrics sequence numbers and uploads them.
+2. `Uploader`: Manages uploading metrics. Sends the latest metric on the core, receives missing metrics sequence numbers and uploads them.
 3. `MetricManager`: Manages switching between savin and loading metrics. Does some basic state checks and manages the threads running.
 
 ## Recommended debugging
@@ -54,4 +54,4 @@ Most of the logic is contained in `src/metric_file_group.py`, `src/uploader.py`,
 
 If using LTE 2. Confirm your APN and MTU are correctly configured based on your sim card and carrier 3. Confirm your data plan has not reached its limit 4. Check the cellular bands and disable those with poor connection by selectively enabling some and examining the network signals in the COREIO page
 
-If using Wifi 2. Confirm no 2FA or other form of autentication was required 3. Confirm wifi dongle is powered, physically connected and has not come loose
+If using Wifi 2. Confirm no 2FA or other form of authentication was required 3. Confirm wifi dongle is powered, physically connected and has not come loose

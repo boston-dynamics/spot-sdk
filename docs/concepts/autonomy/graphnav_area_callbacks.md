@@ -211,7 +211,7 @@ For detailed instructions of using this runner with an example callback, see the
 
 ### Test within GraphNav
 
-To test within GraphNav, you will need to record a map that has an Area Callback region which uses your callback service. For recording a map with Spot's tablet, follow the [Autowalk recording instructions](https://support.bostondynamics.com/s/article/Getting-Started-with-Autowalk#Recording). Adding an Area Callback to a map during recording is similar to adding an Autowalk action. After selecting your callback's name from the list, follow the on-screen prompts to define the start and end of a region.
+To test within GraphNav, you will need to record a map that has an Area Callback region which uses your callback service. For recording a map with Spot's tablet, follow the [Autowalk recording instructions](https://support.bostondynamics.com/s/article/Record-an-Autowalk-Mission-49960). Adding an Area Callback to a map during recording is similar to adding an Autowalk action. After selecting your callback's name from the list, follow the on-screen prompts to define the start and end of a region.
 
 Note that if you pass through the same area again (for example, returning across the same crosswalk on the way back) you will need to add the Area Callback region to the return path during recording as well.
 

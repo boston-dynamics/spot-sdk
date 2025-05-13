@@ -32,7 +32,7 @@ The Python client library is supported on the following platforms:
 - Windows 10
 - MacOS 10.14 (Mojave and Catalina)
 
-Python 3.6-3.10 are supported.
+Python 3.7-3.10 are supported.
 
 Python 2.7 is _not_ supported, since the [Python 2 End-Of-Life](https://www.python.org/dev/peps/pep-0373/) happened at the start of 2020.
 

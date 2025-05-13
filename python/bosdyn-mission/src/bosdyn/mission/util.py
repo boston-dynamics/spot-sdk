@@ -4,11 +4,13 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+import collections
 import copy
 import json
 import logging
 import operator
 import re
+import typing
 from builtins import str as text
 from typing import Dict, Union
 
@@ -180,38 +182,85 @@ def proto_from_tuple(tup, pack_nodes=True):
 
 
 
-def python_var_to_value(var):
+def python_var_to_value(var) -> util_pb2.ConstantValue:
     """Returns a ConstantValue with the appropriate oneof set."""
     value = util_pb2.ConstantValue()
-    if isinstance(var, bool):
-        value.bool_value = var
-    elif isinstance(var, int):
-        value.int_value = var
-    elif isinstance(var, float):
-        value.float_value = var
-    elif isinstance(var, str):
-        value.string_value = var
-    elif isinstance(var, google.protobuf.message.Message):
-        value.msg_value.Pack(var)
-    else:
-        raise Error('Invalid type "{}"'.format(type(var)))
+    match var:
+        case bool():
+            value.bool_value = var
+        case int():
+            value.int_value = var
+        case float():
+            value.float_value = var
+        case str():
+            value.string_value = var
+        case util_pb2.ConstantValue():
+            value.CopyFrom(var)
+        case google.protobuf.message.Message():
+            value.msg_value.Pack(var)
+        case _:
+            if isinstance(var, collections.abc.Mapping):
+                for key, val in var.items():
+                    value.dict_value.values[key].CopyFrom(python_var_to_value(val))
+            elif isinstance(var, collections.abc.Iterable):
+                value.list_value.values.extend([python_var_to_value(v) for v in var])
+            else:
+                raise Error('Invalid type "{}"'.format(type(var)))
     return value
 
 
-def python_type_to_pb_type(var):
+def python_type_to_pb_type(var) -> util_pb2.VariableDeclaration.Type.ValueType:
     """Returns the protobuf-schema variable type that corresponds to the given variable."""
-    if isinstance(var, bool):
-        return util_pb2.VariableDeclaration.TYPE_BOOL
-    elif isinstance(var, int):
-        return util_pb2.VariableDeclaration.TYPE_INT
-    elif isinstance(var, float):
-        # Python floating point is typically a C double.
-        return util_pb2.VariableDeclaration.TYPE_FLOAT
-    elif isinstance(var, str):
-        return util_pb2.VariableDeclaration.TYPE_STRING
-    elif isinstance(var, google.protobuf.message.Message):
-        return util_pb2.VariableDeclaration.TYPE_MESSAGE
+    match var:
+        case bool():
+            return util_pb2.VariableDeclaration.TYPE_BOOL
+        case int():
+            return util_pb2.VariableDeclaration.TYPE_INT
+        case float():
+            return util_pb2.VariableDeclaration.TYPE_FLOAT
+        case str():
+            return util_pb2.VariableDeclaration.TYPE_STRING
+        # Special case for List and Dict value to allow using this function
+        # with ConstantValue.WhichOneof() to return the correct pb type.
+        case util_pb2.ConstantValue.ListValue():
+            return util_pb2.VariableDeclaration.TYPE_LIST
+        case util_pb2.ConstantValue.DictValue():
+            return util_pb2.VariableDeclaration.TYPE_DICT
+        case google.protobuf.message.Message():
+            return util_pb2.VariableDeclaration.TYPE_MESSAGE
+        case _:
+            if isinstance(var, collections.abc.Mapping):
+                return util_pb2.VariableDeclaration.TYPE_DICT
+            elif isinstance(var, collections.abc.Iterable):
+                return util_pb2.VariableDeclaration.TYPE_LIST
     raise InvalidConversion(var, util_pb2.VariableDeclaration.Type.DESCRIPTOR.full_name)
+
+
+def python_type_to_variable_decl_info(
+        var) -> typing.Tuple[int, util_pb2.VariableDeclaration.SubType | None]:
+    var_type = python_type_to_pb_type(var)
+    sub_type = None
+    match var_type:
+        case util_pb2.VariableDeclaration.TYPE_LIST:
+            if len(var) != 0:
+                sub_var_type, sub_recurse = python_type_to_variable_decl_info(var[0])
+                sub_type = util_pb2.VariableDeclaration.SubType(type=sub_var_type,
+                                                                sub_type=sub_recurse)
+        case util_pb2.VariableDeclaration.TYPE_DICT:
+            if len(var) != 0:
+                sub_var_type, sub_recurse = python_type_to_variable_decl_info(
+                    next(iter(var.values())))
+                sub_type = util_pb2.VariableDeclaration.SubType(type=sub_var_type,
+                                                                sub_type=sub_recurse)
+        case _:
+            pass
+    return var_type, sub_type
+
+
+def python_var_to_variable_decl(var,
+                                name: typing.Optional[str] = None) -> util_pb2.VariableDeclaration:
+    var_type, sub_type = python_type_to_variable_decl_info(var)
+    return util_pb2.VariableDeclaration(type=var_type, sub_type=sub_type, name=name)
 
 
 def is_string_identifier(string):
@@ -222,10 +271,13 @@ def is_string_identifier(string):
 
 def field_desc_to_pb_type(field_desc):
     """Returns the protobuf-schema variable type that corresponds to the given descriptor."""
-    if field_desc.type in (field_desc.TYPE_UINT32, field_desc.TYPE_UINT64, field_desc.TYPE_FIXED32,
-                           field_desc.TYPE_FIXED64, field_desc.TYPE_INT32, field_desc.TYPE_INT64,
-                           field_desc.TYPE_SFIXED64, field_desc.TYPE_SINT32, field_desc.TYPE_SINT64,
-                           field_desc.TYPE_SFIXED32):
+    if field.label == FieldDescriptor.LABEL_REPEATED:
+        return util_pb2.VariableDeclaration.TYPE_LIST
+    elif field_desc.type in (field_desc.TYPE_UINT32, field_desc.TYPE_UINT64,
+                             field_desc.TYPE_FIXED32, field_desc.TYPE_FIXED64,
+                             field_desc.TYPE_INT32, field_desc.TYPE_INT64, field_desc.TYPE_SFIXED64,
+                             field_desc.TYPE_SINT32, field_desc.TYPE_SINT64,
+                             field_desc.TYPE_SFIXED32):
         return util_pb2.VariableDeclaration.TYPE_INT
     elif field_desc.type in (field_desc.TYPE_DOUBLE, field_desc.TYPE_FLOAT):
         return util_pb2.VariableDeclaration.TYPE_FLOAT
@@ -234,6 +286,8 @@ def field_desc_to_pb_type(field_desc):
     elif field_desc.type == field_desc.TYPE_STRING:
         return util_pb2.VariableDeclaration.TYPE_STRING
     elif field_desc.type == field_desc.TYPE_MESSAGE:
+        if field.message_type.GetOptions().map_entry:
+            return util_pb2.VariableDeclaration.TYPE_DICT
         return util_pb2.VariableDeclaration.TYPE_MESSAGE
     raise InvalidConversion(field_desc.type, util_pb2.VariableDeclaration.Type.DESCRIPTOR.full_name)
 
@@ -359,7 +413,8 @@ safe_pb_enum_to_string = moved_to(_bosdyn_client_safe_pb_enum_to_string, version
 
 
 def create_value(
-        var: Union[bool, int, float, str, google.protobuf.message.Message]) -> util_pb2.Value:
+    var: Union[bool, int, float, str, google.protobuf.message.Message, list,
+               dict]) -> util_pb2.Value:
     """Returns a Value message containing a ConstantValue with the appropriate oneof set.
     """
     return util_pb2.Value(constant=python_var_to_value(var))

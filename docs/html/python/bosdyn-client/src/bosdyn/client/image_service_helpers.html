@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Image Service Helpers &mdash; Spot 4.1.1 documentation</title>
+  <title>Image Service Helpers &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -260,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -319,6 +320,7 @@
 <li class="toctree-l5"><a class="reference internal" href="gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -339,6 +341,8 @@
 <li class="toctree-l4"><a class="reference internal" href="metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="power.html">Power</a></li>
@@ -749,7 +753,7 @@ which returns the gain as a float.</p></li>
 <li><p><strong>exposure</strong> (<em>float</em><em> | </em><em>function</em>) – The exposure time for an image in seconds. This can be a fixed
 value or a function which returns the exposure time as a float.</p></li>
 <li><p><strong>request_custom_params</strong> (<em>service_customization_pb2.DictParam</em>) – Custom Params associated with the image
-request. Should not be ‘None’, but left as an option to accomodate old callers</p></li>
+request. Should not be ‘None’, but left as an option to accommodate old callers</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -835,7 +839,7 @@ is_valid = False and capture/timestamp as None.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="bosdyn.client.image_service_helpers.CameraBaseImageServicer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">CameraBaseImageServicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bosdyn_sdk_robot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_sources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_background_capture_thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_capture_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraBaseImageServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraBaseImageServicer" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bosdyn.client.image_service_helpers.</span></span><span class="sig-name descname"><span class="pre">CameraBaseImageServicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bosdyn_sdk_robot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">service_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_sources</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_background_capture_thread</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_capture_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_images</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/client/image_service_helpers.html#CameraBaseImageServicer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.client.image_service_helpers.CameraBaseImageServicer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ImageServiceServicer</span></code></p>
 <p>GRPC service to provide access to multiple different image sources.</p>
 <p>The service can list the available image (device) sources and query each source for image data.</p>
@@ -851,6 +855,8 @@ captures images so the image service can respond rapidly to the GetImage request
 the image service will call an image sources’ blocking_capture_function during the GetImage request.</p></li>
 <li><p><strong>background_capture_params</strong> (<em>service_customization_pb2.DictParam</em>) – If use_background_capture_thread is true,
 custom image source parameters used for all of the background captures. Otherwise ignored</p></li>
+<li><p><strong>log_images</strong> (<em>bool</em>) – if true, include image request/response messages in robot logs.  This is turned off
+by default.</p></li>
 </ul>
 </dd>
 </dl>
@@ -906,7 +912,7 @@ specified in the request.</p>
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

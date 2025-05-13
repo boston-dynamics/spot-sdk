@@ -8,13 +8,13 @@
 
 import datetime
 import glob
+import importlib.resources
 import logging
 import os
 import platform
 from enum import Enum
 
 import jwt
-import pkg_resources
 from deprecated.sphinx import deprecated
 
 from .arm_surface_contact import ArmSurfaceContactClient
@@ -178,6 +178,8 @@ def create_standard_sdk(client_name_prefix, service_clients=None, cert_resource_
 
 
 
+
+
 class Sdk(object):
     """Repository for settings typically common to a single developer and/or robot fleet.
     See also Robot for robot-specific settings.
@@ -281,7 +283,7 @@ class Sdk(object):
         """
         self.cert = None
         if resource_path_glob is None:
-            self.cert = pkg_resources.resource_stream('bosdyn.client.resources', 'robot.pem').read()
+            self.cert = importlib.resources.read_binary('bosdyn.client.resources', 'robot.pem')
         else:
             cert_paths = [c for c in glob.glob(resource_path_glob) if os.path.isfile(c)]
             if not cert_paths:

@@ -5,11 +5,10 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import distutils.cmd
+import importlib.resources
 import os
 import sys
 
-import pkg_resources
-import setuptools
 import setuptools.command.build_py
 
 try:
@@ -78,23 +77,24 @@ class proto_build(distutils.cmd.Command, object):
         output_dir = self.build_base
         make_init(os.path.join(root, output_dir, 'bosdyn'), do_pkg_extension=True)
         protos_root = os.path.join(root, 'bosdyn')
-        for cwd, dirs, files in os.walk(protos_root):
-            cwd_relative_to_root = cwd[len(root) + 1:]
-            for d in dirs:
-                make_init(os.path.join(root, output_dir, cwd_relative_to_root, d),
-                          do_pkg_extension=True)
+        proto_ref = importlib.resources.files('grpc_tools') / '_proto'
+        with importlib.resources.as_file(proto_ref) as proto_path:
+            for cwd, dirs, files in os.walk(protos_root):
+                cwd_relative_to_root = cwd[len(root) + 1:]
+                for d in dirs:
+                    make_init(os.path.join(root, output_dir, cwd_relative_to_root, d),
+                              do_pkg_extension=True)
 
-            for f in files:
-                if not f.endswith('.proto'):
-                    continue
-                file_relative_to_root = os.path.join(cwd_relative_to_root, f)
-                # the protoc.main discards the first argument, assuming it's the program.
-                args = ('garbage', file_relative_to_root, "--python_out=" + output_dir,
-                        "--grpc_python_out=" + output_dir, "-I.",
-                        "-I" + pkg_resources.resource_filename('grpc_tools', '_proto'))
-                if self.verbose:
-                    print('Building {}'.format(f))
-                protoc.main(args)
+                for f in files:
+                    if not f.endswith('.proto'):
+                        continue
+                    file_relative_to_root = os.path.join(cwd_relative_to_root, f)
+                    # the protoc.main discards the first argument, assuming it's the program.
+                    args = ('garbage', file_relative_to_root, "--python_out=" + output_dir,
+                            "--grpc_python_out=" + output_dir, "-I.", "-I" + str(proto_path))
+                    if self.verbose:
+                        print('Building {}'.format(f))
+                    protoc.main(args)
 
 
 with open("README.md", "r") as fh:

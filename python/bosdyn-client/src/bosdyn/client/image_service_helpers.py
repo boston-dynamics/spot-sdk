@@ -4,6 +4,7 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+import contextlib
 import inspect
 import logging
 import sys
@@ -15,11 +16,12 @@ import numpy as np
 
 from bosdyn.api import (header_pb2, image_pb2, image_service_pb2, image_service_pb2_grpc,
                         service_customization_pb2, service_fault_pb2)
+from bosdyn.client.data_buffer import DataBufferClient
 from bosdyn.client.exceptions import RpcError
 from bosdyn.client.fault import (FaultClient, ServiceFaultAlreadyExistsError,
                                  ServiceFaultDoesNotExistError)
 from bosdyn.client.image import UnsupportedPixelFormatRequestedError
-from bosdyn.client.server_util import populate_response_header
+from bosdyn.client.server_util import ResponseContext, populate_response_header
 from bosdyn.client.service_customization_helpers import create_value_validator, validate_dict_spec
 from bosdyn.client.util import setup_logging
 from bosdyn.util import sec_to_nsec, seconds_to_duration
@@ -430,7 +432,7 @@ class VisualImageSource():
             exposure (float | function): The exposure time for an image in seconds. This can be a fixed
                               value or a function which returns the exposure time as a float.
             request_custom_params (service_customization_pb2.DictParam): Custom Params associated with the image
-                            request. Should not be 'None', but left as an option to accomodate old callers
+                            request. Should not be 'None', but left as an option to accommodate old callers
         Returns:
             An instance of the protobuf CaptureParameters message.
         """
@@ -562,7 +564,7 @@ class ImageCaptureThread():
         """Update the capture function to use custom_params and capture_func_kwargs if it can"""
 
         # capture_func is likely provided through create_capture_thread, which already does handling for pre-3.3 blocking_capture
-        # Still, check for the custom_params argument to ensure we accomodate pre-3.3 direct implementations of ImageCaptureThreads
+        # Still, check for the custom_params argument to ensure we accommodate pre-3.3 direct implementations of ImageCaptureThreads
         if "custom_params" in inspect.signature(capture_func).parameters.keys():
             #If using a blocking capture function that takes in custom params or kwargs, one should supply those
             def output_capture_function():
@@ -607,10 +609,14 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
             the image service will call an image sources' blocking_capture_function during the GetImage request.
         background_capture_params (service_customization_pb2.DictParam): If use_background_capture_thread is true,
             custom image source parameters used for all of the background captures. Otherwise ignored
+        log_images (bool): if true, include image request/response messages in robot logs.  This is turned off
+            by default.
+
     """
 
     def __init__(self, bosdyn_sdk_robot, service_name, image_sources, logger=None,
-                 use_background_capture_thread=True, background_capture_params=None):
+                 use_background_capture_thread=True, background_capture_params=None,
+                 log_images=False):
         super(CameraBaseImageServicer, self).__init__()
         if logger is None:
             # Set up the logger to remove duplicated messages and use a specific logging format.
@@ -626,6 +632,13 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
 
         # Fault client to report service faults
         self.fault_client = self.bosdyn_sdk_robot.ensure_client(FaultClient.default_service_name)
+
+        if log_images:
+            # Data buffer client for logging messages
+            self.data_buffer_client = self.bosdyn_sdk_robot.ensure_client(
+                DataBufferClient.default_service_name)
+        else:
+            self.data_buffer_client = None
 
         # Get a timesync endpoint from the robot instance such that the image timestamps can be
         # reported in the robot's time.
@@ -681,74 +694,81 @@ class CameraBaseImageServicer(image_service_pb2_grpc.ImageServiceServicer):
             specified in the request.
         """
         response = image_pb2.GetImageResponse()
-        for img_req in request.image_requests:
-            img_resp = response.image_responses.add()
-            src_name = img_req.image_source_name
-            if src_name not in self.image_sources_mapped:
-                # The requested camera source does not match the name of the Ricoh Theta camera, so it cannot
-                # be completed and will have a failure status in the response message.
-                img_resp.status = image_pb2.ImageResponse.STATUS_UNKNOWN_CAMERA
-                self.logger.warning("Camera source '%s' is unknown.", src_name)
-                continue
-
-            if img_req.resize_ratio < 0 or img_req.resize_ratio > 1:
-                img_resp.status = image_pb2.ImageResponse.STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED
-                self.logger.warning("Resize ratio %f is unsupported.", img_req.resize_ratio)
-                continue
-
-            if img_req.HasField("custom_params"):
-                value_validation_error = self.image_sources_mapped[src_name].value_validator(
-                    img_req.custom_params)
-                if value_validation_error:
-                    img_resp.status = image_pb2.ImageResponse.STATUS_CUSTOM_PARAMS_ERROR
-                    img_resp.custom_param_error.CopyFrom(value_validation_error)
+        if self.data_buffer_client is not None:
+            response_context = ResponseContext(response, request, self.data_buffer_client)
+        else:
+            response_context = contextlib.nullcontext()
+        with response_context:
+            for img_req in request.image_requests:
+                img_resp = response.image_responses.add()
+                src_name = img_req.image_source_name
+                if src_name not in self.image_sources_mapped:
+                    # The requested camera source does not match the name of the Ricoh Theta camera, so it cannot
+                    # be completed and will have a failure status in the response message.
+                    img_resp.status = image_pb2.ImageResponse.STATUS_UNKNOWN_CAMERA
+                    self.logger.warning("Camera source '%s' is unknown.", src_name)
                     continue
 
-            # Set the image source information in the response.
-            img_resp.source.CopyFrom(self.image_sources_mapped[src_name].image_source_proto)
+                if img_req.resize_ratio < 0 or img_req.resize_ratio > 1:
+                    img_resp.status = image_pb2.ImageResponse.STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED
+                    self.logger.warning("Resize ratio %f is unsupported.", img_req.resize_ratio)
+                    continue
 
-            # Set the image capture parameters in the response.
-            img_resp.shot.capture_params.CopyFrom(
-                self.image_sources_mapped[src_name].get_image_capture_params(img_req.custom_params))
+                if img_req.HasField("custom_params"):
+                    value_validation_error = self.image_sources_mapped[src_name].value_validator(
+                        img_req.custom_params)
+                    if value_validation_error:
+                        img_resp.status = image_pb2.ImageResponse.STATUS_CUSTOM_PARAMS_ERROR
+                        img_resp.custom_param_error.CopyFrom(value_validation_error)
+                        continue
 
-            if img_req.HasField("custom_params"):
-                #If future keyword arguments are added here, they'll need to be added to this call
-                #get_image_and_timestamp already calls a 'sanitized' capture function that handles pre-3.3 blocking_captures
-                captured_image, img_time_seconds = self.image_sources_mapped[
-                    src_name].get_image_and_timestamp(custom_params=img_req.custom_params)
-            else:
-                #get_image_and_timestamp() can accomodate pre-3.3 blocking_capture calls if no custom params are supplied
-                captured_image, img_time_seconds = self.image_sources_mapped[
-                    src_name].get_image_and_timestamp()
+                # Set the image source information in the response.
+                img_resp.source.CopyFrom(self.image_sources_mapped[src_name].image_source_proto)
 
-            if captured_image is None or img_time_seconds is None:
-                img_resp.status = image_pb2.ImageResponse.STATUS_IMAGE_DATA_ERROR
-                error_message = "Failed to capture an image from %s on the server." % src_name
-                response.header.error.message = error_message
-                self.logger.warning(error_message)
-                continue
+                # Set the image capture parameters in the response.
+                img_resp.shot.capture_params.CopyFrom(
+                    self.image_sources_mapped[src_name].get_image_capture_params(
+                        img_req.custom_params))
 
-            # Convert the image capture time from the local clock time into the robot's time. Then set it as
-            # the acquisition timestamp for the image data.
-            img_resp.shot.acquisition_time.CopyFrom(
-                self.bosdyn_sdk_robot.time_sync.robot_timestamp_from_local_secs(img_time_seconds))
+                if img_req.HasField("custom_params"):
+                    #If future keyword arguments are added here, they'll need to be added to this call
+                    #get_image_and_timestamp already calls a 'sanitized' capture function that handles pre-3.3 blocking_captures
+                    captured_image, img_time_seconds = self.image_sources_mapped[
+                        src_name].get_image_and_timestamp(custom_params=img_req.custom_params)
+                else:
+                    #get_image_and_timestamp() can accommodate pre-3.3 blocking_capture calls if no custom params are supplied
+                    captured_image, img_time_seconds = self.image_sources_mapped[
+                        src_name].get_image_and_timestamp()
 
-            img_resp.shot.image.rows = img_resp.source.rows
-            img_resp.shot.image.cols = img_resp.source.cols
+                if captured_image is None or img_time_seconds is None:
+                    img_resp.status = image_pb2.ImageResponse.STATUS_IMAGE_DATA_ERROR
+                    error_message = "Failed to capture an image from %s on the server." % src_name
+                    response.header.error.message = error_message
+                    self.logger.warning(error_message)
+                    continue
 
-            # Set the image data.
-            img_resp.shot.image.format = img_req.image_format
-            decode_status = self._set_format_and_decode(captured_image, img_resp.shot.image,
-                                                        img_req)
-            if decode_status != image_pb2.ImageResponse.STATUS_OK:
-                img_resp.status = decode_status
+                # Convert the image capture time from the local clock time into the robot's time. Then set it as
+                # the acquisition timestamp for the image data.
+                img_resp.shot.acquisition_time.CopyFrom(
+                    self.bosdyn_sdk_robot.time_sync.robot_timestamp_from_local_secs(
+                        img_time_seconds))
 
-            # Set that we successfully got the image.
-            if img_resp.status == image_pb2.ImageResponse.STATUS_UNKNOWN:
-                img_resp.status = image_pb2.ImageResponse.STATUS_OK
+                img_resp.shot.image.rows = img_resp.source.rows
+                img_resp.shot.image.cols = img_resp.source.cols
 
-        # No header error codes, so set the response header as CODE_OK.
-        populate_response_header(response, request)
+                # Set the image data.
+                img_resp.shot.image.format = img_req.image_format
+                decode_status = self._set_format_and_decode(captured_image, img_resp.shot.image,
+                                                            img_req)
+                if decode_status != image_pb2.ImageResponse.STATUS_OK:
+                    img_resp.status = decode_status
+
+                # Set that we successfully got the image.
+                if img_resp.status == image_pb2.ImageResponse.STATUS_UNKNOWN:
+                    img_resp.status = image_pb2.ImageResponse.STATUS_OK
+
+            # No header error codes, so set the response header as CODE_OK.
+            populate_response_header(response, request)
         return response
 
     def __del__(self):

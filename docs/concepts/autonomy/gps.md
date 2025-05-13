@@ -26,7 +26,7 @@ Most consumer-grade GPS receivers can compute their location with a few meters o
 
 GPS receivers make NMEA-0183 messages available through different interfaces. Examples of receiver interfaces include USB, Ethernet, Wi-Fi, and Bluetooth. Spot is not able to consume this data directly from the sensor. Instead, Spot has an interface for accepting GPS data from attached payloads through its API. This means that in addition to a GPS receiver payload, a user must also attach a payload capable of translating from the GPS receiver interface to the Spot API. For information about designing and attaching payloads for Spot, refer to the documentation [here](../../payload/README.md). The figure shown below depicts a system with three GPS receivers communicating with Spot through the GPS API.
 
-Boston Dynamics provides an example of such a system involving the [Trimble SPS986](https://www.sitechnorcal.com/products/site-positioning-systems/antennas-and-base-stations/trimble-sps986-gnss-smart-antenna). The CORE I/O and associated extension also supports GPS devices using USB and UDP connections.
+Boston Dynamics provides an example of such a system involving the [Trimble SPS986](https://help.fieldsystems.trimble.com/sps/ch-intro-sps986.htm). The CORE I/O and associated extension also supports GPS devices using USB and UDP connections.
 
 ![](images/gps_diagram.png)
 _Figure 1: Spot GPS System Diagram_
@@ -34,6 +34,28 @@ _Figure 1: Spot GPS System Diagram_
 ### Writing Custom GPS Services
 
 The GPS Listener example provided by Boston Dynamics translates NMEA-0183 messages to the Spot API. If this is not suitable for a use case, it is possible to interface with the Spot API directly to provide GPS data. To do this, a new service should be developed. For information on how to do this, please refer to the documentation [here](../developing_api_services.md). This service will need to send NewGpsDataRequest messages to Spot's Aggregator service. This request must contain information about the position of the receiver in either [Geographic Coordinate System](https://en.wikipedia.org/wiki/Geographic_coordinate_system) (GCS: latitude, longitude, and altitude) or in [Earth Centered Earth Fixed](https://en.wikipedia.org/wiki/Earth-centered,_Earth-fixed_coordinate_system) (ECEF) coordinates. Additionally, the timestamp of the fix in robot time and the quantity of satellites used to calculate the fix must be provided. If available, other information such as horizontal and vertical accuracy, yaw, heading, the GPS timestamp, and information about individual satellites used for the fix can be included. GPS data points must also include an SE3Pose specifying the location of the receiver with respect to Spot's body. For additional information, please refer to the [API documentation](../../../protos/bosdyn/api/README.md).
+
+### Using NTRIP Corrections
+
+Networked Transport of RTCM via Internet Protocol (NTRIP) can be used to increase the precision of
+a GPS receiver's position fix. If the computer using the GPS Listener example has an internet
+connection, the GPS Listener can stream NTRIP corrections and forward them to the connected
+GPS receiver. There are many sources of NTRIP corrections, some are free and others require a paid
+subscription.
+
+Some free services:
+
+- [Massachusetts Continuously Operating Reference Station Network (MaCORS)](https://www.mass.gov/how-to/the-massachusetts-continuously-operating-reference-station-network-macors)
+  - Some other states in the United States have comparable services.
+- [RTK2Go](http://rtk2go.com/)
+- [UNAVCO](https://www.unavco.org/instrumentation/networks/status/all/realtime)
+
+Some paid services:
+
+- [u-blox PointPerfect](https://www.u-blox.com/en/product/thingstream)
+- [Trimble RTX](https://positioningservices.trimble.com/en/rtx)
+- [KeyNet](https://www.keypre.com/keynetgps/)
+- [SmartNet](https://www.smartnetna.com/coverage_network.cfm)
 
 ## Background
 
@@ -94,6 +116,7 @@ available for inspection.
 | `STATUS_NEED_DATA`      | No usable GPS data was available                                           |
 | `STATUS_NEED_MORE_DATA` | Spot has not moved far enough                                              |
 | `STATUS_STALE`          | No usable data has been received recently enough to compute a registration |
+| `STATUS_HIGH_ERROR`     | Signals high error associated with registration                            |
 
 ### Registration to Graph Nav Maps
 
@@ -182,14 +205,14 @@ Nav:
   | ----------------------------- | --------------------------------------------------------------------------- |
   | `STATE_OK`                    | Using GPS.                                                                  |
   | `STATE_BAD_FRAMES`            | Error getting frames (ko, etc.)                                             |
-  | `STATE_NO_GPS_OBJECTS  `      | No GPS available.                                                           |
+  | `STATE_NO_GPS_OBJECTS`        | No GPS available.                                                           |
   | `STATE_REGISTRATION_NOT_OK`   | GPS registration isn't ready.                                               |
   | `STATE_NO_GPS_STATES`         | No GPS state measurements.                                                  |
   | `STATE_NOT_ENOUGH_SATELLITES` | Too few satellites to localize.                                             |
   | `STATE_NO_ECEF_FRAME`         | GPS registration is missing a frame.                                        |
   | `STATE_HIGH_ERROR`            | The GPS data exists, but is high error.                                     |
-  | `STATE_STALE  `               | The GPS data exists, and we have not used it yet, but it is too old to use. |
-  | `STATE_INTERNAL_ERROR `       | Internal error (e.g. missing waypoints).                                    |
+  | `STATE_STALE`                 | The GPS data exists, and we have not used it yet, but it is too old to use. |
+  | `STATE_INTERNAL_ERROR`        | Internal error (e.g. missing waypoints).                                    |
 
 - **graph_nav.NavigateToAnchor** \- this RPC allows Graph Nav to navigate to either a point in the "seed" frame, the ECEF frame, or the LLH frame. To navigate to a latitude and longitude, or to an ECEF coordinate, use GPSNavigationParams as the goal field.
 

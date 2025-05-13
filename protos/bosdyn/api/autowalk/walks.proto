@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api.autowalk;
+option go_package = "bosdyn/api/autowalk/walks";
 
 option java_outer_classname = "WalksProto";
 
@@ -263,6 +264,11 @@ message Target {
         // example, the user may decide how close to the destination waypoint
         // the robot needs to be in order to declare success.
         bosdyn.api.graph_nav.TravelParams travel_params = 3;
+
+        // Passed through to graph_nav.  See comment in graph_nav.proto.
+        SE2Pose destination_waypoint_tform_body_goal = 4;
+
+        reserved 2;
     }
 
     // Tell the robot to follow a route to a waypoint.
@@ -276,6 +282,9 @@ message Target {
         // example, the user may decide how close to the destination waypoint
         // the robot needs to be in order to declare success.
         bosdyn.api.graph_nav.TravelParams travel_params = 2;
+
+        // Passed through to graph_nav.  See comment in graph_nav.proto.
+        SE2Pose destination_waypoint_tform_body_goal = 3;
     }
 
     oneof target {
@@ -430,18 +439,28 @@ message ActionWrapper {
         bosdyn.api.spot_cam.PtzPosition ptz_position = 1;
     }
 
-    // Align SpotCam to a waypoint. Cannot be used with SpotCamPtz or RobotBodyPose
+    // Align the SpotCam to given reference image(s). The robot will initially point the camera in
+    // the direction specified by target_tform_sensor. Then, the robot will align the SpotCam by
+    // computing the homography between the live image(s) from the camera and the supplied reference
+    // image(s). Cannot be used with SpotCamPtz or RobotBodyPose
     message SpotCamAlignment {
         message Alignment {
             // Camera zoom parameter
             float zoom = 1;
 
-            // Sensor to use for alignment
+            // Sensor to use for alignment. The sensor must be registered with the sensor pointing
+            // service. The sensor_id is the name of the sensor given by the sensor pointing
+            // service's ListSensors RPC.
             string sensor_id = 2;
 
             // Image to use for alignment
             oneof reference {
+                // Points at a world object in the waypoint snapshot corresponding to the waypoint
+                // of this action. The world object should contain the reference image.
                 string scene_object_id = 3;
+
+                // Reference image to use for alignment and the camera source of the image.
+                ImageCaptureAndSource reference_image = 6;
             }
 
             // If true, this alignment will be skipped during playback
@@ -454,7 +473,8 @@ message ActionWrapper {
         // List of alignments to perform
         repeated Alignment alignments = 2;
 
-        // Desired transform from the sensor to the target
+        // Desired transform from the sensor to the waypoint. This is used to initially point the
+        // camera in the correct direction before refining the alignment using reference images.
         bosdyn.api.SE3Pose target_tform_sensor = 3;
 
         // Final zoom the camera should be after all alignments have finished

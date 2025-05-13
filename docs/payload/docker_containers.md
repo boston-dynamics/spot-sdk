@@ -150,7 +150,7 @@ Extensions can also simply be static files that developers need to upload into C
 
 #### Helper Scripts
 
-In v4.0, two scripts were added to the [Extensions](../../python/examples/extensions/README.md) example to help with creating software package extensions in the structure described below. The `generate_extension_data.py` script takes in a saved Docker image and generates basic `manifest.json` and `docker-compose.yml` files described below. The `build_extension.py` script takes in all of the files in the structure below and outputs a valid Extension file that can be installed onto the CORE I/O.
+In 4.0.0, a script was added to the [Extensions](../../python/examples/extensions/README.md) example to help with creating software package extensions in the structure described below. The `build_extension.py` script takes in all of the files in the structure below and outputs a valid Extension file that can be installed onto the CORE I/O or Orbit.
 
 #### Extension Structure
 
@@ -158,7 +158,7 @@ An Extension is a set of docker images configured with a docker-compose yaml con
 
 - `manifest.json` file with metadata about the Extension
 - List of docker images
-- docker-compose.yml file
+- `docker-compose.yml` file
 - Icon file shown in the web portal
 - Udev rules file to install in the CORE I/O OS if the Extension is associated with a hardware payload to be attached to CORE I/O.
 - Other files needed by the software or the udev rules included in the Extension
@@ -169,6 +169,8 @@ If populated, the `extension_name` field in `manifest.json` represents the name 
 - Cannot contain the special strings, `coreio` and `mission_control`
 
 Please note that these restrictions do not apply to the Extension filename when `extension_name` is populated.
+
+If populated, the `files_to_save` and `directories_to_save` fields in `manifest.json` ensure that files and directories (recursive) from the current installation are retained when upgrading to a new version of the same extension. The paths should be specified relative to the extension's base directory `/data/.extensions/{extension_name}`, where `extension_name` is determined according to the rules outlined above.
 
 One known issue in CORE I/O version 4.1.0 is that Extensions with names that violate the naming requirements cannot be uninstalled through the web portal. To resolve this, you can use one of the following workarounds (be sure to back anything up you are not confident you have stored elsewhere prior to deleting it on the CORE I/O):
 
@@ -187,6 +189,8 @@ The `manifest.json` file is the Extension parameterization file with the followi
 - images: Optional list of tgz file names included in the extension that represent the docker images to load for running the extension. Parameter is omitted if the images are available from a public location, such as dockerhub.
 - extension_name: Name of the extension, subject to the restrictions in [Extension Structure](#extension-structure)
 
+Please see [here](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/manifest.json) for best practices.
+
 ##### Docker Images
 
 The docker images listed in the `images` field of the `manifest.json` file also need to be included in the Extension. These are the docker images that contain the software components to run as part of the extension. The inclusion of docker images in the Extension is optional if the images are available from a public source, such as dockerhub. The Extension setup could also contain a mix-and-match of public and non-public images. In that case, the `images` field in the `manifest.json` file would include only the non-public images included in the Extension, and the docker-compose rules would specify all images (public and non-public).
@@ -194,6 +198,8 @@ The docker images listed in the `images` field of the `manifest.json` file also 
 ##### Docker Compose YAML configuration file
 
 The `docker-compose.yml` file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together. If no logging driver is specified in the `docker-compose.yml` file, the Extension uses the `journald` logging driver as of 4.1.0.
+
+Please see [here](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/docker-compose.yml) for best practices.
 
 ##### Docker Logs
 
@@ -203,6 +209,10 @@ As of 4.1.0, the `journald` logging driver is supported for Extensions. Its usag
 - For each ID, executing `journalctl CONTAINER_ID_FULL={ID} -u docker.service --until now`, where `{ID}` is the full Docker container ID from the previous step
 
 If the CORE I/O has been power cycled, logs may be retrieved by executing `journalctl -u docker.service --until now`.
+
+##### Resource Consumption
+
+We strongly recommend setting memory consumption limits in the `docker-compose.yml` file. Without these limits, a memory leak in an Extension could eventually exhaust the device's memory. If that happens, services may be terminated unpredictably, potentially requiring physical recovery of the robot.
 
 ##### Other files
 

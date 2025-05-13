@@ -14,6 +14,7 @@ import os
 import sys
 
 from bosdyn.orbit.client import create_client
+from bosdyn.orbit.utils import add_base_arguments
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
@@ -85,31 +86,21 @@ def export_run_archives(options: argparse.Namespace) -> bool:
         run_archives_zip_file = get_run_archives_by_id_response.content
         # Set the file name schema
         file_name = f'temp/{mission_name}_{start_time}_{run_uuid}.zip'
+
         # Write the run_archives_zip_file to file_name
-        file = open(file_name, "wb")
-        file.write(run_archives_zip_file)
-        file.close()
+        with open(file_name, "wb") as file:
+            file.write(run_archives_zip_file)
+
         LOGGER.info("Downloaded: " + file_name)
 
 
 def main():
-    """Command line interface."""
+    """ Command line interface."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--hostname', help='IP address associated with the Orbit instance',
-                        required=True, type=str)
+    add_base_arguments(parser)
     parser.add_argument('--num_of_runs',
                         help='The number of latest runs to export archives data for.',
                         required=False, type=int, default=10)
-    parser.add_argument(
-        '--verify',
-        help=
-        'verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate',
-        default=True,
-    )
-    parser.add_argument(
-        '--cert', help=
-        "(a .pem file or a tuple with ('cert', 'key') pair): a local cert to use as client side certificate ",
-        nargs='+', default=None)
     options = parser.parse_args()
     export_run_archives(options)
 

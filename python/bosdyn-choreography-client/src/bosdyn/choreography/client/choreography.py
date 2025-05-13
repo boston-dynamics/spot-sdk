@@ -481,6 +481,83 @@ class ChoreographyClient(BaseClient):
             copy_request=False,
             **kwargs)
 
+    def leg_size_configuration(self, front_left_size=None, front_right_size=None,
+                               hind_left_size=None, hind_right_size=None, **kwargs):
+        """ Tell the robot its legs are a non-standard size to help avoid self-collision. Typically used for robots that are wearing costumes.
+            Configuration will be permanently stored (persisting through reboot) until cleared by sending an empty request.
+        Args: 
+            front_left_size: New leg configuration dimensions for the front left leg. Either 
+                a LegSize message or a list of 4 floats. If None, all config values are set to zero.
+            front_right_size: Same as front_left_size, but for the front right leg.
+            hind_left_size: Same as front_left_size, but for the hind left leg.
+            hind_right_size: Same as front_left_size, but for the hind right leg.
+
+        Returns:
+            The full LegSizeConfigurationResponse message.
+        """
+        req = self.build_leg_size_configuration_request(front_left_size=front_left_size,
+                                                        front_right_size=front_right_size,
+                                                        hind_left_size=hind_left_size,
+                                                        hind_right_size=hind_right_size)
+
+        return self.call(
+            self._stub.LegSizeConfiguration,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
+    def leg_size_configuration_async(self, front_left_size=None, front_right_size=None,
+                                     hind_left_size=None, hind_right_size=None, **kwargs):
+        """Async version of leg_size_configuration()"""
+        req = self.build_leg_size_configuration_request(front_left_size=front_left_size,
+                                                        front_right_size=front_right_size,
+                                                        hind_left_size=hind_left_size,
+                                                        hind_right_size=hind_right_size)
+
+        return self.call_async(
+            self._stub.LegSizeConfiguration,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
+    def leg_size_configuration_state(self, **kwargs):
+        """ Read the current leg size configuration from the robot. On a robot with the default leg size configuration the 
+        values for each leg's LegSize will be:
+
+            distance_inward = 0.02 m
+            distance_outward = 0.02 m
+            distance_forward = 0.035 m                                          
+            distance_backward = 0.035 m
+
+        Returns:
+            The full LegSizeConfigurationStateResponse message.
+        """
+        req = choreography_sequence_pb2.LegSizeConfigurationStateRequest()
+
+        return self.call(
+            self._stub.LegSizeConfigurationState,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
+    def leg_size_configuration_state_async(self, **kwargs):
+        """Async version of leg_size_configuration_state()"""
+        req = choreography_sequence_pb2.LegSizeConfigurationStateRequest()
+
+        return self.call_async(
+            self._stub.LegSizeConfigurationState,
+            req,
+            value_from_response=None,  # Return the complete response message
+            error_from_response=common_header_errors,
+            copy_request=False,
+            **kwargs)
+
     def start_recording_state(self, duration_secs, continue_session_id=0, **kwargs):
         """Start (or continue) a manually recorded robot state log.
 
@@ -768,6 +845,55 @@ class ChoreographyClient(BaseClient):
         request.add_labels.extend(add_labels)
         request.remove_labels.extend(remove_labels)
         return request
+
+    def build_leg_size(self, dist_inward=0.0, dist_outward=0.0, dist_forward=0.0,
+                       dist_backward=0.0):
+        """Build and return a LegSize message from provided dimentions."""
+        return choreography_sequence_pb2.LegSize(distance_inward=dist_inward,
+                                                 distance_outward=dist_outward,
+                                                 distance_forward=dist_forward,
+                                                 distance_backward=dist_backward)
+
+    def build_leg_size_configuration_request(self, front_left_size=None, front_right_size=None,
+                                             hind_left_size=None, hind_right_size=None):
+        """Build a LegSizeConfigurationRequest. 
+
+        Args: 
+            front_left_size: New leg configuration dimensions for the front left leg. Either 
+                a LegSize message or a list of 4 floats. If None, all config values are set to zero.
+            front_right_size: Same as front_left_size, but for the front right leg.
+            hind_left_size: Same as front_left_size, but for the hind left leg.
+            hind_right_size: Same as front_left_size, but for the hind right leg.
+
+        Returns:
+            The LegSizeConfigurationRequest message built from provided parameters.
+        """
+        req = choreography_sequence_pb2.LegSizeConfigurationRequest()
+
+        # Check for a list input for each foot.
+        if isinstance(front_left_size, list) and len(front_left_size) == 4:
+            front_left_size = self.build_leg_size(front_left_size[0], front_left_size[1],
+                                                  front_left_size[2], front_left_size[3])
+        if isinstance(front_right_size, list) and len(front_right_size) == 4:
+            front_right_size = self.build_leg_size(front_right_size[0], front_right_size[1],
+                                                   front_right_size[2], front_right_size[3])
+        if isinstance(hind_left_size, list) and len(hind_left_size) == 4:
+            hind_left_size = self.build_leg_size(hind_left_size[0], hind_left_size[1],
+                                                 hind_left_size[2], hind_left_size[3])
+        if isinstance(hind_right_size, list) and len(hind_right_size) == 4:
+            hind_right_size = self.build_leg_size(hind_right_size[0], hind_right_size[1],
+                                                  hind_right_size[2], hind_right_size[3])
+
+        # Copy the LegSize message for each foot to the request if it was provided and valid.
+        if isinstance(front_left_size, choreography_sequence_pb2.LegSize):
+            req.front_left_size.CopyFrom(front_left_size)
+        if isinstance(front_right_size, choreography_sequence_pb2.LegSize):
+            req.front_right_size.CopyFrom(front_right_size)
+        if isinstance(hind_left_size, choreography_sequence_pb2.LegSize):
+            req.hind_left_size.CopyFrom(hind_left_size)
+        if isinstance(hind_right_size, choreography_sequence_pb2.LegSize):
+            req.hind_right_size.CopyFrom(hind_right_size)
+        return req
 
     def _update_timestamp_filter(self, timestamp, timesync_endpoint):
         """Set or convert fields of the proto that need timestamps in the robot's clock."""

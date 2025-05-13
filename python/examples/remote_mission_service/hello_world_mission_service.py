@@ -8,16 +8,21 @@
 
 import logging
 import sys
+import traceback
 
 import bosdyn.client
 import bosdyn.client.util
 from bosdyn.api.mission import remote_pb2, remote_service_pb2_grpc
+from bosdyn.api.service_customization_pb2 import DictParam
 from bosdyn.client.directory_registration import (DirectoryRegistrationClient,
                                                   DirectoryRegistrationKeepAlive)
 from bosdyn.client.server_util import GrpcServiceRunner, ResponseContext
 from bosdyn.client.service_customization_helpers import (create_value_validator,
-                                                         dict_param_coerce_to, make_dict_child_spec,
-                                                         make_dict_param_spec,
+                                                         dict_param_coerce_to, dict_params_to_dict,
+                                                         make_dict_child_spec, make_dict_param_spec,
+                                                         make_int64_param_spec,
+                                                         make_one_of_child_spec,
+                                                         make_one_of_param_spec,
                                                          make_string_param_spec,
                                                          make_user_interface_info,
                                                          validate_dict_spec)
@@ -29,6 +34,8 @@ SERVICE_TYPE = 'bosdyn.api.mission.RemoteMissionService'
 
 _LOGGER = logging.getLogger(__name__)
 _WHO_KEY = 'who'
+_TOGGLE_KEY = 'toggle_key'
+_TOGGLE_ENABLE_VALUE_KEY = 'toggle_enable_value_key'
 
 
 class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
@@ -44,14 +51,8 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         self.logger = logger or _LOGGER
         self.coerce = coerce
 
-        # Create the custom parameters. If no hello_options are provided, allow the text to be edited.
-        who_param = make_string_param_spec(options=hello_options, default_value=default_name,
-                                           editable=True)
-        who_ui_info = make_user_interface_info(display_name, 'Who Spot will say hello to')
-        dict_spec = make_dict_param_spec({_WHO_KEY: make_dict_child_spec(who_param, who_ui_info)},
-                                         is_hidden_by_default=False)
-
         # validate spec, error will be raised if invalid
+        dict_spec = create_custom_params(default_name, display_name, hello_options)
         validate_dict_spec(dict_spec)
         self.custom_params = dict_spec
 
@@ -73,10 +74,13 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
                     response.custom_param_error.CopyFrom(valid_param)
                     return response
 
-            who = request.params.values.get(_WHO_KEY)
-            if who is not None:
-                name = who.string_value.value
-            self.logger.info('Hello %s!', name)
+            # Get the params, then figure out who to say hello to and how many times to repeat it
+            params = dict_params_to_dict(request.params, self.custom_params, validate=True)
+            name = params.get(_WHO_KEY, name)
+            num_repeats = params.get(_TOGGLE_KEY, {}).get(_TOGGLE_ENABLE_VALUE_KEY, 0)
+
+            for _ in range(1 + num_repeats):
+                self.logger.info('Hello %s!', name)
             response.status = remote_pb2.TickResponse.STATUS_SUCCESS
         return response
 
@@ -106,6 +110,56 @@ class HelloWorldServicer(remote_service_pb2_grpc.RemoteMissionServiceServicer):
         with ResponseContext(response, request):
             response.custom_params.CopyFrom(self.custom_params)
         return response
+
+
+def create_custom_params(default_name, display_name, hello_options) -> DictParam.Spec:
+    # Create the custom parameters. If no hello_options are provided, allow the text to be edited.
+    who_param = make_string_param_spec(options=hello_options, default_value=default_name,
+                                       editable=True)
+    who_ui_info = make_user_interface_info(display_name,
+                                           description='Specify who Spot says hello to',
+                                           display_order=0)
+
+    # Add a toggle for how many times the robot should repeat itself.
+    ui_info = make_user_interface_info(display_name='Repeats',
+                                       description='Specify how many times Spot repeats itself',
+                                       display_order=1)
+    ui_info_enable = make_user_interface_info(
+        display_name='Enable', description='Spot will repeat itself this number of times',
+        display_order=0)
+    ui_info_disable = make_user_interface_info(display_name='Disable',
+                                               description='Spot will not repeat itself',
+                                               display_order=1)
+    return make_dict_param_spec(
+        {
+            _WHO_KEY:
+                make_dict_child_spec(who_param, who_ui_info),
+            _TOGGLE_KEY:
+                make_dict_child_spec(
+                    make_one_of_param_spec(
+                        {
+                            'toggle_key_enable':
+                                make_one_of_child_spec(
+                                    make_dict_param_spec(
+                                        {
+                                            _TOGGLE_ENABLE_VALUE_KEY:
+                                                make_dict_child_spec(
+                                                    make_int64_param_spec(
+                                                        # This toggle is cool, so set the default number of repeats to 1337. Set the min and max number of repeats to 1 and 1337, respectively.
+                                                        default_value=1337,
+                                                        min_value=1,
+                                                        max_value=1337))
+                                        },
+                                        is_hidden_by_default=True),
+                                    ui_info=ui_info_enable),
+                            'toggle_key_disable':
+                                make_one_of_child_spec(
+                                    make_dict_param_spec({}, is_hidden_by_default=True),
+                                    ui_info=ui_info_disable),
+                        },),
+                    ui_info=ui_info)
+        },
+        is_hidden_by_default=False)
 
 
 def run_service(port, logger=None, default_name=None, display_name=None, hello_options=None,

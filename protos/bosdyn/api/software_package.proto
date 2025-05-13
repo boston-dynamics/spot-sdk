@@ -1,0 +1,111 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option go_package = "bosdyn/api/software_package";
+option java_outer_classname = "SoftwarePackage";
+
+import "google/protobuf/timestamp.proto";
+import "bosdyn/api/robot_id.proto";
+
+// Common data type for communicating version information about an installable software package
+// on the robot or its payloads.
+message SoftwarePackageVersion {
+    // Unique string identifying the unit of software, e.g., "spot" or "coreio".  Package names
+    // identifying payload software must not conflict with other package names in use.  Note that
+    // Spot Extensions also use their name in this field when reporting their versions as well.
+    string package_name = 1;
+
+    // Version of the software package.
+    SoftwareVersion version = 2;
+
+    // Release date associated with the software package.
+    google.protobuf.Timestamp release_date = 3;
+
+    // Unique identifier of the build of the software package.  For example, this can be a
+    // randomly generated UUID, a hash of some binary artifact, or a version control commit hash.
+    // The only requirement is that it uniquely identifies the build of the software package.
+
+    // This is used to test whether installed software packages are equivalent to the desired
+    // package versions and provide a stronger guarantee than the version field and release_date.
+    string build_id = 4;
+}
+
+// StagedSoftwarePackage builds upon the version information by adding details of the package's
+// size on disk and the URL that robot payloads can use to retrieve the file.
+message StagedSoftwarePackage {
+    // Information about the software package version.
+    SoftwarePackageVersion version_info = 1;
+
+    // File size of the software package in bytes.
+    int64 file_size = 2;
+
+    // URL of the file on the staging server.
+    string url = 3;
+}
+
+// SoftwareUpdateStatus provides details on the progress of an installation of a unit of software
+// on the robot.
+message SoftwareUpdateStatus {
+    // Unique string identifying the software unit.
+    string package_name = 1;
+
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // Payload is not currently executing an update.
+        STATUS_IDLE = 1;
+        // Payload is waiting for other software installations to complete.
+        STATUS_WAITING = 2;
+        // Payload is downloading the software package from the staging server.
+        STATUS_DOWNLOADING = 3;
+        // Payload is validating the downloaded package.
+        STATUS_VALIDATING = 4;
+        // Payload is installing the software package.
+        STATUS_INSTALLING = 5;
+        // Payload is rebooting to start using the new software.
+        STATUS_REBOOTING = 6;
+        // Payload has successfully been updated.
+        STATUS_SUCCESS = 7;
+        // Payload failed to install the update.
+        STATUS_FAILURE = 8;
+    }
+
+    enum ErrorCode {
+        ERROR_UNINITIALIZED = 0;
+        // No error
+        ERROR_NONE = 1;
+        // Unknown error; not covered in any of the cases below
+        ERROR_UNKNOWN = 2;
+        // Failed to download the package from the staging area
+        ERROR_DOWNLOAD_FAILED = 3;
+        // Update rejected for some reason (staged is older than current, for example)
+        ERROR_UPDATE_REJECTED = 4;
+        // Validation by software failed
+        ERROR_VALIDATION_FAILED = 5;
+        // Inadequate disk space to accept software update
+        ERROR_INSUFFICIENT_STORAGE = 6;
+        // Failed to find a required file during the update process
+        ERROR_FILE_NOT_FOUND = 7;
+        // Package was downloaded and validated, but failed to install.
+        ERROR_INSTALLATION_FAILED = 8;
+        // The update was started, but it was interrupted before it was allowed to complete.
+        ERROR_INTERRUPTED = 9;
+        // This depends on another update, but that other update failed to install.
+        ERROR_DEPENDENCY_FAILED = 10;
+        // Payload failed to respond after a timeout; update is presumed to have failed.
+        ERROR_TIMEOUT = 11;
+        // The payload is already installing an update.
+        ERROR_INSTALLATION_ALREADY_IN_PROGRESS = 12;
+    }
+
+    // Status of the update process for a specific software package.
+    Status status = 2;
+
+    // If status == STATUS_FAILURE, this field communicates the reason for the failure.
+    ErrorCode error_code = 3;
+}

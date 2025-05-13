@@ -182,7 +182,9 @@ class PtzSetPtzFocusCommand(Command):
         return str_to_enum_dict[mode.lower()]
 
     def _run(self, robot, options):
+        focus_mode = self._focus_mode_str_to_enum(options.focus_mode)
+        dist = options.distance if focus_mode == ptz_pb2.PtzFocusState.PTZ_FOCUS_MANUAL else None
         ptz_focus = robot.ensure_client(PtzClient.default_service_name).set_ptz_focus_state(
-            self._focus_mode_str_to_enum(options.focus_mode), options.distance, None)
+            focus_mode, dist, None)
 
         return ptz_focus

@@ -159,18 +159,7 @@ class PtzClient(BaseClient):
         Returns:
             SetPtzFocusStateResponse indicating whether the call was successful
         """
-
-        if focus_position is not None:
-            focus_position_val = Int32Value(value=focus_position)
-            approx_distance = None
-        elif distance is not None:
-            approx_distance = FloatValue(value=distance)
-            focus_position_val = None
-        else:
-            raise ValueError("One of distance or focus_position must be specified.")
-
-        ptz_focus_state = ptz_pb2.PtzFocusState(mode=focus_mode, approx_distance=approx_distance,
-                                                focus_position=focus_position_val)
+        ptz_focus_state = create_focus_state(focus_mode, distance, focus_position)
         request = ptz_pb2.SetPtzFocusStateRequest(focus_state=ptz_focus_state)
         return self.call(self._stub.SetPtzFocusState, request,
                          self._set_ptz_focus_state_from_response, common_header_errors,
@@ -178,18 +167,7 @@ class PtzClient(BaseClient):
 
     def set_ptz_focus_state_async(self, focus_mode, distance=None, focus_position=None, **kwargs):
         """Async version of set_ptz_focus_state()"""
-
-        if focus_position is not None:
-            focus_position_val = Int32Value(value=focus_position)
-            approx_distance = None
-        elif distance is not None:
-            approx_distance = FloatValue(value=distance)
-            focus_position_val = None
-        else:
-            raise ValueError("One of distance or focus_position must be specified.")
-
-        ptz_focus_state = ptz_pb2.PtzFocusState(mode=focus_mode, approx_distance=approx_distance,
-                                                focus_position=focus_position_val)
+        ptz_focus_state = create_focus_state(focus_mode, distance, focus_position)
         request = ptz_pb2.SetPtzFocusStateRequest(focus_state=ptz_focus_state)
         return self.call_async(self._stub.SetPtzFocusState, request,
                                self._set_ptz_focus_state_from_response, common_header_errors,
@@ -232,3 +210,21 @@ class PtzClient(BaseClient):
 def shift_pan_angle(pan):
     """Shift the pan angle (degrees) so that it is in the [0,360] range."""
     return recenter_value_mod(pan, 180, 360)
+
+
+def create_focus_state(focus_mode, distance=None, focus_position=None):
+    """Generate a focus state proto."""
+    approx_distance = None
+    focus_position_val = None
+    if focus_mode == ptz_pb2.PtzFocusState.PTZ_FOCUS_MANUAL:
+        if focus_position is not None:
+            focus_position_val = Int32Value(value=focus_position)
+            approx_distance = None
+        elif distance is not None:
+            approx_distance = FloatValue(value=distance)
+            focus_position_val = None
+        else:
+            raise ValueError("One of distance or focus_position must be specified.")
+
+    return ptz_pb2.PtzFocusState(mode=focus_mode, approx_distance=approx_distance,
+                                 focus_position=focus_position_val)

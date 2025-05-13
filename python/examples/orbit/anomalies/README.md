@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Anomalies in Orbit
 
-This Orbit API example demonstrates how to retireve and edit anomaly data with a Boston Dynamics Orbit API client.
+This Orbit API example demonstrates how to retrieve and edit anomaly data with a Boston Dynamics Orbit API client.
 
 ## Understanding Orbit Web API
 

@@ -22,7 +22,7 @@ The SDK consists of:
 - [Spot API protocol definition](protos/bosdyn/api/README.md). This reference guide covers the details of the protocol applications used to communicate to Spot. Application developers who wish to use a language other than Python can implement clients that speak the protocol.
 - [Spot SDK Repository](https://github.com/boston-dynamics/spot-sdk). The GitHub repo where all of the Spot SDK code is hosted.
 
-This is version 4.1.1 of the SDK. Please review the [Release Notes](docs/release_notes.md) to see what has changed.
+This is version 5.0.0 of the SDK. Please review the [Release Notes](docs/release_notes.md) to see what has changed.
 
 ## Contents
 

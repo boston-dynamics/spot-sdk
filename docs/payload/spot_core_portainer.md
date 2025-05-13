@@ -14,9 +14,9 @@ This section describes two ways to manage docker containers on a computation pay
 
 In Spot release 2.1, Spot CORE comes preloaded with [Portainer](https://www.portainer.io) software to manage the docker containers. Portainer is a complete software solution for container management to speed up software deployments and troubleshooting on the Spot CORE. It is the recommended method for managing docker containers on Spot CORE. We also recommend using Portainer and following these instructions with other computation payloads as well.
 
-Check the Spot CORE version to make sure it is 2.1 or higher by ssh-ing onto the Spot CORE and running `cat /etc/spotcore-release`. If it is not up-to-date, upgrade to the latest Spot CORE release by following the [instructions to upgrade](https://support.bostondynamics.com/s/article/Spot-CORE-payload-reference#UpdatingSpotCore).
+Check the Spot CORE version to make sure it is 2.1 or higher by ssh-ing onto the Spot CORE and running `cat /etc/spotcore-release`. If it is not up-to-date, upgrade to the latest Spot CORE release by following the [instructions to upgrade](https://support.bostondynamics.com/s/article/Spot-Core-Payload-Legacy-72064#UpdatingSpotCoresoftware).
 
-If you are having issues with Portainer running on the Spot CORE, refer to the support site [Spot CORE payload reference](https://support.bostondynamics.com/s/article/Spot-CORE-payload-reference)
+If you are having issues with Portainer running on the Spot CORE, refer to the support site [Spot CORE payload reference](https://support.bostondynamics.com/s/article/Spot-Core-Payload-Legacy-72064)
 
 Once the Spot CORE is updated, the docker file can be deployed from the Portainer web console. To access the web console, go to `https://192.168.80.3:21900`, log in, and then click the "Local" endpoint. To upload the tar file, click the "Image" tab on the left side of the web console, and then click the "Import" button in the "Images" section, as shown below.
 ![Portainer Image Upload](./images/portainer_image_upload.png)

@@ -4,6 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+# Boston Dynamics, Inc. Confidential Information.
+# Copyright 2025. All Rights Reserved.
 """Client for the log-status service.
 
 This allows client code to start, extend or terminate experiment logs and start retro logs.
@@ -183,6 +185,7 @@ class LogStatusClient(BaseClient):
                                **kwargs)
 
 
+
 _GET_LOG_STATUS_STATUS_TO_ERROR = \
     collections.defaultdict(lambda: (LogStatusResponseError, None))
 _GET_LOG_STATUS_STATUS_TO_ERROR.update({
@@ -230,6 +233,7 @@ _TERMINATE_LOG_STATUS_TO_ERROR.update({
     log_status.TerminateLogResponse.STATUS_OK: (None, None),
     log_status.TerminateLogResponse.STATUS_ID_NOT_FOUND: error_pair(RequestIdDoesNotExistError),
 })
+
 
 
 @handle_common_header_errors
@@ -284,3 +288,5 @@ def terminate_log_error(response):
     return error_factory(response, response.status,
                          status_to_string=log_status.TerminateLogResponse.Status.Name,
                          status_to_error=_TERMINATE_LOG_STATUS_TO_ERROR)
+
+

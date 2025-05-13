@@ -338,8 +338,8 @@ class DataAcquisitionStoreClient(BaseClient):
     def query_max_capture_id(self, **kwargs):
         """Query max capture id from the robot.
         Returns:
-            QueryMaxCaptureIdResult, which has a max_capture_id uint64, corresponding to the 
-            greatest capture id on the robot.  Used for skiping DAQ synchronization
+            QueryMaxCaptureIdResult, which has a max_capture_id uint64, corresponding to the
+            greatest capture id on the robot.  Used for skipping DAQ synchronization
             on connect.
         """
         request = data_acquisition_store.QueryMaxCaptureIdRequest()

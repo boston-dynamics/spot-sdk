@@ -27,7 +27,7 @@ In this part of the tutorial, you will:
 - Download the data from the robot.
 - Configure the robot to automatically upload its data to the cloud.
 
-To collect data we will create an [Autowalk mission](https://support.bostondynamics.com/s/article/Getting-Started-with-Autowalk) with Spot.
+To collect data we will create an [Autowalk mission](https://support.bostondynamics.com/s/article/Record-an-Autowalk-Mission-49960) with Spot.
 
 ## Creating Actions
 

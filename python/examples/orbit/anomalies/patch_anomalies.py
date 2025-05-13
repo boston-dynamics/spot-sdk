@@ -12,6 +12,7 @@ import logging
 import sys
 
 from bosdyn.orbit.client import create_client
+from bosdyn.orbit.utils import add_base_arguments
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
@@ -83,8 +84,7 @@ def update_anomaly(options: argparse.Namespace) -> bool:
 def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--hostname', help='IP address associated with the Orbit instance',
-                        required=True, type=str)
+    add_base_arguments(parser)
 
     # For bulk closing multiple anomalies
     parser.add_argument('--bulk-close-element-ids',
@@ -101,16 +101,6 @@ def main():
         help='Value to set the specified anomaly "status" field to. Either "open" or "closed"',
         required=False, type=str, default='')
 
-    parser.add_argument(
-        '--verify',
-        help=
-        'verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate',
-        default=True,
-    )
-    parser.add_argument(
-        '--cert', help=
-        "(a .pem file or a tuple with ('cert', 'key') pair): a local cert to use as client side certificate ",
-        nargs='+', default=None)
     options = parser.parse_args()
 
     # Ensure the required fields for each request are available in the parsed arguments to run each function

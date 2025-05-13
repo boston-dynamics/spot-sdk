@@ -91,7 +91,7 @@ class JointAPIInterface:
 
     # get_latest_joints_state function is to get a latest joint state
     def get_latest_pos_and_load_state(self):
-        # Wait for first data to cache. This should happend synchronously in normal stand before
+        # Wait for first data to cache. This should happened synchronously in normal stand before
         # joint control is activated.
         while not self.latest_state_stream_data:
             time.sleep(0.1)
@@ -104,7 +104,7 @@ class JointAPIInterface:
     # command by interpolating commanded poses
     # cmd_poses : series of commanded joints poses
     # cmd_loads : commanded joint loads
-    # duration : desired duriation between the poses [s]
+    # duration : desired duration between the poses [s]
     # k_q_p : proportional gain for position control
     # k_qd_p : proportional gain for velocity control
     def generate_joint_pos_interp_commands(self, cmd_poses, cmd_load, duration, k_q_p, k_qd_p):

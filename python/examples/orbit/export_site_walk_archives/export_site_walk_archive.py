@@ -14,6 +14,7 @@ import os
 import sys
 
 from bosdyn.orbit.client import create_client
+from bosdyn.orbit.utils import add_base_arguments
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
@@ -27,7 +28,7 @@ DOWNLOAD_ALL_CMD = 'all'
 
 
 def export_site_walk_archive(options: argparse.Namespace) -> bool:
-    """ A simple example to show how to use the Orbit client to export SiteWalk archives 
+    """ A simple example to show how to use the Orbit client to export SiteWalk archives
         which represent a collection of graph and mission data from Orbit.
 
         Args:
@@ -78,7 +79,7 @@ def export_site_walk_archive(options: argparse.Namespace) -> bool:
     while not valid_selection:
         # Prompt the user to select a SiteWalk by index or backup all SiteWalks with DOWNLOAD_ALL_CMD
         site_walk_selected_indices = input(
-            f"\nSelect SiteWalks to export archives by providing the associated index. For exporting multiple indices, please list them in a comma-separated format. If the indices are 1, 2, 3, and 4, you should enter them as 1, 2, 3, 4. To export all indices, simply type 'all'. \n> "
+            "\nSelect SiteWalks to export archives by providing the associated index. For exporting multiple indices, please list them in a comma-separated format. If the indices are 1, 2, 3, and 4, you should enter them as 1, 2, 3, 4. To export all indices, simply type 'all'. \n> "
         )
 
         # If user types DOWNLOAD_ALL_CMD create a list including all of the indices of available SiteWalks
@@ -95,7 +96,7 @@ def export_site_walk_archive(options: argparse.Namespace) -> bool:
                 for i in range(len(site_walk_selected_indices)):
                     site_walk_selected_indices[i] = int(site_walk_selected_indices[i])
 
-                    # Check if all selected indices are in the range of ite Walk incides listed from above
+                    # Check if all selected indices are in the range of its Walk indices listed from above
                     if site_walk_selected_indices[i] > len(
                             available_site_walks) + 1 or site_walk_selected_indices[i] < 0:
                         invalid_index = site_walk_selected_indices[i]
@@ -139,9 +140,9 @@ def export_site_walk_archive(options: argparse.Namespace) -> bool:
         file_name = f'temp/{site_walk_name}.walk.zip'
 
         # Write the site_walk_archive_zip_file to file_name
-        file = open(file_name, "wb")
-        file.write(site_walk_archive_zip_file)
-        file.close()
+        with open(file_name, "wb") as file:
+            file.write(site_walk_archive_zip_file)
+
         LOGGER.info("Downloaded: " + file_name)
 
     return True
@@ -150,21 +151,7 @@ def export_site_walk_archive(options: argparse.Namespace) -> bool:
 def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--hostname', help='IP address associated with the Orbit instance',
-                        required=True, type=str)
-
-    parser.add_argument(
-        '--verify',
-        help=
-        'verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate',
-        default=True,
-    )
-
-    parser.add_argument(
-        '--cert', help=
-        "(a .pem file or a tuple with ('cert', 'key') pair): a local cert to use as client side certificate ",
-        nargs='+', default=None)
-
+    add_base_arguments(parser)
     options = parser.parse_args()
 
     export_site_walk_archive(options)

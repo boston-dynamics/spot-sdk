@@ -13,14 +13,14 @@ from typing import List
 
 class MetricFileGroup:
     """  Initializer for the MetricFileGroup
-            
+
             Args:
                 robot_dir(str): path to performance log files
         """
 
     def __init__(self, robot_dir):
         '''  Initializer for the MetricFileGroup
-            
+
             Args:
                 robot_dir(str): path to performance log files
         '''
@@ -29,7 +29,7 @@ class MetricFileGroup:
 
     def ensure_directory_exists(self, directory: str):
         """  Create a direct at the file path if one does not yet exist
-            
+
             Args:
                 directory(str): path to performance log files
         """
@@ -42,13 +42,13 @@ class MetricFileGroup:
 
     def get_data(self, sequence_num: str) -> bytearray:
         """   A helper function to read a specific file from within this file group
-            
+
             Args:
                 sequence num(str): Sequence number of the file to read
-            
+
             Raises:
                 FileNotFoundError:If the file specified by current_dir does not exist, a FileNotFoundError will be thrown when attempting to open i
-            
+
             Returns:
                 A byte array of the file_content written when we first wrote the snapshot from the robot onto the coreio.  Saved in the file corresponding to that snapshot number.
         """
@@ -72,13 +72,13 @@ class MetricFileGroup:
 
     def get_sequence_num(self, latest: bool) -> int:
         """  A helper function to get the sequence number in the file system
-            
+
             Args:
                 latest(bool): Indicator flag for whether the method should return the max or min sequence number from the range found within the file system
-            
+
             Raises:
                 FileNotFoundError: If the file specified by current_dir does not exist, a FileNotFoundError will be thrown when attempting to open i
-            
+
             Returns:
                 sequence(int): largest or smallest sequence number on the COREIO
         """
@@ -96,11 +96,11 @@ class MetricFileGroup:
             return min(files, key=lambda f: int(f.split('.')[0]))
 
     def getSequenceRangeToDownload(self, sequence_range: List[int]) -> List[int]:
-        """  A helper function to get the sequence range to download from the robot.  It checks for data on the core first and 
-            
+        """  A helper function to get the sequence range to download from the robot.  It checks for data on the core first and
+
             Args:
                 sequence_range(int[]): Sequence range of snapshots returned by the robot
-            
+
             Returns:
                 SequenceRange(int[]): An array of size two with the first value being on the latest on core/robot and the second the
                 latest on robot
@@ -132,11 +132,11 @@ class MetricFileGroup:
 
     def write_metric_to_core(self, sequence_num: int, signedProto):
         """ Write a metric snapshot to the core.  Creates / gets the directory bsdrf on the robot's serial and the snapshot sequence number.
-            
+
             Args:
                 sequence_num (int): Sequence number of the metric snapshot
-                signedProto (bytes): Protobuff message return from the get_absolute_metric_snapshot method
-            
+                signedProto (bytes): Protobuf message return from the get_absolute_metric_snapshot method
+
             Raises:
                 FileNotFoundError:If the file specified by current_dir does not exist, a FileNotFoundError will be thrown when attempting to open i
 
@@ -157,7 +157,7 @@ class MetricFileGroup:
 
                 # Write out only the data
                 f.write(signedProto.data)
-                _LOGGER.info(f'Successully wrote log {sequence_num} to file')
+                _LOGGER.info(f'Successfully wrote log {sequence_num} to file')
                 f.close()
         except Exception as e:
             _LOGGER.error(f"Error writing to file for {self.serial} on {file_name}: {e}")

@@ -189,6 +189,6 @@ sudo systemctl daemon-reload # Reloads all systemd services.
 ## Useful TigerVNC Resources
 
 - [TigerVNC tutorial (primary resource used to create this document).](https://www.tecmint.com/install-and-configure-vnc-server-on-ubuntu/)
-- [How to handle port forwarding with TigerVNC.](http://danielhnyk.cz/setting-vnc-remote-access-port-forwarding/)
+- [How to handle port forwarding with TigerVNC.](https://danielhnyk.cz/setting-vnc-remote-access-port-forwarding/)
 - [How to use systemd.service files.](https://www.freedesktop.org/software/systemd/man/systemd.service.html)
 - [Additional TigerVNC tutorial.](https://www.cyberciti.biz/faq/install-and-configure-tigervnc-server-on-ubuntu-18-04/)

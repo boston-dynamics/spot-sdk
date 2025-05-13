@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.robot &mdash; Spot 4.1.1 documentation</title>
+  <title>bosdyn.client.robot &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -257,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -316,6 +317,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -336,6 +338,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -889,7 +893,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">update_user_token</span><span class="p">(</span><span class="n">user_token</span><span class="p">,</span> <span class="n">username</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.authenticate_from_payload_credentials"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.authenticate_from_payload_credentials">[docs]</a>    <span class="k">def</span> <span class="nf">authenticate_from_payload_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">guid</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">payload_registration_client</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                              <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                                              <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">retry_interval</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Authenticate to this Robot with the guid/secret of the hosting payload.</span>
 
 <span class="sd">        This call is used to authenticate to a robot using payload credentials. If a payload is</span>
@@ -917,7 +921,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                         <span class="s1">&#39;Payload is not authorized. Authentication will block until an&#39;</span>
                         <span class="s1">&#39; operator authorizes the payload in the Admin Console.&#39;</span><span class="p">)</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">retry_interval</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_user_token</span><span class="p">(</span><span class="n">user_token</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.update_user_token"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.update_user_token">[docs]</a>    <span class="k">def</span> <span class="nf">update_user_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_token</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -971,7 +975,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">service_type_by_name</span></div>
 
 
-<div class="viewcode-block" id="Robot.register_payload_and_authenticate"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.register_payload_and_authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">register_payload_and_authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Robot.register_payload_and_authenticate"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.register_payload_and_authenticate">[docs]</a>    <span class="k">def</span> <span class="nf">register_payload_and_authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                          <span class="n">auth_retry_interval</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a payload with the robot and request a user_token.</span>
 
 <span class="sd">        This method will block until the payload is authorized by an operator in the robot webpage.</span>
@@ -990,7 +995,7 @@
             <span class="k">pass</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">authenticate_from_payload_credentials</span><span class="p">(</span>
             <span class="n">payload</span><span class="o">.</span><span class="n">GUID</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">payload_registration_client</span><span class="o">=</span><span class="n">payload_registration_client</span><span class="p">,</span>
-            <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span></div>
+            <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">,</span> <span class="n">retry_interval</span><span class="o">=</span><span class="n">auth_retry_interval</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Robot.start_time_sync"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot.html#bosdyn.client.robot.Robot.start_time_sync">[docs]</a>    <span class="k">def</span> <span class="nf">start_time_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_sync_interval_sec</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Start time sync thread if needed.</span>
@@ -1212,7 +1217,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

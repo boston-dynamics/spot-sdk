@@ -9,6 +9,7 @@ Example usage of the data-buffer features
 """
 import argparse
 import logging
+import math
 import struct
 import sys
 import time
@@ -75,12 +76,6 @@ def log_spot_data(config):
     cmd_proto = basic_command_pb2.SelfRightCommand()
     data_buffer_client.add_protobuf(cmd_proto)
     robot.logger.info('Added robot command log blob to robot log.')
-    time.sleep(0.1)
-
-    # Log two blobs of data of different types to the same 'channel'
-    data_buffer_client.add_protobuf(geo_proto, channel='multi-proto-channel')
-    data_buffer_client.add_protobuf(cmd_proto, channel='multi-proto-channel')
-    robot.logger.info('Added protos of different types to the same channel.')
     time.sleep(0.1)
 
 

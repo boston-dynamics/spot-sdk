@@ -494,7 +494,7 @@ class ScoutClient():
             Returns:
                 requests.Response: the response associated with the post request
         """
-        return self.post_resource(f'site_walks/export_as_walk',
+        return self.post_resource('site_walks/export_as_walk',
                                   json={"siteWalkUuid": site_walk_uuid}, **kwargs)
 
     def post_import_from_walk(self, **kwargs) -> requests.Response:

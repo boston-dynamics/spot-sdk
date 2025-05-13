@@ -413,8 +413,23 @@ class GraphNavClient(BaseClient):
         request = self._build_navigate_to_anchor_request(
             seed_tform_goal, travel_params, route_params, cmd_duration, leases, used_endpoint,
             command_id, goal_waypoint_rt_seed_ewrt_seed_tolerance, gps_navigation_params)
-        return self.call_async(self._stub.NavigateTo, request,
+        return self.call_async(self._stub.NavigateToAnchor, request,
                                value_from_response=_command_id_from_navigate_route_response,
+                               error_from_response=_navigate_to_anchor_error, copy_request=False,
+                               **kwargs)
+
+    def navigate_to_anchor_full_async(self, seed_tform_goal, cmd_duration, route_params=None,
+                                      travel_params=None, leases=None, timesync_endpoint=None,
+                                      goal_waypoint_rt_seed_ewrt_seed_tolerance=None,
+                                      command_id=None, gps_navigation_params=None, **kwargs):
+        """Async version of navigate_to_anchor() that returns the full response."""
+        used_endpoint = timesync_endpoint or self._timesync_endpoint
+        if not used_endpoint:
+            raise GraphNavServiceResponseError(response=None, error_message='No timesync endpoint!')
+        request = self._build_navigate_to_anchor_request(
+            seed_tform_goal, travel_params, route_params, cmd_duration, leases, used_endpoint,
+            command_id, goal_waypoint_rt_seed_ewrt_seed_tolerance, gps_navigation_params)
+        return self.call_async(self._stub.NavigateToAnchor, request,
                                error_from_response=_navigate_to_anchor_error, copy_request=False,
                                **kwargs)
 

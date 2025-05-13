@@ -389,7 +389,7 @@ def add_service_endpoint_arguments(parser):
 
 def safe_pb_enum_to_string(value, pb_enum_obj):
     """Safe wrapper to convert a protobuf enum object to its string representation.
-    Avoids throughing an exception if the status is unknown by the enum object.
+    Avoids throwing an exception if the status is unknown by the enum object.
 
     Args:
         value: The enum value to convert

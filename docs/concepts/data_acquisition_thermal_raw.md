@@ -27,7 +27,7 @@ Raw data captured using the SDK is captured as `.pgm` while the same data captur
 
 ## Rendering raw thermal data
 
-Some image viewers can natively open .pgm files as a grayscale image. To instead show with a particular color palette, a lookup-table can be referenced to map from temperature to a color. For example, the lookup tables used by matplotlib can be referenced at this [link](https://github.com/matplotlib/matplotlib/blob/850bf04d317cbd85f3baff888dd273582d19a3c7/lib/matplotlib/_cm_listed.py)
+Some image viewers can natively open .pgm files as a grayscale image. To instead show with a particular color palette, a lookup-table can be referenced to map from temperature to a color. For example, the lookup tables used by matplotlib can be referenced at this <a href="https://github.com/matplotlib/matplotlib/blob/main/lib/matplotlib/_cm_listed.py">link</a>
 
 ### Scaling the color mapping
 

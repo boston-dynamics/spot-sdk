@@ -91,6 +91,8 @@ Since an image can be a lot of data, there are also different types of encodings
 - `RLE`: a run length encoding
 - `RAW`: the raw uncompressed image data
 
+The transformation between an image source and the robot's `body`, `vision`, and `odom` frames is available in the `transforms_snapshot` field in the [ListImageSourcesResponse](../protos/bosdyn/api/image.proto#listimagesourcesresponse) message.
+
 ## local-grid
 
 Spot uses its sensors and information about its body to develop an idea about nearby terrain and obstacles. This information is stored as a grid-based map where each cell of the grid has a parameterized dimension and relates to a specific location in the world specified in the frame tree snapshot.

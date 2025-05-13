@@ -4,9 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+import importlib.resources
 import unittest
-
-import pkg_resources
 
 import bosdyn.client
 import bosdyn.client.common
@@ -107,7 +106,7 @@ Spam, Spam, Spam, Spam!
         sdk.load_robot_cert()
         self.assertEqual(
             sdk.cert,
-            pkg_resources.resource_stream('bosdyn.client.resources', 'robot.pem').read())
+            importlib.resources.files('bosdyn.client.resources').joinpath('robot.pem').read_bytes())
         with self.assertRaises(IOError):
             sdk.load_robot_cert('this-path-does-not-exist')
 

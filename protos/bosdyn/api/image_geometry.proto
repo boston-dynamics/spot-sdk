@@ -7,8 +7,8 @@
 syntax = "proto3";
 
 package bosdyn.api;
+option go_package = "bosdyn/api/image_geometry";
 
-option go_package = "bosdyn/api";
 option java_outer_classname = "ImageGeometryProto";
 
 // geometry.proto is standardized to use double fields.  There are some primitives already specified
@@ -29,9 +29,23 @@ message RectangleI {
     reserved 1, 2, 3, 4;
 }
 
-// Represents an area in the XY plane, with integer indices
+// Represents a point in the XY plane, with integer indices.
+message Vec2I {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+// Represents a polygon in the XY plane, with integer indices.
+// This can be convex or concave, and clockwise or counter-clockwise, but
+// must not self-intersect.
+message PolygonI {
+    repeated Vec2I vertices = 1;
+}
+
+// Represents an area in the XY plane, with integer indices.
 message AreaI {
     oneof geometry {
         RectangleI rectangle = 1;
+        PolygonI polygon = 2;
     }
 }

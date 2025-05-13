@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Protocol Documentation &mdash; Spot 4.1.1 documentation</title>
+  <title>Protocol Documentation &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -260,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -319,6 +320,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -339,6 +341,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -1110,6 +1114,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-gps-GetLocationResponse">GetLocationResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-gps-GpsState">GpsState</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-gps-Registration">Registration</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-gps-Registration-Quality">Registration.Quality</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-gps-ResetRegistrationRequest">ResetRegistrationRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-gps-ResetRegistrationResponse">ResetRegistrationResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-gps-GetLocationResponse-Status">GetLocationResponse.Status</a></p></li>
@@ -1367,28 +1372,23 @@
 <li><p><a class="reference external" href="#bosdyn-api-graph_nav-GraphNavRecordingService">GraphNavRecordingService</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference external" href="#bosdyn_api_graph_nav_visual_features-proto">bosdyn/api/graph_nav/visual_features.proto</a></p>
-<ul>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-DirectionWithCovariance">DirectionWithCovariance</a></p></li>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-GenericDescriptor">GenericDescriptor</a></p></li>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-LandmarkObservationIndex">LandmarkObservationIndex</a></p></li>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-PositionWithCovariance">PositionWithCovariance</a></p></li>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-VisualDescriptor">VisualDescriptor</a></p></li>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-VisualKeyFrame">VisualKeyFrame</a></p></li>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-VisualKeyFrameBundle">VisualKeyFrameBundle</a></p></li>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-VisualKeypoint">VisualKeypoint</a></p></li>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-VisualLandmark">VisualLandmark</a></p></li>
-<li><p><a class="reference external" href="#bosdyn-api-graph_nav-VisualLandmarks">VisualLandmarks</a></p></li>
-</ul>
-</li>
 <li><p><a class="reference external" href="#bosdyn_api_gripper_camera_param-proto">bosdyn/api/gripper_camera_param.proto</a></p>
 <ul>
+<li><p><a class="reference external" href="#bosdyn-api-GetGripperCameraCalibrationRequest">GetGripperCameraCalibrationRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GetGripperCameraCalibrationResponse">GetGripperCameraCalibrationResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GripperCameraCalibrationProto">GripperCameraCalibrationProto</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GripperCameraGetParamRequest">GripperCameraGetParamRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GripperCameraGetParamResponse">GripperCameraGetParamResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GripperCameraParamRequest">GripperCameraParamRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GripperCameraParamResponse">GripperCameraParamResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GripperCameraParams">GripperCameraParams</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GripperColorCameraCalibrationParams">GripperColorCameraCalibrationParams</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GripperColorCameraCalibrationParams-ColorCameraIntrinsics">GripperColorCameraCalibrationParams.ColorCameraIntrinsics</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GripperDepthCameraCalibrationParams">GripperDepthCameraCalibrationParams</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GripperDepthCameraCalibrationParams-DepthCameraIntrinsics">GripperDepthCameraCalibrationParams.DepthCameraIntrinsics</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-RoiParameters">RoiParameters</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-SetGripperCameraCalibrationRequest">SetGripperCameraCalibrationRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-SetGripperCameraCalibrationResponse">SetGripperCameraCalibrationResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GripperCameraParams-CameraMode">GripperCameraParams.CameraMode</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GripperCameraParams-LedMode">GripperCameraParams.LedMode</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-HdrParameters">HdrParameters</a></p></li>
@@ -1447,7 +1447,9 @@
 <li><p><a class="reference external" href="#bosdyn_api_image_geometry-proto">bosdyn/api/image_geometry.proto</a></p>
 <ul>
 <li><p><a class="reference external" href="#bosdyn-api-AreaI">AreaI</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-PolygonI">PolygonI</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-RectangleI">RectangleI</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-Vec2I">Vec2I</a></p></li>
 </ul>
 </li>
 <li><p><a class="reference external" href="#bosdyn_api_image_service-proto">bosdyn/api/image_service.proto</a></p>
@@ -1698,6 +1700,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynGripperCameraParamsState">BosdynGripperCameraParamsState</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynNavigateRoute">BosdynNavigateRoute</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynNavigateTo">BosdynNavigateTo</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-BosdynNavigateToAnchor">BosdynNavigateToAnchor</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynPowerRequest">BosdynPowerRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynQueryStoredCaptures">BosdynQueryStoredCaptures</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-BosdynQueryStoredCaptures-CaptureActionIdFormat">BosdynQueryStoredCaptures.CaptureActionIdFormat</a></p></li>
@@ -1739,6 +1742,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-mission-SpotCamFocusState">SpotCamFocusState</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-SpotCamLed">SpotCamLed</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-SpotCamLed-BrightnessesEntry">SpotCamLed.BrightnessesEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-SpotCamNamedPosition">SpotCamNamedPosition</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-SpotCamPtz">SpotCamPtz</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-SpotCamPtz-AdjustParameters">SpotCamPtz.AdjustParameters</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-SpotCamResetAutofocus">SpotCamResetAutofocus</a></p></li>
@@ -1777,11 +1781,15 @@
 <li><p><a class="reference external" href="#bosdyn_api_mission_util-proto">bosdyn/api/mission/util.proto</a></p>
 <ul>
 <li><p><a class="reference external" href="#bosdyn-api-mission-ConstantValue">ConstantValue</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-ConstantValue-DictValue">ConstantValue.DictValue</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-ConstantValue-DictValue-ValuesEntry">ConstantValue.DictValue.ValuesEntry</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-ConstantValue-ListValue">ConstantValue.ListValue</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-KeyValue">KeyValue</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-MissionText">MissionText</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-UserData">UserData</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-Value">Value</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-VariableDeclaration">VariableDeclaration</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-mission-VariableDeclaration-SubType">VariableDeclaration.SubType</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-Result">Result</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-mission-VariableDeclaration-Type">VariableDeclaration.Type</a></p></li>
 </ul>
@@ -1889,10 +1897,40 @@
 <li><p><a class="reference external" href="#bosdyn-api-PayloadService">PayloadService</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference external" href="#bosdyn_api_payload_software_update-proto">bosdyn/api/payload_software_update.proto</a></p>
+<ul>
+<li><p><a class="reference external" href="#bosdyn-api-GetAvailableSoftwareUpdatesRequest">GetAvailableSoftwareUpdatesRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GetAvailableSoftwareUpdatesResponse">GetAvailableSoftwareUpdatesResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-SendCurrentVersionInfoRequest">SendCurrentVersionInfoRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-SendCurrentVersionInfoResponse">SendCurrentVersionInfoResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-SendSoftwareUpdateStatusRequest">SendSoftwareUpdateStatusRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-SendSoftwareUpdateStatusResponse">SendSoftwareUpdateStatusResponse</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#bosdyn_api_payload_software_update_initiation-proto">bosdyn/api/payload_software_update_initiation.proto</a></p>
+<ul>
+<li><p><a class="reference external" href="#bosdyn-api-TriggerInitiateUpdateRequest">TriggerInitiateUpdateRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-TriggerInitiateUpdateResponse">TriggerInitiateUpdateResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-TriggerSendPayloadSoftwareInfoRequest">TriggerSendPayloadSoftwareInfoRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-TriggerSendPayloadSoftwareInfoResponse">TriggerSendPayloadSoftwareInfoResponse</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#bosdyn_api_payload_software_update_initiation_service-proto">bosdyn/api/payload_software_update_initiation_service.proto</a></p>
+<ul>
+<li><p><a class="reference external" href="#bosdyn-api-PayloadSoftwareUpdateInitiationService">PayloadSoftwareUpdateInitiationService</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference external" href="#bosdyn_api_payload_software_update_service-proto">bosdyn/api/payload_software_update_service.proto</a></p>
+<ul>
+<li><p><a class="reference external" href="#bosdyn-api-PayloadSoftwareUpdateService">PayloadSoftwareUpdateService</a></p></li>
+</ul>
+</li>
 <li><p><a class="reference external" href="#bosdyn_api_point_cloud-proto">bosdyn/api/point_cloud.proto</a></p>
 <ul>
 <li><p><a class="reference external" href="#bosdyn-api-GetPointCloudRequest">GetPointCloudRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GetPointCloudResponse">GetPointCloudResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-LidarPointCloud">LidarPointCloud</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-LidarPointCloud-LidarPoseSample">LidarPointCloud.LidarPoseSample</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-ListPointCloudSourcesRequest">ListPointCloudSourcesRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-ListPointCloudSourcesResponse">ListPointCloudSourcesResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-PointCloud">PointCloud</a></p></li>
@@ -1901,6 +1939,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-PointCloudResponse">PointCloudResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-PointCloudSource">PointCloudSource</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-PointCloud-Encoding">PointCloud.Encoding</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-PointCloudRequest-PointCloudType">PointCloudRequest.PointCloudType</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-PointCloudResponse-Status">PointCloudResponse.Status</a></p></li>
 </ul>
 </li>
@@ -2112,6 +2151,15 @@
 <li><p><a class="reference external" href="#bosdyn-api-SignalSpec">SignalSpec</a></p></li>
 </ul>
 </li>
+<li><p><a class="reference external" href="#bosdyn_api_software_package-proto">bosdyn/api/software_package.proto</a></p>
+<ul>
+<li><p><a class="reference external" href="#bosdyn-api-SoftwarePackageVersion">SoftwarePackageVersion</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-SoftwareUpdateStatus">SoftwareUpdateStatus</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-StagedSoftwarePackage">StagedSoftwarePackage</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-SoftwareUpdateStatus-ErrorCode">SoftwareUpdateStatus.ErrorCode</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-SoftwareUpdateStatus-Status">SoftwareUpdateStatus.Status</a></p></li>
+</ul>
+</li>
 <li><p><a class="reference external" href="#bosdyn_api_sparse_features-proto">bosdyn/api/sparse_features.proto</a></p>
 <ul>
 <li><p><a class="reference external" href="#bosdyn-api-Keypoint">Keypoint</a></p></li>
@@ -2224,6 +2272,11 @@
 <li><p><a class="reference external" href="#bosdyn-api-spot-GetChoreographySequenceRequest">GetChoreographySequenceRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-GetChoreographySequenceResponse">GetChoreographySequenceResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-LegJointAngles">LegJointAngles</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-LegSize">LegSize</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-LegSizeConfigurationRequest">LegSizeConfigurationRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-LegSizeConfigurationResponse">LegSizeConfigurationResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-LegSizeConfigurationStateRequest">LegSizeConfigurationStateRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-LegSizeConfigurationStateResponse">LegSizeConfigurationStateResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-ListAllMovesRequest">ListAllMovesRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-ListAllMovesResponse">ListAllMovesResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-ListAllSequencesRequest">ListAllSequencesRequest</a></p></li>
@@ -2259,6 +2312,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-spot-ExecuteChoreographyResponse-Status">ExecuteChoreographyResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-GetAnimationResponse-Status">GetAnimationResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-GetChoreographySequenceResponse-Status">GetChoreographySequenceResponse.Status</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-spot-LegSizeConfigurationResponse-Status">LegSizeConfigurationResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-ModifyChoreographyInfoResponse-Status">ModifyChoreographyInfoResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-MoveInfo-TransitionState">MoveInfo.TransitionState</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-spot-SaveSequenceResponse-Status">SaveSequenceResponse.Status</a></p></li>
@@ -4980,7 +5034,7 @@ identity of the requester.</p>
 <td>element_identifiers</td>
 <td><a href="#bosdyn-api-autowalk-ElementIdentifiers">ElementIdentifiers</a></td>
 <td>repeated</td>
-<td>There will be one ElementIdentifier for each Element in the input Walk.<br>The index of each ElementIdentifier corresponds to the index of the Element in the input<br>Walk. Skipped elements will have default values for id's. (0 and empty string)</td>
+<td><strong>Deprecated.</strong> There will be one ElementIdentifier for each Element in the input Walk.<br>The index of each ElementIdentifier corresponds to the index of the Element in the input<br>Walk. Skipped elements will have default values for id's. (0 and empty string)<br>Deprecated as of 5.0. The active_mission_text field in the mission service's State proto will<br>indicate when the robot is undocking, navigating, performing an action, or docking at mission<br>runtime.</td>
 </tr>
 <tr>
 <td>failed_elements</td>
@@ -5169,7 +5223,7 @@ identity of the requester.</p>
 <td>element_identifiers</td>
 <td><a href="#bosdyn-api-autowalk-ElementIdentifiers">ElementIdentifiers</a></td>
 <td>repeated</td>
-<td>There will be one ElementIdentifier for each Element in the input Walk.<br>The index of each ElementIdentifier corresponds to the index of the Element in the input<br>Walk. Skipped elements will have default values for id's. (0 and empty string)</td>
+<td><strong>Deprecated.</strong> There will be one ElementIdentifier for each Element in the input Walk.<br>The index of each ElementIdentifier corresponds to the index of the Element in the input<br>Walk. Skipped elements will have default values for id's. (0 and empty string)<br>Deprecated as of 5.0. The active_mission_text field in the mission service's State proto will<br>indicate when the robot is undocking, navigating, performing an action, or docking at mission<br>runtime.</td>
 </tr>
 <tr>
 <td>failed_elements</td>
@@ -5734,7 +5788,10 @@ incline.</p>
 </section>
 <section id="actionwrapper-spotcamalignment">
 <h3>ActionWrapper.SpotCamAlignment<a class="headerlink" href="#actionwrapper-spotcamalignment" title="Permalink to this heading"></a></h3>
-<p>Align SpotCam to a waypoint. Cannot be used with SpotCamPtz or RobotBodyPose</p>
+<p>Align the SpotCam to given reference image(s). The robot will initially point the camera in
+the direction specified by target_tform_sensor. Then, the robot will align the SpotCam by
+computing the homography between the live image(s) from the camera and the supplied reference
+image(s). Cannot be used with SpotCamPtz or RobotBodyPose</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -5755,7 +5812,7 @@ incline.</p>
 <td>target_tform_sensor</td>
 <td><a href="#bosdyn-api-SE3Pose">bosdyn.api.SE3Pose</a></td>
 <td></td>
-<td>Desired transform from the sensor to the target</td>
+<td>Desired transform from the sensor to the waypoint. This is used to initially point the<br>camera in the correct direction before refining the alignment using reference images.</td>
 </tr>
 <tr>
 <td>final_zoom</td>
@@ -5794,13 +5851,19 @@ incline.</p>
 <td>sensor_id</td>
 <td><a href="#string">string</a></td>
 <td></td>
-<td>Sensor to use for alignment</td>
+<td>Sensor to use for alignment. The sensor must be registered with the sensor pointing<br>service. The sensor_id is the name of the sensor given by the sensor pointing<br>service's ListSensors RPC.</td>
 </tr>
 <tr>
 <td>scene_object_id</td>
 <td><a href="#string">string</a></td>
 <td></td>
+<td>Points at a world object in the waypoint snapshot corresponding to the waypoint<br>of this action. The world object should contain the reference image.</td>
+</tr>
+<tr>
+<td>reference_image</td>
+<td><a href="#bosdyn-api-ImageCaptureAndSource">bosdyn.api.ImageCaptureAndSource</a></td>
 <td></td>
+<td>Reference image to use for alignment and the camera source of the image.</td>
 </tr>
 <tr>
 <td>is_skipped</td>
@@ -6430,6 +6493,12 @@ NavigateRoute is sent, the robot may navigate in unexpected ways.</p>
 <td></td>
 <td>Parameters that define how to traverse and end the route. For<br>example, the user may decide how close to the destination waypoint<br>the robot needs to be in order to declare success.</td>
 </tr>
+<tr>
+<td>destination_waypoint_tform_body_goal</td>
+<td><a href="#bosdyn-api-SE2Pose">bosdyn.api.SE2Pose</a></td>
+<td></td>
+<td>Passed through to graph_nav. See comment in graph_nav.proto.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-autowalk-Target-NavigateTo"></a></p>
 </section>
@@ -6457,6 +6526,12 @@ NavigateRoute is sent, the robot may navigate in unexpected ways.</p>
 <td><a href="#bosdyn-api-graph_nav-TravelParams">bosdyn.api.graph_nav.TravelParams</a></td>
 <td></td>
 <td>Parameters that define how to traverse and end the route. For<br>example, the user may decide how close to the destination waypoint<br>the robot needs to be in order to declare success.</td>
+</tr>
+<tr>
+<td>destination_waypoint_tform_body_goal</td>
+<td><a href="#bosdyn-api-SE2Pose">bosdyn.api.SE2Pose</a></td>
+<td></td>
+<td>Passed through to graph_nav. See comment in graph_nav.proto.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-autowalk-Target-Relocalize"></a></p>
@@ -11943,7 +12018,7 @@ to ensure that robot hardware and/or software is working as intended.</p>
 <td>is_time</td>
 <td><a href="#bool">bool</a></td>
 <td></td>
-<td>Zero or one variable in 'vars' may be specified as a time variable.<br>A time variable must have type TYPE_FLOAT64.</td>
+<td>Zero or one variable in 'vars' may be specified as a time variable.<br>A time variable must have type TYPE_INT64 and should be stored as nanoseconds<br> since the UNIX epoch in the robot clock.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-SignalSchemaId"></a></p>
@@ -16705,7 +16780,7 @@ the x, y and z axes in radians.                                   <br />The matr
 <td>yaw_variance</td>
 <td><a href="#double">double</a></td>
 <td></td>
-<td><strong>Deprecated.</strong> Variance of the yaw component of the SE3 Pose.<br>Warning: DEPRECATED as of 2.1. This should equal cov_rzrz, inside <code>matrix</code>. Will be removed<br>in a future release.<br>FIXME(sberard): https://bostondynamics.atlassian.net/browse/SPOT-12523</td>
+<td><strong>Deprecated.</strong> Variance of the yaw component of the SE3 Pose.<br>Warning: DEPRECATED as of 2.1. This should equal cov_rzrz, inside <code>matrix</code>. Will be removed<br>in a future release.</td>
 </tr>
 <tr>
 <td>cov_xx</td>
@@ -17681,6 +17756,52 @@ In practice:
 <td>repeated</td>
 <td>Most recent data from each GPS. Note that the LLH the GPS is reporting<br>won't exactly match robot_body_location, because robot_body_location is<br>filtered, and the GPS might have some offset relative to the robot's body.</td>
 </tr>
+<tr>
+<td>quality</td>
+<td><a href="#bosdyn-api-gps-Registration-Quality">Registration.Quality</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-gps-Registration-Quality"></a></p>
+</section>
+<section id="registration-quality">
+<h3>Registration.Quality<a class="headerlink" href="#registration-quality" title="Permalink to this heading"></a></h3>
+<p>Information about the quality of the registration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>num_points</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>The number of points being used in the registration.</td>
+</tr>
+<tr>
+<td>covariance</td>
+<td><a href="#bosdyn-api-Matrix">bosdyn.api.Matrix</a></td>
+<td></td>
+<td>The 3D position covariance 3x3 matrix calculated from the registration and measured with<br>respect to the "odom" frame.</td>
+</tr>
+<tr>
+<td>residuals</td>
+<td><a href="#bosdyn-api-Matrix">bosdyn.api.Matrix</a></td>
+<td></td>
+<td>The residuals of the computed registration.</td>
+</tr>
+<tr>
+<td>mean_residual</td>
+<td><a href="#double">double</a></td>
+<td></td>
+<td>The mean of the residuals of the registration.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-gps-ResetRegistrationRequest"></a></p>
 </section>
@@ -17792,6 +17913,11 @@ In practice:
 <td>STATUS_STALE</td>
 <td>4</td>
 <td>We have a registration, but it is based on old data.</td>
+</tr>
+<tr>
+<td>STATUS_HIGH_ERROR</td>
+<td>5</td>
+<td>If the registration is poor, signal high error.</td>
 </tr>
 </tbody>
 </table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_gps_registration_service-proto"></a></p>
@@ -19799,6 +19925,12 @@ If robot is lost, this state can be reset by either:</p>
 <td>This is the most recent localization that the lost detector rejected.</td>
 </tr>
 <tr>
+<td>last_accepted_strict_localization</td>
+<td><a href="#bosdyn-api-graph_nav-Localization">Localization</a></td>
+<td></td>
+<td>This is the most recent localization that would have been accepted with strict parameters.</td>
+</tr>
+<tr>
 <td>num_consecutive_bad_edges</td>
 <td><a href="#int32">int32</a></td>
 <td></td>
@@ -20109,6 +20241,12 @@ of the NavigateToAnchor command using the NavigationFeedbackRequest RPC.</p>
 <td>Identifier provided by the time sync service to verify time sync between robot and client.</td>
 </tr>
 <tr>
+<td>route_blocked_behavior</td>
+<td><a href="#bosdyn-api-graph_nav-RouteFollowingParams-RouteBlockedBehavior">RouteFollowingParams.RouteBlockedBehavior</a></td>
+<td></td>
+<td>Defines robot behavior when route is blocked. Defaults to reroute when route is blocked.</td>
+</tr>
+<tr>
 <td>command_id</td>
 <td><a href="#uint32">uint32</a></td>
 <td></td>
@@ -20247,7 +20385,7 @@ status of the NavigateTo command using the NavigationFeedbackRequest RPC.</p>
 <td>destination_waypoint_tform_body_goal</td>
 <td><a href="#bosdyn-api-SE2Pose">bosdyn.api.SE2Pose</a></td>
 <td></td>
-<td>If provided, graph_nav will move the robot to an SE2 pose relative to the waypoint.<br>Note that the robot will treat this as a simple goto request. It will first arrive at the<br>destination waypoint, and then travel in a straight line from the destination waypoint to the<br>offset goal, attempting to avoid obstacles along the way.</td>
+<td>If provided, graph_nav will move the robot to an SE2 pose relative to the waypoint.<br>Note that the robot will treat this as a simple goto request. It will first arrive at the<br>destination waypoint, and then travel in a straight line from the destination waypoint to the<br>offset goal, attempting to avoid obstacles along the way.<br><br>Also note that the waypoint frame will be flattened before this transform is applied.<br>This is relevant in cases where the destination_waypoint is not gravity alligned.</td>
 </tr>
 <tr>
 <td>command_id</td>
@@ -20650,6 +20788,18 @@ in the map.</p>
 <td></td>
 <td>If true, the robot is currently configured to use LIDAR data.</td>
 </tr>
+<tr>
+<td>map_has_gps_data</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>If true, the loaded map has GPS data in it.</td>
+</tr>
+<tr>
+<td>robot_configured_for_gps</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>If true, the robot is currently configured to use GPS data.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-graph_nav-SetLocalizationRequest"></a></p>
 </section>
@@ -20777,7 +20927,7 @@ will be modified, and can be retrieved using a GetLocalizationStateRequest.</p>
 <td>error_report</td>
 <td><a href="#string">string</a></td>
 <td></td>
-<td>If set, describes the reason the status is not OK.</td>
+<td><strong>Deprecated.</strong> If set, describes the reason the status is not OK.</td>
 </tr>
 <tr>
 <td>localization</td>
@@ -22361,7 +22511,7 @@ final-waypoint-offset), and command_id indicates a new command.</p>
 <tr>
 <td>STATUS_FAILED</td>
 <td>5</td>
-<td>Failed to localize for some other reason; see the error_report for details.<br>This is often because the initial guess was incorrect.</td>
+<td>Failed to localize for some other reason. This is often because the initial guess was<br>incorrect.</td>
 </tr>
 <tr>
 <td>STATUS_FIDUCIAL_TOO_FAR_AWAY</td>
@@ -22462,6 +22612,11 @@ final-waypoint-offset), and command_id indicates a new command.</p>
 <td>PLANNER_MODE_LONG_RANGE</td>
 <td>3</td>
 <td>Use long range planner. This is an experimental feature that helps the robot navigate<br>around large obstacles that were not present during mission recording.<br>NOTE: Alternate route-finding waypoints are disabled when using the long range planner.</td>
+</tr>
+<tr>
+<td>PLANNER_MODE_LONG_RANGE_LIVE_ONLY</td>
+<td>4</td>
+<td>Use long range planner with live data only.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-graph_nav-UploadGraphResponse-Status"></a></p>
@@ -26306,391 +26461,88 @@ from the GraphNavService to download the large sensor data with the map.</p></li
 <td>Tells the client the internal state of the record service, and the structure of the map that<br>has been recorded so far.</td>
 </tr>
 </tbody>
-</table> <!-- end services --><p><a name="bosdyn_api_graph_nav_visual_features-proto"></a></p>
-<p align="right"><a href="#top">Top</a></p></section>
-</section>
-<section id="bosdyn-api-graph-nav-visual-features-proto">
-<h2>bosdyn/api/graph_nav/visual_features.proto<a class="headerlink" href="#bosdyn-api-graph-nav-visual-features-proto" title="Permalink to this heading"></a></h2>
-<p><a name="bosdyn-api-graph_nav-DirectionWithCovariance"></a></p>
-<section id="directionwithcovariance">
-<h3>DirectionWithCovariance<a class="headerlink" href="#directionwithcovariance" title="Permalink to this heading"></a></h3>
-<p>A 3D direction with a covariance estimate.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>direction</td>
-<td><a href="#bosdyn-api-Vec3">bosdyn.api.Vec3</a></td>
-<td></td>
-<td>The vector is to be interpreted as a 3D normalized direction in a frame.</td>
-</tr>
-<tr>
-<td>covariance</td>
-<td><a href="#bosdyn-api-Matrixf">bosdyn.api.Matrixf</a></td>
-<td></td>
-<td>2x2 covariance matrix representing uncertainty in the direction (in a local tangent frame).</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn-api-graph_nav-GenericDescriptor"></a></p>
-</section>
-<section id="genericdescriptor">
-<h3>GenericDescriptor<a class="headerlink" href="#genericdescriptor" title="Permalink to this heading"></a></h3>
-<p>Generic sparse visual descriptor with a byte blob and a descriptor name.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>name</td>
-<td><a href="#string">string</a></td>
-<td></td>
-<td>Name of the descriptor which identifies how it is to be interpreted.</td>
-</tr>
-<tr>
-<td>data</td>
-<td><a href="#bytes">bytes</a></td>
-<td></td>
-<td>Binary blob representing the descriptor.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn-api-graph_nav-LandmarkObservationIndex"></a></p>
-</section>
-<section id="landmarkobservationindex">
-<h3>LandmarkObservationIndex<a class="headerlink" href="#landmarkobservationindex" title="Permalink to this heading"></a></h3>
-<p>Indexes an observation of a landmark at a particular bundle, keyframe and keypoint.
-Waypoint snapshots have bundles of keyframes, each keyframe has a number of extracted keypoints.
-Observations are structured as:
-bundle_0 …
-bundle_1
-…. keyframe_0
-…. keyframe_1
-…….. keypoint_0
-…….. keypoint_1
-…….. …
-…….. keypoint_J
-…. …
-…. keyframe_K
-…
-bundle_N</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>bundle_id</td>
-<td><a href="#int32">int32</a></td>
-<td></td>
-<td>The bundle from within the waypoint snapshot that this<br>landmark observation came from.</td>
-</tr>
-<tr>
-<td>keyframe_id</td>
-<td><a href="#int32">int32</a></td>
-<td></td>
-<td>The keyframe from within the bundle that this observation came from.</td>
-</tr>
-<tr>
-<td>keypoint_id</td>
-<td><a href="#int32">int32</a></td>
-<td></td>
-<td>The keypoint within the keyframe that this observation came from.</td>
-</tr>
-<tr>
-<td>timestamp</td>
-<td><a href="#google-protobuf-Timestamp">google.protobuf.Timestamp</a></td>
-<td></td>
-<td>Time of the camera image which observed this landmark.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn-api-graph_nav-PositionWithCovariance"></a></p>
-</section>
-<section id="positionwithcovariance">
-<h3>PositionWithCovariance<a class="headerlink" href="#positionwithcovariance" title="Permalink to this heading"></a></h3>
-<p>A 3D position with a covariance estimate.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>position</td>
-<td><a href="#bosdyn-api-Vec3">bosdyn.api.Vec3</a></td>
-<td></td>
-<td>The vector is to be interpreted as a 3D position in a frame.</td>
-</tr>
-<tr>
-<td>covariance</td>
-<td><a href="#bosdyn-api-Matrixf">bosdyn.api.Matrixf</a></td>
-<td></td>
-<td>3x3 covariance matrix representing uncertainty in the position.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn-api-graph_nav-VisualDescriptor"></a></p>
-</section>
-<section id="visualdescriptor">
-<h3>VisualDescriptor<a class="headerlink" href="#visualdescriptor" title="Permalink to this heading"></a></h3>
-<p>Represents a visual descriptor of a feature, usually a sparse visual feature.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>orb</td>
-<td><a href="#bytes">bytes</a></td>
-<td></td>
-<td>Oriented Brief (ORB) sparse visual feature.</td>
-</tr>
-<tr>
-<td>other</td>
-<td><a href="#bosdyn-api-graph_nav-GenericDescriptor">GenericDescriptor</a></td>
-<td></td>
-<td>Place to put other descriptors not explicitly captured above.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn-api-graph_nav-VisualKeyFrame"></a></p>
-</section>
-<section id="visualkeyframe">
-<h3>VisualKeyFrame<a class="headerlink" href="#visualkeyframe" title="Permalink to this heading"></a></h3>
-<p>Represents a set of visual features collected  at a particular time from a particular camera
-source. Associates an image geometry + pixel data with visual features extracted there.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>keypoints</td>
-<td><a href="#bosdyn-api-graph_nav-VisualKeypoint">VisualKeypoint</a></td>
-<td>repeated</td>
-<td>The visual features extracted at the camera image.</td>
-</tr>
-<tr>
-<td>image_capture_and_source</td>
-<td><a href="#bosdyn-api-ImageCaptureAndSource">bosdyn.api.ImageCaptureAndSource</a></td>
-<td></td>
-<td>Contains the actual data in the image capture (may be compressed), and information<br>about the source. Note that the raw data may be omitted if visual features are already<br>extracted.</td>
-</tr>
-<tr>
-<td>bundle_tform_image</td>
-<td><a href="#bosdyn-api-SE3Pose">bosdyn.api.SE3Pose</a></td>
-<td></td>
-<td>Transformation from a bundle frame to the image. Depending on the context,<br>the bundle frame may be the body, odometry, etc.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn-api-graph_nav-VisualKeyFrameBundle"></a></p>
-</section>
-<section id="visualkeyframebundle">
-<h3>VisualKeyFrameBundle<a class="headerlink" href="#visualkeyframebundle" title="Permalink to this heading"></a></h3>
-<p>Represents a bundle of visual KeyFrames taken around the same time. For example, if the robot has
-many cameras, this represents all of the cameras captured at around the same time/location.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>key_frames</td>
-<td><a href="#bosdyn-api-graph_nav-VisualKeyFrame">VisualKeyFrame</a></td>
-<td>repeated</td>
-<td>A number of key frames, possibly from different sources.</td>
-</tr>
-<tr>
-<td>bundle_frame_name</td>
-<td><a href="#string">string</a></td>
-<td></td>
-<td>Reference frame that the keyframes' poses are expressed in.</td>
-</tr>
-<tr>
-<td>frame_tree_snapshot</td>
-<td><a href="#bosdyn-api-FrameTreeSnapshot">bosdyn.api.FrameTreeSnapshot</a></td>
-<td></td>
-<td>Frame tree snapshot mapping common poses at record time (odom, body, etc.) to each other and<br>the bundle frame.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn-api-graph_nav-VisualKeypoint"></a></p>
-</section>
-<section id="visualkeypoint">
-<h3>VisualKeypoint<a class="headerlink" href="#visualkeypoint" title="Permalink to this heading"></a></h3>
-<p>Represents a 2d (pixel-based) detection of a feature in an image.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>visual_descriptor</td>
-<td><a href="#bosdyn-api-graph_nav-VisualDescriptor">VisualDescriptor</a></td>
-<td></td>
-<td>The descriptor of the sparse feature, used to match it to other features.</td>
-</tr>
-<tr>
-<td>position</td>
-<td><a href="#bosdyn-api-Vec2">bosdyn.api.Vec2</a></td>
-<td></td>
-<td>Position (pixels) in the image.</td>
-</tr>
-<tr>
-<td>size_pixels</td>
-<td><a href="#float">float</a></td>
-<td></td>
-<td>Size of the feature in pixels. If the feature is circular, this is the radius of the circle.<br>If the feature is square, this is the side length of the square.</td>
-</tr>
-<tr>
-<td>orientation</td>
-<td><a href="#float">float</a></td>
-<td></td>
-<td>Orientation of the feature in the image plane, radians. Counterclockwise.</td>
-</tr>
-<tr>
-<td>depth_measurement</td>
-<td><a href="#google-protobuf-DoubleValue">google.protobuf.DoubleValue</a></td>
-<td></td>
-<td>The depth (in meters) from the camera if it exists, or empty otherwise.</td>
-</tr>
-<tr>
-<td>position_covariance</td>
-<td><a href="#bosdyn-api-Matrixf">bosdyn.api.Matrixf</a></td>
-<td></td>
-<td>2x2 Covariance matrix of the position measurement's uncertainty.</td>
-</tr>
-<tr>
-<td>depth_variance</td>
-<td><a href="#google-protobuf-DoubleValue">google.protobuf.DoubleValue</a></td>
-<td></td>
-<td>Expected variance of the depth measurement, if it exists.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn-api-graph_nav-VisualLandmark"></a></p>
-</section>
-<section id="visuallandmark">
-<h3>VisualLandmark<a class="headerlink" href="#visuallandmark" title="Permalink to this heading"></a></h3>
-<p>Represents a 3D landmark that has some visual descriptor attached to it.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>id</td>
-<td><a href="#int64">int64</a></td>
-<td></td>
-<td>Unique ID of the landmark. Ids of landmarks are unique only in a particular instance of a<br>graph nav map. Ids of landmarks may change as maps update.</td>
-</tr>
-<tr>
-<td>position_with_covariance</td>
-<td><a href="#bosdyn-api-graph_nav-PositionWithCovariance">PositionWithCovariance</a></td>
-<td></td>
-<td>The landmark may either be a full 3D landmark (in which case it is a point), or an<br>orientation-only landmark (in which case it is a normalized direction). The frame of the<br>landmark is left ambiguous here; generally the container of the landmark will specify which<br>frame it is in. Note that landmarks may have <em>both</em> position and direction. A 3D position<br>with covariance.</td>
-</tr>
-<tr>
-<td>direction_with_covariance</td>
-<td><a href="#bosdyn-api-graph_nav-DirectionWithCovariance">DirectionWithCovariance</a></td>
-<td></td>
-<td>The vector is to be interpreted as a normalized 3D direction in the landmark frame. This<br>represents the direction "into" the landmark from where it was first observed.</td>
-</tr>
-<tr>
-<td>visual_descriptor</td>
-<td><a href="#bosdyn-api-graph_nav-VisualDescriptor">VisualDescriptor</a></td>
-<td></td>
-<td>The canonical descriptor associated with this landmark. If a landmark looks different from<br>different angles, then multiple landmarks are likely to be created for it. This will be set<br>whenever the first observation is made of a landmark to create it.</td>
-</tr>
-<tr>
-<td>landmark_observations</td>
-<td><a href="#bosdyn-api-graph_nav-LandmarkObservationIndex">LandmarkObservationIndex</a></td>
-<td>repeated</td>
-<td>Indices of the observations that support this landmark.</td>
-</tr>
-</tbody>
-</table><p><a name="bosdyn-api-graph_nav-VisualLandmarks"></a></p>
-</section>
-<section id="visuallandmarks">
-<h3>VisualLandmarks<a class="headerlink" href="#visuallandmarks" title="Permalink to this heading"></a></h3>
-<p>A group of 3D landmarks. These landmarks may be associated with a single waypoint, or with groups
-of waypoints.</p>
-<table border="1" class="docutils">
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Label</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>landmarks</td>
-<td><a href="#bosdyn-api-graph_nav-VisualLandmark">VisualLandmark</a></td>
-<td>repeated</td>
-<td>Unorganized 3d landmark cloud.</td>
-</tr>
-<tr>
-<td>landmark_frame</td>
-<td><a href="#string">string</a></td>
-<td></td>
-<td>Name of the reference frame that the landmarks are in.</td>
-</tr>
-<tr>
-<td>frame_tree_snapshot</td>
-<td><a href="#bosdyn-api-FrameTreeSnapshot">bosdyn.api.FrameTreeSnapshot</a></td>
-<td></td>
-<td>The frame tree must contain, at minimum, the landmark_frame and some other frame that the<br>waypoint or current robot body knows about (for example, "odom" or "vision").</td>
-</tr>
-</tbody>
-</table> <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_gripper_camera_param-proto"></a></p>
+</table> <!-- end services --><p><a name="bosdyn_api_gripper_camera_param-proto"></a></p>
 <p align="right"><a href="#top">Top</a></p></section>
 </section>
 <section id="bosdyn-api-gripper-camera-param-proto">
 <h2>bosdyn/api/gripper_camera_param.proto<a class="headerlink" href="#bosdyn-api-gripper-camera-param-proto" title="Permalink to this heading"></a></h2>
-<p><a name="bosdyn-api-GripperCameraGetParamRequest"></a></p>
+<p><a name="bosdyn-api-GetGripperCameraCalibrationRequest"></a></p>
+<section id="getgrippercameracalibrationrequest">
+<h3>GetGripperCameraCalibrationRequest<a class="headerlink" href="#getgrippercameracalibrationrequest" title="Permalink to this heading"></a></h3>
+<p>Request to get the gripper camera calibration parameters.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">RequestHeader</a></td>
+<td></td>
+<td>Common request header.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GetGripperCameraCalibrationResponse"></a></p>
+</section>
+<section id="getgrippercameracalibrationresponse">
+<h3>GetGripperCameraCalibrationResponse<a class="headerlink" href="#getgrippercameracalibrationresponse" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">ResponseHeader</a></td>
+<td></td>
+<td>Common request header.</td>
+</tr>
+<tr>
+<td>gripper_cam_cal</td>
+<td><a href="#bosdyn-api-GripperCameraCalibrationProto">GripperCameraCalibrationProto</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GripperCameraCalibrationProto"></a></p>
+</section>
+<section id="grippercameracalibrationproto">
+<h3>GripperCameraCalibrationProto<a class="headerlink" href="#grippercameracalibrationproto" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>depth</td>
+<td><a href="#bosdyn-api-GripperDepthCameraCalibrationParams">GripperDepthCameraCalibrationParams</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>color</td>
+<td><a href="#bosdyn-api-GripperColorCameraCalibrationParams">GripperColorCameraCalibrationParams</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GripperCameraGetParamRequest"></a></p>
+</section>
 <section id="grippercameragetparamrequest">
 <h3>GripperCameraGetParamRequest<a class="headerlink" href="#grippercameragetparamrequest" title="Permalink to this heading"></a></h3>
 <p>The GripperCameraGetParam request message queries the robot for the current gripper sensor
@@ -26920,6 +26772,129 @@ parameters do not persist across reboots.</p>
 <td>Set the image sharpness level.<br>Min 0, max 1</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn-api-GripperColorCameraCalibrationParams"></a></p>
+</section>
+<section id="grippercolorcameracalibrationparams">
+<h3>GripperColorCameraCalibrationParams<a class="headerlink" href="#grippercolorcameracalibrationparams" title="Permalink to this heading"></a></h3>
+<p>Color camera calibration parameters
+Distortion for color camera is not supported.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>wr1_tform_sensor</td>
+<td><a href="#bosdyn-api-SE3Pose">SE3Pose</a></td>
+<td></td>
+<td>The sensor frame uses the convention of z along the optical axis, x along the column<br>and y along the row (from top left.)</td>
+</tr>
+<tr>
+<td>intrinsics</td>
+<td><a href="#bosdyn-api-GripperColorCameraCalibrationParams-ColorCameraIntrinsics">GripperColorCameraCalibrationParams.ColorCameraIntrinsics</a></td>
+<td>repeated</td>
+<td>Color camera intrinsics.<br>We support to calibrate color camera in the gripper at a number of focus value.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GripperColorCameraCalibrationParams-ColorCameraIntrinsics"></a></p>
+</section>
+<section id="grippercolorcameracalibrationparams-colorcameraintrinsics">
+<h3>GripperColorCameraCalibrationParams.ColorCameraIntrinsics<a class="headerlink" href="#grippercolorcameracalibrationparams-colorcameraintrinsics" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pinhole</td>
+<td><a href="#bosdyn-api-ImageSource-PinholeModel">ImageSource.PinholeModel</a></td>
+<td></td>
+<td>Rectilinear camera model.</td>
+</tr>
+<tr>
+<td>camera_mode</td>
+<td><a href="#bosdyn-api-GripperCameraParams-CameraMode">GripperCameraParams.CameraMode</a></td>
+<td></td>
+<td>Camera mode having the resolution of image.</td>
+</tr>
+<tr>
+<td>focus_absolute</td>
+<td><a href="#google-protobuf-DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+<td>The RGB camera in the gripper has an adjustable lens position. This value ranges from 0<br>to 1 inclusive and does not directly translate into focal length. If it’s not set (for<br>example, in auto-focus mode), the system assumes that calibration needs to be based on<br>the current focus value (focus_absolute from GripperCameraParams).</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GripperDepthCameraCalibrationParams"></a></p>
+</section>
+<section id="gripperdepthcameracalibrationparams">
+<h3>GripperDepthCameraCalibrationParams<a class="headerlink" href="#gripperdepthcameracalibrationparams" title="Permalink to this heading"></a></h3>
+<p>Depth camera calibration parameters</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>wr1_tform_sensor</td>
+<td><a href="#bosdyn-api-SE3Pose">SE3Pose</a></td>
+<td></td>
+<td>The sensor frame uses the convention of z along the optical axis, x along the column<br>and y along the row (from top left.)</td>
+</tr>
+<tr>
+<td>intrinsics</td>
+<td><a href="#bosdyn-api-GripperDepthCameraCalibrationParams-DepthCameraIntrinsics">GripperDepthCameraCalibrationParams.DepthCameraIntrinsics</a></td>
+<td></td>
+<td>Depth camera intrinsics.<br>The depth camera in the gripper does not have and adjustable lens, so only one set of<br>intrinsics is needed.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GripperDepthCameraCalibrationParams-DepthCameraIntrinsics"></a></p>
+</section>
+<section id="gripperdepthcameracalibrationparams-depthcameraintrinsics">
+<h3>GripperDepthCameraCalibrationParams.DepthCameraIntrinsics<a class="headerlink" href="#gripperdepthcameracalibrationparams-depthcameraintrinsics" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pinhole</td>
+<td><a href="#bosdyn-api-ImageSource-PinholeModel">ImageSource.PinholeModel</a></td>
+<td></td>
+<td>Rectilinear camera model.</td>
+</tr>
+<tr>
+<td>pinhole_brown_conrady</td>
+<td><a href="#bosdyn-api-ImageSource-PinholeBrownConrady">ImageSource.PinholeBrownConrady</a></td>
+<td></td>
+<td>The pinhole camera model with the 4 parameter brown conrady distortion model.</td>
+</tr>
+<tr>
+<td>kannala_brandt</td>
+<td><a href="#bosdyn-api-ImageSource-KannalaBrandtModel">ImageSource.KannalaBrandtModel</a></td>
+<td></td>
+<td>The kannala brandt camera model for modeling fisheye lenses.</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn-api-RoiParameters"></a></p>
 </section>
 <section id="roiparameters">
@@ -26947,6 +26922,56 @@ determination of automatic focus or exposure.</p>
 <td><a href="#bosdyn-api-RoiParameters-RoiWindowSize">RoiParameters.RoiWindowSize</a></td>
 <td></td>
 <td>Size of the region of interest.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-SetGripperCameraCalibrationRequest"></a></p>
+</section>
+<section id="setgrippercameracalibrationrequest">
+<h3>SetGripperCameraCalibrationRequest<a class="headerlink" href="#setgrippercameracalibrationrequest" title="Permalink to this heading"></a></h3>
+<p>Request to set the gripper camera calibration parameters. To reset the calibration, send the
+request with empty gripper_cam_cal.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">RequestHeader</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>gripper_cam_cal</td>
+<td><a href="#bosdyn-api-GripperCameraCalibrationProto">GripperCameraCalibrationProto</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-SetGripperCameraCalibrationResponse"></a></p>
+</section>
+<section id="setgrippercameracalibrationresponse">
+<h3>SetGripperCameraCalibrationResponse<a class="headerlink" href="#setgrippercameracalibrationresponse" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">ResponseHeader</a></td>
+<td></td>
+<td>Common response header.</td>
 </tr>
 </tbody>
 </table> <!-- end messages --><p><a name="bosdyn-api-GripperCameraParams-CameraMode"></a></p>
@@ -27195,6 +27220,18 @@ get exposure in a large range.  HDR will reduce framerate in high-framerate mode
 <td>GetParams</td>
 <td><a href="#bosdyn-api-GripperCameraGetParamRequest">GripperCameraGetParamRequest</a></td>
 <td><a href="#bosdyn-api-GripperCameraGetParamResponse">GripperCameraGetParamResponse</a></td>
+<td></td>
+</tr>
+<tr>
+<td>SetCamCalib</td>
+<td><a href="#bosdyn-api-SetGripperCameraCalibrationRequest">SetGripperCameraCalibrationRequest</a></td>
+<td><a href="#bosdyn-api-SetGripperCameraCalibrationResponse">SetGripperCameraCalibrationResponse</a></td>
+<td></td>
+</tr>
+<tr>
+<td>GetCamCalib</td>
+<td><a href="#bosdyn-api-GetGripperCameraCalibrationRequest">GetGripperCameraCalibrationRequest</a></td>
+<td><a href="#bosdyn-api-GetGripperCameraCalibrationResponse">GetGripperCameraCalibrationResponse</a></td>
 <td></td>
 </tr>
 </tbody>
@@ -28176,6 +28213,12 @@ Camera Matrix can be constructed by the camera intrinsics:
 <td>repeated</td>
 <td>The set of ImageSources available from this service.<br>May be empty if the service serves no cameras (e.g., if no cameras were found on startup).</td>
 </tr>
+<tr>
+<td>transforms_snapshot</td>
+<td><a href="#bosdyn-api-FrameTreeSnapshot">FrameTreeSnapshot</a></td>
+<td></td>
+<td>A tree-based collection of transformations, which will include the transformations to each<br>image sources sensors in addition to transformations to the common frames ("vision", "body",<br>"odom"). All transforms within the snapshot are at the time of the request.</td>
+</tr>
 </tbody>
 </table> <!-- end messages --><p><a name="bosdyn-api-Image-Format"></a></p>
 </section>
@@ -28351,7 +28394,7 @@ Camera Matrix can be constructed by the camera intrinsics:
 <p><a name="bosdyn-api-AreaI"></a></p>
 <section id="areai">
 <h3>AreaI<a class="headerlink" href="#areai" title="Permalink to this heading"></a></h3>
-<p>Represents an area in the XY plane, with integer indices</p>
+<p>Represents an area in the XY plane, with integer indices.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -28366,6 +28409,36 @@ Camera Matrix can be constructed by the camera intrinsics:
 <td>rectangle</td>
 <td><a href="#bosdyn-api-RectangleI">RectangleI</a></td>
 <td></td>
+<td></td>
+</tr>
+<tr>
+<td>polygon</td>
+<td><a href="#bosdyn-api-PolygonI">PolygonI</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-PolygonI"></a></p>
+</section>
+<section id="polygoni">
+<h3>PolygonI<a class="headerlink" href="#polygoni" title="Permalink to this heading"></a></h3>
+<p>Represents a polygon in the XY plane, with integer indices.
+This can be convex or concave, and clockwise or counter-clockwise, but
+must not self-intersect.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vertices</td>
+<td><a href="#bosdyn-api-Vec2I">Vec2I</a></td>
+<td>repeated</td>
 <td></td>
 </tr>
 </tbody>
@@ -28407,6 +28480,34 @@ Camera Matrix can be constructed by the camera intrinsics:
 <td><a href="#int32">int32</a></td>
 <td></td>
 <td>Height of the rectangle in pixels</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-Vec2I"></a></p>
+</section>
+<section id="vec2i">
+<h3>Vec2I<a class="headerlink" href="#vec2i" title="Permalink to this heading"></a></h3>
+<p>Represents a point in the XY plane, with integer indices.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>y</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table> <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_image_service-proto"></a></p>
@@ -34283,10 +34384,80 @@ the current localization is. This can be useful to reinitialize the system at a 
 <td>If provided, this will write the last NavigateToResponse message to<br>a blackboard variable with this name.</td>
 </tr>
 <tr>
+<td>navigate_to_request_blackboard_key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>If provided, parameters from this request will be merged with the other parameters defined in<br>the node and be used in the NavigateTo RPC.</td>
+</tr>
+<tr>
 <td>route_blocked_behavior</td>
 <td><a href="#bosdyn-api-graph_nav-RouteFollowingParams-RouteBlockedBehavior">bosdyn.api.graph_nav.RouteFollowingParams.RouteBlockedBehavior</a></td>
 <td></td>
 <td>Defines robot behavior when route is blocked. Defaults to reroute when route is blocked.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-BosdynNavigateToAnchor"></a></p>
+</section>
+<section id="bosdynnavigatetoanchor">
+<h3>BosdynNavigateToAnchor<a class="headerlink" href="#bosdynnavigatetoanchor" title="Permalink to this heading"></a></h3>
+<p>Tell the robot to navigate to a pose in the seed frame</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>service_name</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Name of the service to use.</td>
+</tr>
+<tr>
+<td>host</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Host machine the service is running on.</td>
+</tr>
+<tr>
+<td>seed_tform_goal</td>
+<td><a href="#bosdyn-api-SE3Pose">bosdyn.api.SE3Pose</a></td>
+<td></td>
+<td>Desired goal pose in seed frame.</td>
+</tr>
+<tr>
+<td>route_gen_params</td>
+<td><a href="#bosdyn-api-graph_nav-RouteGenParams">bosdyn.api.graph_nav.RouteGenParams</a></td>
+<td></td>
+<td>Preferences on how to pick the route.</td>
+</tr>
+<tr>
+<td>travel_params</td>
+<td><a href="#bosdyn-api-graph_nav-TravelParams">bosdyn.api.graph_nav.TravelParams</a></td>
+<td></td>
+<td>Parameters that define how to traverse and end the route.</td>
+</tr>
+<tr>
+<td>navigation_feedback_response_blackboard_key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>If provided, this will write the last NavigationFeedbackResponse message<br>to a blackboard variable with this name.</td>
+</tr>
+<tr>
+<td>navigate_to_anchor_response_blackboard_key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>If provided, this will write the last NavigateToResponse message to<br>a blackboard variable with this name.</td>
+</tr>
+<tr>
+<td>navigate_to_anchor_request_blackboard_key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>If provided, parameters from this request will be merged with the other parameters defined in<br>the node and be used in the NavigateToAnchor RPC.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-mission-BosdynPowerRequest"></a></p>
@@ -35407,6 +35578,12 @@ Specifics of what the node does are contained in the “impl” field.</p>
 <td></td>
 </tr>
 <tr>
+<td>spot_cam_named_position</td>
+<td><a href="#bosdyn-api-mission-SpotCamNamedPosition">SpotCamNamedPosition</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td>store_metadata</td>
 <td><a href="#bosdyn-api-mission-StoreMetadata">StoreMetadata</a></td>
 <td></td>
@@ -36182,6 +36359,46 @@ been retained, and FAILURE if any one lease cannot be retained.</p>
 <td><a href="#float">float</a></td>
 <td></td>
 <td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-SpotCamNamedPosition"></a></p>
+</section>
+<section id="spotcamnamedposition">
+<h3>SpotCamNamedPosition<a class="headerlink" href="#spotcamnamedposition" title="Permalink to this heading"></a></h3>
+<p>Point the PTZ to a specified named configuraiton.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>service_name</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Name of the service to use.</td>
+</tr>
+<tr>
+<td>host</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Host machine of the directory server that the Spot CAM registered with.</td>
+</tr>
+<tr>
+<td>ptz_name</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Name of the ptz to be pointed.</td>
+</tr>
+<tr>
+<td>named_position</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Named position to move the PTZ to.<br>Currently, the only supported named position is "stow".<br>Stow points the camera forward, parallel to the robot body's +x axis.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-mission-SpotCamPtz"></a></p>
@@ -37191,6 +37408,87 @@ to this service type, calling out to this service when loaded, ticked, or unload
 <td></td>
 <td></td>
 </tr>
+<tr>
+<td>list_value</td>
+<td><a href="#bosdyn-api-mission-ConstantValue-ListValue">ConstantValue.ListValue</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>dict_value</td>
+<td><a href="#bosdyn-api-mission-ConstantValue-DictValue">ConstantValue.DictValue</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-ConstantValue-DictValue"></a></p>
+</section>
+<section id="constantvalue-dictvalue">
+<h3>ConstantValue.DictValue<a class="headerlink" href="#constantvalue-dictvalue" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values</td>
+<td><a href="#bosdyn-api-mission-ConstantValue-DictValue-ValuesEntry">ConstantValue.DictValue.ValuesEntry</a></td>
+<td>repeated</td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-ConstantValue-DictValue-ValuesEntry"></a></p>
+</section>
+<section id="constantvalue-dictvalue-valuesentry">
+<h3>ConstantValue.DictValue.ValuesEntry<a class="headerlink" href="#constantvalue-dictvalue-valuesentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-mission-ConstantValue">ConstantValue</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-ConstantValue-ListValue"></a></p>
+</section>
+<section id="constantvalue-listvalue">
+<h3>ConstantValue.ListValue<a class="headerlink" href="#constantvalue-listvalue" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>values</td>
+<td><a href="#bosdyn-api-mission-ConstantValue">ConstantValue</a></td>
+<td>repeated</td>
+<td></td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-mission-KeyValue"></a></p>
 </section>
@@ -37344,10 +37642,45 @@ to this service type, calling out to this service when loaded, ticked, or unload
 <td>Name of the variable, to be used as the key in KeyValue pairs.</td>
 </tr>
 <tr>
+<td>sub_type</td>
+<td><a href="#bosdyn-api-mission-VariableDeclaration-SubType">VariableDeclaration.SubType</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td>type</td>
 <td><a href="#bosdyn-api-mission-VariableDeclaration-Type">VariableDeclaration.Type</a></td>
 <td></td>
 <td>Type that this variable is expected to have. Used to verify assignments and comparisons.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-mission-VariableDeclaration-SubType"></a></p>
+</section>
+<section id="variabledeclaration-subtype">
+<h3>VariableDeclaration.SubType<a class="headerlink" href="#variabledeclaration-subtype" title="Permalink to this heading"></a></h3>
+<p>Subtype of the variable if it is a list or dict type. This would be type of the elements of
+that collection</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td><a href="#bosdyn-api-mission-VariableDeclaration-Type">VariableDeclaration.Type</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>sub_type</td>
+<td><a href="#bosdyn-api-mission-VariableDeclaration-SubType">VariableDeclaration.SubType</a></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table> <!-- end messages --><p><a name="bosdyn-api-mission-Result"></a></p>
@@ -37432,6 +37765,16 @@ to this service type, calling out to this service when loaded, ticked, or unload
 <tr>
 <td>TYPE_MESSAGE</td>
 <td>5</td>
+<td></td>
+</tr>
+<tr>
+<td>TYPE_LIST</td>
+<td>6</td>
+<td></td>
+</tr>
+<tr>
+<td>TYPE_DICT</td>
+<td>7</td>
 <td></td>
 </tr>
 </tbody>
@@ -38982,6 +39325,12 @@ the payload to the user as a single record.</p>
 <td>A human-readable description string providing more context as to the<br>function of this payload. It is displayed in UIs.</td>
 </tr>
 <tr>
+<td>serial_number</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>A unique traceable per-payload serial number.</td>
+</tr>
+<tr>
 <td>label_prefix</td>
 <td><a href="#string">string</a></td>
 <td>repeated</td>
@@ -39879,6 +40228,265 @@ successful.</p>
 <td>List all payloads the robot knows about.</td>
 </tr>
 </tbody>
+</table> <!-- end services --><p><a name="bosdyn_api_payload_software_update-proto"></a></p>
+<p align="right"><a href="#top">Top</a></p></section>
+</section>
+<section id="bosdyn-api-payload-software-update-proto">
+<h2>bosdyn/api/payload_software_update.proto<a class="headerlink" href="#bosdyn-api-payload-software-update-proto" title="Permalink to this heading"></a></h2>
+<p><a name="bosdyn-api-GetAvailableSoftwareUpdatesRequest"></a></p>
+<section id="getavailablesoftwareupdatesrequest">
+<h3>GetAvailableSoftwareUpdatesRequest<a class="headerlink" href="#getavailablesoftwareupdatesrequest" title="Permalink to this heading"></a></h3>
+<p>Request version information for staged packages matching the supplied package names.  Typically
+this is a single package name representing the payload, but if the payload hosts additional
+installable components, these may also be queried.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">RequestHeader</a></td>
+<td></td>
+<td>Common request header.</td>
+</tr>
+<tr>
+<td>package_names</td>
+<td><a href="#string">string</a></td>
+<td>repeated</td>
+<td>Unique strings identifying units of payload software.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GetAvailableSoftwareUpdatesResponse"></a></p>
+</section>
+<section id="getavailablesoftwareupdatesresponse">
+<h3>GetAvailableSoftwareUpdatesResponse<a class="headerlink" href="#getavailablesoftwareupdatesresponse" title="Permalink to this heading"></a></h3>
+<p>Software updater returns information about the staged software packages matching the supplied
+package names in the request.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">ResponseHeader</a></td>
+<td></td>
+<td>Common response header.</td>
+</tr>
+<tr>
+<td>staged_packages</td>
+<td><a href="#bosdyn-api-StagedSoftwarePackage">StagedSoftwarePackage</a></td>
+<td>repeated</td>
+<td>Information about staged software updates matching the requested package names.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-SendCurrentVersionInfoRequest"></a></p>
+</section>
+<section id="sendcurrentversioninforequest">
+<h3>SendCurrentVersionInfoRequest<a class="headerlink" href="#sendcurrentversioninforequest" title="Permalink to this heading"></a></h3>
+<p>Send payload’s current software version to the robot software updater.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">RequestHeader</a></td>
+<td></td>
+<td>Common request header.</td>
+</tr>
+<tr>
+<td>package_version</td>
+<td><a href="#bosdyn-api-SoftwarePackageVersion">SoftwarePackageVersion</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-SendCurrentVersionInfoResponse"></a></p>
+</section>
+<section id="sendcurrentversioninforesponse">
+<h3>SendCurrentVersionInfoResponse<a class="headerlink" href="#sendcurrentversioninforesponse" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">ResponseHeader</a></td>
+<td></td>
+<td>Common response header.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-SendSoftwareUpdateStatusRequest"></a></p>
+</section>
+<section id="sendsoftwareupdatestatusrequest">
+<h3>SendSoftwareUpdateStatusRequest<a class="headerlink" href="#sendsoftwareupdatestatusrequest" title="Permalink to this heading"></a></h3>
+<p>Send the status of an update process to the robot.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">RequestHeader</a></td>
+<td></td>
+<td>Common request header.</td>
+</tr>
+<tr>
+<td>update_status</td>
+<td><a href="#bosdyn-api-SoftwareUpdateStatus">SoftwareUpdateStatus</a></td>
+<td></td>
+<td>Current status of the software update process for this payload.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-SendSoftwareUpdateStatusResponse"></a></p>
+</section>
+<section id="sendsoftwareupdatestatusresponse">
+<h3>SendSoftwareUpdateStatusResponse<a class="headerlink" href="#sendsoftwareupdatestatusresponse" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">ResponseHeader</a></td>
+<td></td>
+<td>Common response header.</td>
+</tr>
+</tbody>
+</table> <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_payload_software_update_initiation-proto"></a></p>
+<p align="right"><a href="#top">Top</a></p></section>
+</section>
+<section id="bosdyn-api-payload-software-update-initiation-proto">
+<h2>bosdyn/api/payload_software_update_initiation.proto<a class="headerlink" href="#bosdyn-api-payload-software-update-initiation-proto" title="Permalink to this heading"></a></h2>
+<p><a name="bosdyn-api-TriggerInitiateUpdateRequest"></a></p>
+<section id="triggerinitiateupdaterequest">
+<h3>TriggerInitiateUpdateRequest<a class="headerlink" href="#triggerinitiateupdaterequest" title="Permalink to this heading"></a></h3>
+<p>Event instructing the payload to initiate its software update process.</p>
+<p><a name="bosdyn-api-TriggerInitiateUpdateResponse"></a></p>
+</section>
+<section id="triggerinitiateupdateresponse">
+<h3>TriggerInitiateUpdateResponse<a class="headerlink" href="#triggerinitiateupdateresponse" title="Permalink to this heading"></a></h3>
+<p><a name="bosdyn-api-TriggerSendPayloadSoftwareInfoRequest"></a></p>
+</section>
+<section id="triggersendpayloadsoftwareinforequest">
+<h3>TriggerSendPayloadSoftwareInfoRequest<a class="headerlink" href="#triggersendpayloadsoftwareinforequest" title="Permalink to this heading"></a></h3>
+<p>Event instructing the payload to send its current software version information
+via a trusted channel.</p>
+<p><a name="bosdyn-api-TriggerSendPayloadSoftwareInfoResponse"></a></p>
+</section>
+<section id="triggersendpayloadsoftwareinforesponse">
+<h3>TriggerSendPayloadSoftwareInfoResponse<a class="headerlink" href="#triggersendpayloadsoftwareinforesponse" title="Permalink to this heading"></a></h3>
+ <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_payload_software_update_initiation_service-proto"></a></p>
+<p align="right"><a href="#top">Top</a></p></section>
+</section>
+<section id="bosdyn-api-payload-software-update-initiation-service-proto">
+<h2>bosdyn/api/payload_software_update_initiation_service.proto<a class="headerlink" href="#bosdyn-api-payload-software-update-initiation-service-proto" title="Permalink to this heading"></a></h2>
+ <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --><p><a name="bosdyn-api-PayloadSoftwareUpdateInitiationService"></a></p>
+<section id="payloadsoftwareupdateinitiationservice">
+<h3>PayloadSoftwareUpdateInitiationService<a class="headerlink" href="#payloadsoftwareupdateinitiationservice" title="Permalink to this heading"></a></h3>
+<p>This service is hosted by a payload and is used by Spot to tell it to perform
+certain actions related to payload software update.  These RPCs support events only;
+no data exchange takes place.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Method Name</th>
+<th>Request Type</th>
+<th>Response Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TriggerSendPayloadSoftwareInfo</td>
+<td><a href="#bosdyn-api-TriggerSendPayloadSoftwareInfoRequest">TriggerSendPayloadSoftwareInfoRequest</a></td>
+<td><a href="#bosdyn-api-TriggerSendPayloadSoftwareInfoResponse">TriggerSendPayloadSoftwareInfoResponse</a></td>
+<td>Tell the payload to send information about its current software version.</td>
+</tr>
+<tr>
+<td>TriggerInitiateUpdate</td>
+<td><a href="#bosdyn-api-TriggerInitiateUpdateRequest">TriggerInitiateUpdateRequest</a></td>
+<td><a href="#bosdyn-api-TriggerInitiateUpdateResponse">TriggerInitiateUpdateResponse</a></td>
+<td>Tell the payload to initiate its software update operation.</td>
+</tr>
+</tbody>
+</table> <!-- end services --><p><a name="bosdyn_api_payload_software_update_service-proto"></a></p>
+<p align="right"><a href="#top">Top</a></p></section>
+</section>
+<section id="bosdyn-api-payload-software-update-service-proto">
+<h2>bosdyn/api/payload_software_update_service.proto<a class="headerlink" href="#bosdyn-api-payload-software-update-service-proto" title="Permalink to this heading"></a></h2>
+ <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --><p><a name="bosdyn-api-PayloadSoftwareUpdateService"></a></p>
+<section id="payloadsoftwareupdateservice">
+<h3>PayloadSoftwareUpdateService<a class="headerlink" href="#payloadsoftwareupdateservice" title="Permalink to this heading"></a></h3>
+<p>The PayloadSoftwareUpdateService is hosted by a robot and coordinates software updates of the
+various payloads attached to the robot.  Each payload connects to this service to communicate
+its current version, obtain information about available updates, and provide status of the
+update process.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Method Name</th>
+<th>Request Type</th>
+<th>Response Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SendCurrentVersionInfo</td>
+<td><a href="#bosdyn-api-SendCurrentVersionInfoRequest">SendCurrentVersionInfoRequest</a></td>
+<td><a href="#bosdyn-api-SendCurrentVersionInfoResponse">SendCurrentVersionInfoResponse</a></td>
+<td>Send the payload's current software version information to the service.</td>
+</tr>
+<tr>
+<td>GetAvailableSoftwareUpdates</td>
+<td><a href="#bosdyn-api-GetAvailableSoftwareUpdatesRequest">GetAvailableSoftwareUpdatesRequest</a></td>
+<td><a href="#bosdyn-api-GetAvailableSoftwareUpdatesResponse">GetAvailableSoftwareUpdatesResponse</a></td>
+<td>Query the payload software update service for available software updates for the payload<br>and any updateable components hosted by the payload.</td>
+</tr>
+<tr>
+<td>SendSoftwareUpdateStatus</td>
+<td><a href="#bosdyn-api-SendSoftwareUpdateStatusRequest">SendSoftwareUpdateStatusRequest</a></td>
+<td><a href="#bosdyn-api-SendSoftwareUpdateStatusResponse">SendSoftwareUpdateStatusResponse</a></td>
+<td>Set the status of the payload software update in process.</td>
+</tr>
+</tbody>
 </table> <!-- end services --><p><a name="bosdyn_api_point_cloud-proto"></a></p>
 <p align="right"><a href="#top">Top</a></p></section>
 </section>
@@ -39936,6 +40544,80 @@ successful.</p>
 <td><a href="#bosdyn-api-PointCloudResponse">PointCloudResponse</a></td>
 <td>repeated</td>
 <td>The resulting point clouds for each requested source.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-LidarPointCloud"></a></p>
+</section>
+<section id="lidarpointcloud">
+<h3>LidarPointCloud<a class="headerlink" href="#lidarpointcloud" title="Permalink to this heading"></a></h3>
+<p>A structured point cloud obtained from a series of scans from a LIDAR.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>point_cloud</td>
+<td><a href="#bosdyn-api-PointCloud">PointCloud</a></td>
+<td></td>
+<td>The point cloud data, where the points are stored in row-major order<br>as num_beams x num_scans, and a point is three floats XYZ.<br># rows == num_beams and # columns == num_scans<br>Each row corresponds to a beam from the LIDAR.<br>Each column corresponds to a scan from the LIDAR.<br>Beams will be ordered from lowest to highest.<br>Scans will be order from oldest to newest.<br>Missing data will be returned as all-zeros (0.0, 0.0, 0.0).</td>
+</tr>
+<tr>
+<td>num_beams</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>Number of beams produced by the LIDAR.</td>
+</tr>
+<tr>
+<td>num_scans</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>Number of scans included in the cloud.</td>
+</tr>
+<tr>
+<td>lidar_pose_history</td>
+<td><a href="#bosdyn-api-LidarPointCloud-LidarPoseSample">LidarPointCloud.LidarPoseSample</a></td>
+<td>repeated</td>
+<td>Subsampled trajectory of the lidar position over time.<br>Will always include the first &amp; last scan poses.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-LidarPointCloud-LidarPoseSample"></a></p>
+</section>
+<section id="lidarpointcloud-lidarposesample">
+<h3>LidarPointCloud.LidarPoseSample<a class="headerlink" href="#lidarpointcloud-lidarposesample" title="Permalink to this heading"></a></h3>
+<p>Information to track where the LIDAR was over time.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>lidar_pos_in_vision</td>
+<td><a href="#bosdyn-api-Vec3">Vec3</a></td>
+<td></td>
+<td>Position of the lidar in the vision world frame at acquisition_time.</td>
+</tr>
+<tr>
+<td>acquisition_time</td>
+<td><a href="#google-protobuf-Timestamp">google.protobuf.Timestamp</a></td>
+<td></td>
+<td>Robot time of this pose sample.</td>
+</tr>
+<tr>
+<td>scan_number</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>Which scan in point_cloud corresponds to this pose sample.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-ListPointCloudSourcesRequest"></a></p>
@@ -40106,6 +40788,18 @@ service.</p>
 <td></td>
 <td>Name of the point cloud source to request from.</td>
 </tr>
+<tr>
+<td>cloud_type</td>
+<td><a href="#bosdyn-api-PointCloudRequest-PointCloudType">PointCloudRequest.PointCloudType</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>downsample_rate</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>Skip every downsample_rate-1 scans, if supported by the service.<br>Has no effect if less than or equal to 1.</td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-PointCloudResponse"></a></p>
 </section>
@@ -40131,7 +40825,25 @@ service.</p>
 <td>point_cloud</td>
 <td><a href="#bosdyn-api-PointCloud">PointCloud</a></td>
 <td></td>
-<td>The current point cloud from the service.</td>
+<td></td>
+</tr>
+<tr>
+<td>lidar_cloud</td>
+<td><a href="#bosdyn-api-LidarPointCloud">LidarPointCloud</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>no_update</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>True if the client already received the latest cloud from the service.<br>In this case, cloud_data will be empty.</td>
+</tr>
+<tr>
+<td>expected_time_to_next_update</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>If positive, the expected nanoseconds until new cloud data will be ready.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-PointCloudSource"></a></p>
@@ -40173,6 +40885,12 @@ service.</p>
 <td></td>
 <td>A tree-based collection of transformations, which will include the transformations<br>to the point cloud data frame and the point cloud sensor frame.</td>
 </tr>
+<tr>
+<td>supported_cloud_types</td>
+<td><a href="#bosdyn-api-PointCloudRequest-PointCloudType">PointCloudRequest.PointCloudType</a></td>
+<td>repeated</td>
+<td>If non-empty, the cloud types that can be returned by this service.</td>
+</tr>
 </tbody>
 </table> <!-- end messages --><p><a name="bosdyn-api-PointCloud-Encoding"></a></p>
 </section>
@@ -40207,6 +40925,38 @@ service.</p>
 <td>ENCODING_XYZ_5SC</td>
 <td>3</td>
 <td>Each point is 3 signed int8s plus two extra shared signed int8s (5 byte).<br>The encoding is the same as XYZ_4SC, except the "extra" value x is a 16 bit integer.<br>This encoding has roughly double the resolution of XYZ_4SC, but takes up<br>an additional byte for each point.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-PointCloudRequest-PointCloudType"></a></p>
+</section>
+<section id="pointcloudrequest-pointcloudtype">
+<h3>PointCloudRequest.PointCloudType<a class="headerlink" href="#pointcloudrequest-pointcloudtype" title="Permalink to this heading"></a></h3>
+<p>How to format the returned point cloud.
+Not all services may support every format, in
+which case they will treat the requet as CLOUD_TYPE_POINTS.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CLOUD_TYPE_UNKNOWN</td>
+<td>0</td>
+<td>No specified type, treated same as CLOUD_TYPE_POINTS.</td>
+</tr>
+<tr>
+<td>CLOUD_TYPE_POINTS</td>
+<td>1</td>
+<td>Request point cloud as unstructured list of points.<br>This will not include entries for missing returns.</td>
+</tr>
+<tr>
+<td>CLOUD_TYPE_LIDAR</td>
+<td>2</td>
+<td>Request data as a structured tensor retaining scan &amp; beam information.<br>This will include entries for missing returns.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-PointCloudResponse-Status"></a></p>
@@ -40245,7 +40995,12 @@ service.</p>
 <tr>
 <td>STATUS_UNKNOWN_SOURCE</td>
 <td>4</td>
-<td>Provided point cloud source was not found. One</td>
+<td>Provided point cloud source was not found.</td>
+</tr>
+<tr>
+<td>STATUS_UNSUPPORTED_CLOUD_TYPE</td>
+<td>5</td>
+<td>Service does not support the requested cloud type.</td>
 </tr>
 </tbody>
 </table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_point_cloud_service-proto"></a></p>
@@ -42668,7 +43423,13 @@ as well as joint states and the velocity of the body.</p>
 <td>estimated_end_effector_force_in_hand</td>
 <td><a href="#bosdyn-api-Vec3">Vec3</a></td>
 <td></td>
-<td>The estimated force on the end-effector expressed in the hand frame.</td>
+<td><strong>Deprecated.</strong> The estimated force on the end-effector expressed in the hand frame.<br>Deprecated in favor of the estimated_end_effector_wrench_in_end_effector</td>
+</tr>
+<tr>
+<td>estimated_end_effector_wrench_in_end_effector</td>
+<td><a href="#bosdyn-api-Wrench">Wrench</a></td>
+<td></td>
+<td>The estimated wrench on the end-effector expressed in the end_effector (hand) frame.</td>
 </tr>
 <tr>
 <td>stow_state</td>
@@ -42750,6 +43511,12 @@ The robot must not be E-Stopped to enter the POWER_ON state.</p>
 <td><a href="#bosdyn-api-PowerState-MotorPowerState">PowerState.MotorPowerState</a></td>
 <td></td>
 <td>The motor power state of the robot.</td>
+</tr>
+<tr>
+<td>motor_power_error_message</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Human-readable error description. Not for programmatic analysis.</td>
 </tr>
 <tr>
 <td>shore_power_state</td>
@@ -43502,7 +44269,13 @@ fault recovery behavior on robot.</p>
 <td>uid</td>
 <td><a href="#uint64">uint64</a></td>
 <td></td>
-<td>Fault UID</td>
+<td><strong>Deprecated.</strong> Fault UID. Deprecated in favor of string based uuid.</td>
+</tr>
+<tr>
+<td>uuid</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Fault universal unique identifier (UUID).</td>
 </tr>
 <tr>
 <td>error_message</td>
@@ -44096,7 +44869,7 @@ CARRIABLE_AND_STOWABLE - The arm will stow while continuing to grasp the item</p
 <section id="powerstate-shorepowerstate">
 <h3>PowerState.ShorePowerState<a class="headerlink" href="#powerstate-shorepowerstate" title="Permalink to this heading"></a></h3>
 <p>State describing if robot is connected to shore (wall) power. Robot can’t be powered on
-while on shore power</p>
+while on shore power.</p>
 <table border="1" class="docutils">
 <thead>
 <tr>
@@ -44225,6 +44998,11 @@ while on shore power</p>
 <td>IMPAIRED_STATUS_ENTITY_DETECTOR_NOT_WORKING</td>
 <td>8</td>
 <td>The autonomous system expected to have a payload providing an entity detector.<br>The detector is either not present, or not working. Note that if the detector<br>exists but is throwing a system fault, the status will be IMPAIRED_STATUS_SYSTEM_FAULT.</td>
+</tr>
+<tr>
+<td>IMPAIRED_STATUS_STUCK_IN_COLLISION</td>
+<td>9</td>
+<td>The robot got stuck due to a collision</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-SystemFault-Severity"></a></p>
@@ -45142,7 +45920,13 @@ of the OneOf they want, and then the UI lets the user specify any child specific
 <td>allows_rectangle</td>
 <td><a href="#bool">bool</a></td>
 <td></td>
-<td>Area may eventually contain many shape primitives. In that case, services can constrain<br>which primitives they accept. These will be opt in, so that adding new primitive types<br>won't be automatically advertised by older services.</td>
+<td>Area may eventually contain many shape primitives. In that case, services can constrain<br>which primitives they accept. These will be opt in, so that adding new primitive types<br>won't be automatically advertised by older services. For widest compatibility, services<br>should at least support rectangles.<br><br>Whether or not the service accepts a rectangle.</td>
+</tr>
+<tr>
+<td>allows_polygon</td>
+<td><a href="#bool">bool</a></td>
+<td></td>
+<td>Whether or not the service accepts a polygon.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-StringParam"></a></p>
@@ -45864,7 +46648,260 @@ If the value is false, then SEVERITY_LEVEL_CRITICAL.</p></li>
 <td>A signal can have multiple alert conditions.<br>If multiple conditions are simultaneously met,<br>the higher severity condition or first in the list will be the accepted alert state.</td>
 </tr>
 </tbody>
-</table> <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_sparse_features-proto"></a></p>
+</table> <!-- end messages --> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_software_package-proto"></a></p>
+<p align="right"><a href="#top">Top</a></p></section>
+</section>
+<section id="bosdyn-api-software-package-proto">
+<h2>bosdyn/api/software_package.proto<a class="headerlink" href="#bosdyn-api-software-package-proto" title="Permalink to this heading"></a></h2>
+<p><a name="bosdyn-api-SoftwarePackageVersion"></a></p>
+<section id="softwarepackageversion">
+<h3>SoftwarePackageVersion<a class="headerlink" href="#softwarepackageversion" title="Permalink to this heading"></a></h3>
+<p>Common data type for communicating version information about an installable software package
+on the robot or its payloads.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>package_name</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Unique string identifying the unit of software, e.g., "spot" or "coreio". Package names<br>identifying payload software must not conflict with other package names in use. Note that<br>Spot Extensions also use their name in this field when reporting their versions as well.</td>
+</tr>
+<tr>
+<td>version</td>
+<td><a href="#bosdyn-api-SoftwareVersion">SoftwareVersion</a></td>
+<td></td>
+<td>Version of the software package.</td>
+</tr>
+<tr>
+<td>release_date</td>
+<td><a href="#google-protobuf-Timestamp">google.protobuf.Timestamp</a></td>
+<td></td>
+<td>Release date associated with the software package.</td>
+</tr>
+<tr>
+<td>build_id</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>This is used to test whether installed software packages are equivalent to the desired<br>package versions and provide a stronger guarantee than the version field and release_date.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-SoftwareUpdateStatus"></a></p>
+</section>
+<section id="softwareupdatestatus">
+<h3>SoftwareUpdateStatus<a class="headerlink" href="#softwareupdatestatus" title="Permalink to this heading"></a></h3>
+<p>SoftwareUpdateStatus provides details on the progress of an installation of a unit of software
+on the robot.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>package_name</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Unique string identifying the software unit.</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn-api-SoftwareUpdateStatus-Status">SoftwareUpdateStatus.Status</a></td>
+<td></td>
+<td>Status of the update process for a specific software package.</td>
+</tr>
+<tr>
+<td>error_code</td>
+<td><a href="#bosdyn-api-SoftwareUpdateStatus-ErrorCode">SoftwareUpdateStatus.ErrorCode</a></td>
+<td></td>
+<td>If status == STATUS_FAILURE, this field communicates the reason for the failure.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-StagedSoftwarePackage"></a></p>
+</section>
+<section id="stagedsoftwarepackage">
+<h3>StagedSoftwarePackage<a class="headerlink" href="#stagedsoftwarepackage" title="Permalink to this heading"></a></h3>
+<p>StagedSoftwarePackage builds upon the version information by adding details of the package’s
+size on disk and the URL that robot payloads can use to retrieve the file.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>version_info</td>
+<td><a href="#bosdyn-api-SoftwarePackageVersion">SoftwarePackageVersion</a></td>
+<td></td>
+<td>Information about the software package version.</td>
+</tr>
+<tr>
+<td>file_size</td>
+<td><a href="#int64">int64</a></td>
+<td></td>
+<td>File size of the software package in bytes.</td>
+</tr>
+<tr>
+<td>url</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>URL of the file on the staging server.</td>
+</tr>
+</tbody>
+</table> <!-- end messages --><p><a name="bosdyn-api-SoftwareUpdateStatus-ErrorCode"></a></p>
+</section>
+<section id="softwareupdatestatus-errorcode">
+<h3>SoftwareUpdateStatus.ErrorCode<a class="headerlink" href="#softwareupdatestatus-errorcode" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ERROR_UNINITIALIZED</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>ERROR_NONE</td>
+<td>1</td>
+<td>No error</td>
+</tr>
+<tr>
+<td>ERROR_UNKNOWN</td>
+<td>2</td>
+<td>Unknown error; not covered in any of the cases below</td>
+</tr>
+<tr>
+<td>ERROR_DOWNLOAD_FAILED</td>
+<td>3</td>
+<td>Failed to download the package from the staging area</td>
+</tr>
+<tr>
+<td>ERROR_UPDATE_REJECTED</td>
+<td>4</td>
+<td>Update rejected for some reason (staged is older than current, for example)</td>
+</tr>
+<tr>
+<td>ERROR_VALIDATION_FAILED</td>
+<td>5</td>
+<td>Validation by software failed</td>
+</tr>
+<tr>
+<td>ERROR_INSUFFICIENT_STORAGE</td>
+<td>6</td>
+<td>Inadequate disk space to accept software update</td>
+</tr>
+<tr>
+<td>ERROR_FILE_NOT_FOUND</td>
+<td>7</td>
+<td>Failed to find a required file during the update process</td>
+</tr>
+<tr>
+<td>ERROR_INSTALLATION_FAILED</td>
+<td>8</td>
+<td>Package was downloaded and validated, but failed to install.</td>
+</tr>
+<tr>
+<td>ERROR_INTERRUPTED</td>
+<td>9</td>
+<td>The update was started, but it was interrupted before it was allowed to complete.</td>
+</tr>
+<tr>
+<td>ERROR_DEPENDENCY_FAILED</td>
+<td>10</td>
+<td>This depends on another update, but that other update failed to install.</td>
+</tr>
+<tr>
+<td>ERROR_TIMEOUT</td>
+<td>11</td>
+<td>Payload failed to respond after a timeout; update is presumed to have failed.</td>
+</tr>
+<tr>
+<td>ERROR_INSTALLATION_ALREADY_IN_PROGRESS</td>
+<td>12</td>
+<td>The payload is already installing an update.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-SoftwareUpdateStatus-Status"></a></p>
+</section>
+<section id="softwareupdatestatus-status">
+<h3>SoftwareUpdateStatus.Status<a class="headerlink" href="#softwareupdatestatus-status" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_IDLE</td>
+<td>1</td>
+<td>Payload is not currently executing an update.</td>
+</tr>
+<tr>
+<td>STATUS_WAITING</td>
+<td>2</td>
+<td>Payload is waiting for other software installations to complete.</td>
+</tr>
+<tr>
+<td>STATUS_DOWNLOADING</td>
+<td>3</td>
+<td>Payload is downloading the software package from the staging server.</td>
+</tr>
+<tr>
+<td>STATUS_VALIDATING</td>
+<td>4</td>
+<td>Payload is validating the downloaded package.</td>
+</tr>
+<tr>
+<td>STATUS_INSTALLING</td>
+<td>5</td>
+<td>Payload is installing the software package.</td>
+</tr>
+<tr>
+<td>STATUS_REBOOTING</td>
+<td>6</td>
+<td>Payload is rebooting to start using the new software.</td>
+</tr>
+<tr>
+<td>STATUS_SUCCESS</td>
+<td>7</td>
+<td>Payload has successfully been updated.</td>
+</tr>
+<tr>
+<td>STATUS_FAILURE</td>
+<td>8</td>
+<td>Payload failed to install the update.</td>
+</tr>
+</tbody>
+</table> <!-- end enums --> <!-- end HasExtensions --> <!-- end services --><p><a name="bosdyn_api_sparse_features-proto"></a></p>
 <p align="right"><a href="#top">Top</a></p></section>
 </section>
 <section id="bosdyn-api-sparse-features-proto">
@@ -50781,6 +51818,189 @@ itself and any animations the sequence uses.</p>
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn-api-spot-LegSize"></a></p>
+</section>
+<section id="legsize">
+<h3>LegSize<a class="headerlink" href="#legsize" title="Permalink to this heading"></a></h3>
+<p>Size and shape of a specific individual leg.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>distance_inward</td>
+<td><a href="#float">float</a></td>
+<td></td>
+<td>Horizontal distances from the center of the foot sphere to the edge of the collision<br>geometry. Meters.<br><br>Toward the front/back centerline. Baseline robot: 0.02 m</td>
+</tr>
+<tr>
+<td>distance_outward</td>
+<td><a href="#float">float</a></td>
+<td></td>
+<td>Away from the front/back centerline. Baseline robot: 0.02 m</td>
+</tr>
+<tr>
+<td>distance_forward</td>
+<td><a href="#float">float</a></td>
+<td></td>
+<td>Baseline robot: 0.035m</td>
+</tr>
+<tr>
+<td>distance_backward</td>
+<td><a href="#float">float</a></td>
+<td></td>
+<td>Baseline robot: 0.035m</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-spot-LegSizeConfigurationRequest"></a></p>
+</section>
+<section id="legsizeconfigurationrequest">
+<h3>LegSizeConfigurationRequest<a class="headerlink" href="#legsizeconfigurationrequest" title="Permalink to this heading"></a></h3>
+<p>Tell the robot its legs are a non-standard size to help avoid self-collision.
+Typically used for robots that are wearing costumes.
+Configuration will be permanently stored (persisting through reboot) until cleared by sending an
+empty request.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td></td>
+<td>Common request header</td>
+</tr>
+<tr>
+<td>front_left_size</td>
+<td><a href="#bosdyn-api-spot-LegSize">LegSize</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>front_right_size</td>
+<td><a href="#bosdyn-api-spot-LegSize">LegSize</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>hind_left_size</td>
+<td><a href="#bosdyn-api-spot-LegSize">LegSize</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>hind_right_size</td>
+<td><a href="#bosdyn-api-spot-LegSize">LegSize</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-spot-LegSizeConfigurationResponse"></a></p>
+</section>
+<section id="legsizeconfigurationresponse">
+<h3>LegSizeConfigurationResponse<a class="headerlink" href="#legsizeconfigurationresponse" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td></td>
+<td>Common response header</td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn-api-spot-LegSizeConfigurationResponse-Status">LegSizeConfigurationResponse.Status</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-spot-LegSizeConfigurationStateRequest"></a></p>
+</section>
+<section id="legsizeconfigurationstaterequest">
+<h3>LegSizeConfigurationStateRequest<a class="headerlink" href="#legsizeconfigurationstaterequest" title="Permalink to this heading"></a></h3>
+<p>Check the state of the current leg size configuration.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">bosdyn.api.RequestHeader</a></td>
+<td></td>
+<td>Common request header</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-spot-LegSizeConfigurationStateResponse"></a></p>
+</section>
+<section id="legsizeconfigurationstateresponse">
+<h3>LegSizeConfigurationStateResponse<a class="headerlink" href="#legsizeconfigurationstateresponse" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">bosdyn.api.ResponseHeader</a></td>
+<td></td>
+<td>Common response header</td>
+</tr>
+<tr>
+<td>front_left_size</td>
+<td><a href="#bosdyn-api-spot-LegSize">LegSize</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>front_right_size</td>
+<td><a href="#bosdyn-api-spot-LegSize">LegSize</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>hind_left_size</td>
+<td><a href="#bosdyn-api-spot-LegSize">LegSize</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>hind_right_size</td>
+<td><a href="#bosdyn-api-spot-LegSize">LegSize</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn-api-spot-ListAllMovesRequest"></a></p>
 </section>
 <section id="listallmovesrequest">
@@ -52369,6 +53589,35 @@ displayed with.</p>
 <td>The requested sequence was not found.</td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn-api-spot-LegSizeConfigurationResponse-Status"></a></p>
+</section>
+<section id="legsizeconfigurationresponse-status">
+<h3>LegSizeConfigurationResponse.Status<a class="headerlink" href="#legsizeconfigurationresponse-status" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td>Status unknown. Do not use.</td>
+</tr>
+<tr>
+<td>STATUS_OK</td>
+<td>1</td>
+<td>The new leg size configuration value was accepted and stored.</td>
+</tr>
+<tr>
+<td>STATUS_EXCEEDS_LIMITS</td>
+<td>2</td>
+<td>The new leg size configuration value either contained values below 0 or above the<br>maximum dimension size of .20 meters. The configuration was not stored.</td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn-api-spot-ModifyChoreographyInfoResponse-Status"></a></p>
 </section>
 <section id="modifychoreographyinforesponse-status">
@@ -52703,6 +53952,18 @@ displayed with.</p>
 <td><a href="#bosdyn-api-spot-ChoreographyCommandRequest">ChoreographyCommandRequest</a></td>
 <td><a href="#bosdyn-api-spot-ChoreographyCommandResponse">ChoreographyCommandResponse</a></td>
 <td>Commands intended for individual dance moves that are currently executing.</td>
+</tr>
+<tr>
+<td>LegSizeConfiguration</td>
+<td><a href="#bosdyn-api-spot-LegSizeConfigurationRequest">LegSizeConfigurationRequest</a></td>
+<td><a href="#bosdyn-api-spot-LegSizeConfigurationResponse">LegSizeConfigurationResponse</a></td>
+<td>Adjust leg size configuration, which affects self-collision avoidance regions.</td>
+</tr>
+<tr>
+<td>LegSizeConfigurationState</td>
+<td><a href="#bosdyn-api-spot-LegSizeConfigurationStateRequest">LegSizeConfigurationStateRequest</a></td>
+<td><a href="#bosdyn-api-spot-LegSizeConfigurationStateResponse">LegSizeConfigurationStateResponse</a></td>
+<td>Read the current leg size configuration from the robot.</td>
 </tr>
 <tr>
 <td>ChoreographyTimeAdjust</td>
@@ -63220,7 +64481,7 @@ the robot.</p>
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

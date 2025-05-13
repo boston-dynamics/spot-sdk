@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.image_service_helpers &mdash; Spot 4.1.1 documentation</title>
+  <title>bosdyn.client.image_service_helpers &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -257,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -316,6 +317,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -336,6 +338,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -508,6 +512,7 @@
 <span class="c1"># is subject to the terms and conditions of the Boston Dynamics Software</span>
 <span class="c1"># Development Kit License (20191101-BDSDK-SL).</span>
 
+<span class="kn">import</span> <span class="nn">contextlib</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -519,11 +524,12 @@
 
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">header_pb2</span><span class="p">,</span> <span class="n">image_pb2</span><span class="p">,</span> <span class="n">image_service_pb2</span><span class="p">,</span> <span class="n">image_service_pb2_grpc</span><span class="p">,</span>
                         <span class="n">service_customization_pb2</span><span class="p">,</span> <span class="n">service_fault_pb2</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.data_buffer</span> <span class="kn">import</span> <span class="n">DataBufferClient</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">RpcError</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.fault</span> <span class="kn">import</span> <span class="p">(</span><span class="n">FaultClient</span><span class="p">,</span> <span class="n">ServiceFaultAlreadyExistsError</span><span class="p">,</span>
                                  <span class="n">ServiceFaultDoesNotExistError</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.image</span> <span class="kn">import</span> <span class="n">UnsupportedPixelFormatRequestedError</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.server_util</span> <span class="kn">import</span> <span class="n">populate_response_header</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.server_util</span> <span class="kn">import</span> <span class="n">ResponseContext</span><span class="p">,</span> <span class="n">populate_response_header</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.service_customization_helpers</span> <span class="kn">import</span> <span class="n">create_value_validator</span><span class="p">,</span> <span class="n">validate_dict_spec</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.util</span> <span class="kn">import</span> <span class="n">setup_logging</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">sec_to_nsec</span><span class="p">,</span> <span class="n">seconds_to_duration</span>
@@ -934,7 +940,7 @@
 <span class="sd">            exposure (float | function): The exposure time for an image in seconds. This can be a fixed</span>
 <span class="sd">                              value or a function which returns the exposure time as a float.</span>
 <span class="sd">            request_custom_params (service_customization_pb2.DictParam): Custom Params associated with the image</span>
-<span class="sd">                            request. Should not be &#39;None&#39;, but left as an option to accomodate old callers</span>
+<span class="sd">                            request. Should not be &#39;None&#39;, but left as an option to accommodate old callers</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            An instance of the protobuf CaptureParameters message.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1066,7 +1072,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the capture function to use custom_params and capture_func_kwargs if it can&quot;&quot;&quot;</span>
 
         <span class="c1"># capture_func is likely provided through create_capture_thread, which already does handling for pre-3.3 blocking_capture</span>
-        <span class="c1"># Still, check for the custom_params argument to ensure we accomodate pre-3.3 direct implementations of ImageCaptureThreads</span>
+        <span class="c1"># Still, check for the custom_params argument to ensure we accommodate pre-3.3 direct implementations of ImageCaptureThreads</span>
         <span class="k">if</span> <span class="s2">&quot;custom_params&quot;</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">capture_func</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="c1">#If using a blocking capture function that takes in custom params or kwargs, one should supply those</span>
             <span class="k">def</span> <span class="nf">output_capture_function</span><span class="p">():</span>
@@ -1111,10 +1117,14 @@
 <span class="sd">            the image service will call an image sources&#39; blocking_capture_function during the GetImage request.</span>
 <span class="sd">        background_capture_params (service_customization_pb2.DictParam): If use_background_capture_thread is true,</span>
 <span class="sd">            custom image source parameters used for all of the background captures. Otherwise ignored</span>
+<span class="sd">        log_images (bool): if true, include image request/response messages in robot logs.  This is turned off</span>
+<span class="sd">            by default.</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bosdyn_sdk_robot</span><span class="p">,</span> <span class="n">service_name</span><span class="p">,</span> <span class="n">image_sources</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">use_background_capture_thread</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">background_capture_params</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">use_background_capture_thread</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">background_capture_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">log_images</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CameraBaseImageServicer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Set up the logger to remove duplicated messages and use a specific logging format.</span>
@@ -1130,6 +1140,13 @@
 
         <span class="c1"># Fault client to report service faults</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fault_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bosdyn_sdk_robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">FaultClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">log_images</span><span class="p">:</span>
+            <span class="c1"># Data buffer client for logging messages</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bosdyn_sdk_robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span>
+                <span class="n">DataBufferClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># Get a timesync endpoint from the robot instance such that the image timestamps can be</span>
         <span class="c1"># reported in the robot&#39;s time.</span>
@@ -1185,74 +1202,81 @@
 <span class="sd">            specified in the request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">response</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">GetImageResponse</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">img_req</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">image_requests</span><span class="p">:</span>
-            <span class="n">img_resp</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">image_responses</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
-            <span class="n">src_name</span> <span class="o">=</span> <span class="n">img_req</span><span class="o">.</span><span class="n">image_source_name</span>
-            <span class="k">if</span> <span class="n">src_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">:</span>
-                <span class="c1"># The requested camera source does not match the name of the Ricoh Theta camera, so it cannot</span>
-                <span class="c1"># be completed and will have a failure status in the response message.</span>
-                <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN_CAMERA</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Camera source &#39;</span><span class="si">%s</span><span class="s2">&#39; is unknown.&quot;</span><span class="p">,</span> <span class="n">src_name</span><span class="p">)</span>
-                <span class="k">continue</span>
-
-            <span class="k">if</span> <span class="n">img_req</span><span class="o">.</span><span class="n">resize_ratio</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">img_req</span><span class="o">.</span><span class="n">resize_ratio</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Resize ratio </span><span class="si">%f</span><span class="s2"> is unsupported.&quot;</span><span class="p">,</span> <span class="n">img_req</span><span class="o">.</span><span class="n">resize_ratio</span><span class="p">)</span>
-                <span class="k">continue</span>
-
-            <span class="k">if</span> <span class="n">img_req</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;custom_params&quot;</span><span class="p">):</span>
-                <span class="n">value_validation_error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">value_validator</span><span class="p">(</span>
-                    <span class="n">img_req</span><span class="o">.</span><span class="n">custom_params</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">value_validation_error</span><span class="p">:</span>
-                    <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_CUSTOM_PARAMS_ERROR</span>
-                    <span class="n">img_resp</span><span class="o">.</span><span class="n">custom_param_error</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">value_validation_error</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">response_context</span> <span class="o">=</span> <span class="n">ResponseContext</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_buffer_client</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">response_context</span> <span class="o">=</span> <span class="n">contextlib</span><span class="o">.</span><span class="n">nullcontext</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">response_context</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">img_req</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">image_requests</span><span class="p">:</span>
+                <span class="n">img_resp</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">image_responses</span><span class="o">.</span><span class="n">add</span><span class="p">()</span>
+                <span class="n">src_name</span> <span class="o">=</span> <span class="n">img_req</span><span class="o">.</span><span class="n">image_source_name</span>
+                <span class="k">if</span> <span class="n">src_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">:</span>
+                    <span class="c1"># The requested camera source does not match the name of the Ricoh Theta camera, so it cannot</span>
+                    <span class="c1"># be completed and will have a failure status in the response message.</span>
+                    <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN_CAMERA</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Camera source &#39;</span><span class="si">%s</span><span class="s2">&#39; is unknown.&quot;</span><span class="p">,</span> <span class="n">src_name</span><span class="p">)</span>
                     <span class="k">continue</span>
 
-            <span class="c1"># Set the image source information in the response.</span>
-            <span class="n">img_resp</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">image_source_proto</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">img_req</span><span class="o">.</span><span class="n">resize_ratio</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">img_req</span><span class="o">.</span><span class="n">resize_ratio</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNSUPPORTED_RESIZE_RATIO_REQUESTED</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Resize ratio </span><span class="si">%f</span><span class="s2"> is unsupported.&quot;</span><span class="p">,</span> <span class="n">img_req</span><span class="o">.</span><span class="n">resize_ratio</span><span class="p">)</span>
+                    <span class="k">continue</span>
 
-            <span class="c1"># Set the image capture parameters in the response.</span>
-            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">capture_params</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_image_capture_params</span><span class="p">(</span><span class="n">img_req</span><span class="o">.</span><span class="n">custom_params</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">img_req</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;custom_params&quot;</span><span class="p">):</span>
+                    <span class="n">value_validation_error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">value_validator</span><span class="p">(</span>
+                        <span class="n">img_req</span><span class="o">.</span><span class="n">custom_params</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">value_validation_error</span><span class="p">:</span>
+                        <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_CUSTOM_PARAMS_ERROR</span>
+                        <span class="n">img_resp</span><span class="o">.</span><span class="n">custom_param_error</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">value_validation_error</span><span class="p">)</span>
+                        <span class="k">continue</span>
 
-            <span class="k">if</span> <span class="n">img_req</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;custom_params&quot;</span><span class="p">):</span>
-                <span class="c1">#If future keyword arguments are added here, they&#39;ll need to be added to this call</span>
-                <span class="c1">#get_image_and_timestamp already calls a &#39;sanitized&#39; capture function that handles pre-3.3 blocking_captures</span>
-                <span class="n">captured_image</span><span class="p">,</span> <span class="n">img_time_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span>
-                    <span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_image_and_timestamp</span><span class="p">(</span><span class="n">custom_params</span><span class="o">=</span><span class="n">img_req</span><span class="o">.</span><span class="n">custom_params</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1">#get_image_and_timestamp() can accomodate pre-3.3 blocking_capture calls if no custom params are supplied</span>
-                <span class="n">captured_image</span><span class="p">,</span> <span class="n">img_time_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span>
-                    <span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_image_and_timestamp</span><span class="p">()</span>
+                <span class="c1"># Set the image source information in the response.</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">image_source_proto</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">captured_image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">img_time_seconds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_IMAGE_DATA_ERROR</span>
-                <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Failed to capture an image from </span><span class="si">%s</span><span class="s2"> on the server.&quot;</span> <span class="o">%</span> <span class="n">src_name</span>
-                <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">error_message</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
-                <span class="k">continue</span>
+                <span class="c1"># Set the image capture parameters in the response.</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">capture_params</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span><span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_image_capture_params</span><span class="p">(</span>
+                        <span class="n">img_req</span><span class="o">.</span><span class="n">custom_params</span><span class="p">))</span>
 
-            <span class="c1"># Convert the image capture time from the local clock time into the robot&#39;s time. Then set it as</span>
-            <span class="c1"># the acquisition timestamp for the image data.</span>
-            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">acquisition_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">bosdyn_sdk_robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">img_time_seconds</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">img_req</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="s2">&quot;custom_params&quot;</span><span class="p">):</span>
+                    <span class="c1">#If future keyword arguments are added here, they&#39;ll need to be added to this call</span>
+                    <span class="c1">#get_image_and_timestamp already calls a &#39;sanitized&#39; capture function that handles pre-3.3 blocking_captures</span>
+                    <span class="n">captured_image</span><span class="p">,</span> <span class="n">img_time_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span>
+                        <span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_image_and_timestamp</span><span class="p">(</span><span class="n">custom_params</span><span class="o">=</span><span class="n">img_req</span><span class="o">.</span><span class="n">custom_params</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1">#get_image_and_timestamp() can accommodate pre-3.3 blocking_capture calls if no custom params are supplied</span>
+                    <span class="n">captured_image</span><span class="p">,</span> <span class="n">img_time_seconds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_sources_mapped</span><span class="p">[</span>
+                        <span class="n">src_name</span><span class="p">]</span><span class="o">.</span><span class="n">get_image_and_timestamp</span><span class="p">()</span>
 
-            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">rows</span>
-            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">cols</span>
+                <span class="k">if</span> <span class="n">captured_image</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">img_time_seconds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_IMAGE_DATA_ERROR</span>
+                    <span class="n">error_message</span> <span class="o">=</span> <span class="s2">&quot;Failed to capture an image from </span><span class="si">%s</span><span class="s2"> on the server.&quot;</span> <span class="o">%</span> <span class="n">src_name</span>
+                    <span class="n">response</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">error</span><span class="o">.</span><span class="n">message</span> <span class="o">=</span> <span class="n">error_message</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">error_message</span><span class="p">)</span>
+                    <span class="k">continue</span>
 
-            <span class="c1"># Set the image data.</span>
-            <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">img_req</span><span class="o">.</span><span class="n">image_format</span>
-            <span class="n">decode_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_format_and_decode</span><span class="p">(</span><span class="n">captured_image</span><span class="p">,</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
-                                                        <span class="n">img_req</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">decode_status</span> <span class="o">!=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span>
-                <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">decode_status</span>
+                <span class="c1"># Convert the image capture time from the local clock time into the robot&#39;s time. Then set it as</span>
+                <span class="c1"># the acquisition timestamp for the image data.</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">acquisition_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">bosdyn_sdk_robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span>
+                        <span class="n">img_time_seconds</span><span class="p">))</span>
 
-            <span class="c1"># Set that we successfully got the image.</span>
-            <span class="k">if</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN</span><span class="p">:</span>
-                <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_OK</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">rows</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">cols</span>
 
-        <span class="c1"># No header error codes, so set the response header as CODE_OK.</span>
-        <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+                <span class="c1"># Set the image data.</span>
+                <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">format</span> <span class="o">=</span> <span class="n">img_req</span><span class="o">.</span><span class="n">image_format</span>
+                <span class="n">decode_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_format_and_decode</span><span class="p">(</span><span class="n">captured_image</span><span class="p">,</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">shot</span><span class="o">.</span><span class="n">image</span><span class="p">,</span>
+                                                            <span class="n">img_req</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">decode_status</span> <span class="o">!=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span>
+                    <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">decode_status</span>
+
+                <span class="c1"># Set that we successfully got the image.</span>
+                <span class="k">if</span> <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_UNKNOWN</span><span class="p">:</span>
+                    <span class="n">img_resp</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">image_pb2</span><span class="o">.</span><span class="n">ImageResponse</span><span class="o">.</span><span class="n">STATUS_OK</span>
+
+            <span class="c1"># No header error codes, so set the response header as CODE_OK.</span>
+            <span class="n">populate_response_header</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">response</span></div>
 
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1270,7 +1294,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

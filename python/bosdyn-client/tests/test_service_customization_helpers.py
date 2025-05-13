@@ -80,6 +80,16 @@ def roi_spec(allows_rectangle=True):
     return roi_spec
 
 
+def roi_spec_poly(allows_polygon=True):
+    roi_spec = service_customization_pb2.RegionOfInterestParam.Spec()
+    roi_spec.service_and_source.service = "fake_service"
+    roi_spec.service_and_source.source = "fake_source"
+    roi_spec.default_area.polygon.vertices.append(image_geometry_pb2.Vec2I(x=5, y=10))
+    roi_spec.default_area.polygon.vertices.append(image_geometry_pb2.Vec2I(x=10, y=10))
+    roi_spec.default_area.polygon.vertices.append(image_geometry_pb2.Vec2I(x=5, y=5))
+    roi_spec.allows_poygon = allows_polygon
+
+
 def custom_spec(type_string, original_spec):
     custom_spec = service_customization_pb2.CustomParam.Spec()
     spec_string = type_string + "_spec"
@@ -812,6 +822,21 @@ roi_param_specs = [
              service='fakeservice', source='fakesource'), default_area=image_geometry_pb2.AreaI(
                  rectangle=image_geometry_pb2.RectangleI(x=5, y=10, cols=10, rows=25)),
          allows_rectangle=True), False),
+    (make_region_of_interest_param_spec(
+        make_roi_service_and_source('fakeservice', 'fakesource'),
+        image_geometry_pb2.AreaI(polygon=image_geometry_pb2.PolygonI(vertices=[
+            image_geometry_pb2.Vec2I(x=5, y=5),
+            image_geometry_pb2.Vec2I(x=10, y=5),
+            image_geometry_pb2.Vec2I(x=5, y=10)
+        ])), False, True),
+     service_customization_pb2.RegionOfInterestParam.Spec(
+         service_and_source=service_customization_pb2.RegionOfInterestParam.ServiceAndSource(
+             service='fakeservice', source='fakesource'),
+         default_area=image_geometry_pb2.AreaI(polygon=image_geometry_pb2.PolygonI(vertices=[
+             image_geometry_pb2.Vec2I(x=5, y=5),
+             image_geometry_pb2.Vec2I(x=10, y=5),
+             image_geometry_pb2.Vec2I(x=5, y=10)
+         ])), allows_polygon=True), True),
 ]
 
 list_param_specs = [

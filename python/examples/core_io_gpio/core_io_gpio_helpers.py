@@ -10,18 +10,23 @@ import re
 from packaging import version
 
 PWM_DEFAULT_PERIOD = 250000000
-version_path = '/etc/rv2-release'
-version_pattern = re.compile(r"version='(\d+\.\d+\.\d+)'")
+VERSION_PATH = '/etc/rv2-release'
+VERSION_PATTERN = re.compile(r"version='(\d+\.\d+\.\d+)'")
 
 
 # The function gets CORE I/O's version
 def get_version(file_path):
-    with open(file_path, 'r') as file:
-        for line in file:
-            match = version_pattern.search(line)
-            if match:
-                print(f'Current CORE I/O version is {match.group(1)}')
-                return match.group(1)
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                match = VERSION_PATTERN.search(line)
+                if match:
+                    print(f'Current CORE I/O version is {match.group(1)}')
+                    return match.group(1)
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f'Could not find the {VERSION_PATH} file. Are you running this example on Core I/O?'
+        ) from None
     # Version is not found
     return None
 
@@ -33,7 +38,7 @@ def get_version(file_path):
 # This function checks the CORE I/O version and if the version, and applies
 # appropriate line numbers to the pins.
 def check_version_and_set():
-    software_version = get_version(version_path)
+    software_version = get_version(VERSION_PATH)
     current_version = version.parse(software_version)
     comparison_version = version.parse('4.0.0')
 

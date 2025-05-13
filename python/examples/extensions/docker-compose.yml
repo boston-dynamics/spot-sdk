@@ -1,0 +1,61 @@
+services:
+  app:
+    image: "{image}:latest"
+    network_mode: "bridge" # We explicitly recommend against using "host"
+    ports:
+      ## If you're running a service, you need to map the port through in order for it to work with bridge mode.
+      ## For mapping a grpc service, we want to map the same external port to internal port. Otherwise correctly
+      ## registering the service is more complicated.
+      ## Example port mapping:
+      # - "6000:6000"
+      # - "6001:6001"
+    volumes:
+      ## If your Extension runs on CORE I/O, you may wish to use its GUID and Secret for authenticating
+      ## with the robot.
+      # - "/opt/payload_credentials/payload_guid_and_secret:/payload_guid_and_secret"
+      #
+      ## Separating the configuration and implementation into two separate Extensions allows
+      ## users who are not familiar with command-line tools like SSH and SCP to effectively
+      ## configure your Extension through a configuration-specific Extension. You may wish
+      ## to use this approach if your Extension requires configuration files that you
+      ## anticipate changing.
+      # - "/data/.extensions/your_extension_config/:/config/"
+    restart: unless-stopped
+    ## If your Extension relies on a device connected to CORE I/O, you may wish to supply a
+    ## udev .rules file in your .spx that specifies a user-friendly name for your device
+    ## like "my_device" (SYMLINK+="my_device"). You can then map that device in your container
+    ## like so:
+    # devices:
+    #   - /dev/my_device:/dev/device
+    #
+    ## Use this if you would like to change the command-line arguments supplied to your Extension
+    ## without rebuilding it.
+    # command:
+    #   [
+    #     "--arg1",
+    #     "value1",
+    #     "--arg2",
+    #     "value2a",
+    #     "value2b",
+    #   ]
+    #
+    # deploy:
+    #   resources:
+    #     limits:
+    ## Use this to limit the allowed memory consumption for your Extension. Setting it
+    ## is a good way to (1) fail fast if there is a memory leak, thereby alerting you to said
+    ## memory leak and (2) ensure your Extension
+    ## does not consume all of the device's memory. If the CORE I/O runs out of memory due
+    ## to a memory leak in your Extension, services like sensor pointing, entity detection,
+    ## and your Extension will be affected, and the CORE I/O may need to be power cycled.
+    ## In the case of Orbit, different services will be affected.
+    #       memory: "512m"
+    #
+    ## Use this if your Extension needs to use the CORE I/O's GPU.
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           capabilities: [gpu]
+    ## Use this in conjunction with the memory limit above to ensure your Extension is killed
+    ## off instead of other mission-critical services.
+    # oom_score_adj: 1000

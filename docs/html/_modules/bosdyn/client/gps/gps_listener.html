@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.gps.gps_listener &mdash; Spot 4.1.1 documentation</title>
+  <title>bosdyn.client.gps.gps_listener &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
@@ -257,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -316,6 +317,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -336,6 +338,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -521,6 +525,7 @@
 <span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">ProxyConnectionError</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.gps.aggregator_client</span> <span class="kn">import</span> <span class="n">AggregatorClient</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.gps.NMEAParser</span> <span class="kn">import</span> <span class="n">NMEAParser</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.gps.ntrip_client</span> <span class="kn">import</span> <span class="n">NtripClient</span><span class="p">,</span> <span class="n">NtripClientParams</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.robot</span> <span class="kn">import</span> <span class="n">UnregisteredServiceNameError</span>
 <span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">RobotTimeConverter</span><span class="p">,</span> <span class="n">duration_to_seconds</span>
 
@@ -572,7 +577,10 @@
         <span class="k">for</span> <span class="n">data_point</span> <span class="ow">in</span> <span class="n">new_points</span><span class="p">:</span>
             <span class="n">data_point</span><span class="o">.</span><span class="n">body_tform_gps</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body_tform_gps</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">new_points</span></div></div>
+        <span class="k">return</span> <span class="n">new_points</span></div>
+
+<div class="viewcode-block" id="NMEAStreamReader.get_latest_gga"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html#bosdyn.client.gps.gps_listener.NMEAStreamReader.get_latest_gga">[docs]</a>    <span class="k">def</span> <span class="nf">get_latest_gga</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">get_latest_gga</span><span class="p">()</span></div></div>
 
 
 <div class="viewcode-block" id="GpsListener"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html#bosdyn.client.gps.gps_listener.GpsListener">[docs]</a><span class="k">class</span> <span class="nc">GpsListener</span><span class="p">:</span>
@@ -581,10 +589,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">robot</span> <span class="o">=</span> <span class="n">robot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">time_converter</span> <span class="o">=</span> <span class="n">time_converter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream</span> <span class="o">=</span> <span class="n">stream</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reader</span> <span class="o">=</span> <span class="n">NMEAStreamReader</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span> <span class="n">body_tform_gps</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gps_device</span> <span class="o">=</span> <span class="n">GpsDevice</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">gps_device</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">aggregator_client</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="GpsListener.run_ntrip_client"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html#bosdyn.client.gps.gps_listener.GpsListener.run_ntrip_client">[docs]</a>    <span class="k">def</span> <span class="nf">run_ntrip_client</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ntrip_params</span><span class="p">:</span> <span class="n">NtripClientParams</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span> <span class="o">=</span> <span class="n">NtripClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stream</span><span class="p">,</span> <span class="n">ntrip_params</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span><span class="o">.</span><span class="n">start_stream</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GpsListener.stop_ntrip_client"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html#bosdyn.client.gps.gps_listener.GpsListener.stop_ntrip_client">[docs]</a>    <span class="k">def</span> <span class="nf">stop_ntrip_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="GpsListener.run"><a class="viewcode-back" href="../../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html#bosdyn.client.gps.gps_listener.GpsListener.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># It is possible for a payload to come up faster than the service. Loop a few times</span>
@@ -622,7 +642,7 @@
         <span class="n">agg_future</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># Attach and run until a SIGINT is received.</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Looping&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Listening for GPS data.&#39;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
@@ -660,8 +680,22 @@
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">time_passed_since_last_rpc</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">timestamp_of_last_rpc</span>
 
+                <span class="c1"># If we are running an NTRIP client, pass it the latest GGA message.</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1"># If the NTRIP Client&#39;s stream has been closed, restart it.</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span><span class="o">.</span><span class="n">is_streaming</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Restarting NTRIP Client!&quot;</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span><span class="o">.</span><span class="n">start_stream</span><span class="p">()</span>
+
+                    <span class="n">latest_gga</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reader</span><span class="o">.</span><span class="n">get_latest_gga</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">latest_gga</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">ntrip_client</span><span class="o">.</span><span class="n">handle_nmea_gga</span><span class="p">(</span><span class="n">latest_gga</span><span class="p">)</span>
+
         <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">()</span>  <span class="c1"># Get past the ^C in the console output</span></div></div>
+            <span class="nb">print</span><span class="p">()</span>  <span class="c1"># Get past the ^C in the console output</span>
+
+        <span class="c1"># Just in case there is an NTRIP client still running, stop it here.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_ntrip_client</span><span class="p">()</span></div></div>
 </pre></div>
 
            </div>
@@ -674,7 +708,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

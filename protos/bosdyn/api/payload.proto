@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api;
+option go_package = "bosdyn/api/payload";
 option java_outer_classname = "PayloadProto";
 
 import "bosdyn/api/geometry.proto";
@@ -25,6 +26,8 @@ message Payload {
     // A human-readable description string providing more context as to the
     // function of this payload. It is displayed in UIs.
     string description = 3;
+    // A unique traceable per-payload serial number.
+    string serial_number = 18;
     // A list of labels used to indicate what type of payload this is.
     repeated string label_prefix = 9;
     // Set true once the payload is authorized by the administrator in the payload webpage.

@@ -12,6 +12,7 @@ import math
 import os
 import sys
 import time
+import traceback
 
 import google.protobuf.timestamp_pb2
 import graph_nav_util
@@ -75,18 +76,40 @@ class GraphNavInterface(object):
             self._upload_filepath = upload_path
 
         self._command_dictionary = {
-            '1': self._get_localization_state,
-            '2': self._set_initial_localization_fiducial,
-            '3': self._set_initial_localization_waypoint,
-            '4': self._list_graph_waypoint_and_edge_ids,
-            '5': self._upload_graph_and_snapshots,
-            '6': self._navigate_to,
-            '7': self._navigate_route,
-            '8': self._navigate_to_anchor,
-            '9': self._clear_graph
+            '1': (self._get_localization_state, "Get localization state."),
+            '2':
+                (self._set_initial_localization_fiducial,
+                 "Initialize localization to the nearest fiducial (must be in sight of a fiducial)."
+                ),
+            '3':
+                (self._set_initial_localization_waypoint,
+                 "Initialize localization to a specific waypoint (must be exactly at the waypoint)."
+                ),
+            '4': (self._list_graph_waypoint_and_edge_ids,
+                  "List the waypoint ids and edge ids of the map on the robot."),
+            '5': (self._upload_graph_and_snapshots, "Upload the graph and its snapshots."),
+            '6': (self._navigate_to,
+                  "Navigate to. The destination waypoint id is the second argument."),
+            '7': (self._navigate_route,
+                  "Navigate route. The (in-order) waypoint ids of the route are the arguments."),
+            '8': (
+                self._navigate_to_anchor,
+                "Navigate to in seed frame. The following options are accepted for arguments: [x, y],\n\t\t"
+                "[x, y, yaw], [x, y, z, yaw], [x, y, z, qw, qx, qy, qz]. (Don't type the braces).\n\t\t"
+                "When a value for z is not specified, we use the current z height.\n\t\t"
+                "When only yaw is specified, the quaternion is constructed from the yaw.\n\t\t"
+                "When yaw is not specified, an identity quaternion is used."),
+            '9': (self._clear_graph, "Clear the current graph.")
         }
+
         if self.use_gps:
-            self._command_dictionary['g'] = self._navigate_to_gps_coords
+            self._command_dictionary['g'] = (
+                self._navigate_to_gps_coords,
+                "Navigate to in the GPS frame. Your robot must have a GPS payload installed, and must\n\t\t"
+                "have already recorded a map with GPS data in it.\n\t\t"
+                "The following options are accepted for arguments:\n\t\t"
+                "[latitude_degrees, longitude_degrees],\n\t\t"
+                "[latitude_degrees, longitude_degrees, yaw_around_up_radians]")
 
     def _get_localization_state(self, *args):
         """Get the current localization and state of the robot."""
@@ -108,6 +131,13 @@ class GraphNavInterface(object):
         self._graph_nav_client.set_localization(initial_guess_localization=localization,
                                                 ko_tform_body=current_odom_tform_body)
 
+
+
+    def _clear_graph_and_cache(self, *args):
+        """Clear the state of the map on the robot, removing all waypoints and edges. Also clears the disk cache."""
+        return self._graph_nav_client.clear_graph_and_cache()
+
+    # @do_not_publish_end
 
     def _set_initial_localization_waypoint(self, *args):
         """Trigger localization to a waypoint."""
@@ -162,7 +192,7 @@ class GraphNavInterface(object):
             self._current_graph = map_pb2.Graph()
             self._current_graph.ParseFromString(data)
             print(
-                f'Loaded graph has {len(self._current_graph.waypoints)} waypoints and {self._current_graph.edges} edges'
+                f'Loaded graph has {len(self._current_graph.waypoints)} waypoints and {len(self._current_graph.edges)} edges'
             )
         for waypoint in self._current_graph.waypoints:
             # Load the waypoint snapshots from disk.
@@ -499,31 +529,10 @@ class GraphNavInterface(object):
     def run(self):
         """Main loop for the command line interface."""
         while True:
-            print("""
-            Options:
-            (1) Get localization state.
-            (2) Initialize localization to the nearest fiducial (must be in sight of a fiducial).
-            (3) Initialize localization to a specific waypoint (must be exactly at the waypoint)."""
-
-                  """
-            (4) List the waypoint ids and edge ids of the map on the robot.
-            (5) Upload the graph and its snapshots.
-            (6) Navigate to. The destination waypoint id is the second argument.
-            (7) Navigate route. The (in-order) waypoint ids of the route are the arguments.
-            (8) Navigate to in seed frame. The following options are accepted for arguments: [x, y],
-                [x, y, yaw], [x, y, z, yaw], [x, y, z, qw, qx, qy, qz]. (Don't type the braces).
-                When a value for z is not specified, we use the current z height.
-                When only yaw is specified, the quaternion is constructed from the yaw.
-                When yaw is not specified, an identity quaternion is used.
-
-            (g) Navigate to in the GPS frame. Your robot must have a GPS payload installed, and must
-                have already recorded a map with GPS data in it.
-                The following options are accepted for arguments:
-                [latitude_degrees, longitude_degrees],
-                [latitude_degrees, longitude_degrees, yaw_around_up_radians]
-            (9) Clear the current graph.
-            (q) Exit.
-            """)
+            print("Options:")
+            for key, (_, description) in self._command_dictionary.items():
+                print(f"\t({key}):\t{description}")
+            print("\t(q):\tExit.")
             try:
                 inputs = input('>')
             except NameError:
@@ -538,10 +547,11 @@ class GraphNavInterface(object):
                 print('Request not in the known command dictionary.')
                 continue
             try:
-                cmd_func = self._command_dictionary[req_type]
+                cmd_func = self._command_dictionary[req_type][0]
                 cmd_func(str.split(inputs)[1:])
             except Exception as e:
                 print(e)
+                print(traceback.format_exc())
 
 
 def main():

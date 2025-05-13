@@ -231,7 +231,7 @@ class Client():
             Returns:
                 requests.Response: the response associated with the get request
         """
-        return self.get_resource(f"site_walks/archive", params={"uuids": uuid}, **kwargs)
+        return self.get_resource("site_walks/archive", params={"uuids": uuid}, **kwargs)
 
     def get_site_elements(self, **kwargs) -> requests.Response:
         """ Returns site elements on the specified instance.
@@ -381,6 +381,17 @@ class Client():
         """
         return self.get_resource(f'runs/{uuid}', **kwargs)
 
+    def get_run_log(self, uuid: str, **kwargs) -> requests.Response:
+        """ Retrieves the log of a run.
+
+            Args:
+                uuid: the ID of the run.
+                kwargs(**): a variable number of keyword arguments for the get request.
+            Returns:
+                requests.Response: the response associated with the get request.
+        """
+        return self.get_resource(f'runs/{uuid}/log', **kwargs)
+
     def get_run_archives_by_id(self, uuid: str, **kwargs) -> requests.Response:
         """ Given a runUuid, returns run archives.
 
@@ -472,6 +483,67 @@ class Client():
         """
         return self.get_resource(f'robot-session/{robot_nickname}/session', **kwargs)
 
+    def get_anomalies(self, **kwargs) -> requests.Response:
+        """ Given a dictionary of query params, returns anomalies.
+
+            Args:
+                kwargs(**): a variable number of keyword arguments for the get request.
+            Raises:
+                RequestExceptions: exceptions thrown by the Requests library.
+                UnauthenticatedClientError:  indicates that the client is not authenticated properly.
+            Returns:
+                requests.Response: the response associated with the get request.
+        """
+        return self.get_resource("anomalies", **kwargs)
+
+    def get_backup(self, task_id: str, **kwargs):
+        """ Retrieves a *.zip containing an Orbit backup.
+
+            Args:
+                task_id: the task ID returned from the post_backup_task method.
+                kwargs(**): a variable number of keyword arguments for the get request.
+            Raises:
+                RequestExceptions: exceptions thrown by the Requests library.
+                UnauthenticatedClientError:  indicates that the client is not authenticated properly.
+            Returns:
+                requests.Response: the response associated with the get request.
+        """
+        return self.get_resource(f'backups/{task_id}', headers=OCTET_HEADER, **kwargs)
+
+    def get_backup_task(self, task_id: str, **kwargs):
+        """ Retrieves the status of a backup task started by the post_backup_task method.
+
+            Args:
+                task_id: the task ID returned from the post_backup_task method.
+                kwargs(**): a variable number of keyword arguments for the get request.
+            Raises:
+                RequestExceptions: exceptions thrown by the Requests library.
+                UnauthenticatedClientError:  indicates that the client is not authenticated properly.
+            Returns:
+                requests.Response: the response associated with the get request.
+        """
+        return self.get_resource(f'backup_tasks/{task_id}', **kwargs)
+
+    def get_run_statistics(self, **kwargs) -> requests.Response:
+        """ Retrieves session statistics.
+
+            Args:
+                kwargs(**): a variable number of keyword arguments for the get request.
+            Returns:
+                requests.Response: the response associated with the get request.
+        """
+        return self.get_resource("run_statistics/sessions", **kwargs)
+
+    def get_run_statistics_session_summary(self, **kwargs) -> requests.Response:
+        """ Retrieves session summary.
+
+            Args:
+                kwargs(**): a variable number of keyword arguments for the get request.
+            Returns:
+                requests.Response: the response associated with the get request.
+        """
+        return self.get_resource("run_statistics/sessions_summary", **kwargs)
+
     def post_export_as_walk(self, site_walk_uuid: str, **kwargs) -> requests.Response:
         """ Given a SiteWalk uuid, it exports the walks_pb2.Walk equivalent.
 
@@ -484,7 +556,7 @@ class Client():
             Returns:
                 requests.Response: The response associated with the post request.
         """
-        return self.post_resource(f'site_walks/export_as_walk',
+        return self.post_resource('site_walks/export_as_walk',
                                   json={"siteWalkUuid": site_walk_uuid}, **kwargs)
 
     def post_import_from_walk(self, **kwargs) -> requests.Response:
@@ -789,7 +861,7 @@ class Client():
             "includeMissions": include_missions,
             "includeCaptures": include_captures,
         }
-        return self.post_resource(f'backup_tasks/', json=payload, **kwargs)
+        return self.post_resource('backup_tasks/', json=payload, **kwargs)
 
     def patch_bulk_close_anomalies(self, element_ids: list[str], **kwargs) -> requests.Response:
         """ Bulk close Anomalies by Element ID.
@@ -912,8 +984,14 @@ def create_client(options: 'argparse.Namespace') -> 'bosdyn.orbit.client.Client'
             .format(options.verify))
         verify = options.verify
 
+    # Sanitize the format of the cert option. Requests handles None, a single pathname,
+    # or a sequence of pathnames with two or more elements.
+    cert = options.cert
+    if isinstance(cert, (list, tuple)) and len(cert) == 1:
+        cert = cert[0]
+
     # A client object represents a single instance.
-    client = Client(hostname=options.hostname, verify=verify, cert=options.cert)
+    client = Client(hostname=options.hostname, verify=verify, cert=cert)
 
     # The client needs to be authenticated before using its functions
     client.authenticate_with_api_token()

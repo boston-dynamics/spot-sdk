@@ -16,6 +16,7 @@ import time
 import pyowm
 
 from bosdyn.orbit.client import create_client
+from bosdyn.orbit.utils import add_base_arguments
 
 # Set up logging
 LOGGER = logging.getLogger()
@@ -71,21 +72,12 @@ def toggle_mission_based_on_weather(options: argparse.Namespace) -> None:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--hostname', help='Orbit instance IP address', required=True, type=str)
+    add_base_arguments(parser)
     parser.add_argument('--owmapikey', help='API key for Open Weather Map', required=True, type=str)
     parser.add_argument('--period', required=False, default=0.1,
                         help='desired period (min) to check for the weather', type=int)
     parser.add_argument('--city', required=True, type=str)
     parser.add_argument('--country', required=True, type=str)
-    parser.add_argument(
-        '--verify',
-        help=
-        'verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate',
-        default=False,
-    )
-    parser.add_argument('--cert',
-                        help='Client-side certificate (PEM file or tuple with cert and key)',
-                        nargs='+', default=None)
     options = parser.parse_args()
     toggle_mission_based_on_weather(options)
 

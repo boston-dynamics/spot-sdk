@@ -75,7 +75,7 @@ docker save web_cam_image_service | pigz > web_cam_image_service.tgz
 This will build the image and create a file to upload to the robot.
 The above commands assume that your user is in the `docker` group. If not, you may need to run them with `sudo`.
 
-An example `docker_requirements.txt` for [the web cam image service](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/web_cam_image_service/docker-requirements.txt) and [a point cloud data acquisition plugin](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/data_acquisition_service/pointcloud_plugin/docker-requirements.txt) can be found in the examples directory. The main difference is the OpenCV dependency in image services.
+An example `docker-requirements.txt` for the [web cam image service](https://github.com/boston-dynamics/spot-sdk/blob/7569b7998d486109f80de31dd5f86470016bb141/python/examples/service_customization/custom_parameter_image_server/docker-requirements-l4t.txt) and a [point cloud data acquisition plugin](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/data_acquisition_service/pointcloud_plugin/docker-requirements.txt) can be found in the examples directory. The main difference is the OpenCV dependency in image services.
 
 #### Creating battery_service Docker image
 

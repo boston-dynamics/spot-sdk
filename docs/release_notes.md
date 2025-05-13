@@ -12,7 +12,148 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
-## 4.1.1
+## Release 5.0.0
+
+#### Choreography
+
+- The choreography SDK has added support to adjust the self-collision regions of Spot's legs. This support is intended to prevent self-collision of the legs when robots have larger leg sizes due to leg costuming. Leg Size Configuration changes persist through reboot until cleared by the user, and will affect both choreography and non-choreography robot behaviors (when applicable). Non-standard Leg Size Configurations are not recommended unless some type of payload or costuming is on Spot's leg(s). Leg Size configuration settings can be checked and adjusted in Choreographer in the "Spot Leg Size Configuration" window which can be found under the "Settings" menu.
+
+- 5.0.0 introduces improved stability for the Custom Gait choreography behavior overall, and with several improvements for Spots performing Custom Gait behaviors with payloads attached.
+
+- Choreographer now provides a way to check what animations have been loaded to each of its robot connections. This analysis tool can be found under "Help" -> "Check Animated Moves" when using Choreographer in "Advanced Mode".
+
+- Custom Gait moves can now be driven with the keyboard WASD keys when an xbox controller is not connected. To enable this, select, "Accept Interactive WASD Input" in the "Playback and Music Settings" menu found under the "Settings" menu.
+
+- Experiment logs can now be started from Choreographer using the "Start Experiment Log" button which has been added to Robot Controls (see [User Interface Overview](concepts/choreography/choreographer.md)).
+
+### Breaking Changes
+
+- Python 3.6 is no longer support by the Python SDK. Python 3.7-3.10 are supported for 5.0.0.
+- Change Detection is no longer present on the CORE I/O. It has been deprecated in favor of Orbit AI Visual Inspections (AIVI). The [Support Center](https://support.bostondynamics.com) has more information about AIVI.
+- `generate_extension_data.py` has been removed from the Python SDK. Please see the example [manifest.json](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/manifest.json) and [docker-compose.yml](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/docker-compose.yml) for best practices.
+
+### Bug Fixes and Improvements
+
+#### Spot SDK
+
+- The `from_vector` methods in [math_helpers.py](../python/bosdyn-client/src/bosdyn/client/math_helpers.py) no longer crash if the input argument is of type `numpy.ndarray`.
+
+- The `authenticate_from_payload_credentials` and `register_payload_and_authenticate` methods in [robot.py](../python/bosdyn-client/src/bosdyn/client/robot.py) no longer spam the robot with authenticate requests at a 10 Hz rate, which sometimes resulted in rate limiting.
+
+- Added a helper function, `pixel_format_to_numpy_type`, to [image.py](../python/bosdyn-client/src/bosdyn/client/image.py) that converts the API-specific pixel format to NumPy format.
+
+#### Orbit SDK
+
+- The argument handling for certs in the `create_client` method has been adjusted to correctly support single-file certificates, in addition to separate certificate and key files. The help text for the `--cert` option has also been updated for clarity.
+
+- Added a helper function, `add_base_arguments`, to [utils.py](../python/bosdyn-orbit/src/bosdyn/orbit/utils.py) that simplifies argument parsing by adding common arguments like `--hostname`, `--verify`, and `--cert` to the argument parser. The Orbit examples have been updated accordingly.
+
+#### Extensions
+
+- Support for three new fields, `installation_target`, `files_to_save`, and `directories_to_save` has been added for Extensions (via the required `manifest.json` file). The `installation_target` field specifies the installation target of the Extension (`spot` or `orbit`). If populated, the `files_to_save` and `directories_to_save` fields in `manifest.json` ensure that files and directories (recursive) from the current installation are retained when upgrading to a new version of the same extension. This feature can be useful if there are customer-specific configuration files you do not want overwritten. The example [manifest.json](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/manifest.json) has been updated accordingly.
+
+#### GPS
+
+- The [GPS Listener](../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.py) handles GPZDA parsing failures correctly.
+
+#### Choreography
+
+- The [LegSizeConfiguration](../protos/bosdyn/api/spot/choreography_service.proto) RPC can be used to modify Spot's internal model of its leg size to help avoid self-collision when its legs have non-standard dimensions. To query the current leg size configuration, use the [LegSizeConfigurationState](../protos/bosdyn/api/spot/choreography_service.proto) RPC. Please see [here](concepts/choreography/choreography_service.md#leg-size-configuration-api) for more information. The [ChoreographyClient](../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.py) has been updated accordingly.
+
+#### Data Buffer
+
+- When logging time variables to the robot's data buffer (as indicated by setting the field, `is_time` to `true`, in the [SignalSchema](../protos/bosdyn/api/data_buffer.proto#signalschema) message), their corresponding `type` must be `TYPE_INT64` and they should be stored in units of nanoseconds since the UNIX epoch (in robot time).
+
+#### GraphNav
+
+- The robot additionally indicates whether the loaded map has GPS data in it, and if it does, whether the robot is configured to use it. See the `map_has_gps_data` and `robot_configured_for_gps` fields in the [SensorCompatibilityStatus](../protos/bosdyn/api/graph_nav/graph_nav.proto#sensorcompatibilitystatus) message. Note that if attempting to play back an Autowalk mission whose corresponding map had GPS data, but the robot is no longer receiving GPS data via the [NewGpsData](../protos/bosdyn/api/gps/aggregator_service.proto) RPC, the Autowalk mission will not be started.
+
+- When navigating to an anchor, the robot's behavior when its route is blocked is now configurable using the `route_blocked_behavior` field in the [NavigateToAnchorRequest](../protos/bosdyn/api/graph_nav/graph_nav.proto#navigatetoanchorrequest) message. Previously, this was only configurable for [NavigateToRequest](../protos/bosdyn/api/graph_nav/graph_nav.proto#navigatetorequest) and [NavigateRouteRequest](../protos/bosdyn/api/graph_nav/graph_nav.proto#navigaterouterequest). The default behavior is to reroute when blocked.
+
+- The `navigate_to_anchor_full_async` method in the [GraphNavClient](../python/bosdyn-client/src/bosdyn/client/graph_nav.py) returns the full [NavigateToAnchorResponse](../protos/bosdyn/api/graph_nav/graph_nav.proto#navigatetoanchorresponse), not just the command ID.
+
+#### GPS
+
+- The [GPS Listener](../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.py) now supports streaming Networked Transport of RTCM via Internet Protocol to the associated GPS receiver using the [NtripClient](../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.py). Please see [here](concepts/autonomy/gps.md#using-ntrip-corrections) for more information.
+
+- The [Registration Service](../protos/bosdyn/api/gps/registration_service.proto) now indicates when the registration between the robot and GPS frames is poor via the `status` field in the [Registration](../protos/bosdyn/api/gps.proto#registration) message. The `quality` field in the same message contains information about the quality of the registration. To determine if the registration is poor, use the [GetLocation](../protos/bosdyn/api/gps/registration_service.proto) RPC. If the registration is poor, this may be due to an error in the GPS position or robot position.
+
+#### Gripper Camera
+
+- The Spot Arm's gripper camera calibration can now be set and get via the [SetCamCalib](../protos/bosdyn/api/gripper_camera_param_service.proto) and [GetCamCalib](../protos/bosdyn/api/gripper_camera_param_service.proto) RPCs, respectively. The [GripperCameraParamClient](../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.py) has been updated accordingly. NOTE: we recommend using Spot Check to calibrate the Spot Arm gripper camera.
+
+#### Image Service
+
+- The transformation between an image source and the robot's `body`, `vision`, and `odom` frames is now published in the `transforms_snapshot` field in the [ListImageSourcesResponse](../protos/bosdyn/api/image.proto#listimagesourcesresponse) message.
+
+- By default, the [GetImage](../protos/bosdyn/api/image_service.proto) RPC is not logged in robot logs for 3rd party image sources for users of the `CameraBaseImageServicer` class in the [image service helpers](../python/bosdyn-client/src/bosdyn/client/image_service_helpers.py). To log such images for the purposes of support, set the `log_images` argument to `True`.
+
+#### Manipulation
+
+- The torque on the end-effector is now available via the `estimated_end_effector_wrench_in_end_effector` field in the [ManipulatorState](../protos/bosyn/api/robot_state.proto#manipulatorstate) message.
+
+#### Missions
+
+- Support for navigating the robot to a pose in the GraphNav seed frame has been added to missions via the [BosdynNavigateToAnchor](../protos/bosdyn/api/mission/nodes.proto#bosdynnavigatetoanchor) node type. This can be useful if the robot needs to navigate to a location that is _near_ an existing waypoint, but not coincident with it.
+
+- The SpotCam may be commanded to a known position using the [SpotCamNamedPosition](../protos/bosdyn/api/mission/nodes.proto#spotcamnamedposition) node type. Currently, the only position supported is `stow`, which is forward with 1x zoom. This can be useful if you want the SpotCam to point forward while the robot is navigating between waypoints.
+
+- Navigation requests may now be dynamically created using blackboard variables via the `navigate_to_request_blackboard_key` field in the [BosdynNavigateTo](../protos/bosdyn/api/mission/nodes.proto#bosdynnavigateto) message. The blackboard variable value must be of type [NavigateToRequest](../protos/bosdyn/api/graph_nav/graph_nav.proto#navigatetorequest).
+
+- Lists and dictionaries may now be used as run- or compile-time variables via the `sub_type` field in the [VariableDeclaration](../protos/bosdyn/api/mission/util.proto#variabledeclaration) message.
+
+#### Payloads
+
+- When registering payloads via the [RegisterPayload](../protos/bosdyn/api/payload_registration_service.proto) RPC, payloads may now specify their serial number using the `serial_number` field in the [Payload](../protos/bosdyn/api/payload.proto#payload) message. Note that the [UpdatePayload](../protos/bosdyn/api/payload_registration_service.proto) RPC does not yet support this new field.
+
+#### Point Cloud
+
+- [Structured point clouds](../protos/bosdyn/api/point_cloud.proto#lidarpointcloud) may be requested from the point cloud service (assuming the corresponding point cloud source supports them) using the `cloud_type` field in the [PointCloudRequest](../protos/bosdyn/api/point_cloud.proto#pointcloudrequest) message. The `downsample_rate` field may be used to skip every `downsample_rate-1` point clouds.
+
+#### Service Customization
+
+- Support for polygonal regions of interest (ROI) has been added to service customization via the `allows_polygon` field in the [RegionOfInterestParam](../protos/bosdyn/api/service_customization.proto#regionofinterestparam) message. However, note that polygonal ROIs are not yet supported in the Spot App. The corresponding `validate_spec` and `validate_value`, and `make_region_of_interest_param_spec` methods in [service_customization_helpers.py](../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.py) have been updated accordingly. Practically speaking, to use a polygonal ROI during an inspection in an Autowalk mission (assuming the client supports it), edit the [Walk](../protos/bosdyn/api/autowalk/walks.proto) accordingly.
+
+- The `python_type_to_pb_type` function in [util.py](https://github.com/boston-dynamics/spot-sdk/blob/master/python/bosdyn-mission/src/bosdyn/mission/util.py) is now capable of serializing Python lists, dictionaries, mappings, and iterables into the corresponding Protobuf-compatible formats. Conversion of nested or complex data structures is handled by the `python_var_to_variable_decl` function.
+
+### Spot Sample Code
+
+#### Updated
+
+- [Area Callback Crosswalk](../python/examples/area_callback/README.md): Authentication using username/password is now supported, which can be useful if running the example from a computer that is (1) not the CORE I/O or (2) not an authorized payload.
+
+- [Get Robot State](../python/examples/get_robot_state/README.md): Support for printing the joint state and frame tree snapshot has been added.
+
+- [GPS Listener](../python/examples/gps_service/README.md): NTRIP corrections are now supported, which have the potential to improve the GPS positioning performance.
+
+- [Remote Mission Service Examples](../python/examples/remote_mission_service/README.md): A toggle to enable/disable certain parameters on the tablet has been added, which can make the user experience while recording inspections better.
+
+### Orbit Sample Code
+
+#### New
+
+- [Orbit Client](../python/bosdyn-orbit/src/bosdyn/orbit/client.py): Five new methods have been added.
+  - `get_anomalies`: Retrieves anomalies based upon the input query.
+  - `get_backup`: Retrieves a \*.zip containing a backup.
+  - `get_backup_task_status`: Retrieves the status of a backup task started by the `post_backup_task` method.
+  - `get_run_statistics`: Retrieves session statistics.
+  - `get_run_statistics_session_summary`: Retrieves session summary.
+
+### Deprecations
+
+- The `element_identifiers` field in the [LoadAutowalkResponse](../protos/bosdyn/api/autowalk/autowalk.proto#loadautowalkresponse) message is deprecated in favor of the `active_mission_text` field in the [State](../protos/bosdyn/api/mission/mission.proto#state) message, which indicates when the robot is undocking, navigating, performing an action, or docking at mission runtime. The [GetState](../protos/bosdyn/api/mission/mission_service.proto) RPC returns this state.
+
+- The `uid` field (uint64) in the [SystemFault](../protos/bosdyn/api/robot_state.proto#systemfault) message is deprecated in favor of the `uuid` field (string) in the same message.
+
+- The `estimated_end_effector_force_in_hand` field in the [ManipulatorState](../protos/bosdyn/api/robot_state.proto#manipulatorstate) message is deprecated in favor of the `estimated_end_effector_wrench_in_end_effector` field in the same message.
+
+- The SpotCam's [MediaLogService](../protos/bosdyn/api/spot_cam/service.proto) is deprecated in favor of a variety of services like the [ImageService](../protos/bosdyn/api/image_service.proto), [DataAcquisitionService](../protos/bosdyn/api/data_acquisition_service.proto), [DataAcquisitionStoreService](../protos/bosdyn/api/data_acquisition_store_service.proto), [PayloadRegistrationService](../protos/bosdyn/api/payload_registration_service.proto), and [PayloadService](../protos/bosdyn/api/payload_service.proto).
+
+- The `error_report` field in the [SetLocalizationResponse](../protos/bosdyn/api/graph_nav/graph_nav.proto#setlocalizationresponse) message is deprecated.
+
+### Known Issues
+
+## Release 4.1.1
 
 ### Bug Fixes and Improvements
 
@@ -38,7 +179,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 - Same as 4.1.0
 
-## 4.1.0
+## Release 4.1.0
 
 ### Breaking Changes
 
@@ -56,23 +197,23 @@ Development Kit License (20191101-BDSDK-SL).
 
 - Support for multiple docks has been added to autowalk. Two new fields, `disable_recharge` and `disable_end` have been added to the [Dock](../protos/bosdyn/api/autowalk/walks.proto#dock) message. Setting `disable_recharge` to `true` determines whether the robot can use the corresponding dock for recharging or executing a return to dock and try again later failure behavior. Setting `disable_end` to `true` determines whether the robot can end the mission on the corresponding dock.
 
-- Support for mission text has been added to missions via the [CreateMissionText](../protos/bosdyn/api/mission/nodes.proto#createmissiontext) node type. Mission text is similar to prompts (e.g., the action failed, what would you like to do?), minus the answering functionality. It can be used to communicate the mission status to users, among other things. Clients can retrieve all active mission text through the [GetState](../protos/bosdyn/api/mission/mission_service.proto#getstate) RPC, where active means the mission text node has been ticked and is running. Please see the `active_mission_text` field in the [State](../protos/bosdyn/api/mission/mission.proto#state) message for more information.
+- Support for mission text has been added to missions via the [CreateMissionText](../protos/bosdyn/api/mission/nodes.proto#createmissiontext) node type. Mission text is similar to prompts (e.g., the action failed, what would you like to do?), minus the answering functionality. It can be used to communicate the mission status to users, among other things. Clients can retrieve all active mission text through the [GetState](../protos/bosdyn/api/mission/mission_service.proto) RPC, where active means the mission text node has been ticked and is running. Please see the `active_mission_text` field in the [State](../protos/bosdyn/api/mission/mission.proto#state) message for more information.
 
 - Support for querying Data Acquisition Store has been added to missions via the [BosdynQueryStoredCaptures](../protos/bosdyn/api/mission/nodes.proto#bosdynquerystoredcaptures) node type. This node type queries Data Acquisition Store and writes the corresponding `QueryStoredCapturesResponse` to the blackboard. If a client needs inspection-dependent behavior (e.g., inspection B is contingent on the outcome of inspection A), this node can be used to help accomplish that (assuming inspection A writes data to the Data Acquisition Store). The aforementioned HRI behaviors rely on this new node type, among other things, under the hood. After an inspection, the Data Acquisition Store is queried to determine if an anomaly was found during that inspection, then the robot behaves accordingly.
 
 #### Clients
 
-- Async streaming is now supported in the Python SDK. The [StoreDataStream](../protos/bosdyn/api/data_acquisition_store_service.proto#storedatastream) and [QueryStoredCaptures](../protos/bosdyn/api/data_acquisition_store_service.proto#querystoredcaptures) RPCs are two examples of streaming RPCs that can now be called in an async manner. Please see the corresponding client implementation in the `store_file_async`, `store_data_as_chunks_async`, and `query_stored_captures_async` methods in the [DataAcquisitionClient](../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.py) for examples of usage.
+- Async streaming is now supported in the Python SDK. The [StoreDataStream and QueryStoredCaptures](../protos/bosdyn/api/data_acquisition_store_service.proto) RPCs are two examples of streaming RPCs that can now be called in an async manner. Please see the corresponding client implementation in the `store_file_async`, `store_data_as_chunks_async`, and `query_stored_captures_async` methods in the [DataAcquisitionClient](../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.py) for examples of usage.
 
 Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tests for async streaming have been added to `test_base_client.py`.
 
 #### Data Acquisition Store
 
-- Files in excess of 100 MB can now be stored in a single RPC using the [StoreDataStream](../protos/bosdyn/api/data_acquisition_store_service.proto#StoreDataStream) RPC. This functionality is useful for payloads that produce files in excess of 100 MB (e.g., laser scanners). Please note that the Data Acquisition Store capacity is 50 GB and writing files before existing data is offloaded will result in existing data being overwritten. The new field, `include_large`, in the [QueryParameters](../protos/bosdyn/api/data_acquisition_store.proto#queryparameters) message controls whether captures in excess of 100 MB are included in the [QueryStoredCapturesResponse](../protos/bosdyn/api/data_acquisition_store.proto#querystoredcapturesresponse) message. `DataAcquisitionStoreHelper` and `DataAcquisitionStoreClient` have been updated accordingly. Please see [data_acquisition_plugin_service.py](../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.py) and [data_acquisition_store.py](../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.py), respectively.
+- Files in excess of 100 MB can now be stored in a single RPC using the [StoreDataStream](../protos/bosdyn/api/data_acquisition_store_service.proto) RPC. This functionality is useful for payloads that produce files in excess of 100 MB (e.g., laser scanners). Please note that the Data Acquisition Store capacity is 50 GB and writing files before existing data is offloaded will result in existing data being overwritten. The new field, `include_large`, in the [QueryParameters](../protos/bosdyn/api/data_acquisition_store.proto#queryparameters) message controls whether captures in excess of 100 MB are included in the [QueryStoredCapturesResponse](../protos/bosdyn/api/data_acquisition_store.proto#querystoredcapturesresponse) message. `DataAcquisitionStoreHelper` and `DataAcquisitionStoreClient` have been updated accordingly. Please see [data_acquisition_plugin_service.py](../python/bosdyn-client/src/bosdyn/client/data_acquisition_plugin_service.py) and [data_acquisition_store.py](../python/bosdyn-client/src/bosdyn/client/data_acquisition_store.py), respectively.
 
 #### GraphNav
 
-- Support for uploading and downloading [graphs](../protos/bosdyn/api/graph_nav/map.proto#graph) larger than 4 MB has been added via the [UploadGraphStreaming](../protos/bosdyn/api/graph_nav/graph_nav_service.proto#uploadgraphstreaming) and [DownloadGraphStreaming](../protos/bosdyn/api/graph_nav/graph_nav_service.proto#downloadgraphstreaming) RPCs, respectively.
+- Support for uploading and downloading [graphs](../protos/bosdyn/api/graph_nav/map.proto#graph) larger than 4 MB has been added via the [UploadGraphStreaming and DownloadGraphStreaming](../protos/bosdyn/api/graph_nav/graph_nav_service.proto) RPCs, respectively.
 
 - Area Callback implementations are now informed of whether the robot is already inside the callback region at the beginning of the callback, rather than starting from the edge of the region as usual. This can be used by the callback to provide [better behavior for restarting or re-routing](concepts/autonomy/graphnav_area_callbacks.md#handling-re-routing). This can happen in some cases when the robot gets stuck inside the region, and restarts navigation with a new navigation command.
 
@@ -130,7 +271,7 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 - The lost detector, which is responsible for determining when the robot is lost, is now configurable. If the robot is regularly getting lost on site in a particular location, where, for example, its surroundings change regularly, this may be of use. The strictness of the lost detector can be configured using the [LostDetectorStrictness](../protos/bosdyn/api/graph_nav/lost_detection.proto#lostdetectorstrictness) enum type. Similarly, if there are particular, problematic regions at a given waypoint, the [RegionWithFrame](../protos/bosdyn/api/graph_nav/map.proto#regionwithframe) message may be used to configure how scan matching or other parameters work. For example, there could be a particular region at a waypoint where the scene changed frequently, thereby causing the robot to get lost. Assuming no risks from a navigation or safety perspective are in the vicinity (e.g., an unprotected fall), the `lost_detector_strictness` field could be set to `LOST_DETECTOR_STRICTNESS_PERMISSIVE`. The dynamic region could be indicated using the `regions` field, setting the `data_filter` field in the [Region](../protos/bosdyn/api/graph_nav/map.proto) message to `DATA_FILTER_IGNORE`. These settings are per [Waypoint](../protos/bosdyn/api/graph_nav/map.proto#waypoint). To debug the lost detector, use the `lost_detector_state` field in the [GetLocalizationStateResponse](../protos/bosdyn/api/graph_nav/graph_nav.proto#getlocalizationstateresponse) message.
 
-- More granular control of the feature matching behavior of topology processing is now available via the [FeatureMatchingParams](../protos/bosdyn/api/graph_nav/map_processing.proto#featurematchingparams) message. A new field, `feature_matching_params`, has been added to the [Params](../protos/bosdyn/api/graph_nav/map_processing.proto#params) message that controls whether and how sparse feature matching is performed during topology processing. At present, the how is limited to simply enabling/disabling feature matching. Please see [here](concepts/autonomy/graphnav_map_structure.md#topology-processing) for more information.
+- More granular control of the feature matching behavior of topology processing is now available via the [FeatureMatchingParams](../protos/bosdyn/api/graph_nav/map_processing.proto#processtopologyrequest-featurematchingparams) message. A new field, `feature_matching_params`, has been added to the [Params](../protos/bosdyn/api/graph_nav/map_processing.proto#params) message that controls whether and how sparse feature matching is performed during topology processing. At present, the how is limited to simply enabling/disabling feature matching. Please see [here](concepts/autonomy/graphnav_map_structure.md#topology-processing) for more information.
 
 - The Python SDK now raises `LicenseError` if the robot's license is not valid when calling `upload_graph()`, `start_recording()`, or `create_waypoint()`. Previously they incorrectly raised `UnsetStatusError`.
 
@@ -176,7 +317,7 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 #### Updated
 
-- [Area Callback Crosswalk](../python/examples/area_callback/README.md) and [Area Callback Look Both Ways](../python/examples/area_callback/README.md): The `area_callback_crosswalk.py` and `area_callback_look_both_ways.py` examples now utilize the new `starting_inside_region` field mentioned above in the [4.1.0](#410) release notes. Custom parameters have also been added to the latter example to allow the user to configure the yaw.
+- [Area Callback Crosswalk](../python/examples/area_callback/README.md) and [Area Callback Look Both Ways](../python/examples/area_callback/README.md): The `area_callback_crosswalk.py` and `area_callback_look_both_ways.py` examples now utilize the new `starting_inside_region` field mentioned above in the [4.1.0](#release-4-1-0) release notes. Custom parameters have also been added to the latter example to allow the user to configure the yaw.
 
 - [Build Extension](../python/examples/extensions/README.md): The `build_extension.py` example now checks if docker-compose.yml and manifest.json are malformed. Please note that it does not check whether all required fields are there.
 
@@ -188,11 +329,11 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 - [Replay Mission](../python/examples/replay_mission/README.md): A bug that caused the `replay_mission.py` example to crash has been fixed.
 
-- [Save File Plugin Service](../python/examples/data_acquisition_service/README.md#save-file-plugin) and [Data Acquisition Plugin - Custom Params](../python/examples/service_customization/custom_parameters_data_acquisition/README.md): These examples now use methods that use the new [StoreDataStream](../protos/bosdyn/api/data_acquisition_store_service.proto#StoreDataStream) RPC under the hood. Please note that these examples will no longer work if the robot software version is before 4.1.0.
+- [Save File Plugin Service](../python/examples/data_acquisition_service/README.md#save-file-plugin) and [Data Acquisition Plugin - Custom Params](../python/examples/service_customization/custom_parameters_data_acquisition/README.md): These examples now use methods that use the new [StoreDataStream](../protos/bosdyn/api/data_acquisition_store_service.proto) RPC under the hood. Please note that these examples will no longer work if the robot software version is before 4.1.0.
 
-- [Data Acquisition Download](../python/examples/data_acquisition_service/README.md): This example now additionally supports the [QueryStoredCaptures](../protos/bosdyn/api/data_acquisition_store_service.proto#querystoredcaptures) RPC.
+- [Data Acquisition Download](../python/examples/data_acquisition_service/README.md): This example now additionally supports the [QueryStoredCaptures](../protos/bosdyn/api/data_acquisition_store_service.proto) RPC.
 
-- [Simple Alert Server](../python/examples/network_compute_bridge/README.md): The breaking change reported in [4.0.1](#401), but present since [4.0.0](#400) has been fixed for the `simple_alert_server.py` example. The `status` in the `WorkerComputeResponse` is set to `NETWORK_COMPUTE_STATUS_SUCCESS`.
+- [Simple Alert Server](../python/examples/network_compute_bridge/README.md): The breaking change reported in [4.0.1](#release-4-0-1), but present since [4.0.0](#release-4-0-0) has been fixed for the `simple_alert_server.py` example. The `status` in the `WorkerComputeResponse` is set to `NETWORK_COMPUTE_STATUS_SUCCESS`.
 
 - [Velodyne Client](../python/examples/velodyne_client/README.md): A deprecation warning associated with NumPy >= 2.0.0 has been fixed.
 
@@ -206,7 +347,7 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 - [Orbit API Documentation](concepts/orbit/orbit_api.md): Though not an example, the Orbit API documentation is significantly improved. High-level concepts are still described on the [About Orbit](concepts/orbit/about_orbit.md) page.
 
-- [Orbit Client](../python/bosdyn-orbit/src/bosdyn/orbit/client.py): The Orbit Client now supports `PATCH` endpoints on Orbit via the `patch_resource` method. In addition, five new methods: `patch_anomaly_by_id`, `patch_bulk_close_anomalies`, `get_site_walk_archive_by_id`, `post_backup_task`, and `delete_backup` have been added. For examples demonstrating usage of these new methods, please see the [Get Anomalies](../python/examples/orbit/anomalies/README.md) example for the first two methods, the [Export SiteWalk Archive(s)](../python/examples/orbit/export_site_walk_archives/README.md) for the third method, and the [Get Backup](../python/examples/orbit/backups/README.md) example for the last two methods. Please note that the **deprecated** [Scout Client](../python/bosdyn-scout/src/bosdyn/scout/client.py) has **not** been updated.
+- [Orbit Client](../python/bosdyn-orbit/src/bosdyn/orbit/client.py): The Orbit Client now supports `PATCH` endpoints on Orbit via the `patch_resource` method. In addition, five new methods: `patch_anomaly_by_id`, `patch_bulk_close_anomalies`, `get_site_walk_archive_by_id`, `post_backup_task`, and `delete_backup` have been added. For examples demonstrating usage of the first three methods, please see [Get Anomalies](../python/examples/orbit/anomalies/README.md) for the first two methods and [Export SiteWalk Archive(s)](../python/examples/orbit/export_site_walk_archives/README.md) for the third method. There is no example for the last two methods, but one is targeted for the forthcoming 4.1.1 release. Please note that the **deprecated** [Scout Client](../python/bosdyn-scout/src/bosdyn/scout/client.py) has **not** been updated.
 
 - [Get Backup](../python/examples/orbit/backups/README.md): The `get_backup.py` example shows how to retrieve a backup from Orbit.
 
@@ -222,7 +363,7 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 - [Orbit Client](../python/bosdyn-orbit/src/bosdyn/orbit/client.py): An issue with the `post_export_as_walk` method has been fixed. The `SiteWalk UUID` is now included in the JSON arguments, not appended to the POST request URL as it was before. The `post_dispatch_mission_to_robot` method now supports the `skip_initialization` argument, which controls whether the robot should skip initialization when starting the return to dock mission. The **deprecated** [Scout Client](../python/bosdyn-scout/src/bosdyn/scout/client.py) has also been updated.
 
-## 4.0.3
+## Release 4.0.3
 
 ### Breaking Changes
 
@@ -236,7 +377,7 @@ Please see [common.py](../python/bosdyn-client/src/bosdyn/client/common.py). Tes
 
 - No changes from 4.0.2
 
-## 4.0.2
+## Release 4.0.2
 
 ### Breaking Changes
 
@@ -287,7 +428,7 @@ The Joint Control API allows for low-level control of the robot's joints. Note t
 
 - [Hello Webhook](../python/examples/orbit/webhook/README.md): A bug that caused this example to crash when the webhook event type was `TEST` has been fixed. The `TEST` event type is useful for debugging webhooks without having to perform an action using the robot.
 
-## 4.0.1
+## Release 4.0.1
 
 ### Breaking Changes
 
@@ -351,7 +492,7 @@ In addition to those listed for 4.0.0:
 
 - [Orbit Send Robot Back to Dock](../python/examples/orbit/send_robot_back_to_dock/README.md): The example has been made more interactive.
 
-## 4.0.0
+## Release 4.0.0
 
 ### Breaking Changes
 
@@ -574,7 +715,7 @@ Published robot state messages previously contained kinematic information for a 
 
 - [Custom Parameter Network Compute Bridge Worker](../python/examples/service_customization/custom_parameter_ncb_worker/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5. Specific instructions for how to build the corresponding Spot Extension are now included.
 
-- [Detect and Follow](https://github.com/boston-dynamics/spot-sdk/blob/577c45e26241ba1cbbbdf3d85013b2a5b2b52888/python/examples/spot_detect_and_follow/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5. Specific instructions for how to build the corresponding Spot Extension are now included.
+- <a href="https://github.com/boston-dynamics/spot-sdk/blob/665de1bc1467c86e97cca9df905aa6e9a2c0a5a8/python/examples/spot_detect_and_follow/README.md">Detect and Follow</a>: The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5. Specific instructions for how to build the corresponding Spot Extension are now included.
 
 - [DAQ Plugin Tester](../python/examples/tester_programs/README.md): The plugin now tests for whether the DAQ plugin is publishing live data.
 
@@ -588,7 +729,7 @@ Published robot state messages previously contained kinematic information for a 
 
 [**Mission question answerer (updated)**](../python/examples/mission_question_answerer/README.md)
 
-## 3.3.1
+## Release 3.3.1
 
 ### Upcoming Removals
 
@@ -644,7 +785,7 @@ Same as 3.3.0
 
 [Replay Mission](../python/examples/replay_mission/README.md): Fixed documentation and improved arguments accepted by the example application so the walk filename is not assumed to be autogenerated. Updated example to use Autowalk service to load Autowalk missions.
 
-## 3.3.0
+## Release 3.3.0
 
 ### Upcoming Removals
 
@@ -876,7 +1017,7 @@ Some malformed Graph Nav graphs were previously accepted, but would leave the se
 - Added get/set ptz focus calls.
 - Added `exposure_mode` and `exposure_duration` in `StreamQualityCommand`.
 
-[Spot Detect and Follow](https://github.com/boston-dynamics/spot-sdk/blob/577c45e26241ba1cbbbdf3d85013b2a5b2b52888/python/examples/spot_detect_and_follow/README.md)
+<a href="https://github.com/boston-dynamics/spot-sdk/blob/665de1bc1467c86e97cca9df905aa6e9a2c0a5a8/python/examples/spot_detect_and_follow/README.md">Spot Detect and Follow</a>
 
 - Added documentation for running it as a Spot Extension.
 - Added authentication through payload credentials.
@@ -885,11 +1026,11 @@ Some malformed Graph Nav graphs were previously accepted, but would leave the se
 
 [Remote Mission Service](../python/examples/remote_mission_service/README.md): Updated example to use custom parameters.
 
-## 3.2.3
+## Release 3.2.3
 
 No changes from 3.2.2.
 
-## 3.2.2
+## Release 3.2.2
 
 ### Bug Fixes and Improvements
 
@@ -914,7 +1055,7 @@ Updated Nvidia base docker image version in Dockerfile of the following:
 
 Updated [Fire Extinguisher Detector example](../python/examples/network_compute_bridge/fire_extinguisher_server/README.md) to work with the updated tensorflow version installed in the updated nvidia base docker image.
 
-## 3.2.1
+## Release 3.2.1
 
 ### Bug Fixes and Improvements
 
@@ -945,7 +1086,7 @@ Same as 3.2.0
 
 [Velodyne Client](../python/examples/velodyne_client/README.md): Fixed velodyne client PyQt dependency issue.
 
-## 3.2.0
+## Release 3.2.0
 
 ### New Features
 
@@ -1183,17 +1324,17 @@ Deprecated Spot CORE Documentation and moved to [Pre-3.2 Spot CORE Documentation
 - Added spotcam ir meter example into command line.
 - Hardcoded dependency versions that work with Python 3.6.
 
-[Spot Detect and Follow](https://github.com/boston-dynamics/spot-sdk/blob/577c45e26241ba1cbbbdf3d85013b2a5b2b52888/python/examples/spot_detect_and_follow/README.md): Added configuration to create a Spot Extension with the example and various improvements.
+<a href="https://github.com/boston-dynamics/spot-sdk/blob/665de1bc1467c86e97cca9df905aa6e9a2c0a5a8/python/examples/spot_detect_and_follow/README.md">Spot Detect and Follow</a>: Added configuration to create a Spot Extension with the example and various improvements.
 
 [Stitch Front Images](../python/examples/stitch_front_images/README.md): Add live viewer to example.
 
-## 3.1.2.1
+## Release 3.1.2.1
 
 ### Dependencies
 
 The `bosdyn-api` and `bosdyn-choreography-protos` packages have been rebuilt to support the latest `protobuf` package. They now require a minimum `protobuf` version of 3.6.1.
 
-## 3.1.2
+## Release 3.1.2
 
 ### Bug Fixes and Improvements
 
@@ -1206,7 +1347,7 @@ Added payloads and lidar transform in GraphNav's `WaypointSnapshot` to help with
 
 Same as 3.1.0
 
-## 3.1.1
+## Release 3.1.1
 
 ### Known Issues
 
@@ -1217,7 +1358,7 @@ Same as 3.1.0
 [**Network Compute Bridge (updated)**](../python/examples/network_compute_bridge/README.md)
 Modified server to use user confidence value as a threshold for returning detections
 
-## 3.1.0
+## Release 3.1.0
 
 ### New Features
 
@@ -1450,7 +1591,7 @@ Demonstrate using the new drawing helper.
 [**Xbox Controller (updated)**](../python/examples/xbox_controller/README.md)
 Cleaner lease usage throughout.
 
-## 3.0.3
+## Release 3.0.3
 
 ### Bug fixes and improvements
 
@@ -1462,7 +1603,7 @@ Example documentation cleanup and improvements.
 
 Same as 3.0.0
 
-## 3.0.2
+## Release 3.0.2
 
 ### New Features
 
@@ -1478,7 +1619,7 @@ Fixed usage of `SE2Trajectory` robot commands in mission service.
 
 Same as 3.0.0
 
-## 3.0.1
+## Release 3.0.1
 
 ### New Features
 
@@ -1511,7 +1652,7 @@ Improved handling in certain failure cases
 [**Spot Cam (updated)**](../python/examples/spot_cam/README.md)
 Handle new IR color map options and removed the usage of the deprecated pose fields
 
-## 3.0.0
+## Release 3.0.0
 
 ### New Features
 
@@ -1807,7 +1948,7 @@ The Escape key can now be used to stop the robot.
 [**Webcam Image Service (updated)**](../python/examples/service_customization/custom_parameter_image_server/README.md)
 New resolution options allow for capturing from the webcam at different resolutions.
 
-## 2.3.5
+## Release 2.3.5
 
 ### New Features
 
@@ -1841,7 +1982,7 @@ The `ResponseContext` helper class has been moved to the bosdyn-client package (
 
 Same as 2.3.0
 
-## 2.3.4
+## Release 2.3.4
 
 ### New Features
 
@@ -1865,7 +2006,7 @@ Same as 2.3.0
 
 A new [tutorial](python/fetch_tutorial/fetch1.md) has been added to walk through using machine learning, the Network Compute Bridge, and Manipulation API to play fetch with Spot.
 
-## 2.3.3
+## Release 2.3.3
 
 ### New Features
 
@@ -1900,7 +2041,7 @@ Same as 2.3.0
 [**Network Compute Bridge**](../python/examples/network_compute_bridge/README.md)
 Updated to provide appropriate error messages from the workers.
 
-## 2.3.2
+## Release 2.3.2
 
 ### New Features
 
@@ -1930,7 +2071,7 @@ Defaults to not capturing continuously. Flags `--capture-continuously` and `--ca
 [**Spot CAM (updated)**](../python/examples/spot_cam/README.md)
 Support for IR images and power cycling functionality.
 
-## 2.3.0
+## Release 2.3.0
 
 ### New Features
 
@@ -2111,7 +2252,7 @@ Returns a clearer error message if being used with an incorrect license.
 [**Web Cam Image Service (updated)**](../python/examples/service_customization/custom_parameter_image_server/README.md)
 The web cam example now has better support for Windows, and has a debug mode which will show a popup image window of the camera image.
 
-## 2.2.0
+## Release 2.2.0
 
 ### New Features
 
@@ -2213,7 +2354,7 @@ Added options to specify a time range, and automatically converts times to robot
 [**Data acquisition (updated)**](../python/examples/data_acquisition_service/README.md)
 Uses the new data acquisition helpers. The data acquisition tester program has been moved to a common [`tester_programs`](../python/examples/tester_programs/README.md) directory.
 
-## 2.1.0
+## Release 2.1.0
 
 ### New Features
 
@@ -2440,7 +2581,7 @@ Create a standard Boston Dynamics API `ImageService` that communicates with the 
 [**Service faults (new)**](../python/examples/service_faults/README.md)
 Demonstrates raising service faults, clearing service faults, and implementation of directory liveness checks.
 
-[**Spot detect and follow (new)**](https://github.com/boston-dynamics/spot-sdk/blob/577c45e26241ba1cbbbdf3d85013b2a5b2b52888/python/examples/spot_detect_and_follow/README.md)
+<a href="https://github.com/boston-dynamics/spot-sdk/blob/665de1bc1467c86e97cca9df905aa6e9a2c0a5a8/python/examples/spot_detect_and_follow/README.md"><b>Spot detect and follow (new)</b></a>
 Collects images from the two front Spot cameras and performs object detection on a specified class.
 
 [**Stance (new)**](../python/examples/stance/README.md)
@@ -2548,7 +2689,7 @@ Demonstrates adding a world object that exists only in image coordinates, rather
 
 - Users can run Spot Check from the tablet.
 
-## 2.0.2
+## Release 2.0.2
 
 ### New Features
 
@@ -2578,7 +2719,7 @@ Release 2.0.2 contains the same issues as release 2.0.1, listed below.
 
 - Workaround: If you need to call these in an async manner, call them on a separate thread.
 
-## 2.0.1
+## Release 2.0.1
 
 ### New Features
 
@@ -2667,7 +2808,7 @@ Release 2.0.1 contains the same issues as release 2.0.0, listed below.
 
 - Fixed a UI crash on MacOS X.
 
-## 2.0.0
+## Release 2.0.0
 
 ### New Features
 
@@ -2909,7 +3050,7 @@ Robot command client will throw a new error if a frame is specified that the rob
 
 - Added support for Windows driver.
 
-## 1.1.2
+## Release 1.1.2
 
 ### New features
 
@@ -2927,11 +3068,11 @@ Robot command client will throw a new error if a frame is specified that the rob
 
 - **mission_question_answerer** demonstrates how to build a client which responds to Mission Callbacks.
 
-## 1.1.1
+## Release 1.1.1
 
 1.1.1 has no SDK-related changes.
 
-## 1.1.0
+## Release 1.1.0
 
 The 1.1.0 SDK software is published under a new software license which can be found in the LICENSE file at the top of the SDK directory.
 
@@ -3013,7 +3154,7 @@ The sample code directory structure has changed to directory-per-example under p
 
 - Protocol Buffer locations changed to split services from messages. Any direct imports of protocol buffers by client applications will need to change to support the 1.1.0 version changes.
 
-## 1.0.1
+## Release 1.0.1
 
 - Improved documentation on SDK installation.
 
@@ -3025,6 +3166,6 @@ The sample code directory structure has changed to directory-per-example under p
 
 - Fixed timing bugs in power service.
 
-## 1.0.0
+## Release 1.0.0
 
 Initial release of the SDK.

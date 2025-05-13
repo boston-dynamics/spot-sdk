@@ -204,6 +204,22 @@ def _get_image_value(response):
     return response.image_responses
 
 
+def pixel_format_to_numpy_type(pixel_format):
+    if pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U8:
+        dtype = np.uint8
+    elif pixel_format == image_pb2.Image.PIXEL_FORMAT_RGB_U8:
+        dtype = np.uint8
+    elif pixel_format == image_pb2.Image.PIXEL_FORMAT_RGBA_U8:
+        dtype = np.uint8
+    elif pixel_format == image_pb2.Image.PIXEL_FORMAT_DEPTH_U16:
+        dtype = np.uint16
+    elif pixel_format == image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16:
+        dtype = ">u2"  # Big endian
+    else:
+        raise Exception('Image PixelFormat type {} not supported'.format(pixel_format))
+    return dtype
+
+
 def write_pgm_or_ppm(image_response, filename="", filepath=".", include_pixel_format=False):
     """Write raw data from image_response to a PGM file.
 

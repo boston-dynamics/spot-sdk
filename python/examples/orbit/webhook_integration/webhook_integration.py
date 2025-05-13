@@ -21,7 +21,7 @@ from requests import Response
 
 from bosdyn.orbit.client import Client
 from bosdyn.orbit.exceptions import WebhookSignatureVerificationError
-from bosdyn.orbit.utils import validate_webhook_payload
+from bosdyn.orbit.utils import add_base_arguments, validate_webhook_payload
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
@@ -49,9 +49,9 @@ class WebhookManager:
     def __init__(self, client, webhook_host, webhook_port, hostname):
         """
         Initialization method that sets up our webhook integrator object.
-        
+
         Args:
-            webhook_host: IP that the webhook listener will be hosted at 
+            webhook_host: IP that the webhook listener will be hosted at
             webhook_port: Port that the webhook listener will be hosted at
             client: Instantiated Orbit Client
             hostname: IP of the Orbit instance this integration will be connecting to
@@ -71,7 +71,7 @@ class WebhookManager:
     @app.route('/', methods=['GET', 'POST'])
     def webhook_listener(self) -> Response:
         """Listens to incoming webhook requests from Orbit and processes them depending on the payload type.
-            
+
             Returns:
                 A tuple containing a response message and an HTTP status code.
         """
@@ -142,10 +142,10 @@ class WebhookManager:
         try:
             validate_webhook_payload(data, signature, SECRET)
         except WebhookSignatureVerificationError as e:
-            LOGGER.exception(f'Webhook signature verification failed with the following error')
+            LOGGER.exception('Webhook signature verification failed with the following error')
             return jsonify({"error": "Invalid webhook signature"}), 400
         except Exception as e:
-            LOGGER.exception(f'Got at error while attempting to validate the webhook signature')
+            LOGGER.exception('Got at error while attempting to validate the webhook signature')
             return jsonify(
                 {"error": "Unexpected error while attempting to validate webhook signature"}), 500
 
@@ -153,10 +153,10 @@ class WebhookManager:
 
     def send_to_backend_service(self, inspection_data):
         """Takes in the build JSON inspection data payload and forwards on using a REST API call.
-            
+
             Args:
             inspection_data(JSON) : build JSON with data to be forwarded to the backend system
-            
+
         """
         # Basic Authentication Credentials
         username = 'your_username'
@@ -173,7 +173,7 @@ class WebhookManager:
         # Check for HTTP codes other than 200 (HTTP_OK)
         if response.status_code == 200:
             print('Success!')
-            LOGGER.info(f'Successfull sent with status code {response.status_code}')
+            LOGGER.info(f'Successfully sent with status code {response.status_code}')
         else:
             print('Failed to call webhook with status code:', response.status_code)
             LOGGER.info(f'Failed to call webhook with status code:{response.status_code}')
@@ -182,7 +182,7 @@ class WebhookManager:
     def create_webhook(self, options) -> bool:
         """A simple example to show how to use Orbit client to fetch list, create, update, and delete webhook instance on Orbit.
             This example also shows how to start the webhook listener given a webhook host IP and port number.
-            
+
             Args:
                 options(Namespace) : parsed args used for webhook configuration options
             Returns:
@@ -221,8 +221,7 @@ class WebhookManager:
 def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--hostname', help='IP address associated with the Orbit instance',
-                        required=True, type=str)
+    add_base_arguments(parser)
     parser.add_argument('--webhook-host', help='the http host address for the webhook listener',
                         required=False, default='0.0.0.0', type=str)
     parser.add_argument('--webhook-port', help='the port for hosting the webhook listener',
@@ -233,16 +232,6 @@ def main():
     parser.add_argument('--enabled', help='whether webhook is enabled / disabled', required=False,
                         default='True', type=bool)
     parser.add_argument('--validate-TLS-cert', required=False, default='True', type=bool)
-    parser.add_argument(
-        '--verify',
-        help=
-        'verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate',
-        default=True,
-    )
-    parser.add_argument(
-        '--cert', help=
-        "(a .pem file or a tuple with ('cert', 'key') pair): a local cert to use as client side certificate ",
-        nargs='+', default=None)
     options = parser.parse_args()
 
     global client
@@ -251,8 +240,8 @@ def main():
         verify = options.verify == "True"
     else:
         print(
-            "The provided value for the argument verify [%s] is not either 'True' or 'False'. Assuming verify is set to 'path/to/CA bundle'"
-            .format(options.verify))
+            f"The provided value for the argument verify [{options.verify}] is not either 'True' or 'False'. Assuming verify is set to 'path/to/CA bundle'"
+        )
         verify = options.verify
 
     # A client object represents a single instance.

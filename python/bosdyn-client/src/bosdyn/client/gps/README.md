@@ -15,4 +15,5 @@ Client code and interfaces for GPS integration.
 - [Aggregator Client](aggregator_client)
 - [GPS Listener](gps_listener)
 - [NMEA Parser](NMEAParser)
+- [NTRIP Client](ntrip_client)
 - [Registration Client](registration_client)

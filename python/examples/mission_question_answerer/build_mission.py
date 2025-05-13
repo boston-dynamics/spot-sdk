@@ -75,8 +75,8 @@ def main():
     # This is the text that is typically displayed to the user. It will still be accessible in the
     # mission state if for_autonomous_processing is True.
 
-    # This question is asked as a boolean to demostrate a question with a different data format.
-    # The question "What should I do?" can be replicatd with a StringParam.Spec param specification.
+    # This question is asked as a boolean to demonstrate a question with a different data format.
+    # The question "What should I do?" can be replicated with a StringParam.Spec param specification.
     custom_param_prompt.text = 'Custom param question:'
     # The variable to write into in the blackboard. Only this prompt's descendant nodes will have
     # access to it. This will be used later in the Condition node.

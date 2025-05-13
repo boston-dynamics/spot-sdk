@@ -348,7 +348,7 @@ Authentication of an image service or a data acquisition plugin with a robot is 
 
 In order to test these services, we need payload authentication credentials. Those credentials are created by registering a payload with the robot. The payload can represent an actual physical payload with mass and dimensions specified in the payload registration request, or a massless payload. To register a massless payload, please run the payload SDK example https://github.com/boston-dynamics/spot-sdk/tree/master/python/examples/payloads.
 
-For more information on registering payloads, please take a look at [this SDK documentation article](../../payload/configuring_payload_software).
+For more information on registering payloads, please take a look at [this SDK documentation article](../../payload/configuring_payload_software.md).
 
 The SpotCORE payload credentials can also be used to authenticate these image and data acquisition plugin services. They are located in `/opt/payload_credentials/payload_guid_and_secret` in SpotCORE.
 

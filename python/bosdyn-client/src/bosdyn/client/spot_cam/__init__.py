@@ -8,6 +8,8 @@ from . import (audio, compositor, health, lighting, media_log, network, power, p
                version)
 
 
+IMAGE_SERVICE_NAME = 'spot-cam-image'
+
 CLIENTS = [
     audio.AudioClient,
     compositor.CompositorClient,

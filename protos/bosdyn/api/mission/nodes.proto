@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api.mission;
+option go_package = "bosdyn/api/mission/nodes";
 
 option java_outer_classname = "NodesProto";
 
@@ -18,6 +19,7 @@ import "bosdyn/api/alerts.proto";
 import "bosdyn/api/docking/docking.proto";
 import "bosdyn/api/geometry.proto";
 import "bosdyn/api/gripper_camera_param.proto";
+import "bosdyn/api/image.proto";
 import "bosdyn/api/spot/choreography_sequence.proto";
 import "bosdyn/api/spot_cam/camera.proto";
 import "bosdyn/api/spot_cam/logging.proto";
@@ -82,6 +84,7 @@ message Node {
         SpotCamLed spot_cam_led = 37;
         SpotCamFocusState spot_cam_focus_state = 58;
         SpotCamResetAutofocus spot_cam_reset_autofocus = 38;
+        SpotCamNamedPosition spot_cam_named_position = 63;
         StoreMetadata store_metadata = 39;
         Switch switch = 40;
         DataAcquisition data_acquisition = 41;
@@ -372,8 +375,39 @@ message BosdynNavigateTo {
     // a blackboard variable with this name.
     string navigate_to_response_blackboard_key = 7;
 
+    // If provided, parameters from this request will be merged with the other parameters defined in
+    // the node and be used in the NavigateTo RPC.
+    string navigate_to_request_blackboard_key = 9;
+
     // Defines robot behavior when route is blocked. Defaults to reroute when route is blocked.
     bosdyn.api.graph_nav.RouteFollowingParams.RouteBlockedBehavior route_blocked_behavior = 8;
+}
+
+// Tell the robot to navigate to a pose in the seed frame
+message BosdynNavigateToAnchor {
+    // Name of the service to use.
+    string service_name = 1;
+    // Host machine the service is running on.
+    string host = 2;
+
+    // Desired goal pose in seed frame.
+    bosdyn.api.SE3Pose seed_tform_goal = 3;
+
+    // Preferences on how to pick the route.
+    bosdyn.api.graph_nav.RouteGenParams route_gen_params = 4;
+    // Parameters that define how to traverse and end the route.
+    bosdyn.api.graph_nav.TravelParams travel_params = 5;
+
+    // If provided, this will write the last NavigationFeedbackResponse message
+    // to a blackboard variable with this name.
+    string navigation_feedback_response_blackboard_key = 6;
+    // If provided, this will write the last NavigateToResponse message to
+    // a blackboard variable with this name.
+    string navigate_to_anchor_response_blackboard_key = 7;
+
+    // If provided, parameters from this request will be merged with the other parameters defined in
+    // the node and be used in the NavigateToAnchor RPC.
+    string navigate_to_anchor_request_blackboard_key = 8;
 }
 
 // Tell the robot to navigate a route.
@@ -685,6 +719,23 @@ message SpotCamPtz {
     // based on where the robot is, relative to the waypoint. Leave empty to disable auto-adjust
     // features.
     AdjustParameters adjust_parameters = 4;
+}
+
+// Point the PTZ to a specified named configuraiton.
+message SpotCamNamedPosition {
+    // Name of the service to use.
+    string service_name = 1;
+
+    // Host machine of the directory server that the Spot CAM registered with.
+    string host = 2;
+
+    // Name of the ptz to be pointed.
+    string ptz_name = 3;
+
+    // Named position to move the PTZ to.
+    // Currently, the only supported named position is "stow".
+    // Stow points the camera forward, parallel to the robot body's +x axis.
+    string named_position = 4;
 }
 
 // Store media using the Spot CAM.

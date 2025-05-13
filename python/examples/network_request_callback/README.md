@@ -19,7 +19,7 @@ The callback expects the following user parameters. These should be added manual
 
 # Network Request Callback
 
-For example, if Spot has internet access, this can be used to query the weather using a service like the one at `https://api.openweathermap.org/`. The action requires two User Parameters to be defined: _Url_ and _MustContain_. _Url_ is the network address and _MustContain_ is the substring that is required to be included in the response. If the reponse does not include the _MustContain_ string, then the action will fail.
+For example, if Spot has internet access, this can be used to query the weather using a service like the one at `https://api.openweathermap.org/`. The action requires two User Parameters to be defined: _Url_ and _MustContain_. _Url_ is the network address and _MustContain_ is the substring that is required to be included in the response. If the response does not include the _MustContain_ string, then the action will fail.
 
 In this example, Spot can avoid running a mission in poor weather. The response from openweathermap.org after setting up an API key is:
 

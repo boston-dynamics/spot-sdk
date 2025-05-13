@@ -23,7 +23,7 @@ class Uploader:
 
     def __init__(self, serial: int, data_path: str):
         """  Initializer for the Uploader class.  This method assigns two variables, serial and data_path, for later use by other methods
-            
+
             Args:
                 serial(int): Robot serial for identification and defining the data path later
                 data_path(str): Path to where the data is stored on your computer or the CoreI/O
@@ -46,7 +46,7 @@ class Uploader:
 
     def uploadMetrics(self, core_flag: bool):
         """  Upload metrics to the bosdyn servers.  Creates a path to the folder where logs are stored then creates a Metric File Group based on that path to interact with it. The snapshot ranges are then grabbed from the local folder and the latest sent to Bosdyn servers.  Based on the response, snapshots from the robot are uploaded.
-            
+
             Args:
                 core_flag(bool):  Expect a boolean value for the core_flag indicating the files should be read from the typical core file path or one on the desktop
         """
@@ -77,7 +77,7 @@ class Uploader:
         # Get the oldest day / sequence number using our metric file manager.
         latestSeq = metricFileGroup.get_sequence_num(True)
 
-        # Also get the most current sequence number / day.  This is toggled in the method based on the passed in boolean valye
+        # Also get the most current sequence number / day.  This is toggled in the method based on the passed in boolean value
         oldestSeq = metricFileGroup.get_sequence_num(False)
 
         # Get the data of the latest sequence number
@@ -91,9 +91,9 @@ class Uploader:
 
         # Check the response status code
         if response.status_code == 200 or response.status_code == 201:
-            _LOGGER.info('Successfully uploaded first reponse')
+            _LOGGER.info('Successfully uploaded first response')
         else:
-            _LOGGER.info('Did not successfuly download the first reponse')
+            _LOGGER.info('Did not successfully download the first reponse')
             return False
 
         # If we did not exit above, we had a successful response
@@ -121,7 +121,7 @@ class Uploader:
             # Get the data of the next sequence in my sequenceSetToUpload from wherever I stored it
             sequenceData = metricFileGroup.get_data(cur_seq)
 
-            # Send and recieve a response from the Bosdyn servers
+            # Send and receive a response from the Bosdyn servers
             response = self.uploadSnapshotFromData(sequenceData)
 
             # If we had a successful response, we successfully uploaded those metrics
@@ -134,12 +134,12 @@ class Uploader:
 
     def uploadSnapshotFromData(self, data) -> Response:
         """  Upload a single snapshot to the bosdyn servers.
-            
+
             Args:
                 data(bytes):  expects a binary data file of snapshot data
-            
+
             Raises:
-                RequestionException: There was an ambiguous exception that occurred while handling your request.
+                RequestException: There was an ambiguous exception that occurred while handling your request.
         """
 
         # Try and catch a blocking send with all of that data
@@ -163,11 +163,11 @@ class Uploader:
 
     def get_numbers_within_ranges(self, ranges, end_val: int, start_val: int) -> List[int]:
         """  Get the snapshot numbers that are in the ranges returned by the server and also within the range of data that we have in our local file system.
-            
+
             Args:
                 ranges(): snapshot ranges missing from bosdyn servers returned from our initial request
                 end_val(int):  Most recent value on our local file system
-                start_val(int):  Oldest snapshot valye on our local file system
+                start_val(int):  Oldest snapshot value on our local file system
         """
 
         toUpload = []

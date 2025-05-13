@@ -40,7 +40,7 @@ def save_image(mission_image, image_location):
         - mission_image (image_pb2): The image to be saved
         - image_location (Path): File location for the saved image
     - Returns:
-        - boolean: True if image is succesfully saved False otherwise.
+        - boolean: True if image is successfully saved False otherwise.
     """
     if mission_image.format == image_pb2.Image.FORMAT_JPEG:
         image_location.write_bytes(mission_image.data)

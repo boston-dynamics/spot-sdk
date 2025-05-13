@@ -12,6 +12,7 @@ import logging
 import os
 import socket
 import time
+from contextlib import ExitStack
 from itertools import product
 
 import serial
@@ -24,6 +25,7 @@ from bosdyn.client.exceptions import ProxyConnectionError
 from bosdyn.client.fault import (FaultClient, ServiceFaultAlreadyExistsError,
                                  ServiceFaultDoesNotExistError)
 from bosdyn.client.gps.gps_listener import GpsListener
+from bosdyn.client.gps.ntrip_client import NtripClientParams
 from bosdyn.client.math_helpers import Quat, SE3Pose
 from bosdyn.client.payload import PayloadClient
 from bosdyn.client.payload_registration import (PayloadAlreadyExistsError,
@@ -166,7 +168,7 @@ def create_parser():
         nargs=3, type=float, default=[0, 0, 0], required=False)
     parser.add_argument(
         "--position", help=
-        'Position of payload refrence frame with respect to payload mount reference frame. (x y z qw qx qy qz)',
+        'Position of payload reference frame with respect to payload mount reference frame. (x y z qw qx qy qz)',
         nargs=7, type=float, default=[0, 0, 0, 1, 0, 0, 0], required=False)
     parser.add_argument("--bounding-box",
                         help='Bounding box. (x y z qw qx qy qz size_x size_y size_z)', nargs=10,
@@ -174,6 +176,24 @@ def create_parser():
     parser.add_argument("--gps-credentials-file",
                         help='Credentials file for the specified GPS payload.', required=False,
                         default='gps-credentials.txt')
+
+    parser.add_argument("--ntrip-server", help="The NTRIP server address", required=False,
+                        default="")
+    parser.add_argument("--ntrip-port", help="The NTRIP server port", type=int, required=False,
+                        default=2101)
+    parser.add_argument("--ntrip-user",
+                        help="The username used for authenticating with the NTRIP server",
+                        required=False, default="")
+    parser.add_argument("--ntrip-password",
+                        help="The password used for authenticating with the NTRIP server",
+                        required=False, default="")
+    parser.add_argument("--ntrip-mountpoint", help="The mountpoint for the NTRIP connection",
+                        required=False, default="")
+    parser.add_argument(
+        "--ntrip-use-tls", action='store_true',
+        help="Flag indicating if the NTRIP client should use TLS when connecting to the NTRIP server"
+    )
+
     return parser
 
 
@@ -566,6 +586,12 @@ def calculate_body_tform_gps(robot, options):
     return body_T_gps
 
 
+def get_ntrip_params(options):
+    return NtripClientParams(options.ntrip_server, options.ntrip_port, options.ntrip_user,
+                             options.ntrip_password, options.ntrip_mountpoint,
+                             options.ntrip_use_tls)
+
+
 # Use the configuration provided by the user to connect to and read from a GPS device.
 def main():
     bosdyn.client.util.setup_logging()
@@ -621,7 +647,17 @@ def main():
     # Run the GPS Listener.
     gps_listener = GpsListener(robot, time_converter, stream, options.name, body_tform_gps, logger,
                                options.verbose)
-    ok = gps_listener.run()
+
+    # If the user provided an NTRIP server argument, start an NTRIP client.
+    context = ExitStack()
+    if options.ntrip_server:
+        logger.info("Using NTRIP client.")
+        gps_listener.run_ntrip_client(get_ntrip_params(options))
+        # Stop the NTRIP client when the context exits.
+        context.callback(gps_listener.stop_ntrip_client)
+
+    with context:
+        ok = gps_listener.run()
 
     # If we encountered a problem, trigger a fault.
     if not ok:

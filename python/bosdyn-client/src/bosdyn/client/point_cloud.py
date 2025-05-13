@@ -39,6 +39,10 @@ class PointCloudDataError(PointCloudResponseError):
     """System cannot generate point cloud data at this time."""
 
 
+class PointCloudTypeError(PointCloudResponseError):
+    """System cannot generate point cloud with the request cloud_type."""
+
+
 _STATUS_TO_ERROR = collections.defaultdict(lambda: (PointCloudResponseError, None))
 _STATUS_TO_ERROR.update({
     point_cloud_protos.PointCloudResponse.STATUS_OK: (None, None),
@@ -50,6 +54,8 @@ _STATUS_TO_ERROR.update({
         error_pair(UnsetStatusError),
     point_cloud_protos.PointCloudResponse.STATUS_POINT_CLOUD_DATA_ERROR:
         error_pair(PointCloudDataError),
+    point_cloud_protos.PointCloudResponse.STATUS_UNSUPPORTED_CLOUD_TYPE:
+        error_pair(PointCloudTypeError),
 })
 
 
@@ -64,6 +70,8 @@ def _error_from_response(response):
         if result is not None:
             return result
     return None
+
+
 
 
 class PointCloudClient(BaseClient):
@@ -175,6 +183,7 @@ class PointCloudClient(BaseClient):
     @staticmethod
     def _get_list_point_cloud_source_request():
         return point_cloud_protos.ListPointCloudSourcesRequest()
+
 
 
 def build_pc_request(point_cloud_source_name):

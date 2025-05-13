@@ -13,6 +13,7 @@ import logging
 import sys
 
 from bosdyn.orbit.client import create_client
+from bosdyn.orbit.utils import add_base_arguments
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
@@ -148,22 +149,11 @@ def send_robot_back_to_dock(options: argparse.Namespace):
 def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--hostname', help='IP address associated with the Orbit instance',
-                        required=True, type=str)
+    add_base_arguments(parser)
     parser.add_argument('--robot_nickname', help="Nickname associated with the robot",
                         required=False, type=str)
     parser.add_argument('--site_dock_uuid', help="uuid associated with the dock", required=False,
                         type=str)
-    parser.add_argument(
-        '--verify',
-        help=
-        'verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate',
-        default=True,
-    )
-    parser.add_argument(
-        '--cert', help=
-        "(a .pem file or a tuple with ('cert', 'key') pair): a local cert to use as client side certificate ",
-        nargs='+', default=None)
     options = parser.parse_args()
     send_robot_back_to_dock(options)
 

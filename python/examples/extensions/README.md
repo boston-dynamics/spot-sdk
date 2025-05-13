@@ -8,17 +8,13 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Extensions Build Script
 
-The scripts in this directory can be used to build Spot Extensions.
-
-- `generate_extension_data.py` creates a Spot Extension from an existing Docker image tarball.
+The script in this directory can be used to build Spot Extensions.
 
 - `build_extension.py` creates a Spot Extension from an existing Docker file or files as well as other supporting files.
   It uses the Docker API to build images and saves them to a compressed archive file.
   Then, it packages the archive file along with a manifest, Docker Compose file, and an icon into an SPX file.
 
 ## Install Dependencies
-
-`generate_extension_data.py` does not have any additional dependencies.
 
 Run the command below to install the necessary Python dependencies for `build_extension.py`:
 
@@ -29,46 +25,22 @@ python3 -m pip install -r requirements.txt
 Docker must also be installed on the system.
 See [Install Docker Engine](https://docs.docker.com/engine/install/) for more info.
 
-## About generate_extension_data.py
-
-The script generates a simple `manifest.json` and `docker-compose.yml` for a given image archive.
-It should be used as a reference for how these files might be formatted.
-
-### Arguments:
-
-- `--image`: Required. Docker saved image file. File name stem should match the image tag.
-- `--description`: Optional. Name of extension.
-
-The format for running this command is:
-
-```
-python3 generate_extension_data.py \
-    --image {/path/to/image.tar.gz} \
-    [--description "Example description"]
-```
-
-For example, to build the artifacts for the AWS Post Docking Callback example,
-run the following commands in this directory:
-
-```
-pushd ../post_docking_callbacks
-docker build -t docking_callback:arm64 -f Dockerfile.arm64 .
-popd
-docker save docking_callback:arm64 | pigz > aws_docking_callback.tar.gz
-
-python3 generate_extension_data.py \
-    --image aws_docking_callback.tar.gz\
-    --description "Post Docking S3 Upload Callback"
-```
-
 ## About build_extension.py
 
 The script builds the Docker image(s) specified in --dockerfile-paths with the corresponding tag(s) specified in `--build-image-tags`.
 It saves all the Docker images specified in `--build-image-tags` and -`-extra-image-tags` to a compressed archive file specified in `--image-archive`.
 It packages the archive file along with a manifest, Docker Compose file, and an icon into an SPX file specified in `--spx`.
-The manifest file, compose file, and icon should either be located in the same directory as the first Dockerfile specified or `--package-dir` must be specified to indicate the directory.
+The manifest file, compose file, and icon should either be located in the same directory as the first Dockerfile specified or `--package-dir` must be specified to indicate the directory. An example `manifest.json` and Docker Compose file have been included in this directory as a reference.
 
 Note: While the Spot Extension specification allows for multiple image archive tarballs in a single extension, this build script only supports one.
+
+## Important Note
+
+A manifest file must contain at minimum the fields included in the example `manifest.json` in this directory. If not included, `extension_target` will be added to the `manifest.json` in the extension and default to "spot", so if Orbit is your desired target then you MUST specify that, otherwise your extension will not work.
+
+Additionally, an ISO 8601 formatted date string of the current time will be added to the extension's manifest file under the field `date`, for tracking purposes. If you want to use your own timestamp, the script will not overwrite it, so please ensure that your timestamp is in the correct format, and listed under the field `date`.
+
+These additional fields are inserted into the copy of `manifest.json` stored in the built extension; the original input `manifest.json` is not modified.
 
 ### Arguments:
 
@@ -99,7 +71,7 @@ python3 build_extension.py \
     [--additional-files {file1.txt} {file2.jpg}]
 ```
 
-For example, to build the Spot Extension for the AWS Post Dockering Callback example to run on ARM64,
+For example, to build the Spot Extension for the AWS Post Docking Callback example to run on ARM64,
 follow the setup steps in the [README](../post_docking_callbacks/README.md),
 then run the following command in this directory:
 

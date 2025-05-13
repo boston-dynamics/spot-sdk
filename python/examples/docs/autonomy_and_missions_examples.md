@@ -28,3 +28,4 @@ The following examples demonstrate how to use the mission service and the autono
 - [Record Autowalk](../record_autowalk/README.md)
 - [Extract Images from Autowalk](../extract_images_from_walk/README.md)
 - [Network Request Callback](../network_request_callback/README.md)
+- [SpotCheck Mission Service](../remote_mission_service/spot_check/README.md)

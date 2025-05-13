@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Using the Robot State Service
 
-This example program demonstrates how to query the robot state service for the hardware config, the current robot state, or the robot metrics.
+This example program demonstrates how to query the robot state service for the hardware config, current robot state, robot metrics, joint states, or frame tree snapshot.
 
 ## Setup Dependencies
 
@@ -23,7 +23,7 @@ python3 -m pip install -r requirements.txt
 To run the example:
 
 ```
-python3 get_robot_state.py ROBOT_IP {state, hardware, metrics}
+python3 get_robot_state.py ROBOT_IP {state, hardware, metrics, joints, frame_tree}
 ```
 
-As well, the program requires one of `{state, hardware, metrics}` as a command line argument to specify which robot state request to issue when running the example program.
+As well, the program requires one of `{state, hardware, metrics, joints, frame_tree}` as a command line argument to specify which robot state request to issue when running the example program.

@@ -408,6 +408,10 @@ class SE2Velocity(object):
                     + str(se2_vel_vector.shape[0]))
                 return None
             else:
+                if (isinstance(se2_vel_vector[0], numpy.ndarray)):
+                    return SE2Velocity(x=se2_vel_vector[0][0], y=se2_vel_vector[1][0],
+                                       angular=se2_vel_vector[2][0])
+
                 return SE2Velocity(x=se2_vel_vector[0], y=se2_vel_vector[1],
                                    angular=se2_vel_vector[2])
 
@@ -521,6 +525,11 @@ class SE3Velocity(object):
                     + str(se3_vel_vector.shape[0]))
                 return None
             else:
+                if (isinstance(se3_vel_vector[0], numpy.ndarray)):
+                    return SE3Velocity(lin_x=se3_vel_vector[0][0], lin_y=se3_vel_vector[1][0],
+                                       lin_z=se3_vel_vector[2][0], ang_x=se3_vel_vector[3][0],
+                                       ang_y=se3_vel_vector[4][0], ang_z=se3_vel_vector[5][0])
+
                 return SE3Velocity(lin_x=se3_vel_vector[0], lin_y=se3_vel_vector[1],
                                    lin_z=se3_vel_vector[2], ang_x=se3_vel_vector[3],
                                    ang_y=se3_vel_vector[4], ang_z=se3_vel_vector[5])
@@ -1098,6 +1107,11 @@ def skew_matrix_2d(vec2_proto):
     """Creates a 2x1 numpy matrix representing the skew symmetric matrix for a vec2.
        These are used to create the adjoint matrices for SE2Pose's, among other things."""
     return numpy.array([[vec2_proto.y, -vec2_proto.x]])
+
+
+def matrix_from_proto(proto):
+    """Converts a geometry_pb2.Matrix or geometry_pb2.Matrixf to a numpy array."""
+    return numpy.array(proto.values).reshape(proto.rows, proto.cols)
 
 
 def transform_se2velocity(a_adjoint_b_matrix, se2_velocity_in_b):

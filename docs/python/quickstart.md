@@ -47,17 +47,17 @@ Windows WSL use is discouraged due to so many examples having graphics.
 
 ### Python requirements
 
-Spot Python SDK works with Python 3.6-3.10.
+Spot Python SDK works with Python 3.7-3.10.
 
 Downloads and instructions for installing Python can be found at https://www.python.org/.
 
-**We use "python" in this guide but**...if you have multiple versions of Python installed then running `python` might reference an incorrect version (e.g. version 2.7). For example, to run python 3 on Ubuntu 18.04 you would run `python3` and on Windows you could use the [Python launcher](https://docs.python.org/3/using/windows.html#launcher) and run `py -3`. Our documentation uses `python` assuming that the command launches a compatible version of Python. `Virtualenv` (described below), is an excellent way to resolve these issues.
+**We use "python" in this guide but**...if you have multiple versions of Python installed then running `python` might reference an incorrect version (e.g. version 2.7). For example, to run python 3 on Ubuntu 22.04 you would run `python3` and on Windows you could use the [Python launcher](https://docs.python.org/3/using/windows.html#launcher) and run `py -3`. Our documentation uses `python` assuming that the command launches a compatible version of Python. `Virtualenv` (described below), is an excellent way to resolve these issues.
 
 Verify your python install is the correct version. Open a command prompt or start your python IDE:
 
 ```
 $ python --version
-Python 3.6.8
+Python 3.10.12
 ```
 
 **Windows users:** There are two common methods for starting the Python interpreter on the command
@@ -83,7 +83,7 @@ python to launch:
 
 `py.exe -3` (launches Python 3)
 
-`py.exe -3.6` (launches Python 3.6)
+`py.exe -3.10` (launches Python 3.10)
 
 ### Pip Installation
 
@@ -139,8 +139,7 @@ starting python after activating the virtual environment.
 
 ```shell
 (my_spot_env) user@yourcomputer:~/user $ python
-Python 3.6.9 (default, Oct  8 2020, 12:12:24)
-[GCC 8.4.0] on linux
+Python 3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>>
 ```
@@ -166,10 +165,10 @@ $ python3 -m pip install --upgrade bosdyn-client bosdyn-mission bosdyn-choreogra
 Installing the `bosdyn-client`, `bosdyn-choreography-client` and `bosdyn-mission` packages will also
 install `bosdyn-api` and `bosdyn-core` packages with the same version. The command above installs
 the latest version of the packages. To install a different version of the packages from PyPI, for
-example 4.1.1, use the following command.
+example 5.0.0, use the following command.
 
 ```shell
-$ python3 -m pip install bosdyn-client==4.1.1 bosdyn-mission==4.1.1 bosdyn-choreography-client==4.1.1 bosdyn-orbit==4.1.1
+$ python3 -m pip install bosdyn-client==5.0.0 bosdyn-mission==5.0.0 bosdyn-choreography-client==5.0.0 bosdyn-orbit==5.0.0
 ```
 
 **Version incompatibility:**
@@ -178,7 +177,7 @@ If you see a version incompatibility error during pip install such as:
 
 ```shell
 ERROR: bosdyn-core <VERSION_STRING> has requirement bosdyn-api==<VERSION_STRING>, but you
-have bosdyn-api 4.1.1 which is incompatible.
+have bosdyn-api 5.0.0 which is incompatible.
 ```
 
 Try uninstalling the bosdyn packages (Note: unlike install, you will need to explicitly list all packages) and then reinstalling:
@@ -194,13 +193,13 @@ Make sure that the packages have been installed.
 
 ```shell
 $ python3 -m pip list --format=columns | grep bosdyn
-bosdyn-api                    4.1.1
-bosdyn-choreography-client    4.1.1
-bosdyn-choreography-protos    4.1.1
-bosdyn-client                 4.1.1
-bosdyn-core                   4.1.1
-bosdyn-mission                4.1.1
-bosdyn-orbit                  4.1.1
+bosdyn-api                    5.0.0
+bosdyn-choreography-client    5.0.0
+bosdyn-choreography-protos    5.0.0
+bosdyn-client                 5.0.0
+bosdyn-core                   5.0.0
+bosdyn-mission                5.0.0
+bosdyn-orbit                  5.0.0
 ```
 
 **Windows users:**
@@ -216,8 +215,7 @@ Next, start the python interpreter:
 
 ```shell
 $ python3
-Python 3.6.8 (default, Jan 14 2019, 11:02:34)
-[GCC 8.0.1 20180414 (experimental) [trunk revision 259383]] on linux
+Python 3.10.12 (main, Sep 11 2024, 15:47:36) [GCC 11.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import bosdyn.client
 >>> help(bosdyn.client)
@@ -387,11 +385,11 @@ But, if you also want to be a full-fledged Spot Programmer, you need to understa
 ## Next Steps
 
 1.  Read our next section, [Spot Programming](./understanding_spot_programming.md) Highly recommended!
-2.  Take time to explore the [programming examples](../../python/examples/README) which all launch in essentially the same manner as hello_spot.
+2.  Take time to explore the [programming examples](../../python/examples/README.md) which all launch in essentially the same manner as hello_spot.
 
     - Try making simple modifications to the code. NOTE: If you installed the SDK using a zipfile, be careful to understand what changes you've made, as users sometimes inject errors into the SDK code unintentionally. Git users can simply use `git diff` to understand all changes they have made.
-    - Try out the [wasd programming example](../../python/examples/wasd/README). This is a more detailed example built on top of the Python API which lets you interactively control Spot using the keyboard on your development machine. It covers issuing commands in far more detail than this quick start. And it is fun!
+    - Try out the [wasd programming example](../../python/examples/wasd/README.md). This is a more detailed example built on top of the Python API which lets you interactively control Spot using the keyboard on your development machine. It covers issuing commands in far more detail than this quick start. And it is fun!
 
-3.  Read through the [protocol buffer definitions](../protos/README) and the Spot Python SDK [source code documentation](../../python/README) to understand even more.
+3.  Read through the [protocol buffer definitions](../protos/README.md) and the Spot Python SDK [source code documentation](../../python/README.md) to understand even more.
 
 If you have any questions, please [reach out to Support](https://support.bostondynamics.com/s/contactsupport).

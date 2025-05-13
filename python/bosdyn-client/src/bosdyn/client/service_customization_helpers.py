@@ -404,6 +404,10 @@ class _RegionOfInterestParamValidator(_ParamValidatorInterface):
             if self.param_spec.default_area.rectangle:
                 raise InvalidCustomParamSpecError(
                     ["Default area is a rectangle despite not being allowed"])
+        if not self.param_spec.allows_polygon:
+            if len(self.param_spec.default_area.polygon.vertices) > 0:
+                raise InvalidCustomParamSpecError(
+                    ["Default area is a polygon despite not being allowed"])
 
     def validate_value(self, param_value):
         err = check_types_match(param_value, self.proto_type)
@@ -415,6 +419,13 @@ class _RegionOfInterestParamValidator(_ParamValidatorInterface):
                 return CustomParamError(
                     status=CustomParamError.STATUS_INVALID_VALUE,
                     error_messages=["Chosen area is a rectangle despite not being allowed"])
+
+        if not self.param_spec.allows_polygon:
+            if len(param_value.area.polygon.vertices) > 0:
+                return CustomParamError(
+                    status=CustomParamError.STATUS_INVALID_VALUE,
+                    error_messages=["Chosen area is a polygon despite not being allowed"])
+
         if param_value.image_cols < 0:
             return CustomParamError(status=CustomParamError.STATUS_INVALID_VALUE,
                                     error_messages=["Number of columns in image must be positive"])
@@ -1165,10 +1176,10 @@ def make_bool_param_spec(default_value: Optional[bool] = None) -> BoolParam.Spec
     return spec
 
 
-def make_region_of_interest_param_spec(
-        service_and_source: Optional[RegionOfInterestParam.ServiceAndSource] = None,
-        default_area: Optional[AreaI] = None,
-        allows_rectangle: bool = False) -> RegionOfInterestParam.Spec:
+def make_region_of_interest_param_spec(service_and_source: Optional[
+    RegionOfInterestParam.ServiceAndSource] = None, default_area: Optional[AreaI] = None,
+                                       allows_rectangle: bool = False,
+                                       allows_polygon: bool = False) -> RegionOfInterestParam.Spec:
     """
     Helper function to create a RegionOfInterestParam.Spec
 
@@ -1176,10 +1187,12 @@ def make_region_of_interest_param_spec(
          service_and_source: service and source to which the RegionOfInterestParam should adhere
          default_area: starting area for the RegionOfInterestParam
          allows_rectangle: whether a rectangle may be drawn for the selected area
+         allows_polygon: whether a polygon may be drawn for the selected area
     """
     return RegionOfInterestParam.Spec(default_area=default_area,
                                       service_and_source=service_and_source,
-                                      allows_rectangle=allows_rectangle)
+                                      allows_rectangle=allows_rectangle,
+                                      allows_polygon=allows_polygon)
 
 
 

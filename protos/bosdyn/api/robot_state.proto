@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api;
+option go_package = "bosdyn/api/robot_state";
 option java_outer_classname = "RobotStateProto";
 
 import "bosdyn/api/geometry.proto";
@@ -142,8 +143,12 @@ message PowerState {
     // The motor power state of the robot.
     MotorPowerState motor_power_state = 2;
 
+    // Human-readable error description. Not for programmatic analysis.
+    string motor_power_error_message = 10;
+
+
     // State describing if robot is connected to shore (wall) power. Robot can't be powered on
-    // while on shore power
+    // while on shore power.
     enum ShorePowerState {
         option allow_alias = true;
 
@@ -257,8 +262,11 @@ message SystemFault {
     // robot.
     int32 code = 4;
 
-    // Fault UID
-    uint64 uid = 8;
+    // Fault UID. Deprecated in favor of string based uuid.
+    uint64 uid = 8 [deprecated = true];
+
+    // Fault universal unique identifier (UUID).
+    string uuid = 9;
 
     // User visible description of the fault (and possibly remedies.)
     string error_message = 5;
@@ -296,6 +304,7 @@ message SystemFault {
     // SEVERITY_CRITICAL likely means the robot is going to shutdown
     // immediately.
     Severity severity = 7;
+
 }
 
 // The robot's current E-Stop states and endpoints.
@@ -385,6 +394,7 @@ message BatteryState {
 message SystemState {
     // Temperature of the robot motors.
     repeated MotorTemperature motor_temperatures = 1;
+
 }
 
 // The kinematic state of the robot describes the current estimated positions of the robot body and
@@ -617,7 +627,11 @@ message ManipulatorState {
     bool is_gripper_holding_item = 6;
 
     // The estimated force on the end-effector expressed in the hand frame.
-    Vec3 estimated_end_effector_force_in_hand = 13;
+    // Deprecated in favor of the estimated_end_effector_wrench_in_end_effector
+    Vec3 estimated_end_effector_force_in_hand = 13 [deprecated = true];
+
+    // The estimated wrench on the end-effector expressed in the end_effector (hand) frame.
+    Wrench estimated_end_effector_wrench_in_end_effector = 17;
 
     enum StowState {
         STOWSTATE_UNKNOWN = 0;
@@ -678,6 +692,7 @@ message TerrainState {
     // the robot may cause the robot to be in an unstable position?
     bool is_unsafe_to_sit = 1;
 }
+
 
 // The RobotState request message to get the current state of the robot.
 message RobotStateRequest {
@@ -770,6 +785,8 @@ message RobotImpairedState {
         // The detector is either not present, or not working. Note that if the detector
         // exists but is throwing a system fault, the status will be IMPAIRED_STATUS_SYSTEM_FAULT.
         IMPAIRED_STATUS_ENTITY_DETECTOR_NOT_WORKING = 8;
+        // The robot got stuck due to a collision
+        IMPAIRED_STATUS_STUCK_IN_COLLISION = 9;
     }
     // If the status is ROBOT_IMPAIRED, this is specifically why the robot is impaired.
     ImpairedStatus impaired_status = 1;

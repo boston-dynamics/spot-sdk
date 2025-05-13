@@ -167,7 +167,7 @@ def clean_filename(filename):
         filename(string): Original filename to clean.
 
     Returns:
-        Valid filename with removed characters :*?<>|
+        Valid filename with removed characters :?<>|*
     """
 
     return "".join(i for i in filename if i not in ":*?<>|")

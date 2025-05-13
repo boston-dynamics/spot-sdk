@@ -7,10 +7,10 @@
 syntax = "proto3";
 
 package bosdyn.api;
+option go_package = "bosdyn/api/geometry";
 
 import "google/protobuf/wrappers.proto";
 
-option go_package = "bosdyn/api";
 option java_outer_classname = "GeometryProto";
 
 // Two dimensional vector primitive.
@@ -280,7 +280,6 @@ Matrix matrix = 1;
 // Variance of the yaw component of the SE3 Pose.
 // Warning: DEPRECATED as of 2.1. This should equal cov_rzrz, inside `matrix`. Will be removed
 // in a future release.
-// FIXME(sberard): https://bostondynamics.atlassian.net/browse/SPOT-12523
 double yaw_variance = 2 [deprecated = true];
 // Warning: DEPRECATED as of 2.1. Use 'matrix.' Will be removed in a future release.
 double cov_xx = 3 [deprecated = true];

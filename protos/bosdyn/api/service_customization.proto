@@ -7,12 +7,12 @@
 syntax = "proto3";
 
 package bosdyn.api;
+option go_package = "bosdyn/api/service_customization";
 
 import "google/protobuf/wrappers.proto";
 import "bosdyn/api/image_geometry.proto";
 import "bosdyn/api/units.proto";
 
-option go_package = "bosdyn/api";
 option java_outer_classname = "ServiceCustomizationProto";
 
 // This file contains messages that can customize service APIs.
@@ -285,10 +285,16 @@ message RegionOfInterestParam {
         // selection.
         AreaI default_area = 2;
 
-        // Area may eventually contain many shape primitives.  In that case, services can constrain
-        // which primitives they accept.  These will be opt in, so that adding new primitive types
-        // won't be automatically advertised by older services.
+        // Area may eventually contain many shape primitives. In that case, services can constrain
+        // which primitives they accept. These will be opt in, so that adding new primitive types
+        // won't be automatically advertised by older services. For widest compatibility, services
+        // should at least support rectangles.
+        //
+        // Whether or not the service accepts a rectangle.
         bool allows_rectangle = 3;
+
+        // Whether or not the service accepts a polygon.
+        bool allows_polygon = 4;
     }
 
     AreaI area = 1;

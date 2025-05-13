@@ -18,7 +18,7 @@ from requests import Response
 
 from bosdyn.orbit.client import create_client
 from bosdyn.orbit.exceptions import WebhookSignatureVerificationError
-from bosdyn.orbit.utils import validate_webhook_payload
+from bosdyn.orbit.utils import add_base_arguments, validate_webhook_payload
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.DEBUG)
@@ -142,8 +142,7 @@ def hello_webhook(options: argparse.Namespace) -> bool:
 def main():
     """Command line interface."""
     parser = argparse.ArgumentParser()
-    parser.add_argument('--hostname', help='IP address associated with the Orbit instance',
-                        required=True, type=str)
+    add_base_arguments(parser)
     parser.add_argument('--webhook-host', help='the http host address for the webhook listener',
                         required=False, default='0.0.0.0', type=str)
     parser.add_argument('--webhook-port', help='the port for hosting the webhook listener',
@@ -157,16 +156,6 @@ def main():
                         help='if set to False (default), establishes and starts listening service',
                         required=False, default=False, type=bool)
     parser.add_argument('--validate-TLS-cert', required=False, default='True', type=bool)
-    parser.add_argument(
-        '--verify',
-        help=
-        'verify(path to a CA bundle or Boolean): controls whether we verify the server’s TLS certificate',
-        default=True,
-    )
-    parser.add_argument(
-        '--cert', help=
-        "(a .pem file or a tuple with ('cert', 'key') pair): a local cert to use as client side certificate ",
-        nargs='+', default=None)
     options = parser.parse_args()
     hello_webhook(options)
 

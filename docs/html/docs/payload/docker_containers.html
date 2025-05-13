@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Running Custom Applications with Spot &mdash; Spot 4.1.1 documentation</title>
+  <title>Running Custom Applications with Spot &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -260,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -319,6 +320,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -339,6 +341,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -640,7 +644,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 </ol>
 <section id="helper-scripts">
 <h4>Helper Scripts<a class="headerlink" href="#helper-scripts" title="Permalink to this heading"></a></h4>
-<p>In v4.0, two scripts were added to the <a class="reference internal" href="../../python/examples/extensions/README.html"><span class="doc">Extensions</span></a> example to help with creating software package extensions in the structure described below. The <code class="docutils literal notranslate"><span class="pre">generate_extension_data.py</span></code> script takes in a saved Docker image and generates basic <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> and <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> files described below. The <code class="docutils literal notranslate"><span class="pre">build_extension.py</span></code> script takes in all of the files in the structure below and outputs a valid Extension file that can be installed onto the CORE I/O.</p>
+<p>In 4.0.0, a script was added to the <a class="reference internal" href="../../python/examples/extensions/README.html"><span class="doc">Extensions</span></a> example to help with creating software package extensions in the structure described below. The <code class="docutils literal notranslate"><span class="pre">build_extension.py</span></code> script takes in all of the files in the structure below and outputs a valid Extension file that can be installed onto the CORE I/O or Orbit.</p>
 </section>
 <section id="extension-structure">
 <h4>Extension Structure<a class="headerlink" href="#extension-structure" title="Permalink to this heading"></a></h4>
@@ -648,7 +652,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> file with metadata about the Extension</p></li>
 <li><p>List of docker images</p></li>
-<li><p>docker-compose.yml file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file</p></li>
 <li><p>Icon file shown in the web portal</p></li>
 <li><p>Udev rules file to install in the CORE I/O OS if the Extension is associated with a hardware payload to be attached to CORE I/O.</p></li>
 <li><p>Other files needed by the software or the udev rules included in the Extension</p></li>
@@ -659,6 +663,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <li><p>Cannot contain the special strings, <code class="docutils literal notranslate"><span class="pre">coreio</span></code> and <code class="docutils literal notranslate"><span class="pre">mission_control</span></code></p></li>
 </ul>
 <p>Please note that these restrictions do not apply to the Extension filename when <code class="docutils literal notranslate"><span class="pre">extension_name</span></code> is populated.</p>
+<p>If populated, the <code class="docutils literal notranslate"><span class="pre">files_to_save</span></code> and <code class="docutils literal notranslate"><span class="pre">directories_to_save</span></code> fields in <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> ensure that files and directories (recursive) from the current installation are retained when upgrading to a new version of the same extension. The paths should be specified relative to the extension’s base directory <code class="docutils literal notranslate"><span class="pre">/data/.extensions/{extension_name}</span></code>, where <code class="docutils literal notranslate"><span class="pre">extension_name</span></code> is determined according to the rules outlined above.</p>
 <p>One known issue in CORE I/O version 4.1.0 is that Extensions with names that violate the naming requirements cannot be uninstalled through the web portal. To resolve this, you can use one of the following workarounds (be sure to back anything up you are not confident you have stored elsewhere prior to deleting it on the CORE I/O):</p>
 <ul class="simple">
 <li><p><strong>Before upgrading to CORE I/O version 4.1.0</strong>: Uninstall the affected Extensions. Then, update the Extension’s name (as specified in the <code class="docutils literal notranslate"><span class="pre">extension_name</span></code> field in <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>) or its filename. After upgrading to CORE I/O version 4.1.0, reinstall the updated Extension.</p></li>
@@ -676,6 +681,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <li><p>images: Optional list of tgz file names included in the extension that represent the docker images to load for running the extension. Parameter is omitted if the images are available from a public location, such as dockerhub.</p></li>
 <li><p>extension_name: Name of the extension, subject to the restrictions in <a class="reference external" href="#extension-structure">Extension Structure</a></p></li>
 </ul>
+<p>Please see <a class="reference external" href="https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/manifest.json">here</a> for best practices.</p>
 </section>
 <section id="docker-images">
 <h5>Docker Images<a class="headerlink" href="#docker-images" title="Permalink to this heading"></a></h5>
@@ -684,6 +690,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <section id="docker-compose-yaml-configuration-file">
 <h5>Docker Compose YAML configuration file<a class="headerlink" href="#docker-compose-yaml-configuration-file" title="Permalink to this heading"></a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file contains instructions for managing the docker images in the Extension. The “docker-compose” tool is an industry standard to support the management of multiple pieces of software packaged together. If no logging driver is specified in the <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file, the Extension uses the <code class="docutils literal notranslate"><span class="pre">journald</span></code> logging driver as of 4.1.0.</p>
+<p>Please see <a class="reference external" href="https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/docker-compose.yml">here</a> for best practices.</p>
 </section>
 <section id="docker-logs">
 <h5>Docker Logs<a class="headerlink" href="#docker-logs" title="Permalink to this heading"></a></h5>
@@ -693,6 +700,10 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
 <li><p>For each ID, executing <code class="docutils literal notranslate"><span class="pre">journalctl</span> <span class="pre">CONTAINER_ID_FULL={ID}</span> <span class="pre">-u</span> <span class="pre">docker.service</span> <span class="pre">--until</span> <span class="pre">now</span></code>, where <code class="docutils literal notranslate"><span class="pre">{ID}</span></code> is the full Docker container ID from the previous step</p></li>
 </ul>
 <p>If the CORE I/O has been power cycled, logs may be retrieved by executing <code class="docutils literal notranslate"><span class="pre">journalctl</span> <span class="pre">-u</span> <span class="pre">docker.service</span> <span class="pre">--until</span> <span class="pre">now</span></code>.</p>
+</section>
+<section id="resource-consumption">
+<h5>Resource Consumption<a class="headerlink" href="#resource-consumption" title="Permalink to this heading"></a></h5>
+<p>We strongly recommend setting memory consumption limits in the <code class="docutils literal notranslate"><span class="pre">docker-compose.yml</span></code> file. Without these limits, a memory leak in an Extension could eventually exhaust the device’s memory. If that happens, services may be terminated unpredictably, potentially requiring physical recovery of the robot.</p>
 </section>
 <section id="other-files">
 <h5>Other files<a class="headerlink" href="#other-files" title="Permalink to this heading"></a></h5>
@@ -839,7 +850,7 @@ The <code class="docutils literal notranslate"><span class="pre">Dockerfile</spa
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

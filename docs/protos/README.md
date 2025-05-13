@@ -17,4 +17,4 @@ The Spot API lets applications control Spot, read sensor information, and integr
 ## Contents
 
 - [Style Guide](style_guide.md)
-- [Proto Reference Guide](../../protos/bosdyn/api/README)
+- [Proto Reference Guide](../../protos/bosdyn/api/README.md)

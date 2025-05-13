@@ -152,9 +152,10 @@ class Theta:
                            auth=(HTTPDigestAuth(self.theta_ssid, self.theta_pw)))
         filename = os.path.basename(image_url)
         saveto = os.path.join(directory, filename)
-        local_file = open(saveto, 'wb')
         res.raw.decode_content = True
-        shutil.copyfileobj(res.raw, local_file)
+
+        with open(saveto, 'wb') as local_file:
+            shutil.copyfileobj(res.raw, local_file)
 
         # image information
         if print_to_screen:

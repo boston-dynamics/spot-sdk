@@ -64,7 +64,7 @@ def directory_spot(config):
 def print_services(services):
     print('\n\nServices running on robot:')
     for s in services:
-        print(f'{s.name: <20}\t{s.authority: <20}')
+        print(f'{s.name: <32}\t{s.authority}')
 
 
 def main():

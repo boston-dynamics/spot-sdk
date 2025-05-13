@@ -7,10 +7,12 @@
 syntax = "proto3";
 
 package bosdyn.api;
+option go_package = "bosdyn/api/gripper_camera_param";
 option java_outer_classname = "GripperCameraParamProto";
 
 import "bosdyn/api/header.proto";
 import "bosdyn/api/geometry.proto";
+import "bosdyn/api/image.proto";
 import "google/protobuf/wrappers.proto";
 
 // The GripperCameraParam request message sets new gripper sensor parameters. Gripper sensor
@@ -200,4 +202,83 @@ message RoiParameters {
 
     // Size of the region of interest.
     RoiWindowSize window_size = 2;
+}
+
+// Depth camera calibration parameters
+message GripperDepthCameraCalibrationParams {
+    // The sensor frame uses the convention of z along the optical axis, x along the column
+    // and y along the row (from top left.)
+    SE3Pose wr1_tform_sensor = 1;
+
+    message DepthCameraIntrinsics {
+        oneof camera_models {
+            // Rectilinear camera model.
+            ImageSource.PinholeModel pinhole = 1;
+            // The pinhole camera model with the 4 parameter brown conrady distortion model.
+            ImageSource.PinholeBrownConrady pinhole_brown_conrady = 2;
+            // The kannala brandt camera model for modeling fisheye lenses.
+            ImageSource.KannalaBrandtModel kannala_brandt = 3;
+        }
+    }
+
+    // Depth camera intrinsics.
+    // The depth camera in the gripper does not have and adjustable lens, so only one set of
+    // intrinsics is needed.
+    DepthCameraIntrinsics intrinsics = 2;
+}
+
+// Color camera calibration parameters
+// Distortion for color camera is not supported.
+message GripperColorCameraCalibrationParams {
+    // The sensor frame uses the convention of z along the optical axis, x along the column
+    // and y along the row (from top left.)
+    SE3Pose wr1_tform_sensor = 1;
+
+    message ColorCameraIntrinsics {
+        // Rectilinear camera model.
+        ImageSource.PinholeModel pinhole = 1;
+
+        // Camera mode having the resolution of image.
+        GripperCameraParams.CameraMode camera_mode = 2;
+
+        // The RGB camera in the gripper has an adjustable lens position. This value ranges from 0
+        // to 1 inclusive and does not directly translate into focal length. If it’s not set (for
+        // example, in auto-focus mode), the system assumes that calibration needs to be based on
+        // the current focus value (focus_absolute from GripperCameraParams).
+        google.protobuf.DoubleValue focus_absolute = 3;
+    }
+
+    // Color camera intrinsics.
+    // We support to calibrate color camera in the gripper at a number of focus value.
+    repeated ColorCameraIntrinsics intrinsics = 2;
+}
+
+message GripperCameraCalibrationProto {
+    GripperDepthCameraCalibrationParams depth = 1;
+    GripperColorCameraCalibrationParams color = 2;
+}
+
+// Request to set the gripper camera calibration parameters. To reset the calibration, send the
+// request with empty gripper_cam_cal.
+message SetGripperCameraCalibrationRequest {
+    RequestHeader header = 1;
+    GripperCameraCalibrationProto gripper_cam_cal = 2;
+}
+
+message SetGripperCameraCalibrationResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+}
+
+// Request to get the gripper camera calibration parameters.
+message GetGripperCameraCalibrationRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message GetGripperCameraCalibrationResponse {
+    // Common request header.
+    ResponseHeader header = 1;
+
+    GripperCameraCalibrationProto gripper_cam_cal = 2;
 }

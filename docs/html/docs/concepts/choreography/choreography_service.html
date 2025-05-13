@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Choreography service &mdash; Spot 4.1.1 documentation</title>
+  <title>Choreography service &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -260,6 +260,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -319,6 +320,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -339,6 +341,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -645,6 +649,11 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> RPC can be used to slightly modify the start time of the next <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC request that will be received by the robot in the future. If the new start time is within the right thresholds to be valid, the <code class="docutils literal notranslate"><span class="pre">start_time</span></code> of the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> request will be ignored, and the <code class="docutils literal notranslate"><span class="pre">override_start_time</span></code> from the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> request will be used instead. Values for <code class="docutils literal notranslate"><span class="pre">override_start_time</span></code> are limited to at most 5 minutes in the future from the time when the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> request is sent, and can have a maximum of 2 minutes difference from the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> request’s original <code class="docutils literal notranslate"><span class="pre">start_time</span></code> value. Within those constraints, those thresholds are configurable by the user, but default to a <code class="docutils literal notranslate"><span class="pre">validity_time</span></code> threshold of 1 minute and an <code class="docutils literal notranslate"><span class="pre">acceptable_time_difference</span></code> threshold of 20 seconds.</p>
 <p>In nearly all cases the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> RPC will not be necessary. The purpose of this RPC is the rare case where one isolated system will be sending the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC, and using a separate system the user would like to make a small adjustment to the start time of that request. If it’s possible to set the desired start time using the system that sends the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC the user should just set that <code class="docutils literal notranslate"><span class="pre">start_time</span></code> in the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC and avoid using the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> RPC.</p>
 </section>
+<section id="leg-size-configuration-api">
+<h3>Leg Size Configuration API<a class="headerlink" href="#leg-size-configuration-api" title="Permalink to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">LegSizeConfiguration</span></code> RPC can be used to modify Spot’s internal model of its leg size to help avoid self-collision when its legs have non-standard dimensions. This is typically used for Spot’s wearing costumes that cover the all or part of the leg, but it could also be used to specify that the leg has been modified to have a smaller area. Default values for Spot’s foot dimensions are estimated at 4 centimeters in width and 7 centimeters length, (measured around the widest point of the foot). The requested configuration is permanently stored (persisting through reboot) until cleared by sending an empty request, and affects all Spot behaviors.</p>
+<p>Leg size configuration for individual robots can be adjusted through <a class="reference internal" href="choreographer.html"><span class="doc">Choreographer</span></a> by selecting the “Spot Leg Size Configuration” option in the “Settings” menu.</p>
+</section>
 <section id="choreography-client">
 <h3>Choreography client<a class="headerlink" href="#choreography-client" title="Permalink to this heading"></a></h3>
 <p>The choreography service python client library provides helper functions for each RPC as well as functions that help convert the choreography sequence from a protobuf message into either a binary or text file.</p>
@@ -725,7 +734,7 @@ Development Kit License (20191101-BDSDK-SL).
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api.autowalk;
+option go_package = "bosdyn/api/autowalk/autowalk";
 
 option java_outer_classname = "AutowalkProto";
 
@@ -86,7 +87,10 @@ message CompileAutowalkResponse {
     // There will be one ElementIdentifier for each Element in the input Walk.
     // The index of each ElementIdentifier corresponds to the index of the Element in the input
     // Walk. Skipped elements will have default values for id's.  (0 and empty string)
-    repeated ElementIdentifiers element_identifiers = 5;
+    // Deprecated as of 5.0. The active_mission_text field in the mission service's State proto will
+    // indicate when the robot is undocking, navigating, performing an action, or docking at mission
+    // runtime.
+    repeated ElementIdentifiers element_identifiers = 5 [deprecated = true];
 
     // If certain elements failed compilation, they will be reported back in this field.
     // The map correlates the index of the Element in the input Walk to the FailedElement.
@@ -151,7 +155,10 @@ message LoadAutowalkResponse {
     // There will be one ElementIdentifier for each Element in the input Walk.
     // The index of each ElementIdentifier corresponds to the index of the Element in the input
     // Walk. Skipped elements will have default values for id's.  (0 and empty string)
-    repeated ElementIdentifiers element_identifiers = 7;
+    // Deprecated as of 5.0. The active_mission_text field in the mission service's State proto will
+    // indicate when the robot is undocking, navigating, performing an action, or docking at mission
+    // runtime.
+    repeated ElementIdentifiers element_identifiers = 7 [deprecated = true];
 
     // If certain elements failed compilation, they will be reported back in this field.
     // The map correlates the index of the Element in the input Walk to the FailedElement.

@@ -14,7 +14,7 @@ from google.protobuf.any_pb2 import Any
 from google.protobuf.timestamp_pb2 import Timestamp
 
 from bosdyn.api.gps.gps_pb2 import GpsDataPoint
-from bosdyn.util import RobotTimeConverter, now_timestamp, seconds_to_timestamp
+from bosdyn.util import RobotTimeConverter, now_sec, seconds_to_timestamp
 
 
 has_warned_no_zda = False
@@ -36,6 +36,7 @@ class NMEAParser(object):
         # If your GPS outputs data at 20 Hz, this constant must be less than 0.050 seconds.
         self.grouping_timeout = 0.025
         self.last_failed_read_log_time = None
+        self.last_gga = None
 
     def nmea_message_group_to_gps_data_point(self, nmea_messages: List[Tuple[str, str, int]],
                                              time_converter: RobotTimeConverter):
@@ -53,12 +54,13 @@ class NMEAParser(object):
             data, raw_nmea_msg, client_timestamp = nmea_message_list
 
             if data.sentence_type == 'GGA':
+                self.last_gga = raw_nmea_msg
                 if data.latitude is not None and data.longitude is not None and data.altitude is not None:
                     data_point.llh.latitude = data.latitude
                     data_point.llh.longitude = data.longitude
                     data_point.llh.height = data.altitude
 
-                if data.num_sats is not None and int(data.num_sats) > 0:
+                if data.num_sats is not None and data.num_sats != '' and int(data.num_sats) > 0:
                     for _ in range(int(data.num_sats)):
                         sat = data_point.satellites.add()
 
@@ -86,7 +88,12 @@ class NMEAParser(object):
                     data_point.accuracy.vertical = data.std_dev_altitude
 
             elif data.sentence_type == 'ZDA':
-                gps_timestamp = data.datetime
+                try:
+                    gps_timestamp = data.datetime
+                except:
+                    self.logger.exception("Failed to extract datetime from ZDA message.")
+                    continue
+
                 # Protobuf timestamp does not use timezone aware timestamps.
                 gps_timestamp_no_tz = gps_timestamp.replace(tzinfo=None)
                 data_point.timestamp_gps.FromDatetime(gps_timestamp_no_tz)
@@ -111,7 +118,7 @@ class NMEAParser(object):
 
     def parse(self, new_data: str, time_converter: RobotTimeConverter,
               check: bool = True) -> List[GpsDataPoint]:
-        timestamp = time.time()  # Client timestamp when received.
+        timestamp = now_sec()  # Client timestamp when received.
         self.data = self.data + new_data
 
         if len(self.data) == 0:
@@ -143,14 +150,14 @@ class NMEAParser(object):
             except Exception as e:
                 # Parsing error, log and skip.
                 # Throttle the logs.
-                now = time.time()
+                now = now_sec()
                 if self.last_failed_read_log_time is None or (
                         now - self.last_failed_read_log_time) > self.LOG_THROTTLE_TIME:
                     self.logger.exception(f"Failed to parse {stripped}. Is it NMEA?")
                     self.last_failed_read_log_time = now
                 continue
 
-            # if the message does not contain a timestamp attribute, abandon the rest of the logic
+            # If the message does not contain a timestamp attribute, abandon the rest of the logic
             # and go to the beginning of the loop
             if not hasattr(nmea_msg, 'timestamp'):
                 continue
@@ -193,3 +200,6 @@ class NMEAParser(object):
                     break
 
         return [self.nmea_message_group_to_gps_data_point(x, time_converter) for x in found_subsets]
+
+    def get_latest_gga(self):
+        return self.last_gga

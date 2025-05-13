@@ -6,6 +6,7 @@
 
 syntax = "proto3";
 package bosdyn.api;
+option go_package = "bosdyn/api/data_buffer";
 
 option java_outer_classname = "DataBufferProto";
 
@@ -157,7 +158,8 @@ message SignalSchema {
         Type type = 2;
 
         // Zero or one variable in 'vars' may be specified as a time variable.
-        // A time variable must have type TYPE_FLOAT64.
+        // A time variable must have type TYPE_INT64 and should be stored as nanoseconds
+        //  since the UNIX epoch in the robot clock.
         bool is_time = 3;
     }
 
@@ -290,6 +292,7 @@ message Event {
 
     // Optionally request that the robot try to preserve data near this time for a service log.
     LogPreserveHint log_preserve_hint = 9;
+
 }
 
 message RecordTextMessagesResponse {

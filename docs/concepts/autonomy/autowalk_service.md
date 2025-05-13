@@ -50,7 +50,7 @@ The Walk proto defines the autowalk's “go here, do this” format. It is a lin
 | [Action](../../../protos/bosdyn/api/autowalk/walks.proto#action)                           | What the robot should do at a location.                                                 |
 | [Action Wrapper](../../../protos/bosdyn/api/autowalk/walks.proto#actionwrapper)            | What the robot should do before and during an action.                                   |
 | [Action Failure Behavior](../../../protos/bosdyn/api/autowalk/walks.proto#failurebehavior) | What the robot should do if the action fails.                                           |
-| [Target](../../../protos/bosdyn/api/pautowalk/walks.proto#target)                          | Where the robot should go. Targets are specified within the context of a graph nav map. |
+| [Target](../../../protos/bosdyn/api/autowalk/walks.proto#target)                           | Where the robot should go. Targets are specified within the context of a graph nav map. |
 | [Target Failure Behavior](../../../protos/bosdyn/api/autowalk/walks.proto#failurebehavior) | What the robot should do if it fails to reach the target.                               |
 | [Battery Monitor](../../../protos/bosdyn/api/autowalk/walks.proto#batterymonitor)          | The battery thresholds at which the robot should pause/resume mission execution.        |
 

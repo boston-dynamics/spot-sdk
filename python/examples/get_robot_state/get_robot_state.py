@@ -16,7 +16,7 @@ from bosdyn.client.robot_state import RobotStateClient
 def main():
     import argparse
 
-    commands = {'state', 'hardware', 'metrics'}
+    commands = {'state', 'hardware', 'metrics', 'joints', 'frame_tree'}
 
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -36,6 +36,12 @@ def main():
         print(robot_state_client.get_hardware_config_with_link_info())
     elif options.command == 'metrics':
         print(robot_state_client.get_robot_metrics())
+    elif options.command == 'joints':
+        robot_state = robot_state_client.get_robot_state()
+        print(robot_state.kinematic_state.joint_states)
+    elif options.command == 'frame_tree':
+        robot_state = robot_state_client.get_robot_state()
+        print(robot_state.kinematic_state.transforms_snapshot)
 
     return True
 

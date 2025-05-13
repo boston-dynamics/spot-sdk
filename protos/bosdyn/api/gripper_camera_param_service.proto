@@ -7,6 +7,7 @@
 syntax = "proto3";
 
 package bosdyn.api;
+option go_package = "bosdyn/api/gripper_camera_param_service";
 
 option java_outer_classname = "GripperCameraParamServiceProto";
 
@@ -15,4 +16,8 @@ import "bosdyn/api/gripper_camera_param.proto";
 service GripperCameraParamService {
     rpc SetParams(GripperCameraParamRequest) returns (GripperCameraParamResponse) {}
     rpc GetParams(GripperCameraGetParamRequest) returns (GripperCameraGetParamResponse) {}
+    rpc SetCamCalib(SetGripperCameraCalibrationRequest)
+        returns (SetGripperCameraCalibrationResponse) {}
+    rpc GetCamCalib(GetGripperCameraCalibrationRequest)
+        returns (GetGripperCameraCalibrationResponse) {}
 }

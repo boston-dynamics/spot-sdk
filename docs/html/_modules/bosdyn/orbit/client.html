@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.orbit.client &mdash; Spot 4.1.1 documentation</title>
+  <title>bosdyn.orbit.client &mdash; Spot 5.0.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                4.1.1
+                5.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -257,6 +257,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/extract_images_from_walk/README.html">Extract Images from Autowalk</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -316,6 +317,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/aggregator_client.html">Aggregator Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.html">GPS Listener</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/NMEAParser.html">NMEA Parser</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.html">NTRIP Client</a></li>
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
@@ -336,6 +338,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/metrics_logging.html">Metrics Logging</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/network_compute_bridge_client.html">Network Compute Bridge</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_registration.html">Payload Registration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update.html">Payload Software Update</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload_software_update_initiation.html">Payload Software Update Initiation</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/payload.html">Payload</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/point_cloud.html">Point Cloud</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/power.html">Power</a></li>
@@ -735,7 +739,7 @@
 <span class="sd">            Returns:</span>
 <span class="sd">                requests.Response: the response associated with the get request</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;site_walks/archive&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;uuids&quot;</span><span class="p">:</span> <span class="n">uuid</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;site_walks/archive&quot;</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;uuids&quot;</span><span class="p">:</span> <span class="n">uuid</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.get_site_elements"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_site_elements">[docs]</a>    <span class="k">def</span> <span class="nf">get_site_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns site elements on the specified instance.</span>
@@ -885,6 +889,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;runs/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.get_run_log"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_log">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Retrieves the log of a run.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                uuid: the ID of the run.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;runs/</span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s1">/log&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Client.get_run_archives_by_id"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_archives_by_id">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_archives_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a runUuid, returns run archives.</span>
 
@@ -976,6 +991,67 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;robot-session/</span><span class="si">{</span><span class="n">robot_nickname</span><span class="si">}</span><span class="s1">/session&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="Client.get_anomalies"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_anomalies">[docs]</a>    <span class="k">def</span> <span class="nf">get_anomalies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a dictionary of query params, returns anomalies.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;anomalies&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_backup"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_backup">[docs]</a>    <span class="k">def</span> <span class="nf">get_backup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Retrieves a *.zip containing an Orbit backup.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                task_id: the task ID returned from the post_backup_task method.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;backups/</span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">OCTET_HEADER</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_backup_task"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_backup_task">[docs]</a>    <span class="k">def</span> <span class="nf">get_backup_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Retrieves the status of a backup task started by the post_backup_task method.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                task_id: the task ID returned from the post_backup_task method.</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
+<span class="sd">            Raises:</span>
+<span class="sd">                RequestExceptions: exceptions thrown by the Requests library.</span>
+<span class="sd">                UnauthenticatedClientError:  indicates that the client is not authenticated properly.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;backup_tasks/</span><span class="si">{</span><span class="n">task_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_run_statistics"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_statistics">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_statistics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Retrieves session statistics.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;run_statistics/sessions&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Client.get_run_statistics_session_summary"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.get_run_statistics_session_summary">[docs]</a>    <span class="k">def</span> <span class="nf">get_run_statistics_session_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Retrieves session summary.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                kwargs(**): a variable number of keyword arguments for the get request.</span>
+<span class="sd">            Returns:</span>
+<span class="sd">                requests.Response: the response associated with the get request.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_resource</span><span class="p">(</span><span class="s2">&quot;run_statistics/sessions_summary&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="Client.post_export_as_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_export_as_walk">[docs]</a>    <span class="k">def</span> <span class="nf">post_export_as_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">site_walk_uuid</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Given a SiteWalk uuid, it exports the walks_pb2.Walk equivalent.</span>
 
@@ -988,7 +1064,7 @@
 <span class="sd">            Returns:</span>
 <span class="sd">                requests.Response: The response associated with the post request.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;site_walks/export_as_walk&#39;</span><span class="p">,</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s1">&#39;site_walks/export_as_walk&#39;</span><span class="p">,</span>
                                   <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;siteWalkUuid&quot;</span><span class="p">:</span> <span class="n">site_walk_uuid</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.post_import_from_walk"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.post_import_from_walk">[docs]</a>    <span class="k">def</span> <span class="nf">post_import_from_walk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
@@ -1293,7 +1369,7 @@
             <span class="s2">&quot;includeMissions&quot;</span><span class="p">:</span> <span class="n">include_missions</span><span class="p">,</span>
             <span class="s2">&quot;includeCaptures&quot;</span><span class="p">:</span> <span class="n">include_captures</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;backup_tasks/&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_resource</span><span class="p">(</span><span class="s1">&#39;backup_tasks/&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Client.patch_bulk_close_anomalies"><a class="viewcode-back" href="../../../python/bosdyn-orbit/src/bosdyn/orbit/client.html#bosdyn.orbit.client.Client.patch_bulk_close_anomalies">[docs]</a>    <span class="k">def</span> <span class="nf">patch_bulk_close_anomalies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">requests</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Bulk close Anomalies by Element ID.</span>
@@ -1416,8 +1492,14 @@
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">verify</span><span class="p">))</span>
         <span class="n">verify</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">verify</span>
 
+    <span class="c1"># Sanitize the format of the cert option. Requests handles None, a single pathname,</span>
+    <span class="c1"># or a sequence of pathnames with two or more elements.</span>
+    <span class="n">cert</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">cert</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cert</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cert</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">cert</span> <span class="o">=</span> <span class="n">cert</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
     <span class="c1"># A client object represents a single instance.</span>
-    <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">cert</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">cert</span><span class="p">)</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">hostname</span><span class="o">=</span><span class="n">options</span><span class="o">.</span><span class="n">hostname</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="n">verify</span><span class="p">,</span> <span class="n">cert</span><span class="o">=</span><span class="n">cert</span><span class="p">)</span>
 
     <span class="c1"># The client needs to be authenticated before using its functions</span>
     <span class="n">client</span><span class="o">.</span><span class="n">authenticate_with_api_token</span><span class="p">()</span>
@@ -1435,7 +1517,7 @@
   <div role="contentinfo">
     <p>
       
-      &copy; Copyright 2024 Boston Dynamics. All rights reserved.
+      &copy; Copyright 2025 Boston Dynamics. All rights reserved.
       <a href="https://www.bostondynamics.com/privacy-policy">Privacy Policy</a> | 
       <a href="https://www.bostondynamics.com/terms">Terms of Use</a>
 

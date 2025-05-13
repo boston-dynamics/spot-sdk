@@ -1,0 +1,24 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option go_package = "bosdyn/api/payload_software_update_initiation_service";
+option java_outer_classname = "PayloadSoftwareUpdateInitiationServiceProto";
+
+import "bosdyn/api/payload_software_update_initiation.proto";
+
+// This service is hosted by a payload and is used by Spot to tell it to perform
+// certain actions related to payload software update.  These RPCs support events only;
+// no data exchange takes place.
+service PayloadSoftwareUpdateInitiationService {
+    // Tell the payload to send information about its current software version.
+    rpc TriggerSendPayloadSoftwareInfo(TriggerSendPayloadSoftwareInfoRequest)
+        returns (TriggerSendPayloadSoftwareInfoResponse);
+    // Tell the payload to initiate its software update operation.
+    rpc TriggerInitiateUpdate(TriggerInitiateUpdateRequest) returns (TriggerInitiateUpdateResponse);
+}

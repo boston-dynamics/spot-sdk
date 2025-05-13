@@ -4,6 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+# Boston Dynamics, Inc. Confidential Information.
+# Copyright 2025. All Rights Reserved.
 """Command-line utility code for interacting with robot services."""
 
 from __future__ import division
@@ -705,13 +707,16 @@ class LogStatusCommands(Subcommands):
             subparsers: List of argument parsers.
             command_dict: Dictionary of command names which take parsed options.
         """
-        super(LogStatusCommands, self).__init__(subparsers, command_dict, [
-            GetLogCommand,
-            GetActiveLogStatusesCommand,
-            ExperimentLogCommand,
-            StartRetroLogCommand,
-            TerminateLogCommand,
-        ])
+        super(LogStatusCommands, self).__init__(
+            subparsers,
+            command_dict,
+            [
+                GetLogCommand,
+                GetActiveLogStatusesCommand,
+                ExperimentLogCommand,
+                StartRetroLogCommand,
+                TerminateLogCommand,
+            ])
 
 
 class GetLogCommand(Command):
@@ -945,6 +950,8 @@ class TerminateLogCommand(Command):
         response = client.terminate_log(options.id)
         print(response.log_status)
         return True
+
+
 
 
 class RobotIdCommand(Command):
@@ -2645,6 +2652,7 @@ def main(args=None):
     """Command-line interface for interacting with robot services."""
     parser = argparse.ArgumentParser(prog='bosdyn.client', description=main.__doc__)
     add_common_arguments(parser, credentials_no_warn=True)
+
 
     command_dict = {}  # command name to fn which takes parsed options
     subparsers = parser.add_subparsers(title='commands', dest='command')

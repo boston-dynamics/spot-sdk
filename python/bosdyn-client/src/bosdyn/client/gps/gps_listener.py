@@ -17,6 +17,7 @@ from bosdyn.api.gps.gps_pb2 import GpsDataPoint, GpsDevice
 from bosdyn.client.exceptions import ProxyConnectionError
 from bosdyn.client.gps.aggregator_client import AggregatorClient
 from bosdyn.client.gps.NMEAParser import NMEAParser
+from bosdyn.client.gps.ntrip_client import NtripClient, NtripClientParams
 from bosdyn.client.robot import UnregisteredServiceNameError
 from bosdyn.util import RobotTimeConverter, duration_to_seconds
 
@@ -70,6 +71,9 @@ class NMEAStreamReader(object):
 
         return new_points
 
+    def get_latest_gga(self):
+        return self.parser.get_latest_gga()
+
 
 class GpsListener:
 
@@ -77,10 +81,22 @@ class GpsListener:
         self.logger = logger
         self.robot = robot
         self.time_converter = time_converter
+        self.stream = stream
         self.reader = NMEAStreamReader(logger, stream, body_tform_gps, verbose)
         self.gps_device = GpsDevice()
         self.gps_device.name = name
         self.aggregator_client = None
+        self.ntrip_client = None
+
+    def run_ntrip_client(self, ntrip_params: NtripClientParams):
+        self.ntrip_client = NtripClient(self.stream, ntrip_params, self.logger)
+        self.ntrip_client.start_stream()
+
+    def stop_ntrip_client(self):
+        if self.ntrip_client is None:
+            return
+        self.ntrip_client.stop_stream()
+        self.ntrip_client = None
 
     def run(self):
         # It is possible for a payload to come up faster than the service. Loop a few times
@@ -118,7 +134,7 @@ class GpsListener:
         agg_future = None
 
         # Attach and run until a SIGINT is received.
-        self.logger.info('Looping')
+        self.logger.info('Listening for GPS data.')
         try:
             while True:
                 try:
@@ -156,5 +172,19 @@ class GpsListener:
                     else:
                         time_passed_since_last_rpc = time.time() - timestamp_of_last_rpc
 
+                # If we are running an NTRIP client, pass it the latest GGA message.
+                if self.ntrip_client is not None:
+                    # If the NTRIP Client's stream has been closed, restart it.
+                    if not self.ntrip_client.is_streaming():
+                        self.logger.info("Restarting NTRIP Client!")
+                        self.ntrip_client.start_stream()
+
+                    latest_gga = self.reader.get_latest_gga()
+                    if latest_gga is not None:
+                        self.ntrip_client.handle_nmea_gga(latest_gga)
+
         except KeyboardInterrupt:
             print()  # Get past the ^C in the console output
+
+        # Just in case there is an NTRIP client still running, stop it here.
+        self.stop_ntrip_client()
