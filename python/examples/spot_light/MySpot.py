@@ -14,7 +14,7 @@ import bosdyn.client.lease
 import bosdyn.client.util
 from bosdyn import geometry
 from bosdyn.client.image import ImageClient
-from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand
+from bosdyn.client.robot_command import RobotCommandBuilder, RobotCommandClient, blocking_stand, block_until_arm_arrives
 
 
 class MySpot(object):
@@ -31,7 +31,15 @@ class MySpot(object):
         # A handle to the spot robot
         self._robot = None
 
+        self._gripper_open = False  # TODO read somehow
+
+        # Provide users with a command client
+        self.client = None
+        # Provide users with access to the logger
+        self.logger = None
+
         # A handle to the lease for the robot connected
+        self._lease = None
         self._lease_client = None
         self._lease_keep_alive = None
 
@@ -49,8 +57,6 @@ class MySpot(object):
         """
         sdk_name = 'MySpot_sdk'
 
-        bosdyn.client.util.setup_logging(config.verbose)
-
         # Create the SDK
         self._sdk = bosdyn.client.create_standard_sdk(sdk_name)
 
@@ -58,8 +64,11 @@ class MySpot(object):
         self._robot = self._sdk.create_robot(config.hostname)
         bosdyn.client.util.authenticate(self._robot)
 
-        # Set brightness_threshold
-        self._brightness_threshold = config.brightness_threshold
+        assert self._prep_for_motion()
+        self.client = self._robot.ensure_client(RobotCommandClient.default_service_name)
+
+        bosdyn.client.util.setup_logging(config.verbose)
+        self.logger = self._robot.logger
 
     def get_image(self):
         """
@@ -88,9 +97,7 @@ class MySpot(object):
         if self._robot is None:
             return
 
-        if self._prep_for_motion():
-            command_client = self._robot.ensure_client(RobotCommandClient.default_service_name)
-            blocking_stand(command_client, timeout_sec=10)
+        blocking_stand(self.client, timeout_sec=10)
 
     def sit_down(self):
         """
@@ -99,28 +106,25 @@ class MySpot(object):
         if self._robot is None:
             return
 
-        if self._prep_for_motion():
-            command_client = self._robot.ensure_client(RobotCommandClient.default_service_name)
-            cmd = RobotCommandBuilder.synchro_sit_command()
-            command_client.robot_command(cmd)
+        cmd = RobotCommandBuilder.synchro_sit_command()
+        self.client.robot_command(cmd)
 
-    def orient(self, yaw=0.0, pitch=0.0, roll=0.0):
+    def stow_arm(self):
         """
-        Ask Spot to orient its body (e.g. yaw, pitch, roll)
-
-        @param[in]  yaw    Rotation about Z (+up/down) [rad]
-        @param[in]  pitch  Rotation about Y (+left/right) [rad]
-        @param[in]  roll   Rotation about X (+front/back) [rad]
+        Ask Spot to sit down
         """
-
         if self._robot is None:
             return
 
-        if self._prep_for_motion():
-            rotation = geometry.EulerZXY(yaw=yaw, pitch=pitch, roll=roll)
-            command_client = self._robot.ensure_client(RobotCommandClient.default_service_name)
-            cmd = RobotCommandBuilder.synchro_stand_command(footprint_R_body=rotation)
-            command_client.robot_command(cmd)
+        # Stow the arm
+        # Build the stow command using RobotCommandBuilder
+        stow = RobotCommandBuilder.arm_stow_command()
+
+        # Issue the command via the RobotCommandClient
+        stow_command_id = self.client.robot_command(stow)
+
+        self.logger.info('Stow command issued.')
+        block_until_arm_arrives(self.client, stow_command_id, 3.0)
 
     def _prep_for_motion(self):
         """
@@ -141,9 +145,8 @@ class MySpot(object):
 
         # Acquire a lease to indicate that we want to control the robot
         if self._lease_client is None:
-            self._lease_client = self._robot.ensure_client(
-                bosdyn.client.lease.LeaseClient.default_service_name)
-            lease = self._lease_client.acquire()
+            self._lease_client = self._robot.ensure_client(bosdyn.client.lease.LeaseClient.default_service_name)
+            self._lease = self._lease_client.take()
             self._lease_keep_alive = bosdyn.client.lease.LeaseKeepAlive(self._lease_client)
 
         # Power the motor on
@@ -152,34 +155,35 @@ class MySpot(object):
 
         return self._robot.is_powered_on()
 
-    def _rotate_bound(self, image, angle):
+    def toggle_lease(self):
+        """toggle lease acquisition. Initial state is acquired"""
+        if self._lease_client is not None:
+            if self._lease_keep_alive is None:
+                self._lease_keep_alive = bosdyn.client.lease.LeaseKeepAlive(self._lease_client, must_acquire=True,
+                                                                            return_at_exit=True)
+                self.logger.info("Lease acquired")
+            else:
+                self._lease_keep_alive.shutdown()
+                self._lease_keep_alive = None
+                self.logger.warn("Lease released")
+
+    def toggle_gripper(self):
+        """open/close gripper. Initial state is assumed to be closed"""
+        if self._gripper_open:
+            cmd_id = self.client.robot_command(RobotCommandBuilder.claw_gripper_close_command())
+        else:
+            cmd_id = self.client.robot_command(RobotCommandBuilder.claw_gripper_open_command())
+        self._gripper_open = not self._gripper_open
+
+    def power_off(self):
         """
-        Rotate the image without cutting portions of the image off
-        From https://www.pyimagesearch.com/2017/01/02/rotate-images-correctly-with-opencv-and-python/
-
-        @param[in]  image  The image to rotate
-        @param[in]  angle  The angle [deg] to rotate the image by
+        Power off spot robot.
         """
+        # Power the robot off. By specifying "cut_immediately=False", a safe power off command
+        # is issued to the robot. This will attempt to sit the robot before powering off.
+        self._robot.power_off(cut_immediately=False, timeout_sec=20)
+        assert not self._robot.is_powered_on(), 'Robot power off failed.'
+        self.logger.info('Robot safely powered off.')
 
-        # grab the dimensions of the image and then determine the
-        # center
-        (h, w) = image.shape[:2]
-        (cX, cY) = (w // 2, h // 2)
-
-        # grab the rotation matrix (applying the negative of the
-        # angle to rotate clockwise), then grab the sine and cosine
-        # (i.e., the rotation components of the matrix)
-        M = cv2.getRotationMatrix2D((cX, cY), -angle, 1.0)
-        cos = numpy.abs(M[0, 0])
-        sin = numpy.abs(M[0, 1])
-
-        # compute the new bounding dimensions of the image
-        nW = int((h * sin) + (w * cos))
-        nH = int((h * cos) + (w * sin))
-
-        # adjust the rotation matrix to take into account translation
-        M[0, 2] += (nW / 2) - cX
-        M[1, 2] += (nH / 2) - cY
-
-        # perform the actual rotation and return the image
-        return cv2.warpAffine(image, M, (nW, nH))
+        # TODO proper disconnect
+        self._lease_client.return_lease(self._lease)
