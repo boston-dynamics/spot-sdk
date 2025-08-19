@@ -85,7 +85,3 @@ And this response for a successful GCP upload.
 ```
 Upload of file requirements.txt as requirements.txt to c-imagedemo successful (cloud_upload.py:26)
 ```
-
-## Autowalk Example
-
-An example of how to utilize these functions in a remote_mission_service application can be found in the [ricoh_theta](../ricoh_theta/README.md) example.

@@ -41,6 +41,7 @@ Similar to the Spot API, client applications can be written in many languages an
 - [Robot services](robot_services.md)
 - [E-Stop](estop_service.md)
 - [KeepAlive (BETA)](keepalive_service.md)
+- [Audio Visual](audio_visual.md)
 - [Lease](lease_service.md)
 - [Developing API Services](developing_api_services.md)
 - [Service Customization](service_customization.md)

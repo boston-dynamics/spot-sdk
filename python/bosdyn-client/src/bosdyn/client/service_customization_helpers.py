@@ -356,7 +356,7 @@ class _StringParamValidator(_ParamValidatorInterface):
         if err:
             return err
 
-        if len(self.param_spec.options) > 0:
+        if not self.param_spec.editable and len(self.param_spec.options) > 0:
             if param_value.value not in self.param_spec.options:
                 return CustomParamError(
                     status=CustomParamError.STATUS_INVALID_VALUE, error_messages=[

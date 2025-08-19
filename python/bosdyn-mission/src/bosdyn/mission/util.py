@@ -185,54 +185,50 @@ def proto_from_tuple(tup, pack_nodes=True):
 def python_var_to_value(var) -> util_pb2.ConstantValue:
     """Returns a ConstantValue with the appropriate oneof set."""
     value = util_pb2.ConstantValue()
-    match var:
-        case bool():
-            value.bool_value = var
-        case int():
-            value.int_value = var
-        case float():
-            value.float_value = var
-        case str():
-            value.string_value = var
-        case util_pb2.ConstantValue():
-            value.CopyFrom(var)
-        case google.protobuf.message.Message():
-            value.msg_value.Pack(var)
-        case _:
-            if isinstance(var, collections.abc.Mapping):
-                for key, val in var.items():
-                    value.dict_value.values[key].CopyFrom(python_var_to_value(val))
-            elif isinstance(var, collections.abc.Iterable):
-                value.list_value.values.extend([python_var_to_value(v) for v in var])
-            else:
-                raise Error('Invalid type "{}"'.format(type(var)))
+    if isinstance(var, bool):
+        value.bool_value = var
+    elif isinstance(var, int):
+        value.int_value = var
+    elif isinstance(var, float):
+        value.float_value = var
+    elif isinstance(var, str):
+        value.string_value = var
+    elif isinstance(var, util_pb2.ConstantValue):
+        value.CopyFrom(var)
+    elif isinstance(var, google.protobuf.message.Message):
+        value.msg_value.Pack(var)
+    elif isinstance(var, collections.abc.Mapping):
+        for key, val in var.items():
+            value.dict_value.values[key].CopyFrom(python_var_to_value(val))
+    elif isinstance(var, collections.abc.Iterable):
+        value.list_value.values.extend([python_var_to_value(v) for v in var])
+    else:
+        raise Error('Invalid type "{}"'.format(type(var)))
     return value
 
 
 def python_type_to_pb_type(var) -> util_pb2.VariableDeclaration.Type.ValueType:
     """Returns the protobuf-schema variable type that corresponds to the given variable."""
-    match var:
-        case bool():
-            return util_pb2.VariableDeclaration.TYPE_BOOL
-        case int():
-            return util_pb2.VariableDeclaration.TYPE_INT
-        case float():
-            return util_pb2.VariableDeclaration.TYPE_FLOAT
-        case str():
-            return util_pb2.VariableDeclaration.TYPE_STRING
-        # Special case for List and Dict value to allow using this function
-        # with ConstantValue.WhichOneof() to return the correct pb type.
-        case util_pb2.ConstantValue.ListValue():
-            return util_pb2.VariableDeclaration.TYPE_LIST
-        case util_pb2.ConstantValue.DictValue():
-            return util_pb2.VariableDeclaration.TYPE_DICT
-        case google.protobuf.message.Message():
-            return util_pb2.VariableDeclaration.TYPE_MESSAGE
-        case _:
-            if isinstance(var, collections.abc.Mapping):
-                return util_pb2.VariableDeclaration.TYPE_DICT
-            elif isinstance(var, collections.abc.Iterable):
-                return util_pb2.VariableDeclaration.TYPE_LIST
+    if isinstance(var, bool):
+        return util_pb2.VariableDeclaration.TYPE_BOOL
+    elif isinstance(var, int):
+        return util_pb2.VariableDeclaration.TYPE_INT
+    elif isinstance(var, float):
+        return util_pb2.VariableDeclaration.TYPE_FLOAT
+    elif isinstance(var, str):
+        return util_pb2.VariableDeclaration.TYPE_STRING
+    # Special case for List and Dict value to allow using this function
+    # with ConstantValue.WhichOneof() to return the correct pb type.
+    elif isinstance(var, util_pb2.ConstantValue.ListValue):
+        return util_pb2.VariableDeclaration.TYPE_LIST
+    elif isinstance(var, util_pb2.ConstantValue.DictValue):
+        return util_pb2.VariableDeclaration.TYPE_DICT
+    elif isinstance(var, google.protobuf.message.Message):
+        return util_pb2.VariableDeclaration.TYPE_MESSAGE
+    elif isinstance(var, collections.abc.Mapping):
+        return util_pb2.VariableDeclaration.TYPE_DICT
+    elif isinstance(var, collections.abc.Iterable):
+        return util_pb2.VariableDeclaration.TYPE_LIST
     raise InvalidConversion(var, util_pb2.VariableDeclaration.Type.DESCRIPTOR.full_name)
 
 

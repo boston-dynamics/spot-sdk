@@ -19,7 +19,8 @@ from bosdyn.api import (directory_pb2, directory_registration_pb2,
 from bosdyn.client.common import (BaseClient, error_factory, error_pair,
                                   handle_common_header_errors, handle_unset_status_error)
 
-from .exceptions import ResponseError, RetryableUnavailableError, TimedOutError
+from .error_callback_result import ErrorCallbackResult
+from .exceptions import ResponseError, RetryableUnavailableError, RpcError, TimedOutError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -299,10 +300,12 @@ class DirectoryRegistrationKeepAlive(object):
       rpc_timeout_seconds: Number of seconds to wait for a dir_reg_client RPC. Defaults to None,
           for no timeout.
       rpc_interval_seconds: Interval at which to request service registrations.
+      initial_retry_seconds: Initial number of seconds to wait before retrying a failed
+          registration request. Defaults to 1 second.
     """
 
     def __init__(self, dir_reg_client, logger=None, rpc_timeout_seconds=None,
-                 rpc_interval_seconds=30):
+                 rpc_interval_seconds=30, initial_retry_seconds=1):
         self.authority = None
         self.directory_name = None
         self.host = None
@@ -310,11 +313,15 @@ class DirectoryRegistrationKeepAlive(object):
         self.port = None
         self.service_type = None
         self.dir_reg_client = dir_reg_client
+        #: Callable[[Exception], ErrorCallbackResult] | None: Optional callback to be called when
+        #: an error occurs in the reregistration thread.
+        self.reregistration_error_callback = None
 
         self._end_reregister_signal = threading.Event()
         self._lock = threading.Lock()
         self._rpc_timeout = rpc_timeout_seconds
         self._reregister_period = rpc_interval_seconds
+        self._initial_retry_seconds = initial_retry_seconds
 
         # Configure the thread to do re-registration.
         self._thread = threading.Thread(target=self._periodic_reregister)
@@ -430,9 +437,13 @@ class DirectoryRegistrationKeepAlive(object):
         Raises:
           RpcError: Problem communicating with the robot.
         """
+        retry_interval = self._initial_retry_seconds
+        wait_time = self._reregister_period
+
         self.logger.info('Starting directory registration loop for {}'.format(self.directory_name))
-        while True:
+        while not self._end_reregister_signal.wait(wait_time):
             exec_start = time.time()
+            action = ErrorCallbackResult.RESUME_NORMAL_OPERATION
             try:
                 self.dir_reg_client.register(
                     self.directory_name,
@@ -454,9 +465,27 @@ class DirectoryRegistrationKeepAlive(object):
                 pass
             except TimedOutError:
                 self.logger.warning('Timed out, timeout set to "{}"'.format(self._rpc_timeout))
+            except RpcError as exc:
+                self.logger.exception('Reregistration failed with RpcError')
+                if self.reregistration_error_callback is not None:
+                    try:
+                        action = self.reregistration_error_callback(exc)
+                    except Exception:  #pylint: disable=broad-except
+                        self.logger.exception('Exception thrown in the provided error callback')
             except Exception:
                 # Log all other exceptions, but continue looping in hopes that it resolves itself
                 self.logger.exception('Caught general exception')
-            exec_sec = time.time() - exec_start
-            if self._end_reregister_signal.wait(self._reregister_period - exec_sec):
+
+            elapsed = time.time() - exec_start
+            if action == ErrorCallbackResult.RETRY_IMMEDIATELY:
+                wait_time = 0.0
+            elif action == ErrorCallbackResult.ABORT:
                 break
+            elif action == ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF:
+                wait_time = retry_interval - elapsed
+                retry_interval = min(2.0 * retry_interval, self._reregister_period)
+            else:
+                # action doesn't match one of the enum values or is one of
+                # RESUME_NORMAL_OPERATION or DEFAULT_ACTION
+                retry_interval = self._initial_retry_seconds
+                wait_time = self._reregister_period - elapsed

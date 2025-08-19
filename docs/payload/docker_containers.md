@@ -27,7 +27,6 @@ To manage the docker images on any other compute payload, please refer to the [C
 Multiple Spot SDK examples support dockerization and running as docker containers. The main examples are listed below, but all the other examples can be easily configured to run as docker containers by duplicating the docker configuration in the examples below.
 
 - [Data Acquisition Plugins](../../python/examples/data_acquisition_service/README.md)
-- [Ricoh Theta](../../python/examples/ricoh_theta/README.md)
 - [Custom Parameter Web Cam Image Service](../../python/examples/service_customization/custom_parameter_image_server/README.md)
 
 ## Installing Docker Engine

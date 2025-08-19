@@ -4,6 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+from deprecated.sphinx import deprecated
+
 from bosdyn.api import gripper_camera_param_service_pb2_grpc
 from bosdyn.client.common import BaseClient, common_header_errors
 
@@ -77,12 +79,16 @@ class GripperCameraParamClient(BaseClient):
             get_gripper_camera_calib_request (gripper_camera_params_pb2.GripperCameraGetCalibrationRequest) : The command reqeust to get gripper camera calibration
 
         Returns:
-            The GripperCameraGetCalibrationResponse message, which contains the GripperCameraCalibrationProto 
+            The GripperCameraGetCalibrationResponse message, which contains the GripperCameraCalibrationProto
         """
         return self.call(self._stub.GetCamCalib, get_gripper_camera_calib_request,
                          error_from_response=common_header_errors, **kwargs)
 
-    def get_camera_calib_asnyc(self, get_gripper_camera_calib_request, **kwargs):
-        """Asnyc version of get_camera_calib()."""
+    def get_camera_calib_async(self, get_gripper_camera_calib_request, **kwargs):
+        """Async version of get_camera_calib()."""
         return self.call_async(self._stub.GetCamCalib, get_gripper_camera_calib_request,
                                error_from_response=common_header_errors, **kwargs)
+
+    @deprecated(version='5.0', reason='Use get_camera_calib_async() instead.')
+    def get_camera_calib_asnyc(self, get_gripper_camera_calib_request, **kwargs):
+        return self.get_camera_calib_async(get_gripper_camera_calib_request, **kwargs)

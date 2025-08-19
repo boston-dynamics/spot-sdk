@@ -1,0 +1,32 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option go_package = "bosdyn/api/audio_visual_service";
+
+option java_outer_classname = "AudioVisualServiceProto";
+
+import "bosdyn/api/audio_visual.proto";
+
+service AudioVisualService {
+    // Run an AudioVisualBehavior.
+    rpc RunBehavior(RunBehaviorRequest) returns (RunBehaviorResponse) {}
+
+    // Stop an AudioVisualBehavior.
+    rpc StopBehavior(StopBehaviorRequest) returns (StopBehaviorResponse) {}
+
+
+    // List all AudioVisualBehaviors currently added to the AudioVisual Service.
+    rpc ListBehaviors(ListBehaviorsRequest) returns (ListBehaviorsResponse) {}
+
+    // Get the current status of the system.
+    rpc GetSystemParams(GetSystemParamsRequest) returns (GetSystemParamsResponse) {}
+
+    // Set the current status of the system.
+    rpc SetSystemParams(SetSystemParamsRequest) returns (SetSystemParamsResponse) {}
+}

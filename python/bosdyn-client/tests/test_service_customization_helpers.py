@@ -316,6 +316,7 @@ double_value_inputs = [
 string_value_inputs = [
     (service_customization_pb2.StringParam(value="blue"), string_spec_inputs[0][0], _StringParamValidator, True),
     (service_customization_pb2.StringParam(value="anything"), string_spec_inputs[1][0], _StringParamValidator, True),
+    (service_customization_pb2.StringParam(value="anything"), string_spec_inputs[2][0], _StringParamValidator, True),
     (service_customization_pb2.StringParam(value="notanoption"), string_spec_inputs[0][0], _StringParamValidator, False)
 ] #yapf: disable
 

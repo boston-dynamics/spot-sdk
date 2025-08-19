@@ -1,0 +1,374 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option go_package = "bosdyn/api/audio_visual";
+
+option java_outer_classname = "AudioVisualProto";
+
+import "bosdyn/api/header.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
+import "bosdyn/api/spot/choreography_params.proto";
+
+// Defines an individual LED's color.
+message Color {
+    // A color preset. Each preset maps to an RGB value.
+    enum Preset {
+        PRESET_UNKNOWN = 0;
+        PRESET_NORMAL = 1;
+        PRESET_WARNING = 2;
+        PRESET_DANGER = 3;
+    }
+
+    // A specific RGB color. Each channel is from [0, 255].
+    message RGB {
+        int32 r = 1;
+        int32 g = 2;
+        int32 b = 3;
+    }
+
+    oneof color_type {
+        Preset preset = 1;
+        RGB rgb = 2;
+    }
+}
+
+// A group of sequences that can be played back on the Spot AV System LEDs, SpotCam LEDs, or the
+// Mood Light LEDs.
+message LedSequenceGroup {
+    enum InterpolationMode {
+        INTERPOLATION_UNKNOWN = 0;
+        // Zero-order hold between this frame and the next.
+        INTERPOLATION_NONE = 1;
+        // Linearly interpolate the RGB channels from the color defined in this frame to
+        // the color defined in the next frame. If this is the last frame, the next
+        // frame is the frame at index 0.
+        INTERPOLATION_LINEAR = 2;
+    }
+
+    // A sequence for an individual LED on the robot.
+    message LedSequence {
+        // A sequence of frames that create an animation. After the final frame in the sequence, the
+        // sequence loops back to the first frame.
+        message AnimationSequence {
+            message Frame {
+                // LED color.
+                Color color = 4;
+                // Duration of the frame.
+                google.protobuf.Duration duration = 2;
+                // Describes how the system should interpolate between this frame and the next.
+                InterpolationMode interpolation = 3;
+            }
+            repeated Frame frames = 1;
+        }
+
+        // Blink this LED.
+        message BlinkSequence {
+            // LED Color.
+            Color color = 4;
+            // Blink period [0.1, 25.5] seconds.
+            google.protobuf.Duration period = 2;
+            // Duty cycle from [0, 1]. Determines what % of each period the LED should be on for.
+            float duty_cycle = 3;
+        }
+
+        // Pulse this LED.
+        message PulseSequence {
+            // LED color.
+            Color color = 3;
+            // Pulse period [0.1, 25.5] seconds.
+            google.protobuf.Duration period = 2;
+        }
+
+        // Special blink mode that is guaranteed to not affect robot perception.  The pulse width of
+        // this sequence is fixed at approximately 30ms.
+        message SyncedBlinkSequence {
+            // LED color.
+            Color color = 3;
+            // Blink period [0.1, 25.5] seconds.
+            google.protobuf.Duration period = 2;
+        }
+
+        // Set this LED to a solid color.
+        message SolidColorSequence {
+            // LED color.
+            Color color = 2;
+        }
+
+        // Select one of the preset types.
+        oneof sequence_type {
+            AnimationSequence animation_sequence = 1;
+            BlinkSequence blink_sequence = 2;
+            PulseSequence pulse_sequence = 3;
+            SyncedBlinkSequence synced_blink_sequence = 4;
+            SolidColorSequence solid_color_sequence = 5;
+        }
+    }
+
+    message SpotCamSequence {
+        message AnimationSequence {
+            // For Spot Cam, there are four LEDs at indices [0, 3]. The brightness for each LED may
+            // be set between [0.0, 1.0], where 0 is off and 1 is full brightness.
+            message Frame {
+                map<int32, float> brightnesses = 1;
+            }
+
+            repeated Frame frames = 1;
+        }
+
+        // Blink all the LEDs on Spot CAM at a certain frequency.
+        message BlinkSequence {
+            // LED brightness.
+            float brightness = 1;
+            // Blink period in seconds.
+            google.protobuf.Duration period = 2;
+            // Duty cycle from [0, 1]. Determines what % of each period the LED should be on for.
+            float duty_cycle = 3;
+        }
+
+        // "Breathe" all the LEDs on Spot CAM at a certain frequency.
+        message BreatheSequence {
+            // LED brightness.
+            float brightness = 1;
+            // Blink period in seconds.
+            google.protobuf.Duration period = 2;
+        }
+
+        // Set the four LEDs on spot cam at indices [0, 3] to brightnesses between [0.1, 1.0].
+        message FixedBrightnessSequence {
+            map<int32, float> brightnesses = 1;
+        }
+
+        oneof sequence_type {
+            AnimationSequence animation_sequence = 1;
+            BlinkSequence blink_sequence = 2;
+            BreatheSequence breathe_sequence = 3;
+            FixedBrightnessSequence fixed_brightness_sequence = 4;
+        }
+    }
+
+    message StatusLightsSequence {
+        message Frame {
+            // Color for each of the Status Light LEDs during this frame.
+            Color top_left = 1;
+            Color upper_mid_left = 2;
+            Color lower_mid_left = 3;
+            Color bottom_left = 4;
+            Color top_right = 5;
+            Color upper_mid_right = 6;
+            Color lower_mid_right = 7;
+            Color bottom_right = 8;
+            // Frame duration.
+            google.protobuf.Duration duration = 9;
+        }
+
+        repeated Frame frames = 1;
+        InterpolationMode interpolation = 2;
+    }
+
+    // Sequences for each of the different lights in the AV System. If a sequence is not specified,
+    // then it defaults to "off".
+    LedSequence front_center = 1;
+    LedSequence front_left = 2;
+    LedSequence front_right = 3;
+    LedSequence hind_left = 4;
+    LedSequence hind_right = 5;
+
+    // Additional sequences for Non-AV system lights. If a sequence is not specified, then it
+    // defaults to no operation (meaning, other systems can control these separate from the AV
+    // system).
+    SpotCamSequence spot_cam = 6;
+    StatusLightsSequence status_lights = 7;
+}
+
+// A group of sequences that can be played on the Piezo buzzer.
+message AudioSequenceGroup {
+    message BuzzerSequence {
+        message NoteWithDuration {
+            // The note specification (note name or rest) and modifiers (sharp/flat, octave).
+            bosdyn.api.spot.BuzzerNoteParams note = 1;
+            google.protobuf.Duration duration = 2;
+        }
+        repeated NoteWithDuration notes = 1;
+    }
+
+    // A sequence that sets what is played on the buzzer. If a sequence is not specified, the
+    // buzzer defaults to not playing anything.
+    BuzzerSequence buzzer = 1;
+}
+
+// Specifies a combination of sound, buzzer, and LED states.
+message AudioVisualBehavior {
+    bool enabled = 1;
+    int32 priority = 2;
+
+    // The sequences for the LEDs.
+    LedSequenceGroup led_sequence_group = 3;
+    // The sequence group for the buzzer.
+    AudioSequenceGroup audio_sequence_group = 4;
+}
+
+message LiveAudioVisualBehavior {
+    string name = 1;
+    // Whether this behavior is marked permanent, and cannot be edited or deleted.
+    // This field will be filled out for ListBehaviors.
+    bool permanent = 2;
+    AudioVisualBehavior behavior = 3;
+}
+
+/* RUN BEHAVIOR */
+
+message RunBehaviorRequest {
+    RequestHeader header = 1;
+
+    // Which behavior to run.
+    string name = 2;
+
+    // The timestamp (in robot time) when this behavior will stop.
+    google.protobuf.Timestamp end_time = 3;
+
+    // If this behavior is already running, setting this to true will restart the behavior's
+    // sequences from the beginning. If this behavior is not running, this parameter has no effect.
+    bool restart = 4;
+}
+
+message RunBehaviorResponse {
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // The system attempted to run the specified behavior. Check run_result for more details.
+        STATUS_SUCCESS = 1;
+        // The specified behavior name does not exist in the system.
+        STATUS_DOES_NOT_EXIST = 2;
+        // The specified end_time has already expired.
+        STATUS_EXPIRED = 3;
+    }
+
+    enum RunResult {
+        RESULT_UNKNOWN = 0;
+        // The behavior was run.
+        RESULT_BEHAVIOR_RUN = 1;
+        // The behavior was not run because the system is currently disabled.
+        RESULT_SYSTEM_DISABLED = 2;
+        // The behavior was not run because it is disabled.
+        RESULT_BEHAVIOR_DISABLED = 3;
+        // The behavior was not run because it has a lower priority than the currently active
+        // behavior.
+        RESULT_LOW_PRIORITY = 4;
+        // The behavior was not run, because it is already being run by a different client.
+        RESULT_ALREADY_RUNNING = 5;
+    }
+
+    ResponseHeader header = 1;
+    Status status = 2;
+
+    // The result of running this behavior.
+    RunResult run_result = 3;
+
+}
+
+/* STOP BEHAVIOR */
+message StopBehaviorRequest {
+    RequestHeader header = 1;
+
+    // The name of the behavior to stop.
+    string behavior_name = 2;
+}
+
+message StopBehaviorResponse {
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // StopBehavior ran successfully. Check result for more details.
+        STATUS_SUCCESS = 1;
+        // The client that issued this request is not the client that was running the behavior.
+        STATUS_INVALID_CLIENT = 2;
+    }
+
+    ResponseHeader header = 1;
+    Status status = 2;
+}
+
+/* LIST BEHAVIORS */
+message ListBehaviorsRequest {
+    RequestHeader header = 1;
+}
+
+message ListBehaviorsResponse {
+    ResponseHeader header = 1;
+
+    repeated LiveAudioVisualBehavior behaviors = 2;
+}
+
+/* SYSTEM PARAMS */
+message PresetColorAssociation {
+    enum PredefinedColor {
+        PREDEFINED_UNKNOWN = 0;
+        PREDEFINED_GREEN = 1;
+        PREDEFINED_AMBER = 2;
+        PREDEFINED_RED = 3;
+        PREDEFINED_BLUE = 4;
+        PREDEFINED_PINK = 5;
+        PREDEFINED_PURPLE = 6;
+        PREDEFINED_WHITE = 7;
+    }
+
+    oneof association {
+        PredefinedColor color_name = 1;
+        Color.RGB custom_value = 2;
+    }
+}
+
+// These values will persist across robot reboots.
+message AudioVisualSystemParams {
+    // True if the system is currently enabled.
+    bool enabled = 1;
+
+    // The current max brightness [0, 1].
+    float max_brightness = 2;
+
+    // The buzzer's current max volume [0, 1].
+    float buzzer_max_volume = 3;
+
+
+    PresetColorAssociation normal_color_association = 5;
+    PresetColorAssociation warning_color_association = 6;
+    PresetColorAssociation danger_color_association = 7;
+}
+
+message GetSystemParamsRequest {
+    RequestHeader header = 1;
+}
+
+message GetSystemParamsResponse {
+    ResponseHeader header = 1;
+
+    AudioVisualSystemParams params = 2;
+}
+
+message SetSystemParamsRequest {
+    RequestHeader header = 1;
+
+    // True if the system is currently enabled.
+    google.protobuf.BoolValue enabled = 2;
+
+    // The new max brightness value [0, 1].
+    google.protobuf.FloatValue max_brightness = 3;
+
+    // The new buzzer max volume value [0, 1].
+    google.protobuf.FloatValue buzzer_max_volume = 4;
+
+
+    PresetColorAssociation normal_color_association = 6;
+    PresetColorAssociation warning_color_association = 7;
+    PresetColorAssociation danger_color_association = 8;
+}
+
+message SetSystemParamsResponse {
+    ResponseHeader header = 1;
+}

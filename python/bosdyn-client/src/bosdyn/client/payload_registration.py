@@ -20,6 +20,7 @@ from bosdyn.client import (ResponseError, RetryableUnavailableError, TimedOutErr
                            TooManyRequestsError)
 from bosdyn.client.common import (BaseClient, error_factory, handle_common_header_errors,
                                   handle_lease_use_result_errors, handle_unset_status_error)
+from bosdyn.client.error_callback_result import ErrorCallbackResult
 
 LOGGER = logging.getLogger('payload_registration_client')
 
@@ -381,16 +382,23 @@ class PayloadRegistrationKeepAlive(object):
           class name is acquired.
       rpc_timeout_secs: Number of seconds to wait for a pay_reg_client RPC. Defaults to None,
           for no timeout.
+      initial_retry_seconds: Number of seconds to wait before retrying registration that failed
+          due to unhandled errors including RPC transport issues.
     """
 
     def __init__(self, pay_reg_client, payload, secret, registration_interval_secs=30, logger=None,
-                 rpc_timeout_secs=None):
+                 rpc_timeout_secs=None, initial_retry_seconds=1.0):
         self.pay_reg_client = pay_reg_client
         self.payload = payload
         self.secret = secret
         self._registration_interval_secs = registration_interval_secs
         self.logger = logger or logging.getLogger(self.__class__.__name__)
         self._rpc_timeout_secs = rpc_timeout_secs
+        self._initial_retry_seconds = initial_retry_seconds
+
+        #: Callable[[Exception], ErrorCallbackResult] | None: Optional callback to be called when
+        #: an error occurs in the re-registration thread.
+        self.reregistration_error_callback = None
 
         # Configure the thread to do re-registration.
         self._end_reregister_signal = threading.Event()
@@ -423,6 +431,7 @@ class PayloadRegistrationKeepAlive(object):
 
         # This will raise an exception if the thread has already started.
         self._thread.start()
+        return self
 
     def is_alive(self):
         """Are we still periodically re-registering?
@@ -445,8 +454,12 @@ class PayloadRegistrationKeepAlive(object):
           RpcError: Problem communicating with the robot.
         """
         self.logger.info('Starting registration loop')
-        while True:
+        retry_interval = self._initial_retry_seconds
+        wait_time = self._registration_interval_secs
+
+        while not self._end_reregister_signal.wait(wait_time):
             exec_start = time.time()
+            action = ErrorCallbackResult.RESUME_NORMAL_OPERATION
             try:
                 self.pay_reg_client.register_payload(self.payload, self.secret)
             except PayloadAlreadyExistsError:
@@ -459,10 +472,31 @@ class PayloadRegistrationKeepAlive(object):
                 self.logger.warning('Timed out, timeout set to "{}"'.format(self._rpc_timeout_secs))
             except TooManyRequestsError:
                 self.logger.warning("Too many requests error")
-            except Exception as exc:
-                # Log all other exceptions, but continue looping in hopes that it resolves itself
-                self.logger.exception('Caught general exception.')
+            except Exception as exc:  # pylint: disable=broad-except
+                # If the application provided an error handler, give it an opportunity to resolve
+                # the issue.
+                if self.reregistration_error_callback is not None:
+                    action = ErrorCallbackResult.DEFAULT_ACTION
+                    try:
+                        action = self.reregistration_error_callback(exc)
+                    except Exception:  # pylint: disable=broad-except
+                        self.logger.exception(
+                            'Exception thrown in the provided re-registration error callback ')
+                else:
+                    # Log all other exceptions, but continue looping in hopes that it resolves itself
+                    self.logger.exception('Caught general exception.')
+
             exec_sec = time.time() - exec_start
-            if self._end_reregister_signal.wait(self._registration_interval_secs - exec_sec):
+            if action == ErrorCallbackResult.ABORT:
+                self.logger.warning('Callback directed the re-registration loop to exit.')
                 break
+            elif action == ErrorCallbackResult.RETRY_IMMEDIATELY:
+                wait_time = 0.0
+            elif action == ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF:
+                wait_time = retry_interval - exec_sec
+                retry_interval = min(retry_interval * 2, self._registration_interval_secs)
+            else:
+                # Success path, or default action (resume normal operation)
+                wait_time = self._registration_interval_secs - exec_sec
+                retry_interval = self._initial_retry_seconds
         self.logger.info('Re-registration stopped')

@@ -17,7 +17,6 @@ The following examples show how to use Spot's perception system, through image s
 - [World Object With Image Coordinates](../world_object_with_image_coordinates/README.md)
 - [World Object Mutations](../world_object_mutations/README.md)
 - [Visualizer](../visualizer/README.md)
-- [Ricoh Theta](../ricoh_theta/README.md)
 - [Gripper Camera Parameters](../gripper_camera_params/README.md)
 - [Spot CAM](../spot_cam/README.md)
 - [Stitch Front Images](../stitch_front_images/README.md)

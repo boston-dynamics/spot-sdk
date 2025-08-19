@@ -59,9 +59,9 @@ The image service's `GetImage` RPC retrieves images, based on the image source r
 
 When `use_background_capture_thread` is set to False, the `CameraBaseImageServicer` will make the call to the `blocking_capture` function during the completion of the RPC.
 
-### Example Image Services
+### Example Image Service
 
-There are two SDK examples showing `ImageService` implementations using the helper functions: a [USB web camera](../../python/examples/service_customization/custom_parameter_image_server/README.md), and the [Ricoh Theta camera](../../python/examples/ricoh_theta/README.md).
+There is an SDK example showing an `ImageService` implementation using the helper functions: a [USB web camera](../../python/examples/service_customization/custom_parameter_image_server/README.md).
 
 ### Tips for Creating an Image Service
 

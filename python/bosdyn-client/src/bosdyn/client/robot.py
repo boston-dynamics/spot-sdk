@@ -131,6 +131,10 @@ class Robot(object):
         self._time_sync_thread = None
         self.executor = None
 
+        #: Callable[[Exception], ErrorCallbackResult] | None: Optional callback to be invoked when
+        #: an error occurs in the token refresh thread.
+        self.token_refresh_error_callback = None
+
         # Set default max message length for sending and receiving. These values are used when
         # creating channels.
         self.max_send_message_length = DEFAULT_MAX_MESSAGE_LENGTH

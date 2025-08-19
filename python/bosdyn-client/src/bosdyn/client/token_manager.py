@@ -14,10 +14,14 @@ import logging
 import threading
 
 from .auth import InvalidTokenError
-from .exceptions import ResponseError, RpcError
+from .error_callback_result import ErrorCallbackResult
+from .exceptions import ResponseError, RpcError, TimedOutError
 from .token_cache import WriteFailedError
 
 _LOGGER = logging.getLogger(__name__)
+
+USER_TOKEN_REFRESH_TIME_DELTA = datetime.timedelta(hours=1)
+USER_TOKEN_RETRY_INTERVAL_START = datetime.timedelta(seconds=1)
 
 
 class TokenManager:
@@ -26,10 +30,13 @@ class TokenManager:
        The refresh policy assumes the token is minted and then the manager is
        launched."""
 
-    def __init__(self, robot, timestamp=None):
+    def __init__(self, robot, timestamp=None, refresh_interval=USER_TOKEN_REFRESH_TIME_DELTA,
+                 initial_retry_interval=USER_TOKEN_RETRY_INTERVAL_START):
         self.robot = robot
 
         self._last_timestamp = timestamp or datetime.datetime.now()
+        self._refresh_interval = refresh_interval
+        self._initial_retry_seconds = initial_retry_interval
 
         # Daemon threads can still run during shutdown after python has
         # started to clear out things in globals().
@@ -51,33 +58,55 @@ class TokenManager:
 
     def update(self):
         """Refresh the user token as needed."""
-        USER_TOKEN_REFRESH_TIME_DELTA = datetime.timedelta(hours=1)
-        USER_TOKEN_RETRY_INTERVAL_START = datetime.timedelta(seconds=1)
+        retry_interval = self._initial_retry_seconds
+        wait_time = min(self._refresh_interval - (datetime.datetime.now() - self._last_timestamp),
+                        self._refresh_interval)
 
-        retry_interval = USER_TOKEN_RETRY_INTERVAL_START
-        while not self._exit_thread.is_set():
-            elapsed_time = datetime.datetime.now() - self._last_timestamp
-            if elapsed_time >= USER_TOKEN_REFRESH_TIME_DELTA:
-                try:
-                    self.robot.authenticate_with_token(self.robot.user_token)
-                except WriteFailedError:
-                    _LOGGER.exception(
-                        "Failed to save the token to the cache.  Continuing without caching.")
-                except (InvalidTokenError, ResponseError, RpcError):
-                    _LOGGER.exception("Error refreshing the token.  Retry in %s", retry_interval)
-
-                    # Exponential back-off on retrying
-                    self._exit_thread.wait(retry_interval.seconds)
-                    retry_interval = min(2 * retry_interval, USER_TOKEN_REFRESH_TIME_DELTA)
-                    continue
-
-                retry_interval = USER_TOKEN_RETRY_INTERVAL_START
-
-                # Wait until the specified time or get interrupted by user.
+        while not self._exit_thread.wait(wait_time.total_seconds()):
+            start_time = datetime.datetime.now()
+            action = ErrorCallbackResult.RESUME_NORMAL_OPERATION
+            try:
+                self.robot.authenticate_with_token(self.robot.user_token)
                 self._last_timestamp = datetime.datetime.now()
-                elapsed_time = USER_TOKEN_REFRESH_TIME_DELTA
+            except WriteFailedError:
+                _LOGGER.exception(
+                    "Failed to save the token to the cache.  Continuing without caching.")
+            except (InvalidTokenError, ResponseError, RpcError) as exc:
+                _LOGGER.exception("Error refreshing the token.")
+                # Default course of action is to retry with a back-off, unless the application
+                # supplied callback directs us to do otherwise.
+                action = ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF
+                # If the application provided a callback and the error was encountered while
+                # refreshing the token, invoke the callback so that the application can take
+                # appropriate action.
+                if self.robot.token_refresh_error_callback is not None and not isinstance(
+                        exc, TimedOutError):
+                    try:
+                        action = self.robot.token_refresh_error_callback(exc)
+                    except Exception:  #pylint: disable=broad-except
+                        _LOGGER.exception(
+                            "Exception thrown in the provided token refresh error callback")
+                if action == ErrorCallbackResult.RESUME_NORMAL_OPERATION:
+                    _LOGGER.warning("Refreshing token in %s", self._refresh_interval)
 
-            self._exit_thread.wait(elapsed_time.seconds)
+            elapsed = datetime.datetime.now() - start_time
+            if action == ErrorCallbackResult.ABORT:
+                _LOGGER.warning(
+                    "Application-supplied callback directed the token refresh loop to exit.")
+                break
+            elif action == ErrorCallbackResult.RETRY_IMMEDIATELY:
+                _LOGGER.warning("Retrying to refresh token immediately.")
+                wait_time = datetime.timedelta(seconds=0)
+            elif action == ErrorCallbackResult.RESUME_NORMAL_OPERATION:
+                wait_time = self._refresh_interval - elapsed
+                retry_interval = self._initial_retry_seconds
+            else:
+                # action doesn't match one of the enum values or is one of
+                # RETRY_WITH_EXPONENTIAL_BACK_OFF or DEFAULT_ACTION
+                _LOGGER.warning("Retrying token refresh in %s", retry_interval)
+                wait_time = retry_interval - elapsed
+                retry_interval = min(2 * retry_interval, self._refresh_interval)
+
         message = 'Shutting down monitoring of token belonging to robot {}'.format(
             self.robot.address)
         _LOGGER.debug(message)

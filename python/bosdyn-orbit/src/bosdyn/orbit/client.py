@@ -6,6 +6,7 @@
 
 """ The client uses a web API to send HTTPs requests to a number of REStful endpoints using the Requests library.
 """
+import warnings
 from typing import Dict, Iterable
 
 import requests
@@ -792,26 +793,51 @@ class Client():
             "siteDockUuid": site_dock_uuid
         }, **kwargs)
 
-    def post_dispatch_mission_to_robot(self, robot_nickname: str, driver_id: str, mission_uuid: str,
-                                       delete_mission: bool, force_acquire_estop: bool,
-                                       skip_initialization: bool, **kwargs) -> requests.Response:
+    def post_dispatch_mission_to_robot(self, robot_nickname: str, driver_id: str,
+                                       mission_uuid: str = None, delete_mission: bool = False,
+                                       force_acquire_estop: bool = False,
+                                       skip_initialization: bool = True, walk=None,
+                                       **kwargs) -> requests.Response:
         """ Dispatch the robot to a mission given a mission uuid.
 
             Args:
                 robot_nickname: the nickname of the robot.
                 driver_id: the current driver ID of the mission.
-                mission_uuid: uuid of the mission(also known as SiteWalk) to dispatch.
-                delete_mission: whether to delete the mission after playback.
+                mission_uuid: Deprecated. Use 'walk' instead.
+                delete_mission: DEPRECATED and no longer supported. Instead, use a temporary walk file that will not be reused.
                 force_acquire_estop: whether to force acquire E-stop from the previous client.
                 skip_initialization: whether to skip initialization when starting the return to dock mission.
+                walk: the walk to dispatch the robot to. If this is set, mission_uuid should be None.
                 kwargs(**): a variable number of keyword arguments for the post request.
             Raises:
+                ValueError: if neither or both of mission_uuid and walk are set.
+                AssertionError: if delete_mission is set to True.
                 RequestExceptions: exceptions thrown by the Requests library.
                 UnauthenticatedClientError:  indicates that the client is not authenticated properly.
             Returns:
                 requests.Response: The response associated with the post request.
         """
         # Payload required for dispatching a mission
+        if (mission_uuid is not None and walk is not None) or (mission_uuid is None and
+                                                               walk is None):
+            raise ValueError(
+                "Exactly one of mission_uuid or walk must be set (not both or neither).")
+
+        if delete_mission:
+            raise AssertionError(
+                "'delete_mission' is deprecated and no longer supported. "
+                "Instead, pass in a 'walk' object that only temporarily exists and will not be reused."
+            )
+
+        dispatch_target = {}
+        if mission_uuid is not None:
+            warnings.warn(
+                "'mission_uuid' is deprecated and will be removed in a future release. "
+                "Please use 'walk' instead.", DeprecationWarning, stacklevel=2)
+            dispatch_target["missionId"] = mission_uuid
+        if walk is not None:
+            dispatch_target["walk"] = walk
+
         payload = {
             "agent": {
                 "nickname": robot_nickname
@@ -829,15 +855,14 @@ class Client():
                 }
             },
             "task": {
-                "missionId": mission_uuid,
+                "dispatchTarget": dispatch_target,
                 "forceAcquireEstop": force_acquire_estop,
-                "deleteMission": delete_mission,
                 "requireDocked": False,
                 "skipInitialization": skip_initialization
             },
             "eventMetadata": {
-                "name": "API Triggered Mission"
-            }
+                "name": f"Driver Triggered Mission ({driver_id})"
+            },
         }
         return self.post_resource(
             f'calendar/mission/dispatch/{robot_nickname}?currentDriverId={driver_id}', json=payload,

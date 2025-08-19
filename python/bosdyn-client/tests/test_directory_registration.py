@@ -6,6 +6,7 @@
 
 """Unit tests for the directory registration module."""
 import time
+from unittest.mock import patch
 
 import pytest
 
@@ -13,16 +14,19 @@ import bosdyn.api.directory_pb2 as directory_protos
 import bosdyn.api.directory_registration_pb2 as directory_registration_protos
 import bosdyn.api.directory_registration_service_pb2_grpc as directory_registration_service
 import bosdyn.api.header_pb2 as HeaderProto
-import bosdyn.client.common
 import bosdyn.client.directory_registration
-import bosdyn.client.processors
-from bosdyn.client import InternalServerError, UnsetStatusError
 from bosdyn.client.directory_registration import (DirectoryRegistrationKeepAlive,
                                                   ServiceAlreadyExistsError,
                                                   ServiceDoesNotExistError)
+from bosdyn.client.error_callback_result import ErrorCallbackResult
 from bosdyn.client.exceptions import InvalidRequestError
 
-from . import helpers
+from . import error_callback_helpers, helpers
+
+# default registration interval
+INTERVAL_SECONDS = 30.0
+# default initial retry time for exponential backoff
+INITIAL_RETRY_SECONDS = 1.0
 
 
 class MockDirectoryRegistrationServicer(
@@ -41,9 +45,12 @@ class MockDirectoryRegistrationServicer(
         self.error_code = HeaderProto.CommonError.CODE_OK
         self.error_message = None
         self.use_unspecified_status = False
+        self.simulate_service_error = False
 
     def RegisterService(self, request, context):
         """Implement the RegisterService function of the service."""
+        if self.simulate_service_error:
+            return None
         response = directory_registration_protos.RegisterServiceResponse()
         helpers.add_common_header(response, request, self.error_code, self.error_message)
         if self.error_code != HeaderProto.CommonError.CODE_OK:
@@ -69,7 +76,7 @@ class MockDirectoryRegistrationServicer(
         return response
 
     def UpdateService(self, request, context):
-        """Implement the UnregisterService function of the service."""
+        """Implement the UpdateService function of the service."""
         response = directory_registration_protos.UpdateServiceResponse()
         helpers.add_common_header(response, request, self.error_code, self.error_message)
         if self.error_code != HeaderProto.CommonError.CODE_OK:
@@ -219,3 +226,125 @@ def test_keep_alive_update(default_service_entry, default_service_endpoint):
         # Make sure the thread is still alive after a few loops.
         time.sleep(interval_seconds * 3)
         assert keepalive.is_alive()
+
+
+def _run_keepalive_test(service_entry, service_endpoint, mock_time, callback, test_time,
+                        interval_seconds=INTERVAL_SECONDS,
+                        initial_retry_seconds=INITIAL_RETRY_SECONDS):
+    with patch('bosdyn.client.directory_registration.time', mock_time):
+        client, service, server = _setup()
+
+        client.register(service_entry.name, service_entry.type, service_entry.authority,
+                        service_endpoint.host_ip, service_endpoint.port)
+
+        keepalive = bosdyn.client.directory_registration.DirectoryRegistrationKeepAlive(
+            client, rpc_interval_seconds=interval_seconds,
+            initial_retry_seconds=initial_retry_seconds)
+        keepalive.reregistration_error_callback = callback
+        keepalive._end_reregister_signal = mock_time
+
+        with keepalive.start(service_entry.name, service_entry.type, service_entry.authority,
+                             service_endpoint.host_ip, service_endpoint.port):
+
+            service.simulate_service_error = True
+
+            mock_time.run(test_time)
+
+
+def test_keep_alive_update_error_callback_is_invoked_on_rpc_error(default_service_entry,
+                                                                  default_service_endpoint):
+    mt = error_callback_helpers.MockTime()
+    callback = error_callback_helpers.SimpleCallback(mock_time=mt)
+
+    _run_keepalive_test(default_service_entry, default_service_endpoint, mt, callback,
+                        INTERVAL_SECONDS * 3.5)
+
+    assert len(callback.times) == 3
+    assert callback.times[0] == pytest.approx(INTERVAL_SECONDS)
+    t_diff = error_callback_helpers.diff(callback.times)
+    assert t_diff == pytest.approx((INTERVAL_SECONDS, INTERVAL_SECONDS))
+
+
+def test_keep_alive_update_error_callback_resume_normal_operation(default_service_entry,
+                                                                  default_service_endpoint):
+    mt = error_callback_helpers.MockTime()
+    callback = error_callback_helpers.SimpleCallback(ErrorCallbackResult.RESUME_NORMAL_OPERATION,
+                                                     mock_time=mt)
+
+    _run_keepalive_test(default_service_entry, default_service_endpoint, mt, callback,
+                        INTERVAL_SECONDS * 3.5)
+
+    assert len(callback.times) == 3
+    assert callback.times[0] == pytest.approx(INTERVAL_SECONDS)
+    t_diff = error_callback_helpers.diff(callback.times)
+    assert t_diff == pytest.approx((INTERVAL_SECONDS, INTERVAL_SECONDS))
+
+
+def test_keep_alive_update_error_callback_retry_immediately(default_service_entry,
+                                                            default_service_endpoint):
+    mt = error_callback_helpers.MockTime()
+    callback = error_callback_helpers.PolicySwitchingCallback(
+        ErrorCallbackResult.RETRY_IMMEDIATELY, ErrorCallbackResult.RESUME_NORMAL_OPERATION, 3,
+        mock_time=mt)
+
+    _run_keepalive_test(default_service_entry, default_service_endpoint, mt, callback,
+                        INTERVAL_SECONDS * 2.5)
+
+    assert len(callback.times) == 5
+    assert callback.times[0] == pytest.approx(INTERVAL_SECONDS)
+    t_diff = error_callback_helpers.diff(callback.times)
+    assert t_diff == pytest.approx((0.0, 0.0, 0.0, INTERVAL_SECONDS))
+
+
+def test_keep_alive_update_error_callback_abort(default_service_entry, default_service_endpoint):
+    mt = error_callback_helpers.MockTime()
+    callback = error_callback_helpers.SimpleCallback(ErrorCallbackResult.ABORT, mock_time=mt)
+
+    _run_keepalive_test(default_service_entry, default_service_endpoint, mt, callback,
+                        INTERVAL_SECONDS * 1.5)
+
+    assert len(callback.times) == 1
+    assert callback.times[0] == pytest.approx(INTERVAL_SECONDS)
+
+
+def test_keep_alive_update_error_callback_exponential_backoff(default_service_entry,
+                                                              default_service_endpoint):
+    mt = error_callback_helpers.MockTime()
+    callback = error_callback_helpers.SimpleCallback(
+        ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF, mock_time=mt)
+    interval_seconds = 30.0
+    initial_retry_seconds = 1.0
+
+    # 30 + 1 + 2 + 4 + 8 + 16 = 61
+    # + 0.5 * interval_seconds => 76
+    _run_keepalive_test(default_service_entry, default_service_endpoint, mt, callback, 76,
+                        interval_seconds=interval_seconds,
+                        initial_retry_seconds=initial_retry_seconds)
+
+    assert len(callback.times) == 6
+    assert callback.times[0] == pytest.approx(interval_seconds)
+    t_diff = error_callback_helpers.diff(callback.times)
+    assert t_diff == pytest.approx(tuple(initial_retry_seconds * (2**count) for count in range(5)))
+
+
+def test_keep_alive_update_error_callback_exponential_backoff_levels_off(
+        default_service_entry, default_service_endpoint):
+
+    mt = error_callback_helpers.MockTime()
+    callback = error_callback_helpers.SimpleCallback(
+        ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF, mock_time=mt)
+    interval_seconds = 30.0
+    initial_retry_seconds = 2.0
+
+    # 30 + 2 + 4 + 8 + 16 + 30 + 30 = 120
+    # + 0.5 * interval_seconds => 135
+    _run_keepalive_test(default_service_entry, default_service_endpoint, mt, callback, 135,
+                        interval_seconds=interval_seconds,
+                        initial_retry_seconds=initial_retry_seconds)
+
+    assert len(callback.times) == 7
+    assert callback.times[0] == pytest.approx(interval_seconds)
+    t_diff = error_callback_helpers.diff(callback.times)
+    assert t_diff == pytest.approx(
+        tuple(initial_retry_seconds * (2**count) for count in range(4)) +
+        (interval_seconds, interval_seconds))

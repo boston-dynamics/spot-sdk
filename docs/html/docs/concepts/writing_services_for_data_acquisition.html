@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Integrate a Payload with the Data Acquisition Pipeline &mdash; Spot 5.0.0 documentation</title>
+  <title>Integrate a Payload with the Data Acquisition Pipeline &mdash; Spot 5.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.0
+                5.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -59,6 +59,7 @@
 <li class="toctree-l2"><a class="reference internal" href="robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="estop_service.html">E-Stop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="keepalive_service.html">KeepAlive (BETA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audio_visual.html">Audio Visual</a></li>
 <li class="toctree-l2"><a class="reference internal" href="lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="developing_api_services.html">Developing API Services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="service_customization.html">Service Customization</a></li>
@@ -138,6 +139,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/comms_test/README.html">Comms Test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/disable_ir_emission/README.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/reset_safety_stop/README.html">Reset Safety Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/audio_visual/audio_visual_params/README.html">Audio Visual Params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/examples/audio_visual/audio_visual_behaviors/README.html">Audio Visual Behaviors</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
@@ -198,7 +201,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/visualizer/README.html">Visualizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
@@ -229,7 +231,6 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_faults/README.html">Faults</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -290,6 +291,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/audio_visual.html">Audio Visual</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/audio_visual_helpers.html">Audio Visual Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
@@ -311,6 +314,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/door.html">Door</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/error_callback_result.html">Error Callback Result</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
@@ -550,9 +554,9 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The image service’s <code class="docutils literal notranslate"><span class="pre">GetImage</span></code> RPC retrieves images, based on the image source requested, from the payload using the camera’s API (e.g. OpenCV) and converts them into the <code class="docutils literal notranslate"><span class="pre">bosdyn.api.Image</span></code> proto message to be returned by the service. This RPC is meant to complete “quickly” when communicating with the payload and returning the collected images. To enable a fast response to the RPC for slower captures, the <code class="docutils literal notranslate"><span class="pre">CameraBaseImageServicer</span></code> image service constructor has the argument <code class="docutils literal notranslate"><span class="pre">use_background_capture_thread</span></code>, which when set to True will create a background thread for each image source that will continuously fetch images from the camera payloads and keep a buffer of these images to reduce the latency when responding to the RPC. The <code class="docutils literal notranslate"><span class="pre">CameraBaseImageServicer</span></code> will then respond to a <code class="docutils literal notranslate"><span class="pre">GetImage</span></code> RPC with the most recent image stored in the buffer from the capture thread, instead of calling out to the service. By default, an image service will have <code class="docutils literal notranslate"><span class="pre">use_background_capture_thread</span></code> set to True and create threads for each image source.</p>
 <p>When <code class="docutils literal notranslate"><span class="pre">use_background_capture_thread</span></code> is set to False, the <code class="docutils literal notranslate"><span class="pre">CameraBaseImageServicer</span></code> will make the call to the <code class="docutils literal notranslate"><span class="pre">blocking_capture</span></code> function during the completion of the RPC.</p>
 </section>
-<section id="example-image-services">
-<h3>Example Image Services<a class="headerlink" href="#example-image-services" title="Permalink to this heading"></a></h3>
-<p>There are two SDK examples showing <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> implementations using the helper functions: a <a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html"><span class="doc">USB web camera</span></a>, and the <a class="reference internal" href="../../python/examples/ricoh_theta/README.html"><span class="doc">Ricoh Theta camera</span></a>.</p>
+<section id="example-image-service">
+<h3>Example Image Service<a class="headerlink" href="#example-image-service" title="Permalink to this heading"></a></h3>
+<p>There is an SDK example showing an <code class="docutils literal notranslate"><span class="pre">ImageService</span></code> implementation using the helper functions: a <a class="reference internal" href="../../python/examples/service_customization/custom_parameter_image_server/README.html"><span class="doc">USB web camera</span></a>.</p>
 </section>
 <section id="tips-for-creating-an-image-service">
 <h3>Tips for Creating an Image Service<a class="headerlink" href="#tips-for-creating-an-image-service" title="Permalink to this heading"></a></h3>

@@ -12,7 +12,93 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## Release 5.0.1
+
+### Breaking Changes
+
+#### Orbit
+
+- The `missionName` parameter for the `/runs/facets/actions` endpoint has been changed from a `path` parameter to a `query` parameter.
+  - Old usage: /runs/facets/actions/{missionName}
+  - New usage: /runs/facets/actions?missionName={yourMissionName}
+- The query parameter `includeLaunchFailures` has been renamed to `includeDispatchFailures`. This change clarifies the intent of the parameter, now specifically referring to dispatch-related failures.
+
+### Upcoming Breaking Changes
+
+#### Robot
+
+- In 5.1, we plan on normalizing payload GUIDs to comply with UUIDs as defined in [RFC 4122](https://www.rfc-editor.org/rfc/rfc4122). This means that sometime after 5.1, customers and partners should expect that all alphabetic letters in payload GUIDs will be lowercase. We will try to minimize disruption by automatically converting GUIDs to lowercase and we anticipate that this would be sufficient, but there's a small possibility that payloads would need to be re-registered.
+
+### New Features
+
+- New SDK support is released for using the Auditory and Visual (A/V) Warning System. It is now possible to use the `AudioVisualClient` in [audio_visual.py](../python/bosdyn-client/src/bosdyn/client/audio_visual.py) to run and stop A/V behaviors, list available A/V behaviors, and read and set the A/V system parameters. A/V system parameters that can be set include enabling/disabling the A/V system, adjusting the volume level of the buzzer, and setting the brightness of the A/V lights. More information concerning the A/V system's functionality is available [here](concepts/audio_visual.md). WARNING: These changes will allow you to adjust the buzzer volume. At higher volumes, prolonged exposure to the noise produced by the buzzer can be harmful. Refer to _Spot Instructions for Use_ available at [Spot Product Safety](https://support.bostondynamics.com/s/spot/product-safety). NOTE: This funtionality applies only to Spots that have the A/V system, which includes model numbers 04‑00143531‑401, 04‑00143531‑601, and 04‑00143531‑611. To find your model number, check the label inside Spot's battery compartment.
+
+### Bug Fixes and Improvements
+
+- Enhanced error handling and client notification for authentication token expiration and directory registration failures in long-running Spot API clients and services has been addressed. This was a long-standing issue that would occur if an API client was unable to refresh its authentication token for an extended period of time (due to e.g., prolonged network connectivity issues, issues with the robot's services), which would result in the token expiring without any clear indication to client code. Since most payload services are intended to run continuously, this would result in silent failures and loss of service functionality. To take advantage of this new functionality, callbacks are supplied by setting the callback to a property on the relevant object. For token refresh errors, set the callback to the `token_refresh_error_callback` property on the `Robot` class instance. The relevant properties for callback registration on other classes are `DirectoryRegistrationKeepalive.reregistration_error_callback`, `PayloadRegistrationKeepAlive.reregistration_error_callback`, and `PolicyKeepalive.keepalive_error_callback`. The corresponding tests have been updated accordingly in the following files: `test_directory_registration.py`, `test_keepalive.py`, `test_payload_registration.py`, and `test_token_manager.py`.
+
+#### GraphNav
+
+- GraphNav now supports more efficient map upload by default (if implemented by client) by enabling clients to avoid uploading redundant parts of the map. Here, redundant is defined as a part of the map that is already on the robot that has not changed. Note that this feature has not been implemented in the SDK, so the onus is on the client to determine what has and has not changed, then only upload the former. If the area Spot is currently localized to has not changed, localization is retained. Clients should check the `replaced_graph` flag in the [UploadGraphResponse](../protos/bosdyn/api/graph_nav/graph_nav.proto#uploadgraphresponse) to confirm the robot acknowledged the request. If not, the robot is running older software and the map should be cleared before retrying without this flag. To retain the original behavior where the robot replaced the existing map with the uploaded map instead of merging them, set the `replace_graph` field in the [UploadGraphRequest](../protos/bosdyn/api/graph_nav/graph_nav.proto#uploadgraphrequest) to `true`.
+
+#### Math Helpers
+
+- One new helper function has been added to the `SE3Pose` class in [math_helpers.py](../python/bosdyn-client/src/bosdyn/client/math_helpers.py). This function calculates the Euclidean norm of the corresponding `SE3Pose`.
+
+#### Missions
+
+The helper functions, `python_var_to_value` and `python_type_to_pb_type`, in [util.py](https://github.com/boston-dynamics/spot-sdk/blob/master/python/bosdyn-mission/src/bosdyn/mission/util.py) are now compatible with the recommended Python versions (3.7-3.10). These methods previously used `match: case:`, available only in Python 3.10 and later.
+
+#### Service Customization
+
+- Validation of service customization's [CustomParams](../protos/bosdyn/api/service_customization.proto#customparams) message no longer results in an exception being thrown at playback time. This would occur when the user entered a string at record time that was not in the `options` for a [StringParam](../protos/bosdyn/api/service_customization.proto), even though `editable` was set. The corresponding tests have been updated accordingly in `test_service_customization_helpers.py`.
+
+### Orbit Sample Code
+
+#### New
+
+- Two new examples are available to help you get started with the A/V system (note that your robot must have an A/V system; see the `New Features` section above for more information):
+  - [A/V Behaviors](../python/examples/audio_visual/audio_visual_behaviors/README.md): Demonstrates how to use the `AudioVisualClient` to list, run, and stop available A/V behaviors on supported Spot robots. This example can be used to trigger warning sounds and lights, and to observe how the robot responds to different behavior commands.
+  - [A/V Params](../python/examples/audio_visual/audio_visual_params/README.md): Shows how to read and modify the A/V system parameters, such as enabling/disabling the system, adjusting buzzer volume, and setting light brightness. This example is useful for understanding how to configure the A/V system for different operational needs.
+
+#### Updated
+
+- [Orbit Client](../python/bosdyn-orbit/src/bosdyn/orbit/client.py):
+  - `post_dispatch_mission_to_robot` method:
+    - New `walk` parameter: use the new `walk` parameter to specify missions. You must provide either `walk` or mission_uuid, but not both.
+    - `mission_uuid` has been deprecated and will be removed in a future release.
+    - `delete_mission` has been removed and is no longer supported.
+    - `skip_initialization` now defaults to `True`.
+    - Mission dispatch events now include the `driver_id` for better tracking.
+    - The [Send Robot Back to Dock](../python/examples/orbit/send_robot_back_to_dock/README.md) example has been updated accordingly.
+
+### Deprecations
+
+- The `get_camera_calib_asnyc` (sic) method in [gripper_camera_param.py](../python/bosdyn-client/src/bosdyn/client/gripper_camera_param.py) is deprecated in favor of the `get_camera_calib_async` method in the same file.
+
+- The `mission_uuid` parameter in the `post_dispatch_mission_to_robot` method in the [Orbit Client](../python/bosdyn-orbit/src/bosdyn/orbit/client.py) is deprecated in favor of the `walk` parameter.
+
+### Known Issues
+
+#### Preexisting, but undiscovered prior to 5.0.1
+
+- In the 5.0.0 release notes, it was incorrectly stated that the torque on the end-effector is now available via the `estimated_end_effector_wrench_in_end_effector` field in the [ManipulatorState](../protos/bosdyn/api/robot_state.proto#manipulatorstate) message. While the wrench technically supports torque, the torque component is not set.
+
+- The [Log Spot Data](../python/examples/logging/README.md) example does not reliably get signals data into Spot experiment logs. We recommend using other methods in the [DataBufferClient](../python/bosdyn-client/src/bosdyn/client/data_buffer.py).
+
+#### Preexisting
+
+- Same as 5.0.0
+
 ## Release 5.0.0
+
+### Breaking Changes
+
+- Python 3.6 is no longer support by the Python SDK. Python 3.7-3.10 are supported for 5.0.0.
+- Change Detection is no longer present on the CORE I/O. It has been deprecated in favor of Orbit AI Visual Inspections (AIVI). The [Support Center](https://support.bostondynamics.com) has more information about AIVI.
+- `generate_extension_data.py` has been removed from the Python SDK. Please see the example [manifest.json](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/manifest.json) and [docker-compose.yml](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/docker-compose.yml) for best practices.
+
+### New Features
 
 #### Choreography
 
@@ -25,12 +111,6 @@ Development Kit License (20191101-BDSDK-SL).
 - Custom Gait moves can now be driven with the keyboard WASD keys when an xbox controller is not connected. To enable this, select, "Accept Interactive WASD Input" in the "Playback and Music Settings" menu found under the "Settings" menu.
 
 - Experiment logs can now be started from Choreographer using the "Start Experiment Log" button which has been added to Robot Controls (see [User Interface Overview](concepts/choreography/choreographer.md)).
-
-### Breaking Changes
-
-- Python 3.6 is no longer support by the Python SDK. Python 3.7-3.10 are supported for 5.0.0.
-- Change Detection is no longer present on the CORE I/O. It has been deprecated in favor of Orbit AI Visual Inspections (AIVI). The [Support Center](https://support.bostondynamics.com) has more information about AIVI.
-- `generate_extension_data.py` has been removed from the Python SDK. Please see the example [manifest.json](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/manifest.json) and [docker-compose.yml](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/docker-compose.yml) for best practices.
 
 ### Bug Fixes and Improvements
 
@@ -52,10 +132,6 @@ Development Kit License (20191101-BDSDK-SL).
 
 - Support for three new fields, `installation_target`, `files_to_save`, and `directories_to_save` has been added for Extensions (via the required `manifest.json` file). The `installation_target` field specifies the installation target of the Extension (`spot` or `orbit`). If populated, the `files_to_save` and `directories_to_save` fields in `manifest.json` ensure that files and directories (recursive) from the current installation are retained when upgrading to a new version of the same extension. This feature can be useful if there are customer-specific configuration files you do not want overwritten. The example [manifest.json](https://github.com/boston-dynamics/spot-sdk/blob/master/python/examples/extensions/manifest.json) has been updated accordingly.
 
-#### GPS
-
-- The [GPS Listener](../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.py) handles GPZDA parsing failures correctly.
-
 #### Choreography
 
 - The [LegSizeConfiguration](../protos/bosdyn/api/spot/choreography_service.proto) RPC can be used to modify Spot's internal model of its leg size to help avoid self-collision when its legs have non-standard dimensions. To query the current leg size configuration, use the [LegSizeConfigurationState](../protos/bosdyn/api/spot/choreography_service.proto) RPC. Please see [here](concepts/choreography/choreography_service.md#leg-size-configuration-api) for more information. The [ChoreographyClient](../python/bosdyn-choreography-client/src/bosdyn/choreography/client/choreography.py) has been updated accordingly.
@@ -73,6 +149,8 @@ Development Kit License (20191101-BDSDK-SL).
 - The `navigate_to_anchor_full_async` method in the [GraphNavClient](../python/bosdyn-client/src/bosdyn/client/graph_nav.py) returns the full [NavigateToAnchorResponse](../protos/bosdyn/api/graph_nav/graph_nav.proto#navigatetoanchorresponse), not just the command ID.
 
 #### GPS
+
+- The [GPS Listener](../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.py) handles GPZDA parsing failures correctly.
 
 - The [GPS Listener](../python/bosdyn-client/src/bosdyn/client/gps/gps_listener.py) now supports streaming Networked Transport of RTCM via Internet Protocol to the associated GPS receiver using the [NtripClient](../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.py). Please see [here](concepts/autonomy/gps.md#using-ntrip-corrections) for more information.
 
@@ -152,6 +230,10 @@ Development Kit License (20191101-BDSDK-SL).
 - The `error_report` field in the [SetLocalizationResponse](../protos/bosdyn/api/graph_nav/graph_nav.proto#setlocalizationresponse) message is deprecated.
 
 ### Known Issues
+
+#### Preexisting
+
+- Same as 4.1.1
 
 ## Release 4.1.1
 
@@ -709,7 +791,7 @@ Published robot state messages previously contained kinematic information for a 
 
 - [Power Off Mission Service Callback](../python/examples/remote_mission_service/README.md): PowerOffServicer now implements GetRemoteMissionServiceInfo, which prevents a harmless message from being printed when the example is run.
 
-- [Ricoh Theta](../python/examples/ricoh_theta/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5. When no password argument is supplied, the default password for the Ricoh Theta now includes only the numeric portion of the Ricoh Theta SSID (as described in the Ricoh Theta documentation).
+- Ricoh Theta: The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5. When no password argument is supplied, the default password for the Ricoh Theta now includes only the numeric portion of the Ricoh Theta SSID (as described in the Ricoh Theta documentation).
 
 - [Custom Parameter Image Server](../python/examples/service_customization/custom_parameter_image_server/README.md): The base image in Dockerfile.l4t has been updated to account for v4.0 CoreIO running on Jetpack 5.
 
@@ -1051,7 +1133,7 @@ Updated Nvidia base docker image version in Dockerfile of the following:
 - [Fetch tutorial](python/fetch_tutorial/fetch1.md),
 - Crosswalk Lights and Look Both Ways [Area Callback examples](../python/examples/area_callback/README.md),
 - Fire Extinguisher Detector Network Compute Bridge worker [example](../python/examples/network_compute_bridge/fire_extinguisher_server/README.md),
-- [Ricoh Theta example](../python/examples/ricoh_theta/README.md)
+- Ricoh Theta example
 
 Updated [Fire Extinguisher Detector example](../python/examples/network_compute_bridge/fire_extinguisher_server/README.md) to work with the updated tensorflow version installed in the updated nvidia base docker image.
 
@@ -1566,7 +1648,7 @@ Supports a new `--pixel-format` option to be able to specify the desired format.
 [**Graph Nav Command Line (updated)**](../python/examples/graph_nav_command_line/README.md)
 The recording example correctly handles the `NotReadyYetError` response when stopping recording.
 
-[**Ricoh Theta (updated)**](../python/examples/ricoh_theta/README.md)
+**Ricoh Theta (updated)**
 Includes support for pixel format and resize ratio.
 
 [**Spot CAM (updated)**](../python/examples/spot_cam/README.md)
@@ -1936,7 +2018,7 @@ Now includes an example of how to attach and detach a payload.
 [**Replay Mission (updated)**](../python/examples/replay_mission/README.md)
 Now includes extra options for playing back Autowalk missions, as well as disabling directed exploration.
 
-[**Ricoh Theta (updated)**](../python/examples/ricoh_theta/README.md)
+**Ricoh Theta (updated)**
 Now includes a "live stream" option that provides a higher frame rate at the cost of lower-quality stitching. (Thanks Aaron Gokasian!)
 
 [**Spot Cam (updated)**](../python/examples/spot_cam/README.md)
@@ -2063,7 +2145,7 @@ Same as 2.3.0
 [**Get image (updated)**](../python/examples/get_image/README.md)
 Support for the new pixel format of IR images.
 
-[**Ricoh Theta (updated)**](../python/examples/ricoh_theta/README.md)
+**Ricoh Theta (updated)**
 Improved parsing of timestamp information from the camera.
 Correctly set the image proto format field.
 Defaults to not capturing continuously. Flags `--capture-continuously` and `--capture-when-requested` can be used to specify the desired behavior.
@@ -2237,7 +2319,7 @@ Additionally, the example contains a client-side example that queries the networ
 [**Replay Mission (updated)**](../python/examples/replay_mission/README.md)
 Optimized to only upload snapshots to the robot that are not already present. Has an option to disable alternate route finding when running a mission.
 
-[**Ricoh Theta (updated)**](../python/examples/ricoh_theta/README.md)
+**Ricoh Theta (updated)**
 Fixes a missing import required to run the continuous capture thread.
 
 [**Self Registration (updated)**](../python/examples/self_registration/README.md)
@@ -2345,7 +2427,7 @@ Shows how to trigger the docking service to safely dock the robot on a charger.
 [**Web Cam Image Service (updated)**](../python/examples/service_customization/custom_parameter_image_server/README.md)
 The web cam example now uses the new image service helpers.
 
-[**Ricoh Theta Image Service (updated)**](../python/examples/ricoh_theta/README.md)
+**Ricoh Theta Image Service (updated)**
 Uses the new image service helpers. A few extra bug fixes as described above.
 
 [**Data Service (updated)**](../python/examples/data_service/README.md)
@@ -2575,7 +2657,7 @@ Demonstrates how to use the SDK to perform comms testing.
 [**Data Service (new)**](../python/examples/data_service/README.md)
 Get comments and data index information from the robot.
 
-[**Ricoh theta image service (new)**](../python/examples/ricoh_theta/README.md)
+**Ricoh theta image service (new)**
 Create a standard Boston Dynamics API `ImageService` that communicates with the Ricoh Theta camera.
 
 [**Service faults (new)**](../python/examples/service_faults/README.md)
@@ -2777,10 +2859,6 @@ Release 2.0.1 contains the same issues as release 2.0.0, listed below.
 - Workaround: If you need to call these in an async manner, call them on a separate thread.
 
 ### Sample Code
-
-[**Ricoh Theta (new)**](../python/examples/ricoh_theta/README.md)
-
-- Example that utilizes the 360-degree Ricoh Theta camera during an Autowalk mission.
 
 [**Cloud Upload (new)**](../python/examples/cloud_upload/README.md)
 

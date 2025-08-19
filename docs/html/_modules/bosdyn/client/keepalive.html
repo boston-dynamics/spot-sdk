@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.keepalive &mdash; Spot 5.0.0 documentation</title>
+  <title>bosdyn.client.keepalive &mdash; Spot 5.0.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.0
+                5.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -56,6 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/robot_services.html">Robot services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/estop_service.html">E-Stop</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/keepalive_service.html">KeepAlive (BETA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/audio_visual.html">Audio Visual</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/lease_service.html">Lease</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/developing_api_services.html">Developing API Services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/service_customization.html">Service Customization</a></li>
@@ -135,6 +136,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/comms_test/README.html">Comms Test</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/disable_ir_emission/README.html">IR Enable/Disable</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/reset_safety_stop/README.html">Reset Safety Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/audio_visual/audio_visual_params/README.html">Audio Visual Params</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/audio_visual/audio_visual_behaviors/README.html">Audio Visual Behaviors</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/robot_behavior_examples.html">Robot Behavior and Commands Examples</a><ul>
@@ -195,7 +198,6 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_with_image_coordinates/README.html">World Object With Image Coordinates</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
@@ -226,7 +228,6 @@
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_faults/README.html">Faults</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/ricoh_theta/README.html">Ricoh Theta</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Service</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameters_data_acquisition/README.html">Custom Parameter Data Acquisition Plugin</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_image/README.html">Test Image Service Implementation with Get Image</a></li>
@@ -287,6 +288,8 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_utils.html">Area Callback Service Utils</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/arm_surface_contact.html">Arm Surface Contact</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/async_tasks.html">Async Tasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/audio_visual.html">Audio Visual</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/audio_visual_helpers.html">Audio Visual Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auth.html">Auth</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/auto_return.html">Auto Return</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/autowalk.html">Autowalk</a></li>
@@ -308,6 +311,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/docking.html">Docking</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/door.html">Door</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/estop.html">E-Stop</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/error_callback_result.html">Error Callback Result</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/fault.html">Fault</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/frame_helpers.html">Frame Helpers</a></li>
@@ -527,6 +531,7 @@
 <span class="kn">from</span> <span class="nn">bosdyn.api.keepalive</span> <span class="kn">import</span> <span class="n">keepalive_pb2</span><span class="p">,</span> <span class="n">keepalive_service_pb2_grpc</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">error_pair</span><span class="p">,</span>
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.error_callback_result</span> <span class="kn">import</span> <span class="n">ErrorCallbackResult</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">RetryableRpcError</span>
 
 
@@ -733,7 +738,7 @@
     <span class="c1">#pylint: disable=too-many-arguments</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">:</span> <span class="n">KeepaliveClient</span><span class="p">,</span> <span class="n">policy</span><span class="p">:</span> <span class="n">Policy</span><span class="p">,</span> <span class="n">rpc_timeout_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">rpc_interval_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="p">:</span> <span class="s1">&#39;logging.Logger&#39;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                 <span class="n">remove_policy_on_exit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+                 <span class="n">remove_policy_on_exit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">initial_retry_seconds</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span> <span class="ow">or</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remove_policy_on_exit</span> <span class="o">=</span> <span class="n">remove_policy_on_exit</span>
@@ -746,6 +751,11 @@
         <span class="c1"># This will raise an exception if there&#39;s no action at all.</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_interval_seconds</span> <span class="o">=</span> <span class="n">rpc_interval_seconds</span> <span class="ow">or</span> <span class="n">policy</span><span class="o">.</span><span class="n">shortest_action_delay</span><span class="p">()</span> <span class="o">/</span> <span class="mi">3</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_timeout_seconds</span> <span class="o">=</span> <span class="n">rpc_timeout_seconds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initial_retry_seconds</span> <span class="o">=</span> <span class="n">initial_retry_seconds</span>
+
+        <span class="c1">#: Callable[[Exception], ErrorCallbackResult] | None: Optional callback to be called when</span>
+        <span class="c1">#: an error occurs in the keepalive thread.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keepalive_error_callback</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_check_in_signal</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Event</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_periodic_check_in</span><span class="p">)</span>
@@ -785,24 +795,47 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_end_check_in_signal</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_periodic_check_in</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">retry_interval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_retry_seconds</span>
+        <span class="n">wait_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_interval_seconds</span>
+
+        <span class="c1"># Block and wait for the stop signal. If we receive it within the check-in period,</span>
+        <span class="c1"># leave the loop. Under normal conditions, wait up to self._check_in_period seconds, minus</span>
+        <span class="c1"># the RPC processing time. (values &lt; 0 are OK and unblock immediately)</span>
+        <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_check_in_signal</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">wait_time</span><span class="p">):</span>
             <span class="n">exec_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">ErrorCallbackResult</span><span class="o">.</span><span class="n">RESUME_NORMAL_OPERATION</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_check_in</span><span class="p">()</span>
             <span class="k">except</span> <span class="n">RetryableRpcError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;exception during check-in:</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;continuing check-in&#39;</span><span class="p">)</span>
-
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">keepalive_error_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">action</span> <span class="o">=</span> <span class="n">ErrorCallbackResult</span><span class="o">.</span><span class="n">DEFAULT_ACTION</span>
+                    <span class="k">try</span><span class="p">:</span>
+                        <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">keepalive_error_callback</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># pylint: disable=broad-except</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                            <span class="s1">&#39;Exception thrown in the provided keepalive error callback&#39;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span>
             <span class="c1"># How long did the RPC and processing of said RPC take?</span>
             <span class="n">exec_seconds</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">exec_start</span>
 
-            <span class="c1"># Block and wait for the stop signal. If we receive it within the check-in period,</span>
-            <span class="c1"># leave the loop. This check must be at the end of the loop!</span>
-            <span class="c1"># Wait up to self._check_in_period seconds, minus the RPC processing time.</span>
-            <span class="c1"># (values &lt; 0 are OK and will return immediately)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_check_in_signal</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rpc_interval_seconds</span> <span class="o">-</span> <span class="n">exec_seconds</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="n">ErrorCallbackResult</span><span class="o">.</span><span class="n">ABORT</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Callback directed the keepalive thread to exit.&#39;</span><span class="p">)</span>
                 <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="n">ErrorCallbackResult</span><span class="o">.</span><span class="n">RETRY_IMMEDIATELY</span><span class="p">:</span>
+                <span class="n">wait_time</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">continue</span>
+            <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="n">ErrorCallbackResult</span><span class="o">.</span><span class="n">RETRY_WITH_EXPONENTIAL_BACK_OFF</span><span class="p">:</span>
+                <span class="n">wait_time</span> <span class="o">=</span> <span class="n">retry_interval</span> <span class="o">-</span> <span class="n">exec_seconds</span>
+                <span class="n">retry_interval</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">retry_interval</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_interval_seconds</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Success path, or default action (resume normal operation)</span>
+                <span class="n">wait_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rpc_interval_seconds</span> <span class="o">-</span> <span class="n">exec_seconds</span>
+                <span class="n">retry_interval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initial_retry_seconds</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Policy check-in stopped&#39;</span><span class="p">)</span></div>
 
 

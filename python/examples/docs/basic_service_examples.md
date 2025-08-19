@@ -24,3 +24,5 @@ The following examples show how to use various Boston Dynamics API services and 
 - [Comms Test](../comms_test/README.md)
 - [IR Enable/Disable](../disable_ir_emission/README.md)
 - [Reset Safety Stop](../reset_safety_stop/README.md)
+- [Audio Visual Params](../audio_visual/audio_visual_params/README.md)
+- [Audio Visual Behaviors](../audio_visual/audio_visual_behaviors/README.md)

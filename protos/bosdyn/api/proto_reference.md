@@ -64,6 +64,55 @@
   
     - [ArmSurfaceContactService](#bosdyn-api-ArmSurfaceContactService)
   
+- [bosdyn/api/audio_visual.proto](#bosdyn_api_audio_visual-proto)
+    - [AudioSequenceGroup](#bosdyn-api-AudioSequenceGroup)
+    - [AudioSequenceGroup.BuzzerSequence](#bosdyn-api-AudioSequenceGroup-BuzzerSequence)
+    - [AudioSequenceGroup.BuzzerSequence.NoteWithDuration](#bosdyn-api-AudioSequenceGroup-BuzzerSequence-NoteWithDuration)
+    - [AudioVisualBehavior](#bosdyn-api-AudioVisualBehavior)
+    - [AudioVisualSystemParams](#bosdyn-api-AudioVisualSystemParams)
+    - [Color](#bosdyn-api-Color)
+    - [Color.RGB](#bosdyn-api-Color-RGB)
+    - [GetSystemParamsRequest](#bosdyn-api-GetSystemParamsRequest)
+    - [GetSystemParamsResponse](#bosdyn-api-GetSystemParamsResponse)
+    - [LedSequenceGroup](#bosdyn-api-LedSequenceGroup)
+    - [LedSequenceGroup.LedSequence](#bosdyn-api-LedSequenceGroup-LedSequence)
+    - [LedSequenceGroup.LedSequence.AnimationSequence](#bosdyn-api-LedSequenceGroup-LedSequence-AnimationSequence)
+    - [LedSequenceGroup.LedSequence.AnimationSequence.Frame](#bosdyn-api-LedSequenceGroup-LedSequence-AnimationSequence-Frame)
+    - [LedSequenceGroup.LedSequence.BlinkSequence](#bosdyn-api-LedSequenceGroup-LedSequence-BlinkSequence)
+    - [LedSequenceGroup.LedSequence.PulseSequence](#bosdyn-api-LedSequenceGroup-LedSequence-PulseSequence)
+    - [LedSequenceGroup.LedSequence.SolidColorSequence](#bosdyn-api-LedSequenceGroup-LedSequence-SolidColorSequence)
+    - [LedSequenceGroup.LedSequence.SyncedBlinkSequence](#bosdyn-api-LedSequenceGroup-LedSequence-SyncedBlinkSequence)
+    - [LedSequenceGroup.SpotCamSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence)
+    - [LedSequenceGroup.SpotCamSequence.AnimationSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence-AnimationSequence)
+    - [LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame](#bosdyn-api-LedSequenceGroup-SpotCamSequence-AnimationSequence-Frame)
+    - [LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.BrightnessesEntry](#bosdyn-api-LedSequenceGroup-SpotCamSequence-AnimationSequence-Frame-BrightnessesEntry)
+    - [LedSequenceGroup.SpotCamSequence.BlinkSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence-BlinkSequence)
+    - [LedSequenceGroup.SpotCamSequence.BreatheSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence-BreatheSequence)
+    - [LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence-FixedBrightnessSequence)
+    - [LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.BrightnessesEntry](#bosdyn-api-LedSequenceGroup-SpotCamSequence-FixedBrightnessSequence-BrightnessesEntry)
+    - [LedSequenceGroup.StatusLightsSequence](#bosdyn-api-LedSequenceGroup-StatusLightsSequence)
+    - [LedSequenceGroup.StatusLightsSequence.Frame](#bosdyn-api-LedSequenceGroup-StatusLightsSequence-Frame)
+    - [ListBehaviorsRequest](#bosdyn-api-ListBehaviorsRequest)
+    - [ListBehaviorsResponse](#bosdyn-api-ListBehaviorsResponse)
+    - [LiveAudioVisualBehavior](#bosdyn-api-LiveAudioVisualBehavior)
+    - [PresetColorAssociation](#bosdyn-api-PresetColorAssociation)
+    - [RunBehaviorRequest](#bosdyn-api-RunBehaviorRequest)
+    - [RunBehaviorResponse](#bosdyn-api-RunBehaviorResponse)
+    - [SetSystemParamsRequest](#bosdyn-api-SetSystemParamsRequest)
+    - [SetSystemParamsResponse](#bosdyn-api-SetSystemParamsResponse)
+    - [StopBehaviorRequest](#bosdyn-api-StopBehaviorRequest)
+    - [StopBehaviorResponse](#bosdyn-api-StopBehaviorResponse)
+  
+    - [Color.Preset](#bosdyn-api-Color-Preset)
+    - [LedSequenceGroup.InterpolationMode](#bosdyn-api-LedSequenceGroup-InterpolationMode)
+    - [PresetColorAssociation.PredefinedColor](#bosdyn-api-PresetColorAssociation-PredefinedColor)
+    - [RunBehaviorResponse.RunResult](#bosdyn-api-RunBehaviorResponse-RunResult)
+    - [RunBehaviorResponse.Status](#bosdyn-api-RunBehaviorResponse-Status)
+    - [StopBehaviorResponse.Status](#bosdyn-api-StopBehaviorResponse-Status)
+  
+- [bosdyn/api/audio_visual_service.proto](#bosdyn_api_audio_visual_service-proto)
+    - [AudioVisualService](#bosdyn-api-AudioVisualService)
+  
 - [bosdyn/api/auth.proto](#bosdyn_api_auth-proto)
     - [GetAuthTokenRequest](#bosdyn-api-GetAuthTokenRequest)
     - [GetAuthTokenResponse](#bosdyn-api-GetAuthTokenResponse)
@@ -2895,6 +2944,762 @@ If mode is set to force, use the "press_force_percentage" field to determine for
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | ArmSurfaceContact | [ArmSurfaceContactCommand](#bosdyn-api-ArmSurfaceContactCommand) | [ArmSurfaceContactResponse](#bosdyn-api-ArmSurfaceContactResponse) |  |
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_audio_visual-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/audio_visual.proto
+
+
+
+<a name="bosdyn-api-AudioSequenceGroup"></a>
+
+### AudioSequenceGroup
+A group of sequences that can be played on the Piezo buzzer.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| buzzer | [AudioSequenceGroup.BuzzerSequence](#bosdyn-api-AudioSequenceGroup-BuzzerSequence) |  | A sequence that sets what is played on the buzzer. If a sequence is not specified, the<br>buzzer defaults to not playing anything. |
+
+
+
+
+
+
+<a name="bosdyn-api-AudioSequenceGroup-BuzzerSequence"></a>
+
+### AudioSequenceGroup.BuzzerSequence
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| notes | [AudioSequenceGroup.BuzzerSequence.NoteWithDuration](#bosdyn-api-AudioSequenceGroup-BuzzerSequence-NoteWithDuration) | repeated |  |
+
+
+
+
+
+
+<a name="bosdyn-api-AudioSequenceGroup-BuzzerSequence-NoteWithDuration"></a>
+
+### AudioSequenceGroup.BuzzerSequence.NoteWithDuration
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| note | [spot.BuzzerNoteParams](#bosdyn-api-spot-BuzzerNoteParams) |  | The note specification (note name or rest) and modifiers (sharp/flat, octave). |
+| duration | [google.protobuf.Duration](#google-protobuf-Duration) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-AudioVisualBehavior"></a>
+
+### AudioVisualBehavior
+Specifies a combination of sound, buzzer, and LED states.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| enabled | [bool](#bool) |  |  |
+| priority | [int32](#int32) |  |  |
+| led_sequence_group | [LedSequenceGroup](#bosdyn-api-LedSequenceGroup) |  | The sequences for the LEDs. |
+| audio_sequence_group | [AudioSequenceGroup](#bosdyn-api-AudioSequenceGroup) |  | The sequence group for the buzzer. |
+
+
+
+
+
+
+<a name="bosdyn-api-AudioVisualSystemParams"></a>
+
+### AudioVisualSystemParams
+These values will persist across robot reboots.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| enabled | [bool](#bool) |  | True if the system is currently enabled. |
+| max_brightness | [float](#float) |  | The current max brightness [0, 1]. |
+| buzzer_max_volume | [float](#float) |  | The buzzer's current max volume [0, 1]. |
+| normal_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
+| warning_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
+| danger_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-Color"></a>
+
+### Color
+Defines an individual LED's color.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| preset | [Color.Preset](#bosdyn-api-Color-Preset) |  |  |
+| rgb | [Color.RGB](#bosdyn-api-Color-RGB) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-Color-RGB"></a>
+
+### Color.RGB
+A specific RGB color. Each channel is from [0, 255].
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| r | [int32](#int32) |  |  |
+| g | [int32](#int32) |  |  |
+| b | [int32](#int32) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-GetSystemParamsRequest"></a>
+
+### GetSystemParamsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-GetSystemParamsResponse"></a>
+
+### GetSystemParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| params | [AudioVisualSystemParams](#bosdyn-api-AudioVisualSystemParams) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup"></a>
+
+### LedSequenceGroup
+A group of sequences that can be played back on the Spot AV System LEDs, SpotCam LEDs, or the
+Mood Light LEDs.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| front_center | [LedSequenceGroup.LedSequence](#bosdyn-api-LedSequenceGroup-LedSequence) |  | Sequences for each of the different lights in the AV System. If a sequence is not specified,<br>then it defaults to "off". |
+| front_left | [LedSequenceGroup.LedSequence](#bosdyn-api-LedSequenceGroup-LedSequence) |  |  |
+| front_right | [LedSequenceGroup.LedSequence](#bosdyn-api-LedSequenceGroup-LedSequence) |  |  |
+| hind_left | [LedSequenceGroup.LedSequence](#bosdyn-api-LedSequenceGroup-LedSequence) |  |  |
+| hind_right | [LedSequenceGroup.LedSequence](#bosdyn-api-LedSequenceGroup-LedSequence) |  |  |
+| spot_cam | [LedSequenceGroup.SpotCamSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence) |  | Additional sequences for Non-AV system lights. If a sequence is not specified, then it<br>defaults to no operation (meaning, other systems can control these separate from the AV<br>system). |
+| status_lights | [LedSequenceGroup.StatusLightsSequence](#bosdyn-api-LedSequenceGroup-StatusLightsSequence) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-LedSequence"></a>
+
+### LedSequenceGroup.LedSequence
+A sequence for an individual LED on the robot.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| animation_sequence | [LedSequenceGroup.LedSequence.AnimationSequence](#bosdyn-api-LedSequenceGroup-LedSequence-AnimationSequence) |  |  |
+| blink_sequence | [LedSequenceGroup.LedSequence.BlinkSequence](#bosdyn-api-LedSequenceGroup-LedSequence-BlinkSequence) |  |  |
+| pulse_sequence | [LedSequenceGroup.LedSequence.PulseSequence](#bosdyn-api-LedSequenceGroup-LedSequence-PulseSequence) |  |  |
+| synced_blink_sequence | [LedSequenceGroup.LedSequence.SyncedBlinkSequence](#bosdyn-api-LedSequenceGroup-LedSequence-SyncedBlinkSequence) |  |  |
+| solid_color_sequence | [LedSequenceGroup.LedSequence.SolidColorSequence](#bosdyn-api-LedSequenceGroup-LedSequence-SolidColorSequence) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-LedSequence-AnimationSequence"></a>
+
+### LedSequenceGroup.LedSequence.AnimationSequence
+A sequence of frames that create an animation. After the final frame in the sequence, the
+sequence loops back to the first frame.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| frames | [LedSequenceGroup.LedSequence.AnimationSequence.Frame](#bosdyn-api-LedSequenceGroup-LedSequence-AnimationSequence-Frame) | repeated |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-LedSequence-AnimationSequence-Frame"></a>
+
+### LedSequenceGroup.LedSequence.AnimationSequence.Frame
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| color | [Color](#bosdyn-api-Color) |  | LED color. |
+| duration | [google.protobuf.Duration](#google-protobuf-Duration) |  | Duration of the frame. |
+| interpolation | [LedSequenceGroup.InterpolationMode](#bosdyn-api-LedSequenceGroup-InterpolationMode) |  | Describes how the system should interpolate between this frame and the next. |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-LedSequence-BlinkSequence"></a>
+
+### LedSequenceGroup.LedSequence.BlinkSequence
+Blink this LED.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| color | [Color](#bosdyn-api-Color) |  | LED Color. |
+| period | [google.protobuf.Duration](#google-protobuf-Duration) |  | Blink period [0.1, 25.5] seconds. |
+| duty_cycle | [float](#float) |  | Duty cycle from [0, 1]. Determines what % of each period the LED should be on for. |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-LedSequence-PulseSequence"></a>
+
+### LedSequenceGroup.LedSequence.PulseSequence
+Pulse this LED.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| color | [Color](#bosdyn-api-Color) |  | LED color. |
+| period | [google.protobuf.Duration](#google-protobuf-Duration) |  | Pulse period [0.1, 25.5] seconds. |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-LedSequence-SolidColorSequence"></a>
+
+### LedSequenceGroup.LedSequence.SolidColorSequence
+Set this LED to a solid color.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| color | [Color](#bosdyn-api-Color) |  | LED color. |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-LedSequence-SyncedBlinkSequence"></a>
+
+### LedSequenceGroup.LedSequence.SyncedBlinkSequence
+Special blink mode that is guaranteed to not affect robot perception.  The pulse width of
+this sequence is fixed at approximately 30ms.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| color | [Color](#bosdyn-api-Color) |  | LED color. |
+| period | [google.protobuf.Duration](#google-protobuf-Duration) |  | Blink period [0.1, 25.5] seconds. |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-SpotCamSequence"></a>
+
+### LedSequenceGroup.SpotCamSequence
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| animation_sequence | [LedSequenceGroup.SpotCamSequence.AnimationSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence-AnimationSequence) |  |  |
+| blink_sequence | [LedSequenceGroup.SpotCamSequence.BlinkSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence-BlinkSequence) |  |  |
+| breathe_sequence | [LedSequenceGroup.SpotCamSequence.BreatheSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence-BreatheSequence) |  |  |
+| fixed_brightness_sequence | [LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence](#bosdyn-api-LedSequenceGroup-SpotCamSequence-FixedBrightnessSequence) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-SpotCamSequence-AnimationSequence"></a>
+
+### LedSequenceGroup.SpotCamSequence.AnimationSequence
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| frames | [LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame](#bosdyn-api-LedSequenceGroup-SpotCamSequence-AnimationSequence-Frame) | repeated |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-SpotCamSequence-AnimationSequence-Frame"></a>
+
+### LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame
+For Spot Cam, there are four LEDs at indices [0, 3]. The brightness for each LED may
+be set between [0.0, 1.0], where 0 is off and 1 is full brightness.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| brightnesses | [LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.BrightnessesEntry](#bosdyn-api-LedSequenceGroup-SpotCamSequence-AnimationSequence-Frame-BrightnessesEntry) | repeated |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-SpotCamSequence-AnimationSequence-Frame-BrightnessesEntry"></a>
+
+### LedSequenceGroup.SpotCamSequence.AnimationSequence.Frame.BrightnessesEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [int32](#int32) |  |  |
+| value | [float](#float) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-SpotCamSequence-BlinkSequence"></a>
+
+### LedSequenceGroup.SpotCamSequence.BlinkSequence
+Blink all the LEDs on Spot CAM at a certain frequency.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| brightness | [float](#float) |  | LED brightness. |
+| period | [google.protobuf.Duration](#google-protobuf-Duration) |  | Blink period in seconds. |
+| duty_cycle | [float](#float) |  | Duty cycle from [0, 1]. Determines what % of each period the LED should be on for. |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-SpotCamSequence-BreatheSequence"></a>
+
+### LedSequenceGroup.SpotCamSequence.BreatheSequence
+"Breathe" all the LEDs on Spot CAM at a certain frequency.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| brightness | [float](#float) |  | LED brightness. |
+| period | [google.protobuf.Duration](#google-protobuf-Duration) |  | Blink period in seconds. |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-SpotCamSequence-FixedBrightnessSequence"></a>
+
+### LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence
+Set the four LEDs on spot cam at indices [0, 3] to brightnesses between [0.1, 1.0].
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| brightnesses | [LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.BrightnessesEntry](#bosdyn-api-LedSequenceGroup-SpotCamSequence-FixedBrightnessSequence-BrightnessesEntry) | repeated |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-SpotCamSequence-FixedBrightnessSequence-BrightnessesEntry"></a>
+
+### LedSequenceGroup.SpotCamSequence.FixedBrightnessSequence.BrightnessesEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [int32](#int32) |  |  |
+| value | [float](#float) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-StatusLightsSequence"></a>
+
+### LedSequenceGroup.StatusLightsSequence
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| frames | [LedSequenceGroup.StatusLightsSequence.Frame](#bosdyn-api-LedSequenceGroup-StatusLightsSequence-Frame) | repeated |  |
+| interpolation | [LedSequenceGroup.InterpolationMode](#bosdyn-api-LedSequenceGroup-InterpolationMode) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-StatusLightsSequence-Frame"></a>
+
+### LedSequenceGroup.StatusLightsSequence.Frame
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| top_left | [Color](#bosdyn-api-Color) |  | Color for each of the Status Light LEDs during this frame. |
+| upper_mid_left | [Color](#bosdyn-api-Color) |  |  |
+| lower_mid_left | [Color](#bosdyn-api-Color) |  |  |
+| bottom_left | [Color](#bosdyn-api-Color) |  |  |
+| top_right | [Color](#bosdyn-api-Color) |  |  |
+| upper_mid_right | [Color](#bosdyn-api-Color) |  |  |
+| lower_mid_right | [Color](#bosdyn-api-Color) |  |  |
+| bottom_right | [Color](#bosdyn-api-Color) |  |  |
+| duration | [google.protobuf.Duration](#google-protobuf-Duration) |  | Frame duration. |
+
+
+
+
+
+
+<a name="bosdyn-api-ListBehaviorsRequest"></a>
+
+### ListBehaviorsRequest
+LIST BEHAVIORS
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-ListBehaviorsResponse"></a>
+
+### ListBehaviorsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| behaviors | [LiveAudioVisualBehavior](#bosdyn-api-LiveAudioVisualBehavior) | repeated |  |
+
+
+
+
+
+
+<a name="bosdyn-api-LiveAudioVisualBehavior"></a>
+
+### LiveAudioVisualBehavior
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  |  |
+| permanent | [bool](#bool) |  | Whether this behavior is marked permanent, and cannot be edited or deleted.<br>This field will be filled out for ListBehaviors. |
+| behavior | [AudioVisualBehavior](#bosdyn-api-AudioVisualBehavior) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-PresetColorAssociation"></a>
+
+### PresetColorAssociation
+SYSTEM PARAMS
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| color_name | [PresetColorAssociation.PredefinedColor](#bosdyn-api-PresetColorAssociation-PredefinedColor) |  |  |
+| custom_value | [Color.RGB](#bosdyn-api-Color-RGB) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-RunBehaviorRequest"></a>
+
+### RunBehaviorRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+| name | [string](#string) |  | Which behavior to run. |
+| end_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The timestamp (in robot time) when this behavior will stop. |
+| restart | [bool](#bool) |  | If this behavior is already running, setting this to true will restart the behavior's<br>sequences from the beginning. If this behavior is not running, this parameter has no effect. |
+
+
+
+
+
+
+<a name="bosdyn-api-RunBehaviorResponse"></a>
+
+### RunBehaviorResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| status | [RunBehaviorResponse.Status](#bosdyn-api-RunBehaviorResponse-Status) |  |  |
+| run_result | [RunBehaviorResponse.RunResult](#bosdyn-api-RunBehaviorResponse-RunResult) |  | The result of running this behavior. |
+
+
+
+
+
+
+<a name="bosdyn-api-SetSystemParamsRequest"></a>
+
+### SetSystemParamsRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+| enabled | [google.protobuf.BoolValue](#google-protobuf-BoolValue) |  | True if the system is currently enabled. |
+| max_brightness | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | The new max brightness value [0, 1]. |
+| buzzer_max_volume | [google.protobuf.FloatValue](#google-protobuf-FloatValue) |  | The new buzzer max volume value [0, 1]. |
+| normal_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
+| warning_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
+| danger_color_association | [PresetColorAssociation](#bosdyn-api-PresetColorAssociation) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-SetSystemParamsResponse"></a>
+
+### SetSystemParamsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-StopBehaviorRequest"></a>
+
+### StopBehaviorRequest
+STOP BEHAVIOR
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+| behavior_name | [string](#string) |  | The name of the behavior to stop. |
+
+
+
+
+
+
+<a name="bosdyn-api-StopBehaviorResponse"></a>
+
+### StopBehaviorResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| status | [StopBehaviorResponse.Status](#bosdyn-api-StopBehaviorResponse-Status) |  |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn-api-Color-Preset"></a>
+
+### Color.Preset
+A color preset. Each preset maps to an RGB value.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PRESET_UNKNOWN | 0 |  |
+| PRESET_NORMAL | 1 |  |
+| PRESET_WARNING | 2 |  |
+| PRESET_DANGER | 3 |  |
+
+
+
+<a name="bosdyn-api-LedSequenceGroup-InterpolationMode"></a>
+
+### LedSequenceGroup.InterpolationMode
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| INTERPOLATION_UNKNOWN | 0 |  |
+| INTERPOLATION_NONE | 1 | Zero-order hold between this frame and the next. |
+| INTERPOLATION_LINEAR | 2 | Linearly interpolate the RGB channels from the color defined in this frame to<br>the color defined in the next frame. If this is the last frame, the next<br>frame is the frame at index 0. |
+
+
+
+<a name="bosdyn-api-PresetColorAssociation-PredefinedColor"></a>
+
+### PresetColorAssociation.PredefinedColor
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| PREDEFINED_UNKNOWN | 0 |  |
+| PREDEFINED_GREEN | 1 |  |
+| PREDEFINED_AMBER | 2 |  |
+| PREDEFINED_RED | 3 |  |
+| PREDEFINED_BLUE | 4 |  |
+| PREDEFINED_PINK | 5 |  |
+| PREDEFINED_PURPLE | 6 |  |
+| PREDEFINED_WHITE | 7 |  |
+
+
+
+<a name="bosdyn-api-RunBehaviorResponse-RunResult"></a>
+
+### RunBehaviorResponse.RunResult
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| RESULT_UNKNOWN | 0 |  |
+| RESULT_BEHAVIOR_RUN | 1 | The behavior was run. |
+| RESULT_SYSTEM_DISABLED | 2 | The behavior was not run because the system is currently disabled. |
+| RESULT_BEHAVIOR_DISABLED | 3 | The behavior was not run because it is disabled. |
+| RESULT_LOW_PRIORITY | 4 | The behavior was not run because it has a lower priority than the currently active<br>behavior. |
+| RESULT_ALREADY_RUNNING | 5 | The behavior was not run, because it is already being run by a different client. |
+
+
+
+<a name="bosdyn-api-RunBehaviorResponse-Status"></a>
+
+### RunBehaviorResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_SUCCESS | 1 | The system attempted to run the specified behavior. Check run_result for more details. |
+| STATUS_DOES_NOT_EXIST | 2 | The specified behavior name does not exist in the system. |
+| STATUS_EXPIRED | 3 | The specified end_time has already expired. |
+
+
+
+<a name="bosdyn-api-StopBehaviorResponse-Status"></a>
+
+### StopBehaviorResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_SUCCESS | 1 | StopBehavior ran successfully. Check result for more details. |
+| STATUS_INVALID_CLIENT | 2 | The client that issued this request is not the client that was running the behavior. |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_audio_visual_service-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/audio_visual_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn-api-AudioVisualService"></a>
+
+### AudioVisualService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| RunBehavior | [RunBehaviorRequest](#bosdyn-api-RunBehaviorRequest) | [RunBehaviorResponse](#bosdyn-api-RunBehaviorResponse) | Run an AudioVisualBehavior. |
+| StopBehavior | [StopBehaviorRequest](#bosdyn-api-StopBehaviorRequest) | [StopBehaviorResponse](#bosdyn-api-StopBehaviorResponse) | Stop an AudioVisualBehavior. |
+| ListBehaviors | [ListBehaviorsRequest](#bosdyn-api-ListBehaviorsRequest) | [ListBehaviorsResponse](#bosdyn-api-ListBehaviorsResponse) | List all AudioVisualBehaviors currently added to the AudioVisual Service. |
+| GetSystemParams | [GetSystemParamsRequest](#bosdyn-api-GetSystemParamsRequest) | [GetSystemParamsResponse](#bosdyn-api-GetSystemParamsResponse) | Get the current status of the system. |
+| SetSystemParams | [SetSystemParamsRequest](#bosdyn-api-SetSystemParamsRequest) | [SetSystemParamsResponse](#bosdyn-api-SetSystemParamsResponse) | Set the current status of the system. |
 
  <!-- end services -->
 
@@ -11665,7 +12470,7 @@ been concatenated and deserialized.
 
 ### UploadGraphRequest
 Uploads a graph to the server. This graph will be appended to the graph that
-currently exists on the server.
+currently exists on the server unless replace_graph is specified.
 
 
 | Field | Type | Label | Description |
@@ -11675,6 +12480,7 @@ currently exists on the server.
 | lease | [bosdyn.api.Lease](#bosdyn-api-Lease) |  | The Lease to show ownership of graph-nav service. |
 | generate_new_anchoring | [bool](#bool) |  | If this is true, generate an (overwrite the) anchoring on upload. |
 | treat_validation_warnings_as_errors | [bool](#bool) |  | If true, validation warnings will be treated as errors, and STATUS_INVALID_GRAPH will be<br>returned. This is false by default. |
+| replace_graph | [bool](#bool) |  | If true, the old graph will be replaced with the uploaded graph, rather than merged<br>with it. If the graph did not change the areas that Spot is currently localized to, the<br>localization will be retained. When using this flag, clients should check for the<br>replaced_graph flag in the UploadGraphResponse to determine if the robot acknowledged the<br>flag. If it did not, the robot is running older software and the graph should be cleared<br>prior to re-sending this request without this flag. |
 
 
 
@@ -11704,6 +12510,7 @@ be uploaded by the client.
 | area_callback_error | [AreaCallbackServiceError](#bosdyn-api-graph_nav-AreaCallbackServiceError) |  | Errors about Area Callbacks in the map. |
 | map_stats | [MapStats](#bosdyn-api-graph_nav-MapStats) |  | General map statistics. |
 | validation_status | [UploadGraphResponse.ValidationStatus](#bosdyn-api-graph_nav-UploadGraphResponse-ValidationStatus) |  | If the returned status is STATUS_INVALID_GRAPH, this contains the detailed information about<br>why the graph was invalid. Note that some graph validation errors are warnings and the robot<br>will be able to navigate on the graph even when they are present. |
+| replaced_graph | [bool](#bool) |  | If the replace_graph flag was provided in the corresponding request, this flag<br>confirms that the graph has been updated in-place. Because old releases did not<br>support the replace_graph request flag, clients should check for this response flag when<br>using the request flag and retry with a ClearGraphRequest and resubmission without the<br>request flag if this is unset. |
 
 
 
@@ -22612,7 +23419,7 @@ Additional state published if an arm is attached to the robot.
 | gripper_open_percentage | [double](#double) |  | How open the gripper is, measured in percent.<br>0 = fully closed, 100 = fully open. |
 | is_gripper_holding_item | [bool](#bool) |  | Will be true if the gripper is holding an item, false otherwise. |
 | estimated_end_effector_force_in_hand | [Vec3](#bosdyn-api-Vec3) |  | **Deprecated.** The estimated force on the end-effector expressed in the hand frame.<br>Deprecated in favor of the estimated_end_effector_wrench_in_end_effector |
-| estimated_end_effector_wrench_in_end_effector | [Wrench](#bosdyn-api-Wrench) |  | The estimated wrench on the end-effector expressed in the end_effector (hand) frame. |
+| estimated_end_effector_wrench_in_end_effector | [Wrench](#bosdyn-api-Wrench) |  | The estimated wrench on the end-effector expressed in the end_effector (hand) frame.<br>Only the force component of the wrench is currently set. |
 | stow_state | [ManipulatorState.StowState](#bosdyn-api-ManipulatorState-StowState) |  | Information on if the arm is stowed, or deployed. |
 | velocity_of_hand_in_vision | [SE3Velocity](#bosdyn-api-SE3Velocity) |  | Velocity of the hand frame with respect to vision frame and expressed in vision frame.<br>The linear velocity is applied at the origin of the hand frame. |
 | velocity_of_hand_in_odom | [SE3Velocity](#bosdyn-api-SE3Velocity) |  | Velocity of the hand frame with respect to odom frame and expressed in odom frame.<br>Again, the linear velocity is applied at the origin of the hand frame. |
@@ -25528,6 +26335,8 @@ Parameters specific to twerking
 | NOTE_G | 5 |  |
 | NOTE_A | 6 |  |
 | NOTE_B | 7 |  |
+| NOTE_PEAK_SPL | 8 | This "note" corresponds to the frequencies at which peak Sound Pressure Level (SPL)<br>(i.e., maximum loudness) is achieved for the buzzer. Note that sharp, flat, and octave<br>are ignored for this "note". |
+| NOTE_REST | 9 | This "note" corresponds to a musical rest, i.e., no sound. Note that sharp, flat, and<br> octave are ignored for this "note". |
 
 
 

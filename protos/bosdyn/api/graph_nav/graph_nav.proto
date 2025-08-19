@@ -1138,7 +1138,7 @@ message ClearGraphResponse {
 }
 
 // Uploads a graph to the server. This graph will be appended to the graph that
-// currently exists on the server.
+// currently exists on the server unless replace_graph is specified.
 message UploadGraphRequest {
     // Common request header.
     RequestHeader header = 1;
@@ -1154,6 +1154,14 @@ message UploadGraphRequest {
     // If true, validation warnings will be treated as errors, and STATUS_INVALID_GRAPH will be
     // returned. This is false by default.
     bool treat_validation_warnings_as_errors = 5;
+
+    // If true, the old graph will be replaced with the uploaded graph, rather than merged
+    // with it. If the graph did not change the areas that Spot is currently localized to, the
+    // localization will be retained. When using this flag, clients should check for the
+    // replaced_graph flag in the UploadGraphResponse to determine if the robot acknowledged the
+    // flag. If it did not, the robot is running older software and the graph should be cleared
+    // prior to re-sending this request without this flag.
+    bool replace_graph = 6;
 }
 
 // This is a streaming version of the UploadGraph request.
@@ -1275,6 +1283,13 @@ message UploadGraphResponse {
     // why the graph was invalid. Note that some graph validation errors are warnings and the robot
     // will be able to navigate on the graph even when they are present.
     ValidationStatus validation_status = 12;
+
+    // If the replace_graph flag was provided in the corresponding request, this flag
+    // confirms that the graph has been updated in-place. Because old releases did not
+    // support the replace_graph request flag, clients should check for this response flag when
+    // using the request flag and retry with a ClearGraphRequest and resubmission without the
+    // request flag if this is unset.
+    bool replaced_graph = 13;
 }
 
 // The DownloadGraphRequest requests that the server send the graph (waypoints and edges)

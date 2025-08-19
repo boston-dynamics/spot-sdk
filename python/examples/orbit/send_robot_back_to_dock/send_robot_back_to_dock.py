@@ -11,6 +11,7 @@ An example to show how to send robot back to the dock using Orbit web API.
 import argparse
 import logging
 import sys
+from datetime import datetime as now
 
 from bosdyn.orbit.client import create_client
 from bosdyn.orbit.utils import add_base_arguments
@@ -98,7 +99,7 @@ def select_site_dock(client: 'bosdyn.orbit.client.Client') -> str:
     return selected_uuid
 
 
-def send_robot_back_to_dock(options: argparse.Namespace):
+def send_robot_back_to_dock(options: argparse.Namespace) -> bool:
     """ A simple example to use the Orbit client to send robot back to the dock during a mission.
 
         Args:
@@ -116,9 +117,9 @@ def send_robot_back_to_dock(options: argparse.Namespace):
         selected_nickname = select_robot_nickname(client)
 
     if options.site_dock_uuid:
-        seleted_site_dock_uuid = options.site_dock_uuid
+        selected_site_dock_uuid = options.site_dock_uuid
     else:
-        seleted_site_dock_uuid = select_site_dock(client)
+        selected_site_dock_uuid = select_site_dock(client)
 
     # First, check if the mission is running, then obtain the current driver ID
     robot_info_response = client.get_robot_info(selected_nickname)
@@ -127,23 +128,36 @@ def send_robot_back_to_dock(options: argparse.Namespace):
     else:
         LOGGER.error("Robot is not running a mission!")
         return False
-    # Then, generate the mission to return to the dock from current location
-    mission_response = client.post_return_to_dock_mission(selected_nickname, seleted_site_dock_uuid)
-    if 'error' in mission_response.json():
-        LOGGER.error(
-            f"Mission failed to generate with following error: {mission_response.json()['error']}")
+    # Generate a walk to the dock
+    send_robot_response = client.post_return_to_dock_mission(selected_nickname,
+                                                             selected_site_dock_uuid)
+    resp_json = send_robot_response.json()
+    if 'error' in resp_json:
+        LOGGER.error(f"Failed to generate walk: {resp_json['error']}")
         return False
-    else:
-        mission_uuid = mission_response.json()["missionUuid"]
-    # Finally, dispatch the mission back to the dock
-    delete_mission = True  # whether to delete the mission after playback
-    force_acquire_estop = False  # whether to force acquire the E-stop from the previous client
-    skip_initialization = True  # whether to skip initialization when starting the return to dock mission
-    dispatch_response = client.post_dispatch_mission_to_robot(selected_nickname, current_driver_id,
-                                                              mission_uuid, delete_mission,
-                                                              force_acquire_estop,
-                                                              skip_initialization)
-    return dispatch_response.ok
+    if 'walk' not in resp_json:
+        LOGGER.error("No walk returned in response.")
+        return False
+    walk = resp_json['walk']
+
+    # Dispatch the walk to the robot
+    dispatch_response = client.post_dispatch_mission_to_robot(robot_nickname=selected_nickname,
+                                                              walk=walk,
+                                                              driver_id=current_driver_id)
+    # Retry dispatch if it fails
+    try_count = 1
+    while dispatch_response.ok is False and try_count < options.retries:
+        try_count += 1
+        LOGGER.warning(f"Dispatch failed, retrying {try_count}/{options.retries}...")
+        dispatch_response = client.post_dispatch_mission_to_robot(robot_nickname=selected_nickname,
+                                                                  walk=walk,
+                                                                  driver_id=current_driver_id)
+    if not dispatch_response.ok:
+        LOGGER.error(f"Failed to dispatch walk: {dispatch_response.text}")
+        return False
+
+    LOGGER.info("Successfully dispatched walk to robot.")
+    return True
 
 
 def main():
@@ -154,6 +168,8 @@ def main():
                         required=False, type=str)
     parser.add_argument('--site_dock_uuid', help="uuid associated with the dock", required=False,
                         type=str)
+    parser.add_argument('--retries', help="Number of retries for dispatching the walk",
+                        required=False, type=int, default=3)
     options = parser.parse_args()
     send_robot_back_to_dock(options)
 

@@ -31,7 +31,7 @@ python3 -m pip install -r requirements.txt
 To run the example for local development and testing, run the following command with verify set to False. When set to False, requests will skip server's TLS certificate verifications which will make your application vulnerable. For production software, we recommend you set verify to True or a path to CA bundle.
 
 ```
-python3 send_robot_back_to_dock.py --hostname ORBIT_IP --robot_nickname ROBOT_NICKNAME --site_dock_uuid SITE_DOCK_UUID --verify False
+python3 send_robot_back_to_dock.py --hostname ORBIT_IP --robot_nickname ROBOT_NICKNAME --site_dock_uuid SITE_DOCK_UUID --verify False --retries 0
 ```
 
 The above command prompts you to provide the API token obtained from the Orbit admin settings page. Alternatively, you can set the environment variable `BOSDYN_ORBIT_CLIENT_API_TOKEN` to the API token obtained from Orbit admin settings page.

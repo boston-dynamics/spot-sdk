@@ -660,6 +660,10 @@ class SE3Pose(object):
         ret[0:3, 3] = [self.x, self.y, self.z]
         return ret
 
+    def translation_norm(self):
+        """Calculates the Euclidean norm (magnitude) of the translation component pose."""
+        return math.sqrt(self.x**2 + self.y**2 + self.z**2)
+
     def mult(self, se3pose):
         """
         Computes the multiplication between the current math_helpers.SE3Pose and the input se3pose.

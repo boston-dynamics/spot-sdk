@@ -68,6 +68,5 @@ with keep_alive:
 The Spot SDK provides a myriad of examples showing how an off-robot Python gRPC service can be developed.
 
 - [Custom Parameter Web Cam Image Service](../../python/examples/service_customization/custom_parameter_image_server/README.md)
-- [Ricoh Theta Image Service](../../python/examples/ricoh_theta/README.md)
 - [Remote Mission Services](../../python/examples/remote_mission_service/README.md)
 - [Data Acquisition Plugins](../../python/examples/data_acquisition_service/README.md)

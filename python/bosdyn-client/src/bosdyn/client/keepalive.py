@@ -19,6 +19,7 @@ import bosdyn.util
 from bosdyn.api.keepalive import keepalive_pb2, keepalive_service_pb2_grpc
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
                                   handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.error_callback_result import ErrorCallbackResult
 from bosdyn.client.exceptions import ResponseError, RetryableRpcError
 
 
@@ -225,7 +226,7 @@ class PolicyKeepalive():
     #pylint: disable=too-many-arguments
     def __init__(self, client: KeepaliveClient, policy: Policy, rpc_timeout_seconds: float = None,
                  rpc_interval_seconds: float = None, logger: 'logging.Logger' = None,
-                 remove_policy_on_exit: bool = False):
+                 remove_policy_on_exit: bool = False, initial_retry_seconds: float = 1.0):
 
         self.logger = logger or logging.getLogger()
         self.remove_policy_on_exit = remove_policy_on_exit
@@ -238,6 +239,11 @@ class PolicyKeepalive():
         # This will raise an exception if there's no action at all.
         self._rpc_interval_seconds = rpc_interval_seconds or policy.shortest_action_delay() / 3
         self._rpc_timeout_seconds = rpc_timeout_seconds
+        self._initial_retry_seconds = initial_retry_seconds
+
+        #: Callable[[Exception], ErrorCallbackResult] | None: Optional callback to be called when
+        #: an error occurs in the keepalive thread.
+        self.keepalive_error_callback = None
 
         self._end_check_in_signal = threading.Event()
         self._thread = threading.Thread(target=self._periodic_check_in)
@@ -277,24 +283,47 @@ class PolicyKeepalive():
         self._end_check_in_signal.set()
 
     def _periodic_check_in(self):
-        while True:
+        retry_interval = self._initial_retry_seconds
+        wait_time = self._rpc_interval_seconds
+
+        # Block and wait for the stop signal. If we receive it within the check-in period,
+        # leave the loop. Under normal conditions, wait up to self._check_in_period seconds, minus
+        # the RPC processing time. (values < 0 are OK and unblock immediately)
+        while not self._end_check_in_signal.wait(wait_time):
             exec_start = time.time()
+            action = ErrorCallbackResult.RESUME_NORMAL_OPERATION
 
             try:
                 self._check_in()
             except RetryableRpcError as exc:
                 self.logger.warning('exception during check-in:\n%s\n', exc)
                 self.logger.info('continuing check-in')
-
+            except Exception as exc:  # pylint: disable=broad-except
+                if self.keepalive_error_callback is not None:
+                    action = ErrorCallbackResult.DEFAULT_ACTION
+                    try:
+                        action = self.keepalive_error_callback(exc)
+                    except Exception:  # pylint: disable=broad-except
+                        self.logger.exception(
+                            'Exception thrown in the provided keepalive error callback')
+                else:
+                    raise
             # How long did the RPC and processing of said RPC take?
             exec_seconds = time.time() - exec_start
 
-            # Block and wait for the stop signal. If we receive it within the check-in period,
-            # leave the loop. This check must be at the end of the loop!
-            # Wait up to self._check_in_period seconds, minus the RPC processing time.
-            # (values < 0 are OK and will return immediately)
-            if self._end_check_in_signal.wait(self._rpc_interval_seconds - exec_seconds):
+            if action == ErrorCallbackResult.ABORT:
+                self.logger.warning('Callback directed the keepalive thread to exit.')
                 break
+            elif action == ErrorCallbackResult.RETRY_IMMEDIATELY:
+                wait_time = 0
+                continue
+            elif action == ErrorCallbackResult.RETRY_WITH_EXPONENTIAL_BACK_OFF:
+                wait_time = retry_interval - exec_seconds
+                retry_interval = min(2 * retry_interval, self._rpc_interval_seconds)
+            else:
+                # Success path, or default action (resume normal operation)
+                wait_time = self._rpc_interval_seconds - exec_seconds
+                retry_interval = self._initial_retry_seconds
         self.logger.info('Policy check-in stopped')
 
 
