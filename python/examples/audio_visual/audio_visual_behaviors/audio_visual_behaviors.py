@@ -49,7 +49,7 @@ def run_behavior(av_client, name, run_time):
 def add_or_modify_behavior(av_client, name, behavior):
     print(f"Trying to add or modify behavior \"{name}\"...")
     try:
-        av_client.add_or_modify_behavior(name=name, behavior=behavior)
+        av_client.add_or_modify_behavior(name, behavior)
         print("Successfully added behavior!")
         return True
     except InvalidBehaviorError:

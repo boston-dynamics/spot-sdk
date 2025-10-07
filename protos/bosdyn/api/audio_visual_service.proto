@@ -20,6 +20,14 @@ service AudioVisualService {
     // Stop an AudioVisualBehavior.
     rpc StopBehavior(StopBehaviorRequest) returns (StopBehaviorResponse) {}
 
+    // Add a new or modify an existing AudioVisualBehavior.
+    // Before you consider adding your own AV behaviors, please consider that
+    // the ‘solid lights on’ behavior can overheat the AV board if you leave
+    // it on for too long with certain RGB values.
+    rpc AddOrModifyBehavior(AddOrModifyBehaviorRequest) returns (AddOrModifyBehaviorResponse) {}
+
+    // Delete one or more AudioVisualBehaviors.
+    rpc DeleteBehaviors(DeleteBehaviorsRequest) returns (DeleteBehaviorsResponse) {}
 
     // List all AudioVisualBehaviors currently added to the AudioVisual Service.
     rpc ListBehaviors(ListBehaviorsRequest) returns (ListBehaviorsResponse) {}

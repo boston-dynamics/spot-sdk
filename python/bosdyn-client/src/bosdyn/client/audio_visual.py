@@ -145,6 +145,98 @@ class AudioVisualClient(BaseClient):
                                error_from_response=_stop_behavior_error, copy_request=False,
                                **kwargs)
 
+    def add_or_modify_behavior(self, name, behavior, **kwargs):
+        """Add or modify an AudioVisualBehavior.
+
+        Args:
+            name: The name of the behavior to add.
+            behavior: The AudioVisualBehavior proto to add.
+
+        Returns:
+            The LiveAudioVisualBehavior proto that was just added or modified.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+            PermanentBehaviorError: The behavior specified is permanent and cannot be modified.
+            InvalidBehaviorError: The request contained a behavior with invalid fields.
+        """
+        # Clamp and normalize colors in the behavior before sending the request.
+        led_sequence_group = getattr(behavior, "led_sequence_group", None)
+        if led_sequence_group is not None:
+            behavior.led_sequence_group.CopyFrom(check_color(led_sequence_group))
+
+        req = audio_visual_pb2.AddOrModifyBehaviorRequest(name=name, behavior=behavior)
+        return self.call(self._stub.AddOrModifyBehavior, req,
+                         value_from_response=_get_live_behavior,
+                         error_from_response=_add_or_modify_behavior_error, copy_request=False,
+                         **kwargs)
+
+    def add_or_modify_behavior_async(self, name, behavior, **kwargs):
+        """Add or modify an AudioVisualBehavior.
+
+        Args:
+            name: The name of the behavior to add.
+            behavior: The AudioVisualBehavior proto to add.
+
+        Returns:
+            The LiveAudioVisualBehavior proto that was just added or modified.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+            PermanentBehaviorError: The behavior specified is permanent and cannot be modified.
+            InvalidBehaviorError: The request contained a behavior with invalid fields.
+        """
+        # Clamp and normalize colors in the behavior before sending the request.
+        led_sequence_group = getattr(behavior, "led_sequence_group", None)
+        if led_sequence_group is not None:
+            behavior.led_sequence_group.CopyFrom(check_color(led_sequence_group))
+
+        req = audio_visual_pb2.AddOrModifyBehaviorRequest(name=name, behavior=behavior)
+        return self.call_async(self._stub.AddOrModifyBehavior, req,
+                               value_from_response=_get_live_behavior,
+                               error_from_response=_add_or_modify_behavior_error,
+                               copy_request=False, **kwargs)
+
+    def delete_behaviors(self, behavior_names, **kwargs):
+        """Delete an AudioVisualBehavior.
+
+        Args:
+            behavior_names: A list of behavior names to delete.
+
+        Returns:
+            A list of LiveAudioVisualBehavior protos that were deleted.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+            DoesNotExistError: A specified behavior name has not been added to the system.
+            PermanentBehaviorError: A specified behavior is permanent and cannot be deleted.
+        """
+
+        req = audio_visual_pb2.DeleteBehaviorsRequest(behavior_names=behavior_names)
+        return self.call(self._stub.DeleteBehaviors, req,
+                         value_from_response=_get_deleted_behaviors,
+                         error_from_response=_delete_behaviors_error, copy_request=False, **kwargs)
+
+    def delete_behaviors_async(self, behavior_names, **kwargs):
+        """Async version of delete_behaviors().
+
+        Args:
+            behavior_names: A list of behavior names to delete.
+
+        Returns:
+            A list of LiveAudioVisualBehavior protos that were deleted.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+            DoesNotExistError: A specified behavior name has not been added to the system.
+            PermanentBehaviorError: A specified behavior is permanent and cannot be deleted.
+        """
+
+        req = audio_visual_pb2.DeleteBehaviorsRequest(behavior_names=behavior_names)
+        return self.call_async(self._stub.DeleteBehaviors, req,
+                               value_from_response=_get_deleted_behaviors,
+                               error_from_response=_delete_behaviors_error, copy_request=False,
+                               **kwargs)
 
     def list_behaviors(self, **kwargs):
         """List all currently added AudioVisualBehaviors.
@@ -301,6 +393,9 @@ def _get_live_behavior(response):
     return response.live_behavior
 
 
+def _get_deleted_behaviors(response):
+    return response.deleted_behaviors
+
 
 _AUDIO_VISUAL_RUN_BEHAVIOR_STATUS_TO_ERROR = collections.defaultdict(
     lambda: (AudioVisualResponseError, None))
@@ -317,6 +412,25 @@ _AUDIO_VISUAL_STOP_BEHAVIOR_STATUS_TO_ERROR.update({
     audio_visual_pb2.StopBehaviorResponse.STATUS_INVALID_CLIENT: error_pair(InvalidClientError)
 })
 
+_AUDIO_VISUAL_ADD_OR_MODIFY_BEHAVIOR_STATUS_TO_ERROR = collections.defaultdict(
+    lambda: (AudioVisualResponseError, None))
+_AUDIO_VISUAL_ADD_OR_MODIFY_BEHAVIOR_STATUS_TO_ERROR.update({
+    audio_visual_pb2.AddOrModifyBehaviorResponse.STATUS_SUCCESS: (None, None),
+    audio_visual_pb2.AddOrModifyBehaviorResponse.STATUS_INVALID:
+        error_pair(InvalidBehaviorError),
+    audio_visual_pb2.AddOrModifyBehaviorResponse.STATUS_MODIFY_PERMANENT:
+        error_pair(PermanentBehaviorError),
+})
+
+_AUDIO_VISUAL_DELETE_BEHAVIORS_STATUS_TO_ERROR = collections.defaultdict(
+    lambda: (AudioVisualResponseError, None))
+_AUDIO_VISUAL_DELETE_BEHAVIORS_STATUS_TO_ERROR.update({
+    audio_visual_pb2.DeleteBehaviorsResponse.STATUS_SUCCESS: (None, None),
+    audio_visual_pb2.DeleteBehaviorsResponse.STATUS_DOES_NOT_EXIST:
+        error_pair(DoesNotExistError),
+    audio_visual_pb2.DeleteBehaviorsResponse.STATUS_DELETE_PERMANENT:
+        error_pair(PermanentBehaviorError),
+})
 
 
 @handle_common_header_errors
@@ -337,3 +451,67 @@ def _stop_behavior_error(response):
                          status_to_error=_AUDIO_VISUAL_STOP_BEHAVIOR_STATUS_TO_ERROR)
 
 
+@handle_common_header_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN')
+def _add_or_modify_behavior_error(response):
+    """AddOrModifyBehaviorResponse response to exception."""
+    return error_factory(response, response.status,
+                         status_to_string=audio_visual_pb2.AddOrModifyBehaviorResponse.Status.Name,
+                         status_to_error=_AUDIO_VISUAL_ADD_OR_MODIFY_BEHAVIOR_STATUS_TO_ERROR)
+
+
+@handle_common_header_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN')
+def _delete_behaviors_error(response):
+    """DeleteBehaviorResponse response to exception."""
+    return error_factory(response, response.status,
+                         status_to_string=audio_visual_pb2.DeleteBehaviorsResponse.Status.Name,
+                         status_to_error=_AUDIO_VISUAL_DELETE_BEHAVIORS_STATUS_TO_ERROR)
+
+
+def check_color(led_sequence_group):
+    # Check every LED
+    leds = ["center", "front_left", "front_right", "hind_left", "hind_right"]
+    for led in leds:
+        # Get the LED sequence by location
+        led_sequence = getattr(led_sequence_group, led, None)
+        if led_sequence is not None:
+            # Now, normalize the color in the LED sequence by location
+            if led_sequence.HasField("animation_sequence"):
+                for frame, idx in enumerate(led_sequence.animation_sequence.frames):
+                    if frame.HasField("color"):
+                        color = clamp_and_normalize_color(frame.color)
+                        led_sequence.animation_sequence.frames[idx] = color
+            elif led_sequence.HasField("blink_sequence"):
+                if led_sequence.blink_sequence.HasField("color"):
+                    led_sequence.blink_sequence.color.CopyFrom(
+                        clamp_and_normalize_color(led_sequence.blink_sequence.color))
+            elif led_sequence.HasField("pulse_sequence"):
+                if led_sequence.pulse_sequence.HasField("color"):
+                    led_sequence.pulse_sequence.color.CopyFrom(
+                        clamp_and_normalize_color(led_sequence.pulse_sequence.color))
+            elif led_sequence.HasField("synced_blink_sequence"):
+                for frame, idx in enumerate(led_sequence.synced_blink_sequence.frames):
+                    if frame.HasField("color"):
+                        color = clamp_and_normalize_color(frame.color)
+                        led_sequence.synced_blink_sequence.frames[idx] = color
+            elif led_sequence.HasField("solid_color_sequence"):
+                if led_sequence.solid_color_sequence.HasField("color"):
+                    led_sequence.solid_color_sequence.color.CopyFrom(
+                        clamp_and_normalize_color(led_sequence.solid_color_sequence.color))
+    return led_sequence_group
+
+
+# Scale color so that their Euclidean norm does not exceed max_color_magnitude.
+# NOTE: max_color_magnitude of 255 (roughly 50% of sqrt(3*255^2)=441.67) is a heuristic chosen to prevent damage to the robot's LEDs.
+# Exceeding this value may result in damage to the robot's LEDs that will NOT be covered under warranty.
+def clamp_and_normalize_color(color, max_color_magnitude=255):
+    r, g, b = color.rgb.r, color.rgb.g, color.rgb.b
+    norm = math.sqrt(r**2 + g**2 + b**2)
+    if norm > max_color_magnitude and norm > 0:
+        scale = max_color_magnitude / norm
+        scaled_color = audio_visual_pb2.Color(
+            rgb=audio_visual_pb2.Color.RGB(r=int(r * scale), g=int(g * scale), b=int(b * scale)))
+        print(f"Input color {color} scaled by {scale:.2f}. Clamped color: {scaled_color}.")
+        color = scaled_color
+    return color

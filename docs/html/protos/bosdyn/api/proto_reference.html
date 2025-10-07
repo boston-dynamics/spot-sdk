@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Protocol Documentation &mdash; Spot 5.0.1 documentation</title>
+  <title>Protocol Documentation &mdash; Spot 5.0.1.1 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1
+                5.0.1.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -586,6 +586,8 @@
 </li>
 <li><p><a class="reference external" href="#bosdyn_api_audio_visual-proto">bosdyn/api/audio_visual.proto</a></p>
 <ul>
+<li><p><a class="reference external" href="#bosdyn-api-AddOrModifyBehaviorRequest">AddOrModifyBehaviorRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-AddOrModifyBehaviorResponse">AddOrModifyBehaviorResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-AudioSequenceGroup">AudioSequenceGroup</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-AudioSequenceGroup-BuzzerSequence">AudioSequenceGroup.BuzzerSequence</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-AudioSequenceGroup-BuzzerSequence-NoteWithDuration">AudioSequenceGroup.BuzzerSequence.NoteWithDuration</a></p></li>
@@ -593,6 +595,8 @@
 <li><p><a class="reference external" href="#bosdyn-api-AudioVisualSystemParams">AudioVisualSystemParams</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-Color">Color</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-Color-RGB">Color.RGB</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-DeleteBehaviorsRequest">DeleteBehaviorsRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-DeleteBehaviorsResponse">DeleteBehaviorsResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GetSystemParamsRequest">GetSystemParamsRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-GetSystemParamsResponse">GetSystemParamsResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-LedSequenceGroup">LedSequenceGroup</a></p></li>
@@ -623,7 +627,9 @@
 <li><p><a class="reference external" href="#bosdyn-api-SetSystemParamsResponse">SetSystemParamsResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-StopBehaviorRequest">StopBehaviorRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-StopBehaviorResponse">StopBehaviorResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-AddOrModifyBehaviorResponse-Status">AddOrModifyBehaviorResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-Color-Preset">Color.Preset</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-DeleteBehaviorsResponse-Status">DeleteBehaviorsResponse.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-LedSequenceGroup-InterpolationMode">LedSequenceGroup.InterpolationMode</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-PresetColorAssociation-PredefinedColor">PresetColorAssociation.PredefinedColor</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-RunBehaviorResponse-RunResult">RunBehaviorResponse.RunResult</a></p></li>
@@ -2795,10 +2801,13 @@
 <li><p><a class="reference external" href="#bosdyn-api-NoGoRegionProperties">NoGoRegionProperties</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-RayProperties">RayProperties</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-StaircaseProperties">StaircaseProperties</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-TrackedEntityProperties">TrackedEntityProperties</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-TrackedEntityProperties-TypeLikelihoodsEntry">TrackedEntityProperties.TypeLikelihoodsEntry</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-WorldObject">WorldObject</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-AprilTagProperties-AprilTagPoseStatus">AprilTagProperties.AprilTagPoseStatus</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-MutateWorldObjectRequest-Action">MutateWorldObjectRequest.Action</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-MutateWorldObjectResponse-Status">MutateWorldObjectResponse.Status</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-TrackedEntityProperties-EntityType">TrackedEntityProperties.EntityType</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-WorldObjectType">WorldObjectType</a></p></li>
 </ul>
 </li>
@@ -4546,7 +4555,88 @@ If mode is set to force, use the “press_force_percentage” field to determine
 </section>
 <section id="bosdyn-api-audio-visual-proto">
 <h2>bosdyn/api/audio_visual.proto<a class="headerlink" href="#bosdyn-api-audio-visual-proto" title="Permalink to this heading"></a></h2>
-<p><a name="bosdyn-api-AudioSequenceGroup"></a></p>
+<p><a name="bosdyn-api-AddOrModifyBehaviorRequest"></a></p>
+<section id="addormodifybehaviorrequest">
+<h3>AddOrModifyBehaviorRequest<a class="headerlink" href="#addormodifybehaviorrequest" title="Permalink to this heading"></a></h3>
+<p>Before you consider adding your own AV behaviors, please consider that
+the ‘solid lights on’ behavior can overheat the AV board if you leave
+it on for too long with certain RGB values.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">RequestHeader</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>name</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>New behavior's name.</td>
+</tr>
+<tr>
+<td>behavior</td>
+<td><a href="#bosdyn-api-AudioVisualBehavior">AudioVisualBehavior</a></td>
+<td></td>
+<td>Behavior to add.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-AddOrModifyBehaviorResponse"></a></p>
+</section>
+<section id="addormodifybehaviorresponse">
+<h3>AddOrModifyBehaviorResponse<a class="headerlink" href="#addormodifybehaviorresponse" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">ResponseHeader</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn-api-AddOrModifyBehaviorResponse-Status">AddOrModifyBehaviorResponse.Status</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>deprecated_invalid_fields</td>
+<td><a href="#string">string</a></td>
+<td>repeated</td>
+<td><strong>Deprecated.</strong></td>
+</tr>
+<tr>
+<td>error_message</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>Human readable error message. Only set for STATUS_INVALID.</td>
+</tr>
+<tr>
+<td>live_behavior</td>
+<td><a href="#bosdyn-api-LiveAudioVisualBehavior">LiveAudioVisualBehavior</a></td>
+<td></td>
+<td>Only for STATUS_SUCCESS, specifies the resulting LiveAudioVisualBehavior object.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-AudioSequenceGroup"></a></p>
+</section>
 <section id="audiosequencegroup">
 <h3>AudioSequenceGroup<a class="headerlink" href="#audiosequencegroup" title="Permalink to this heading"></a></h3>
 <p>A group of sequences that can be played on the Piezo buzzer.</p>
@@ -4766,6 +4856,67 @@ If mode is set to force, use the “press_force_percentage” field to determine
 <td>b</td>
 <td><a href="#int32">int32</a></td>
 <td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-DeleteBehaviorsRequest"></a></p>
+</section>
+<section id="deletebehaviorsrequest">
+<h3>DeleteBehaviorsRequest<a class="headerlink" href="#deletebehaviorsrequest" title="Permalink to this heading"></a></h3>
+<p>DELETE BEHAVIOR</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">RequestHeader</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>behavior_names</td>
+<td><a href="#string">string</a></td>
+<td>repeated</td>
+<td>Behavior names to remove.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-DeleteBehaviorsResponse"></a></p>
+</section>
+<section id="deletebehaviorsresponse">
+<h3>DeleteBehaviorsResponse<a class="headerlink" href="#deletebehaviorsresponse" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">ResponseHeader</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>status</td>
+<td><a href="#bosdyn-api-DeleteBehaviorsResponse-Status">DeleteBehaviorsResponse.Status</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>deleted_behaviors</td>
+<td><a href="#bosdyn-api-LiveAudioVisualBehavior">LiveAudioVisualBehavior</a></td>
+<td>repeated</td>
 <td></td>
 </tr>
 </tbody>
@@ -5723,7 +5874,41 @@ be set between [0.0, 1.0], where 0 is off and 1 is full brightness.</p>
 <td></td>
 </tr>
 </tbody>
-</table> <!-- end messages --><p><a name="bosdyn-api-Color-Preset"></a></p>
+</table> <!-- end messages --><p><a name="bosdyn-api-AddOrModifyBehaviorResponse-Status"></a></p>
+</section>
+<section id="addormodifybehaviorresponse-status">
+<h3>AddOrModifyBehaviorResponse.Status<a class="headerlink" href="#addormodifybehaviorresponse-status" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_SUCCESS</td>
+<td>1</td>
+<td>The behavior was added successfully.</td>
+</tr>
+<tr>
+<td>STATUS_MODIFY_PERMANENT</td>
+<td>2</td>
+<td>A permanent behavior cannot be modified.</td>
+</tr>
+<tr>
+<td>STATUS_INVALID</td>
+<td>3</td>
+<td>The request contained an invalid field.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-Color-Preset"></a></p>
 </section>
 <section id="color-preset">
 <h3>Color.Preset<a class="headerlink" href="#color-preset" title="Permalink to this heading"></a></h3>
@@ -5756,6 +5941,40 @@ be set between [0.0, 1.0], where 0 is off and 1 is full brightness.</p>
 <td>PRESET_DANGER</td>
 <td>3</td>
 <td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-DeleteBehaviorsResponse-Status"></a></p>
+</section>
+<section id="deletebehaviorsresponse-status">
+<h3>DeleteBehaviorsResponse.Status<a class="headerlink" href="#deletebehaviorsresponse-status" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STATUS_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>STATUS_SUCCESS</td>
+<td>1</td>
+<td>Behaviors were deleted successfully.</td>
+</tr>
+<tr>
+<td>STATUS_DOES_NOT_EXIST</td>
+<td>2</td>
+<td>A specified behavior name was not present in the system.</td>
+</tr>
+<tr>
+<td>STATUS_DELETE_PERMANENT</td>
+<td>3</td>
+<td>A permanent behavior cannot be deleted.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-LedSequenceGroup-InterpolationMode"></a></p>
@@ -5977,6 +6196,18 @@ be set between [0.0, 1.0], where 0 is off and 1 is full brightness.</p>
 <td><a href="#bosdyn-api-StopBehaviorRequest">StopBehaviorRequest</a></td>
 <td><a href="#bosdyn-api-StopBehaviorResponse">StopBehaviorResponse</a></td>
 <td>Stop an AudioVisualBehavior.</td>
+</tr>
+<tr>
+<td>AddOrModifyBehavior</td>
+<td><a href="#bosdyn-api-AddOrModifyBehaviorRequest">AddOrModifyBehaviorRequest</a></td>
+<td><a href="#bosdyn-api-AddOrModifyBehaviorResponse">AddOrModifyBehaviorResponse</a></td>
+<td>Add a new or modify an existing AudioVisualBehavior.<br>Before you consider adding your own AV behaviors, please consider that<br>the ‘solid lights on’ behavior can overheat the AV board if you leave<br>it on for too long with certain RGB values.</td>
+</tr>
+<tr>
+<td>DeleteBehaviors</td>
+<td><a href="#bosdyn-api-DeleteBehaviorsRequest">DeleteBehaviorsRequest</a></td>
+<td><a href="#bosdyn-api-DeleteBehaviorsResponse">DeleteBehaviorsResponse</a></td>
+<td>Delete one or more AudioVisualBehaviors.</td>
 </tr>
 <tr>
 <td>ListBehaviors</td>
@@ -65514,6 +65745,134 @@ the mutation was applied to if the request succeeds.</p>
 <td></td>
 </tr>
 </tbody>
+</table><p><a name="bosdyn-api-TrackedEntityProperties"></a></p>
+</section>
+<section id="trackedentityproperties">
+<h3>TrackedEntityProperties<a class="headerlink" href="#trackedentityproperties" title="Permalink to this heading"></a></h3>
+<p>Represents an entity (object that possibly has a mind of its own, like a person or vehicle) that
+is being tracked by the world object service.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>entity_id</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>Unique ID of the entity according to the tracking system. Note that<br>this does not persist between reboots, and an entity track may be lost<br>and regained later, possibly with a new ID.</td>
+</tr>
+<tr>
+<td>entity_type</td>
+<td><a href="#bosdyn-api-TrackedEntityProperties-EntityType">TrackedEntityProperties.EntityType</a></td>
+<td></td>
+<td>Current type of the entity.</td>
+</tr>
+<tr>
+<td>frame</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>The pose of the entity is expressed in this frame.</td>
+</tr>
+<tr>
+<td>size_in_frame</td>
+<td><a href="#bosdyn-api-Vec3">Vec3</a></td>
+<td></td>
+<td>Bounding box size expressed in the reference frame. This is the<br>side length of the bounding box.</td>
+</tr>
+<tr>
+<td>velocity_frame</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td>The velocity of the object will be expressed in this frame.</td>
+</tr>
+<tr>
+<td>velocity</td>
+<td><a href="#bosdyn-api-Vec3">Vec3</a></td>
+<td></td>
+<td>Velocity estimate expressed in the given frame.</td>
+</tr>
+<tr>
+<td>likelihood_exists</td>
+<td><a href="#double">double</a></td>
+<td></td>
+<td>Number from 0-1 indicating whether we believe this object<br>exists.</td>
+</tr>
+<tr>
+<td>type_likelihoods</td>
+<td><a href="#bosdyn-api-TrackedEntityProperties-TypeLikelihoodsEntry">TrackedEntityProperties.TypeLikelihoodsEntry</a></td>
+<td>repeated</td>
+<td>Map from type enum (e.g., "person") to a value from 0-1 indicating<br>our belief of how likely this object is the corresponding type.</td>
+</tr>
+<tr>
+<td>num_observations</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td>Number of times we've observed this entity.</td>
+</tr>
+<tr>
+<td>max_observed_velocity</td>
+<td><a href="#double">double</a></td>
+<td></td>
+<td>The maximum length of the observed velocity vector for this entity.</td>
+</tr>
+<tr>
+<td>windowed_average_velocity</td>
+<td><a href="#bosdyn-api-Vec3">Vec3</a></td>
+<td></td>
+<td>Average velocity over a window. The size of the window varies depending on how<br>old the entity is. See velocity_window_size_seconds for details.</td>
+</tr>
+<tr>
+<td>velocity_window_size_seconds</td>
+<td><a href="#double">double</a></td>
+<td></td>
+<td>This is the number of seconds in the window used to compute windowed_average_velocity.</td>
+</tr>
+<tr>
+<td>windowed_velocity_magnitude</td>
+<td><a href="#double">double</a></td>
+<td></td>
+<td>This is the absolute magnitude of the velocity over a window -- that is:<br>sum_{i in window} (</td>
+</tr>
+<tr>
+<td>direction_in_vision</td>
+<td><a href="#bosdyn-api-Vec3">Vec3</a></td>
+<td></td>
+<td>Estimate of the entity's direction.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-TrackedEntityProperties-TypeLikelihoodsEntry"></a></p>
+</section>
+<section id="trackedentityproperties-typelikelihoodsentry">
+<h3>TrackedEntityProperties.TypeLikelihoodsEntry<a class="headerlink" href="#trackedentityproperties-typelikelihoodsentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#int32">int32</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#double">double</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
 </table><p><a name="bosdyn-api-WorldObject"></a></p>
 </section>
 <section id="worldobject">
@@ -65574,6 +65933,12 @@ have multiple different properties that are all associated with the single objec
 <td><a href="#bosdyn-api-AprilTagProperties">AprilTagProperties</a></td>
 <td></td>
 <td>The apriltag properties describe any fiducial identifying an object.</td>
+</tr>
+<tr>
+<td>tracked_entity_properties</td>
+<td><a href="#bosdyn-api-TrackedEntityProperties">TrackedEntityProperties</a></td>
+<td></td>
+<td>Properties of a moving entity.</td>
 </tr>
 <tr>
 <td>nogo_region_properties</td>
@@ -65729,6 +66094,45 @@ have multiple different properties that are all associated with the single objec
 <td>STATUS_INVALID_WORLD_OBJECT</td>
 <td>4</td>
 <td>The mutation request is not allowed because some aspect of the world object is invalid.<br>For example, something could be defined in an unallowed reference frame.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-TrackedEntityProperties-EntityType"></a></p>
+</section>
+<section id="trackedentityproperties-entitytype">
+<h3>TrackedEntityProperties.EntityType<a class="headerlink" href="#trackedentityproperties-entitytype" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ENTITY_TYPE_UNKNOWN</td>
+<td>0</td>
+<td>Unset.</td>
+</tr>
+<tr>
+<td>ENTITY_TYPE_3D_BLOB</td>
+<td>1</td>
+<td>Tracked using 3D blob detection.</td>
+</tr>
+<tr>
+<td>ENTITY_TYPE_PERSON</td>
+<td>2</td>
+<td>Tracked using person detection.</td>
+</tr>
+<tr>
+<td>ENTITY_TYPE_FORKLIFT</td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>ENTITY_TYPE_SPOT</td>
+<td>4</td>
+<td></td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-WorldObjectType"></a></p>

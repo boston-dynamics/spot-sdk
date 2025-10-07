@@ -294,6 +294,64 @@ message StopBehaviorResponse {
     Status status = 2;
 }
 
+/* ADD BEHAVIOR */
+// Before you consider adding your own AV behaviors, please consider that
+// the ‘solid lights on’ behavior can overheat the AV board if you leave
+// it on for too long with certain RGB values.
+message AddOrModifyBehaviorRequest {
+    RequestHeader header = 1;
+    // New behavior's name.
+    string name = 2;
+    // Behavior to add.
+    AudioVisualBehavior behavior = 3;
+}
+
+message AddOrModifyBehaviorResponse {
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // The behavior was added successfully.
+        STATUS_SUCCESS = 1;
+        // A permanent behavior cannot be modified.
+        STATUS_MODIFY_PERMANENT = 2;
+        // The request contained an invalid field.
+        STATUS_INVALID = 3;
+    }
+
+    ResponseHeader header = 1;
+    Status status = 2;
+
+    repeated string deprecated_invalid_fields = 3 [deprecated = true];
+
+    // Human readable error message. Only set for STATUS_INVALID.
+    string error_message = 5;
+
+    // Only for STATUS_SUCCESS, specifies the resulting LiveAudioVisualBehavior object.
+    LiveAudioVisualBehavior live_behavior = 4;
+}
+
+/* DELETE BEHAVIOR */
+message DeleteBehaviorsRequest {
+    RequestHeader header = 1;
+    // Behavior names to remove.
+    repeated string behavior_names = 2;
+}
+
+message DeleteBehaviorsResponse {
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        // Behaviors were deleted successfully.
+        STATUS_SUCCESS = 1;
+        // A specified behavior name was not present in the system.
+        STATUS_DOES_NOT_EXIST = 2;
+        // A permanent behavior cannot be deleted.
+        STATUS_DELETE_PERMANENT = 3;
+    }
+
+    ResponseHeader header = 1;
+    Status status = 2;
+    repeated LiveAudioVisualBehavior deleted_behaviors = 3;
+}
+
 /* LIST BEHAVIORS */
 message ListBehaviorsRequest {
     RequestHeader header = 1;

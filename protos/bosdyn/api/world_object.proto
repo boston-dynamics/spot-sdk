@@ -57,6 +57,8 @@ message WorldObject {
     repeated DrawableProperties drawable_properties = 5;
     // The apriltag properties describe any fiducial identifying an object.
     AprilTagProperties apriltag_properties = 6;
+    // Properties of a moving entity.
+    TrackedEntityProperties tracked_entity_properties = 13;
     // Property for a user no-go
     NoGoRegionProperties nogo_region_properties = 14;
     // The image properties describe any camera and image coordinates associated with an object.
@@ -310,6 +312,57 @@ message BoundingBoxProperties {
 
     // Frame the size is expressed with respect to.
     string frame = 2;
+}
+
+// Represents an entity (object that possibly has a mind of its own, like a person or vehicle) that
+// is being tracked by the world object service.
+message TrackedEntityProperties {
+    // Unique ID of the entity according to the tracking system. Note that
+    // this does not persist between reboots, and an entity track may be lost
+    // and regained later, possibly with a new ID.
+    int32 entity_id = 1;
+    enum EntityType {
+        ENTITY_TYPE_UNKNOWN = 0;  // Unset.
+        ENTITY_TYPE_3D_BLOB = 1;  // Tracked using 3D blob detection.
+        ENTITY_TYPE_PERSON = 2;   // Tracked using person detection.
+        ENTITY_TYPE_FORKLIFT = 3;
+        ENTITY_TYPE_SPOT = 4;
+    }
+
+    // Current type of the entity.
+    EntityType entity_type = 2;
+    // The pose of the entity is expressed in this frame.
+    string frame = 3;
+    // Bounding box size expressed in the reference frame. This is the
+    // side length of the bounding box.
+    Vec3 size_in_frame = 4;
+    // The velocity of the object will be expressed in this frame.
+    string velocity_frame = 5;
+    // Velocity estimate expressed in the given frame.
+    Vec3 velocity = 6;
+    // Number from 0-1 indicating whether we believe this object
+    // exists.
+    double likelihood_exists = 8;
+    // Map from type enum (e.g., "person") to a value from 0-1 indicating
+    // our belief of how likely this object is the corresponding type.
+    map<int32, double> type_likelihoods = 11;
+    // Number of times we've observed this entity.
+    int32 num_observations = 10;
+    // The  maximum length of the observed velocity vector for this entity.
+    double max_observed_velocity = 12;
+    reserved 9;
+    // Average velocity over a window. The size of the window varies depending on how
+    // old the entity is. See velocity_window_size_seconds for details.
+    Vec3 windowed_average_velocity = 14;
+    // This is the number of seconds in the window used to compute windowed_average_velocity.
+    double velocity_window_size_seconds = 15;
+    // This is the absolute magnitude of the velocity over a window -- that is:
+    // sum_{i in window} (||v_i||) where v_i = the velocity at that time. This is the
+    // same window size as "velocity_window_size_seconds". Note that this velocity is 2d, projected
+    // to the x/y/ plane in vision frame.
+    double windowed_velocity_magnitude = 16;
+    // Estimate of the entity's direction.
+    Vec3 direction_in_vision = 17;
 }
 
 

@@ -12,6 +12,17 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## Release 5.0.1.1
+
+### New Features
+
+- People, vehicles, and other moving objects tracked by Spot's Moving Object Detection service (requires a Spot EAP 2 payload) are now discoverable via the World Object Service. This is an experimental feature for which we do not guarantee consistent tracking behavior across releases. We will not assist with specific performance or behavior inquiries.
+
+### Bug Fixes and Improvements
+
+- Fixed an issue where the AudioVisualClient was not automatically registered with sdk objects.
+- Custom A/V behaviors can now be added, modified, or deleted using the AddOrModifyBehavior and DeleteBehaviors RPCs. AnimationSequence and SyncedBlinkSequence are not yet supported for custom behaviors.
+
 ## Release 5.0.1
 
 ### Breaking Changes

@@ -65,6 +65,8 @@
     - [ArmSurfaceContactService](#bosdyn-api-ArmSurfaceContactService)
   
 - [bosdyn/api/audio_visual.proto](#bosdyn_api_audio_visual-proto)
+    - [AddOrModifyBehaviorRequest](#bosdyn-api-AddOrModifyBehaviorRequest)
+    - [AddOrModifyBehaviorResponse](#bosdyn-api-AddOrModifyBehaviorResponse)
     - [AudioSequenceGroup](#bosdyn-api-AudioSequenceGroup)
     - [AudioSequenceGroup.BuzzerSequence](#bosdyn-api-AudioSequenceGroup-BuzzerSequence)
     - [AudioSequenceGroup.BuzzerSequence.NoteWithDuration](#bosdyn-api-AudioSequenceGroup-BuzzerSequence-NoteWithDuration)
@@ -72,6 +74,8 @@
     - [AudioVisualSystemParams](#bosdyn-api-AudioVisualSystemParams)
     - [Color](#bosdyn-api-Color)
     - [Color.RGB](#bosdyn-api-Color-RGB)
+    - [DeleteBehaviorsRequest](#bosdyn-api-DeleteBehaviorsRequest)
+    - [DeleteBehaviorsResponse](#bosdyn-api-DeleteBehaviorsResponse)
     - [GetSystemParamsRequest](#bosdyn-api-GetSystemParamsRequest)
     - [GetSystemParamsResponse](#bosdyn-api-GetSystemParamsResponse)
     - [LedSequenceGroup](#bosdyn-api-LedSequenceGroup)
@@ -103,7 +107,9 @@
     - [StopBehaviorRequest](#bosdyn-api-StopBehaviorRequest)
     - [StopBehaviorResponse](#bosdyn-api-StopBehaviorResponse)
   
+    - [AddOrModifyBehaviorResponse.Status](#bosdyn-api-AddOrModifyBehaviorResponse-Status)
     - [Color.Preset](#bosdyn-api-Color-Preset)
+    - [DeleteBehaviorsResponse.Status](#bosdyn-api-DeleteBehaviorsResponse-Status)
     - [LedSequenceGroup.InterpolationMode](#bosdyn-api-LedSequenceGroup-InterpolationMode)
     - [PresetColorAssociation.PredefinedColor](#bosdyn-api-PresetColorAssociation-PredefinedColor)
     - [RunBehaviorResponse.RunResult](#bosdyn-api-RunBehaviorResponse-RunResult)
@@ -2056,11 +2062,14 @@
     - [NoGoRegionProperties](#bosdyn-api-NoGoRegionProperties)
     - [RayProperties](#bosdyn-api-RayProperties)
     - [StaircaseProperties](#bosdyn-api-StaircaseProperties)
+    - [TrackedEntityProperties](#bosdyn-api-TrackedEntityProperties)
+    - [TrackedEntityProperties.TypeLikelihoodsEntry](#bosdyn-api-TrackedEntityProperties-TypeLikelihoodsEntry)
     - [WorldObject](#bosdyn-api-WorldObject)
   
     - [AprilTagProperties.AprilTagPoseStatus](#bosdyn-api-AprilTagProperties-AprilTagPoseStatus)
     - [MutateWorldObjectRequest.Action](#bosdyn-api-MutateWorldObjectRequest-Action)
     - [MutateWorldObjectResponse.Status](#bosdyn-api-MutateWorldObjectResponse-Status)
+    - [TrackedEntityProperties.EntityType](#bosdyn-api-TrackedEntityProperties-EntityType)
     - [WorldObjectType](#bosdyn-api-WorldObjectType)
   
 - [bosdyn/api/world_object_service.proto](#bosdyn_api_world_object_service-proto)
@@ -2956,6 +2965,44 @@ If mode is set to force, use the "press_force_percentage" field to determine for
 
 
 
+<a name="bosdyn-api-AddOrModifyBehaviorRequest"></a>
+
+### AddOrModifyBehaviorRequest
+Before you consider adding your own AV behaviors, please consider that
+the ‘solid lights on’ behavior can overheat the AV board if you leave
+it on for too long with certain RGB values.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+| name | [string](#string) |  | New behavior's name. |
+| behavior | [AudioVisualBehavior](#bosdyn-api-AudioVisualBehavior) |  | Behavior to add. |
+
+
+
+
+
+
+<a name="bosdyn-api-AddOrModifyBehaviorResponse"></a>
+
+### AddOrModifyBehaviorResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| status | [AddOrModifyBehaviorResponse.Status](#bosdyn-api-AddOrModifyBehaviorResponse-Status) |  |  |
+| deprecated_invalid_fields | [string](#string) | repeated | **Deprecated.**  |
+| error_message | [string](#string) |  | Human readable error message. Only set for STATUS_INVALID. |
+| live_behavior | [LiveAudioVisualBehavior](#bosdyn-api-LiveAudioVisualBehavior) |  | Only for STATUS_SUCCESS, specifies the resulting LiveAudioVisualBehavior object. |
+
+
+
+
+
+
 <a name="bosdyn-api-AudioSequenceGroup"></a>
 
 ### AudioSequenceGroup
@@ -3067,6 +3114,39 @@ A specific RGB color. Each channel is from [0, 255].
 | r | [int32](#int32) |  |  |
 | g | [int32](#int32) |  |  |
 | b | [int32](#int32) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-DeleteBehaviorsRequest"></a>
+
+### DeleteBehaviorsRequest
+DELETE BEHAVIOR
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+| behavior_names | [string](#string) | repeated | Behavior names to remove. |
+
+
+
+
+
+
+<a name="bosdyn-api-DeleteBehaviorsResponse"></a>
+
+### DeleteBehaviorsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| status | [DeleteBehaviorsResponse.Status](#bosdyn-api-DeleteBehaviorsResponse-Status) |  |  |
+| deleted_behaviors | [LiveAudioVisualBehavior](#bosdyn-api-LiveAudioVisualBehavior) | repeated |  |
 
 
 
@@ -3580,6 +3660,20 @@ STOP BEHAVIOR
  <!-- end messages -->
 
 
+<a name="bosdyn-api-AddOrModifyBehaviorResponse-Status"></a>
+
+### AddOrModifyBehaviorResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_SUCCESS | 1 | The behavior was added successfully. |
+| STATUS_MODIFY_PERMANENT | 2 | A permanent behavior cannot be modified. |
+| STATUS_INVALID | 3 | The request contained an invalid field. |
+
+
+
 <a name="bosdyn-api-Color-Preset"></a>
 
 ### Color.Preset
@@ -3591,6 +3685,20 @@ A color preset. Each preset maps to an RGB value.
 | PRESET_NORMAL | 1 |  |
 | PRESET_WARNING | 2 |  |
 | PRESET_DANGER | 3 |  |
+
+
+
+<a name="bosdyn-api-DeleteBehaviorsResponse-Status"></a>
+
+### DeleteBehaviorsResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_SUCCESS | 1 | Behaviors were deleted successfully. |
+| STATUS_DOES_NOT_EXIST | 2 | A specified behavior name was not present in the system. |
+| STATUS_DELETE_PERMANENT | 3 | A permanent behavior cannot be deleted. |
 
 
 
@@ -3697,6 +3805,8 @@ A color preset. Each preset maps to an RGB value.
 | ----------- | ------------ | ------------- | ------------|
 | RunBehavior | [RunBehaviorRequest](#bosdyn-api-RunBehaviorRequest) | [RunBehaviorResponse](#bosdyn-api-RunBehaviorResponse) | Run an AudioVisualBehavior. |
 | StopBehavior | [StopBehaviorRequest](#bosdyn-api-StopBehaviorRequest) | [StopBehaviorResponse](#bosdyn-api-StopBehaviorResponse) | Stop an AudioVisualBehavior. |
+| AddOrModifyBehavior | [AddOrModifyBehaviorRequest](#bosdyn-api-AddOrModifyBehaviorRequest) | [AddOrModifyBehaviorResponse](#bosdyn-api-AddOrModifyBehaviorResponse) | Add a new or modify an existing AudioVisualBehavior.<br>Before you consider adding your own AV behaviors, please consider that<br>the ‘solid lights on’ behavior can overheat the AV board if you leave<br>it on for too long with certain RGB values. |
+| DeleteBehaviors | [DeleteBehaviorsRequest](#bosdyn-api-DeleteBehaviorsRequest) | [DeleteBehaviorsResponse](#bosdyn-api-DeleteBehaviorsResponse) | Delete one or more AudioVisualBehaviors. |
 | ListBehaviors | [ListBehaviorsRequest](#bosdyn-api-ListBehaviorsRequest) | [ListBehaviorsResponse](#bosdyn-api-ListBehaviorsResponse) | List all AudioVisualBehaviors currently added to the AudioVisual Service. |
 | GetSystemParams | [GetSystemParamsRequest](#bosdyn-api-GetSystemParamsRequest) | [GetSystemParamsResponse](#bosdyn-api-GetSystemParamsResponse) | Get the current status of the system. |
 | SetSystemParams | [SetSystemParamsRequest](#bosdyn-api-SetSystemParamsRequest) | [SetSystemParamsResponse](#bosdyn-api-SetSystemParamsResponse) | Set the current status of the system. |
@@ -33391,6 +33501,51 @@ A box or circle no-go region
 
 
 
+<a name="bosdyn-api-TrackedEntityProperties"></a>
+
+### TrackedEntityProperties
+Represents an entity (object that possibly has a mind of its own, like a person or vehicle) that
+is being tracked by the world object service.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| entity_id | [int32](#int32) |  | Unique ID of the entity according to the tracking system. Note that<br>this does not persist between reboots, and an entity track may be lost<br>and regained later, possibly with a new ID. |
+| entity_type | [TrackedEntityProperties.EntityType](#bosdyn-api-TrackedEntityProperties-EntityType) |  | Current type of the entity. |
+| frame | [string](#string) |  | The pose of the entity is expressed in this frame. |
+| size_in_frame | [Vec3](#bosdyn-api-Vec3) |  | Bounding box size expressed in the reference frame. This is the<br>side length of the bounding box. |
+| velocity_frame | [string](#string) |  | The velocity of the object will be expressed in this frame. |
+| velocity | [Vec3](#bosdyn-api-Vec3) |  | Velocity estimate expressed in the given frame. |
+| likelihood_exists | [double](#double) |  | Number from 0-1 indicating whether we believe this object<br>exists. |
+| type_likelihoods | [TrackedEntityProperties.TypeLikelihoodsEntry](#bosdyn-api-TrackedEntityProperties-TypeLikelihoodsEntry) | repeated | Map from type enum (e.g., "person") to a value from 0-1 indicating<br>our belief of how likely this object is the corresponding type. |
+| num_observations | [int32](#int32) |  | Number of times we've observed this entity. |
+| max_observed_velocity | [double](#double) |  | The maximum length of the observed velocity vector for this entity. |
+| windowed_average_velocity | [Vec3](#bosdyn-api-Vec3) |  | Average velocity over a window. The size of the window varies depending on how<br>old the entity is. See velocity_window_size_seconds for details. |
+| velocity_window_size_seconds | [double](#double) |  | This is the number of seconds in the window used to compute windowed_average_velocity. |
+| windowed_velocity_magnitude | [double](#double) |  | This is the absolute magnitude of the velocity over a window -- that is:<br>sum_{i in window} (||v_i||) where v_i = the velocity at that time. This is the<br>same window size as "velocity_window_size_seconds". Note that this velocity is 2d, projected<br>to the x/y/ plane in vision frame. |
+| direction_in_vision | [Vec3](#bosdyn-api-Vec3) |  | Estimate of the entity's direction. |
+
+
+
+
+
+
+<a name="bosdyn-api-TrackedEntityProperties-TypeLikelihoodsEntry"></a>
+
+### TrackedEntityProperties.TypeLikelihoodsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [int32](#int32) |  |  |
+| value | [double](#double) |  |  |
+
+
+
+
+
+
 <a name="bosdyn-api-WorldObject"></a>
 
 ### WorldObject
@@ -33410,6 +33565,7 @@ have multiple different properties that are all associated with the single objec
 | object_lifetime | [google.protobuf.Duration](#google-protobuf-Duration) |  | Duration of time after which the obstacle expires. If this field is left blank, the object<br>will expire according to a default time set in the world object service. The duration is<br>relative to the acquisition_time if filled out, or relative to the time the object is<br>added to the world object service if acquisition_time is left blank. |
 | drawable_properties | [DrawableProperties](#bosdyn-api-DrawableProperties) | repeated | The drawable properties describe geometric shapes associated with an object. |
 | apriltag_properties | [AprilTagProperties](#bosdyn-api-AprilTagProperties) |  | The apriltag properties describe any fiducial identifying an object. |
+| tracked_entity_properties | [TrackedEntityProperties](#bosdyn-api-TrackedEntityProperties) |  | Properties of a moving entity. |
 | nogo_region_properties | [NoGoRegionProperties](#bosdyn-api-NoGoRegionProperties) |  | Property for a user no-go |
 | image_properties | [ImageProperties](#bosdyn-api-ImageProperties) |  | The image properties describe any camera and image coordinates associated with an object. |
 | dock_properties | [DockProperties](#bosdyn-api-DockProperties) |  | Properties describing a dock |
@@ -33466,6 +33622,21 @@ have multiple different properties that are all associated with the single objec
 | STATUS_INVALID_MUTATION_ID | 2 | The mutation object's ID is unknown such that the service could not recognize this<br>object. This error applies to the CHANGE and DELETE actions, since it must identify the<br>object by it's id number given by the service. |
 | STATUS_NO_PERMISSION | 3 | The mutation request is not allowed because it is attempting to change or delete an<br>object detected by Spot's perception system. |
 | STATUS_INVALID_WORLD_OBJECT | 4 | The mutation request is not allowed because some aspect of the world object is invalid.<br>For example, something could be defined in an unallowed reference frame. |
+
+
+
+<a name="bosdyn-api-TrackedEntityProperties-EntityType"></a>
+
+### TrackedEntityProperties.EntityType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ENTITY_TYPE_UNKNOWN | 0 | Unset. |
+| ENTITY_TYPE_3D_BLOB | 1 | Tracked using 3D blob detection. |
+| ENTITY_TYPE_PERSON | 2 | Tracked using person detection. |
+| ENTITY_TYPE_FORKLIFT | 3 |  |
+| ENTITY_TYPE_SPOT | 4 |  |
 
 
 

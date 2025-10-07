@@ -64,6 +64,7 @@ from .spot_check import SpotCheckClient
 from .time_sync import TimeSyncClient
 from .world_object import WorldObjectClient
 
+from .audio_visual import AudioVisualClient  # isort:skip
 
 
 class SdkError(Error):
@@ -111,6 +112,7 @@ _DEFAULT_SERVICE_CLIENTS = [
     AuthClient,
     AutoReturnClient,
     AutowalkClient,
+    AudioVisualClient,
     DataAcquisitionClient,
     DataAcquisitionStoreClient,
     DataBufferClient,
