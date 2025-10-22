@@ -478,10 +478,10 @@ def check_color(led_sequence_group):
         if led_sequence is not None:
             # Now, normalize the color in the LED sequence by location
             if led_sequence.HasField("animation_sequence"):
-                for frame, idx in enumerate(led_sequence.animation_sequence.frames):
+                for idx, frame in enumerate(led_sequence.animation_sequence.frames):
                     if frame.HasField("color"):
-                        color = clamp_and_normalize_color(frame.color)
-                        led_sequence.animation_sequence.frames[idx] = color
+                        led_sequence.animation_sequence.frames[idx].color.CopyFrom(
+                            clamp_and_normalize_color(frame.color))
             elif led_sequence.HasField("blink_sequence"):
                 if led_sequence.blink_sequence.HasField("color"):
                     led_sequence.blink_sequence.color.CopyFrom(
@@ -491,10 +491,9 @@ def check_color(led_sequence_group):
                     led_sequence.pulse_sequence.color.CopyFrom(
                         clamp_and_normalize_color(led_sequence.pulse_sequence.color))
             elif led_sequence.HasField("synced_blink_sequence"):
-                for frame, idx in enumerate(led_sequence.synced_blink_sequence.frames):
-                    if frame.HasField("color"):
-                        color = clamp_and_normalize_color(frame.color)
-                        led_sequence.synced_blink_sequence.frames[idx] = color
+                if led_sequence.synced_blink_sequence.HasField("color"):
+                    led_sequence.synced_blink_sequence.color.CopyFrom(
+                        clamp_and_normalize_color(led_sequence.synced_blink_sequence.color))
             elif led_sequence.HasField("solid_color_sequence"):
                 if led_sequence.solid_color_sequence.HasField("color"):
                     led_sequence.solid_color_sequence.color.CopyFrom(

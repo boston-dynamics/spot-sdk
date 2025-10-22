@@ -50,6 +50,12 @@ def main():
         object_type=request_fiducials).world_objects
     print(f'Fiducial objects: {fiducial_objects}')
 
+    # Get all entity objects (an object of a specific type).
+    request_entities = [world_object_pb2.WORLD_OBJECT_TRACKED_ENTITY]
+    entity_objects = world_object_client.list_world_objects(
+        object_type=request_entities).world_objects
+    print(f'Entity objects: {entity_objects}')
+
     # Get all objects detected after this time
     start_time = time.time()
     most_recent_objects = world_object_client.list_world_objects(

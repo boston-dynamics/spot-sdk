@@ -12,6 +12,22 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## Release 5.0.1.2
+
+### Bug Fixes and Improvements
+
+- Added the `WORLD_OBJECT_TRACKED_ENTITY` value to the `WorldObjectType` enum.
+
+- Fixed an issue with the [AudioVisualClient](../python/bosdyn-client/src/bosdyn/client/audio_visual.py) that prevented custom A/V behaviors containing AnimationSequence and SyncedBlinkSequence LED sequences from being added or modified.
+
+### Spot Sample Code
+
+#### Updated
+
+- [Get World Objects](../python/examples/get_world_objects/README.md): This example now demonstrates how to retrieve world objects tracked by Spot's Moving Object Detection service (requires a Spot EAP 2 payload).
+
+- [A/V Behaviors](../python/examples/audio_visual/audio_visual_behaviors/README.md): This example now demonstrates the usage of two additional LED sequences: AnimationSequence and SyncedBlinkSequence.
+
 ## Release 5.0.1.1
 
 ### New Features

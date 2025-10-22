@@ -96,15 +96,16 @@ def main():
 
     # LED sequence type
     def parse_led_sequence_type(value):
-        # Accept either a comma-separated string of 3 ints or a supported string
-        allowed_strings = {"blink", "pulse", "solid"}
+        allowed_strings = {"blink", "pulse", "synced_blink", "solid", "animation"}
         if value in allowed_strings:
             return value
         else:
-            raise argparse.ArgumentTypeError("LED sequence type must be blink, pulse, or solid.")
+            raise argparse.ArgumentTypeError(
+                "LED sequence type must be blink, pulse, synced_blink, solid, or animation.")
 
-    parser.add_argument('-l', '--led-sequence-type', type=parse_led_sequence_type, default="normal",
-                        help='LED sequence type as blink, pulse, or solid.')
+    parser.add_argument(
+        '-l', '--led-sequence-type', type=parse_led_sequence_type, default="normal",
+        help='LED sequence type as blink, pulse, synced_blink, solid, or animation.')
 
     def parse_color(value):
         # Accept either a comma-separated string of 3 ints or a supported string
@@ -125,7 +126,7 @@ def main():
                 "Color must be normal, warning, danger, or a 3 comma-separated values (r,g,b).")
 
     parser.add_argument(
-        '-c', '--color', type=parse_color, default="normal",
+        '-c', '--color', type=parse_color, required=False,
         help='Color as normal, warning, danger, or a 3 comma-separated integers (r,g,b).')
     parser.add_argument('-d', '--delete', action='store_true',
                         help='Delete custom behavior after running')
@@ -194,17 +195,30 @@ def main():
                 blink_sequence=audio_visual_pb2.LedSequenceGroup.LedSequence.BlinkSequence(
                     color=color, period=period, duty_cycle=duty_cycle))
 
-        # This method is unused, but you can uncomment it below to experiment if you'd like.
         def get_led_pulse_sequence(color, period):
             return audio_visual_pb2.LedSequenceGroup.LedSequence(
                 pulse_sequence=audio_visual_pb2.LedSequenceGroup.LedSequence.PulseSequence(
                     color=color, period=period))
 
-        # This method is also unused, but you can uncomment it below to experiment if you'd like.
         def get_led_solid_color_sequence(color):
             return audio_visual_pb2.LedSequenceGroup.LedSequence(
                 solid_color_sequence=audio_visual_pb2.LedSequenceGroup.LedSequence.
                 SolidColorSequence(color=color))
+
+        def get_led_synced_blink_sequence(color, period):
+            return audio_visual_pb2.LedSequenceGroup.LedSequence(
+                synced_blink_sequence=audio_visual_pb2.LedSequenceGroup.LedSequence.
+                SyncedBlinkSequence(color=color, period=period))
+
+        def get_led_animation_sequence(colors, durations):
+            animation_sequence = audio_visual_pb2.LedSequenceGroup.LedSequence.AnimationSequence()
+            for color, duration in zip(colors, durations):
+                animation_sequence.frames.append(
+                    audio_visual_pb2.LedSequenceGroup.LedSequence.AnimationSequence.Frame(
+                        color=color, duration=duration, interpolation=audio_visual_pb2.
+                        LedSequenceGroup.InterpolationMode.INTERPOLATION_NONE))
+            return audio_visual_pb2.LedSequenceGroup.LedSequence(
+                animation_sequence=animation_sequence)
 
         def get_color_from_user_color_input(color):
             if isinstance(color, str):
@@ -227,24 +241,60 @@ def main():
         # LEDs #####
         ############
         try:
-            color = get_color_from_user_color_input(options.color)
+            if options.color is not None:
+                color = get_color_from_user_color_input(options.color)
         except Exception as e:
             print(f"Error: {e}")
             print("Exiting...")
             return False
+        finally:
+            if options.led_sequence_type in ["blink", "pulse", "synced_blink", "solid"]:
+                if not options.color:
+                    print(
+                        "Error: You must specify a color using the --color option when using the blink, pulse, synced_blink, or solid LED sequence types."
+                    )
+                    print("Exiting...")
+                    return False
 
         color_period = Duration(nanos=500000000)  # 500 ms
-        # There are different types of LED sequences. Two additional ones are commented out below.
-        # Note that this example does not include a helper function for creating an AnimationSequence.
         if options.led_sequence_type == "blink":
             led_sequence = get_led_blink_sequence(color, color_period)
         elif options.led_sequence_type == "pulse":
             led_sequence = get_led_pulse_sequence(color, color_period)
+        elif options.led_sequence_type == "synced_blink":
+            led_sequence = get_led_synced_blink_sequence(color, color_period)
         elif options.led_sequence_type == "solid":
             led_sequence = get_led_solid_color_sequence(color)
-        led_sequence_group = audio_visual_pb2.LedSequenceGroup(
-            front_center=led_sequence, front_left=led_sequence, front_right=led_sequence,
-            hind_left=led_sequence, hind_right=led_sequence)
+        elif options.led_sequence_type == "animation":
+            if options.color:
+                print(
+                    "In this example, when using the animation LED sequence type, the --color option is ignored to demonstrate using multiple colors in a single animation."
+                )
+            red = audio_visual_pb2.Color(rgb=audio_visual_pb2.Color.RGB(r=255, g=0, b=0))
+            white = audio_visual_pb2.Color(rgb=audio_visual_pb2.Color.RGB(r=255, g=255, b=255))
+            blue = audio_visual_pb2.Color(rgb=audio_visual_pb2.Color.RGB(r=0, g=0, b=255))
+            front_center_led_sequence = get_led_animation_sequence([red, white, blue],
+                                                                   [color_period] * 3)
+            front_sides_led_sequence = get_led_animation_sequence([white, blue, red],
+                                                                  [color_period] * 3)
+            rear_sides_led_sequence = get_led_animation_sequence([blue, red, white],
+                                                                 [color_period] * 3)
+
+        if options.led_sequence_type in ["blink", "pulse", "synced_blink", "solid"]:
+            # Use the same sequence for all LEDs
+            led_sequence_group = audio_visual_pb2.LedSequenceGroup(
+                front_center=led_sequence, front_left=led_sequence, front_right=led_sequence,
+                hind_left=led_sequence, hind_right=led_sequence)
+        elif options.led_sequence_type == "animation":
+            # Use different sequences for different sets of LEDs
+            # This alternates red, white, and blue on the front, sides, and rear LEDs.
+            # Front: red,   white, blue
+            # Sides: white, blue,  red
+            # Rear:  blue,  red,   white
+            led_sequence_group = audio_visual_pb2.LedSequenceGroup(
+                front_center=front_center_led_sequence, front_left=front_sides_led_sequence,
+                front_right=front_sides_led_sequence, hind_left=rear_sides_led_sequence,
+                hind_right=rear_sides_led_sequence)
 
         ############
         # Buzzer ###
