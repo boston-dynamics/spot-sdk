@@ -485,7 +485,7 @@ def main():
 
     # Start rendering.
     renderWindow.Render()
-    renderWindow.Start()
+    renderWindowInteractor.Initialize()
     renderWindowInteractor.Start()
 
 
