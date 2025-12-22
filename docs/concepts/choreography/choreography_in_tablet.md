@@ -6,84 +6,67 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 -->
 
-# Boston Dynamics Choreography tablet UI
+# Choreography tablet UI
 
-Dances authored and executed using Choreographer can also be played through the Tablet using the Choreography drive mode.
+Dances authored and executed using Choreographer can also be played through the tablet using the Choreography drive mode. In addition, Spot comes with a set of pre-uploaded sample dances created by Boston Dynamics which can found under the **Sample Dances** and **Sample Emotes** categories when first connecting Spot to a Tablet.
 
-_Only users with a Spot choreography license will be able to view the Choreography drive screen._
+### License Requirements
 
-## Choreography safety
+Users must have a choreography license for Spot to upload and play user-authored choreography sequences (sequences created by the user) through the tablet interface. Users without choreography license features will still have access to Boston Dynamics' pre-uploaded sample dances.
 
-CAUTION: Choreography moves can induce unpredictable or unstable motions in Spot, which may increase the risk of falls, collisions, and other hazards. Observe the following safety precautions:
+_Note: Prior to 5.1.0, users without a choreography license did not have permissions to view choreography features through the tablet. If the choreography option does not appear, or no selectable sample dances are available, ensure both the tablet and connected Spot are on a 5.1.0 or greater release version._
 
-- Before using choreography, ensure there is at least 3 meters of clearance around Spot in all directions.
-- Stay at least 3 meters away from Spot when motors are active. Power off motors before approaching Spot.
-- Ensure that all bystanders who are in or may enter the area where choreography is performed are adequately warned and stay at least 3 meters away from Spot at all times.
+### Choreography Safety
 
-WARNING: A small percentage of people may experience epileptic seizures or blackouts when exposed to certain light patterns or flashing lights. Choreography moves that include Spot’s status lights or A/V warning system lights could trigger epileptic symptoms or seizures, even in people with no history of photosensitive epilepsy. Observe the following safety precautions:
+The choreography framework is less robust than other Spot behaviors. It should only be used on a flat floor with plenty of space and good traction. **Choreography is not recommended for use with payloads**. Please refer to the [choreography safety](choreographer.md#choreography-safety) overview before running choreography sequences through the tablet interface.
 
-- When designing choreography routines that include Spot’s status lights or A/V warning system lights, avoid patterns and frequencies known to increase the risk of epileptic symptoms.
-- Before using choreography, ensure that all bystanders are adequately warned of any risk of exposure to light patterns and flashing lights from Spot.
+## Playing choreography sequences through the tablet
 
-## Using the Choreography drive mode
+1. **Enter choreography drive mode** - Enter Choreography drive mode from the upper left dropdown menu where it appears with Drive and Autowalk.
 
-  <img src="images/tablet_choreographer_1.png" width="520"/>
+   <img src="tablet_images/choreography_drive_option.png" width="520"/>
 
-1. **Application selection** - Enter Choreography drive mode from the upper left dropdown menu where it appears with Drive and Autowalk.
+2. **Add Sequence buttons to the screen** - Lists of the choreography sequences that the robot can perform are viewable by pressing the tabs at the top of the screen. You can choose to place any sequence to the left or right side of the tablet screen, where it will be added to a list of buttons which each trigger the playback of the selected choreography sequence.
 
-2) **Exiting and entering Dance mode** - For Tablets without hardware joysticks, exiting and entering dance mode allows you to toggle between playing choreography sequences and using other robot modes. For tablets with hardware joysticks, selected choreography sequences will always appear on screen.
+   Remove a specific button from the screen by pressing the minus symbol next to it, or remove all buttons from the screen by using the "clear screen" button in the gear icon menu in the upper right corner.
 
-3. **Select and View Choreography Sequences** - Lists of the choreography sequences that the robot can perform are viewable by pressing the tabs at the top of the screen. Opening these menus will allow you to add dance sequences to the Choreography screen as buttons which are used to play the sequences on the robot. These tabs are configurable, and you can choose which tabs will appear as options on screen by going to the **Choreography** option in the **Settings** menu.
+   <img src="tablet_images/add_dances.png" width="520"/>
 
-   _See below for information on configuring the Choreography drive screen._
+3. **Play the Choreography sequence** - Press the added sequence buttons to start sequences. The name on the button indicates the choreography sequence that will play. Once a sequence has started a progress bar will appear in the center of the screen.
 
-   <img src="images/tablet_choreographer_2.png" width="520"/>
+   _Note: When a tablet does not have hardware joysticks connected for driving the robot, sequence buttons are hidden in modes like "Sit" and "Stand" so the on screen software joysticks may be displayed instead. To make the sequence buttons reappear, select "Dance" mode from the lower left list, or click on any dance dropdown menu._
 
-4) **Adding moves to the screen** - You can choose to place any sequence to the left or right side of the tablet screen, where it will be added to a list of buttons which each trigger the playback of the selected choreography sequence. Swipe horizontally left and right across the dropdown menu to scroll through the known moves.
+   <img src="tablet_images/playing_sequence.png" width="520"/>
 
-   <img src="images/tablet_choreographer_3.png" width="520"/>
+### Stopping Active Sequences
 
-5) **Play the Choreography sequence** - Once a sequence appears on screen as a white button you can press that button to play the choreography sequence. The name on the button indicates the choreography sequence that will play.
+Stop a choreography sequence that is playing by pressing **CANCEL** in the center of the screen. If a sequence is canceled while it is playing, the robot will stop the sequence and attempt to freeze in place.
 
-6) **Removing buttons from the list** - Remove a button from on screen by pressing the minus symbol next to it. This does not remove the move from the dropdown menu it was selected from.
+**Warning**: Interrupting a dance in the middle of a dynamic movement (such as a jump), or starting a different dance before the previous dance finishes, may cause falls. For the best behavior avoid stopping a dance partway through unless necessary for safety reasons, and start dances from a stable stance or from seated. If a dance must be stopped partway through regardless of risk, try to pick a moment when Spot isn't moving too quickly, and has at least 3 feet on the ground. This will lower the risk of falls.
 
-7) **Cancel moves** - Stop a choreography sequence that is playing by pressing **CANCEL** in the center of the screen. If a move is canceled while it is playing, the robot will stop the move and come to a stand. A sequence can also be aborted by entering any other mode such as Sit, Stand, Walk, or Self Right.
+## Uploading your own Choreography sequences
 
-Take caution when stopping choreography sequences and playing choreography sequences when the robot is not in a neutral stance. Interrupting a dance in the middle of a dynamic movement, or starting a different dance before the previous dance finishes, may cause falls. For the best behavior avoid stopping a dance partway through unless necessary for safety reasons, and start dances from a stable stance or from seated. If a dance must be stopped partway through regardless of risk, try to pick a moment when Spot isn't moving too quickly, and has at least 3 feet on the ground. This will lower the risk of falls.
+_Note: It is recommended that before uploading a choreography sequence to the robot through Choreographer for use with the tablet that you verify your sequence is playable and stable through Choreographer first._
 
-## Using the tablet to play your own Choreography sequences
+1. Start by connecting your Spot(s) to Choreographer and opening the choreography sequence(s) you wish to upload. Refer to the [Choreographer Overview](choreographer.md) and [Robot Connections in Choreographer](robot_controls_in_choreographer.md) documentation if you have trouble with this step.
 
-Spot comes with a small library of sequences. Some of these are intended for performance. Some gestures can be used to communicate intent through body language. These sequences are always available in the **Select Moves** dropdown. The Tablet can also play custom sequences uploaded by users. The easiest way to author choreography sequences and upload them to the robot is through the Choreographer application.
+   _Note: Make sure you have saved your choreography sequence(s) with names that will allow you to easily identify them later._
 
-_Only users with a Spot choreography license can upload original sequences._
+2. Select the robot connections you wish to upload your sequence to, then make sure the sequence you wish to upload is the current open tab. When these settings are correct, open the "File" menu and select the "Save and Upload Choreography to Robot(s)" option. Press **Save**.
 
-### Uploading choreography sequences with Choreographer
+   <img src="tablet_images/anotated_save_and_upload_box.png" width="800"/>
 
-<img src="images/tablet_choreographer_4.png" width="520"/>
+3. Repeat **step 2** for all the choreography sequences you want to upload. Then sit the robot(s) and disconnect from Choreographer.
 
-1. Start by opening your completed choreography sequence in Choreographer and connecting your robot to Choreographer. Refer to the “Choreographer User Guide” and “Connecting Robots to Choreographer” if you have trouble with this step.
+4. Now connect to Spot through the tablet, and navigate to the **Settings** section of the Hamburger menu. In **Settings** select **Choreography**. All the sequences you uploaded to the robot with Choreographer will appear under the **All Original Sequences** category.
 
-2. Make sure you have given your choreography sequence a name that will allow you to easily identify it later, and then play the sequence on the robot using the Choreographer application. Playing the sequence on the robot uploads it to Spot’s memory.
+   <img src="tablet_images/demo_dance_in_list.png" width="520"/>
 
-3. After repeating steps 1 and 2 for all the choreography sequences you want to play through the tablet or save to your Spot, sit the robot and disconnect it from Choreographer.
+5. Make sure the checkbox next to **All Original Sequences** has been selected, then enter the **Choreography drive mode** screen. The uploaded sequence(s) will appear under the **All Original Sequences** dropdown and can be added and played like any other choreography sequence option.
 
-<img src="images/tablet_choreographer_5.png" width="520"/>
+   <img src="tablet_images/demo_dance_in_dropdown.png" width="520"/>
 
-5. Now connect to Spot through the Tablet, and navigate to the **Settings** section of the Hamburger menu. In **Settings** select **Choreography**. All the moves you uploaded with Choreographer should appear in a list near the bottom of the screen under **Unsaved Choreography Sequences**.
-
-<img src="images/tablet_choreographer_6.png" width="520"/>
-
-6. To play these sequences through the tablet you will need to save them and give them a label. To save a sequence, select the edit symbol next to its name on the right side of the screen, choose a label from the dropdown, and press save. Complete this step for each sequence you wish to save and have accessible for execution through the tablet.
-
-_All animation moves (moves loaded from .cha files), included in a saved sequence will also be saved. Once a sequence is saved no further upload action will be required for it to be playable from the tablet or through an `ExecuteChoreography` RPC call using the sequence's name. If all sequences requiring an animation move are deleted, the stored animation move will also be removed on the next reboot. Make sure different animations have different names, or saved choreography sequences will attempt to replace the old version with the new version of the animation._
-
-7. Locate the checkbox for the label(s) you saved your sequences to, and make sure they are checked. Checking the checkbox for a label will make it appear as an option when you enter the Choreography drive screen.
-
-<img src="images/tablet_choreographer_7.png" width="520"/>
-
-8. Enter the Choreography drive screen and locate the dropdown tabs with the labels you selected in the Choreography settings screen. You will now be able to add and play your custom choreography sequences in the same way you would play the sample choreography sequences included with your robot release.
-
-## Managing your uploaded Choreography sequences
+## Managing uploaded Choreography sequences
 
 ### **Deleting Saved Choreography Sequences**
 
@@ -93,24 +76,24 @@ The original choreography sequences you save to Spot will be retained indefinite
 
 **Add a Label**<br/>
 
-<img src="images/create_label.png" width="420"/>
+<img src="tablet_images/create_label.png" width="420"/>
 
 To add a new label go to the Choreography settings screen and press the button that says **Add New Label**. Enter your label name into the provided text field and press the **Create** button.
 
 **Delete a Label**<br/>
 
-<img src="images/delete_label.png" width="420"/>
+<img src="tablet_images/delete_label.png" width="420"/>
 
 Select the edit icon next to the label you want to delete. Find the trash icon next to the label's name in the edit screen and press it.
 
 **Remove a label from a Sequence**<br/>
 
-<img src="images/remove_label.png" width="420"/>
+<img src="tablet_images/remove_label.png" width="420"/>
 
 Select the edit icon next to the sequence you wish to modify. Find the label you wish to remove in the list under _sequence labels_ on the right side of the screen, and remove it by pressing the **X** icon next to it.
 
 **Add a label to a Sequence**<br/>
 
-<img src="images/add_label.png" width="420"/>
+<img src="tablet_images/add_label.png" width="420"/>
 
 Select the edit icon next to the sequence you wish to modify. Select the label you wish to add in the dropdown on the left hand side of the screen, and then press the **Add Label** button.

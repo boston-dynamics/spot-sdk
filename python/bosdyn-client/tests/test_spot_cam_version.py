@@ -7,9 +7,6 @@
 """Unit tests for the Spot CAM's MediaLogClient."""
 import time
 
-import grpc
-import pytest
-
 import bosdyn.client.spot_cam.version
 from bosdyn.api.spot_cam import service_pb2_grpc, version_pb2
 

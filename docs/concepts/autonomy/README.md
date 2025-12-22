@@ -25,6 +25,7 @@ The Autowalk feature is an implementation of the autonomous navigation API. Howe
 - [GraphNav service](graphnav_service.md)
 - [GraphNav map structure](graphnav_map_structure.md)
 - [GraphNav area callbacks](graphnav_area_callbacks.md)
+- [Hazard Avoidance](hazard_avoidance.md)
 - [Initialization](initialization.md)
 - [Localization](localization.md)
 - [GraphNav and robot locomotion](graphnav_and_robot_locomotion.md)

@@ -18,6 +18,7 @@ from bosdyn.api import (directory_pb2, directory_registration_pb2,
                         directory_registration_service_pb2_grpc)
 from bosdyn.client.common import (BaseClient, error_factory, error_pair,
                                   handle_common_header_errors, handle_unset_status_error)
+from bosdyn.util import now_sec
 
 from .error_callback_result import ErrorCallbackResult
 from .exceptions import ResponseError, RetryableUnavailableError, RpcError, TimedOutError
@@ -442,7 +443,7 @@ class DirectoryRegistrationKeepAlive(object):
 
         self.logger.info('Starting directory registration loop for {}'.format(self.directory_name))
         while not self._end_reregister_signal.wait(wait_time):
-            exec_start = time.time()
+            exec_start = now_sec()
             action = ErrorCallbackResult.RESUME_NORMAL_OPERATION
             try:
                 self.dir_reg_client.register(
@@ -476,7 +477,7 @@ class DirectoryRegistrationKeepAlive(object):
                 # Log all other exceptions, but continue looping in hopes that it resolves itself
                 self.logger.exception('Caught general exception')
 
-            elapsed = time.time() - exec_start
+            elapsed = now_sec() - exec_start
             if action == ErrorCallbackResult.RETRY_IMMEDIATELY:
                 wait_time = 0.0
             elif action == ErrorCallbackResult.ABORT:

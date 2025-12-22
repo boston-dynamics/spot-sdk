@@ -149,7 +149,7 @@ def oneof_param_to_dict(oneof_param: OneOfParam, oneof_spec: OneOfParam.Spec,
 
 
 def check_types_match(param, proto_type):
-    if type(param) != proto_type:
+    if type(param) is not proto_type:
         return CustomParamError(
             status=CustomParamError.STATUS_INVALID_VALUE,
             error_messages=[

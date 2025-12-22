@@ -7,9 +7,6 @@
 """Unit tests for the Spot CAM's StreamQualityClient."""
 import time
 
-import grpc
-import pytest
-
 import bosdyn.client.spot_cam.streamquality
 from bosdyn.api.spot_cam import service_pb2_grpc, streamquality_pb2
 
@@ -81,7 +78,7 @@ def test_get_stream_params():
     assert result.SerializeToString() == mock.SerializeToString()
 
 
-def test_get_stream_params():
+def test_get_stream_params_async():
     client, service, server = _setup()
     mock = _mock_stream_params()
     result = client.get_stream_params_async().result()

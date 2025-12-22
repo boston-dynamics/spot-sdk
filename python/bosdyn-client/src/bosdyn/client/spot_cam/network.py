@@ -27,7 +27,7 @@ class NetworkClient(BaseClient):
         super(NetworkClient, self).__init__(service_pb2_grpc.NetworkServiceStub)
 
     def get_ice_configuration(self, **kwargs):
-        """Set ICE configuration on Spot CAM. This overrides all existing configured servers"""
+        """Get ICE configuration from Spot CAM"""
         request = network_pb2.GetICEConfigurationRequest()
         return self.call(self._stub.GetICEConfiguration, request, self._ice_servers_from_response,
                          self._ice_network_error_from_response, copy_request=False, **kwargs)
@@ -41,7 +41,7 @@ class NetworkClient(BaseClient):
 
 
     def set_ice_configuration(self, ice_servers, **kwargs):
-        """Get ICE configuration from Spot CAM"""
+        """Set ICE configuration on Spot CAM. This overrides all existing configured servers"""
         request = self._set_ice_configuration_request(ice_servers)
         return self.call(self._stub.SetICEConfiguration, request, None,
                          self._ice_network_error_from_response, copy_request=False, **kwargs)
@@ -67,3 +67,4 @@ class NetworkClient(BaseClient):
     @handle_common_header_errors
     def _ice_network_error_from_response(response):  # pylint: disable=unused-argument
         return None
+

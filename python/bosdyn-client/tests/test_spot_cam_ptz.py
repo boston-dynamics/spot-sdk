@@ -7,8 +7,6 @@
 """Unit tests for the Spot CAM's PtzClient."""
 import time
 
-import grpc
-import pytest
 from pytest import approx
 
 import bosdyn.client.spot_cam.ptz

@@ -11,9 +11,8 @@ import grpc
 import pytest
 
 import bosdyn.client.map_processing
-from bosdyn.api import header_pb2, lease_pb2, time_sync_pb2
+from bosdyn.api import header_pb2, time_sync_pb2
 from bosdyn.api.graph_nav import map_pb2, map_processing_pb2, map_processing_service_pb2_grpc
-from bosdyn.client.exceptions import InternalServerError, UnsetStatusError
 from bosdyn.client.map_processing import __ANCHORING_COMMON_ERRORS, MapProcessingServiceClient
 from bosdyn.client.time_sync import TimeSyncEndpoint
 

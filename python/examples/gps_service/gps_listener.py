@@ -60,6 +60,8 @@ NUM_ATTEMPTS = 30
 SECS_PER_ATTEMPT = 1.0  # seconds.
 # Number of seconds to wait while we are checking for payload authorization.
 SECS_PER_AUTH = 3.0  # seconds.
+# Number of seconds to wait before attempting to reconnect to an NTRIP server.
+NTRIP_RECONNECT_SECS = 3.0  # seconds.
 
 # Attribute used in service faults to prevent autonomous navigation.
 IMPAIR_ATTRIBUTE = "impair_navigation"
@@ -193,6 +195,10 @@ def create_parser():
         "--ntrip-use-tls", action='store_true',
         help="Flag indicating if the NTRIP client should use TLS when connecting to the NTRIP server"
     )
+    parser.add_argument(
+        "--ntrip-reconnect-secs", type=float,
+        help='The number of seconds to wait before attempting to reconnect to the NTRIP server.',
+        default=NTRIP_RECONNECT_SECS, required=False)
 
     return parser
 
@@ -589,7 +595,7 @@ def calculate_body_tform_gps(robot, options):
 def get_ntrip_params(options):
     return NtripClientParams(options.ntrip_server, options.ntrip_port, options.ntrip_user,
                              options.ntrip_password, options.ntrip_mountpoint,
-                             options.ntrip_use_tls)
+                             options.ntrip_use_tls, options.ntrip_reconnect_secs)
 
 
 # Use the configuration provided by the user to connect to and read from a GPS device.

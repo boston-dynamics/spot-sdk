@@ -227,6 +227,10 @@ message SetLocalizationResponse {
 
 message RouteGenParams {
 
+
+    // When navigating after getting stuck, setting this to true will cause the robot to first
+    // backtrack from its stuck location to the start waypoint before starting the new route.
+    bool backtrack_to_start_waypoint = 2;
 }
 
 // Parameters describing how to travel along a route.
@@ -898,6 +902,20 @@ message NavigationFeedbackResponse {
     // Map of Region IDs with relevant information
     map<string, ActiveRegionInformation> active_region_information = 10;
 
+    // The robot may achieve parts of the goal before the status is STATUS_REACHED_GOAL.
+    // This enum captures intermediate states.
+    enum GoalStatus {
+        // Unset.
+        GOAL_STATUS_UNKNOWN = 0;
+        // The robot has not yet reached the destination.
+        GOAL_STATUS_NOT_REACHED = 1;
+        // The robot is within the destination's goal specified in the TravelParams.
+        GOAL_STATUS_IN_GOAL_AREA = 2;
+        // The robot is standing at the final goal point.
+        GOAL_STATUS_STANDING_AT_GOAL = 3;
+    }
+    GoalStatus goal_status = 19;
+
     // Data for a Area Callback region
     message ActiveRegionInformation {
         // human readable name for the region
@@ -1386,6 +1404,37 @@ message UploadEdgeSnapshotResponse {
     LeaseUseResult lease_use_result = 2;
     // General map statistics after upload.
     MapStats map_stats = 3;
+}
+
+// Like the individual waypoint/edge RPCs, but for N snapshots of both edges and waypoints.
+// graph_nav only processes complete Snapshots so large protos are discouraged;
+// any network interruption would require the data to be resent.  Clients are
+// encouraged to send data in batches on the order of a few MB to strike a
+// balance between eliminating per-RPC overhead and recovering from errors.
+message UploadSnapshotsRequest {
+    RequestHeader header = 1;
+    message Snapshots {
+        repeated WaypointSnapshot waypoint_snapshots = 1;
+        repeated EdgeSnapshot edge_snapshots = 2;
+    }
+    DataChunk chunk = 2;  // This should be interpreted as a serialized Snapshots.
+    Lease lease = 3;
+}
+
+message UploadSnapshotsResponse {
+    ResponseHeader header = 1;
+    LeaseUseResult lease_use_result = 2;
+
+    // If waypoint snapshots were uploaded, sensor compatibilty is checked.
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_INCOMPATIBLE_SENSORS = 2;
+    }
+    Status status = 3;
+    SensorCompatibilityStatus sensor_status = 4;
+
+    MapStats map_stats = 5;
 }
 
 // The DownloadWaypointSnapshot request asks for a specific waypoint snapshot id to

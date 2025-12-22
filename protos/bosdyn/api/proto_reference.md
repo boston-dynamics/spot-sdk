@@ -164,6 +164,7 @@
     - [Action](#bosdyn-api-autowalk-Action)
     - [Action.DataAcquisition](#bosdyn-api-autowalk-Action-DataAcquisition)
     - [Action.ExecuteChoreography](#bosdyn-api-autowalk-Action-ExecuteChoreography)
+    - [Action.ExecuteChoreography.PromptParams](#bosdyn-api-autowalk-Action-ExecuteChoreography-PromptParams)
     - [Action.RemoteGrpc](#bosdyn-api-autowalk-Action-RemoteGrpc)
     - [Action.Sleep](#bosdyn-api-autowalk-Action-Sleep)
     - [ActionWrapper](#bosdyn-api-autowalk-ActionWrapper)
@@ -197,6 +198,9 @@
     - [Target.NavigateTo](#bosdyn-api-autowalk-Target-NavigateTo)
     - [Target.Relocalize](#bosdyn-api-autowalk-Target-Relocalize)
     - [Walk](#bosdyn-api-autowalk-Walk)
+    - [WalkInterrupt](#bosdyn-api-autowalk-WalkInterrupt)
+    - [WalkInterrupt.ConditionAndBehavior](#bosdyn-api-autowalk-WalkInterrupt-ConditionAndBehavior)
+    - [WalkInterrupt.DaqPluginSignal](#bosdyn-api-autowalk-WalkInterrupt-DaqPluginSignal)
   
     - [Target.TargetStowBehavior](#bosdyn-api-autowalk-Target-TargetStowBehavior)
   
@@ -303,6 +307,7 @@
     - [CancelAcquisitionRequest](#bosdyn-api-CancelAcquisitionRequest)
     - [CancelAcquisitionResponse](#bosdyn-api-CancelAcquisitionResponse)
     - [CaptureActionId](#bosdyn-api-CaptureActionId)
+    - [CaptureOrdering](#bosdyn-api-CaptureOrdering)
     - [DataAcquisitionCapability](#bosdyn-api-DataAcquisitionCapability)
     - [DataCapture](#bosdyn-api-DataCapture)
     - [DataError](#bosdyn-api-DataError)
@@ -531,6 +536,9 @@
 - [bosdyn/api/fault_service.proto](#bosdyn_api_fault_service-proto)
     - [FaultService](#bosdyn-api-FaultService)
   
+- [bosdyn/api/fiducial_purpose.proto](#bosdyn_api_fiducial_purpose-proto)
+    - [FiducialPurpose](#bosdyn-api-FiducialPurpose)
+  
 - [bosdyn/api/full_body_command.proto](#bosdyn_api_full_body_command-proto)
     - [FullBodyCommand](#bosdyn-api-FullBodyCommand)
     - [FullBodyCommand.Feedback](#bosdyn-api-FullBodyCommand-Feedback)
@@ -701,6 +709,9 @@
     - [UploadGraphResponse](#bosdyn-api-graph_nav-UploadGraphResponse)
     - [UploadGraphResponse.ValidationStatus](#bosdyn-api-graph_nav-UploadGraphResponse-ValidationStatus)
     - [UploadGraphStreamingRequest](#bosdyn-api-graph_nav-UploadGraphStreamingRequest)
+    - [UploadSnapshotsRequest](#bosdyn-api-graph_nav-UploadSnapshotsRequest)
+    - [UploadSnapshotsRequest.Snapshots](#bosdyn-api-graph_nav-UploadSnapshotsRequest-Snapshots)
+    - [UploadSnapshotsResponse](#bosdyn-api-graph_nav-UploadSnapshotsResponse)
     - [UploadWaypointSnapshotRequest](#bosdyn-api-graph_nav-UploadWaypointSnapshotRequest)
     - [UploadWaypointSnapshotResponse](#bosdyn-api-graph_nav-UploadWaypointSnapshotResponse)
     - [ValidateGraphRequest](#bosdyn-api-graph_nav-ValidateGraphRequest)
@@ -717,6 +728,7 @@
     - [NavigateToResponse.Status](#bosdyn-api-graph_nav-NavigateToResponse-Status)
     - [NavigationFeedbackResponse.ActiveRegionInformation.AreaCallbackStatus](#bosdyn-api-graph_nav-NavigationFeedbackResponse-ActiveRegionInformation-AreaCallbackStatus)
     - [NavigationFeedbackResponse.BlockageStatus](#bosdyn-api-graph_nav-NavigationFeedbackResponse-BlockageStatus)
+    - [NavigationFeedbackResponse.GoalStatus](#bosdyn-api-graph_nav-NavigationFeedbackResponse-GoalStatus)
     - [NavigationFeedbackResponse.RouteFollowingStatus](#bosdyn-api-graph_nav-NavigationFeedbackResponse-RouteFollowingStatus)
     - [NavigationFeedbackResponse.Status](#bosdyn-api-graph_nav-NavigationFeedbackResponse-Status)
     - [NavigationFeedbackResponse.StuckReason](#bosdyn-api-graph_nav-NavigationFeedbackResponse-StuckReason)
@@ -729,6 +741,7 @@
     - [TravelParams.FeatureQualityTolerance](#bosdyn-api-graph_nav-TravelParams-FeatureQualityTolerance)
     - [TravelParams.PathPlannerMode](#bosdyn-api-graph_nav-TravelParams-PathPlannerMode)
     - [UploadGraphResponse.Status](#bosdyn-api-graph_nav-UploadGraphResponse-Status)
+    - [UploadSnapshotsResponse.Status](#bosdyn-api-graph_nav-UploadSnapshotsResponse-Status)
     - [UploadWaypointSnapshotResponse.Status](#bosdyn-api-graph_nav-UploadWaypointSnapshotResponse-Status)
     - [ValidateGraphResponse.Status](#bosdyn-api-graph_nav-ValidateGraphResponse-Status)
   
@@ -747,6 +760,7 @@
     - [Edge](#bosdyn-api-graph_nav-Edge)
     - [Edge.Annotations](#bosdyn-api-graph_nav-Edge-Annotations)
     - [Edge.Annotations.AreaCallbacksEntry](#bosdyn-api-graph_nav-Edge-Annotations-AreaCallbacksEntry)
+    - [Edge.Annotations.AudioVisualSettings](#bosdyn-api-graph_nav-Edge-Annotations-AudioVisualSettings)
     - [Edge.Annotations.StairData](#bosdyn-api-graph_nav-Edge-Annotations-StairData)
     - [Edge.Id](#bosdyn-api-graph_nav-Edge-Id)
     - [EdgeSnapshot](#bosdyn-api-graph_nav-EdgeSnapshot)
@@ -870,6 +884,21 @@
     - [GripperCommand.Request](#bosdyn-api-GripperCommand-Request)
   
     - [ClawGripperCommand.Feedback.Status](#bosdyn-api-ClawGripperCommand-Feedback-Status)
+  
+- [bosdyn/api/hazard_avoidance.proto](#bosdyn_api_hazard_avoidance-proto)
+    - [AddHazardResult](#bosdyn-api-AddHazardResult)
+    - [AddHazardsRequest](#bosdyn-api-AddHazardsRequest)
+    - [AddHazardsResponse](#bosdyn-api-AddHazardsResponse)
+    - [GetHazardServiceStatusRequest](#bosdyn-api-GetHazardServiceStatusRequest)
+    - [GetHazardServiceStatusResponse](#bosdyn-api-GetHazardServiceStatusResponse)
+    - [HazardObservation](#bosdyn-api-HazardObservation)
+    - [HazardObservation.CircleList](#bosdyn-api-HazardObservation-CircleList)
+  
+    - [AddHazardResult.Status](#bosdyn-api-AddHazardResult-Status)
+    - [HazardObservation.HazardType](#bosdyn-api-HazardObservation-HazardType)
+  
+- [bosdyn/api/hazard_avoidance_service.proto](#bosdyn_api_hazard_avoidance_service-proto)
+    - [HazardAvoidanceService](#bosdyn-api-HazardAvoidanceService)
   
 - [bosdyn/api/header.proto](#bosdyn_api_header-proto)
     - [CommonError](#bosdyn-api-CommonError)
@@ -1005,6 +1034,8 @@
     - [GetLogStatusRequest](#bosdyn-api-log_status-GetLogStatusRequest)
     - [GetLogStatusResponse](#bosdyn-api-log_status-GetLogStatusResponse)
     - [LogStatus](#bosdyn-api-log_status-LogStatus)
+    - [StartConcurrentLogRequest](#bosdyn-api-log_status-StartConcurrentLogRequest)
+    - [StartConcurrentLogResponse](#bosdyn-api-log_status-StartConcurrentLogResponse)
     - [StartExperimentLogRequest](#bosdyn-api-log_status-StartExperimentLogRequest)
     - [StartExperimentLogResponse](#bosdyn-api-log_status-StartExperimentLogResponse)
     - [StartRetroLogRequest](#bosdyn-api-log_status-StartRetroLogRequest)
@@ -1018,6 +1049,7 @@
     - [GetLogStatusResponse.Status](#bosdyn-api-log_status-GetLogStatusResponse-Status)
     - [LogStatus.Status](#bosdyn-api-log_status-LogStatus-Status)
     - [LogStatus.Type](#bosdyn-api-log_status-LogStatus-Type)
+    - [StartConcurrentLogResponse.Status](#bosdyn-api-log_status-StartConcurrentLogResponse-Status)
     - [StartExperimentLogResponse.Status](#bosdyn-api-log_status-StartExperimentLogResponse-Status)
     - [StartRetroLogResponse.Status](#bosdyn-api-log_status-StartRetroLogResponse-Status)
     - [TerminateLogResponse.Status](#bosdyn-api-log_status-TerminateLogResponse-Status)
@@ -1135,6 +1167,8 @@
     - [ConstantResult](#bosdyn-api-mission-ConstantResult)
     - [CreateMissionText](#bosdyn-api-mission-CreateMissionText)
     - [DataAcquisition](#bosdyn-api-mission-DataAcquisition)
+    - [DataAcquisitionLiveData](#bosdyn-api-mission-DataAcquisitionLiveData)
+    - [DataAcquisitionLiveData.DataCaptureAndBlackboardName](#bosdyn-api-mission-DataAcquisitionLiveData-DataCaptureAndBlackboardName)
     - [DataAcquisitionOnInterruption](#bosdyn-api-mission-DataAcquisitionOnInterruption)
     - [DateToBlackboard](#bosdyn-api-mission-DateToBlackboard)
     - [DefineBlackboard](#bosdyn-api-mission-DefineBlackboard)
@@ -1521,6 +1555,8 @@
     - [SignalData.Data](#bosdyn-api-SignalData-Data)
     - [SignalDisplayInfo](#bosdyn-api-SignalDisplayInfo)
     - [SignalSpec](#bosdyn-api-SignalSpec)
+  
+    - [SignalSpec.DataType](#bosdyn-api-SignalSpec-DataType)
   
 - [bosdyn/api/software_package.proto](#bosdyn_api_software_package-proto)
     - [SoftwarePackageVersion](#bosdyn-api-SoftwarePackageVersion)
@@ -4382,6 +4418,23 @@ For actions associated with the Data Acquisition Service.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | sequence_name | [string](#string) |  | The name of the sequence to play. |
+| prompt_params | [Action.ExecuteChoreography.PromptParams](#bosdyn-api-autowalk-Action-ExecuteChoreography-PromptParams) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-autowalk-Action-ExecuteChoreography-PromptParams"></a>
+
+### Action.ExecuteChoreography.PromptParams
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| prompt_for_start_time | [bool](#bool) |  | Should the dance start time be determined before the dance plays<br>at runtime from user input |
+| prompt_timeout | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | How long will the prompt run before timing out. If unset,<br>the default value of 10 minutes will be used. |
 
 
 
@@ -4460,9 +4513,9 @@ Position the body and perform a joint move and cartesian command in target frame
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| joint_trajectory | [bosdyn.api.ArmJointTrajectory](#bosdyn-api-ArmJointTrajectory) |  | Arm Joint Move Command<br>The joint trajectory to execute in the initial rough pointing joint move. |
+| joint_trajectory | [bosdyn.api.ArmJointTrajectory](#bosdyn-api-ArmJointTrajectory) |  | Arm Joint Move Command<br>The joint trajectory to execute in the initial rough pointing joint move.<br>Can be unset - if it is, robot will skip this step. |
 | wrist_tform_tool | [bosdyn.api.SE3Pose](#bosdyn-api-SE3Pose) |  | Arm Cartesian Command<br>The tool pose relative to the parent link (wrist).<br>Defaults to a frame with it's origin slightly in front of the gripper's palm plate<br>aligned with the wrist's orientation. |
-| pose_trajectory_rt_target | [bosdyn.api.SE3Trajectory](#bosdyn-api-SE3Trajectory) |  | A 3D pose trajectory for the tool expressed in target frame, |
+| pose_trajectory_rt_target | [bosdyn.api.SE3Trajectory](#bosdyn-api-SE3Trajectory) |  | A 3D pose trajectory for the tool expressed in target frame,<br>Can be unset - if it is, robot will skip this step. |
 | target_tform_measured_offset | [bosdyn.api.SE2Pose](#bosdyn-api-SE2Pose) |  | Robot desired stance relative to waypoint<br>This is taken by measuring the average of the footprints<br>in body frame at the time of waypoint creation.<br>This is used to generate the stance command.<br>Target == waypoint.<br>This assumes the waypoint is gravity aligned. |
 | body_assist_params | [bosdyn.api.spot.BodyControlParams.BodyAssistForManipulation](#bosdyn-api-spot-BodyControlParams-BodyAssistForManipulation) |  | Body mobility params during cartesian move |
 | force_stow_override | [bool](#bool) |  | If true, the arm will stow after this action no matter what.<br>If false, the arm will only stow if the next action is far away. |
@@ -4884,6 +4937,7 @@ A Target is the location the robot should navigate to.
 | navigate_route | [Target.NavigateRoute](#bosdyn-api-autowalk-Target-NavigateRoute) |  |  |
 | relocalize | [Target.Relocalize](#bosdyn-api-autowalk-Target-Relocalize) |  | If set, upon reaching the target the robot will perform an explicit relocalization.<br>This should increase the accuracy of the robots belief of it's position on the map.<br>After relocalizing, the robot will re-navigate to the target. |
 | target_stow_behavior | [Target.TargetStowBehavior](#bosdyn-api-autowalk-Target-TargetStowBehavior) |  |  |
+| success_when_goal_area_reached | [bool](#bool) |  | If true, the robot is allowed to continue to perform the action<br>Before it comes to a complete stop. |
 
 
 
@@ -4957,6 +5011,67 @@ Tell the robot to navigate to a waypoint. It will choose its route.
 | docks | [Dock](#bosdyn-api-autowalk-Dock) | repeated | The docks the mission can dock at. |
 | id | [string](#string) |  | Unique identifier for this walk. This will be embedded in various Data Acquisition captures<br>and various logging bundles. This should be globally unique across all walks. |
 | choreography_items | [ChoreographyItems](#bosdyn-api-autowalk-ChoreographyItems) |  | Choreography related dependencies (any sequences and animations a robot needs to play this<br>walk). |
+| interrupts | [WalkInterrupt](#bosdyn-api-autowalk-WalkInterrupt) |  | Interrupts can be used to interrupt the normal flow of an autowalk.<br>This could be useful for:<br> - Getting the robot to power off when an onboard sensor determines an<br> unsafe condition.<br> - Having an external system that's internet connected inform the robot<br> it's going to rain, so that the robot can return to the dock early.<br> - Temporarily pausing the mission to get a closer look at a detected<br> anomaly. |
+
+
+
+
+
+
+<a name="bosdyn-api-autowalk-WalkInterrupt"></a>
+
+### WalkInterrupt
+How are multiple interruptions handled?
+ - SafePowerOff can never be overridden, and can override everything.
+ - ReturnToStartAndTerminate can only be overridden by SafePowerOff,
+   and can override everything else.
+ - Node can't override anything except an actively running element.
+   If multiple interrupts with "Node" as the condition_behavior are
+   triggered, the first one triggered will run.  When that behavior
+   completes, all signals will be revaluated, and if the other
+   interrupt is still high then that behavior will be triggered.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| signals | [WalkInterrupt.DaqPluginSignal](#bosdyn-api-autowalk-WalkInterrupt-DaqPluginSignal) | repeated |  |
+| conditions_and_behaviors | [WalkInterrupt.ConditionAndBehavior](#bosdyn-api-autowalk-WalkInterrupt-ConditionAndBehavior) | repeated |  |
+
+
+
+
+
+
+<a name="bosdyn-api-autowalk-WalkInterrupt-ConditionAndBehavior"></a>
+
+### WalkInterrupt.ConditionAndBehavior
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  | Only used for things like the autowalk report. |
+| condition_node | [bosdyn.api.mission.Condition](#bosdyn-api-mission-Condition) |  |  |
+| safe_power_off | [FailureBehavior.SafePowerOff](#bosdyn-api-autowalk-FailureBehavior-SafePowerOff) |  |  |
+| return_to_start_and_terminate | [FailureBehavior.ReturnToStartAndTerminate](#bosdyn-api-autowalk-FailureBehavior-ReturnToStartAndTerminate) |  |  |
+| behavior_node | [bosdyn.api.mission.Node](#bosdyn-api-mission-Node) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-autowalk-WalkInterrupt-DaqPluginSignal"></a>
+
+### WalkInterrupt.DaqPluginSignal
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| capability | [bosdyn.api.DataAcquisitionCapability](#bosdyn-api-DataAcquisitionCapability) |  |  |
+| data_capture | [bosdyn.api.DataCapture](#bosdyn-api-DataCapture) |  |  |
+| blackboard_name | [string](#string) |  | The DataCapture will be sent as part of a LiveDataRequest<br>to the data acquisition plugin service. The service will return<br>a CapabilityLiveData for that data_capture, which will be embedded<br>in the mission blackboard at the following name, for use<br>in the condition node. |
 
 
 
@@ -5313,6 +5428,7 @@ the final point of the trajectory.
 | status | [SE2TrajectoryCommand.Feedback.Status](#bosdyn-api-SE2TrajectoryCommand-Feedback-Status) |  | Current status of the command. |
 | body_movement_status | [SE2TrajectoryCommand.Feedback.BodyMovementStatus](#bosdyn-api-SE2TrajectoryCommand-Feedback-BodyMovementStatus) |  | Current status of how the body is moving |
 | final_goal_status | [SE2TrajectoryCommand.Feedback.FinalGoalStatus](#bosdyn-api-SE2TrajectoryCommand-Feedback-FinalGoalStatus) |  | Flag indicating if the final requested position was achievable. |
+| request_information | [SE2TrajectoryCommand.Request](#bosdyn-api-SE2TrajectoryCommand-Request) |  | Enables clients to monitor the commanded goal trajectory, even if not sending the<br>command. |
 
 
 
@@ -5349,7 +5465,12 @@ Move the robot at a specific SE2 velocity for a fixed amount of time.
 <a name="bosdyn-api-SE2VelocityCommand-Feedback"></a>
 
 ### SE2VelocityCommand.Feedback
-Planar velocity commands provide no feedback.
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| request_information | [SE2VelocityCommand.Request](#bosdyn-api-SE2VelocityCommand-Request) |  | Enables clients to monitor the commanded goal velocity, even if not sending the command. |
 
 
 
@@ -6481,6 +6602,22 @@ used to uniquely identify that full request's set of stored data.
 
 
 
+<a name="bosdyn-api-CaptureOrdering"></a>
+
+### CaptureOrdering
+An order for a given capture. This is used to determine the order in which captures are
+processed and saved.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| value | [int32](#int32) |  | The order value. Lower values indicate higher priority and will be executed first. |
+
+
+
+
+
+
 <a name="bosdyn-api-DataAcquisitionCapability"></a>
 
 ### DataAcquisitionCapability
@@ -6513,6 +6650,7 @@ a piece of non-image data to be collected.
 | ----- | ---- | ----- | ----------- |
 | name | [string](#string) |  | Name of the data to be captured. This should match the uniquely identifying name from<br>the DataAcquisitionCapability. |
 | custom_params | [DictParam](#bosdyn-api-DictParam) |  | Values passed to the service at capture time.<br>See the DictParam.Spec in DataAcquisitionCapability. |
+| order | [CaptureOrdering](#bosdyn-api-CaptureOrdering) |  | The order in which this capture should be performed relative to the other captures. |
 
 
 
@@ -6653,6 +6791,7 @@ image data to be collected.
 | image_request | [ImageRequest](#bosdyn-api-ImageRequest) |  | Options for requesting this particular image. |
 | image_source | [string](#string) |  | **Deprecated.** DEPRECATED as of 3.2.0. Use image_request instead.<br>Specific image source to use from the list reported by the image service within the<br>ImageAcquisitionCapability message. |
 | pixel_format | [Image.PixelFormat](#bosdyn-api-Image-PixelFormat) |  | **Deprecated.** DEPRECATED as of 3.2.0. Use image_request instead.<br>Specific pixel format to capture reported by the ImageAcquisitionCapability message. |
+| order | [CaptureOrdering](#bosdyn-api-CaptureOrdering) |  | The order in which this capture should be performed relative to the other captures. |
 
 
 
@@ -6770,6 +6909,7 @@ that capture action.
 | input_data | [NetworkComputeInputData](#bosdyn-api-NetworkComputeInputData) |  | **Deprecated.** DEPRECATED as of 3.3. Please use input_data_bridge instead. |
 | input_data_bridge | [NetworkComputeInputDataBridge](#bosdyn-api-NetworkComputeInputDataBridge) |  |  |
 | server_config | [NetworkComputeServerConfiguration](#bosdyn-api-NetworkComputeServerConfiguration) |  | Which service to use. |
+| order | [CaptureOrdering](#bosdyn-api-CaptureOrdering) |  | The order in which this capture should be performed relative to the other captures. |
 
 
 
@@ -9324,7 +9464,6 @@ Type of dock
 | Name | Number | Description |
 | ---- | ------ | ----------- |
 | DOCK_TYPE_UNKNOWN | 0 | Unknown type of dock |
-| DOCK_TYPE_CONTACT_PROTOTYPE | 2 | Prototype version SpotDock |
 | DOCK_TYPE_SPOT_DOCK | 3 | Production version SpotDock |
 | DOCK_TYPE_SPOT_DOGHOUSE | 4 | Production version SpotDock located in the dog house. |
 
@@ -9848,6 +9987,37 @@ The service fault service enables modification of the robot state ServiceFaultSt
 | ----------- | ------------ | ------------- | ------------|
 | TriggerServiceFault | [TriggerServiceFaultRequest](#bosdyn-api-TriggerServiceFaultRequest) | [TriggerServiceFaultResponse](#bosdyn-api-TriggerServiceFaultResponse) | Sends a ServiceFault to be reporting in robot state. |
 | ClearServiceFault | [ClearServiceFaultRequest](#bosdyn-api-ClearServiceFaultRequest) | [ClearServiceFaultResponse](#bosdyn-api-ClearServiceFaultResponse) | Clears an active ServiceFault from robot state. |
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_fiducial_purpose-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/fiducial_purpose.proto
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn-api-FiducialPurpose"></a>
+
+### FiducialPurpose
+A purpose of a fiducial.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| UNKNOWN | 0 |  |
+| LOCALIZATION | 1 | Fiducial is used for localization. (needs to be unique and static) |
+| DOCK | 2 | Fiducial is used as a docking target. |
+| INTERRUPT | 3 | Fiducial is used interrupts |
+| LOG_TRIGGERING | 4 | Fiducial is used for log triggering. |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
 
  <!-- end services -->
 
@@ -12316,6 +12486,7 @@ progress and current status for the command.
 | body_movement_status | [bosdyn.api.SE2TrajectoryCommand.Feedback.BodyMovementStatus](#bosdyn-api-SE2TrajectoryCommand-Feedback-BodyMovementStatus) |  | Indicates whether the robot's body is currently in motion. |
 | path_following_mode | [Edge.Annotations.PathFollowingMode](#bosdyn-api-graph_nav-Edge-Annotations-PathFollowingMode) |  | Path following mode |
 | active_region_information | [NavigationFeedbackResponse.ActiveRegionInformationEntry](#bosdyn-api-graph_nav-NavigationFeedbackResponse-ActiveRegionInformationEntry) | repeated | Map of Region IDs with relevant information |
+| goal_status | [NavigationFeedbackResponse.GoalStatus](#bosdyn-api-graph_nav-NavigationFeedbackResponse-GoalStatus) |  |  |
 | route_following_status | [NavigationFeedbackResponse.RouteFollowingStatus](#bosdyn-api-graph_nav-NavigationFeedbackResponse-RouteFollowingStatus) |  | Additional information about what kind of route the robot is following and why. |
 | blockage_status | [NavigationFeedbackResponse.BlockageStatus](#bosdyn-api-graph_nav-NavigationFeedbackResponse-BlockageStatus) |  | Additional information about whether or not the robot believes the current route to be<br>blocked. |
 | stuck_reason | [NavigationFeedbackResponse.StuckReason](#bosdyn-api-graph_nav-NavigationFeedbackResponse-StuckReason) |  | Only filled out if status is STATUS_STUCK to provide additional context. |
@@ -12415,6 +12586,11 @@ For each enum in this message, if UNKNOWN is passed in, we default to one of the
 
 ### RouteGenParams
 
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| backtrack_to_start_waypoint | [bool](#bool) |  | When navigating after getting stuck, setting this to true will cause the robot to first<br>backtrack from its stuck location to the start waypoint before starting the new route. |
 
 
 
@@ -12667,6 +12843,62 @@ This is a streaming version of the UploadGraph request.
 | ----- | ---- | ----- | ----------- |
 | header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
 | chunk | [bosdyn.api.DataChunk](#bosdyn-api-DataChunk) |  | Serialized bytes of a UploadGraphRequest message, restricted to a chunk no larger than 4MB in<br>size. To break the data into chunks, first serialize it to bytes. Then, send the bytes in<br>order as DataChunk objects. The chunks will be concatenated together on the server, and<br>deserialized. |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-UploadSnapshotsRequest"></a>
+
+### UploadSnapshotsRequest
+Like the individual waypoint/edge RPCs, but for N snapshots of both edges and waypoints.
+graph_nav only processes complete Snapshots so large protos are discouraged;
+any network interruption would require the data to be resent.  Clients are
+encouraged to send data in batches on the order of a few MB to strike a
+balance between eliminating per-RPC overhead and recovering from errors.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+| chunk | [bosdyn.api.DataChunk](#bosdyn-api-DataChunk) |  | This should be interpreted as a serialized Snapshots. |
+| lease | [bosdyn.api.Lease](#bosdyn-api-Lease) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-UploadSnapshotsRequest-Snapshots"></a>
+
+### UploadSnapshotsRequest.Snapshots
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| waypoint_snapshots | [WaypointSnapshot](#bosdyn-api-graph_nav-WaypointSnapshot) | repeated |  |
+| edge_snapshots | [EdgeSnapshot](#bosdyn-api-graph_nav-EdgeSnapshot) | repeated |  |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-UploadSnapshotsResponse"></a>
+
+### UploadSnapshotsResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| lease_use_result | [bosdyn.api.LeaseUseResult](#bosdyn-api-LeaseUseResult) |  |  |
+| status | [UploadSnapshotsResponse.Status](#bosdyn-api-graph_nav-UploadSnapshotsResponse-Status) |  |  |
+| sensor_status | [SensorCompatibilityStatus](#bosdyn-api-graph_nav-SensorCompatibilityStatus) |  |  |
+| map_stats | [MapStats](#bosdyn-api-graph_nav-MapStats) |  |  |
 
 
 
@@ -12942,6 +13174,21 @@ BLOCKAGE_STATUS_UNKNOWN in all other cases.
 
 
 
+<a name="bosdyn-api-graph_nav-NavigationFeedbackResponse-GoalStatus"></a>
+
+### NavigationFeedbackResponse.GoalStatus
+The robot may achieve parts of the goal before the status is STATUS_REACHED_GOAL.
+This enum captures intermediate states.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| GOAL_STATUS_UNKNOWN | 0 | Unset. |
+| GOAL_STATUS_NOT_REACHED | 1 | The robot has not yet reached the destination. |
+| GOAL_STATUS_IN_GOAL_AREA | 2 | The robot is within the destination's goal specified in the TravelParams. |
+| GOAL_STATUS_STANDING_AT_GOAL | 3 | The robot is standing at the final goal point. |
+
+
+
 <a name="bosdyn-api-graph_nav-NavigationFeedbackResponse-RouteFollowingStatus"></a>
 
 ### NavigationFeedbackResponse.RouteFollowingStatus
@@ -13140,6 +13387,19 @@ Determines which local path planner to use.
 
 
 
+<a name="bosdyn-api-graph_nav-UploadSnapshotsResponse-Status"></a>
+
+### UploadSnapshotsResponse.Status
+If waypoint snapshots were uploaded, sensor compatibilty is checked.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_INCOMPATIBLE_SENSORS | 2 |  |
+
+
+
 <a name="bosdyn-api-graph_nav-UploadWaypointSnapshotResponse-Status"></a>
 
 ### UploadWaypointSnapshotResponse.Status
@@ -13209,6 +13469,7 @@ navigation requests to move around the map.
 | UploadGraphStreaming | [UploadGraphStreamingRequest](#bosdyn-api-graph_nav-UploadGraphStreamingRequest) stream | [UploadGraphResponse](#bosdyn-api-graph_nav-UploadGraphResponse) | This is a streaming version of UploadGraph to allow uploading larger graphs.<br>Note: as with UploadWaypointSnapshot, this streaming process involves serializing a full<br>UploadGraph message from chunks. After all the chunks have been uploaded, a regular<br>UploadGraph RPC will be performed internally, so UploadGraphStreaming has the same semantics<br>as UploadGraph when it completes. That is, UploadGraphStreaming is *not* to be used for<br>incrementally uploading graph data as the robot is navigating -- this is merely a streaming<br>wrapper around UploadGraph. |
 | UploadWaypointSnapshot | [UploadWaypointSnapshotRequest](#bosdyn-api-graph_nav-UploadWaypointSnapshotRequest) stream | [UploadWaypointSnapshotResponse](#bosdyn-api-graph_nav-UploadWaypointSnapshotResponse) | Uploads large waypoint snapshot as a stream for a particular waypoint. |
 | UploadEdgeSnapshot | [UploadEdgeSnapshotRequest](#bosdyn-api-graph_nav-UploadEdgeSnapshotRequest) stream | [UploadEdgeSnapshotResponse](#bosdyn-api-graph_nav-UploadEdgeSnapshotResponse) | Uploads large edge snapshot as a stream for a particular edge. |
+| UploadSnapshots | [UploadSnapshotsRequest](#bosdyn-api-graph_nav-UploadSnapshotsRequest) stream | [UploadSnapshotsResponse](#bosdyn-api-graph_nav-UploadSnapshotsResponse) | Uploads multiple waypoint+edge snapshots. |
 | DownloadWaypointSnapshot | [DownloadWaypointSnapshotRequest](#bosdyn-api-graph_nav-DownloadWaypointSnapshotRequest) | [DownloadWaypointSnapshotResponse](#bosdyn-api-graph_nav-DownloadWaypointSnapshotResponse) stream | Download waypoint data from the server. If the snapshot exists in disk cache, it will be<br>loaded. |
 | DownloadEdgeSnapshot | [DownloadEdgeSnapshotRequest](#bosdyn-api-graph_nav-DownloadEdgeSnapshotRequest) | [DownloadEdgeSnapshotResponse](#bosdyn-api-graph_nav-DownloadEdgeSnapshotResponse) stream | Download edge data from the server. If the snapshot exists in disk cache, it will be loaded. |
 | ValidateGraph | [ValidateGraphRequest](#bosdyn-api-graph_nav-ValidateGraphRequest) | [ValidateGraphResponse](#bosdyn-api-graph_nav-ValidateGraphResponse) | Verify that the graph is still valid and all required external services are still available.<br>A map that was valid at upload time may not still be valid if required services are no longer<br>running. |
@@ -13381,6 +13642,7 @@ Annotations understood by BostonDynamics systems.
 | disable_directed_exploration | [bool](#bool) |  | Disable directed exploration for this edge. |
 | area_callbacks | [Edge.Annotations.AreaCallbacksEntry](#bosdyn-api-graph_nav-Edge-Annotations-AreaCallbacksEntry) | repeated | Reference to area callback regions needed to cross this edge.<br>The string is a unique id for this region, which may be shared<br>across multiple edges. |
 | ground_clutter_mode | [Edge.Annotations.GroundClutterAvoidanceMode](#bosdyn-api-graph_nav-Edge-Annotations-GroundClutterAvoidanceMode) |  |  |
+| audio_visual_settings | [Edge.Annotations.AudioVisualSettings](#bosdyn-api-graph_nav-Edge-Annotations-AudioVisualSettings) |  |  |
 
 
 
@@ -13397,6 +13659,21 @@ Annotations understood by BostonDynamics systems.
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
 | value | [AreaCallbackRegion](#bosdyn-api-graph_nav-AreaCallbackRegion) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-graph_nav-Edge-Annotations-AudioVisualSettings"></a>
+
+### Edge.Annotations.AudioVisualSettings
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| behavior_name | [string](#string) |  | Behavior to run while traversing this edge. |
 
 
 
@@ -15412,6 +15689,204 @@ The gripper request must be one of the basic command primitives.
 
 
 
+<a name="bosdyn_api_hazard_avoidance-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/hazard_avoidance.proto
+
+
+
+<a name="bosdyn-api-AddHazardResult"></a>
+
+### AddHazardResult
+Result of adding a single hazard observation.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| status | [AddHazardResult.Status](#bosdyn-api-AddHazardResult-Status) |  | Status of the detection. |
+
+
+
+
+
+
+<a name="bosdyn-api-AddHazardsRequest"></a>
+
+### AddHazardsRequest
+Request to add multiple hazard observations.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+| hazards | [HazardObservation](#bosdyn-api-HazardObservation) | repeated |  |
+| vision_tform_body | [SE3Pose](#bosdyn-api-SE3Pose) |  | Body pose in VO at the time of the request.<br>If not provided, will attempt to extract from the observation data. |
+| skip_aggregation | [bool](#bool) |  | If true, will write directly into the published map and not to the internally tracked map. |
+| max_unaggregated_update_age | [google.protobuf.Duration](#google-protobuf-Duration) |  | If skip_aggregation is true, max seconds for the observations to be kept around. |
+| hazard_source | [string](#string) |  | Identifier for the source of the observations. |
+
+
+
+
+
+
+<a name="bosdyn-api-AddHazardsResponse"></a>
+
+### AddHazardsResponse
+Response for adding multiple hazard observations.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| add_hazard_results | [AddHazardResult](#bosdyn-api-AddHazardResult) | repeated |  |
+| num_hazards_updated | [int32](#int32) |  | Convenience value to check how many results returned STATUS_HAZARDS_UPDATED. |
+
+
+
+
+
+
+<a name="bosdyn-api-GetHazardServiceStatusRequest"></a>
+
+### GetHazardServiceStatusRequest
+Request to get the status of the service.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  |  |
+
+
+
+
+
+
+<a name="bosdyn-api-GetHazardServiceStatusResponse"></a>
+
+### GetHazardServiceStatusResponse
+Response for getting the status of the service.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  |  |
+| time_since_last_observation | [google.protobuf.Duration](#google-protobuf-Duration) |  | Time since last observation. Can be used to check if the extension is running. |
+
+
+
+
+
+
+<a name="bosdyn-api-HazardObservation"></a>
+
+### HazardObservation
+Hazard data to add for tracking.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| acquisition_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | The time at which the hazard was observed. |
+| point_cloud | [PointCloud](#bosdyn-api-PointCloud) |  | A point cloud associated with this hazard. |
+| segmented_depth | [ImageCaptureAndSource](#bosdyn-api-ImageCaptureAndSource) |  | A segmented depth image; all positive pixels will be associated to this hazard.<br>segmented_depth.shot.image must be type PIXEL_FORMAT_DEPTH_U16. |
+| box | [Box2WithFrame](#bosdyn-api-Box2WithFrame) |  | An oriented box to describe the footprint of the hazard. Must be in the vision frame. |
+| circle | [Circle](#bosdyn-api-Circle) |  | A circle in the vision frame's XY plane to describe the footprint of the hazard. |
+| circle_list | [HazardObservation.CircleList](#bosdyn-api-HazardObservation-CircleList) |  | Multiple circles in the vision frame's XY plane that describe the hazard. |
+| type | [HazardObservation.HazardType](#bosdyn-api-HazardObservation-HazardType) |  | The type of hazard. |
+| likelihood | [float](#float) |  | Confidence in the observation. |
+| semantic_label | [string](#string) |  | A label associated with the observation. |
+| margin | [float](#float) |  | Margin to expand (or contract if negative) the hazard by in meters. |
+
+
+
+
+
+
+<a name="bosdyn-api-HazardObservation-CircleList"></a>
+
+### HazardObservation.CircleList
+Proto to wrap a list of circles.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| circles | [Circle](#bosdyn-api-Circle) | repeated |  |
+
+
+
+
+
+ <!-- end messages -->
+
+
+<a name="bosdyn-api-AddHazardResult-Status"></a>
+
+### AddHazardResult.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 | Unset. |
+| STATUS_HAZARDS_UPDATED | 1 | Updated the hazard map. |
+| STATUS_IGNORED | 2 | No new hazard information was added. |
+| STATUS_INVALID_DATA | 5 | The HazardObservation contained errors. |
+
+
+
+<a name="bosdyn-api-HazardObservation-HazardType"></a>
+
+### HazardObservation.HazardType
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| TYPE_UNKNOWN | 0 | Not specified - not a valid value. |
+| TYPE_PREFER_AVOID_WEAK | 1 | Robot should avoid stepping on, with low penalty for doing so. |
+| TYPE_PREFER_AVOID_STRONG | 2 | Robot should avoid stepping on, with high penalty for doing so. |
+| TYPE_NEVER_STEP_ON | 3 | Robot should never step on, but it can move over. |
+| TYPE_NEVER_STEP_ACROSS | 4 | Robot should never step on or move over. |
+| TYPE_PREFER_STEP_ON | 5 | Safe terrain - the robot should prefer stepping here. |
+| TYPE_NEVER_STEP_ON_AVOID_MARGIN | 6 | Robot should never step on, but it can move over.<br>Positive margin will be treated as TYPE_PREFER_AVOID_WEAK.<br>Negative margin will be unaffected. |
+| TYPE_NEVER_STEP_ACROSS_AVOID_MARGIN | 7 | Robot should never step on or move over.<br>Positive margin will be treated as TYPE_PREFER_AVOID_STRONG.<br>Negative margin will be unaffected. |
+
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+ <!-- end services -->
+
+
+
+<a name="bosdyn_api_hazard_avoidance_service-proto"></a>
+<p align="right"><a href="#top">Top</a></p>
+
+## bosdyn/api/hazard_avoidance_service.proto
+
+
+ <!-- end messages -->
+
+ <!-- end enums -->
+
+ <!-- end HasExtensions -->
+
+
+<a name="bosdyn-api-HazardAvoidanceService"></a>
+
+### HazardAvoidanceService
+The hazard avoidance service provides a way to aggregate and track observations of hazardous
+terrains/structures around the robot.
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| AddHazards | [AddHazardsRequest](#bosdyn-api-AddHazardsRequest) | [AddHazardsResponse](#bosdyn-api-AddHazardsResponse) | Request to add new hazard observations. |
+| GetHazardServiceStatus | [GetHazardServiceStatusRequest](#bosdyn-api-GetHazardServiceStatusRequest) | [GetHazardServiceStatusResponse](#bosdyn-api-GetHazardServiceStatusResponse) | Request to check if the extension is running. |
+
+ <!-- end services -->
+
+
+
 <a name="bosdyn_api_header-proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
@@ -17287,6 +17762,45 @@ and supports requesting a set of the latest local grids by map type name.
 | id | [string](#string) |  | Id of the response log. |
 | status | [LogStatus.Status](#bosdyn-api-log_status-LogStatus-Status) |  | Status of the response log. |
 | type | [LogStatus.Type](#bosdyn-api-log_status-LogStatus-Type) |  | Type of log. |
+| start_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Timestamp of the start of an experiment log, in robot time. |
+| end_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Timestamp of the end of an experiment log, in robot time. |
+| run_time | [google.protobuf.Duration](#google-protobuf-Duration) |  | Current duration of an experiment log, in robot time. This is not the total runtime, but<br>rather how long it has run as of now. |
+
+
+
+
+
+
+<a name="bosdyn-api-log_status-StartConcurrentLogRequest"></a>
+
+### StartConcurrentLogRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+| keep_alive | [google.protobuf.Duration](#google-protobuf-Duration) |  | How long into the future should this log end? |
+| past_textlog_duration | [google.protobuf.Duration](#google-protobuf-Duration) |  | How long into the past should text logs extend? (default 0) |
+| event | [bosdyn.api.Event](#bosdyn-api-Event) |  | Specify an event for the request. The data included in the log will be defined by this event,<br>if the robot has data associated with the event. |
+
+
+
+
+
+
+<a name="bosdyn-api-log_status-StartConcurrentLogResponse"></a>
+
+### StartConcurrentLogResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [bosdyn.api.ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| status | [StartConcurrentLogResponse.Status](#bosdyn-api-log_status-StartConcurrentLogResponse-Status) |  | Response status. |
+| log_status | [LogStatus](#bosdyn-api-log_status-LogStatus) |  | Status of the created log. |
+| end_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Timestamp of the end of the log, in robot time. |
 
 
 
@@ -17303,6 +17817,7 @@ and supports requesting a set of the latest local grids by map type name.
 | ----- | ---- | ----- | ----------- |
 | header | [bosdyn.api.RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
 | keep_alive | [google.protobuf.Duration](#google-protobuf-Duration) |  | How long into the future should this log end? |
+| past_textlog_duration | [google.protobuf.Duration](#google-protobuf-Duration) |  | How long into the past should text logs extend? (default 0) |
 
 
 
@@ -17484,6 +17999,24 @@ Types of logs
 | TYPE_UNKNOWN | 0 |  |
 | TYPE_EXPERIMENT | 1 | A log into the future. |
 | TYPE_RETRO | 2 | A retroactive log. |
+| TYPE_EVENT | 3 | A log created automatically from an event. |
+| TYPE_DATA | 4 | A log created from a data log request. |
+| TYPE_CONCURRENT | 5 | An experiment log that allows concurrency. |
+
+
+
+<a name="bosdyn-api-log_status-StartConcurrentLogResponse-Status"></a>
+
+### StartConcurrentLogResponse.Status
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STATUS_UNKNOWN | 0 |  |
+| STATUS_OK | 1 |  |
+| STATUS_EXPERIMENT_LOG_RUNNING | 2 | An experiment log is already running. |
+| STATUS_CONCURRENCY_LIMIT_REACHED | 3 | Maximum number of logs running concurrently. |
+| STATUS_NO_DATA_FOR_EVENT | 4 | The specified event has no data associated with it |
 
 
 
@@ -17577,6 +18110,7 @@ The LogStatusService provides clients the ability to
 | GetActiveLogStatuses | [GetActiveLogStatusesRequest](#bosdyn-api-log_status-GetActiveLogStatusesRequest) | [GetActiveLogStatusesResponse](#bosdyn-api-log_status-GetActiveLogStatusesResponse) | View statuses of active logs. |
 | StartRetroLog | [StartRetroLogRequest](#bosdyn-api-log_status-StartRetroLogRequest) | [StartRetroLogResponse](#bosdyn-api-log_status-StartRetroLogResponse) | Given a duration T, StartRetroLog(T) triggers a log covering the timespan [logStartTime,<br>t_rpc], where logStartTime = max(t_rpc - T, t_buffer), t_rpc = time of RPC reception, and<br>t_buffer = time of first log on the buffer. |
 | StartExperimentLog | [StartExperimentLogRequest](#bosdyn-api-log_status-StartExperimentLogRequest) | [StartExperimentLogResponse](#bosdyn-api-log_status-StartExperimentLogResponse) | Given a duration T, StartExperimentLog(T) starts logging all data to<br>disk with a keepalive/watchdog timer of T. The duration of the log will be [t_rpc, t_rpc + T]<br>where t_rpc = time of RPC reception. The duration of this log can be extended by calling<br>UpdateExperimentLog before the log's status reaches a terminal state.<br>If any retro logs are running, they will be terminated by starting an experiment log.<br>Only one experiment log can be run at a time. |
+| StartConcurrentLog | [StartConcurrentLogRequest](#bosdyn-api-log_status-StartConcurrentLogRequest) | [StartConcurrentLogResponse](#bosdyn-api-log_status-StartConcurrentLogResponse) | Given a duration T and an event E, starts an experiment log that will include any data<br>the robot associates with E, with a keepalive/watchdog timer of T. However, unlike an<br>experiment log it allows for concurrency, so E must be provided to constrain the data<br>included in the log. |
 | UpdateExperimentLog | [UpdateExperimentLogRequest](#bosdyn-api-log_status-UpdateExperimentLogRequest) | [UpdateExperimentLogResponse](#bosdyn-api-log_status-UpdateExperimentLogResponse) | UpdateExperimentLog(id, T) will update the keepalive/watchdog timer of<br>the log with the provided id if the log is active. The updated duration<br>of the log will be [t_rpc, t_rpc + T] where t_rpc = time of RPC reception. |
 | TerminateLog | [TerminateLogRequest](#bosdyn-api-log_status-TerminateLogRequest) | [TerminateLogResponse](#bosdyn-api-log_status-TerminateLogResponse) | Terminate Log before it is complete. |
 
@@ -18644,6 +19178,7 @@ A question posed by a Prompt node, or by the internal operation of another node.
 | options | [Prompt.Option](#bosdyn-api-mission-Prompt-Option) | repeated | Options to choose from.<br>Uses the submessage from the "prompt" node message. |
 | custom_params | [bosdyn.api.DictParam.Spec](#bosdyn-api-DictParam-Spec) |  | Custom parameter specification for the answer expected for this question. |
 | for_autonomous_processing | [bool](#bool) |  | Set to true if this question was meant to be answered by some automated system, not a<br>human. Clients should usually avoid generating a UI element to ask such a question. |
+| autonomy_key | [string](#string) |  | Optional string data to help autonomous systems identify questions.<br>This data will come from the Prompt asking the question. |
 | severity | [bosdyn.api.AlertData.SeverityLevel](#bosdyn-api-AlertData-SeverityLevel) |  | Severity for this question. See comment in Prompt message in nodes.proto for a better<br>understanding of what levels mean. |
 
 
@@ -19349,6 +19884,40 @@ Trigger the acquisition and storage of data.
 
 
 
+<a name="bosdyn-api-mission-DataAcquisitionLiveData"></a>
+
+### DataAcquisitionLiveData
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| service_name | [string](#string) |  | Service name for a data acquisition service<br>NOTE: Not the plugin! Just the main service<br>You pick the plugin by specifying a capture name in DataCapture |
+| host | [string](#string) |  | Host machine of the directory server that the data acquisition service is registered with. |
+| data_captures | [DataAcquisitionLiveData.DataCaptureAndBlackboardName](#bosdyn-api-mission-DataAcquisitionLiveData-DataCaptureAndBlackboardName) | repeated |  |
+| child | [Node](#bosdyn-api-mission-Node) |  | Child node. Children will have access to the state gathered by this node. |
+
+
+
+
+
+
+<a name="bosdyn-api-mission-DataAcquisitionLiveData-DataCaptureAndBlackboardName"></a>
+
+### DataAcquisitionLiveData.DataCaptureAndBlackboardName
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| data_capture | [bosdyn.api.DataCapture](#bosdyn-api-DataCapture) |  | What request to send to that plugin |
+| blackboard_name | [string](#string) |  | The DataCapture will be sent as part of a LiveDataRequest<br>to the data acquisition plugin service. The plugin service will return<br>a CapabilityLiveData for that data_capture, which will be embedded<br>in the blackboard at the following name, for use in a child node. |
+
+
+
+
+
+
 <a name="bosdyn-api-mission-DataAcquisitionOnInterruption"></a>
 
 ### DataAcquisitionOnInterruption
@@ -19445,6 +20014,7 @@ the state of the dancing robot.
 | service_name | [string](#string) |  | Name of the service to use. |
 | host | [string](#string) |  | Host machine the service is running on. |
 | sequence_name | [string](#string) |  | The name of the sequence to play. |
+| start_time_in_blackboard | [string](#string) |  | Optional Blackboard variable that can specify a start time in nanoseconds<br>since epoch in the robot's clock to be used for the start time of the sequence. |
 
 
 
@@ -19568,6 +20138,7 @@ Specifics of what the node does are contained in the "impl" field.
 | mission_upload_choreography | [MissionUploadChoreography](#bosdyn-api-mission-MissionUploadChoreography) |  |  |
 | create_mission_text | [CreateMissionText](#bosdyn-api-mission-CreateMissionText) |  |  |
 | bosdyn_query_stored_captures | [BosdynQueryStoredCaptures](#bosdyn-api-mission-BosdynQueryStoredCaptures) |  |  |
+| data_acquisition_live_data | [DataAcquisitionLiveData](#bosdyn-api-mission-DataAcquisitionLiveData) |  |  |
 | parameter_values | [KeyValue](#bosdyn-api-mission-KeyValue) | repeated | Defines parameters, used by this node or its children.<br>The "key" in KeyValue is the name of the parameter being defined.<br>The value can be a constant or another parameter value. |
 | overrides | [KeyValue](#bosdyn-api-mission-KeyValue) | repeated | Overwrites a protobuf field in this node's implementation.<br>The "key" in KeyValue is the name of the field to override.<br>The value to write can be sourced from a constant, or a parameter value. |
 | parameters | [VariableDeclaration](#bosdyn-api-mission-VariableDeclaration) | repeated | Declares parameters needed at compile time by this node, or children of this node.<br>This is a way for a node to communicate what parameters its implementation and/or children<br>require, without unpacking the entire subtree. |
@@ -19608,10 +20179,12 @@ This node represents a request for information from ANY listeners that may be ou
 | source | [string](#string) |  | Metadata describing the source of the question.<br>The answer will be written into the state blackboard with this as the variable name. |
 | options | [Prompt.Option](#bosdyn-api-mission-Prompt-Option) | repeated | **Deprecated.** The set of options that can be chosen for this prompt. |
 | options_list | [Prompt.OptionsList](#bosdyn-api-mission-Prompt-OptionsList) |  | The set of options that can be chosen for this prompt. |
-| options_list_in_blackboard | [string](#string) |  | Key to an OptionsList protobuf object on the blackboard. The variable is only read when<br>the node starts meaning options cannot change while the node is running. |
+| options_list_in_blackboard | [string](#string) |  | Key to a OptionsList protobuf object on the blackboard. Note that this variable is only<br>read when the node starts, meaning that options can not change while the node is running. |
 | custom_params | [bosdyn.api.DictParam.Spec](#bosdyn-api-DictParam-Spec) |  | Custom parameter specification for the answer expected for this prompt. |
+| custom_params_in_blackboard | [string](#string) |  | Key to a DictParam.Spec protobuf object on the blackboard. Note that this variable is<br>only read when the node starts, meaning that options can not change while the node is<br>running. |
 | child | [Node](#bosdyn-api-mission-Node) |  | Child node, run after the prompt has been responded to.<br>Children will have access to the answer code provided by the response. |
 | for_autonomous_processing | [bool](#bool) |  | Hint that Question posed by this Prompt is meant to be answered by some automated system.<br>See the Question message for details. |
+| autonomy_key | [string](#string) |  | Optional string data to help autonomous systems identify questions, this will be<br>copied into the Question message. |
 | severity | [bosdyn.api.AlertData.SeverityLevel](#bosdyn-api-AlertData-SeverityLevel) |  | Severity for this prompt. Used to determine what sort of alerting<br>this prompt will trigger.<br>Here are guidelines for severity as it pertains to missions:<br>INFO: Normal operation. For example, waiting for charge; waiting on the dock for logs to<br>download. WARN: Something went wrong, but the mission will try to recover autonomously.<br>ERROR: Something went wrong, and the mission can't recover without human intervention.<br>Intervention is not time sensitive and can be resolved when convenient.<br>CRITICAL: Something went wrong, and the mission can't recover without human intervention.<br>Human needs to rescue the robot before battery runs out because it's not charging. |
 | severity_in_blackboard | [string](#string) |  | If specified, this node will read the severity out of the blackboard at<br>the specified location. |
 | question_name_in_blackboard | [string](#string) |  | If specified, this node will write its current question (bosdyn.api.mission.Question proto)<br>to the blackboard while it is being ticked. |
@@ -20109,6 +20682,7 @@ This defines how the comparator should behave when a read value is stale.
 | COMPLETE_UNKNOWN | 0 |  |
 | COMPLETE_AFTER_SAVED | 1 | Node is complete after all data has been saved. |
 | COMPLETE_AFTER_ACQUIRED | 2 | Node is complete after all data is acquired, but before processing and storage.<br>This allows the robot to continue on with the mission sooner, but<br>it will be unaware of failures in processing or storage. |
+| COMPLETE_AFTER_REQUEST | 3 | Node is complete after the AcquireData request is sent.<br>Note that if the request fails, the node will not be aware of it. |
 
 
  <!-- end enums -->
@@ -22605,6 +23179,7 @@ HardwareConfiguration in bosdyn.api.robot_state.
 | REQUEST_ON_PAYLOAD_PORTS | 6 | Turn on power to the payload ports. |
 | REQUEST_OFF_WIFI_RADIO | 7 | Cut power to the hardware Wi-Fi radio. |
 | REQUEST_ON_WIFI_RADIO | 8 | Power on the hardware Wi-Fi radio. |
+| REQUEST_SOFT_REBOOT_ROBOT | 9 | Soft reboot of base robot computers. Does not cut power to payloads. |
 
 
 
@@ -23948,6 +24523,7 @@ fault recovery behavior on robot.
 | error_message | [string](#string) |  | User visible description of the fault (and possibly remedies.) |
 | attributes | [string](#string) | repeated | Fault attributes<br>Each fault may be flagged with attribute metadata (strings in this case.)<br>These attributes are useful to communicate that a particular fault may<br>have significant effect on robot operations. Some potential attributes<br>may be "robot", "imu", "vision", or "battery". These attributes would let<br>us flag a fault as indicating a problem with the base robot hardware,<br>gyro, perception system, or battery respectively. A fault may have, zero,<br>one, or more attributes attached to it, i.e. a "battery" fault may also<br>be considered a "robot" fault. |
 | severity | [SystemFault.Severity](#bosdyn-api-SystemFault-Severity) |  | Fault severity, how bad is the fault?<br>The severity level will have some indication of the potential robot<br>response to the fault. For example, a fault marked with "battery"<br>attribute and severity level SEVERITY_WARN may indicate a low battery<br>state of charge. However a "battery" fault with severity level<br>SEVERITY_CRITICAL likely means the robot is going to shutdown<br>immediately. |
+| dtc | [string](#string) |  | Diagnostic Troubleshooting Code (DTC). This will directly map to the "code" field in this<br>message. |
 
 
 
@@ -25158,12 +25734,28 @@ The signal specification.
 | info | [SignalDisplayInfo](#bosdyn-api-SignalDisplayInfo) |  |  |
 | sensor | [SensorOutputSpec](#bosdyn-api-SensorOutputSpec) |  |  |
 | alerts | [AlertConditionSpec](#bosdyn-api-AlertConditionSpec) | repeated | A signal can have multiple alert conditions.<br>If multiple conditions are simultaneously met,<br>the higher severity condition or first in the list will be the accepted alert state. |
+| data_type | [SignalSpec.DataType](#bosdyn-api-SignalSpec-DataType) |  |  |
 
 
 
 
 
  <!-- end messages -->
+
+
+<a name="bosdyn-api-SignalSpec-DataType"></a>
+
+### SignalSpec.DataType
+Data type of the signal.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| DATA_TYPE_UNKNOWN | 0 |  |
+| DATA_TYPE_DOUBLE | 1 |  |
+| DATA_TYPE_INT | 2 |  |
+| DATA_TYPE_STRING | 3 |  |
+| DATA_TYPE_BOOL | 4 |  |
+
 
  <!-- end enums -->
 
@@ -33121,6 +33713,7 @@ World object properties describing a fiducial object.
 | frame_name_camera | [string](#string) |  | The frame name for the camera that detected this fiducial. |
 | detection_covariance | [SE3Covariance](#bosdyn-api-SE3Covariance) |  | A 6 x 6 Covariance matrix representing the marginal uncertainty of the last detection.<br>The rows/columns are:<br>rx, ry, rz, tx, ty, tz<br>which represent incremental rotation and translation along the x, y, and z axes of the<br>given frame, respectively.<br>This is computed using the Jacobian of the pose estimation algorithm. |
 | detection_covariance_reference_frame | [string](#string) |  | The frame that the detection covariance is expressed in. |
+| purpose | [FiducialPurpose](#bosdyn-api-FiducialPurpose) |  | Purpose of the fiducial. |
 
 
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Install Choreographer &mdash; Spot 5.0.1.2 documentation</title>
+  <title>Install Choreographer &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Boston Dynamics Choreographer Developer Guide" href="choreographer.html" />
-    <link rel="prev" title="Custom Gait" href="custom_gait.html" /> 
+    <link rel="prev" title="Choreography service" href="choreography_service.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -74,6 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -87,13 +88,15 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="README.html">Choreography</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="choreography_service.html">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -262,6 +265,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -278,12 +282,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -328,6 +334,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -380,6 +387,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -414,7 +422,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
@@ -525,33 +532,180 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The application can be downloaded from the <a class="reference external" href="https://support.bostondynamics.com/s/downloads">Boston Dynamics Support Center</a> (login required). Most Choreography API commands require a special license to use.</p>
 <section id="system-requirements">
 <h2>System requirements<a class="headerlink" href="#system-requirements" title="Permalink to this heading"></a></h2>
-<p>Choreographer supports 64-bit Microsoft Windows 10 and 64-bit Ubuntu 22.04 Linux. No other system dependencies are required to run the Choreographer application. However, to use the Choreography SDK independently of the Choreographer application, both Python 3 and the <code class="docutils literal notranslate"><span class="pre">bosdyn-api</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> wheels must be installed.</p>
+<p>Choreographer supports 64-bit Microsoft Windows 11 and 64-bit Ubuntu 22.04 Linux. No other system dependencies are required to run the Choreographer application.</p>
+<p><em>When using the Choreography SDK independently of the Choreographer application, both Python 3 and the <code class="docutils literal notranslate"><span class="pre">bosdyn-api</span></code> and <code class="docutils literal notranslate"><span class="pre">bosdyn-choreography-client</span></code> wheels must be installed.</em></p>
 </section>
 <section id="installing-and-running-choreographer">
 <h2>Installing and running Choreographer<a class="headerlink" href="#installing-and-running-choreographer" title="Permalink to this heading"></a></h2>
-<p>The Choreographer application is an executable which can be run directly on a laptop or desktop computer. Download the <code class="docutils literal notranslate"><span class="pre">choreographer.exe</span></code> (windows) or <code class="docutils literal notranslate"><span class="pre">choreographer</span></code> (linux) executable from the <a class="reference external" href="https://support.bostondynamics.com/s/downloads">Boston Dynamics Support Center</a>.</p>
-<p><strong>Note for Linux</strong>: It may be necessary to grant executable permissions for the <code class="docutils literal notranslate"><span class="pre">choreographer</span></code> file before it can be executed. To do so, run the following command:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="n">choreographer</span>
+<p>The Choreographer application is an executable which can be run directly on a laptop or desktop computer. Download the <code class="docutils literal notranslate"><span class="pre">choreographer.exe</span></code> (Windows) or <code class="docutils literal notranslate"><span class="pre">choreographer</span></code> (Linux) executable from the <a class="reference external" href="https://support.bostondynamics.com/s/downloads">Boston Dynamics Support Center</a>.</p>
+<section id="granting-permissions">
+<h3>Granting Permissions<a class="headerlink" href="#granting-permissions" title="Permalink to this heading"></a></h3>
+<p><strong>For Windows</strong>: When running Choreographer for the first time, Windows will likely display a security warning stating that the publisher is unknown. This happens because Choreographer is not digitally signed, and it does not indicate an issue with the program. You can select “more info” -&gt; “run anyway”.</p>
+<p><strong>For Linux</strong>: When running Choreographer, it will likely be necessary to grant executable permissions for the <code class="docutils literal notranslate"><span class="pre">choreographer</span></code> application file before it can be executed. You can grant permission to run the application by right-clicking the file, selecting “properties” -&gt; “Permissions”, and enabling the “Allow executing file as program” option.</p>
+<p>You can also grant permissions on Linux through the command line by running the following command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">chmod</span> <span class="o">+</span><span class="n">x</span> <span class="p">{</span><span class="n">FILEPATH_TO_CHOREOGRAPHER</span><span class="p">}</span>
 </pre></div>
 </div>
+</section>
+<section id="running-choreographer">
+<h3>Running Choreographer<a class="headerlink" href="#running-choreographer" title="Permalink to this heading"></a></h3>
 <p>To run Choreographer, double-click on the executable to open it or run it from command line.</p>
-<p>Command line arguments can be used to immediately connect to one or more robots upon opening.</p>
 <ul>
 <li><p>On windows:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">choreographer</span><span class="o">.</span><span class="n">exe</span> <span class="o">--</span><span class="n">hostname</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="o">--</span><span class="n">user</span> <span class="p">{</span><span class="n">USERNAME</span><span class="p">}</span> <span class="o">--</span><span class="n">password</span> <span class="p">{</span><span class="n">PASSWORD</span><span class="p">}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">FILEPATH_TO_CHOREOGRAPHER</span><span class="p">}</span>
 </pre></div>
 </div>
 </li>
 <li><p>On Linux:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">choreographer</span> <span class="o">--</span><span class="n">hostname</span> <span class="p">{</span><span class="n">ROBOT_IP</span><span class="p">}</span> <span class="o">--</span><span class="n">user</span> <span class="p">{</span><span class="n">USERNAME</span><span class="p">}</span> <span class="o">--</span><span class="n">password</span> <span class="p">{</span><span class="n">PASSWORD</span><span class="p">}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="p">{</span><span class="n">FILEPATH_TO_CHOREOGRAPHER</span><span class="p">}</span>
 </pre></div>
 </div>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--hostname</span></code> is the robot’s IP address or hostname of the Spot robot to connect to Choreographer.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--username</span></code> and <code class="docutils literal notranslate"><span class="pre">--password</span></code> are the credentials needed for the robot. Note, unlike many of the API examples, the ROBOT_IP argument now requires the command line flag <code class="docutils literal notranslate"><span class="pre">--hostname</span></code> to precede the actual ROBOT_IP argument.</p></li>
 </ul>
-<p>Multiple robots can be connected to Choreographer at once. The command line arguments <code class="docutils literal notranslate"><span class="pre">--hostname</span></code>, <code class="docutils literal notranslate"><span class="pre">--username</span></code>, <code class="docutils literal notranslate"><span class="pre">--password</span></code> must be provided for each robot.</p>
-<p>You will also be able to connect to robots through the interface after Choreographer is open. Doing so from command line is sometimes more convenient when repeatedly connecting to the same robot(s), especially when working with multiple robots.</p>
+</section>
+</section>
+<section id="installing-optional-choreographer-dependencies">
+<h2>Installing Optional Choreographer Dependencies<a class="headerlink" href="#installing-optional-choreographer-dependencies" title="Permalink to this heading"></a></h2>
+<p>Some Choreographer features such as loading and viewing music files and <a class="reference internal" href="timecode_reference.html"><span class="doc">timecode</span></a> support require the installation of additional audio/video libraries.</p>
+<ul class="simple">
+<li><p>Full music loading capability and displaying music waveforms requires <strong>FFmpeg</strong> (supports audio decoding) or <strong>Gstreamer</strong> (Windows-only alternative to FFmpeg).</p></li>
+<li><p>Timecode features require <strong>PortAudio</strong> (audio device I/O support).</p></li>
+</ul>
+<section id="ffmpeg-recommended">
+<h3>FFmpeg (recommended)<a class="headerlink" href="#ffmpeg-recommended" title="Permalink to this heading"></a></h3>
+<section id="linux-installation">
+<h4>Linux Installation<a class="headerlink" href="#linux-installation" title="Permalink to this heading"></a></h4>
+<p>Most Linux distributions include FFmpeg in their default repositories, and can be installed with the below commands:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">ffmpeg</span>
+</pre></div>
+</div>
+</section>
+<section id="windows-installation">
+<h4>Windows Installation<a class="headerlink" href="#windows-installation" title="Permalink to this heading"></a></h4>
+<ol>
+<li><p>Download a prebuilt Windows FFmpeg package (e.g., “full” build from a trusted provider such as Gyan or BtbN).</p></li>
+<li><p>Extract the contents in an easily accessible location, such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">ffmpeg</span>\
+</pre></div>
+</div>
+</li>
+<li><p>Add FFmpeg’s bin folder to your <strong>PATH</strong>:</p>
+<ul>
+<li><p>Open “System Properties” -&gt; “Advanced” -&gt; “Environment Variables”</p></li>
+<li><p>Under “System variables” (or “User variables”), select “Path” and click “Edit”</p></li>
+<li><p>Click “New” and add:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">ffmpeg</span>\<span class="nb">bin</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Verify the installation by opening a new Command Prompt and running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ffmpeg</span> <span class="o">-</span><span class="n">version</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="gstreamer-alternative-to-ffmpeg">
+<h3>Gstreamer (Alternative to FFmpeg)<a class="headerlink" href="#gstreamer-alternative-to-ffmpeg" title="Permalink to this heading"></a></h3>
+<section id="id1">
+<h4>Windows Installation<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h4>
+<ol>
+<li><p>Download the MSVC 64-bit runtime and development installers.</p></li>
+<li><p>Install both packages.</p></li>
+<li><p>Add GStreamer’s bin folder to your <strong>PATH</strong>:</p>
+<ul>
+<li><p>Open “System Properties” -&gt; “Advanced” -&gt; “Environment Variables”</p></li>
+<li><p>Under “System variables” (or “User variables”), select “Path” and click “Edit”</p></li>
+<li><p>Click “New” and add (adjust path if you installed to a different location):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C</span><span class="p">:</span>\<span class="n">gstreamer</span>\<span class="mf">1.0</span>\<span class="n">msvc_x86_64</span>\<span class="nb">bin</span>
+</pre></div>
+</div>
+</li>
+<li><p>Click “OK” on all dialogs</p></li>
+</ul>
+</li>
+<li><p>Verify the installation by opening a new Command Prompt and running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gst</span><span class="o">-</span><span class="n">launch</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
+<p><em>Note: If both FFmpeg and GStreamer are installed, Choreographer may default to FFmpeg.</em></p>
+</li>
+</ol>
+</section>
+</section>
+<section id="portaudio">
+<h3>PortAudio<a class="headerlink" href="#portaudio" title="Permalink to this heading"></a></h3>
+<section id="id2">
+<h4>Linux Installation<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h4>
+<p>The below command installs PortAudio along with its required library dependencies:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">libasound</span><span class="o">-</span><span class="n">dev</span> <span class="n">portaudio19</span><span class="o">-</span><span class="n">dev</span> <span class="n">libportaudio2</span> <span class="n">libportaudiocpp0</span>
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h4>Windows Installation<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h4>
+<p>PortAudio may already be present on your Windows machine. If it is not available and timecode features are disabled, follow the below steps to manually install PortAudio.</p>
+<ol class="simple">
+<li><p>Download a prebuilt PortAudio DLL:</p>
+<ul class="simple">
+<li><p>Check <a class="reference external" href="http://www.portaudio.com/download.html">PortAudio’s download page</a> for official releases</p></li>
+</ul>
+</li>
+<li><p>Place the DLL file (e.g., <code class="docutils literal notranslate"><span class="pre">portaudio_x64.dll</span></code> or <code class="docutils literal notranslate"><span class="pre">portaudio.dll</span></code>) in one of these locations:</p>
+<ul class="simple">
+<li><p>In the same directory as the Choreographer executable, OR</p></li>
+<li><p>In a directory added to your <strong>PATH</strong> environment variable (see FFmpeg instructions above for how to modify PATH)</p></li>
+</ul>
+</li>
+<li><p>Check that PortAudio is correctly installed by relaunching Choreographer and checking that timecode features can be enabled in the timecode settings section of the “Settings”-&gt;”Playback and Music” menu.</p></li>
+</ol>
+</section>
+</section>
+</section>
+<section id="contacting-support">
+<h2>Contacting Support<a class="headerlink" href="#contacting-support" title="Permalink to this heading"></a></h2>
+<p>The Boston Dynamics Support Center can be accessed by navigating to <a class="reference external" href="http://support.bostondynamics.com">http://support.bostondynamics.com</a> from a web browser on any device.</p>
+<p>Authenticated Support Center users with login credentials can submit and monitor support cases within <strong>My Cases</strong> and access the <strong>Downloads</strong> page, where Choreographer is available.</p>
+<p>You can also reach Boston Dynamics Technical Support for help activating your Support Center account or to request a password reset by emailing <strong>support&#64;bostondynamics.com</strong>.</p>
+<section id="opening-support-cases">
+<h3>Opening Support Cases<a class="headerlink" href="#opening-support-cases" title="Permalink to this heading"></a></h3>
+<p>When opening choreography-related support cases, please include as much of the information as you can for the following categories. This will aid our team in giving you the best and speediest resolution. (If certain information is unknown, that’s okay! Please reach out to us anyway and we’ll work with you to fix the problem).</p>
+<section id="choreographer-application-issue">
+<h4>Choreographer Application Issue<a class="headerlink" href="#choreographer-application-issue" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Description of the issue.</p></li>
+<li><p>Application version and commit id information (found under “Help”-&gt;”About”).</p></li>
+<li><p>Operating system.</p></li>
+<li><p>Terminal or Command Prompt error messages (if available).</p></li>
+<li><p>Any files (sequence, animation, music, etc.) being used at time of failure (if available/relevant).</p></li>
+<li><p>Screenshots or screen recording of the issue (if available).</p></li>
+</ul>
+</section>
+<section id="spot-failure-when-performing-a-choreography-sequence">
+<h4>Spot Failure when Performing a Choreography Sequence<a class="headerlink" href="#spot-failure-when-performing-a-choreography-sequence" title="Permalink to this heading"></a></h4>
+<ul class="simple">
+<li><p>Description of the issue.</p></li>
+<li><p>Choreography sequence (.chr or .csq file)* that produced the failure on Spot.</p>
+<ul>
+<li><p><em>*Please also include any custom animation files (.cha) used in the sequence</em> (if any).</p></li>
+</ul>
+</li>
+<li><p>Experiment log or other automatically generated logs from the time of the failure (if available).</p></li>
+<li><p>Video of Spot when the issue occurred (if available).</p></li>
+<li><p>If Spot was being controlled by Choreographer at the time of the failure, please include:</p>
+<ul>
+<li><p>Application version and commit id information.</p></li>
+<li><p>Operating system.</p></li>
+<li><p>Terminal or Command Prompt error messages at time of failure (if available).</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
 </section>
 </section>
 

@@ -15,8 +15,7 @@ from bosdyn.client.common import (BaseClient, error_factory, error_pair,
                                   handle_unset_status_error)
 from bosdyn.client.data_acquisition import (DataAcquisitionClient, DataAcquisitionResponseError,
                                             UnknownCaptureTypeError, _get_live_data_error,
-                                            acquire_data_error, get_request_id, metadata_to_proto)
-from bosdyn.util import now_timestamp
+                                            acquire_data_error, metadata_to_proto)
 
 
 class DataAcquisitionPluginClient(BaseClient):

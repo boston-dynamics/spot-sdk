@@ -5,9 +5,10 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Tests for the power command client."""
-
 import time
 from concurrent import futures
+from contextlib import ExitStack
+from unittest.mock import patch
 
 import pytest
 
@@ -16,9 +17,44 @@ from bosdyn.client import (InternalServerError, InvalidRequestError, LeaseUseErr
                            ResponseError, UnsetStatusError, power)
 from bosdyn.client.power import (_power_command_error_from_response,
                                  _power_feedback_error_from_response)
+from bosdyn.util import now_sec
+
+from . import error_callback_helpers
 
 # For coverage report, run with...
 # python -m pytest --cov bosdyn.client.power --cov-report term-missing tests/test_power.py
+
+# We're going to mock out time.sleep in a bunch of tests, so save the real one here.
+true_sleep = time.sleep
+
+
+def mock_sleep(mock_time):
+    return patch('bosdyn.client.power.time.sleep', mock_time.wait)
+
+
+def patch_future_result(mock_time):
+    """Allow grpc timeouts to work better with mock time."""
+    original_result = futures.Future.result
+
+    def patched_result(fut, timeout=None):
+        try:
+            # Use the original function.
+            return original_result(fut, timeout=timeout)
+        except futures.TimeoutError:
+            # If we timed out, advance the mock time.
+            mock_time.wait(timeout)
+            raise
+
+    return patch.object(futures.Future, 'result', patched_result)
+
+
+def timing_context(mock_time):
+    """Get context managers for time.sleep, Future.result, and the clock proxy"""
+    stack = ExitStack()
+    stack.enter_context(error_callback_helpers.mock_time_context(mock_time))
+    stack.enter_context(patch_future_result(mock_time))
+    stack.enter_context(mock_sleep(mock_time))
+    return stack
 
 
 def test_power_command_error():
@@ -142,31 +178,44 @@ class MockRobotStateClient(object):
 
 def test_power_on_success():
     mock_client = MockPowerClient()
-    timeout = 1.0
-    mock_client.feedback_fn = lambda: time.sleep(timeout / 2.0)
-    mock_client.response = power_pb2.STATUS_SUCCESS
-    power.power_on(mock_client, timeout_sec=timeout, update_frequency=100)
+    mock_time = error_callback_helpers.MockTime()
+    mock_time.run(1.0)  # Allow the command some time to run.
+    with timing_context(mock_time):
+
+        timeout = 1.0
+        mock_client.feedback_fn = lambda: mock_time.wait(timeout / 2.0)
+        mock_client.response = power_pb2.STATUS_SUCCESS
+        power.power_on(mock_client, timeout_sec=timeout, update_frequency=100,
+                       abort_event=mock_time)
 
 
 def test_power_on_failure():
     mock_client = MockPowerClient()
-    timeout = 1.0
-    mock_client.feedback_fn = lambda: time.sleep(timeout / 2.0)
-    mock_client.response = power_pb2.STATUS_FAULTED
-    with pytest.raises(power.FaultedError, match=r".* Cannot power on due to a fault.*"):
-        power.power_on(mock_client, timeout_sec=timeout, update_frequency=100)
+    mock_time = error_callback_helpers.MockTime()
+    mock_time.run(1.0)  # Allow the command some time to run.
+    with timing_context(mock_time):
+        timeout = 1.0
+        mock_client.feedback_fn = lambda: mock_time.wait(timeout / 2.0)
+        mock_client.response = power_pb2.STATUS_FAULTED
+        with pytest.raises(power.FaultedError, match=r".* Cannot power on due to a fault.*"):
+            power.power_on(mock_client, timeout_sec=timeout, update_frequency=100,
+                           abort_event=mock_time)
 
 
-@pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
+@pytest.mark.parametrize('feedback_fn', [None, lambda: true_sleep(3.0)])
 def test_power_on_timeout(feedback_fn):
     mock_client = MockPowerClient()
     mock_client.feedback_fn = feedback_fn
-    start = time.time()
-    timeout = 1.0
-    with pytest.raises(power.CommandTimedOutError):
-        power.power_on(mock_client, timeout_sec=timeout, update_frequency=100)
-    dt = time.time() - start
-    assert abs(dt - timeout) < 0.1
+    mock_time = error_callback_helpers.MockTime()
+    with timing_context(mock_time):
+        start = now_sec()
+        timeout = 0.1
+        mock_time.run(1.0)  # Allow the power off some time to run.
+        with pytest.raises(power.CommandTimedOutError):
+            power.power_on(mock_client, timeout_sec=timeout, update_frequency=100,
+                           abort_event=mock_time)
+        dt = now_sec() - start
+        assert abs(dt - timeout) < 0.02
 
 
 def test_emergency_power_off_success():
@@ -177,16 +226,20 @@ def test_emergency_power_off_success():
     power.power_off(mock_client, timeout_sec=timeout, update_frequency=100)
 
 
-@pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
+@pytest.mark.parametrize('feedback_fn', [None, lambda: true_sleep(3.0)])
 def test_emergency_power_off_timeout(feedback_fn):
     mock_client = MockPowerClient()
     mock_client.feedback_fn = feedback_fn
-    start = time.time()
-    timeout = 1.0
-    with pytest.raises(power.CommandTimedOutError):
-        power.power_off(mock_client, timeout_sec=timeout, update_frequency=100)
-    dt = time.time() - start
-    assert abs(dt - timeout) < 0.1
+    mock_time = error_callback_helpers.MockTime()
+    with timing_context(mock_time):
+        start = now_sec()
+        timeout = 0.1
+        mock_time.run(1.0)  # Allow the power off some time to run
+        with pytest.raises(power.CommandTimedOutError):
+            power.power_off(mock_client, timeout_sec=timeout, update_frequency=100,
+                            abort_event=mock_time)
+        dt = now_sec() - start
+        assert abs(dt - timeout) < 0.02
 
 
 def test_safe_power_off_success():
@@ -199,17 +252,21 @@ def test_safe_power_off_success():
     power.safe_power_off(mock_command_client, mock_state_client, timeout, update_frequency=100)
 
 
-@pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
+@pytest.mark.parametrize('feedback_fn', [None, lambda: true_sleep(3.0)])
 def test_safe_power_off_timeout(feedback_fn):
     mock_command_client = MockRobotCommandClient()
     mock_state_client = MockRobotStateClient()
     mock_state_client.feedback_fn = feedback_fn
-    start = time.time()
-    timeout = 1.0
-    with pytest.raises(power.CommandTimedOutError):
-        power.safe_power_off(mock_command_client, mock_state_client, timeout, update_frequency=100)
-    dt = time.time() - start
-    assert abs(dt - timeout) < 0.1
+    mock_time = error_callback_helpers.MockTime()
+    with timing_context(mock_time):
+        start = now_sec()
+        timeout = 0.1
+        mock_time.run(1.0)  # Allow the power off some time to run.
+        with pytest.raises(power.CommandTimedOutError):
+            power.safe_power_off(mock_command_client, mock_state_client, timeout,
+                                 update_frequency=100)
+        dt = now_sec() - start
+        assert abs(dt - timeout) < 0.02
 
 
 def test_safe_power_off_motors_success():
@@ -223,18 +280,21 @@ def test_safe_power_off_motors_success():
                                 update_frequency=100)
 
 
-@pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
+@pytest.mark.parametrize('feedback_fn', [None, lambda: true_sleep(3.0)])
 def test_safe_power_off_motors_timeout(feedback_fn):
     mock_command_client = MockRobotCommandClient()
     mock_state_client = MockRobotStateClient()
     mock_state_client.feedback_fn = feedback_fn
-    start = time.time()
-    timeout = 1.0
-    with pytest.raises(power.CommandTimedOutError):
-        power.safe_power_off_motors(mock_command_client, mock_state_client, timeout,
-                                    update_frequency=100)
-    dt = time.time() - start
-    assert abs(dt - timeout) < 0.1
+    mock_time = error_callback_helpers.MockTime()
+    with timing_context(mock_time):
+        start = now_sec()
+        timeout = 0.1
+        mock_time.run(1.0)  # Allow the power off some time to run.
+        with pytest.raises(power.CommandTimedOutError):
+            power.safe_power_off_motors(mock_command_client, mock_state_client, timeout,
+                                        update_frequency=100)
+        dt = now_sec() - start
+        assert abs(dt - timeout) < 0.02
 
 
 def test_safe_power_off_robot_success():
@@ -251,19 +311,22 @@ def test_safe_power_off_robot_success():
                                update_frequency=100)
 
 
-@pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
+@pytest.mark.parametrize('feedback_fn', [None, lambda: true_sleep(3.0)])
 def test_safe_power_off_robot_timeout(feedback_fn):
     mock_command_client = MockRobotCommandClient()
     mock_state_client = MockRobotStateClient()
     mock_power_client = MockPowerClient()
     mock_state_client.feedback_fn = feedback_fn
-    timeout = 1.0
-    start = time.time()
-    with pytest.raises(power.CommandTimedOutError):
-        power.safe_power_off_robot(mock_command_client, mock_state_client, mock_power_client,
-                                   timeout, update_frequency=100)
-    dt = time.time() - start
-    assert abs(dt - timeout) < 0.1
+    mock_time = error_callback_helpers.MockTime()
+    with timing_context(mock_time):
+        timeout = 0.1
+        start = now_sec()
+        mock_time.run(1.0)  # Allow the power off some time to run.
+        with pytest.raises(power.CommandTimedOutError):
+            power.safe_power_off_robot(mock_command_client, mock_state_client, mock_power_client,
+                                       timeout, update_frequency=100)
+        dt = now_sec() - start
+        assert abs(dt - timeout) < 0.02
 
 
 def test_safe_power_cycle_robot_success():
@@ -280,16 +343,19 @@ def test_safe_power_cycle_robot_success():
                                  update_frequency=100)
 
 
-@pytest.mark.parametrize('feedback_fn', [None, lambda: time.sleep(3.0)])
+@pytest.mark.parametrize('feedback_fn', [None, lambda: true_sleep(3.0)])
 def test_safe_power_cycle_robot_timeout(feedback_fn):
     mock_command_client = MockRobotCommandClient()
     mock_state_client = MockRobotStateClient()
     mock_power_client = MockPowerClient()
     mock_state_client.feedback_fn = feedback_fn
-    timeout = 1.0
-    start = time.time()
-    with pytest.raises(power.CommandTimedOutError):
-        power.safe_power_cycle_robot(mock_command_client, mock_state_client, mock_power_client,
-                                     timeout, update_frequency=100)
-    dt = time.time() - start
-    assert abs(dt - timeout) < 0.1
+    mock_time = error_callback_helpers.MockTime()
+    with timing_context(mock_time):
+        timeout = 0.1
+        start = now_sec()
+        mock_time.run(1.0)  # Allow the power off some time to run.
+        with pytest.raises(power.CommandTimedOutError):
+            power.safe_power_cycle_robot(mock_command_client, mock_state_client, mock_power_client,
+                                         timeout, update_frequency=100)
+        dt = now_sec() - start
+        assert abs(dt - timeout) < 0.02

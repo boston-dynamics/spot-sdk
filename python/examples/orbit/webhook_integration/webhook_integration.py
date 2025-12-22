@@ -108,7 +108,7 @@ class WebhookManager:
                     LOGGER.info("Image Embedded.")
                 else:
                     LOGGER.info("Image response was not 200.")
-                if key_results != None:
+                if key_results is not None:
                     LOGGER.info("~~~~~~ Key Results ~~~~~~")
                     LOGGER.info(key_results)
             self.send_to_backend_service(data)

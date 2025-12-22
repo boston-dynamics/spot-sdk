@@ -7,12 +7,11 @@
 import collections
 import time
 
-from urllib3 import Timeout
-
 from bosdyn.api.spot import spot_check_pb2, spot_check_service_pb2_grpc
 from bosdyn.client.common import (BaseClient, error_factory, handle_common_header_errors,
                                   handle_lease_use_result_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import LeaseUseError, ResponseError, TimedOutError
+from bosdyn.util import now_sec
 
 
 class SpotCheckError(ResponseError):
@@ -191,7 +190,7 @@ def run_spot_check(spot_check_client, lease, timeout_sec=212, update_frequency=0
     Raises:
         bosdyn.client.exceptions.Error: Throws on any error failure.
     """
-    start_time = time.time()
+    start_time = now_sec()
     end_time = start_time + timeout_sec
     update_time = 1.0 / update_frequency
     # Start spot check procedure.
@@ -201,7 +200,7 @@ def run_spot_check(spot_check_client, lease, timeout_sec=212, update_frequency=0
     spot_check_client.spot_check_command(req)
     # Check spot check feedback.
     feedback_req = spot_check_pb2.SpotCheckFeedbackRequest()
-    while (time.time() < end_time):
+    while (now_sec() < end_time):
         time.sleep(update_time)
         res = spot_check_client.spot_check_feedback(feedback_req)
         if (res.state == spot_check_pb2.SpotCheckFeedbackResponse.STATE_WAITING_FOR_COMMAND or
@@ -234,7 +233,7 @@ def run_camera_calibration(spot_check_client, lease, timeout_sec=1200, update_fr
     Raises:
         bosdyn.client.exceptions.Error: Throws on any calibration failure.
     """
-    start_time = time.time()
+    start_time = now_sec()
     end_time = start_time + timeout_sec
     update_time = 1.0 / update_frequency
     # Start camera calibration procedure.
@@ -244,7 +243,7 @@ def run_camera_calibration(spot_check_client, lease, timeout_sec=1200, update_fr
     spot_check_client.camera_calibration_command(req)
     # Check camera calibration feedback.
     feedback_req = spot_check_pb2.CameraCalibrationFeedbackRequest()
-    while (time.time() < end_time):
+    while (now_sec() < end_time):
         time.sleep(update_time)
         res = spot_check_client.camera_calibration_feedback(feedback_req)
         if (res.status == spot_check_pb2.CameraCalibrationFeedbackResponse.STATUS_SUCCESS):

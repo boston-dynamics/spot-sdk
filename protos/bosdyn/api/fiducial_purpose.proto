@@ -1,0 +1,23 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+package bosdyn.api;
+option go_package = "bosdyn/api/FiducialPurpose";
+option java_outer_classname = "FiducialPurposeProto";
+
+// A purpose of a fiducial.
+enum FiducialPurpose {
+    UNKNOWN = 0;
+    // Fiducial is used for localization. (needs to be unique and static)
+    LOCALIZATION = 1;
+    // Fiducial is used as a docking target.
+    DOCK = 2;
+    // Fiducial is used interrupts
+    INTERRUPT = 3;
+    // Fiducial is used for log triggering.
+    LOG_TRIGGERING = 4;
+}

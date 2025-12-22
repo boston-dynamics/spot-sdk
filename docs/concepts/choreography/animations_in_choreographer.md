@@ -32,7 +32,7 @@ Additionally, components of the text file enable different animation-specific op
 
 The animated move text files are parsed into `Animation` protobuf messages and uploaded to the robot. Once the animation is uploaded to the robot, it can be referenced by name within choreographies.
 
-This parsing step (from text file to protobuf message) happens automatically in Choreographer for both animations in the **Animations** directory that matches the directory structure shown below and for animations uploaded by selecting **Load Animated Move** from the File menu.
+This parsing step (from text file to protobuf message) happens automatically in Choreographer for both animations in the **animations** directory that matches the directory structure shown below and for animations uploaded by selecting **Load Animated Move** from the File menu.
 
 ```
 dance_directory/
@@ -48,11 +48,11 @@ The `animation_file_to_proto.py` python script file in the `bosdyn-choreography-
 
 ## Automatic animation uploading in Choreographer
 
-When Choreographer connects to a robot, it begins uploading all animations automatically to every connected robot. This includes connecting to a robot at startup from command line arguments and connecting to a robot at run time through the connection interface. Once an animation is uploaded, it is stored on the robot until it is rebooted.
+When Choreographer connects to a robot, it automatically begins uploading all of the animation (.cha) files located in the **animations** folder in the same directory as the application. Loaded animations are also uploaded to each robot connection, including robots connected at startup from command line arguments and robots connected after the application is running.
 
-A dialog indicates the status of all animations being uploaded (example below). If an animation fails to upload, check the terminal where the Choreographer executable is running. It should contain an error message describing why the animation is invalid.
+A dialog indicates the status of all animations being uploaded (example below). If an animation fails to upload, check the terminal where the Choreographer executable is running. It will likely contain an error message describing why the animation was invalid. You can also verify which animations have successfully loaded to each robot connection using the "Check Animated Moves" tool under the "Tools" Menu.
 
-![Animation Upload Dialog](images/animation_upload_dialog.png)
+<img src="images/animation_upload_dialog.png" style="max-width:640px;">
 
 ## Choreography logs for animations
 
@@ -72,6 +72,6 @@ The log can be downloaded as a [compressed npz file](https://numpy.org/doc/stabl
 
 Logs can also be downloaded as a text files, which saves the `ChoreographyStateLog` protobuf message as a protobuf-to-text message. To save in this format, include the ".txt" file extension when entering the log name.
 
-![Choreographer Log Buttons](images/log_buttons.png)
+<img src="images/log_buttons.png" style="max-width:870px;">
 
-The API for the choreography logs is described on the [Choreography Service](choreography_service.md) page and can be accessed via the API in the Choreographer client.
+The API for the choreography logs is described on the [Choreography Service](choreography_service.md) page and can also be accessed via the API in the Choreographer client.

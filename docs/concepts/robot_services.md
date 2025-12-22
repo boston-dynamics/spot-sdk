@@ -91,7 +91,7 @@ Since an image can be a lot of data, there are also different types of encodings
 - `RLE`: a run length encoding
 - `RAW`: the raw uncompressed image data
 
-The transformation between an image source and the robot's `body`, `vision`, and `odom` frames is available in the `transforms_snapshot` field in the [ListImageSourcesResponse](../protos/bosdyn/api/image.proto#listimagesourcesresponse) message.
+The transformation between an image source and the robot's `body`, `vision`, and `odom` frames is available in the `transforms_snapshot` field in the [ListImageSourcesResponse](../../protos/bosdyn/api/image.proto#listimagesourcesresponse) message.
 
 ## local-grid
 

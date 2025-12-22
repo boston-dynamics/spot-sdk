@@ -9,9 +9,6 @@ import socket
 import struct
 import time
 
-import grpc
-import pytest
-
 import bosdyn.client.spot_cam.network
 from bosdyn.api.spot_cam import network_pb2, service_pb2_grpc
 

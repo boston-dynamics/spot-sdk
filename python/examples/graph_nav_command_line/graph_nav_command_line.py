@@ -4,7 +4,8 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-"""Command line interface for graph nav with options to download/upload a map and to navigate a map. """
+"""Command line interface for graph nav with options to download/upload a map
+and to navigate a map."""
 
 import argparse
 import logging
@@ -134,7 +135,11 @@ class GraphNavInterface(object):
 
 
     def _clear_graph_and_cache(self, *args):
-        """Clear the state of the map on the robot, removing all waypoints and edges. Also clears the disk cache."""
+        """Clear the state of the map on the robot, removing all waypoints and
+        edges.
+
+        Also clears the disk cache.
+        """
         return self._graph_nav_client.clear_graph_and_cache()
 
     # @do_not_publish_end
@@ -168,7 +173,8 @@ class GraphNavInterface(object):
             ko_tform_body=current_odom_tform_body)
 
     def _list_graph_waypoint_and_edge_ids(self, *args):
-        """List the waypoint ids and edge ids of the graph currently on the robot."""
+        """List the waypoint ids and edge ids of the graph currently on the
+        robot."""
 
         # Download current graph
         graph = self._graph_nav_client.download_graph()
@@ -212,18 +218,76 @@ class GraphNavInterface(object):
                 self._current_edge_snapshots[edge_snapshot.id] = edge_snapshot
         # Upload the graph to the robot.
         print('Uploading the graph and snapshots to the robot...')
+        time_before = time.time()
         true_if_empty = not len(self._current_graph.anchoring.anchors)
         response = self._graph_nav_client.upload_graph(graph=self._current_graph,
                                                        generate_new_anchoring=true_if_empty)
-        # Upload the snapshots to the robot.
-        for snapshot_id in response.unknown_waypoint_snapshot_ids:
-            waypoint_snapshot = self._current_waypoint_snapshots[snapshot_id]
-            self._graph_nav_client.upload_waypoint_snapshot(waypoint_snapshot)
-            print(f'Uploaded {waypoint_snapshot.id}')
-        for snapshot_id in response.unknown_edge_snapshot_ids:
-            edge_snapshot = self._current_edge_snapshots[snapshot_id]
-            self._graph_nav_client.upload_edge_snapshot(edge_snapshot)
-            print(f'Uploaded {edge_snapshot.id}')
+        # Upload any missing snapshots to the robot.
+        upload_individually = False
+        try:
+            self._graph_nav_client.upload_snapshots(
+                graph_nav_pb2.UploadSnapshotsRequest.Snapshots(waypoint_snapshots=[],
+                                                               edge_snapshots=[]))
+        except:
+            # An empty UploadSnapshots request failed, fall back to slow RPC.
+            upload_individually = True
+
+        if upload_individually:
+            for snapshot_id in response.unknown_waypoint_snapshot_ids:
+                waypoint_snapshot = self._current_waypoint_snapshots[snapshot_id]
+                self._graph_nav_client.upload_waypoint_snapshot(waypoint_snapshot)
+                print(f'Uploaded {waypoint_snapshot.id}')
+            for snapshot_id in response.unknown_edge_snapshot_ids:
+                edge_snapshot = self._current_edge_snapshots[snapshot_id]
+                self._graph_nav_client.upload_edge_snapshot(edge_snapshot)
+                print(f'Uploaded {edge_snapshot.id}')
+        else:
+            # Upload in groups of 16MB.
+            kMaxBytes = 16 * 1024 * 1024
+            snapshots = []
+            num_bytes = 0
+
+            # Upload waypoint snapshots.
+            for snapshot_id in response.unknown_waypoint_snapshot_ids:
+                this_bytes = self._current_waypoint_snapshots[snapshot_id].ByteSize()
+                if len(snapshots) > 0 and this_bytes + num_bytes > kMaxBytes:
+                    print(f'Uploading {len(snapshots)} waypoint snapshots')
+                    self._graph_nav_client.upload_snapshots(
+                        graph_nav_pb2.UploadSnapshotsRequest.Snapshots(
+                            waypoint_snapshots=snapshots, edge_snapshots=[]))
+                    snapshots = []
+                    num_bytes = 0
+                snapshots.append(self._current_waypoint_snapshots[snapshot_id])
+                num_bytes += this_bytes
+            if len(snapshots) > 0:
+                print(f'Uploading final {len(snapshots)} waypoint snapshots')
+                self._graph_nav_client.upload_snapshots(
+                    graph_nav_pb2.UploadSnapshotsRequest.Snapshots(waypoint_snapshots=snapshots,
+                                                                   edge_snapshots=[]))
+
+            # Upload edge snapshots.
+            snapshots = []
+            num_bytes = 0
+            for snapshot_id in response.unknown_edge_snapshot_ids:
+                this_bytes = self._current_edge_snapshots[snapshot_id].ByteSize()
+                if len(snapshots) > 0 and this_bytes + num_bytes > kMaxBytes:
+                    print(f'Uploading {len(snapshots)} edge snapshots')
+                    self._graph_nav_client.upload_snapshots(
+                        graph_nav_pb2.UploadSnapshotsRequest.Snapshots(
+                            waypoint_snapshots=[], edge_snapshots=snapshots))
+                    snapshots = []
+                    num_bytes = 0
+                snapshots.append(self._current_edge_snapshots[snapshot_id])
+                num_bytes += this_bytes
+            if len(snapshots) > 0:
+                print(f'Uploading final {len(snapshots)} edge snapshots')
+                self._graph_nav_client.upload_snapshots(
+                    graph_nav_pb2.UploadSnapshotsRequest.Snapshots(waypoint_snapshots=[],
+                                                                   edge_snapshots=snapshots))
+        upload_time = time.time() - time_before
+        print(
+            f'Uploaded graph and {len(response.unknown_waypoint_snapshot_ids)} (of {len(self._current_graph.waypoints)}) waypoints and {len(response.unknown_edge_snapshot_ids)} (of {len(self._current_graph.edges)}) edges, elapsed time {round(upload_time * 1000)}ms'
+        )
 
         # The upload is complete! Check that the robot is localized to the graph,
         # and if it is not, prompt the user to localize the robot before attempting
@@ -294,18 +358,23 @@ class GraphNavInterface(object):
             self.toggle_power(should_power_on=False)
 
     def _navigate_to_gps_coords(self, *args):
-        """Navigates to GPS coordinates using the NavigateToAnchor RPC from arguments.
-           The arguments are directly captured from keyboard input."""
+        """Navigates to GPS coordinates using the NavigateToAnchor RPC from
+        arguments.
+
+        The arguments are directly captured from keyboard input.
+        """
         coords = self._parse_gps_goal_from_args(args[0])
         if not coords:
             return
         self._navigate_to_parsed_gps_coords(coords[0], coords[1], coords[2])
 
     def _parse_gps_goal_from_args(self, list_of_strings: list):
-        """ This function first parses the input from cin, which is passed in an argument.
-         The following options are accepted for arguments:
-         [latitude_degrees, longitude_degrees], [latitude_degrees, longitude_degrees, yaw_around_up_radians]
-         Returns a tuple of latitude, longitude and yaw (where yaw is possibly None).
+        """This function first parses the input from cin, which is passed in an
+        argument. The following options are accepted for arguments:
+
+        [latitude_degrees, longitude_degrees], [latitude_degrees,
+        longitude_degrees, yaw_around_up_radians] Returns a tuple of
+        latitude, longitude and yaw (where yaw is possibly None).
         """
         if len(list_of_strings) not in [2, 3]:
             print('Invalid arguments supplied.')
@@ -448,7 +517,8 @@ class GraphNavInterface(object):
                 self.toggle_power(should_power_on=False)
 
     def _clear_graph(self, *args):
-        """Clear the state of the map on the robot, removing all waypoints and edges."""
+        """Clear the state of the map on the robot, removing all waypoints and
+        edges."""
         return self._graph_nav_client.clear_graph()
 
     def toggle_power(self, should_power_on):
@@ -485,7 +555,8 @@ class GraphNavInterface(object):
         return self._powered_on
 
     def _check_success(self, command_id=-1):
-        """Use a navigation command id to get feedback from the robot and sit when command succeeds."""
+        """Use a navigation command id to get feedback from the robot and sit
+        when command succeeds."""
         if command_id == -1:
             # No command, so we have no status to check.
             return False

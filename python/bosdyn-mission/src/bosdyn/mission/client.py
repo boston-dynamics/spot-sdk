@@ -7,7 +7,6 @@
 """For clients to the mission service."""
 
 import collections
-from builtins import str as text
 
 from google.protobuf import timestamp_pb2
 
@@ -409,7 +408,7 @@ def _get_state_value(response):
 
 
 def _get_info_value(response):
-    if response.HasField(text('mission_info')):
+    if response.HasField(str('mission_info')):
         return response.mission_info
     return None
 

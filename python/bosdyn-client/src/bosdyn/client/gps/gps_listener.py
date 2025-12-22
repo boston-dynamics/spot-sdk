@@ -11,15 +11,13 @@ import socket
 import time
 from typing import List
 
-import bosdyn.api
-import bosdyn.client.util
 from bosdyn.api.gps.gps_pb2 import GpsDataPoint, GpsDevice
 from bosdyn.client.exceptions import ProxyConnectionError
 from bosdyn.client.gps.aggregator_client import AggregatorClient
 from bosdyn.client.gps.NMEAParser import NMEAParser
 from bosdyn.client.gps.ntrip_client import NtripClient, NtripClientParams
 from bosdyn.client.robot import UnregisteredServiceNameError
-from bosdyn.util import RobotTimeConverter, duration_to_seconds
+from bosdyn.util import RobotTimeConverter, now_sec
 
 
 class NMEAStreamReader(object):
@@ -44,7 +42,7 @@ class NMEAStreamReader(object):
                 raw_data = str(raw_data, "utf-8")
         except UnicodeDecodeError:
             # Throttle the logs.
-            now = time.time()
+            now = now_sec()
             if self.last_failed_read_log_time is None or (
                     now - self.last_failed_read_log_time) > self.LOG_THROTTLE_TIME:
                 self.logger.exception("Failed to decode NMEA message. Is it not Unicode?")
@@ -160,17 +158,17 @@ class GpsListener:
                         agg_future = self.aggregator_client.new_gps_data_async(
                             accumulated_data, self.gps_device)
                         accumulated_data.clear()
-                        timestamp_of_last_rpc = time.time()
+                        timestamp_of_last_rpc = now_sec()
                         time_passed_since_last_rpc = 0
                 else:
                     if time_passed_since_last_rpc > every_x_seconds:
                         if agg_future is None or agg_future.done():
                             agg_future = self.aggregator_client.new_gps_data_async([],
                                                                                    self.gps_device)
-                        timestamp_of_last_rpc = time.time()
+                        timestamp_of_last_rpc = now_sec()
                         time_passed_since_last_rpc = 0
                     else:
-                        time_passed_since_last_rpc = time.time() - timestamp_of_last_rpc
+                        time_passed_since_last_rpc = now_sec() - timestamp_of_last_rpc
 
                 # If we are running an NTRIP client, pass it the latest GGA message.
                 if self.ntrip_client is not None:

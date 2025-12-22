@@ -14,7 +14,6 @@ Client code and interfaces missions.
 
 - [Client](client)
 - [Constants](constants)
-- [Exceptions](exceptions)
 - [Remote Client](remote_client)
 - [Server Util](server_util)
 - [Util](util)

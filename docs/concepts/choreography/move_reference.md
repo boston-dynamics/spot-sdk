@@ -19,7 +19,7 @@ More information about choreography moves can be found by looking at the choreog
 
 ### rotate_body
 
-![](gif_images/image1.gif)
+<img src="move_gif_images/image1.gif" style="max-width:250px;">
 
 Rotates the body to a desired orientation. Nominally takes one beat (4 slices) but can be extended to go slower.
 
@@ -30,7 +30,7 @@ Rotates the body to a desired orientation. Nominally takes one beat (4 slices) b
 
 ### rotate_body_sharp
 
-![](gif_images/image20.gif)
+<img src="move_gif_images/image20.gif" style="max-width:250px;">
 
 Identical to the rotate_body move, but moves to the desired position quickly and returns (unless configured not to return) more slowly.
 
@@ -38,7 +38,7 @@ Identical to the rotate_body move, but moves to the desired position quickly and
 
 ### body_hold
 
-![](gif_images/image4.gif)
+<img src="move_gif_images/image4.gif" style="max-width:250px;">
 
 Moves the body to a specified position/orientation and holds it steady for the specified duration then optionally returns to a neutral pose.
 
@@ -56,7 +56,7 @@ Holds the body at the pose from the immediately preceding body-track move. Appli
 
 ### sway
 
-![](gif_images/image15.gif)
+<img src="move_gif_images/image15.gif" style="max-width:250px;">
 
 Sway back and forth to the beat. A full back/forth cycle takes 2 beats.
 
@@ -70,7 +70,7 @@ Sway back and forth to the beat. A full back/forth cycle takes 2 beats.
 
 ### random_rotate
 
-![](gif_images/image7.gif)
+<img src="move_gif_images/image7.gif" style="max-width:250px;">
 
 Rotate the body in a random, chaotic manner. Rotation in each axis is generated independently. Can be extended to any desired duration.
 
@@ -84,7 +84,7 @@ Rotate the body in a random, chaotic manner. Rotation in each axis is generated 
 
 ### twerk
 
-![](gif_images/image9.gif)
+<img src="move_gif_images/image9.gif" style="max-width:250px;">
 
 Lowers the robutt down and back up once. Lasts for one beat (4 slices).
 
@@ -94,7 +94,7 @@ Lowers the robutt down and back up once. Lasts for one beat (4 slices).
 
 ### butt_circle
 
-![](gif_images/image23.gif)
+<img src="move_gif_images/image23.gif" style="max-width:250px;">
 
 Move the robutt, head, or both head and robutt in a circle. Extendable to the desired duration. Rotates about the previous pose.
 
@@ -131,7 +131,7 @@ A procedurally-generated idle animation. It looks around, breathes, shifts its w
 
 ### step
 
-![](gif_images/image18.gif)
+<img src="move_gif_images/image18.gif" style="max-width:250px;">
 
 Take a single step with one or two feet. Nominally requires one beat (4 slices) but can be extended to step slower. If stepping with two feet, especially both front or both hind feet, longer steps will be unreliable. Lifts off one slice after the move begins and touches down one slice before it ends.
 
@@ -150,7 +150,7 @@ Take a single step with one or two feet. Nominally requires one beat (4 slices) 
 
 ### goto
 
-![](gif_images/Goto.gif)
+<img src="move_gif_images/Goto.gif" style="max-width:250px;">
 
 Trot to a specified position in the dance frame. Unless explicitly set, the dance frame is defined by where the dance begins. Takes 1 step per beat. Extend the duration to successfully move farther.
 
@@ -167,7 +167,7 @@ Trot to a specified position in the dance frame. Unless explicitly set, the danc
 
 ### trot
 
-![](gif_images/trot.gif)
+<img src="move_gif_images/trot.gif" style="max-width:250px;">
 
 Runs the trot gait. Can be extended to run for an arbitrary duration.
 
@@ -178,7 +178,7 @@ Runs the trot gait. Can be extended to run for an arbitrary duration.
 
 ### pace
 
-![](gif_images/pace.gif)
+<img src="move_gif_images/pace.gif" style="max-width:250px;">
 
 Runs the pace gait. Can be extended to run for any desired duration.
 
@@ -189,7 +189,7 @@ Runs the pace gait. Can be extended to run for any desired duration.
 
 ### turn_2step
 
-![](gif_images/image14.gif)
+<img src="move_gif_images/image14.gif" style="max-width:250px;">
 
 Take two steps to turn in place. Requires 2 beats (8 slices).
 
@@ -206,7 +206,7 @@ Take two steps to turn in place. Requires 2 beats (8 slices).
 
 ## pace_2step
 
-![](gif_images/image21.gif)
+<img src="move_gif_images/image21.gif" style="max-width:250px;">
 
 Take two steps to translate using a pace gait (legs on the same side of the robot move together). Requires 2 beats (8 slices). Caution: Large lateral steps require a high-traction floor.
 
@@ -223,7 +223,7 @@ Take two steps to translate using a pace gait (legs on the same side of the robo
 
 ### crawl
 
-![](gif_images/image11.gif)
+<img src="move_gif_images/image11.gif" style="max-width:250px;">
 
 Locomotes, taking one step every beat. Can be extended to run for any desired duration.
 
@@ -241,7 +241,7 @@ See [CustomGait](custom_gait.md)
 
 ### running_man
 
-![](gif_images/image16.gif)
+<img src="move_gif_images/image16.gif" style="max-width:250px;">
 
 Spot’s version of the “running man” dance move. Can be extended to run for any desired duration.
 
@@ -258,7 +258,7 @@ Spot’s version of the “running man” dance move. Can be extended to run for
 
 ### bourree
 
-![](gif_images/bourree.gif)
+<img src="move_gif_images/bourree.gif" style="max-width:250px;">
 
 Cross-legged tippy-taps, like the ballet move.
 
@@ -269,7 +269,7 @@ Cross-legged tippy-taps, like the ballet move.
 
 ### hop
 
-![](gif_images/image13.gif)
+<img src="move_gif_images/image13.gif" style="max-width:250px;">
 
 Runs the hop gait. Can be extended to run for any desired duration.
 
@@ -280,7 +280,7 @@ Runs the hop gait. Can be extended to run for any desired duration.
 
 ### jog
 
-![](gif_images/jog.gif)
+<img src="move_gif_images/jog.gif" style="max-width:250px;">
 
 Runs the jog gait. Can be extended to run for any desired duration.
 
@@ -291,7 +291,7 @@ Runs the jog gait. Can be extended to run for any desired duration.
 
 ### skip
 
-![](gif_images/skip.gif)
+<img src="move_gif_images/skip.gif" style="max-width:250px;">
 
 Runs the skip gait. Is extendable to run for an arbitrary duration.
 
@@ -302,7 +302,7 @@ Runs the skip gait. Is extendable to run for an arbitrary duration.
 
 ### front_up
 
-![](gif_images/image19.gif)
+<img src="move_gif_images/image19.gif" style="max-width:250px;">
 
 Lifts the front feet then returns to a stand. Can be extended to adjust the duration of the hind-feet-only stance. Longer durations are unreliable. Lifts off 2 slices from the start of the move and touches down one slice from the end of the move.
 
@@ -312,7 +312,7 @@ Lifts the front feet then returns to a stand. Can be extended to adjust the dura
 
 ### jump
 
-![](gif_images/image17.gif)
+<img src="move_gif_images/image17.gif" style="max-width:250px;">
 
 Jumps in place. Nominally lasts one beat but may take more slices at faster tempos.
 
@@ -334,7 +334,7 @@ Jumps in place. Nominally lasts one beat but may take more slices at faster temp
 
 ### sit
 
-![](gif_images/image10.gif)
+<img src="move_gif_images/image10.gif" style="max-width:250px;">
 
 Sit the robot down or remain seated. Requires at least 3 seconds.
 
@@ -348,7 +348,7 @@ Stand the robot up from a seated position. Requires at least 2 seconds.
 
 ### sit_to_sprawl
 
-![](gif_images/image12.gif)
+<img src="move_gif_images/image12.gif" style="max-width:250px;">
 
 Starting from a seated position, rolls the robot onto its side/back. Intended to prep the robot for a more dramatic self-right.
 
@@ -364,7 +364,7 @@ Extends any extendable moves immediately prior to it by a random number of slice
 
 ### stand_to_kneel
 
-![](gif_images/image3.gif)
+<img src="move_gif_images/image3.gif" style="max-width:250px;">
 
 Transitions from standing to kneeling on the hind legs. Requires 2 seconds.
 
@@ -372,7 +372,7 @@ Transitions from standing to kneeling on the hind legs. Requires 2 seconds.
 
 ### kneel_to_stand
 
-![](gif_images/image5.gif)
+<img src="move_gif_images/image5.gif" style="max-width:250px;">
 
 Transitions from kneeling on the hind legs to a stand. Requires 2.4 seconds.
 
@@ -380,7 +380,7 @@ Transitions from kneeling on the hind legs to a stand. Requires 2.4 seconds.
 
 ### kneel_to_stand_fast
 
-![](gif_images/kneel2standFast.gif)
+<img src="move_gif_images/kneel2standFast.gif" style="max-width:250px;">
 
 Transitions from kneeling on the hind legs to a stand. Faster and smoother than kneel_To_stand, but might be less reliable in some combinations.
 
@@ -388,7 +388,7 @@ Transitions from kneeling on the hind legs to a stand. Faster and smoother than 
 
 ### self_right
 
-![](gif_images/image22.gif)
+<img src="move_gif_images/image22.gif" style="max-width:250px;">
 
 Activate the self-right behavior. Primarily useful as the first move in a dance if you wish to start from a non-standard posture. Nominally requires 5 seconds, but can be extended to ensure that it completes.
 
@@ -406,7 +406,7 @@ Directly pose Spot's legs by specifying joint angles. Spot will make no attempt 
 
 ### kneel_leg_move
 
-![](gif_images/image8.gif)
+<img src="move_gif_images/image8.gif" style="max-width:250px;">
 
 While kneeling, move the front legs to a specified joint configuration. Nominally takes one beat (4 slices) but can be extended to go slower.
 
@@ -418,7 +418,7 @@ While kneeling, move the front legs to a specified joint configuration. Nominall
 
 ### kneel_leg_move2
 
-![](gif_images/image8.gif)
+<img src="move_gif_images/image8.gif" style="max-width:250px;">
 
 Similar to kneel_leg_move, but allows you to independently set the front-left and front-right leg joint angles. Additionally allows linking for smoother transitions between multiple consecutive moves.
 
@@ -431,7 +431,7 @@ Similar to kneel_leg_move, but allows you to independently set the front-left an
 
 ### kneel_clap
 
-![](gif_images/image2.gif)
+<img src="move_gif_images/image2.gif" style="max-width:250px;">
 
 While kneeling, clap the front feet together. Takes one beat (4 slices).
 
@@ -444,7 +444,7 @@ While kneeling, clap the front feet together. Takes one beat (4 slices).
 
 ### kneel_circles
 
-![](gif_images/image6.gif)
+<img src="move_gif_images/image6.gif" style="max-width:250px;">
 
 While kneeling, move the front feet in circles in the body-XZ (sagittal) plane. The two feet will be 180 degrees out of phase. Can be extended to run for any duration.
 
@@ -461,7 +461,7 @@ While kneeling, move the front feet in circles in the body-XZ (sagittal) plane. 
 
 ### nod
 
-![](gif_images/nod.gif)
+<img src="move_gif_images/nod.gif" style="max-width:250px;">
 
 Moves the WR0 joint up and back down for one beat (4 slices). If done from a stow pose, will raise the hand.
 
@@ -469,7 +469,7 @@ Moves the WR0 joint up and back down for one beat (4 slices). If done from a sto
 
 ### stow
 
-![](gif_images/stow.gif)
+<img src="move_gif_images/stow.gif" style="max-width:250px;">
 
 Returns the arm to a stowed configuration. Nominally takes one beat (4 slices) but can be extended to go slower.
 
@@ -477,7 +477,7 @@ Returns the arm to a stowed configuration. Nominally takes one beat (4 slices) b
 
 ### unstow
 
-![](gif_images/unstow.gif)
+<img src="move_gif_images/unstow.gif" style="max-width:250px;">
 
 Moves the arm to a deployed configuration. Nominally takes one beat (4 slices) but can be extended to go slower.
 
@@ -485,7 +485,7 @@ Moves the arm to a deployed configuration. Nominally takes one beat (4 slices) b
 
 ### shoulder_left
 
-![](gif_images/shoulder-lft.gif)
+<img src="move_gif_images/shoulder-lft.gif" style="max-width:250px;">
 
 Rotate the SH0 joint to move the gripper to the left. Nominally takes one beat (4 slices) but can be extended to go slower.
 
@@ -493,7 +493,7 @@ Rotate the SH0 joint to move the gripper to the left. Nominally takes one beat (
 
 ### shoulder_right
 
-![](gif_images/shoulder-rt.gif)
+<img src="move_gif_images/shoulder-rt.gif" style="max-width:250px;">
 
 Rotate the SH0 joint to move the gripper to the right. Nominally takes one beat (4 slices) but can be extended to go slower.
 
@@ -534,7 +534,7 @@ Moves the gripper to a location specified in the world (not joint angles).
 
 ### figure8_move
 
-![](gif_images/fig8.gif)
+<img src="move_gif_images/fig8.gif" style="max-width:250px;">
 
 Moves the gripper in a figure-8 pattern centered on the previous pose. Repeats for the specified duration.
 
@@ -545,7 +545,7 @@ Moves the gripper in a figure-8 pattern centered on the previous pose. Repeats f
 
 ### gripper
 
-![](gif_images/gripper.gif)
+<img src="move_gif_images/gripper.gif" style="max-width:250px;">
 
 Moves the gripper to the specified angle. Duration can be set to any number of slices but speed will be determined by parameter. Once the gripper reaches the specified angle it will stop. If the selected duration is too short to complete the move given the configured speed, the robot remains at whatever angle it reaches when move ends.
 
@@ -567,7 +567,7 @@ This move sets the frame to be used by future moves that are in an absolute fram
 
 ### chicken_head
 
-![](gif_images/chickenhead-opt.gif)
+<img src="move_gif_images/chickenhead-opt.gif" style="max-width:250px;">
 
 Holds the arm stationary in the world while the body is moving. Can also be configured to move in a fixed oscillation in the world.
 
@@ -616,7 +616,7 @@ Independently specifies the color of all 8 face (status) lights.
 | bottom_left     | Color of the bottom left light.                             |
 | top_right       | Color of the top right light.                               |
 | upper_mid_right | Color of the second from top right light.                   |
-| lower_mid_right | CColor of the second from bottom right light.               |
+| lower_mid_right | Color of the second from bottom right light.                |
 | bottom_right    | Color of the bottom right light.                            |
 | fade_in_slices  | How long to brighten, measured in slices (1/4 beats).       |
 | fade_out_slices | How long to dim at the end, measured in slices (1/4 beats). |

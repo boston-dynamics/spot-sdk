@@ -28,7 +28,7 @@ _clock_source_fn: ClockFn = time.time
 
 def set_clock_source(clock_fn: ClockFn) -> None:
     """Set the clock source to use the input clock source."""
-    global _clock_source_fn
+    global _clock_source_fn  # pylint: disable=global-statement
     _clock_source_fn = clock_fn
 
 

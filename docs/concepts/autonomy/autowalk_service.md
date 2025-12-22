@@ -104,3 +104,11 @@ As previously mentioned, missions offer more flexibility than autowalks because 
 [node]: ../../../protos/bosdyn/api/mission/nodes.proto#node "Node Proto"
 [action]: ../../../protos/bosdyn/api/autowalk/walks.proto#action "Action Proto"
 [loadautowalkresponse]: ../../../protos/bosdyn/api/autowalk/autowalk.proto#loadautowalkresponse "Load Autowalk Response Proto"
+
+## Known Issues
+
+The autowalk service generates deep behavior trees. Some protobuf languages have a maximum recursion limit that will prevent clients from decoding responses from the service. Clients should ensure the recursion limit is set to >200. Python protobuf in particular does not have public API to do this. In some Python protobuf versions you can set:
+
+```
+google.protobuf.internal.api_implementation._c_module.SetAllowOversizeProtos(True)
+```

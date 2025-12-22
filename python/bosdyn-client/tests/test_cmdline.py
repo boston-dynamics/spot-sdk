@@ -6,7 +6,6 @@
 
 """Make sure that imports for bosdyn.client command-line client is OK"""
 # pylint: disable=unused-import
-import bosdyn.client.command_line
 
 
 def test_null():

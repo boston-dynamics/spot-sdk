@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.command_line &mdash; Spot 5.0.1.2 documentation</title>
+  <title>bosdyn.client.command_line &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -71,6 +71,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -84,13 +85,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -259,6 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -275,12 +279,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -325,6 +331,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -377,6 +384,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -411,7 +419,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
@@ -524,6 +531,7 @@
 
 <span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">signal</span>
@@ -531,17 +539,19 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
 
-<span class="kn">from</span> <span class="nn">deprecated.sphinx</span> <span class="kn">import</span> <span class="n">deprecated</span>
+<span class="kn">import</span> <span class="nn">google.protobuf.timestamp_pb2</span>
 <span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">json_format</span>
 
 <span class="kn">import</span> <span class="nn">bosdyn.client</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="n">data_acquisition_pb2</span><span class="p">,</span> <span class="n">image_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.data_buffer_pb2</span> <span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">TextMessage</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.data_index_pb2</span> <span class="kn">import</span> <span class="n">EventsCommentsSpec</span>
+<span class="kn">from</span> <span class="nn">bosdyn.api.header_pb2</span> <span class="kn">import</span> <span class="n">CommonError</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.keepalive</span> <span class="kn">import</span> <span class="n">keepalive_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.robot_state_pb2</span> <span class="kn">import</span> <span class="n">BehaviorFault</span>
-<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">duration_str</span><span class="p">,</span> <span class="n">timestamp_to_datetime</span>
+<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">duration_str</span><span class="p">,</span> <span class="n">now_sec</span><span class="p">,</span> <span class="n">timestamp_to_datetime</span>
 
 <span class="kn">from</span> <span class="nn">.auth</span> <span class="kn">import</span> <span class="n">InvalidLoginError</span><span class="p">,</span> <span class="n">InvalidTokenError</span>
 <span class="kn">from</span> <span class="nn">.data_acquisition</span> <span class="kn">import</span> <span class="n">DataAcquisitionClient</span>
@@ -1227,6 +1237,7 @@
                 <span class="n">GetActiveLogStatusesCommand</span><span class="p">,</span>
                 <span class="n">ExperimentLogCommand</span><span class="p">,</span>
                 <span class="n">StartRetroLogCommand</span><span class="p">,</span>
+                <span class="n">StartConcurrentLogCommand</span><span class="p">,</span>
                 <span class="n">TerminateLogCommand</span><span class="p">,</span>
             <span class="p">])</span></div>
 
@@ -1432,6 +1443,53 @@
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
+<div class="viewcode-block" id="StartConcurrentLogCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.StartConcurrentLogCommand">[docs]</a><span class="k">class</span> <span class="nc">StartConcurrentLogCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Start a concurrent experiment log, with event-derived data.&quot;&quot;&quot;</span>
+
+    <span class="n">NAME</span> <span class="o">=</span> <span class="s1">&#39;concurrent&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start data log</span>
+<span class="sd">        Args:</span>
+<span class="sd">            subparsers: List of argument parsers.</span>
+<span class="sd">            command_dict: Dictionary of command names which take parsed options.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">StartConcurrentLogCommand</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;seconds&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;how long should the experiment run?&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;event_type&#39;</span><span class="p">,</span>
+                                  <span class="n">help</span><span class="o">=</span><span class="s1">&#39;name of the event type we want to match a recipe against&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementation of the command.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            robot: Robot object on which to run the command.</span>
+<span class="sd">            options: Parsed command-line arguments.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            True</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">LogStatusClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">)</span>
+        <span class="n">time_sync_endpoint</span> <span class="o">=</span> <span class="n">TimeSyncEndpoint</span><span class="p">(</span>
+            <span class="n">robot</span><span class="o">.</span><span class="n">ensure_client</span><span class="p">(</span><span class="n">TimeSyncClient</span><span class="o">.</span><span class="n">default_service_name</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">time_sync_endpoint</span><span class="o">.</span><span class="n">establish_timesync</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to establish time sync with the robot.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="n">robot_now</span> <span class="o">=</span> <span class="n">time_sync_endpoint</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span><span class="n">now_sec</span><span class="p">())</span>
+
+        <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">event_type</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Triggering a recipe data log&#39;</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">source</span> <span class="o">=</span> <span class="s1">&#39;LogStatus CLI&#39;</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">start_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">robot_now</span><span class="p">)</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">end_time</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">robot_now</span><span class="p">)</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">start_concurrent_log</span><span class="p">(</span><span class="n">options</span><span class="o">.</span><span class="n">seconds</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">log_status</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
 <div class="viewcode-block" id="TerminateLogCommand"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.TerminateLogCommand">[docs]</a><span class="k">class</span> <span class="nc">TerminateLogCommand</span><span class="p">(</span><span class="n">Command</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Terminate log gathering process.&quot;&quot;&quot;</span>
 
@@ -1566,7 +1624,7 @@
         <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">timestamp</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">robot_timestamp</span> <span class="o">=</span> <span class="n">robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">robot_timestamp_from_local_secs</span><span class="p">(</span>
-                    <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">(),</span> <span class="n">timesync_timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+                    <span class="n">now_sec</span><span class="p">(),</span> <span class="n">timesync_timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">TimeSyncError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed to send message with timestamp: </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
                 <span class="k">return</span> <span class="kc">False</span>
@@ -1619,7 +1677,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">client_timestamp</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">options</span><span class="o">.</span><span class="n">timestamp</span><span class="p">:</span>
-            <span class="n">client_timestamp</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">client_timestamp</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">robot</span><span class="o">.</span><span class="n">time_sync</span><span class="o">.</span><span class="n">wait_for_sync</span><span class="p">(</span><span class="n">timeout_sec</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">TimeSyncError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
@@ -3160,6 +3218,10 @@
 
 
 
+
+
+
+
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/command_line.html#bosdyn.client.command_line.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Command-line interface for interacting with robot services.&quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">prog</span><span class="o">=</span><span class="s1">&#39;bosdyn.client&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="n">main</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
@@ -3187,8 +3249,10 @@
     <span class="n">LocalGridCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">DataAcquisitionCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">HostComputerIPCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+    <span class="n">VideoRecordingCommands</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">PowerCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
     <span class="n">KeepaliveCommand</span><span class="p">(</span><span class="n">subparsers</span><span class="p">,</span> <span class="n">command_dict</span><span class="p">)</span>
+
 
     <span class="n">options</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">)</span>
 

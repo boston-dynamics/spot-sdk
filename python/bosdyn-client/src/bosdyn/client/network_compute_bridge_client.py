@@ -8,12 +8,10 @@
 
 import collections
 
-from bosdyn.api import (network_compute_bridge_pb2, network_compute_bridge_service_pb2,
-                        network_compute_bridge_service_pb2_grpc)
-from bosdyn.client.common import (BaseClient, error_factory, error_pair,
-                                  handle_common_header_errors, handle_custom_params_errors,
-                                  handle_lease_use_result_errors, handle_unset_status_error)
-from bosdyn.client.exceptions import Error, InternalServerError, ResponseError, UnsetStatusError
+from bosdyn.api import network_compute_bridge_pb2, network_compute_bridge_service_pb2_grpc
+from bosdyn.client.common import (BaseClient, error_pair, handle_common_header_errors,
+                                  handle_custom_params_errors)
+from bosdyn.client.exceptions import ResponseError, UnsetStatusError
 
 
 class ExternalServiceNotFoundError(ResponseError):

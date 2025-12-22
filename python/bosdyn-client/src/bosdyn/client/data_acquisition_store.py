@@ -10,18 +10,12 @@
 from os import fstat
 from pathlib import Path
 
-from google.protobuf import json_format
-
 from bosdyn.api import data_acquisition_store_pb2 as data_acquisition_store
 from bosdyn.api import data_acquisition_store_service_pb2_grpc as data_acquisition_store_service
 from bosdyn.api import data_chunk_pb2 as data_chunk
-from bosdyn.api import header_pb2, image_pb2
 from bosdyn.client.channel import DEFAULT_HEADER_BUFFER_LENGTH, DEFAULT_MAX_MESSAGE_LENGTH
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
-                                  handle_common_header_errors, handle_unset_status_error)
+from bosdyn.client.common import BaseClient, common_header_errors
 from bosdyn.client.data_chunk import split_serialized
-from bosdyn.client.exceptions import Error, ResponseError
-from bosdyn.util import now_timestamp
 
 DEFAULT_CHUNK_SIZE_BYTES = int(DEFAULT_MAX_MESSAGE_LENGTH - DEFAULT_HEADER_BUFFER_LENGTH)
 

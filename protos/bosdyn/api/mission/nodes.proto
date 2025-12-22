@@ -100,6 +100,7 @@ message Node {
         MissionUploadChoreography mission_upload_choreography = 57;
         CreateMissionText create_mission_text = 59;
         BosdynQueryStoredCaptures bosdyn_query_stored_captures = 60;
+        DataAcquisitionLiveData data_acquisition_live_data = 64;
     }
 
     // Defines parameters, used by this node or its children.
@@ -301,6 +302,7 @@ message Condition {
         HANDLE_STALE_FAIL = 3;  // return FAILURE status if stale data is read.
     }
     HandleStaleness handle_staleness = 6;
+
 }
 
 // Get state from the robot.
@@ -381,6 +383,7 @@ message BosdynNavigateTo {
 
     // Defines robot behavior when route is blocked. Defaults to reroute when route is blocked.
     bosdyn.api.graph_nav.RouteFollowingParams.RouteBlockedBehavior route_blocked_behavior = 8;
+
 }
 
 // Tell the robot to navigate to a pose in the seed frame
@@ -408,6 +411,7 @@ message BosdynNavigateToAnchor {
     // If provided, parameters from this request will be merged with the other parameters defined in
     // the node and be used in the NavigateToAnchor RPC.
     string navigate_to_anchor_request_blackboard_key = 8;
+
 }
 
 // Tell the robot to navigate a route.
@@ -437,6 +441,7 @@ message BosdynNavigateRoute {
     // If provided, parameters from this request will be merged with the other parameters defined in
     // the node and be used in the NavigateRoute RPC.
     string navigate_route_request_blackboard_key = 8;
+
 }
 
 // Get GraphNav state from the robot and save it to the blackboard.
@@ -560,6 +565,10 @@ message ExecuteChoreography {
     string host = 2;
     // The name of the sequence to play.
     string sequence_name = 3;
+
+    // Optional Blackboard variable that can specify a start time in nanoseconds
+    // since epoch in the robot's clock to be used for the start time of the sequence.
+    string start_time_in_blackboard = 4;
 }
 
 // Uploads the given set of animations and choreography sequences to the robot.
@@ -612,11 +621,15 @@ message Prompt {
     oneof answer_spec {
         // The set of options that can be chosen for this prompt.
         OptionsList options_list = 9;
-        // Key to an OptionsList protobuf object on the blackboard. The variable is only read when
-        // the node starts meaning options cannot change while the node is running.
+        // Key to a OptionsList protobuf object on the blackboard. Note that this variable is only
+        // read when the node starts, meaning that options can not change while the node is running.
         string options_list_in_blackboard = 11;
         // Custom parameter specification for the answer expected for this prompt.
         DictParam.Spec custom_params = 10;
+        // Key to a DictParam.Spec protobuf object on the blackboard. Note that this variable is
+        // only read when the node starts, meaning that options can not change while the node is
+        // running.
+        string custom_params_in_blackboard = 13;
     }
 
     // Child node, run after the prompt has been responded to.
@@ -626,6 +639,10 @@ message Prompt {
     // Hint that Question posed by this Prompt is meant to be answered by some automated system.
     // See the Question message for details.
     bool for_autonomous_processing = 6;
+
+    // Optional string data to help autonomous systems identify questions, this will be
+    // copied into the Question message.
+    string autonomy_key = 14;
 
     oneof severity_spec {
         // Severity for this prompt. Used to determine what sort of alerting
@@ -889,6 +906,9 @@ message DataAcquisition {
         // This allows the robot to continue on with the mission sooner, but
         // it will be unaware of failures in processing or storage.
         COMPLETE_AFTER_ACQUIRED = 2;
+        // Node is complete after the AcquireData request is sent.
+        // Note that if the request fails, the node will not be aware of it.
+        COMPLETE_AFTER_REQUEST = 3;
     }
     CompletionBehavior completion_behavior = 4;
 
@@ -931,6 +951,32 @@ message DataAcquisition {
     // formats.
     bool format_metadata = 10;
 
+}
+
+message DataAcquisitionLiveData {
+    // Service name for a data acquisition service
+    // NOTE: Not the plugin!  Just the main service
+    // You pick the plugin by specifying a capture name in DataCapture
+    string service_name = 1;
+
+    // Host machine of the directory server that the data acquisition service is registered with.
+    string host = 2;
+
+    message DataCaptureAndBlackboardName {
+        // What request to send to that plugin
+        DataCapture data_capture = 1;
+
+        // The DataCapture will be sent as part of a LiveDataRequest
+        // to the data acquisition plugin service.  The plugin service will return
+        // a CapabilityLiveData for that data_capture, which will be embedded
+        // in the blackboard at the following name, for use in a child node.
+        string blackboard_name = 2;
+    }
+
+    repeated DataCaptureAndBlackboardName data_captures = 3;
+
+    // Child node. Children will have access to the state gathered by this node.
+    Node child = 4;
 }
 
 // Send RetainLease for every Lease the mission service is given via PlayMissionRequest.

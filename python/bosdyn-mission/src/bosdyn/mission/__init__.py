@@ -5,7 +5,8 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """The mission library package.
-Sets up some convenience imports for commonly used classes and functions.
+
+Sets up some convenience imports for commonly used classes and
+functions.
 """
 from .client import MissionClient
-from .exceptions import CompileError, Error, UnknownType, ValidationError

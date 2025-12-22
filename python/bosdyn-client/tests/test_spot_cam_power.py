@@ -7,9 +7,6 @@
 """Unit tests for the Spot CAM's PowerClient."""
 import time
 
-import grpc
-import pytest
-
 import bosdyn.client.spot_cam.power
 from bosdyn.api.spot_cam import power_pb2, service_pb2_grpc
 

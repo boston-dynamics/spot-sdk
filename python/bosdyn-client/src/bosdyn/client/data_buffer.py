@@ -28,6 +28,7 @@ from bosdyn.api import parameter_pb2
 from bosdyn.client import time_sync
 from bosdyn.client.common import BaseClient, common_header_errors
 from bosdyn.client.exceptions import Error, ResponseError, RpcError
+from bosdyn.util import now_sec
 
 
 class InvalidArgument(Error):
@@ -356,7 +357,7 @@ class DataBufferClient(BaseClient):
                     (msg_type if msg_type is not None else
                      (proto.DESCRIPTOR.full_name if proto is not None else 'Unknown')))
             else:
-                return converter.robot_timestamp_from_local_secs(time.time())
+                return converter.robot_timestamp_from_local_secs(now_sec())
         return None
 
 
@@ -430,7 +431,7 @@ class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attr
         msg = self.record_to_msg(record)
         with self._lock:
             self._msg_queue.append(msg)
-        self._last_emit_time = time.time()
+        self._last_emit_time = now_sec()
 
     def flush(self):
         self._flush_event.set()
@@ -487,7 +488,7 @@ class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attr
         while (self._num_failed_sends_sequential < self._limit_failed_sends_sequential and
                not self._shutdown_event.is_set()):
             flush = self._flush_event.wait(self._flush_event_wait_time)
-            msg_age = time.time() - self._last_emit_time
+            msg_age = now_sec() - self._last_emit_time
             with self._lock:
                 num_msgs = len(self._msg_queue)
                 to_send = self._msg_queue[:num_msgs]
@@ -555,7 +556,7 @@ class LoggingHandler(logging.Handler):  # pylint: disable=too-many-instance-attr
         if self.time_sync_endpoint is not None:
             try:
                 msg.timestamp.CopyFrom(
-                    self.time_sync_endpoint.robot_timestamp_from_local_secs(time.time()))
+                    self.time_sync_endpoint.robot_timestamp_from_local_secs(now_sec()))
             except time_sync.NotEstablishedError:
                 # If timestamp is not set in the proto, data-buffer will timestamp it on receipt.
                 msg.message = '(No time sync!): ' + msg.message

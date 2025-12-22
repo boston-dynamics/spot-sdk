@@ -55,7 +55,7 @@ def get_anomalies(options: argparse.Namespace) -> bool:
         LOGGER.info('\tAnomaly title: ' + str(anomaly.get('title')))
         LOGGER.info('\t\tactionName: ' + anomaly.get('actionName'))
         LOGGER.info('\t\tstatus: ' + anomaly.get('status'))
-        if anomaly.get('elementId') != None:
+        if anomaly.get('elementId') is not None:
             LOGGER.info('\t\telementId: ' + anomaly.get('elementId'))
         LOGGER.info('\t\tuuid: ' + anomaly.get('uuid') + '\n')
 

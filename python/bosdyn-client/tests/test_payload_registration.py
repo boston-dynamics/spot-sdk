@@ -168,7 +168,7 @@ def test_keep_alive(default_payload_entry):
 
 def _run_keepalive_test(payload, mock_time, callback, test_time, interval_seconds=INTERVAL_SECONDS,
                         initial_retry_seconds=INITIAL_RETRY_SECONDS):
-    with patch('bosdyn.client.payload_registration.time', mock_time):
+    with error_callback_helpers.mock_time_context(mock_time):
         client, service, server, keepalive = _setup(payload, interval_seconds=interval_seconds,
                                                     initial_retry_seconds=initial_retry_seconds,
                                                     callback=callback)

@@ -54,6 +54,7 @@ from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
 from bosdyn.client.data_buffer import DataBufferClient
 from bosdyn.client.server_util import ResponseContext, populate_response_header
 from bosdyn.client.service_customization_helpers import create_value_validator
+from bosdyn.util import now_sec
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -590,7 +591,7 @@ class RequestManager:
         """
         state = self.get_request_state(request_id)
         with state._lock:
-            state._completion_time = time.time()
+            state._completion_time = now_sec()
 
     def cleanup_requests(self, older_than_time=None):
         """Remove all requests that were completed farther in the past than older_than_time.
@@ -600,7 +601,7 @@ class RequestManager:
         Args:
             older_than_time (float): Optional time (in seconds) that requests will be removed after.
         """
-        older_than_time = older_than_time or time.time() - kDefaultRequestExpiration
+        older_than_time = older_than_time or now_sec() - kDefaultRequestExpiration
         with self._lock:
             # Grab the contents to iterate through outside of the lock
             requests = list(self._requests.items())

@@ -1,0 +1,25 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option go_package = "bosdyn/api/hazard_avoidance_service";
+
+option java_outer_classname = "HazardAvoidanceServiceProto";
+
+import "bosdyn/api/hazard_avoidance.proto";
+
+// The hazard avoidance service provides a way to aggregate and track observations of hazardous
+// terrains/structures around the robot.
+service HazardAvoidanceService {
+    // Request to add new hazard observations.
+    rpc AddHazards(AddHazardsRequest) returns (AddHazardsResponse) {}
+
+    // Request to check if the extension is running.
+    rpc GetHazardServiceStatus(GetHazardServiceStatusRequest)
+        returns (GetHazardServiceStatusResponse) {}
+}

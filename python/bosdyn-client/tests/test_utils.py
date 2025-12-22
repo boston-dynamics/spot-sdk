@@ -6,8 +6,6 @@
 
 """Unit tests for the server_utils module."""
 
-import pytest
-
 from bosdyn.api import data_acquisition_store_pb2 as daq_store
 from bosdyn.api import lease_pb2
 from bosdyn.api import local_grid_pb2 as grid

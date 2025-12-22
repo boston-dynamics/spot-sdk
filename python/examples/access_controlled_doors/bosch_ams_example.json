@@ -1,0 +1,51 @@
+[
+  {
+    "method": "POST",
+    "action": "AUTH",
+    "route": "<ROUTE_TO_BOSCH_AMS>",
+    "url": "https://<BOSCH_AMS_IP>:44333/connect/token",
+    "sni_hostname": "<BOSCH_AMS_HOSTNAME>",
+    "request_data": {
+      "data": {
+        "grant_type": "client_credentials",
+        "client_id": "<USERNAME>",
+        "client_secret": "<PASSWORD>"
+      }
+    },
+    "responses": {
+      "token": "access_token"
+    }
+  },
+  {
+    "method": "POST",
+    "action": "OPEN",
+    "route": "<ROUTE_TO_BOSCH_AMS>",
+    "url": "https://<BOSCH_AMS_IP>:62999/api/devices/execute",
+    "sni_hostname": "<BOSCH_AMS_HOSTNAME>",
+    "request_data": {
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "json": {
+        "deviceId": "${door_id}",
+        "commandTypeId": "SetDigitalOutput"
+      }
+    }
+  },
+  {
+    "method": "POST",
+    "action": "CLOSE",
+    "route": "<ROUTE_TO_BOSCH_AMS>",
+    "url": "https://<BOSCH_AMS_IP>:62999/api/devices/execute",
+    "sni_hostname": "<BOSCH_AMS_HOSTNAME>",
+    "request_data": {
+      "headers": {
+        "Authorization": "Bearer ${token}"
+      },
+      "json": {
+        "deviceId": "${door_id}",
+        "commandTypeId": "ClearDigitalOutput"
+      }
+    }
+  }
+]

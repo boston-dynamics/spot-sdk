@@ -13,7 +13,7 @@ _LOGGER = logging.getLogger(__name__)
 from deprecated.sphinx import deprecated
 
 from bosdyn.api.spot_cam import logging_pb2, service_pb2_grpc
-from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
+from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class MediaLogClient(BaseClient):

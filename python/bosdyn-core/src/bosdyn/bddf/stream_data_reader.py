@@ -21,7 +21,7 @@ class StreamDataReader(BaseDataReader):
          outfile:      binary file-like object for reading (e.g., from open(fname, "rb")).
         """
         self._hasher = sha1()  # This computes a checksum
-        super(StreamDataReader, self).__init__(outfile)
+        super().__init__(outfile)
         self._indexer = FileIndexer()
         self._series_index_to_block_index = {}  # {series_index -> SeriesBlockIndex}
 

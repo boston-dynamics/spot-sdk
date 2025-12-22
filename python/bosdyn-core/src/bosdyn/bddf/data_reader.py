@@ -26,7 +26,7 @@ class DataReader(BaseDataReader):  # pylint: disable=too-many-instance-attribute
          infile:      binary file-like object for reading (e.g., from open(fname, "rb")).
          filename:    path of input file, if applicable.
         """
-        super(DataReader, self).__init__(infile, filename)
+        super().__init__(infile, filename)
         self._series_index_to_descriptor = {}
         self._series_index_to_block_index = {}  # {series_index -> SeriesBlockIndex}
         self._read_index()
@@ -90,9 +90,7 @@ class DataReader(BaseDataReader):  # pylint: disable=too-many-instance-attribute
         if self._index_offset < len(MAGIC):
             raise ParseError('Invalid offset to index: {})'.format(self._index_offset))
         self._file_index = self._read_desc_block_at("file_index", self._index_offset)
-        self._spec_index = [{
-            key: value for key, value in desc.spec.items()
-        } for desc in self._file_index.series_identifiers]
+        self._spec_index = [dict(desc.spec.items()) for desc in self._file_index.series_identifiers]
 
     def _seek_to(self, location):
         if location < len(MAGIC):

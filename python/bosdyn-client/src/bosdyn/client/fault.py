@@ -8,7 +8,7 @@
 import collections
 
 from bosdyn.api import fault_service_pb2_grpc, service_fault_pb2
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
+from bosdyn.client.common import (BaseClient, error_factory, error_pair,
                                   handle_common_header_errors, handle_unset_status_error)
 
 from .exceptions import ResponseError

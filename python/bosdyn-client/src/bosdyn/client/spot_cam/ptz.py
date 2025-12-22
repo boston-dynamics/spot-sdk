@@ -13,7 +13,7 @@ _LOGGER = logging.getLogger(__name__)
 from google.protobuf.wrappers_pb2 import FloatValue, Int32Value
 
 from bosdyn.api.spot_cam import ptz_pb2, service_pb2_grpc
-from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
+from bosdyn.client.common import BaseClient, common_header_errors
 from bosdyn.client.math_helpers import recenter_value_mod
 
 

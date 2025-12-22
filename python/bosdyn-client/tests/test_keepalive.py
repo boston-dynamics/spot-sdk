@@ -21,7 +21,8 @@ from bosdyn.client.keepalive import InvalidLeaseError, KeepaliveClient, Policy, 
 from bosdyn.client.lease import Lease
 
 from . import helpers
-from .error_callback_helpers import MockTime, PolicySwitchingCallback, SimpleCallback, diff
+from .error_callback_helpers import (MockTime, PolicySwitchingCallback, SimpleCallback, diff,
+                                     mock_time_context)
 from .util import mock_stub_response, set_common_response_header
 
 MOCK_CHECK_IN_CLIENT_NAME = 'mock-client'
@@ -251,7 +252,7 @@ def test_periodic_checkin_periodically_checks_in(default_policy):
     mt = MockTime()
     callback = SimpleCallback(mock_time=mt)
 
-    with mock.patch('bosdyn.client.keepalive.time', mt):
+    with mock_time_context(mt):
         client, service, server, keepalive = _setup(default_policy, callback=callback)
         keepalive._end_check_in_signal = mt
 
@@ -265,7 +266,7 @@ def test_periodic_checkin_periodically_checks_in(default_policy):
 def _run_periodic_checkin_test(policy, mock_time, callback, test_time,
                                interval_seconds=INTERVAL_SECONDS,
                                initial_retry_seconds=INITIAL_RETRY_SECONDS):
-    with mock.patch('bosdyn.client.keepalive.time', mock_time):
+    with mock_time_context(mock_time):
         client, service, server, keepalive = _setup(policy, interval_seconds=interval_seconds,
                                                     initial_retry_seconds=initial_retry_seconds,
                                                     callback=callback)

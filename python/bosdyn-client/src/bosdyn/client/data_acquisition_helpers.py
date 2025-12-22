@@ -12,11 +12,8 @@ from urllib.error import URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-from google.protobuf import json_format
 from google.protobuf.struct_pb2 import Struct
 
-import bosdyn.client
-import bosdyn.client.util
 from bosdyn.api import data_acquisition_pb2, data_acquisition_store_pb2
 from bosdyn.client.exceptions import ResponseError
 

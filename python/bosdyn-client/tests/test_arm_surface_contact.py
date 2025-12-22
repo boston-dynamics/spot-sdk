@@ -5,7 +5,6 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 """Tests for the arm surface contact client."""
-import pytest
 from google.protobuf import timestamp_pb2
 
 from bosdyn.api import arm_surface_contact_service_pb2

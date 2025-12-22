@@ -18,6 +18,7 @@ import time
 from google.protobuf.duration_pb2 import Duration
 
 from bosdyn.api import estop_pb2, estop_service_pb2_grpc
+from bosdyn.util import now_sec
 
 from .common import (BaseClient, common_header_errors, error_factory, handle_common_header_errors,
                      handle_unset_status_error)
@@ -578,7 +579,7 @@ class EstopKeepAlive(object):
         while True:
             # Include the time it takes to execute keep_running, in case it takes a significant
             # portion of our check in period.
-            exec_start = time.time()
+            exec_start = now_sec()
             if not self._keep_running():
                 break
             try:
@@ -604,7 +605,7 @@ class EstopKeepAlive(object):
                 self._ok()
 
             # How long did the RPC and processing of said RPC take?
-            exec_sec = time.time() - exec_start
+            exec_sec = now_sec() - exec_start
 
             # Block and wait for the stop signal. If we receive it within the check-in period,
             # leave the loop. This check must be at the end of the loop!

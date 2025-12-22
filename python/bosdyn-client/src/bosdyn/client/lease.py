@@ -19,6 +19,7 @@ from bosdyn.api.lease_pb2 import (LeaseUseResult, ListLeasesRequest, RetainLease
                                   ReturnLeaseRequest, ReturnLeaseResponse, TakeLeaseRequest,
                                   TakeLeaseResponse)
 from bosdyn.api.lease_service_pb2_grpc import LeaseServiceStub
+from bosdyn.util import now_sec
 
 from . import common
 from .exceptions import Error as BaseError
@@ -987,7 +988,7 @@ class LeaseKeepAlive(object):
         while True:
             # Include the time it takes to execute keep_running, in case it takes a significant
             # portion of our check in period.
-            exec_start = time.time()
+            exec_start = now_sec()
 
             # Stop doing retention if this is not meant to keep running.
             if not self._keep_running():
@@ -1008,7 +1009,7 @@ class LeaseKeepAlive(object):
                 self._ok()
 
             # How long did the RPC and processing of said RPC take?
-            exec_seconds = time.time() - exec_start
+            exec_seconds = now_sec() - exec_start
 
             # Block and wait for the stop signal. If we receive it within the check-in period,
             # leave the loop. This check must be at the end of the loop!

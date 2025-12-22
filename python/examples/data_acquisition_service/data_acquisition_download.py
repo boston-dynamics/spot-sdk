@@ -120,7 +120,7 @@ def query_stored_captures_download(robot, destination_folder, query_from_timesta
 
             if current_id != result.data_id.id:
                 # We have a new capture so check whether the capture is complete or not
-                if current_id is not None and current_complete == False:
+                if current_id is not None and not current_complete:
                     # This will likely happen when large_data offset become out of sync, additional error handling can be added here to prevent skipping but for this example we will ignore this
                     print('Error: Capture data incomplete and we have moved to the next capture.')
 

@@ -18,13 +18,15 @@ This means that Body and Arm-track moves will result in a cyclic motion phase-lo
 
 ## Driving Custom Gait
 
-CustomGait responds to the [ChoreographyCommand](choreography_service.md) RPC. When operating through Choreographer with an attached XBox controller, steering commands will be sent based on joystick position (left joystick for translation, right for turning), and the d-pad down button will command Custom Gait to stop, allowing the sequence to proceed. Steering commands will be scaled by the `CustomGaitCommandLimits` message returned as part of the [ChoreographyStatus](choreography_service.md) RPC. Those will generally be the values specified for `max_velocity` and `max_yaw_rate` in the parameters, but may be limited based on a determination of what that gait pattern is capable of.
+Custom Gait responds to the [ChoreographyCommand](choreography_service.md) RPC. When operating through Choreographer with an attached XBox controller, steering commands will be sent based on joystick position (left joystick for translation, right for turning), and the d-pad down button will command Custom Gait to stop, allowing the sequence to proceed. WASD input can also be used in place of Xbox input to drive Custom Gait moves when the "Accept Interactive WASD Input" option in the "Settings"->"Playback and Music Settings" menu is enabled (use shift+s instead of d-pad down to stop). Steering commands will be scaled by the `CustomGaitCommandLimits` message returned as part of the [ChoreographyStatus](choreography_service.md) RPC. Those will generally be the values specified for `max_velocity` and `max_yaw_rate` in the parameters, but may be limited based on a determination of what that gait pattern is capable of.
 
 The custom gait move can also be driven through the tablet's choreography drive screen using the tablet's joysticks. See [Tablet Choreography Mode](choreography_in_tablet.md) for further details on playing choreography sequences through the tablet.
 
 ## Gait Diagram
 
-A Hildebrand-style gait diagram (see [wikipedia](https://en.wikipedia.org/wiki/Gait) is provided for Custom Gait as currently configured in the left panel of the Move Configuration tab in Choreographer. For each foot in the diagram (FL, FR, HL, HR), black regions of the diagram indicate periods of time when a foot is in contact with the ground, and white regions indicate periods of time when a foot is in the air. The phase sliders control the beginning and end of the white region. Some types of configuration errors will be indicated in red on the diagram.
+<img src="images/gait_diagram.png" style="max-width:585px;">
+
+A [Hildebrand-style](https://en.wikipedia.org/wiki/Gait) gait diagram is provided for Custom Gait in the **Move Diagram** section of the Move Configuration tab. For each foot in the diagram (FL, FR, HL, HR), black regions of the diagram indicate periods of time when a foot is in contact with the ground, and white regions indicate periods of time when a foot is in the air. The phase sliders control the beginning and end of the white region. Some types of configuration errors will be indicated in red on the diagram.
 
 ## Presets
 
@@ -46,7 +48,7 @@ Beyond that, a valid CHA file to use with custom gait requires the following:
 - the first and last keyframe should match with the exception of base translate x, in case the animation moves forward.
 - unlike other cha files, it is valid for feet to be in the air at the first and last frame, which allows for swings to cross the transition point of the custom gait loop
 - the robot can be either translating forward or stepping in place with feet sliding backwards during the animated gait cycle cha, but for the best result the animation should be meant to translate at a constant velocity
-- Some swing data still can not be pulled from the cha, so you may still need to adjust swing velocities and velocity limits...", "
+- Some swing data still cannot be pulled from the cha, so you may still need to adjust swing velocities and velocity limits.
 
 ## Tips for Configuring Custom Gait
 

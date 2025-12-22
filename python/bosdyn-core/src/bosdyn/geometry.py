@@ -9,7 +9,7 @@ import math
 from bosdyn.api.geometry_pb2 import Quaternion
 
 
-class EulerZXY(object):
+class EulerZXY:
     """Orientation represented by Yaw('Z')-Roll('X')-Pitch('Y') order Euler angles.
     Each angle is expressed in radians."""
 
@@ -19,6 +19,7 @@ class EulerZXY(object):
         self.pitch = pitch
 
     def to_quaternion(self):
+        """Convert to a Quaternion."""
         cy = math.cos(0.5 * self.yaw)
         cr = math.cos(0.5 * self.roll)
         cp = math.cos(0.5 * self.pitch)
@@ -49,6 +50,7 @@ def _matrix_from_quaternion(q):
 
 
 def to_euler_zxy(self):
+    """Convert a Quaternion to EulerZXY."""
     if not isinstance(self, Quaternion):
         raise ValueError('Must input object of type Quaternion')
 
@@ -58,7 +60,7 @@ def to_euler_zxy(self):
     cos_roll = math.sqrt((m[2][0] * m[2][0]) + (m[2][2] * m[2][2]))
     euler_angle.roll = math.atan2(sin_roll, cos_roll)
 
-    if (cos_roll < 1e-22):
+    if cos_roll < 1e-22:
         euler_angle.yaw = math.atan2(m[1][0], m[0][0])
         euler_angle.pitch = 0
     else:

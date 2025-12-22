@@ -131,7 +131,7 @@ class RobotStateClient(BaseClient):
 
 class RobotStateStreamingClient(BaseClient):
     """Client for the RobotState service.
-    
+
     This client is in BETA and may undergo changes in future releases.
     """
     default_service_name = 'robot-state-streaming'

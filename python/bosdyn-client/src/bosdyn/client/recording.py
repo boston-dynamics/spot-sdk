@@ -9,11 +9,11 @@
 import collections
 from enum import Enum
 
-from bosdyn.api.graph_nav import map_pb2, nav_pb2, recording_pb2, recording_service_pb2
+from bosdyn.api.graph_nav import map_pb2, recording_pb2
 from bosdyn.api.graph_nav import recording_service_pb2_grpc as recording_service
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory,
-                                  handle_common_header_errors, handle_lease_use_result_errors,
-                                  handle_license_errors_if_present, handle_unset_status_error)
+                                  handle_common_header_errors, handle_license_errors_if_present,
+                                  handle_unset_status_error)
 from bosdyn.client.exceptions import ResponseError
 
 

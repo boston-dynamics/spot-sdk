@@ -7,7 +7,7 @@
 """For clients to use the world object service"""
 
 from bosdyn.api import geometry_pb2 as geom
-from bosdyn.api import world_object_pb2, world_object_service_pb2
+from bosdyn.api import world_object_pb2
 from bosdyn.api import world_object_service_pb2_grpc as world_object_service
 from bosdyn.client.common import BaseClient, common_header_errors
 from bosdyn.client.frame_helpers import *

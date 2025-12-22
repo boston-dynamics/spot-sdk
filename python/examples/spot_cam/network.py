@@ -10,7 +10,7 @@ import os
 import shutil
 import tempfile
 
-from utils import int2ip
+from utils import add_bool_arg, int2ip
 
 from bosdyn.api.spot_cam import network_pb2
 from bosdyn.client.command_line import Command, Subcommands
@@ -70,5 +70,7 @@ class NetworkSetICEConfigurationCommand(Command):
                 network_pb2.ICEServer(type=ice['type'], address=ice['address'], port=ice['port']))
 
         robot.ensure_client(NetworkClient.default_service_name).set_ice_configuration(ice_servers)
+
+
 
 

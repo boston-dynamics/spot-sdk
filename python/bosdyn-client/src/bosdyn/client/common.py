@@ -25,7 +25,7 @@ from .exceptions import (CustomParamError, Error, InternalServerError, InvalidRe
 
 _LOGGER = logging.getLogger(__name__)
 
-from bosdyn.api import data_chunk_pb2, license_pb2
+from bosdyn.api import license_pb2
 
 DEFAULT_RPC_TIMEOUT = 30  # seconds
 

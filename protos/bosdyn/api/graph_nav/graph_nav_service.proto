@@ -68,6 +68,9 @@ service GraphNavService {
     // Uploads large edge snapshot as a stream for a particular edge.
     rpc UploadEdgeSnapshot(stream UploadEdgeSnapshotRequest) returns (UploadEdgeSnapshotResponse) {}
 
+    // Uploads multiple waypoint+edge snapshots.
+    rpc UploadSnapshots(stream UploadSnapshotsRequest) returns (UploadSnapshotsResponse) {}
+
     // Download waypoint data from the server. If the snapshot exists in disk cache, it will be
     // loaded.
     rpc DownloadWaypointSnapshot(DownloadWaypointSnapshotRequest)

@@ -12,6 +12,107 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## Release 5.1.0
+
+### Breaking Changes
+
+- The `DOCK_TYPE_CONTACT_PROTOTYPE` value in the [DockType](../protos/bosdyn/api/docking/docking.proto#docktype) enum has been removed.
+
+### New Features
+
+- Added the [Hazard Avoidance Service](../protos/bosdyn/api/hazard_avoidance_service.proto), which enables clients to aggregate and track observations of hazardous terrains and structures around Spot. This service allows clients to specify hazards, such as dangerous terrain, obstacles, or operational boundaries, that Spot should avoid or prefer during autonomous navigation. Hazards can be described using point clouds, segmented depth images, boxes, circles, or lists of circles, and can be assigned types that determine how strictly Spot will avoid the region. Each hazard observation can also include a confidence value, semantic label, and margin to expand or contract the affected area. For more details, see the [Hazard Avoidance Service concept documentation](concepts/autonomy/hazard_avoidance.md).
+
+- Added support for access control systems. This feature enables Spot to interact with access control systems via configurable API calls, allowing the robot to authenticate, open, and close doors. The integration supports secure communication using SSL/TLS certificates and allows customization for different providers. Example scripts and configuration files are provided to help users set up and test door operations with their access control system, allowing developers to test access controlled door functionality without a robot. For more details, see the [example](../python/examples/access_controlled_doors/README.md).
+
+#### Missions / Autowalk
+
+- Missions now support interrupts via the [WalkInterrupt](../protos/bosdyn/api/autowalk/walks.proto#walkinterrupt) message. Interrupts allow clients to define conditions under which the robot will adapt its behavior during Autowalk missions. Interrupts can be configured to trigger predefined or custom behaviors, enabling advanced scenarios such as responding to fiducials and external systems (e.g., weather). Predefined behaviors include (1) safely powering off the robot and (2) returning to dock and terminating the mission. The new `DataAcquisitionLiveData` mission node enables missions to request live data from data acquisition plugin services and store the results in the mission blackboard for use by child nodes. The node sends each `DataCapture` as part of a `LiveDataRequest` to the appropriate plugin service, and the returned `CapabilityLiveData` is made available to subsequent mission nodes via the blackboard.
+
+#### Choreography
+
+- Added support for 3D/2D visualization in the Choreographer application. See [3D/2D Visualization in Choreographer](concepts/choreography/dance_previews.md) for details.
+
+- Added timecode LTC support to Choreographer. See [Timecode in Choreographer](concepts/choreography/timecode_reference.md) for details.
+
+- The choreography tablet UI has been updated to allow users without a choreography license to play preloaded choreography sequences. Users with choreography license-enabled robots will see no changes.
+
+- Synchronized choreography start times are now supported in missions. When the `prompt_for_start_time` field is enabled for a choreography action, the mission will prompt the user to provide a start time for the choreography. The user supplies this value as an integer (in nanoseconds, using the robot's clock), which is then read from the mission blackboard and used to synchronize the choreography start. The start time may be read from the blackboard using the `start_time_in_blackboard` field (if specified) in the [ExecuteChoreography](../protos/bosdyn/api/mission/nodes.proto#executechoreography) message. This feature enables multiple robots running individual missions to start dancing in sync.
+
+### Bug Fixes and Improvements
+
+#### GraphNav
+
+- Added support for uploading multiple waypoint and edge snapshots in a single request via the new [UploadSnapshots](../protos/bosdyn/api/graph_nav/graph_nav_service.proto) RPC. This feature enables clients to efficiently batch and upload large sets of snapshot data to the robot, reducing per-RPC overhead and improving reliability when transferring map data. Clients are encouraged to send data in batches of a few megabytes to balance upload efficiency and error recovery. The [GraphNavClient](../python/bosdyn-client/src/bosdyn/client/graph_nav.py) and the [GraphNav command line example](../python/examples/graph_nav_command_line/README.md) have been updated accordingly.
+
+- When uploading a graph using the [GraphNavClient](../python/bosdyn-client/src/bosdyn/client/graph_nav.py), one can now specify whether the existing graph should be replaced rather than added to. The default behavior is to add to the existing graph.
+
+- The A/V behavior a robot should perform while navigating an edge can now be specified via the `audio_visual_settings` field in the [edge annotations](../protos/bosdyn/api/graph_nav/map.proto#edge) message. This allows A/V behaviors to be synchronized with the robot's location in the map without having to either (1) author and record an area callback or (2) monitor the robot's location and command the A/V behavior accordingly.
+
+- More granular feedback on the robot's progress towards its goal is available via the `goal_status` field in the [NavigationFeedbackResponse](../protos/bosdyn/api/graph_nav/graph_nav.proto#navigationfeedbackresponse) message. Clients can use this information to track intermediate states as the robot approaches and achieves its destination.
+
+- Added the `backtrack_to_start_waypoint` field to the [RouteGenParams](../protos/bosdyn/api/graph_nav/graph_nav.proto#routegenparams) message. When set to `true`, the robot will backtrack from its stuck location to the start waypoint before beginning a new navigation route.
+
+#### Choreography
+
+- The Choreographer timeline now supports two additional units: timecode and frame number of configurable framerates. The Red Slider will also now be labeled with the time of its position in the selected units. Timeline units can be set through the "Settings"->"Timeline Settings" menu.
+
+- Choreographer will provide "Poor Comms" and "Comms Loss" warnings for individual robot connections through the Robot Management table.
+
+- A/V settings for robot connections can now be set directly through Choreographer from the "Settings" menu.
+
+- Choreographer Beginner mode will now support the Animation move type while continuing to restrict other options.
+
+#### Image Helpers
+
+- Fixed an issue with the `write_pgm_or_ppm` method in [image.py](../python/bosdyn-client/src/bosdyn/client/image.py) where 16-bit images saved from remote sources were not properly byte-swapped, resulting in unusable image files on little-endian systems. The code now tracks the remote data type separately from the local data type and performs the necessary conversion to ensure images are saved in the correct format for viewing on the local system.
+
+#### Logging
+
+- The LogStatusService now supports a new logging type that is similar to experiment logs, but captures a smaller amount of data for smaller resulting files. Use this in cooperation with Boston Dynamics' support to capture longer sequences of data when tracking down problems.
+
+- Added the `DataBufferLoggingProcessor`, which can be attached to any client to automatically log all protobuf RPC requests and responses to the robot's data buffer. Use the new `log_all_rpcs` helper in [processors.py](../python/bosdyn-client/src/bosdyn/client/processors.py) to attach this processor.
+
+#### Missions
+
+- Uniquely identifiable strings may be specified in the `autonomy_key` field in the [Prompt](../protos/bosdyn/api/mission/nodes.proto#prompt) message in order to help autonomous systems identify questions in missions. The `autonomy_key` field in the mission [Question](../protos/bosdyn/api/mission/mission.proto#question) will be populated with the same string.
+
+- The custom parameter specification for a [Prompt](../protos/bosdyn/api/mission/nodes.proto#prompt) node can now be read from the blackboard. The key used to look up the custom parameter specification in the blackboard is specified by the `custom_params_in_blackboard` field.
+
+#### Robot Commands
+
+- Clients may now monitor the robot's trajectory and velocity relative to the requested one in more granular detail, even when the client is not the command sender. The `request_information` field in the corresponding `Feedback` message is the requested trajectory/velocity. To retrieve it for the active command, simply leave `command_id` unset in the [RobotCommandFeedbackRequest](../protos/bosdyn/api/robot_command.proto#robotcommandfeedbackrequest) message. The `robot_command_feedback` and `robot_command_feedback_async` methods in [RobotCommandClient](../python/bosdyn-client/src/bosdyn/client/robot_command.py) have been updated accordingly.
+
+#### Data Acquisition
+
+- The ordering of captures during a single inspection is now supported via the `order` field in the [ImageSourceCapture](../protos/bosdyn/api/data_acquisition.proto#imagesourcecapture), [DataCapture](../protos/bosdyn/api/data_acquisition.proto#datacapture), and [NetworkComputeCapture](../protos/bosdyn/api/data_acquisition.proto#networkcomputecapture) messages.
+
+#### Robot State
+
+- [System faults](../protos/bosdyn/api/robot_state.proto#systemfault) now include a Diagnostic Troubleshooting Code (DTC) via the `dtc` field.
+
+#### SDK
+
+- Updated all usages of `time.time()` to use the proxy clock provided by [bosdyn.util](../python/bosdyn-core/src/bosdyn/util.py). By default, this proxy uses `time.time()`, so behavior remains unchanged for most cases. However, this change improves compatibility when running in simulation or environments where robot time may differ from real time, ensuring more consistent and accurate time handling across various deployment scenarios.
+
+### Spot Sample Code
+
+#### Updated
+
+- [GraphNav Command Line](../python/examples/graph_nav_command_line/README.md): Now uses the new `UploadSnapshots` RPC if it's available; if not, falls back to the `UploadWaypointSnapshot` and `UploadEdgeSnapshot` RPCs.
+
+- [GPS](../python/examples/gps_service/README.md): Fixed an issue where the [NTRIP client](../python/bosdyn-client/src/bosdyn/client/gps/ntrip_client.py) could spam the NTRIP server when attempting to reconnect after a disconnection, thereby resulting in the NTRIP server temporarily rejecting all connections by the client. Fixed an issue with the u-blox F9R configuration script that prevented the receiver from being configured to run in GNSS-only mode.
+
+- [Log Status](../python/examples/log_status/README.md): Support for the new concurrent logging feature has been added.
+
+- [Xbox Controller](../python/examples/xbox_controller/README.md): The example now cleanly exits when the e-stop is toggled.
+
+### Orbit Sample Code
+
+#### Updated
+
+- [Orbit Client](../python/bosdyn-orbit/src/bosdyn/orbit/client.py):
+  - `get_resource_from_data_acquisition` method: helper for retrieving a file from Orbit's data acquisition.
+
 ## Release 5.0.1.2
 
 ### Bug Fixes and Improvements
@@ -78,7 +179,7 @@ The helper functions, `python_var_to_value` and `python_type_to_pb_type`, in [ut
 
 #### Service Customization
 
-- Validation of service customization's [CustomParams](../protos/bosdyn/api/service_customization.proto#customparams) message no longer results in an exception being thrown at playback time. This would occur when the user entered a string at record time that was not in the `options` for a [StringParam](../protos/bosdyn/api/service_customization.proto), even though `editable` was set. The corresponding tests have been updated accordingly in `test_service_customization_helpers.py`.
+- Validation of service customization's [CustomParams](../protos/bosdyn/api/service_customization.proto#customparam) message no longer results in an exception being thrown at playback time. This would occur when the user entered a string at record time that was not in the `options` for a [StringParam](../protos/bosdyn/api/service_customization.proto), even though `editable` was set. The corresponding tests have been updated accordingly in `test_service_customization_helpers.py`.
 
 ### Orbit Sample Code
 
@@ -195,7 +296,7 @@ The helper functions, `python_var_to_value` and `python_type_to_pb_type`, in [ut
 
 #### Manipulation
 
-- The torque on the end-effector is now available via the `estimated_end_effector_wrench_in_end_effector` field in the [ManipulatorState](../protos/bosyn/api/robot_state.proto#manipulatorstate) message.
+- The torque on the end-effector is now available via the `estimated_end_effector_wrench_in_end_effector` field in the [ManipulatorState](../protos/bosdyn/api/robot_state.proto#manipulatorstate) message.
 
 #### Missions
 
@@ -207,6 +308,8 @@ The helper functions, `python_var_to_value` and `python_type_to_pb_type`, in [ut
 
 - Lists and dictionaries may now be used as run- or compile-time variables via the `sub_type` field in the [VariableDeclaration](../protos/bosdyn/api/mission/util.proto#variabledeclaration) message.
 
+- The robot may now start performing its action once the goal area has been reached, but before it has come to a complete stop, by setting the `success_when_goal_area_reached` field in the [Target](../protos/bosdyn/api/autowalk/walks.proto#target) message to `true`.
+
 #### Payloads
 
 - When registering payloads via the [RegisterPayload](../protos/bosdyn/api/payload_registration_service.proto) RPC, payloads may now specify their serial number using the `serial_number` field in the [Payload](../protos/bosdyn/api/payload.proto#payload) message. Note that the [UpdatePayload](../protos/bosdyn/api/payload_registration_service.proto) RPC does not yet support this new field.
@@ -217,7 +320,7 @@ The helper functions, `python_var_to_value` and `python_type_to_pb_type`, in [ut
 
 #### Service Customization
 
-- Support for polygonal regions of interest (ROI) has been added to service customization via the `allows_polygon` field in the [RegionOfInterestParam](../protos/bosdyn/api/service_customization.proto#regionofinterestparam) message. However, note that polygonal ROIs are not yet supported in the Spot App. The corresponding `validate_spec` and `validate_value`, and `make_region_of_interest_param_spec` methods in [service_customization_helpers.py](../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.py) have been updated accordingly. Practically speaking, to use a polygonal ROI during an inspection in an Autowalk mission (assuming the client supports it), edit the [Walk](../protos/bosdyn/api/autowalk/walks.proto) accordingly.
+- Support for polygonal regions of interest (ROI) has been added to service customization via the `allows_polygon` field in the [RegionOfInterestParam](../protos/bosdyn/api/service_customization.proto#regionofinterestparam) message. However, note that polygonal ROIs are not yet supported in the Spot App. The corresponding `validate_spec` and `validate_value`, and `make_region_of_interest_param_spec` methods in [service_customization_helpers.py](../python/bosdyn-client/src/bosdyn/client/service_customization_helpers.py) have been updated accordingly. Practically speaking, to use a polygonal ROI during an inspection in an Autowalk mission (assuming the client supports it), edit the [Walk](../protos/bosdyn/api/autowalk/walks.proto#walk) accordingly.
 
 - The `python_type_to_pb_type` function in [util.py](https://github.com/boston-dynamics/spot-sdk/blob/master/python/bosdyn-mission/src/bosdyn/mission/util.py) is now capable of serializing Python lists, dictionaries, mappings, and iterables into the corresponding Protobuf-compatible formats. Conversion of nested or complex data structures is handled by the `python_var_to_variable_decl` function.
 

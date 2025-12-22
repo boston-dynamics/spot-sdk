@@ -7,7 +7,6 @@
 """Unit tests for the image client."""
 import time
 
-import grpc
 import pytest
 
 import bosdyn.api.image_pb2 as image_protos
@@ -112,7 +111,7 @@ def test_list_sources_multiple():
     assert 2 == len(client.list_image_sources())
 
 
-def test_list_sources_single_async():
+def test_list_sources_single_async2():
     image_source_a = image_protos.ImageSource()
     image_source_b = image_protos.ImageSource()
     client, service, server = _setup(image_sources=[image_source_a, image_source_b])
@@ -183,15 +182,6 @@ def test_get_image_source_data_error():
     client, service, server = _setup(expected_image_sources=['foo'],
                                      image_responses=[image_response])
     with pytest.raises(bosdyn.client.image.SourceDataError):
-        res = client.get_image_from_sources(image_sources=['foo'])
-
-
-def test_get_image_source_data_error():
-    image_response = image_protos.ImageResponse(
-        status=image_protos.ImageResponse.STATUS_IMAGE_DATA_ERROR)
-    client, service, server = _setup(expected_image_sources=['foo'],
-                                     image_responses=[image_response])
-    with pytest.raises(bosdyn.client.image.ImageDataError):
         res = client.get_image_from_sources(image_sources=['foo'])
 
 

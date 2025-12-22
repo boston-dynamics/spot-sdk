@@ -215,6 +215,10 @@ message SE2TrajectoryCommand {
         }
         // Flag indicating if the final requested position was achievable.
         FinalGoalStatus final_goal_status = 5;
+
+        // Enables clients to monitor the commanded goal trajectory, even if not sending the
+        // command.
+        SE2TrajectoryCommand.Request request_information = 6;
     }
 }
 
@@ -244,7 +248,8 @@ message SE2VelocityCommand {
     }
 
     message Feedback {
-        // Planar velocity commands provide no feedback.
+        // Enables clients to monitor the commanded goal velocity, even if not sending the command.
+        SE2VelocityCommand.Request request_information = 1;
     }
 }
 
@@ -630,6 +635,7 @@ message JointCommand {
         // clear the behavior fault via the Robot Command Service. Values less than or equal to 0
         // will be considered invalid and must be sent in every UpdateRequest for use.
         google.protobuf.FloatValue velocity_safety_limit = 9;
+
     }
 
     message ContactAdvice {

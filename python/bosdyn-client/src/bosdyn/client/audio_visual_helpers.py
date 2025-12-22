@@ -13,6 +13,7 @@ import bosdyn.client
 from bosdyn.api import audio_visual_pb2
 from bosdyn.client.audio_visual import (AudioVisualClient, BehaviorExpiredError, DoesNotExistError,
                                         InvalidClientError)
+from bosdyn.util import now_sec
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class AudioVisualHelper:
         # Run the AV behavior until the stop_event is triggered
         while not self.stop_event.wait(self.refresh_rate):
             try:
-                end_time_secs = time.time() + self.refresh_rate + 0.10  # add 100ms margin
+                end_time_secs = now_sec() + self.refresh_rate + 0.10  # add 100ms margin
                 result = self.av_client.run_behavior(self.behavior_name, end_time_secs)
                 set_future_result(
                     result.run_result == audio_visual_pb2.RunBehaviorResponse.RESULT_BEHAVIOR_RUN)

@@ -331,7 +331,8 @@ def acquire_get_status_and_save(acquisition_request, capability_name, action_nam
         except ResponseError as err:
             _LOGGER.error(
                 'Exception raised when checking if request %s for data \'%s\' with action_name \'%s\' was '
-                'saved in the data acquisition store.', request_id, capability_name, action_name)
+                'saved in the data acquisition store.', acquired_request_id, capability_name,
+                action_name)
             if verbose:
                 log_debug_information(err)
             return False

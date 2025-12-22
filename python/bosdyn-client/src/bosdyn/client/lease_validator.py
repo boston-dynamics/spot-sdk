@@ -11,7 +11,6 @@ import logging
 import threading
 
 from bosdyn.api import lease_pb2
-from bosdyn.client.exceptions import Error
 from bosdyn.client.lease import Lease, LeaseClient
 from bosdyn.client.lease_resource_hierarchy import ResourceHierarchy
 

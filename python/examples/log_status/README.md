@@ -34,6 +34,10 @@ python3 log_status.py ROBOT_IP experiment continuous
 
 python3 log_status.py ROBOT_IP retro $DURATION_IN_SECONDS
 
+python3 log_status.py ROBOT_IP concurrent $EVENT_TYPE $DURATION_IN_SECONDS
+
 python3 log_status.py ROBOT_IP terminate $LOG_ID
 
 ```
+
+where $EVENT_TYPE is, e.g., `bosdyn:graph_nav:navigation_failed:lost`.

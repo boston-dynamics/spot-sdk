@@ -21,12 +21,14 @@ This [documentation](choreography_service.md) provides an overview of the Choreo
 ## Contents
 
 - [Choreography Service](choreography_service.md)
-- [Move Reference Guide](move_reference.md)
-- [CustomGait Reference](custom_gait.md)
 - [Choreographer Setup](choreographer_setup.md)
 - [Choreographer Overview](choreographer.md)
-- [Robot Connections in Choreographer](robot_controls_in_choreographer.md)
-- [Animations in Choreography](animations_in_choreographer.md)
+- [Move Reference Guide](move_reference.md)
 - [Animation File Format](animation_file_specification.md)
+- [Animations in Choreography](animations_in_choreographer.md)
+- [CustomGait Reference](custom_gait.md)
+- [Robot Connections in Choreographer](robot_controls_in_choreographer.md)
+- [3D/2D Visualization in Choreographer](dance_previews.md)
+- [Timecode in Choreographer](timecode_reference.md)
 - [Tablet Choreography Mode](choreography_in_tablet.md)
 - [Choreography Actions in Autowalk](choreography_in_autowalk.md)

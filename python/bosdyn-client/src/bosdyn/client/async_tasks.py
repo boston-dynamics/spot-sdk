@@ -6,7 +6,8 @@
 
 """Utilities for managing periodic tasks consisting of asynchronous GRPC calls."""
 import abc
-import time
+
+from bosdyn.util import now_sec
 
 from .exceptions import ResponseError, RpcError
 
@@ -79,7 +80,7 @@ class AsyncGRPCTask(object, metaclass=abc.ABCMeta):
 
     def update(self):
         """Call this periodically to manage execution of task represented by this object."""
-        now_sec = time.time()
+        now_sec = now_sec()
         if self._future is not None:
             if self._future.original_future.done():
                 try:

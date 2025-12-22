@@ -5,7 +5,6 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 from bosdyn.api import lease_pb2, robot_command_pb2
-from bosdyn.client import lease
 from bosdyn.client.lease import Lease
 from bosdyn.client.lease_resource_hierarchy import ResourceHierarchy
 from bosdyn.client.lease_validator import LeaseValidator, LeaseValidatorResponseProcessor

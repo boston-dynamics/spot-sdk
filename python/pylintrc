@@ -54,20 +54,27 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=R,C,
-        no-member,
-        fixme,
+disable=fixme,
         redefined-outer-name,
         protected-access,
-        unused-argument
+        unused-argument,
+        no-name-in-module,
+        consider-using-f-string,
+        missing-module-docstring,
+        invalid-name,
+        duplicate-code,
+        too-few-public-methods,
+        too-many-return-statements,
+        no-else-return,
+        too-many-positional-arguments,
+        superfluous-parens,
 
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
 # multiple time (only on the command line, not in the configuration file where
 # it should appear only once). See also the "--disable" option for examples.
-enable=old-division,
-
+# enable=old-division,
 
 [REPORTS]
 
@@ -333,7 +340,8 @@ ignored-classes=optparse.Values,thread._local,_thread._local
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis. It
 # supports qualified module names, as well as Unix pattern matching.
-ignored-modules=
+# Protobufs don't work right, so ignore them for now.
+ignored-modules=bosdyn.api.*_pb2,google.protobuf.*_pb2
 
 # Show a hint with possible names when a member name was not found. The aspect
 # of finding the hint is based on edit distance.
@@ -473,4 +481,4 @@ known-third-party=enchant
 
 # Exceptions that will emit a warning when being caught. Defaults to
 # "Exception"
-overgeneral-exceptions=Exception
+overgeneral-exceptions=builtins.Exception

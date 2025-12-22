@@ -11,7 +11,6 @@ This allows client code to read from the robot payload registry.
 
 import logging
 
-import bosdyn.api.payload_pb2 as payload_protos
 import bosdyn.api.payload_pb2 as payload_service_protos
 import bosdyn.api.payload_service_pb2_grpc as payload_service
 
@@ -38,7 +37,7 @@ class PayloadClient(BaseClient):
 
         Args:
           kw_args:              Extra arguments to pass to grpc call invocation.
-        
+
         Returns:
           A list of the proto message definitions of all registered payloads
 
@@ -54,7 +53,7 @@ class PayloadClient(BaseClient):
 
         Args:
           kw_args:              Extra arguments to pass to grpc call invocation.
-        
+
         Returns:
           A list of the proto message definitions of all registered payloads
 

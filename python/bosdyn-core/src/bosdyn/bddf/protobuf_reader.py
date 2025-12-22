@@ -15,7 +15,7 @@ class ProtobufReader(MessageReader):
     """
 
     def __init__(self, data_reader):
-        super(ProtobufReader, self).__init__(data_reader, require_protobuf=True)
+        super().__init__(data_reader, require_protobuf=True)
 
     def get_message(self, series_index, protobuf_type, index_in_series):
         """Return a deserialized protobuf from bytes stored in the file.

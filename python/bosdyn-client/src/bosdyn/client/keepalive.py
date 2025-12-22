@@ -16,11 +16,13 @@ from typing import Callable, List, Union
 
 import bosdyn.client.lease
 import bosdyn.util
+from bosdyn.api import lease_pb2
 from bosdyn.api.keepalive import keepalive_pb2, keepalive_service_pb2_grpc
 from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
                                   handle_common_header_errors, handle_unset_status_error)
 from bosdyn.client.error_callback_result import ErrorCallbackResult
 from bosdyn.client.exceptions import ResponseError, RetryableRpcError
+from bosdyn.util import now_sec
 
 
 class KeepaliveResponseError(ResponseError):
@@ -290,7 +292,7 @@ class PolicyKeepalive():
         # leave the loop. Under normal conditions, wait up to self._check_in_period seconds, minus
         # the RPC processing time. (values < 0 are OK and unblock immediately)
         while not self._end_check_in_signal.wait(wait_time):
-            exec_start = time.time()
+            exec_start = now_sec()
             action = ErrorCallbackResult.RESUME_NORMAL_OPERATION
 
             try:
@@ -309,7 +311,7 @@ class PolicyKeepalive():
                 else:
                     raise
             # How long did the RPC and processing of said RPC take?
-            exec_seconds = time.time() - exec_start
+            exec_seconds = now_sec() - exec_start
 
             if action == ErrorCallbackResult.ABORT:
                 self.logger.warning('Callback directed the keepalive thread to exit.')

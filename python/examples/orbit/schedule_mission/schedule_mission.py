@@ -17,6 +17,7 @@ from typing import Iterable
 
 import pytz
 
+import bosdyn.orbit.client
 from bosdyn.orbit.client import create_client
 from bosdyn.orbit.utils import add_base_arguments
 

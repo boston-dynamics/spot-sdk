@@ -7,9 +7,6 @@
 """Unit tests for the Spot CAM's LightingClient."""
 import time
 
-import grpc
-import pytest
-
 import bosdyn.client.spot_cam.lighting
 from bosdyn.api.spot_cam import LED_pb2, service_pb2_grpc
 

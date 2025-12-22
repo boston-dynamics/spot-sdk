@@ -18,6 +18,9 @@ Orbit collects, organizes, and stores data from every mission and teleoperation 
 - [WebViews](#webviews)
 - [Webhooks](#webhooks)
 - [Scheduling Missions](#scheduling-missions)
+- [Work Orders](#work-orders)
+
+<!-- START web views  -->
 
 ## WebViews
 
@@ -62,6 +65,9 @@ Extensions can also host web servers as an Orbit extension within the port range
 #### Note
 
 Orbit does not save any credentials or payloads passed to external websites.
+
+<!-- END web views -->
+<!-- START web hooks -->
 
 ## Webhooks
 
@@ -144,6 +150,9 @@ The Orbit API is better suited for integrations that require on-demand access to
 
 Webhooks are great for integrations that require real-time data or applications that want to do _something_ when a particular event occurs. For example, an application that creates a work order in an Enterprise Asset Management (EAM) system whenever the robot identifies an anomaly during an inspection. The application can host a webhook that subscribes to the `"ACTION_COMPLETED_WITH_ALERT"` event and sends the necessary data to the EAM system whenever the event is triggered.
 
+<!-- END web hooks -->
+<!-- START scheduling missions -->
+
 ## Scheduling Missions
 
 Orbit has built-in functionality for scheduling missions. Once scheduled, Orbit will kick off and monitor the mission automatically at the prescribed time. The system supports multiple schedules per robot, adjustable repeat configurations, launch windows, and other features described below.
@@ -207,3 +216,235 @@ The API expects Coordinated Universal Time (UTC) times. If the schedules run wit
 #### Daylight Savings Time
 
 The scheduler does not handle Daylight Savings Time yet. This is slated for a future release.
+
+<!-- END scheduling missions -->
+<!-- START work orders -->
+
+## Work Orders
+
+Orbit allows integration with external Work Order Management Systems (WOMS). When alerts occur in Orbit, work orders can be created manually from within the Orbit UI or automatically at the time of the alert.
+
+![Work Orders List](work_orders_1.png)
+
+You can create a work order manually while viewing an Orbit alert:
+
+![Work Orders Creation Manual](work_orders_creation_manual_1.png)
+
+### How Orbit Integrates with Work Order Management Systems
+
+When a creation request is made to the Work Order endpoint in the Orbit API, Orbit will send an HTTP POST request to a configured external endpoint with information about the work order to be created. The external system is then responsible for creating the work order in its own system. Orbit will map the external work order ID to the action that caused the alert for future reference. The status of the work order ID is automatically synchronized periodically in Orbit by querying the external system for updates. Changes in status may take time to reflect in Orbit depending on how many work orders Orbit is keeping track of.
+
+Below is an example creation input that Orbit can support:
+
+![Work Orders Creation 1](work_orders_creation_1.png)
+
+This input can be populated with information about the alert that caused the work order to be created, including images and key results collected during the action. See [Configuring Work Order Integrations](#configuring-work-order-integrations) for more details.
+
+Orbit's work order support may not fit perfectly with your external work order system. If you need more granular control of how the HTTP calls to the external system are made, an intermediate layer can be used to act as a "middleman" between Orbit and the external system. This layer would receive work order creation and status requests from Orbit, translate them into the appropriate format for the external system, and send the requests on behalf of Orbit.
+
+### Configuring Work Order Integrations
+
+Work orders are disabled by default, but can be enabled and configured by an Orbit admin on the settings page.
+
+#### Creation
+
+Work order creation allows Orbit to create work orders in an external work order management system when an alert occurs. To configure work order creation, the following fields must be configured (supported injection fields are listed in parentheses {}):
+
+- **Create URL**: The URL of the external endpoint that Orbit will send HTTP POST work order creation requests to.
+- **Authentication Type**: The HTTP header that contains the authentication information for the external system. For example, `Authorization: Bearer <token>`.
+- **Work order spec**: A JSON (in shape of `bosdyn.api.DictParamSpec`) template that describes how to populate the work order creation request body. See the [Work Order Specification](#work-order-specification) section below for more details. {anomaly, images, user}
+- **Title field**: The field in the external work order creation response that contains the work order title.
+- **ID field**: The field in the external work order creation response that contains the work order ID.
+- **Detail URL**: The URL to the detail page in the external system. {id}
+
+##### Work Order Specification
+
+The work order specification is a JSON (in shape of `bosdyn.api.DictParamSpec`) template that describes how to populate the work order creation request body. The structure of the template follows the [service customization](../service_customization.md) Spec pattern with the addition of templated insertion. The template can include static fields as well as dynamic fields that are populated with information about the alert that caused the work order to be created.
+
+##### Templated Insertion
+
+For dynamic fields, the following templated insertion objects are supported:
+
+- `{anomaly}`: The anomaly (alert) object that caused the work order to be created.
+- `{images}`: If applicable, a list of jpeg `Image` protobuf messages with their bytes fields base64 encoded.
+- `{user}`: If created manually, the user object that created the work order.
+
+Below is an example of an `anomaly` object:
+
+```json
+{
+  "uuid": "2ddf807b-cba3-4274-8e15-4902b803046e",
+  "name": "Pipeline Leak Detection Action",
+  "elementId": "6b167f7e-7912-45cf-bcb1-bb4b0ef63c01",
+  "assetId": "Pipeline Segment 42",
+  "customMetadataTags": ["inspection", "pipeline", "leak-detection"],
+  "time": "2025-07-31T21:38:52.312Z",
+  "runUuid": "778bb71e-5ba6-4d66-9725-6a0192d3fccd",
+  "runEventUuid": "b39fd6c9-b6fa-4a9d-8840-890399861f42",
+  "createdAt": "2025-09-30T21:26:29.292Z",
+  "status": "open",
+  "statusModifiedAt": "2025-09-30T21:26:29.292Z",
+  "statusModifiedBy": null,
+  "actionName": "Pipeline Leak Detection Action",
+  "missionName": "Pipeline Inspection Mission",
+  "channelName": "leak-detection-channel",
+  "dataCaptures": [
+    {
+      "time": "2025-07-31T21:38:52.312188+00:00",
+      "uuid": "4bdc55e8-ed82-46b9-b40f-83d73dddaed2",
+      "dataUrl": "/daq/download/...",
+      "createdAt": "2025-09-30T21:26:29.255377+00:00",
+      "keyResults": [
+        { "name": "SPL At Source", "units": "dB", "value": 55.43461227416992 },
+        { "name": "SNR Value", "value": 242 },
+        { "name": "SNR Threshold", "value": 200 }
+      ],
+      "channelName": "leak-source"
+    }
+  ],
+  "title": "Leak detected",
+  "source": "",
+  "severity": 4
+}
+```
+
+The `templateValue` field can be used to populate the initial value in the field. To inject the action name of the anomaly into a work order field, the following template may be used:
+
+```json
+"title": {
+  "spec": {
+    "stringSpec": {
+      "editable": true,
+      "templateValue": "Problem found at {anomaly.actionName}"
+    }
+  },
+  "uiInfo": {
+    "displayName": "Title",
+  }
+}
+```
+
+Example work order specification using templates:
+
+```json
+{
+  "specs": {
+    "title": {
+      "spec": {
+        "stringSpec": {
+          "editable": true,
+          "templateValue": "Problem at {anomaly.actionName}"
+        }
+      },
+      "uiInfo": {
+        "displayName": "Title",
+        "displayOrder": "1"
+      }
+    },
+    "priority": {
+      "spec": {
+        "stringSpec": {
+          "options": ["Low", "Medium", "High", "Critical"],
+          "defaultValue": "Medium"
+        }
+      },
+      "uiInfo": {
+        "displayName": "Priority",
+        "displayOrder": "4"
+      }
+    },
+    "assetName": {
+      "spec": {
+        "stringSpec": {
+          "editable": true,
+          "templateValue": "{anomaly.assetId}"
+        }
+      },
+      "uiInfo": {
+        "displayName": "Asset Name",
+        "displayOrder": "3"
+      }
+    },
+    "description": {
+      "spec": {
+        "stringSpec": {
+          "editable": true,
+          "templateValue": "Found an anomaly during mission {anomaly.missionName}. See full anomaly here: \n\n{anomaly}",
+          "isMultiline": true
+        }
+      },
+      "uiInfo": {
+        "displayName": "Description",
+        "displayOrder": "2"
+      }
+    }
+  }
+}
+```
+
+This specification would generate the following work order creation request body:
+
+```json
+{
+  "title": "Problem at Pipeline Leak Detection Action",
+  "priority": "Medium",
+  "assetName": "Pipeline Segment 42",
+  "description": "Found an anomaly during mission Pipeline Inspection Mission. See full anomaly here: \n\n{...anomaly object...}"
+}
+```
+
+If the external system supports receiving images as base64 encoded strings, the spec can inject image data directly into the request using a string field. When injecting images, the `images` template variable will be a list of `bosdyn.api.Image` objects with their bytes field base64 encoded. For example, to include the first image in the work order description, the following template may be used:
+
+```json
+"image": {
+  "spec": {
+    "stringSpec": {
+      "editable": true,
+      "templateValue": "See image: {images[0].data}"
+    }
+  },
+  "uiInfo": {
+    "displayName": "Image base64 data",
+  }
+}
+```
+
+If added to the above work order specification, the generated work order creation request body would look like this:
+
+```json
+{
+  "title": "Problem at Pipeline Leak Detection Action",
+  "priority": "Medium",
+  "assetName": "Pipeline Segment 42",
+  "description": "Found an anomaly during mission Pipeline Inspection Mission. See full anomaly here: \n\n{...anomaly object...}",
+  "image": "/9j/4AAQSkZ..."
+}
+```
+
+Note, depending on how the external work order system expects images to be sent, it may be necessary to include additional fields in the work order specification such as the image filename, MIME type or even a middleman to handle the image upload separately.
+
+Note, only JPEG images are supported at this time.
+
+#### Status Synchronization
+
+Work order status synchronization allows Orbit to periodically query the external work order system for updates on the status of work orders that were created from Orbit. To configure status synchronization, the following fields must be configured (supported injection fields are listed in parentheses {}):
+
+- **Status URL**: The URL of the external endpoint that Orbit will send HTTP GET work order status requests to. {id}
+- **Status field**: The field in the external work order status response that contains the work order status.
+- **Status type**: The type of status field returned by the external system. Supported types are `string`, `boolean` and `integer`.
+- **Closed value(s)**: The value(s) in the status field that indicate the work order is closed. Multiple values can be separated by commas. For example, `closed,resolved,completed`.
+
+Note, the status synchronization process runs periodically and can take longer to reflect changes in work order status depending on how many work orders Orbit is keeping track of.
+
+#### Integration Health
+
+Orbit provides visibility into the health of the work order integration on the settings page. The health status indicates whether Orbit is successfully able to create work orders and synchronize their status with the external system. If there are any errors during these processes, Orbit will display the simple log output to assist in debugging.
+
+![Work Orders Health](work_orders_health_1.png)
+
+You can also test the connectivity of the work order integration by clicking the "Test connectivity" button. This attempts a GET request to the given URL to ensure a successful connection can be made.
+
+![Work Orders Test Connectivity](work_orders_connectivity_1.png)
+![Work Orders Test Connectivity Result](work_orders_connectivity_2.png)
+
+<!-- END work orders -->

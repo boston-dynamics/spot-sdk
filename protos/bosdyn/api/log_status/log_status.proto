@@ -9,6 +9,7 @@ syntax = "proto3";
 package bosdyn.api.log_status;
 option go_package = "bosdyn/api/log_status/log_status";
 
+import "bosdyn/api/data_buffer.proto";
 import "bosdyn/api/header.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
@@ -32,6 +33,9 @@ message LogStatus {
         TYPE_UNKNOWN = 0;
         TYPE_EXPERIMENT = 1;  // A log into the future.
         TYPE_RETRO = 2;       // A retroactive log.
+        TYPE_EVENT = 3;       // A log created automatically from an event.
+        TYPE_DATA = 4;        // A log created from a data log request.
+        TYPE_CONCURRENT = 5;  // An experiment log that allows concurrency.
     }
 
     // Id of the response log.
@@ -42,6 +46,16 @@ message LogStatus {
 
     // Type of log.
     Type type = 3;
+
+    // Timestamp of the start of an experiment log, in robot time.
+    google.protobuf.Timestamp start_time = 4;
+
+    // Timestamp of the end of an experiment log, in robot time.
+    google.protobuf.Timestamp end_time = 5;
+
+    // Current duration of an experiment log, in robot time. This is not the total runtime, but
+    // rather how long it has run as of now.
+    google.protobuf.Duration run_time = 6;
 }
 
 message GetLogStatusRequest {
@@ -90,6 +104,43 @@ message GetActiveLogStatusesResponse {
     repeated LogStatus log_statuses = 3;
 }
 
+message StartConcurrentLogRequest {
+    // Common request header.
+    bosdyn.api.RequestHeader header = 1;
+
+    // How long into the future should this log end?
+    google.protobuf.Duration keep_alive = 2;
+
+    // How long into the past should text logs extend? (default 0)
+    google.protobuf.Duration past_textlog_duration = 3;
+
+    // Specify an event for the request. The data included in the log will be defined by this event,
+    // if the robot has data associated with the event.
+    bosdyn.api.Event event = 4;
+}
+
+message StartConcurrentLogResponse {
+    enum Status {
+        STATUS_UNKNOWN = 0;
+        STATUS_OK = 1;
+        STATUS_EXPERIMENT_LOG_RUNNING = 2;     // An experiment log is already running.
+        STATUS_CONCURRENCY_LIMIT_REACHED = 3;  // Maximum number of logs running concurrently.
+        STATUS_NO_DATA_FOR_EVENT = 4;          // The specified event has no data associated with it
+    }
+
+    // Common response header.
+    bosdyn.api.ResponseHeader header = 1;
+
+    // Response status.
+    Status status = 2;
+
+    // Status of the created log.
+    LogStatus log_status = 3;
+
+    // Timestamp of the end of the log, in robot time.
+    google.protobuf.Timestamp end_time = 4;
+}
+
 message StartRetroLogRequest {
     // Common request header.
     bosdyn.api.RequestHeader header = 1;
@@ -125,6 +176,9 @@ message StartExperimentLogRequest {
 
     // How long into the future should this log end?
     google.protobuf.Duration keep_alive = 2;
+
+    // How long into the past should text logs extend? (default 0)
+    google.protobuf.Duration past_textlog_duration = 3;
 }
 
 message StartExperimentLogResponse {

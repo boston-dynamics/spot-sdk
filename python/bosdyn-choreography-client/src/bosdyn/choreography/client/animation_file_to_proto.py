@@ -392,6 +392,7 @@ def convert_animation_file_to_proto(animated_file, animate_move_params_file=""):
                 animate_move_params_file, False)
 
     animation = Animation()
+
     animation.name = ntpath.basename(animated_file).split(".cha")[0]
 
     animation_specs = open(animated_file, "r")

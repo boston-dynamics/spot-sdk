@@ -68,3 +68,12 @@ def make_async(fn):
         return future
 
     return output_fn
+
+
+def make_async_threaded(fn, executor: concurrent.futures.ThreadPoolExecutor):
+    """Make an async version of a regular function that runs in its own thread"""
+
+    def output_fn(*args, **kwargs):
+        return executor.submit(fn, *args, **kwargs)
+
+    return output_fn

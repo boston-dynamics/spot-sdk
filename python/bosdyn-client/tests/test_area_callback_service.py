@@ -12,7 +12,6 @@ import threading
 import time
 from unittest import mock
 
-import grpc
 import pytest
 from google.protobuf import text_format
 

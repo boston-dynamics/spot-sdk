@@ -14,7 +14,7 @@ Choreographer is a tool for authoring dances and executing them on robots. It le
 
 Choreographer is an executable program you can download from the [Boston Dynamics Support Center](https://support.bostondynamics.com/s/downloads) (login required).
 
-To run the program, double-click the executable. Choreographer is supported for Windows and Linux platforms.
+To run the program, double-click the executable. Choreographer is supported for Windows and Linux platforms. See the [Choreographer Setup](choreographer_setup.md) page for details on downloading and running the Choreographer application.
 
 ## Choreography safety
 
@@ -35,37 +35,41 @@ WARNING: At higher volumes, prolonged exposure to the noise produced by the buzz
 
 Choreographer provides as much design freedom as possible. A consequence of this freedom is that the robot cannot perform some combinations of moves, parameters, and other settings under all conditions.
 
-Beginner mode provides a more controlled experience that is more likely to produce reliable results. This mode has smaller parameter ranges, which allow for less energetic but generally more reliable dances. In beginner mode, some of the more dynamic dance moves have been removed from the Moves List. Beginner mode does not support animated dance moves.
+Beginner mode provides a more controlled experience that is more likely to produce reliable results. This mode has smaller parameter ranges, which allow for less energetic but generally more reliable dances. In beginner mode, some of the more dynamic dance moves have been removed from the Moves List.
 
-By default, Choreographer starts in Beginner mode. You can enable it by using the `--restricted` argument when starting Choreographer from the command line. Changing to Beginner mode from Advanced mode takes effect the next time you open Choreographer.
+By default, Choreographer starts in Beginner mode. You can switch modes using the "Mode" submenu under "Settings", or the `--mode` command line argument. You can also switch to Advanced mode by selecting the **Load in Advanced mode** checkbox in Choreographer's welcome menu.
 
-Switch to Advanced mode by selecting the **Load in Advanced mode** checkbox in Choreographer's welcome menu. You can also navigate to **Settings** and select **Load in Advanced mode** which takes effect next time you open Choreographer. Note that if you create a dance in Advanced mode, Choreographer may not be able to load it while in Beginner mode if the dance’s parameters are outside its reduced range.
+Note that if you create a dance in Advanced mode, Choreographer may not be able to load it while in Beginner mode if the dance’s parameters are outside its reduced range, or the dance uses moves that have been restricted.
 
 It is highly recommended that Choreographer users start in Beginner mode until they are comfortable using the robot and creating/executing choreographies!
 
 ## User interface overview
 
-<img src="images/choreography_interface.png" width="500"/>
+<img src="images/UI_move_info.png"/>
 
-<img src="images/choreography_interface_robot_management.png" width="500"/>
+<img src="images/UI_robot_management.png"/>
 
 The Choreographer interface consists of the following important key sections/buttons:
 
-1. **Moves List** - List of predefined stock moves and animation moves sorted by general category such as "Body" or "Transition."
-2. **Dance Timeline** - The main user interface area of Choreographer. The timeline shows a representation of your dance over time. Each move is a different block. Blocks can be edited to set or change move parameters. Blocks can be relocated on the timeline by clicking and dragging or copied and pasted to a new location on the timeline. They can be stretched or shrunk if the move parameters allow it.
-3. **Dance Tabs** - Multiple choreography sequences can be opened at once and will appear as different tabs above the timeline.
-4. **Move Name** - When you select a move in the Moves List its name and description will appear here.
-5. **Robot Preview** - A preview of the robot’s body and arm during your selected move. Note that this section only appears for select moves that directly position the body of the robot or moves that control the arm.
-6. **Move Parameters** - When you select a customizable move, its adjustable parameters appear in this area. Modify the parameters to adjust how the robot acts during this move. Be sure to test and make sure the robot can handle your parameters! Sometimes more extreme parameters can be too much for the robot during high or low BPM songs, so if a combination of parameters does not work, adjust them until they do for your situation. Tap the blue question mark near the parameter name to see a description of the specific parameter.
-7. **Robot Controls** - The robot control buttons are used to send commands to any robots connected to Choreographer, including starting and stopping your dance and powering on or off your robot’s motors. Note: Buttons that trigger commands on robots are disabled when Choreographer is not connected to any robots, or no robots are selected in the robot management table.
-8. **Timeline Controls** - Timeline controls allow you to load and play a song for your robot’s dance, manually adjust the BPM of your robot’s moves to match your song, adjust the zoom level of the timeline.
-   Note: Music volume, along with the Metronome option and other playback settings can be found in the "Settings Menu" under "Playback and Music Settings".
-9. **Move Configuration/Robot Management Tabs** - Toggle between the move configuration tab, which displays move name and parameters, and the robot management tab, which displays all active robot connections and health statistics.
-10. **Mode Indicator** - Indicates whether Choreographer is running in "Beginner" or "Advanced" mode. The title provides an indicator to help remember which mode the application is loaded in. Use the **Settings** menu to switch modes when Choreographer is re-opened.
-11. **Add/Disconnect Buttons** - Dynamically change which robots are connected and controlled by Choreographer.
-12. **Robot Connections** - Shows robot hostname and other information regarding the robot(s) currently connected to Choreographer. The checkbox indicates whether or not the robot is being controlled. Example: When unchecked, pressing robot control buttons such as "sit" will do nothing to the unselected robot.
-13. **Dance Selector** - Choose which of the open choreographies the robot will execute when both checked (in the "Selected" column) and start choreography is clicked.
-14. **Health Stats** - Columns which show the power state (on/off) battery state of charge, and any faults for each robot.
+1. **Moves List** - List of predefined stock moves and animation moves sorted by general category such as “Body” or “Transition.”
+2. **Move Information** - When you select a move in the Moves List its name and description will appear here.
+3. **Move Controls** - Each move can be played on a connected Spot before adding it to a sequence using the "Run Move on Robot" button. Each move also has a button or dropdown to reset or set its parameters to the default options or a preset option. Some moves also have the option to "Get Joints from Robot", which will read a selected robot connection's joint values and apply them to the move's parameter fields.
+4. **Move Diagram** - Some moves have an additional visualization view to aid in editing parameters. There are 3 types of visualization tools that may appear here; the 3D Model view for visualizing joint and body positions, the Color Selector for editing and viewing lights move colors, and the Gait Diagram for visualizing the liftoff and touchdown points of a Custom Gait move's swing fields.
+5. **Move Parameters** - When you select a customizable move, its adjustable parameters appear in this area. Modify the parameters to adjust how the robot acts during this move. Be sure to test and make sure the robot can handle your parameters! Sometimes more extreme parameters can be too much for the robot during high or low BPM songs, so if a combination of parameters does not work, adjust them until they do for your situation. Hover over the blue question mark near the parameter name to see a description of that parameter.
+6. **Dance Previews** - The Dance Previews view will display an estimated 3D and 2D visualization for the sequence(s) of the currently selected tab, or all open tabs. See the [Dance Previews](dance_previews.md) documentation for details.
+7. **Timeline Toolbar** - Contains widgets to set a sequence's start position and entrance state and display the lowest battery level of the connected Spot(s). When options are available and set, the set entrance state will determine the state (sit, stand) that Spot will transition to before the sequence starts. The set start position of a sequence will be used for Dance Preview tools (see item 6) and can be useful for user documentation, but this data has no effect on robot playback of a sequence. The Timeline Toolbar can be hidden/shown under "Settings"->"Show Timeline Toolbar".
+8. **Dance Tabs** - Each open tab represents an open choreography sequence. Multiple choreography sequences can be opened at once and will appear as different tabs above the timeline.
+9. **Dance Timeline** - The timeline shows a representation of your dance over time. Each move is represented with a different block. Move blocks can be edited to set or change move parameters. Blocks can be relocated on the timeline by clicking and dragging or copied and pasted to a new location on the timeline. They can be stretched or shrunk if the move parameters allow it.
+10. **Robot Controls** - The robot control buttons are used to send commands to any robots connected to Choreographer, including starting and stopping your dance and powering on or off your robot’s motors. Note: Buttons that trigger commands on robots are disabled when Choreographer is not connected to any robots, or no robots are selected in the robot management table.
+11. **Timeline Controls** - Timeline controls allow you to load and play a song for your robot’s dance, manually adjust the BPM of your robot’s moves to match your song, and adjust the zoom level of the timeline. Note: Other music, playback, and timeline options can be found under the "Settings" Menu. Music volume, metronome, sequence start delay and timecode options, along with other playback settings, can be found under “Playback and Music Settings”. Options to change the timeline's units can be found under “Timeline Settings”.
+12. **Move Configuration/Robot Management Tabs** - Toggle between the move configuration tab, which displays tools for sequence and move editing; and the robot management tab, which displays all active robot connections and health statistics.
+13. **Mode Indicator** - Indicates whether Choreographer is running in “Beginner” or “Advanced” mode. The title provides an indicator to help remember which mode the application is loaded in. Use the "Settings"->"Mode" submenu to switch between modes (open sequences will be closed).
+14. **Add/Disconnect Buttons** - Dynamically change which robots are connected and controlled by Choreographer.
+15. **Robot Connections** - Lists the Robots connected to Choreographer by their hostname (IP address). Additional columns provide additional information and control options for each Robot's row. A "nickname" or short user provided description can also be provided to help identify robots. This nickname can be typed directly into the table or assigned when connecting robots through the command line before Choreographer starts.
+16. **Selected Column** - Select or unselect a connection. The checkbox indicates whether or not the robot will receive commands. Example: When unchecked, pressing robot control buttons such as “Sit” will do nothing to the unselected robot.
+17. **Dance Selection Column** - Assign a specific Choreography to a robot connection. The selected option determines which of the open choreographies the robot will execute when the Start Choreography button is clicked (or when started with a timecode cue, if timecode is in use). When "Current Open Tab" is the selected option, that robot connection will execute the sequence currently displayed in the timeline.
+18. **Health and Status Columns** - The Power State, Dance State, Battery, Faults, and Connected Columns display information about the row's robot connection.
+19. **EStop Column** - If another system was controlling the robot and still controls the EStop, Choreographer will display the EStop Column. Pressing the "Take" button will let Choreographer take control of the EStop. The robot will power off during this process.
 
 ## Tracks
 
@@ -87,7 +91,7 @@ For a song with a 4/4 time signature, a slice corresponds to a 16th-note, a beat
 
 Some moves take a fixed number of slices. Other moves take a fixed amount of time so the number of slices will depend on the BPM. Some moves are adjustable, but of those some have maximum or minimum durations. For example, this "Running Man" move has been extended from the default number of slices. It controls the legs track for the first 16 slices (4 beats; 1 measure) of this sequence:
 
-![Slice Diagram](images/running_man.png)
+<img src="images/running_man.png" style="max-width:805px;">
 
 ## Dance timeline
 
@@ -110,7 +114,7 @@ Once the parameters are adjusted to the desired values, the move can be added to
 2. Double-clicking the move name in the Moves List. This appends the move to the end of the timeline with any parameter changes.
 3. Click the toggle to go from **Append** to **Insert** (under the Moves List). In **Insert** mode, hovering over the timeline shows a ghost move block. Clicking the block adds the move to the timeline with any parameter changes. Hit Esc to exit insert mode or press the toggle again to return to **Append** mode
 
-   ![Insert/Append Mode Toggle](images/adding_modes.png)
+   <img src="images/adding_modes.png" style="max-width:443px;">
 
 4. Drag a move from the Moves List into the timeline with any parameter changes. As with insert mode, a ghost move block appears to help position and drop the move onto the timeline.
 
@@ -125,10 +129,6 @@ To modify move parameters, click the move block on the timeline to select it. Mo
 Refer to the [Choreography moves reference](move_reference.md) for descriptions of each move and move parameter. Numerical parameters can be modified by editing the text field, adjusting its slider, or pressing the Up or Down arrow buttons. Boolean parameters can be changed by checking or unchecking the box. Enum parameters are changed by choosing new values in the drop-down menu.
 
 Move parameters can be modified before being added to the timeline. Select a move in the **Moves List** to edit the move parameters. When the move is added to the timeline, it will contain these parameter modifications.
-
-## Robot preview
-
-The **Robot Preview** pane appears for applicable moves. You can adjust the camera position and angle of the robot preview pane to get a better view of your move. Use the scroll wheel to zoom in and out. Click and drag to pan the camera. Right-click and drag to rotate around the preview robot.
 
 ## Selecting multiple moves
 
@@ -156,21 +156,23 @@ After loading a dance, you must manually set the BPM (Beats Per Minute) of your 
 
 The red slider defines where within the sequence Spot should begin execution. It also indicates when the audio begins playing. The red slider defaults to the beginning but can be moved to start from the middle. This can be useful for testing just a portion of a long sequence.
 
-Any moves that start before the slider will be skipped even if they are scheduled to complete after the slider. The line drawn at the center of the slider shows the location of the slider on the timeline, as shown in the image below. The slider can be moved by clicking on the colored boxes and dragging it to the desired location.
+Any moves that start before the slider will be skipped even if they are scheduled to complete after the slider. The line drawn at the center of the slider shows the location of the slider on the timeline, as shown in the image below. The slider can be moved by dragging it to the desired location, or double-clicking the desired location on the timeline.
 
-![Slider](images/red_slider.png)
+The red slider can also be used with the Dance Preview view to scrub through the previsualization. See [Dance Previews](dance_previews.md).
 
-## Previewing moves
+<img src="images/red_slider.png" style="max-width:781px;">
 
-With a robot connected to the Choreographer, you can preview dance moves before adding them to the timeline. Select a move from the **Moves List** and modify the move parameters. Press **Preview Move**. This cancels all current dances and actions on the robot and causes the robot to perform the one move you have selected. This is a great way to test out parameter modifications before adding a move to your timeline.
+## Running individual moves
 
-![Preview Move on Robot button](images/preview_move_button.png)
+With a robot connected to the Choreographer, you can run individual dance moves before adding them to the timeline. Select a move from the **Moves List** and modify the move parameters. Press **Run Move on Robot** to perform the single move you have selected. This is a great way to test out parameter modifications before adding a move to your timeline.
+
+<img src="images/run_move_button.png" style="max-width:567px;">
 
 ## Performing Choreography sequences
 
-Click **Start Choreography** in the Robot Controls bar to upload the choreography that is currently selected in the **Robot Management** tab. By default, this is the currently open choreography tab. The robot starts to execute the routine with music at the same. A minimum three-second delay ensures that the music and the dance routine begin at the same time. To adjust this delay, use the `--delay DELAY_IN_SECONDS` command line argument when starting the Choreographer application from the command line.
+Click **Start Choreography** in the Robot Controls bar to upload the choreography that is currently selected in the **Robot Management** tab. By default, this is the currently open choreography tab. The robot starts to execute the routine with music at the same. Having a short lead-in time (default 3 seconds) is recommended to ensure that the music and all dance routine(s) begin at the same time. This start delay can be adjusted in the "Playback and Music Settings" menu under "Settings".
 
-Note: If the robot is not started in the proper position (sprawl, sit, stand) the music and choreography start timing will likely be out of synch.
+Note: If the robot is not started in the proper position (sprawl, sit, stand), it will need a long enough start delay to transition into the correct entrance state or the timing will be out of sync with other robot(s) or the music due to a late start.
 
 To stop a choreography routine (or stop the music from playing if no robot is connected/executing a choreography) click **Stop** to freeze the robot with all four feet on the ground and stop the music. In an emergency, click **E-Stop** or **Power Off** instead.
 
@@ -227,19 +229,22 @@ Choreographer has specific hotkey mappings available for common editing actions.
 
 Command line options for starting Choreographer from the command line:
 
-| Argument               | Description                                                                                                                                                                     |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| -h, --help             | Print this information to the console.                                                                                                                                          |
-| --hostname HOSTNAME    | Hostname or IIP address of robot(s) to initially connect to                                                                                                                     |
-| --username USERNAME    | User name(s) of the account(s) to get credentials for when initially connecting to one or more robots.                                                                          |
-| --password PASSWORD    | Password for the account(s) when initially connecting to one or more robots.                                                                                                    |
-| --restricted           | Load Choreographer in Beginner (Restricted) mode (also available through the Help menu)                                                                                         |
-| --delay DELAY          | Delay time in seconds after pressing the Start Choreography button before starting the sequence. Defaults to 3 seconds.                                                         |
-| --not-verbose          | Prevent printing error messages to the console.                                                                                                                                 |
-| --obs-padding DISTANCE | Sets the obstacle avoidance padding in meters. Note: Obstacle avoidance is not available during most dance moves.                                                               |
-| --estop-timeout TIME   | Sets the duration of the E-Stop timeout in seconds for how long between losing communication with the robot and when the robot sits down and powers off. Defaults to 9 seconds. |
+| Argument                          | Description                                                                                                                                   |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `-h, --help`                      | Print this information to the console.                                                                                                        |
+| `--hostname HOSTNAME`             | Hostname or address of robot(s), e.g. "192.168.80.3"                                                                                          |
+| `--username USERNAME`             | User name(s) of account to get credentials for.                                                                                               |
+| `--password PASSWORD`             | Password(s) to get credentials for.                                                                                                           |
+| `--nickname NICKNAME`             | Nickname(s) to help remember which robot is which.                                                                                            |
+| `--connect CONNECT`               | Connect to a robot with the given hostname, username, password, and optional nickname. Usage: `--connect=HOSTNAME,USERNAME,PASSWORD,NICKNAME` |
+| `--dance-filepath DANCE_FILEPATH` | Filepath to the dance script to load.                                                                                                         |
+| `--mode {beginner,advanced}`      | Load Choreographer in the selected mode.                                                                                                      |
+| `--delay DELAY`                   | How long to delay before starting a dance when using the "Start Choreography" button.                                                         |
+| `--silent`                        | Choreographer will print fewer error messages to the console.                                                                                 |
+| `--obs-padding OBS_PADDING`       | The distance(meters) the robot will stay from any obstacle (including other robots) when returning to the start position.                     |
+| `--estop-timeout ESTOP_TIMEOUT`   | How long (in seconds) should the robot continue to move after it loses communication with Choreographer.                                      |
 
-Command line hostname, username, and password arguments can be especially convenient when repeatedly connecting to the same large set of robots. The following example connects to three different robots using three different sets of login credentials.
+Command line hostname, username, password and (optional) nickname arguments can be especially convenient when repeatedly connecting to the same large set of robots. The following example connects to three different robots using three different sets of login credentials.
 
 In Linux:
 

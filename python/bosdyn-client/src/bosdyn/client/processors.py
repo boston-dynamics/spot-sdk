@@ -25,7 +25,7 @@ class AddRequestHeader(object):
 
     def mutate(self, request):
         """Mutate request such that its header contains a client name and a timestamp.
-        
+
         Headers are not required for third party proto requests/responses.
         """
         header = self._create_header()
@@ -33,3 +33,28 @@ class AddRequestHeader(object):
             request.header.CopyFrom(header)
         except AttributeError:
             pass
+
+
+class DataBufferLoggingProcessor:
+    """Processor that logs every protobuf message to the robot's data buffer."""
+
+    def __init__(self, data_buffer_client):
+        """
+        Args:
+            data_buffer_client: Instance of DataBufferClient.
+        """
+        self.data_buffer_client = data_buffer_client
+
+    def mutate(self, proto, **kwargs):
+        """Logs the protobuf message to the data buffer.
+        Args:
+            proto: The protobuf request or response to log.
+        """
+        self.data_buffer_client.add_protobuf_async(proto)
+
+
+def log_all_rpcs(client, data_buffer_client):
+    """Attach a DataBufferLoggingProcessor to log all RPC requests and responses for the given client."""
+    processor = DataBufferLoggingProcessor(data_buffer_client)
+    client.request_processors.append(processor)
+    client.response_processors.append(processor)

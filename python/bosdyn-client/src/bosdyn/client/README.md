@@ -12,6 +12,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 
 ## Contents
 
+- [Access Controlled Door Util](access_controlled_door_util.py)
 - [Area Callback](area_callback.py)
 - [Area Callback Region Handler](area_callback_region_handler_base.py)
 - [Area Callback Service Runner](area_callback_service_runner.py)
@@ -49,6 +50,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 - [Graph Nav](graph_nav.py)
 - [Gripper Camera Params](gripper_camera_param.py)
 - [GPS](gps/README.md)
+- [Hazard Avoidance](hazard_avoidance.py)
 - [Image](image.py)
 - [Image Service Helpers](image_service_helpers.py)
 - [Inverse Kinematics](inverse_kinematics.py)
@@ -88,6 +90,7 @@ Client code and interfaces for the Boston Dynamics robot API.
 - [Token Cache](token_cache.py)
 - [Token Manager](token_manager.py)
 - [Units Helpers](units_helpers.py)
+- [URL Validation Util](url_validation_util.py)
 - [Util](util.py)
 - [World Object](world_object.py)
 

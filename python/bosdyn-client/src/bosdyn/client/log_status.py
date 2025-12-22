@@ -12,11 +12,13 @@ This allows client code to start, extend or terminate experiment logs and start 
 """
 
 import collections
+import re
+import time
 
 import bosdyn.util
 from bosdyn.api.log_status import log_status_pb2 as log_status
 from bosdyn.api.log_status import log_status_service_pb2_grpc as log_status_service
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
+from bosdyn.client.common import (BaseClient, error_factory, error_pair,
                                   handle_common_header_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import ResponseError
 
@@ -39,6 +41,10 @@ class InactiveLogError(LogStatusResponseError):
 
 class ConcurrencyLimitReachedError(LogStatusResponseError):
     """The limit of concurrent retro logs has be reached, a new log cannot be started."""
+
+
+class NoDataForEventError(LogStatusResponseError):
+    """No data is available for the provided event, so a log cannot be started."""
 
 
 class LogStatusClient(BaseClient):
@@ -88,7 +94,7 @@ class LogStatusClient(BaseClient):
                                error_from_response=get_active_log_statuses_error,
                                copy_request=False, **kwargs)
 
-    def start_experiment_log(self, seconds, **kwargs):
+    def start_experiment_log(self, seconds, past_textlog_duration=0, **kwargs):
         """Start an experiment log, to run for a specified duration.
 
         Args:
@@ -99,14 +105,16 @@ class LogStatusClient(BaseClient):
         """
         req = log_status.StartExperimentLogRequest()
         req.keep_alive.CopyFrom(bosdyn.util.seconds_to_duration(seconds))
+        req.past_textlog_duration.CopyFrom(bosdyn.util.seconds_to_duration(past_textlog_duration))
         return self.call(self._stub.StartExperimentLog, req,
                          error_from_response=start_experiment_log_error, copy_request=False,
                          **kwargs)
 
-    def start_experiment_log_async(self, seconds, **kwargs):
+    def start_experiment_log_async(self, seconds, past_textlog_duration=0, **kwargs):
         """Start an experiment log, to run for a specified duration."""
         req = log_status.StartExperimentLogRequest()
         req.keep_alive.CopyFrom(bosdyn.util.seconds_to_duration(seconds))
+        req.past_textlog_duration.CopyFrom(bosdyn.util.seconds_to_duration(past_textlog_duration))
         return self.call_async(self._stub.StartExperimentLog, req,
                                error_from_response=start_experiment_log_error, copy_request=False,
                                **kwargs)
@@ -133,6 +141,31 @@ class LogStatusClient(BaseClient):
         req.past_duration.CopyFrom(bosdyn.util.seconds_to_duration(-seconds))
         return self.call_async(self._stub.StartRetroLog, req,
                                error_from_response=start_retro_log_error, copy_request=False,
+                               **kwargs)
+
+    def start_concurrent_log(self, duration_seconds, event=None, **kwargs):
+        """Start an experiment log that allows concurrency, to run based on a particular data_set, as derived from the recipe corresponding to the provided event. An event must be provided!"""
+        req = log_status.StartConcurrentLogRequest()
+        req.keep_alive.CopyFrom(bosdyn.util.seconds_to_duration(duration_seconds))
+
+        if event:
+            req.event.CopyFrom(event)
+
+        return self.call(self._stub.StartConcurrentLog, req,
+                         error_from_response=start_concurrent_log_error, copy_request=False,
+                         **kwargs)
+
+    def start_concurrent_log_async(self, duration_seconds, data_set_names=None, properties=None,
+                                   event=None, **kwargs):
+        """Start an experiment log that allows concurrency, to run based on a particular data_set, as derived from the recipe corresponding to the provided event. An event must be provided!"""
+        req = log_status.StartConcurrentLogRequest()
+        req.keep_alive.CopyFrom(bosdyn.util.seconds_to_duration(duration_seconds))
+
+        if event:
+            req.event.CopyFrom(event)
+
+        return self.call_async(self._stub.StartConcurrentLog, req,
+                               error_from_response=start_concurrent_log_error, copy_request=False,
                                **kwargs)
 
     def update_experiment(self, id, seconds, **kwargs):
@@ -217,6 +250,18 @@ _START_RETRO_LOG_STATUS_TO_ERROR.update({
         error_pair(ConcurrencyLimitReachedError),
 })
 
+_START_CONCURRENT_LOG_STATUS_TO_ERROR = \
+    collections.defaultdict(lambda: (LogStatusResponseError, None))
+_START_CONCURRENT_LOG_STATUS_TO_ERROR.update({
+    log_status.StartConcurrentLogResponse.STATUS_OK: (None, None),
+    log_status.StartConcurrentLogResponse.STATUS_EXPERIMENT_LOG_RUNNING:
+        error_pair(ExperimentAlreadyRunningError),
+    log_status.StartConcurrentLogResponse.STATUS_CONCURRENCY_LIMIT_REACHED:
+        error_pair(ConcurrencyLimitReachedError),
+    log_status.StartConcurrentLogResponse.STATUS_NO_DATA_FOR_EVENT:
+        error_pair(NoDataForEventError),
+})
+
 _UPDATE_EXPERIMENT_LOG_STATUS_TO_ERROR = \
     collections.defaultdict(lambda: (LogStatusResponseError, None))
 _UPDATE_EXPERIMENT_LOG_STATUS_TO_ERROR.update({
@@ -270,6 +315,15 @@ def start_retro_log_error(response):
     return error_factory(response, response.status,
                          status_to_string=log_status.StartRetroLogResponse.Status.Name,
                          status_to_error=_START_RETRO_LOG_STATUS_TO_ERROR)
+
+
+@handle_common_header_errors
+@handle_unset_status_error(unset='STATUS_UNKNOWN')
+def start_concurrent_log_error(response):
+    """Return a custom exception based on the StartConcurrentLog response, None if no error."""
+    return error_factory(response, response.status,
+                         status_to_string=log_status.StartConcurrentLogResponse.Status.Name,
+                         status_to_error=_START_CONCURRENT_LOG_STATUS_TO_ERROR)
 
 
 @handle_common_header_errors

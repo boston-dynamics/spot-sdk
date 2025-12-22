@@ -25,7 +25,7 @@ class NtripClientParams:
     """
 
     def __init__(self, server=DEFAULT_NTRIP_SERVER, port=DEFAULT_NTRIP_PORT, user="", password="",
-                 mountpoint="", tls=False):
+                 mountpoint="", tls=False, reconnect_secs=SERVER_RECONNECT_DELAY):
         """
         Constructor.
         """
@@ -35,6 +35,7 @@ class NtripClientParams:
         self.password = password
         self.mountpoint = mountpoint
         self.tls = tls
+        self.reconnect_secs = reconnect_secs
 
 
 class NtripClient:
@@ -54,6 +55,7 @@ class NtripClient:
         self.password = params.password
         self.mountpoint = params.mountpoint
         self.tls = params.tls
+        self.reconnect_secs = params.reconnect_secs
 
         self.thread = None
         self.streaming = False
@@ -143,9 +145,9 @@ class NtripClient:
             self.logger.info(response_lines[0].decode())
             if status[1] != "200":
                 self.logger.error("HTTP Error: %s, retrying in %d seconds",
-                                  response_lines[0].decode(), SERVER_RECONNECT_DELAY)
+                                  response_lines[0].decode(), self.reconnect_secs)
                 sock.close()
-                time.sleep(SERVER_RECONNECT_DELAY)
+                time.sleep(self.reconnect_secs)
                 return False
             self.logger.info("NTRIP Request Response received.")
             for line in range(1, len(response_lines)):
@@ -218,6 +220,13 @@ class NtripClient:
         self.streaming = True
         while self.streaming:
             self.stream_data()
+            # stream_data blocks for the lifetime of a connection. If it returns while we are still
+            # expecting to be streaming, it means the server disconnected from us. Wait for a delay
+            # before attempting to reconnect to avoid spamming the server.
+            if self.streaming:
+                self.logger.info(
+                    f"Attempting to reconnect to NTRIP server in {self.reconnect_secs} seconds.")
+                time.sleep(self.reconnect_secs)
 
     def handle_ntrip_data(self, data):
         """

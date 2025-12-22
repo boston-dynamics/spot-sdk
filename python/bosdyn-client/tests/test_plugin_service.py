@@ -4,7 +4,6 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
-import itertools
 import threading
 import time
 from concurrent.futures import Future, ThreadPoolExecutor
@@ -14,8 +13,7 @@ import pytest
 
 from bosdyn.api import (data_acquisition_pb2, data_acquisition_store_pb2, image_pb2,
                         service_customization_pb2)
-from bosdyn.client.common import FutureWrapper
-#from .util import make_async
+# from .util import make_async
 from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcquisitionPluginService,
                                                            DataAcquisitionStoreHelper,
                                                            RequestCancelledError, RequestManager,
@@ -23,6 +21,7 @@ from bosdyn.client.data_acquisition_plugin_service import (Capability, DataAcqui
 from bosdyn.client.data_acquisition_store import DataAcquisitionStoreClient
 from bosdyn.client.service_customization_helpers import InvalidCustomParamSpecError
 
+from . import error_callback_helpers
 from .helpers import make_async
 
 
@@ -288,9 +287,10 @@ def test_removal():
 def test_request_removal(daq_robot):
     """Make some requests, and then verify that old ones get removed."""
     context = None
-    with mock.patch('time.time') as mock_time:
+    now = 0.0
+    mock_time = lambda: now
+    with error_callback_helpers.mock_time_context(mock_time):
         service = DataAcquisitionPluginService(daq_robot, single_capability, success_plugin_impl)
-        mock_time.return_value = 0
         response1 = service.AcquirePluginData(make_single_request('action 1'), context)
         assert response1.request_id > 0
 
@@ -299,7 +299,7 @@ def test_request_removal(daq_robot):
                 data_acquisition_pb2.GetStatusRequest(request_id=response1.request_id), context)
             if feedback_response.status == feedback_response.STATUS_COMPLETE:
                 break
-        mock_time.return_value = 100
+        now = 100.0
 
         # The current cleanup triggering happens when a request arrives.
         response2 = service.AcquirePluginData(make_single_request('action 1'), context)
@@ -307,8 +307,8 @@ def test_request_removal(daq_robot):
 
         feedback_response = service.GetStatus(
             data_acquisition_pb2.GetStatusRequest(request_id=response1.request_id), context)
-        print(feedback_response)
-        assert feedback_response.status == feedback_response.STATUS_REQUEST_ID_DOES_NOT_EXIST
+        assert feedback_response.status == feedback_response.STATUS_REQUEST_ID_DOES_NOT_EXIST, str(
+            feedback_response)
 
 
 def test_bad_param_spec(daq_robot):

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.spot_check &mdash; Spot 5.0.1.2 documentation</title>
+  <title>bosdyn.client.spot_check &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -71,6 +71,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -84,13 +85,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -259,6 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -275,12 +279,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -325,6 +331,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -377,6 +384,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -411,7 +419,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
@@ -519,12 +526,11 @@
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">urllib3</span> <span class="kn">import</span> <span class="n">Timeout</span>
-
 <span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="kn">import</span> <span class="n">spot_check_pb2</span><span class="p">,</span> <span class="n">spot_check_service_pb2_grpc</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">handle_common_header_errors</span><span class="p">,</span>
                                   <span class="n">handle_lease_use_result_errors</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">LeaseUseError</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">TimedOutError</span>
+<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">now_sec</span>
 
 
 <div class="viewcode-block" id="SpotCheckError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/spot_check.html#bosdyn.client.spot_check.SpotCheckError">[docs]</a><span class="k">class</span> <span class="nc">SpotCheckError</span><span class="p">(</span><span class="n">ResponseError</span><span class="p">):</span>
@@ -703,7 +709,7 @@
 <span class="sd">    Raises:</span>
 <span class="sd">        bosdyn.client.exceptions.Error: Throws on any error failure.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
     <span class="n">update_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">update_frequency</span>
     <span class="c1"># Start spot check procedure.</span>
@@ -713,7 +719,7 @@
     <span class="n">spot_check_client</span><span class="o">.</span><span class="n">spot_check_command</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
     <span class="c1"># Check spot check feedback.</span>
     <span class="n">feedback_req</span> <span class="o">=</span> <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">SpotCheckFeedbackRequest</span><span class="p">()</span>
-    <span class="k">while</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">):</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">now_sec</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">):</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">update_time</span><span class="p">)</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">spot_check_client</span><span class="o">.</span><span class="n">spot_check_feedback</span><span class="p">(</span><span class="n">feedback_req</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">SpotCheckFeedbackResponse</span><span class="o">.</span><span class="n">STATE_WAITING_FOR_COMMAND</span> <span class="ow">or</span>
@@ -746,7 +752,7 @@
 <span class="sd">    Raises:</span>
 <span class="sd">        bosdyn.client.exceptions.Error: Throws on any calibration failure.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
     <span class="n">update_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">update_frequency</span>
     <span class="c1"># Start camera calibration procedure.</span>
@@ -756,7 +762,7 @@
     <span class="n">spot_check_client</span><span class="o">.</span><span class="n">camera_calibration_command</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
     <span class="c1"># Check camera calibration feedback.</span>
     <span class="n">feedback_req</span> <span class="o">=</span> <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">CameraCalibrationFeedbackRequest</span><span class="p">()</span>
-    <span class="k">while</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">):</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">now_sec</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">):</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">update_time</span><span class="p">)</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">spot_check_client</span><span class="o">.</span><span class="n">camera_calibration_feedback</span><span class="p">(</span><span class="n">feedback_req</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">spot_check_pb2</span><span class="o">.</span><span class="n">CameraCalibrationFeedbackResponse</span><span class="o">.</span><span class="n">STATUS_SUCCESS</span><span class="p">):</span>

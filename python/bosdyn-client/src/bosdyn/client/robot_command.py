@@ -8,27 +8,26 @@
 import collections
 import time
 
-from google.protobuf import any_pb2, wrappers_pb2
-
-from bosdyn import geometry
 from bosdyn.api import (arm_command_pb2, basic_command_pb2, full_body_command_pb2, geometry_pb2,
-                        gripper_command_pb2, mobility_command_pb2, payload_estimation_pb2,
-                        robot_command_pb2, robot_command_service_pb2_grpc, synchronized_command_pb2,
-                        trajectory_pb2)
+                        mobility_command_pb2, payload_estimation_pb2, robot_command_pb2,
+                        robot_command_service_pb2_grpc, synchronized_command_pb2, trajectory_pb2)
 
 # isort: off
 # isort: on
+from google.protobuf import any_pb2, wrappers_pb2
+
+from bosdyn import geometry
 from bosdyn.api.spot import robot_command_pb2 as spot_command_pb2
 from bosdyn.client.common import (BaseClient, error_factory, error_pair,
                                   handle_common_header_errors, handle_lease_use_result_errors,
                                   handle_unset_status_error)
-from bosdyn.util import seconds_to_duration
+from bosdyn.util import now_sec, seconds_to_duration
 
 from .exceptions import Error as BaseError
 from .exceptions import InvalidRequestError, ResponseError, TimedOutError, UnsetStatusError
 from .frame_helpers import BODY_FRAME_NAME, ODOM_FRAME_NAME, get_se2_a_tform_b
 from .lease import add_lease_wallet_processors
-from .math_helpers import SE2Pose, SE3Pose, SE3Velocity
+from .math_helpers import SE2Pose, SE3Pose
 
 # The angles (in radians) that represent the claw gripper open and closed positions.
 _CLAW_GRIPPER_OPEN_ANGLE = -1.5708
@@ -372,11 +371,12 @@ class RobotCommandClient(BaseClient):
         return self.call_async(self._stub.RobotCommand, req, _robot_command_value,
                                _robot_command_error, copy_request=False, **kwargs)
 
-    def robot_command_feedback(self, robot_command_id, **kwargs):
+    def robot_command_feedback(self, robot_command_id=None, **kwargs):
         """Get feedback from a previously issued command.
 
         Args:
-            robot_command_id: ID of the robot command to get feedback on.
+            robot_command_id: ID of the robot command to get feedback on. If blank, will return feedback for the 
+            current active command if a command is in progress.
 
         Raises:
             RpcError: Problem communicating with the robot.
@@ -386,7 +386,7 @@ class RobotCommandClient(BaseClient):
         return self.call(self._stub.RobotCommandFeedback, req, None, _robot_command_feedback_error,
                          copy_request=False, **kwargs)
 
-    def robot_command_feedback_async(self, robot_command_id, **kwargs):
+    def robot_command_feedback_async(self, robot_command_id=None, **kwargs):
         """Async version of robot_command_feedback().
 
         Args:
@@ -1928,18 +1928,18 @@ def blocking_command(command_client, command, check_status_fn, end_time_secs=Non
                 basic_command_pb2.RobotCommandFeedbackStatus.Status.Name(feedback_status)),
             response)
 
-    start_time = time.time()
+    start_time = now_sec()
     end_time = start_time + timeout_sec
     update_time = 1.0 / update_frequency
 
     command_id = command_client.robot_command(command, timeout=timeout_sec,
                                               end_time_secs=end_time_secs)
 
-    now = time.time()
+    now = now_sec()
     while now < end_time:
         time_until_timeout = end_time - now
         rpc_timeout = max(time_until_timeout, 1)
-        start_call_time = time.time()
+        start_call_time = now_sec()
         try:
             response = command_client.robot_command_feedback(command_id, timeout=rpc_timeout)
         except TimedOutError:
@@ -1977,9 +1977,9 @@ def blocking_command(command_client, command, check_status_fn, end_time_secs=Non
             if check_status_fn(response):
                 return
 
-        delta_t = time.time() - start_call_time
+        delta_t = now_sec() - start_call_time
         time.sleep(max(min(delta_t, update_time), 0.0))
-        now = time.time()
+        now = now_sec()
 
     raise CommandTimedOutError(
         "Took longer than {:.1f} seconds to execute the command.".format(now - start_time))
@@ -2079,9 +2079,9 @@ def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
         arm_command.proto for more information about why a trajectory would succeed or fail.
     """
     if timeout_sec is not None:
-        start_time = time.time()
+        start_time = now_sec()
         end_time = start_time + timeout_sec
-        now = time.time()
+        now = now_sec()
 
     while timeout_sec is None or now < end_time:
         feedback_resp = command_client.robot_command_feedback(cmd_id)
@@ -2114,7 +2114,7 @@ def block_until_arm_arrives(command_client, cmd_id, timeout_sec=None):
                 return False
 
         time.sleep(0.1)
-        now = time.time()
+        now = now_sec()
     return False
 
 
@@ -2145,9 +2145,9 @@ def block_for_trajectory_cmd(
     """
 
     if timeout_sec is not None:
-        start_time = time.time()
+        start_time = now_sec()
         end_time = start_time + timeout_sec
-        now = time.time()
+        now = now_sec()
 
     while timeout_sec is None or now < end_time:
         feedback_resp = command_client.robot_command_feedback(cmd_id)
@@ -2173,7 +2173,7 @@ def block_for_trajectory_cmd(
                 return True
 
         time.sleep(feedback_interval_secs)
-        now = time.time()
+        now = now_sec()
 
     if logger is not None:
         logger.info('block_for_trajectory_cmd: timeout exceeded.')

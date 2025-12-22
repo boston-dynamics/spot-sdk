@@ -6,7 +6,6 @@
 
 """Unit tests for the directory registration module."""
 import time
-from unittest.mock import patch
 
 import pytest
 
@@ -15,6 +14,7 @@ import bosdyn.api.directory_registration_pb2 as directory_registration_protos
 import bosdyn.api.directory_registration_service_pb2_grpc as directory_registration_service
 import bosdyn.api.header_pb2 as HeaderProto
 import bosdyn.client.directory_registration
+import bosdyn.client.processors
 from bosdyn.client.directory_registration import (DirectoryRegistrationKeepAlive,
                                                   ServiceAlreadyExistsError,
                                                   ServiceDoesNotExistError)
@@ -231,7 +231,7 @@ def test_keep_alive_update(default_service_entry, default_service_endpoint):
 def _run_keepalive_test(service_entry, service_endpoint, mock_time, callback, test_time,
                         interval_seconds=INTERVAL_SECONDS,
                         initial_retry_seconds=INITIAL_RETRY_SECONDS):
-    with patch('bosdyn.client.directory_registration.time', mock_time):
+    with error_callback_helpers.mock_time_context(mock_time):
         client, service, server = _setup()
 
         client.register(service_entry.name, service_entry.type, service_entry.authority,

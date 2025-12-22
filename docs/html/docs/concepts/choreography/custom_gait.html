@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Custom Gait &mdash; Spot 5.0.1.2 documentation</title>
+  <title>Custom Gait &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -21,8 +21,8 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Install Choreographer" href="choreographer_setup.html" />
-    <link rel="prev" title="Choreography moves reference" href="move_reference.html" /> 
+    <link rel="next" title="Connecting robots to Choreographer" href="robot_controls_in_choreographer.html" />
+    <link rel="prev" title="Animations in Choreography" href="animations_in_choreographer.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -74,6 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -87,13 +88,15 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="README.html">Choreography</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="choreography_service.html">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -262,6 +265,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -278,12 +282,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -328,6 +334,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -380,6 +387,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -414,7 +422,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
@@ -529,12 +536,12 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="driving-custom-gait">
 <h2>Driving Custom Gait<a class="headerlink" href="#driving-custom-gait" title="Permalink to this heading"></a></h2>
-<p>CustomGait responds to the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyCommand</span></a> RPC. When operating through Choreographer with an attached XBox controller, steering commands will be sent based on joystick position (left joystick for translation, right for turning), and the d-pad down button will command Custom Gait to stop, allowing the sequence to proceed. Steering commands will be scaled by the <code class="docutils literal notranslate"><span class="pre">CustomGaitCommandLimits</span></code> message returned as part of the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyStatus</span></a> RPC. Those will generally be the values specified for <code class="docutils literal notranslate"><span class="pre">max_velocity</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw_rate</span></code> in the parameters, but may be limited based on a determination of what that gait pattern is capable of.</p>
+<p>Custom Gait responds to the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyCommand</span></a> RPC. When operating through Choreographer with an attached XBox controller, steering commands will be sent based on joystick position (left joystick for translation, right for turning), and the d-pad down button will command Custom Gait to stop, allowing the sequence to proceed. WASD input can also be used in place of Xbox input to drive Custom Gait moves when the “Accept Interactive WASD Input” option in the “Settings”-&gt;”Playback and Music Settings” menu is enabled (use shift+s instead of d-pad down to stop). Steering commands will be scaled by the <code class="docutils literal notranslate"><span class="pre">CustomGaitCommandLimits</span></code> message returned as part of the <a class="reference internal" href="choreography_service.html"><span class="doc">ChoreographyStatus</span></a> RPC. Those will generally be the values specified for <code class="docutils literal notranslate"><span class="pre">max_velocity</span></code> and <code class="docutils literal notranslate"><span class="pre">max_yaw_rate</span></code> in the parameters, but may be limited based on a determination of what that gait pattern is capable of.</p>
 <p>The custom gait move can also be driven through the tablet’s choreography drive screen using the tablet’s joysticks. See <a class="reference internal" href="choreography_in_tablet.html"><span class="doc">Tablet Choreography Mode</span></a> for further details on playing choreography sequences through the tablet.</p>
 </section>
 <section id="gait-diagram">
 <h2>Gait Diagram<a class="headerlink" href="#gait-diagram" title="Permalink to this heading"></a></h2>
-<p>A Hildebrand-style gait diagram (see <a class="reference external" href="https://en.wikipedia.org/wiki/Gait">wikipedia</a> is provided for Custom Gait as currently configured in the left panel of the Move Configuration tab in Choreographer. For each foot in the diagram (FL, FR, HL, HR), black regions of the diagram indicate periods of time when a foot is in contact with the ground, and white regions indicate periods of time when a foot is in the air. The phase sliders control the beginning and end of the white region. Some types of configuration errors will be indicated in red on the diagram.</p>
+<img src="../../../_images/gait_diagram.png" style="max-width:585px;"><p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Gait">Hildebrand-style</a> gait diagram is provided for Custom Gait in the <strong>Move Diagram</strong> section of the Move Configuration tab. For each foot in the diagram (FL, FR, HL, HR), black regions of the diagram indicate periods of time when a foot is in contact with the ground, and white regions indicate periods of time when a foot is in the air. The phase sliders control the beginning and end of the white region. Some types of configuration errors will be indicated in red on the diagram.</p>
 </section>
 <section id="presets">
 <h2>Presets<a class="headerlink" href="#presets" title="Permalink to this heading"></a></h2>
@@ -555,7 +562,7 @@ Beyond that, a valid CHA file to use with custom gait requires the following:</p
 <li><p>the first and last keyframe should match with the exception of base translate x, in case the animation moves forward.</p></li>
 <li><p>unlike other cha files, it is valid for feet to be in the air at the first and last frame, which allows for swings to cross the transition point of the custom gait loop</p></li>
 <li><p>the robot can be either translating forward or stepping in place with feet sliding backwards during the animated gait cycle cha, but for the best result the animation should be meant to translate at a constant velocity</p></li>
-<li><p>Some swing data still can not be pulled from the cha, so you may still need to adjust swing velocities and velocity limits…”, “</p></li>
+<li><p>Some swing data still cannot be pulled from the cha, so you may still need to adjust swing velocities and velocity limits.</p></li>
 </ul>
 </section>
 </section>

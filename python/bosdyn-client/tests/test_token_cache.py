@@ -10,7 +10,7 @@ import os
 import pytest
 
 from bosdyn.client.token_cache import (ClearFailedError, NotInCacheError, TokenCache,
-                                       TokenCacheFilesystem, WriteFailedError)
+                                       TokenCacheFilesystem)
 
 
 def _get_token_cache_filesystem():

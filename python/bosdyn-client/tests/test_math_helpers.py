@@ -6,15 +6,11 @@
 
 """Unit tests for frame helpers"""
 
-import math
 import random
 from math import cos, fabs, pi, sin, sqrt
 
-import google.protobuf.text_format
-import numpy
 import pytest
 
-from bosdyn.api import geometry_pb2
 from bosdyn.client.math_helpers import *
 
 # The following set of tests are for the math_helpers

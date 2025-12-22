@@ -30,7 +30,7 @@ class BaseDataReader:  # pylint: disable=too-many-instance-attributes
         if not self._file:
             if not self._filename:
                 raise ValueError("One of infile or filename must be specified")
-            self._file = open(self._filename, 'rb')
+            self._file = open(self._filename, 'rb')  # pylint: disable=consider-using-with
         self._file_descriptor = None
         self._spec_index = None
         self._index_offset = None

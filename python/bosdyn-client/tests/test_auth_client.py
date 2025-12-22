@@ -7,7 +7,6 @@
 """Unit tests for the auth module."""
 import time
 
-import grpc
 import pytest
 
 import bosdyn.api.auth_pb2

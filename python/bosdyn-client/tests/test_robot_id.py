@@ -7,7 +7,6 @@
 """Unit tests for the robot_id client."""
 import time
 
-import grpc
 import pytest
 
 import bosdyn.api.robot_id_pb2 as robot_id_protos

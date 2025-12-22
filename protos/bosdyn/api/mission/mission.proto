@@ -158,6 +158,10 @@ message Question {
     // human. Clients should usually avoid generating a UI element to ask such a question.
     bool for_autonomous_processing = 5;
 
+    // Optional string data to help autonomous systems identify questions.
+    // This data will come from the Prompt asking the question.
+    string autonomy_key = 8;
+
     // Severity for this question. See comment in Prompt message in nodes.proto for a better
     // understanding of what levels mean.
     AlertData.SeverityLevel severity = 6;

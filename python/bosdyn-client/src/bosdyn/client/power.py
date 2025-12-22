@@ -13,13 +13,14 @@ from concurrent.futures import TimeoutError
 from deprecated.sphinx import deprecated
 from google.protobuf.duration_pb2 import Duration
 
-from bosdyn.api import (basic_command_pb2, full_body_command_pb2, license_pb2, power_pb2,
-                        power_service_pb2_grpc, robot_command_pb2, robot_state_pb2)
+from bosdyn.api import (basic_command_pb2, full_body_command_pb2, power_pb2, power_service_pb2_grpc,
+                        robot_command_pb2, robot_state_pb2)
 from bosdyn.client.common import (BaseClient, common_license_errors, error_factory,
                                   handle_common_header_errors, handle_lease_use_result_errors,
                                   handle_unset_status_error)
 from bosdyn.client.exceptions import (Error, InternalServerError, LicenseError, ResponseError,
                                       TimedOutError)
+from bosdyn.util import now_sec
 
 from .lease import add_lease_wallet_processors
 
@@ -82,9 +83,10 @@ class SafetyStopUnknownStopTypeError(PowerResponseError):
 
 class PowerClient(BaseClient):
     """A client for enabling / disabling robot motor power.
+
     Commands are non-blocking. Clients are expected to issue a power command and then periodically
-    check the status of this command.
-    This service requires ownership over the robot, in the form of a lease.
+    check the status of this command. This service requires ownership over the robot, in the form of
+    a lease.
     """
     default_service_name = 'power'
     service_type = 'bosdyn.api.PowerService'
@@ -134,7 +136,7 @@ class PowerClient(BaseClient):
                                _fan_power_command_error_from_response, **kwargs)
 
     def fan_power_command_feedback(self, command_id, **kwargs):
-        """Check the status of a previously issued fan command"""
+        """Check the status of a previously issued fan command."""
         req = self._fan_power_command_feedback_request(command_id)
         return self.call(self._stub.FanPowerCommandFeedback, req, None,
                          _fan_power_feedback_error_from_response, **kwargs)
@@ -190,7 +192,10 @@ def _handle_license_errors(func):
 
 
 def _common_license_errors(response):
-    """Return an exception based on license status. None if no error."""
+    """Return an exception based on license status.
+
+    None if no error.
+    """
     if response.status != power_pb2.STATUS_LICENSE_ERROR:
         return None
 
@@ -284,14 +289,17 @@ _RESET_SAFETY_STOP_STATUS_TO_ERROR.update({
 @deprecated(reason='Replaced by the less ambiguous safe_power_off_motors function.',
             version='3.0.0', action="ignore")
 def safe_power_off(command_client, state_client, timeout_sec=30, update_frequency=1.0, **kwargs):
-    """Safely power off motors. See safe_power_off_motors()."""
+    """Safely power off motors.
+
+    See safe_power_off_motors().
+    """
     safe_power_off_motors(command_client, state_client, timeout_sec, update_frequency, **kwargs)
 
 
 def safe_power_off_motors(command_client, state_client, timeout_sec=30, update_frequency=1.0,
                           **kwargs):
-    """Power off robot motors safely. This function blocks until robot safely powers off. This
-    means the robot will attempt to sit before powering motors off.
+    """Power off robot motors safely. This function blocks until robot safely powers off. This means
+    the robot will attempt to sit before powering motors off.
 
     Args:
         command_client (RobotCommandClient): client for calling RobotCommandService safe power off.
@@ -305,7 +313,7 @@ def safe_power_off_motors(command_client, state_client, timeout_sec=30, update_f
         power.CommandTimedOutError: Did not power off within timeout_sec
         RobotCommandResponseError: Something went wrong with the safe power off.
     """
-    start_time = time.time()
+    start_time = now_sec()
     end_time = start_time + timeout_sec
     update_time = 1.0 / update_frequency
 
@@ -314,9 +322,9 @@ def safe_power_off_motors(command_client, state_client, timeout_sec=30, update_f
     command = robot_command_pb2.RobotCommand(full_body_command=full_body_command)
     command_client.robot_command(command=command, **kwargs)
 
-    while time.time() < end_time:
-        time_until_timeout = end_time - time.time()
-        start_call_time = time.time()
+    while now_sec() < end_time:
+        time_until_timeout = end_time - now_sec()
+        start_call_time = now_sec()
         future = state_client.get_robot_state_async(**kwargs)
         try:
             response = future.result(timeout=time_until_timeout)
@@ -324,7 +332,7 @@ def safe_power_off_motors(command_client, state_client, timeout_sec=30, update_f
                 return
         except TimeoutError:
             raise CommandTimedOutError
-        call_time = time.time() - start_call_time
+        call_time = now_sec() - start_call_time
         sleep_time = max(0.0, update_time - call_time)
         time.sleep(sleep_time)
     raise CommandTimedOutError
@@ -333,14 +341,20 @@ def safe_power_off_motors(command_client, state_client, timeout_sec=30, update_f
 @deprecated(reason='Replaced by the less ambiguous power_on_motors function.', version='2.3.4',
             action="ignore")
 def power_on(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
-    """Power on robot motors. See power_on_motors()."""
+    """Power on robot motors.
+
+    See power_on_motors().
+    """
     power_on_motors(power_client, timeout_sec, update_frequency, **kwargs)
 
 
 @deprecated(reason='Replaced by the less ambiguous power_off_motors function.', version='2.3.4',
             action="ignore")
 def power_off(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
-    """Power off the robot motors. See power_off_motors()."""
+    """Power off the robot motors.
+
+    See power_off_motors().
+    """
     power_off_motors(power_client, timeout_sec, update_frequency, **kwargs)
 
 
@@ -399,10 +413,10 @@ def safe_power_off_robot(command_client, state_client, power_client, timeout_sec
         power.CommandTimedOutError: Did not power off within timeout_sec
         RobotCommandResponseError: Something went wrong with the safe power off.
     """
-    end_time = time.time() + timeout_sec
-    safe_power_off_motors(command_client, state_client, timeout_sec=end_time - time.time(),
+    end_time = now_sec() + timeout_sec
+    safe_power_off_motors(command_client, state_client, timeout_sec=end_time - now_sec(),
                           update_frequency=update_frequency, **kwargs)
-    power_off_robot(power_client, timeout_sec=end_time - time.time(),
+    power_off_robot(power_client, timeout_sec=end_time - now_sec(),
                     update_frequency=update_frequency, **kwargs)
 
 
@@ -442,10 +456,10 @@ def safe_power_cycle_robot(command_client, state_client, power_client, timeout_s
         power.CommandTimedOutError: Did not power off within timeout_sec
         RobotCommandResponseError: Something went wrong with the safe power off.
     """
-    end_time = time.time() + timeout_sec
-    safe_power_off_motors(command_client, state_client, timeout_sec=end_time - time.time(),
+    end_time = now_sec() + timeout_sec
+    safe_power_off_motors(command_client, state_client, timeout_sec=end_time - now_sec(),
                           update_frequency=update_frequency, **kwargs)
-    power_cycle_robot(power_client, timeout_sec=end_time - time.time(),
+    power_cycle_robot(power_client, timeout_sec=end_time - now_sec(),
                       update_frequency=update_frequency, **kwargs)
 
 
@@ -463,6 +477,49 @@ def power_cycle_robot(power_client, timeout_sec=30, update_frequency=1.0, **kwar
         PowerResponseError: Something went wrong during the power off sequence.
     """
     request = power_pb2.PowerCommandRequest.REQUEST_CYCLE_ROBOT
+    _power_command(power_client, request, timeout_sec, update_frequency, expect_grpc_timeout=True,
+                   **kwargs)
+
+
+def safe_soft_reboot_robot(command_client, state_client, power_client, timeout_sec=30,
+                           update_frequency=1.0, **kwargs):
+    """Soft reboot the robot safely. This function blocks until robot safely powers off. The robot
+    will attempt to sit before soft rebooting.
+
+    Args:
+        command_client (RobotCommandClient): client for calling RobotCommandService safe power off.
+        state_client (RobotStateClient): client for monitoring power state.
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        RobotCommandResponseError: Something went wrong with the safe power off.
+    """
+    end_time = now_sec() + timeout_sec
+    safe_power_off_motors(command_client, state_client, timeout_sec=end_time - now_sec(),
+                          update_frequency=update_frequency, **kwargs)
+    soft_reboot_robot(power_client, timeout_sec=end_time - now_sec(),
+                      update_frequency=update_frequency, **kwargs)
+
+
+def soft_reboot_robot(power_client, timeout_sec=30, update_frequency=1.0, **kwargs):
+    """Soft reboot the robot. Rebooting the robot will stop API comms.
+
+    Args:
+        power_client (bosdyn.api.PowerClient): client for calling power service.
+        timeout_sec (float): Max time this function will block for.
+        update_frequency (float): The frequency with which the robot should check if the command
+                                  has succeeded.
+    Raises:
+        RpcError: Problem communicating with the robot.
+        power.CommandTimedOutError: Did not power off within timeout_sec
+        PowerResponseError: Something went wrong during the power off sequence.
+    """
+    request = power_pb2.PowerCommandRequest.REQUEST_SOFT_REBOOT_ROBOT
     _power_command(power_client, request, timeout_sec, update_frequency, expect_grpc_timeout=True,
                    **kwargs)
 
@@ -551,7 +608,7 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0,
                                   has succeeded.
         expect_timeout (bool): Expect API comms to drop on a success.
     """
-    start_time = time.time()
+    start_time = now_sec()
     end_time = start_time + timeout_sec
     update_time = 1.0 / update_frequency
 
@@ -566,9 +623,9 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0,
         return  # Command succeeded immediately.
 
     power_command_id = response.power_command_id
-    while time.time() < end_time:
-        time_until_timeout = end_time - time.time()
-        start_call_time = time.time()
+    while now_sec() < end_time:
+        time_until_timeout = end_time - now_sec()
+        start_call_time = now_sec()
         future = power_client.power_command_feedback_async(power_command_id, **kwargs)
         try:
             response = future.result(timeout=time_until_timeout)
@@ -585,7 +642,7 @@ def _power_command(power_client, request, timeout_sec=30, update_frequency=1.0,
                 raise
         except TimeoutError:
             raise CommandTimedOutError
-        call_time = time.time() - start_call_time
+        call_time = now_sec() - start_call_time
         sleep_time = max(0.0, update_time - call_time)
         time.sleep(sleep_time)
     raise CommandTimedOutError

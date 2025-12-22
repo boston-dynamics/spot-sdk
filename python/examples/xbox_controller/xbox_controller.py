@@ -5,7 +5,7 @@
 # Development Kit License (20191101-BDSDK-SL).
 
 import argparse
-import math
+import sys
 import textwrap
 import time
 from enum import Enum

@@ -11,7 +11,7 @@ import logging
 _LOGGER = logging.getLogger(__name__)
 
 from bosdyn.api.spot_cam import service_pb2_grpc, version_pb2
-from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
+from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class VersionClient(BaseClient):

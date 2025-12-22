@@ -8,10 +8,13 @@
 
 import sys
 import time
+import uuid
 
 import bosdyn.client
 import bosdyn.client.util
+from bosdyn.api.data_buffer_pb2 import Event
 from bosdyn.client.log_status import InactiveLogError, LogStatusClient
+from bosdyn.util import now_timestamp, seconds_to_timestamp, timestamp_to_sec
 
 
 def get_log_status(client, options):
@@ -80,6 +83,24 @@ def start_retro_log(client, options):
         print("Must provide start")
 
 
+def start_concurrent_log(client, options):
+    if options.event_type:
+        now = now_timestamp()
+        event = Event()
+        event.type = options.event_type
+        event.description = 'Triggering a concurrent log'
+        event.source = 'LogStatus CLI'
+        event.id = uuid.uuid4().hex
+        event.start_time.CopyFrom(now)
+        end_time_sec = timestamp_to_sec(now) + options.seconds
+        event.end_time.CopyFrom(seconds_to_timestamp(end_time_sec))
+
+        response = client.start_concurrent_log(options.seconds, event).log_status
+        print("Started Concurrent Log: \n\n", response)
+    else:
+        print("Must provide file path of dataset")
+
+
 def terminate_log(client, options):
     if options.id:
         print("Terminated Log: ", client.terminate_log(options.id))
@@ -90,7 +111,8 @@ def terminate_log(client, options):
 def main():
     import argparse
 
-    commands = {'get', 'active', 'experiment', 'retro', 'terminate'}
+    commands = {'get', 'active', 'experiment', 'retro', 'concurrent'
+                'terminate'}
 
     parser = argparse.ArgumentParser()
     bosdyn.client.util.add_base_arguments(parser)
@@ -118,6 +140,10 @@ def main():
     retro_parser = subparsers.add_parser('retro', help='interface with retro logs')
     retro_parser.add_argument('seconds', type=float, help='number of seconds for retro log')
 
+    concurrent_parser = subparsers.add_parser('concurrent', help='interface with concurrent logs')
+    concurrent_parser.add_argument('event_type', help='string type of event to trigger logging')
+    concurrent_parser.add_argument('seconds', type=float, help='number of seconds for retro log')
+
     options = parser.parse_args()
 
     # Create robot object with an image client.
@@ -134,6 +160,8 @@ def main():
         start_experiment_log(log_status_client, options)
     elif options.command == 'retro':
         start_retro_log(log_status_client, options)
+    elif options.command == 'concurrent':
+        start_concurrent_log(log_status_client, options)
     elif options.command == 'terminate':
         terminate_log(log_status_client, options)
     else:

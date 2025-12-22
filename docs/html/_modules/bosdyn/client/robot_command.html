@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.robot_command &mdash; Spot 5.0.1.2 documentation</title>
+  <title>bosdyn.client.robot_command &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -71,6 +71,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -84,13 +85,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -259,6 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -275,12 +279,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -325,6 +331,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -377,6 +384,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -411,7 +419,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
@@ -520,27 +527,26 @@
 <span class="kn">import</span> <span class="nn">collections</span>
 <span class="kn">import</span> <span class="nn">time</span>
 
-<span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">any_pb2</span><span class="p">,</span> <span class="n">wrappers_pb2</span>
-
-<span class="kn">from</span> <span class="nn">bosdyn</span> <span class="kn">import</span> <span class="n">geometry</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api</span> <span class="kn">import</span> <span class="p">(</span><span class="n">arm_command_pb2</span><span class="p">,</span> <span class="n">basic_command_pb2</span><span class="p">,</span> <span class="n">full_body_command_pb2</span><span class="p">,</span> <span class="n">geometry_pb2</span><span class="p">,</span>
-                        <span class="n">gripper_command_pb2</span><span class="p">,</span> <span class="n">mobility_command_pb2</span><span class="p">,</span> <span class="n">payload_estimation_pb2</span><span class="p">,</span>
-                        <span class="n">robot_command_pb2</span><span class="p">,</span> <span class="n">robot_command_service_pb2_grpc</span><span class="p">,</span> <span class="n">synchronized_command_pb2</span><span class="p">,</span>
-                        <span class="n">trajectory_pb2</span><span class="p">)</span>
+                        <span class="n">mobility_command_pb2</span><span class="p">,</span> <span class="n">payload_estimation_pb2</span><span class="p">,</span> <span class="n">robot_command_pb2</span><span class="p">,</span>
+                        <span class="n">robot_command_service_pb2_grpc</span><span class="p">,</span> <span class="n">synchronized_command_pb2</span><span class="p">,</span> <span class="n">trajectory_pb2</span><span class="p">)</span>
 
 <span class="c1"># isort: off</span>
 <span class="c1"># isort: on</span>
+<span class="kn">from</span> <span class="nn">google.protobuf</span> <span class="kn">import</span> <span class="n">any_pb2</span><span class="p">,</span> <span class="n">wrappers_pb2</span>
+
+<span class="kn">from</span> <span class="nn">bosdyn</span> <span class="kn">import</span> <span class="n">geometry</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.spot</span> <span class="kn">import</span> <span class="n">robot_command_pb2</span> <span class="k">as</span> <span class="n">spot_command_pb2</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">error_pair</span><span class="p">,</span>
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_lease_use_result_errors</span><span class="p">,</span>
                                   <span class="n">handle_unset_status_error</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">seconds_to_duration</span>
+<span class="kn">from</span> <span class="nn">bosdyn.util</span> <span class="kn">import</span> <span class="n">now_sec</span><span class="p">,</span> <span class="n">seconds_to_duration</span>
 
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">Error</span> <span class="k">as</span> <span class="n">BaseError</span>
 <span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">InvalidRequestError</span><span class="p">,</span> <span class="n">ResponseError</span><span class="p">,</span> <span class="n">TimedOutError</span><span class="p">,</span> <span class="n">UnsetStatusError</span>
 <span class="kn">from</span> <span class="nn">.frame_helpers</span> <span class="kn">import</span> <span class="n">BODY_FRAME_NAME</span><span class="p">,</span> <span class="n">ODOM_FRAME_NAME</span><span class="p">,</span> <span class="n">get_se2_a_tform_b</span>
 <span class="kn">from</span> <span class="nn">.lease</span> <span class="kn">import</span> <span class="n">add_lease_wallet_processors</span>
-<span class="kn">from</span> <span class="nn">.math_helpers</span> <span class="kn">import</span> <span class="n">SE2Pose</span><span class="p">,</span> <span class="n">SE3Pose</span><span class="p">,</span> <span class="n">SE3Velocity</span>
+<span class="kn">from</span> <span class="nn">.math_helpers</span> <span class="kn">import</span> <span class="n">SE2Pose</span><span class="p">,</span> <span class="n">SE3Pose</span>
 
 <span class="c1"># The angles (in radians) that represent the claw gripper open and closed positions.</span>
 <span class="n">_CLAW_GRIPPER_OPEN_ANGLE</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.5708</span>
@@ -884,11 +890,12 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommand</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="n">_robot_command_value</span><span class="p">,</span>
                                <span class="n">_robot_command_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RobotCommandClient.robot_command_feedback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="RobotCommandClient.robot_command_feedback"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get feedback from a previously issued command.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            robot_command_id: ID of the robot command to get feedback on.</span>
+<span class="sd">            robot_command_id: ID of the robot command to get feedback on. If blank, will return feedback for the </span>
+<span class="sd">            current active command if a command is in progress.</span>
 
 <span class="sd">        Raises:</span>
 <span class="sd">            RpcError: Problem communicating with the robot.</span>
@@ -898,7 +905,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">RobotCommandFeedback</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">_robot_command_feedback_error</span><span class="p">,</span>
                          <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="RobotCommandClient.robot_command_feedback_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback_async">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="RobotCommandClient.robot_command_feedback_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/robot_command.html#bosdyn.client.robot_command.RobotCommandClient.robot_command_feedback_async">[docs]</a>    <span class="k">def</span> <span class="nf">robot_command_feedback_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">robot_command_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of robot_command_feedback().</span>
 
 <span class="sd">        Args:</span>
@@ -2440,18 +2447,18 @@
                 <span class="n">basic_command_pb2</span><span class="o">.</span><span class="n">RobotCommandFeedbackStatus</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">feedback_status</span><span class="p">)),</span>
             <span class="n">response</span><span class="p">)</span>
 
-    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
     <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
     <span class="n">update_time</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">update_frequency</span>
 
     <span class="n">command_id</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout_sec</span><span class="p">,</span>
                                               <span class="n">end_time_secs</span><span class="o">=</span><span class="n">end_time_secs</span><span class="p">)</span>
 
-    <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">now</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
     <span class="k">while</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
         <span class="n">time_until_timeout</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">now</span>
         <span class="n">rpc_timeout</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">time_until_timeout</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="n">start_call_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">start_call_time</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command_feedback</span><span class="p">(</span><span class="n">command_id</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">rpc_timeout</span><span class="p">)</span>
         <span class="k">except</span> <span class="n">TimedOutError</span><span class="p">:</span>
@@ -2489,9 +2496,9 @@
             <span class="k">if</span> <span class="n">check_status_fn</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
                 <span class="k">return</span>
 
-        <span class="n">delta_t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_call_time</span>
+        <span class="n">delta_t</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_call_time</span>
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">delta_t</span><span class="p">,</span> <span class="n">update_time</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">))</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
 
     <span class="k">raise</span> <span class="n">CommandTimedOutError</span><span class="p">(</span>
         <span class="s2">&quot;Took longer than </span><span class="si">{:.1f}</span><span class="s2"> seconds to execute the command.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">now</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span></div>
@@ -2591,9 +2598,9 @@
 <span class="sd">        arm_command.proto for more information about why a trajectory would succeed or fail.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">timeout_sec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
         <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
 
     <span class="k">while</span> <span class="n">timeout_sec</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
         <span class="n">feedback_resp</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command_feedback</span><span class="p">(</span><span class="n">cmd_id</span><span class="p">)</span>
@@ -2626,7 +2633,7 @@
                 <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
     <span class="k">return</span> <span class="kc">False</span></div>
 
 
@@ -2657,9 +2664,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">timeout_sec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
         <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span> <span class="o">+</span> <span class="n">timeout_sec</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
 
     <span class="k">while</span> <span class="n">timeout_sec</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">now</span> <span class="o">&lt;</span> <span class="n">end_time</span><span class="p">:</span>
         <span class="n">feedback_resp</span> <span class="o">=</span> <span class="n">command_client</span><span class="o">.</span><span class="n">robot_command_feedback</span><span class="p">(</span><span class="n">cmd_id</span><span class="p">)</span>
@@ -2685,7 +2692,7 @@
                 <span class="k">return</span> <span class="kc">True</span>
 
         <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">feedback_interval_secs</span><span class="p">)</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">now</span> <span class="o">=</span> <span class="n">now_sec</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;block_for_trajectory_cmd: timeout exceeded.&#39;</span><span class="p">)</span>

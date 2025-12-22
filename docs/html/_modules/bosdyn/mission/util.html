@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.mission.util &mdash; Spot 5.0.1.2 documentation</title>
+  <title>bosdyn.mission.util &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -71,6 +71,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -84,13 +85,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -259,6 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -275,12 +279,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -325,6 +331,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -377,6 +384,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -411,7 +419,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
@@ -523,7 +530,6 @@
 <span class="kn">import</span> <span class="nn">operator</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">str</span> <span class="k">as</span> <span class="n">text</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">import</span> <span class="nn">google.protobuf.message</span>
@@ -571,8 +577,7 @@
     <span class="k">if</span> <span class="n">start_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
     <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;|&#39;</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">*</span> <span class="n">start_level</span>
-    <span class="n">string</span> <span class="o">+=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">text</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39; &#39;</span>
-                                     <span class="k">if</span> <span class="n">text</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">root</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
+    <span class="n">string</span> <span class="o">+=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">root</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;(&#39;</span> <span class="o">+</span> <span class="n">root</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s1">&#39;)&#39;</span>
     <span class="k">if</span> <span class="n">include_status</span><span class="p">:</span>
         <span class="n">string</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">prefix</span> <span class="o">+</span> <span class="s1">&#39;Status code: [</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">last_result</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
@@ -682,6 +687,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Proto &quot;</span><span class="si">{}</span><span class="s1">&quot; of type &quot;</span><span class="si">{}</span><span class="s1">&quot; has </span><span class="si">{}</span><span class="s1"> children!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">inner_type</span><span class="p">,</span> <span class="n">num_children</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inner_proto</span><span class="p">,</span> <span class="n">nodes_pb2</span><span class="o">.</span><span class="n">SimpleParallel</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">num_children</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Proto &quot;</span><span class="si">{}</span><span class="s1">&quot; of type &quot;</span><span class="si">{}</span><span class="s1">&quot; was given </span><span class="si">{}</span><span class="s1"> children but should have 2!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">inner_type</span><span class="p">,</span> <span class="n">num_children</span><span class="p">))</span>
+        <span class="n">inner_proto</span><span class="o">.</span><span class="n">primary</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">proto_from_tuple</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">inner_proto</span><span class="o">.</span><span class="n">secondary</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">proto_from_tuple</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
     <span class="k">elif</span> <span class="n">num_children</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">Error</span><span class="p">(</span><span class="s1">&#39;Proto &quot;</span><span class="si">{}</span><span class="s1">&quot; of type &quot;</span><span class="si">{}</span><span class="s1">&quot; was given </span><span class="si">{}</span><span class="s1"> children, but I do not know how to add&#39;</span>
                     <span class="s1">&#39; them!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">inner_type</span><span class="p">,</span> <span class="n">num_children</span><span class="p">))</span>
@@ -720,7 +731,8 @@
 
 
 <div class="viewcode-block" id="python_type_to_pb_type"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.python_type_to_pb_type">[docs]</a><span class="k">def</span> <span class="nf">python_type_to_pb_type</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ValueType</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the protobuf-schema variable type that corresponds to the given variable.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the protobuf-schema variable type that corresponds to the given</span>
+<span class="sd">    variable.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_BOOL</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
@@ -778,7 +790,8 @@
 
 
 <div class="viewcode-block" id="field_desc_to_pb_type"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.field_desc_to_pb_type">[docs]</a><span class="k">def</span> <span class="nf">field_desc_to_pb_type</span><span class="p">(</span><span class="n">field_desc</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the protobuf-schema variable type that corresponds to the given descriptor.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the protobuf-schema variable type that corresponds to the given</span>
+<span class="sd">    descriptor.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">field</span><span class="o">.</span><span class="n">label</span> <span class="o">==</span> <span class="n">FieldDescriptor</span><span class="o">.</span><span class="n">LABEL_REPEATED</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">TYPE_LIST</span>
     <span class="k">elif</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_UINT32</span><span class="p">,</span> <span class="n">field_desc</span><span class="o">.</span><span class="n">TYPE_UINT64</span><span class="p">,</span>
@@ -801,7 +814,8 @@
 
 
 <div class="viewcode-block" id="safe_pb_type_to_string"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.safe_pb_type_to_string">[docs]</a><span class="k">def</span> <span class="nf">safe_pb_type_to_string</span><span class="p">(</span><span class="n">pb_type</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the stringified VariableDeclaration.Type, or &quot;&lt;unknown&gt;&quot; if the type is invalid.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the stringified VariableDeclaration.Type, or &quot;&lt;unknown&gt;&quot; if the</span>
+<span class="sd">    type is invalid.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">VariableDeclaration</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Name</span><span class="p">(</span><span class="n">pb_type</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -834,7 +848,8 @@
 
 
 <div class="viewcode-block" id="proto_enum_to_result_constant"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.proto_enum_to_result_constant">[docs]</a><span class="k">def</span> <span class="nf">proto_enum_to_result_constant</span><span class="p">(</span><span class="n">proto_msg</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a Result enum from a util_pb2.Result, or throws InvalidConversion error.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a Result enum from a util_pb2.Result, or throws</span>
+<span class="sd">    InvalidConversion error.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ResultFromProto</span><span class="o">.</span><span class="n">results_from_proto</span><span class="p">[</span><span class="n">proto_msg</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -842,7 +857,8 @@
 
 
 <div class="viewcode-block" id="result_constant_to_proto_enum"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.result_constant_to_proto_enum">[docs]</a><span class="k">def</span> <span class="nf">result_constant_to_proto_enum</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a protobuf version of the Result enum, RESULT_UNKNOWN on error.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a protobuf version of the Result enum, RESULT_UNKNOWN on</span>
+<span class="sd">    error.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">Result</span><span class="p">):</span>
         <span class="k">raise</span> <span class="n">InvalidConversion</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">DESCRIPTOR</span><span class="o">.</span><span class="n">full_name</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
@@ -875,7 +891,7 @@
         <span class="c1"># Look at max_vel using &gt;=, then min_vel using &lt;=.</span>
         <span class="k">for</span> <span class="n">min_max</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="p">((</span><span class="s1">&#39;max_vel&#39;</span><span class="p">,</span> <span class="n">operator</span><span class="o">.</span><span class="n">ge</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;min_vel&#39;</span><span class="p">,</span> <span class="n">operator</span><span class="o">.</span><span class="n">le</span><span class="p">)):</span>
             <span class="c1"># If the other doesn&#39;t even have this field, skip to the next one.</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="n">min_max</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">other</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">min_max</span><span class="p">)):</span>
                 <span class="k">continue</span>
 
             <span class="n">lim_returned</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">returned</span><span class="p">,</span> <span class="n">min_max</span><span class="p">)</span>
@@ -908,10 +924,10 @@
 
 
 <div class="viewcode-block" id="get_value_from_value_message"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.get_value_from_value_message">[docs]</a><span class="k">def</span> <span class="nf">get_value_from_value_message</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">blackboard</span><span class="p">,</span> <span class="n">value_msg</span><span class="p">,</span> <span class="n">is_validation</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;constant&quot;</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s2">&quot;constant&quot;</span><span class="p">)):</span>
         <span class="n">constant</span> <span class="o">=</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">constant</span>
         <span class="k">return</span> <span class="n">get_value_from_constant_value_message</span><span class="p">(</span><span class="n">constant</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="n">text</span><span class="p">(</span><span class="s2">&quot;runtime_var&quot;</span><span class="p">)):</span>
+    <span class="k">elif</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">HasField</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="s2">&quot;runtime_var&quot;</span><span class="p">)):</span>
         <span class="k">return</span> <span class="n">blackboard</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">value_msg</span><span class="o">.</span><span class="n">runtime_var</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Value must be a runtime variable or constant.&quot;</span><span class="p">)</span></div>
@@ -923,14 +939,14 @@
 <div class="viewcode-block" id="create_value"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.create_value">[docs]</a><span class="k">def</span> <span class="nf">create_value</span><span class="p">(</span>
     <span class="n">var</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">google</span><span class="o">.</span><span class="n">protobuf</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">Message</span><span class="p">,</span> <span class="nb">list</span><span class="p">,</span>
                <span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a Value message containing a ConstantValue with the appropriate oneof set.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a Value message containing a ConstantValue with the appropriate</span>
+<span class="sd">    oneof set.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="n">constant</span><span class="o">=</span><span class="n">python_var_to_value</span><span class="p">(</span><span class="n">var</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="define_blackboard"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.define_blackboard">[docs]</a><span class="k">def</span> <span class="nf">define_blackboard</span><span class="p">(</span><span class="n">dict_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">nodes_pb2</span><span class="o">.</span><span class="n">DefineBlackboard</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a DefineBlackboard protobuf message for the key-value pairs in `dict_values`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a DefineBlackboard protobuf message for the key-value pairs in</span>
+<span class="sd">    `dict_values`.&quot;&quot;&quot;</span>
     <span class="n">node_to_return</span> <span class="o">=</span> <span class="n">nodes_pb2</span><span class="o">.</span><span class="n">DefineBlackboard</span><span class="p">()</span>
     <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dict_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">node_to_return</span><span class="o">.</span><span class="n">blackboard_variables</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">util_pb2</span><span class="o">.</span><span class="n">KeyValue</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">))</span>
@@ -939,8 +955,8 @@
 
 <div class="viewcode-block" id="set_blackboard"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.set_blackboard">[docs]</a><span class="k">def</span> <span class="nf">set_blackboard</span><span class="p">(</span><span class="n">dict_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">],</span>
                    <span class="n">subfield_values</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">util_pb2</span><span class="o">.</span><span class="n">Value</span><span class="p">]</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="n">nodes_pb2</span><span class="o">.</span><span class="n">SetBlackboard</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a SetBlackboard protobuf message for the key-value pairs in `dict_values`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a SetBlackboard protobuf message for the key-value pairs in</span>
+<span class="sd">    `dict_values`.&quot;&quot;&quot;</span>
     <span class="n">node_to_return</span> <span class="o">=</span> <span class="n">nodes_pb2</span><span class="o">.</span><span class="n">SetBlackboard</span><span class="p">()</span>
     <span class="k">for</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">dict_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">node_to_return</span><span class="o">.</span><span class="n">blackboard_variables</span><span class="o">.</span><span class="n">add</span><span class="p">()</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">util_pb2</span><span class="o">.</span><span class="n">KeyValue</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">))</span>
@@ -967,14 +983,9 @@
 
 
 <div class="viewcode-block" id="severity_to_log_level"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.severity_to_log_level">[docs]</a><span class="k">def</span> <span class="nf">severity_to_log_level</span><span class="p">(</span><span class="n">text_level</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts alert data severity enum to a logger level for printing purposes.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts alert data severity enum to a logger level for printing</span>
+<span class="sd">    purposes.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_SEVERITY_TO_LOG_LEVEL</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">text_level</span><span class="p">,</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span></div>
-
-
-<span class="c1"># We want to be able to port spotcam-ptz missions to the argos-ptz sensor.</span>
-<div class="viewcode-block" id="append_alternate_sensor_names"><a class="viewcode-back" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html#bosdyn.mission.util.append_alternate_sensor_names">[docs]</a><span class="k">def</span> <span class="nf">append_alternate_sensor_names</span><span class="p">(</span><span class="n">sensor_names</span><span class="p">):</span>
-    <span class="k">if</span> <span class="s2">&quot;argos-ptz&quot;</span> <span class="ow">in</span> <span class="n">sensor_names</span><span class="p">:</span>
-        <span class="n">sensor_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;spotcam-ptz&quot;</span><span class="p">)</span></div>
 
 
 </pre></div>

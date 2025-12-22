@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Util &mdash; Spot 5.0.1.2 documentation</title>
+  <title>Util &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
@@ -74,6 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -87,13 +88,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -262,6 +265,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../../examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -278,12 +282,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../../../../README.html">Python Reference Guide</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -328,6 +334,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -380,6 +387,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../../bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -414,7 +422,6 @@
 <li class="toctree-l3 current"><a class="reference internal" href="README.html">Mission</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="server_util.html">Server Util</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">Util</a></li>
@@ -574,7 +581,8 @@ longer example.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.mission.util.python_type_to_pb_type">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">python_type_to_pb_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#python_type_to_pb_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.python_type_to_pb_type" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the protobuf-schema variable type that corresponds to the given variable.</p>
+<dd><p>Returns the protobuf-schema variable type that corresponds to the given
+variable.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -595,13 +603,15 @@ longer example.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.mission.util.field_desc_to_pb_type">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">field_desc_to_pb_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_desc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#field_desc_to_pb_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.field_desc_to_pb_type" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the protobuf-schema variable type that corresponds to the given descriptor.</p>
+<dd><p>Returns the protobuf-schema variable type that corresponds to the given
+descriptor.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.mission.util.safe_pb_type_to_string">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">safe_pb_type_to_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pb_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#safe_pb_type_to_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.safe_pb_type_to_string" title="Permalink to this definition"></a></dt>
-<dd><p>Return the stringified VariableDeclaration.Type, or “&lt;unknown&gt;” if the type is invalid.</p>
+<dd><p>Return the stringified VariableDeclaration.Type, or “&lt;unknown&gt;” if the
+type is invalid.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -633,13 +643,15 @@ longer example.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.mission.util.proto_enum_to_result_constant">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">proto_enum_to_result_constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proto_msg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#proto_enum_to_result_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.proto_enum_to_result_constant" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a Result enum from a util_pb2.Result, or throws InvalidConversion error.</p>
+<dd><p>Returns a Result enum from a util_pb2.Result, or throws
+InvalidConversion error.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.mission.util.result_constant_to_proto_enum">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">result_constant_to_proto_enum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#result_constant_to_proto_enum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.result_constant_to_proto_enum" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a protobuf version of the Result enum, RESULT_UNKNOWN on error.</p>
+<dd><p>Returns a protobuf version of the Result enum, RESULT_UNKNOWN on
+error.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -660,31 +672,30 @@ longer example.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.mission.util.create_value">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">create_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Message</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Value</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#create_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.create_value" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a Value message containing a ConstantValue with the appropriate oneof set.</p>
+<dd><p>Returns a Value message containing a ConstantValue with the appropriate
+oneof set.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.mission.util.define_blackboard">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">define_blackboard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Value</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DefineBlackboard</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#define_blackboard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.define_blackboard" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a DefineBlackboard protobuf message for the key-value pairs in <cite>dict_values</cite>.</p>
+<dd><p>Returns a DefineBlackboard protobuf message for the key-value pairs in
+<cite>dict_values</cite>.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.mission.util.set_blackboard">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">set_blackboard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Value</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subfield_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Value</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SetBlackboard</span></span></span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#set_blackboard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.set_blackboard" title="Permalink to this definition"></a></dt>
-<dd><p>Returns a SetBlackboard protobuf message for the key-value pairs in <cite>dict_values</cite>.</p>
+<dd><p>Returns a SetBlackboard protobuf message for the key-value pairs in
+<cite>dict_values</cite>.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bosdyn.mission.util.severity_to_log_level">
 <span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">severity_to_log_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_level</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#severity_to_log_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.severity_to_log_level" title="Permalink to this definition"></a></dt>
-<dd><p>Converts alert data severity enum to a logger level for printing purposes.</p>
+<dd><p>Converts alert data severity enum to a logger level for printing
+purposes.</p>
 </dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="bosdyn.mission.util.append_alternate_sensor_names">
-<span class="sig-prename descclassname"><span class="pre">bosdyn.mission.util.</span></span><span class="sig-name descname"><span class="pre">append_alternate_sensor_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/bosdyn/mission/util.html#append_alternate_sensor_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bosdyn.mission.util.append_alternate_sensor_names" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
 
 </section>
 

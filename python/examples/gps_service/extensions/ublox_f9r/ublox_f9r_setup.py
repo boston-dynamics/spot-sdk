@@ -36,7 +36,7 @@ if __name__ == "__main__":
         ("CFG_MSGOUT_NMEA_ID_GLL_USB", 0),
         ("CFG_MSGOUT_NMEA_ID_RMC_USB", 0),
         # Disable sensor fusion, use GNSS only.
-        ("CFG-SFCORE-USE_SF", 0),
+        ("CFG_SFCORE_USE_SF", 0),
     ]
     msg = UBXMessage.config_set(layers, transaction, cfgData)
     with Serial(F9R_DEV, F9R_BAUD, timeout=TIMEOUT) as stream:

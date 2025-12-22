@@ -19,8 +19,9 @@ import bosdyn.api.payload_registration_service_pb2_grpc as payload_registration_
 from bosdyn.client import (ResponseError, RetryableUnavailableError, TimedOutError,
                            TooManyRequestsError)
 from bosdyn.client.common import (BaseClient, error_factory, handle_common_header_errors,
-                                  handle_lease_use_result_errors, handle_unset_status_error)
+                                  handle_unset_status_error)
 from bosdyn.client.error_callback_result import ErrorCallbackResult
+from bosdyn.util import now_sec
 
 LOGGER = logging.getLogger('payload_registration_client')
 
@@ -156,7 +157,7 @@ class PayloadRegistrationClient(BaseClient):
 
     def get_payload_auth_token(self, guid, secret, **kw_args):
         """Request a limited-access auth token for a payload.
-        
+
         Getting the auth token requires payload to be authorized via the web console.
 
         Args:
@@ -166,7 +167,7 @@ class PayloadRegistrationClient(BaseClient):
 
         Returns:
           A limited-access user token for the robot
-        
+
         Raises:
           RpcError: Problem communicating with the robot.
           PayloadNotAuthorizedError: The payload with the provided GUID is
@@ -370,7 +371,7 @@ class PayloadRegistrationKeepAlive(object):
     the robot if it is ever forgotten. However, payload registrations on Spot are persistent
     across power cycles and updates, so in most cases there is no need to send a payload
     registration request after the first successful payload registration. The use of a payload
-    registration keep alive should only be used when a payload is expected to be regularly 
+    registration keep alive should only be used when a payload is expected to be regularly
     reconfigured by forgetting & re-authorizing the payload in the web page.
 
     Args:
@@ -413,9 +414,9 @@ class PayloadRegistrationKeepAlive(object):
 
     def start(self):
         """Register and then kick off thread.
-        
+
         Can not be restarted with this method after a shutdown.
-        
+
         Raises:
           RpcError: Problem communicating with the robot.
           RuntimeError: The thread was attempted to start more than once.
@@ -435,7 +436,7 @@ class PayloadRegistrationKeepAlive(object):
 
     def is_alive(self):
         """Are we still periodically re-registering?
-        
+
         Returns:
           A bool stating if still alive
         """
@@ -449,7 +450,7 @@ class PayloadRegistrationKeepAlive(object):
 
     def _periodic_reregister(self):
         """Handles a removal of the payload from the robot payload page while still connected.
-        
+
         Raises:
           RpcError: Problem communicating with the robot.
         """
@@ -458,7 +459,7 @@ class PayloadRegistrationKeepAlive(object):
         wait_time = self._registration_interval_secs
 
         while not self._end_reregister_signal.wait(wait_time):
-            exec_start = time.time()
+            exec_start = now_sec()
             action = ErrorCallbackResult.RESUME_NORMAL_OPERATION
             try:
                 self.pay_reg_client.register_payload(self.payload, self.secret)
@@ -486,7 +487,7 @@ class PayloadRegistrationKeepAlive(object):
                     # Log all other exceptions, but continue looping in hopes that it resolves itself
                     self.logger.exception('Caught general exception.')
 
-            exec_sec = time.time() - exec_start
+            exec_sec = now_sec() - exec_start
             if action == ErrorCallbackResult.ABORT:
                 self.logger.warning('Callback directed the re-registration loop to exit.')
                 break

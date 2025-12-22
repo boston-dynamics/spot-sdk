@@ -11,7 +11,6 @@ import logging
 import operator
 import re
 import typing
-from builtins import str as text
 from typing import Dict, Union
 
 import google.protobuf.message
@@ -59,8 +58,7 @@ def tree_to_string(root, start_level=0, include_status=False):
     if start_level == 0:
         string += '\n'
     prefix = '|' + '-' * start_level
-    string += prefix + text(root) + (' '
-                                     if text(root) else '') + '(' + root.__class__.__name__ + ')'
+    string += prefix + str(root) + (' ' if str(root) else '') + '(' + root.__class__.__name__ + ')'
     if include_status:
         string += '\n' + prefix + 'Status code: [{}]'.format(root.last_result)
     for child in root.children:
@@ -170,6 +168,12 @@ def proto_from_tuple(tup, pack_nodes=True):
         else:
             raise Error('Proto "{}" of type "{}" has {} children!'.format(
                 node.name, inner_type, num_children))
+    elif isinstance(inner_proto, nodes_pb2.SimpleParallel):
+        if num_children != 2:
+            raise Error('Proto "{}" of type "{}" was given {} children but should have 2!'.format(
+                node.name, inner_type, num_children))
+        inner_proto.primary.CopyFrom(proto_from_tuple(children[0]))
+        inner_proto.secondary.CopyFrom(proto_from_tuple(children[1]))
     elif num_children != 0:
         raise Error('Proto "{}" of type "{}" was given {} children, but I do not know how to add'
                     ' them!'.format(node.name, inner_type, num_children))
@@ -208,7 +212,8 @@ def python_var_to_value(var) -> util_pb2.ConstantValue:
 
 
 def python_type_to_pb_type(var) -> util_pb2.VariableDeclaration.Type.ValueType:
-    """Returns the protobuf-schema variable type that corresponds to the given variable."""
+    """Returns the protobuf-schema variable type that corresponds to the given
+    variable."""
     if isinstance(var, bool):
         return util_pb2.VariableDeclaration.TYPE_BOOL
     elif isinstance(var, int):
@@ -266,7 +271,8 @@ def is_string_identifier(string):
 
 
 def field_desc_to_pb_type(field_desc):
-    """Returns the protobuf-schema variable type that corresponds to the given descriptor."""
+    """Returns the protobuf-schema variable type that corresponds to the given
+    descriptor."""
     if field.label == FieldDescriptor.LABEL_REPEATED:
         return util_pb2.VariableDeclaration.TYPE_LIST
     elif field_desc.type in (field_desc.TYPE_UINT32, field_desc.TYPE_UINT64,
@@ -289,7 +295,8 @@ def field_desc_to_pb_type(field_desc):
 
 
 def safe_pb_type_to_string(pb_type):
-    """Return the stringified VariableDeclaration.Type, or "<unknown>" if the type is invalid."""
+    """Return the stringified VariableDeclaration.Type, or "<unknown>" if the
+    type is invalid."""
     try:
         return util_pb2.VariableDeclaration.Type.Name(pb_type)
     except ValueError:
@@ -322,7 +329,8 @@ class ResultFromProto:
 
 
 def proto_enum_to_result_constant(proto_msg):
-    """Returns a Result enum from a util_pb2.Result, or throws InvalidConversion error."""
+    """Returns a Result enum from a util_pb2.Result, or throws
+    InvalidConversion error."""
     try:
         return ResultFromProto.results_from_proto[proto_msg]
     except KeyError:
@@ -330,7 +338,8 @@ def proto_enum_to_result_constant(proto_msg):
 
 
 def result_constant_to_proto_enum(result):
-    """Returns a protobuf version of the Result enum, RESULT_UNKNOWN on error."""
+    """Returns a protobuf version of the Result enum, RESULT_UNKNOWN on
+    error."""
     if not isinstance(result, constants.Result):
         raise InvalidConversion(result, util_pb2.Result.DESCRIPTOR.full_name)
     try:
@@ -363,7 +372,7 @@ def most_restrictive_travel_params(travel_params, vel_limit=None,
         # Look at max_vel using >=, then min_vel using <=.
         for min_max, comp in (('max_vel', operator.ge), ('min_vel', operator.le)):
             # If the other doesn't even have this field, skip to the next one.
-            if not other.HasField(text(min_max)):
+            if not other.HasField(str(min_max)):
                 continue
 
             lim_returned = getattr(returned, min_max)
@@ -396,10 +405,10 @@ def get_value_from_constant_value_message(const_proto):
 
 
 def get_value_from_value_message(node, blackboard, value_msg, is_validation=False):
-    if value_msg.HasField(text("constant")):
+    if value_msg.HasField(str("constant")):
         constant = value_msg.constant
         return get_value_from_constant_value_message(constant)
-    elif value_msg.HasField(text("runtime_var")):
+    elif value_msg.HasField(str("runtime_var")):
         return blackboard.read(node, value_msg.runtime_var.name)
     else:
         raise AttributeError("Value must be a runtime variable or constant.")
@@ -411,14 +420,14 @@ safe_pb_enum_to_string = moved_to(_bosdyn_client_safe_pb_enum_to_string, version
 def create_value(
     var: Union[bool, int, float, str, google.protobuf.message.Message, list,
                dict]) -> util_pb2.Value:
-    """Returns a Value message containing a ConstantValue with the appropriate oneof set.
-    """
+    """Returns a Value message containing a ConstantValue with the appropriate
+    oneof set."""
     return util_pb2.Value(constant=python_var_to_value(var))
 
 
 def define_blackboard(dict_values: Dict[str, util_pb2.Value]) -> nodes_pb2.DefineBlackboard:
-    """Returns a DefineBlackboard protobuf message for the key-value pairs in `dict_values`.
-    """
+    """Returns a DefineBlackboard protobuf message for the key-value pairs in
+    `dict_values`."""
     node_to_return = nodes_pb2.DefineBlackboard()
     for (key, value) in dict_values.items():
         node_to_return.blackboard_variables.add().CopyFrom(util_pb2.KeyValue(key=key, value=value))
@@ -427,8 +436,8 @@ def define_blackboard(dict_values: Dict[str, util_pb2.Value]) -> nodes_pb2.Defin
 
 def set_blackboard(dict_values: Dict[str, util_pb2.Value],
                    subfield_values: Dict[str, util_pb2.Value] = {}) -> nodes_pb2.SetBlackboard:
-    """Returns a SetBlackboard protobuf message for the key-value pairs in `dict_values`.
-    """
+    """Returns a SetBlackboard protobuf message for the key-value pairs in
+    `dict_values`."""
     node_to_return = nodes_pb2.SetBlackboard()
     for (key, value) in dict_values.items():
         node_to_return.blackboard_variables.add().CopyFrom(util_pb2.KeyValue(key=key, value=value))
@@ -455,13 +464,8 @@ _SEVERITY_TO_LOG_LEVEL = {
 
 
 def severity_to_log_level(text_level):
-    """Converts alert data severity enum to a logger level for printing purposes."""
+    """Converts alert data severity enum to a logger level for printing
+    purposes."""
     return _SEVERITY_TO_LOG_LEVEL.get(text_level, logging.INFO)
-
-
-# We want to be able to port spotcam-ptz missions to the argos-ptz sensor.
-def append_alternate_sensor_names(sensor_names):
-    if "argos-ptz" in sensor_names:
-        sensor_names.append("spotcam-ptz")
 
 

@@ -12,9 +12,8 @@ _LOGGER = logging.getLogger(__name__)
 
 from google.protobuf.wrappers_pb2 import FloatValue
 
-from bosdyn.api import data_chunk_pb2
 from bosdyn.api.spot_cam import audio_pb2, service_pb2_grpc
-from bosdyn.client.common import BaseClient, common_header_errors, handle_common_header_errors
+from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class AudioClient(BaseClient):

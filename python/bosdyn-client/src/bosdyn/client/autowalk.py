@@ -14,8 +14,6 @@ from bosdyn.client.common import BaseClient, error_factory, error_pair
 from bosdyn.client.exceptions import ResponseError
 from bosdyn.client.lease import add_lease_wallet_processors
 
-from .data_chunk import chunk_message
-
 
 class AutowalkResponseError(ResponseError):
     """General class of errors for autowalk service."""

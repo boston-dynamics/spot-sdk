@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boston Dynamics Choreography tablet UI &mdash; Spot 5.0.1.2 documentation</title>
+  <title>Choreography tablet UI &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
     <link rel="next" title="Choreography in Autowalk" href="choreography_in_autowalk.html" />
-    <link rel="prev" title="Animation files for Choreographer" href="animation_file_specification.html" /> 
+    <link rel="prev" title="Timecode in Choreographer" href="timecode_reference.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -74,6 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -87,13 +88,15 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="README.html">Choreography</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="choreography_service.html">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -262,6 +265,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -278,12 +282,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -328,6 +334,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -380,6 +387,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -414,7 +422,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
@@ -504,7 +511,7 @@
       <li><a href="../../../README.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../README.html">Concepts</a></li>
           <li class="breadcrumb-item"><a href="README.html">Spot Choreography SDK</a></li>
-      <li class="breadcrumb-item active">Boston Dynamics Choreography tablet UI</li>
+      <li class="breadcrumb-item active">Choreography tablet UI</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -519,74 +526,54 @@ Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
 Downloading, reproducing, distributing or otherwise using the SDK Software
 is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
---><section id="boston-dynamics-choreography-tablet-ui">
-<h1>Boston Dynamics Choreography tablet UI<a class="headerlink" href="#boston-dynamics-choreography-tablet-ui" title="Permalink to this heading"></a></h1>
-<p>Dances authored and executed using Choreographer can also be played through the Tablet using the Choreography drive mode.</p>
-<p><em>Only users with a Spot choreography license will be able to view the Choreography drive screen.</em></p>
+--><section id="choreography-tablet-ui">
+<h1>Choreography tablet UI<a class="headerlink" href="#choreography-tablet-ui" title="Permalink to this heading"></a></h1>
+<p>Dances authored and executed using Choreographer can also be played through the tablet using the Choreography drive mode. In addition, Spot comes with a set of pre-uploaded sample dances created by Boston Dynamics which can found under the <strong>Sample Dances</strong> and <strong>Sample Emotes</strong> categories when first connecting Spot to a Tablet.</p>
+<section id="license-requirements">
+<h2>License Requirements<a class="headerlink" href="#license-requirements" title="Permalink to this heading"></a></h2>
+<p>Users must have a choreography license for Spot to upload and play user-authored choreography sequences (sequences created by the user) through the tablet interface. Users without choreography license features will still have access to Boston Dynamics’ pre-uploaded sample dances.</p>
+<p><em>Note: Prior to 5.1.0, users without a choreography license did not have permissions to view choreography features through the tablet. If the choreography option does not appear, or no selectable sample dances are available, ensure both the tablet and connected Spot are on a 5.1.0 or greater release version.</em></p>
+</section>
 <section id="choreography-safety">
-<h2>Choreography safety<a class="headerlink" href="#choreography-safety" title="Permalink to this heading"></a></h2>
-<p>CAUTION: Choreography moves can induce unpredictable or unstable motions in Spot, which may increase the risk of falls, collisions, and other hazards. Observe the following safety precautions:</p>
-<ul class="simple">
-<li><p>Before using choreography, ensure there is at least 3 meters of clearance around Spot in all directions.</p></li>
-<li><p>Stay at least 3 meters away from Spot when motors are active. Power off motors before approaching Spot.</p></li>
-<li><p>Ensure that all bystanders who are in or may enter the area where choreography is performed are adequately warned and stay at least 3 meters away from Spot at all times.</p></li>
-</ul>
-<p>WARNING: A small percentage of people may experience epileptic seizures or blackouts when exposed to certain light patterns or flashing lights. Choreography moves that include Spot’s status lights or A/V warning system lights could trigger epileptic symptoms or seizures, even in people with no history of photosensitive epilepsy. Observe the following safety precautions:</p>
-<ul class="simple">
-<li><p>When designing choreography routines that include Spot’s status lights or A/V warning system lights, avoid patterns and frequencies known to increase the risk of epileptic symptoms.</p></li>
-<li><p>Before using choreography, ensure that all bystanders are adequately warned of any risk of exposure to light patterns and flashing lights from Spot.</p></li>
-</ul>
+<h2>Choreography Safety<a class="headerlink" href="#choreography-safety" title="Permalink to this heading"></a></h2>
+<p>The choreography framework is less robust than other Spot behaviors. It should only be used on a flat floor with plenty of space and good traction. <strong>Choreography is not recommended for use with payloads</strong>. Please refer to the <a class="reference external" href="choreographer.html#choreography-safety">choreography safety</a> overview before running choreography sequences through the tablet interface.</p>
 </section>
-<section id="using-the-choreography-drive-mode">
-<h2>Using the Choreography drive mode<a class="headerlink" href="#using-the-choreography-drive-mode" title="Permalink to this heading"></a></h2>
-  <img src="../../../_images/tablet_choreographer_1.png" width="520"/><ol class="simple">
-<li><p><strong>Application selection</strong> - Enter Choreography drive mode from the upper left dropdown menu where it appears with Drive and Autowalk.</p></li>
-</ol>
-<ol class="simple">
-<li><p><strong>Exiting and entering Dance mode</strong> - For Tablets without hardware joysticks, exiting and entering dance mode allows you to toggle between playing choreography sequences and using other robot modes. For tablets with hardware joysticks, selected choreography sequences will always appear on screen.</p></li>
-</ol>
+<section id="playing-choreography-sequences-through-the-tablet">
+<h2>Playing choreography sequences through the tablet<a class="headerlink" href="#playing-choreography-sequences-through-the-tablet" title="Permalink to this heading"></a></h2>
 <ol>
-<li><p><strong>Select and View Choreography Sequences</strong> - Lists of the choreography sequences that the robot can perform are viewable by pressing the tabs at the top of the screen. Opening these menus will allow you to add dance sequences to the Choreography screen as buttons which are used to play the sequences on the robot. These tabs are configurable, and you can choose which tabs will appear as options on screen by going to the <strong>Choreography</strong> option in the <strong>Settings</strong> menu.</p>
-<p><em>See below for information on configuring the Choreography drive screen.</em></p>
-<img src="../../../_images/tablet_choreographer_2.png" width="520"/></li>
+<li><p><strong>Enter choreography drive mode</strong> - Enter Choreography drive mode from the upper left dropdown menu where it appears with Drive and Autowalk.</p>
+<img src="../../../_images/choreography_drive_option.png" width="520"/></li>
+<li><p><strong>Add Sequence buttons to the screen</strong> - Lists of the choreography sequences that the robot can perform are viewable by pressing the tabs at the top of the screen. You can choose to place any sequence to the left or right side of the tablet screen, where it will be added to a list of buttons which each trigger the playback of the selected choreography sequence.</p>
+<p>Remove a specific button from the screen by pressing the minus symbol next to it, or remove all buttons from the screen by using the “clear screen” button in the gear icon menu in the upper right corner.</p>
+<img src="../../../_images/add_dances.png" width="520"/></li>
+<li><p><strong>Play the Choreography sequence</strong> - Press the added sequence buttons to start sequences. The name on the button indicates the choreography sequence that will play. Once a sequence has started a progress bar will appear in the center of the screen.</p>
+<p><em>Note: When a tablet does not have hardware joysticks connected for driving the robot, sequence buttons are hidden in modes like “Sit” and “Stand” so the on screen software joysticks may be displayed instead. To make the sequence buttons reappear, select “Dance” mode from the lower left list, or click on any dance dropdown menu.</em></p>
+<img src="../../../_images/playing_sequence.png" width="520"/></li>
 </ol>
+<section id="stopping-active-sequences">
+<h3>Stopping Active Sequences<a class="headerlink" href="#stopping-active-sequences" title="Permalink to this heading"></a></h3>
+<p>Stop a choreography sequence that is playing by pressing <strong>CANCEL</strong> in the center of the screen. If a sequence is canceled while it is playing, the robot will stop the sequence and attempt to freeze in place.</p>
+<p><strong>Warning</strong>: Interrupting a dance in the middle of a dynamic movement (such as a jump), or starting a different dance before the previous dance finishes, may cause falls. For the best behavior avoid stopping a dance partway through unless necessary for safety reasons, and start dances from a stable stance or from seated. If a dance must be stopped partway through regardless of risk, try to pick a moment when Spot isn’t moving too quickly, and has at least 3 feet on the ground. This will lower the risk of falls.</p>
+</section>
+</section>
+<section id="uploading-your-own-choreography-sequences">
+<h2>Uploading your own Choreography sequences<a class="headerlink" href="#uploading-your-own-choreography-sequences" title="Permalink to this heading"></a></h2>
+<p><em>Note: It is recommended that before uploading a choreography sequence to the robot through Choreographer for use with the tablet that you verify your sequence is playable and stable through Choreographer first.</em></p>
 <ol>
-<li><p><strong>Adding moves to the screen</strong> - You can choose to place any sequence to the left or right side of the tablet screen, where it will be added to a list of buttons which each trigger the playback of the selected choreography sequence. Swipe horizontally left and right across the dropdown menu to scroll through the known moves.</p>
-<img src="../../../_images/tablet_choreographer_3.png" width="520"/></li>
-<li><p><strong>Play the Choreography sequence</strong> - Once a sequence appears on screen as a white button you can press that button to play the choreography sequence. The name on the button indicates the choreography sequence that will play.</p></li>
-<li><p><strong>Removing buttons from the list</strong> - Remove a button from on screen by pressing the minus symbol next to it. This does not remove the move from the dropdown menu it was selected from.</p></li>
-<li><p><strong>Cancel moves</strong> - Stop a choreography sequence that is playing by pressing <strong>CANCEL</strong> in the center of the screen. If a move is canceled while it is playing, the robot will stop the move and come to a stand. A sequence can also be aborted by entering any other mode such as Sit, Stand, Walk, or Self Right.</p></li>
-</ol>
-<p>Take caution when stopping choreography sequences and playing choreography sequences when the robot is not in a neutral stance. Interrupting a dance in the middle of a dynamic movement, or starting a different dance before the previous dance finishes, may cause falls. For the best behavior avoid stopping a dance partway through unless necessary for safety reasons, and start dances from a stable stance or from seated. If a dance must be stopped partway through regardless of risk, try to pick a moment when Spot isn’t moving too quickly, and has at least 3 feet on the ground. This will lower the risk of falls.</p>
-</section>
-<section id="using-the-tablet-to-play-your-own-choreography-sequences">
-<h2>Using the tablet to play your own Choreography sequences<a class="headerlink" href="#using-the-tablet-to-play-your-own-choreography-sequences" title="Permalink to this heading"></a></h2>
-<p>Spot comes with a small library of sequences. Some of these are intended for performance. Some gestures can be used to communicate intent through body language. These sequences are always available in the <strong>Select Moves</strong> dropdown. The Tablet can also play custom sequences uploaded by users. The easiest way to author choreography sequences and upload them to the robot is through the Choreographer application.</p>
-<p><em>Only users with a Spot choreography license can upload original sequences.</em></p>
-<section id="uploading-choreography-sequences-with-choreographer">
-<h3>Uploading choreography sequences with Choreographer<a class="headerlink" href="#uploading-choreography-sequences-with-choreographer" title="Permalink to this heading"></a></h3>
-<img src="../../../_images/tablet_choreographer_4.png" width="520"/><ol class="simple">
-<li><p>Start by opening your completed choreography sequence in Choreographer and connecting your robot to Choreographer. Refer to the “Choreographer User Guide” and “Connecting Robots to Choreographer” if you have trouble with this step.</p></li>
-<li><p>Make sure you have given your choreography sequence a name that will allow you to easily identify it later, and then play the sequence on the robot using the Choreographer application. Playing the sequence on the robot uploads it to Spot’s memory.</p></li>
-<li><p>After repeating steps 1 and 2 for all the choreography sequences you want to play through the tablet or save to your Spot, sit the robot and disconnect it from Choreographer.</p></li>
-</ol>
-<img src="../../../_images/tablet_choreographer_5.png" width="520"/><ol class="simple">
-<li><p>Now connect to Spot through the Tablet, and navigate to the <strong>Settings</strong> section of the Hamburger menu. In <strong>Settings</strong> select <strong>Choreography</strong>. All the moves you uploaded with Choreographer should appear in a list near the bottom of the screen under <strong>Unsaved Choreography Sequences</strong>.</p></li>
-</ol>
-<img src="../../../_images/tablet_choreographer_6.png" width="520"/><ol class="simple">
-<li><p>To play these sequences through the tablet you will need to save them and give them a label. To save a sequence, select the edit symbol next to its name on the right side of the screen, choose a label from the dropdown, and press save. Complete this step for each sequence you wish to save and have accessible for execution through the tablet.</p></li>
-</ol>
-<p><em>All animation moves (moves loaded from .cha files), included in a saved sequence will also be saved. Once a sequence is saved no further upload action will be required for it to be playable from the tablet or through an <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC call using the sequence’s name. If all sequences requiring an animation move are deleted, the stored animation move will also be removed on the next reboot. Make sure different animations have different names, or saved choreography sequences will attempt to replace the old version with the new version of the animation.</em></p>
-<ol class="simple">
-<li><p>Locate the checkbox for the label(s) you saved your sequences to, and make sure they are checked. Checking the checkbox for a label will make it appear as an option when you enter the Choreography drive screen.</p></li>
-</ol>
-<img src="../../../_images/tablet_choreographer_7.png" width="520"/><ol class="simple">
-<li><p>Enter the Choreography drive screen and locate the dropdown tabs with the labels you selected in the Choreography settings screen. You will now be able to add and play your custom choreography sequences in the same way you would play the sample choreography sequences included with your robot release.</p></li>
+<li><p>Start by connecting your Spot(s) to Choreographer and opening the choreography sequence(s) you wish to upload. Refer to the <a class="reference internal" href="choreographer.html"><span class="doc">Choreographer Overview</span></a> and <a class="reference internal" href="robot_controls_in_choreographer.html"><span class="doc">Robot Connections in Choreographer</span></a> documentation if you have trouble with this step.</p>
+<p><em>Note: Make sure you have saved your choreography sequence(s) with names that will allow you to easily identify them later.</em></p>
+</li>
+<li><p>Select the robot connections you wish to upload your sequence to, then make sure the sequence you wish to upload is the current open tab. When these settings are correct, open the “File” menu and select the “Save and Upload Choreography to Robot(s)” option. Press <strong>Save</strong>.</p>
+<img src="../../../_images/anotated_save_and_upload_box.png" width="800"/></li>
+<li><p>Repeat <strong>step 2</strong> for all the choreography sequences you want to upload. Then sit the robot(s) and disconnect from Choreographer.</p></li>
+<li><p>Now connect to Spot through the tablet, and navigate to the <strong>Settings</strong> section of the Hamburger menu. In <strong>Settings</strong> select <strong>Choreography</strong>. All the sequences you uploaded to the robot with Choreographer will appear under the <strong>All Original Sequences</strong> category.</p>
+<img src="../../../_images/demo_dance_in_list.png" width="520"/></li>
+<li><p>Make sure the checkbox next to <strong>All Original Sequences</strong> has been selected, then enter the <strong>Choreography drive mode</strong> screen. The uploaded sequence(s) will appear under the <strong>All Original Sequences</strong> dropdown and can be added and played like any other choreography sequence option.</p>
+<img src="../../../_images/demo_dance_in_dropdown.png" width="520"/></li>
 </ol>
 </section>
-</section>
-<section id="managing-your-uploaded-choreography-sequences">
-<h2>Managing your uploaded Choreography sequences<a class="headerlink" href="#managing-your-uploaded-choreography-sequences" title="Permalink to this heading"></a></h2>
+<section id="managing-uploaded-choreography-sequences">
+<h2>Managing uploaded Choreography sequences<a class="headerlink" href="#managing-uploaded-choreography-sequences" title="Permalink to this heading"></a></h2>
 <section id="deleting-saved-choreography-sequences">
 <h3><strong>Deleting Saved Choreography Sequences</strong><a class="headerlink" href="#deleting-saved-choreography-sequences" title="Permalink to this heading"></a></h3>
 <p>The original choreography sequences you save to Spot will be retained indefinitely until you actively choose to delete them. To delete a sequence go to the Choreography settings screen and select the edit button next to sequence you wish to delete. In that screen, find the trash icon next to the sequence name and press it.</p>

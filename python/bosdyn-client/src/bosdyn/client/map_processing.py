@@ -6,11 +6,9 @@
 
 """For clients of the graph_nav map processing service."""
 
-from bosdyn.api.graph_nav import map_pb2, map_processing_pb2, map_processing_service_pb2
+from bosdyn.api.graph_nav import map_processing_pb2
 from bosdyn.api.graph_nav import map_processing_service_pb2_grpc as map_processing
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory,
-                                  handle_common_header_errors, handle_lease_use_result_errors,
-                                  handle_unset_status_error)
+from bosdyn.client.common import BaseClient, handle_common_header_errors, handle_unset_status_error
 from bosdyn.client.exceptions import ResponseError
 
 

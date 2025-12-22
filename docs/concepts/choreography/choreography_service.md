@@ -47,17 +47,19 @@ The robot’s motion is divided into the following distinct tracks:
 
 In addition to the base motion, there are also tracks for:
 
-- Lights: Control the robot's front two sets of LEDs.
+- Status Lights: Control the robot's front two sets of LEDs.
+- AV Lights: Control the robot's AudioVisual lights. (Only applies to Spots with the AV hardware).
+- AV Buzzer: Control the robot's AudioVisual buzzer. (Only applies to Spots with the AV hardware).
 - Annotations: Enable dance annotations that are separate from any specific move.
 - Music (Choreographer only): Control the audio played from the Choreographer application when dancing.
 
-Each dance move requires one or more of these tracks. Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view. Example: the following script combines moves in three of the four tracks:
+Each dance move requires one or more of these tracks. Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view. Example: the following script combines moves in three of the four tracks that control robot motion:
 
 ![Tracks](images/tracks_labeled.png)
 
 The resulting behavior looks like this:
 
-![Dancing Behavior Gif](gif_images/main_image3.gif)
+![Dancing Behavior Gif](move_gif_images/main_image3.gif)
 
 Some moves require multiple tracks, such as the "Jump" move which uses the body and the legs tracks. The "Arm Move" uses the Arm and Gripper tracks, as shown:
 
@@ -80,6 +82,10 @@ All subsequent legs-track moves must have an entry state that corresponds to the
 
 ![Transitions Error](images/transition_error.png)
 
+Some moves have multiple accepted entrance states. When no option is set Spot will favor the entrance state that doesn't require transitioning into a different state. To force a dances that start with moves that have multiple entrance states to always transition into a certain state before starting, select an Entry state option in the "Entrance State Selector" above the timeline. The Entrance State Selector can be displayed by going to "Settings"->"Show Entrance State Selector".
+
+![Entrance State Options](widget_gif_images/entrance_states.gif)
+
 ## APIs
 
 ### Choreography API
@@ -99,7 +105,7 @@ Once a choreography sequence is created, the `UploadChoreography` RPC sends the 
 
 The service returns a list of warnings and failures related to the uploaded choreography sequence. A failure is something the choreography service could not automatically correct and must be fixed before the routine can be executed. Warnings are automatically corrected and do not block the execution of the routine in certain scenarios. If the boolean `non_strict_parsing` is set to true in the `UploadChoreography` RPC, the service fixes any correctable errors within the routine (for example, by limiting parameters to the acceptable range) and allows a choreography sequence with warnings to be completed.
 
-The `ExecuteChoreography` RPC runs the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Starting time (in robot’s time) and starting slice specifies when the robot when starts the choreography sequence and at which move. Named sequences can be returned using the `ListAllSequences` RPC.
+The `ExecuteChoreography` RPC runs the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Starting time (in robot's time) and starting slice specifies when the robot starts the choreography sequence and at which move. Named sequences can be returned using the `ListAllSequences` RPC.
 
 ### Interacting With a Sequence During Execution
 
@@ -109,7 +115,7 @@ Some moves (e.g. [CustomGait](custom_gait.md)) can respond to commands through t
 
 ### Saving Choreography Sequences to your Spot
 
-The `SaveSequence` RPC will save a sequence and all information required to play that sequence to a library of permanently retained choreography sequences stored on the robot. These sequences load automatically when Spot boots up, and are playable through the Tablet Choreography screen or with an `ExecuteChoreography` RPC. Sequences can be saved with additional information called labels, which are used to categorize and group retained sequences in the tablet UI. The labels associated wih a sequence can be added or removed with the `ModifyChoreographyInfo` RPC. Sequences saved to the robot can be removed using the `DeleteSequence` RPC, which deletes a single sequence, or by using the `ClearAllSequenceFiles` RPC, which deletes every saved choreography file from Spot. The `GetChoreographySequence` RPC can be used to request the full sequence proto with a given name from Spot, along with all the `Animation` moves required to play the sequence (if any).
+The `SaveSequence` RPC will save a sequence and all information required to play that sequence to a library of permanently retained choreography sequences stored on the robot. These sequences load automatically when Spot boots up, and are playable through the Tablet Choreography screen or with an `ExecuteChoreography` RPC. Sequences can be saved with additional information called labels, which are used to categorize and group retained sequences in the tablet UI. The labels associated with a sequence can be added or removed with the `ModifyChoreographyInfo` RPC. Sequences saved to the robot can be removed using the `DeleteSequence` RPC, which deletes a single sequence, or by using the `ClearAllSequenceFiles` RPC, which deletes every saved choreography file from Spot. The `GetChoreographySequence` RPC can be used to request the full sequence proto with a given name from Spot, along with a list of animation names it depends on. The `GetAnimation` RPC can be used to request an animation proto with a given name from Spot.
 
 ### Animation API
 
@@ -153,17 +159,19 @@ Choreography logs can be used to review how the robot actually executed a choreo
 
 Use the `DownloadRobotStateLog` RPC to download choreography logs. The request specifies which type of log should be downloaded. The response is streamed over grpc and recombined by the choreography client to create a full log message. The robot keeps only one auto log and one manual log in its buffer (2 total logs) at a time. The log must be downloaded immediately after completing the move on the robot.
 
-### Time Adjust API
-
-The `ChoreographyTimeAdjust` RPC can be used to slightly modify the start time of the next `ExecuteChoreography` RPC request that will be received by the robot in the future. If the new start time is within the right thresholds to be valid, the `start_time` of the `ExecuteChoreography` request will be ignored, and the `override_start_time` from the `ChoreographyTimeAdjust` request will be used instead. Values for `override_start_time` are limited to at most 5 minutes in the future from the time when the `ChoreographyTimeAdjust` request is sent, and can have a maximum of 2 minutes difference from the `ExecuteChoreography` request's original `start_time` value. Within those constraints, those thresholds are configurable by the user, but default to a `validity_time` threshold of 1 minute and an `acceptable_time_difference` threshold of 20 seconds.
-
-In nearly all cases the `ChoreographyTimeAdjust` RPC will not be necessary. The purpose of this RPC is the rare case where one isolated system will be sending the `ExecuteChoreography` RPC, and using a separate system the user would like to make a small adjustment to the start time of that request. If it's possible to set the desired start time using the system that sends the `ExecuteChoreography` RPC the user should just set that `start_time` in the `ExecuteChoreography` RPC and avoid using the `ChoreographyTimeAdjust` RPC.
-
 ### Leg Size Configuration API
 
 The `LegSizeConfiguration` RPC can be used to modify Spot's internal model of its leg size to help avoid self-collision when its legs have non-standard dimensions. This is typically used for Spot's wearing costumes that cover the all or part of the leg, but it could also be used to specify that the leg has been modified to have a smaller area. Default values for Spot's foot dimensions are estimated at 4 centimeters in width and 7 centimeters length, (measured around the widest point of the foot). The requested configuration is permanently stored (persisting through reboot) until cleared by sending an empty request, and affects all Spot behaviors.
 
 Leg size configuration for individual robots can be adjusted through [Choreographer](choreographer.md) by selecting the "Spot Leg Size Configuration" option in the "Settings" menu.
+
+![Entrance State Options](widget_gif_images/leg_size_configuration.gif)
+
+### Time Adjust API
+
+The `ChoreographyTimeAdjust` RPC can be used to slightly modify the start time of the next `ExecuteChoreography` RPC request that will be received by the robot in the future. If the new start time is within the right thresholds to be valid, the `start_time` of the `ExecuteChoreography` request will be ignored, and the `override_start_time` from the `ChoreographyTimeAdjust` request will be used instead. Values for `override_start_time` are limited to at most 5 minutes in the future from the time when the `ChoreographyTimeAdjust` request is sent, and can have a maximum of 2 minutes difference from the `ExecuteChoreography` request's original `start_time` value. Within those constraints, those thresholds are configurable by the user, but default to a `validity_time` threshold of 1 minute and an `acceptable_time_difference` threshold of 20 seconds.
+
+In nearly all cases the `ChoreographyTimeAdjust` RPC will not be necessary. The purpose of this RPC is the rare case where one isolated system will be sending the `ExecuteChoreography` RPC, and using a separate system the user would like to make a small adjustment to the start time of that request. If it's possible to set the desired start time using the system that sends the `ExecuteChoreography` RPC the user should just set that `start_time` in the `ExecuteChoreography` RPC and avoid using the `ChoreographyTimeAdjust` RPC.
 
 ### Choreography client
 

@@ -14,6 +14,7 @@ import os
 import platform
 from enum import Enum
 
+import __main__
 import jwt
 from deprecated.sphinx import deprecated
 
@@ -87,10 +88,8 @@ BOSDYN_RESOURCE_ROOT = os.environ.get('BOSDYN_RESOURCE_ROOT',
 
 def generate_client_name(prefix=''):
     """Returns a descriptive client name for API clients with an optional prefix."""
-    import bosdyn.client.__main__
     try:
-        process_info = '{}-{}'.format(os.path.basename(bosdyn.client.__main__.__file__),
-                                      os.getpid())
+        process_info = '{}-{}'.format(os.path.basename(__main__.__file__), os.getpid())
     except AttributeError:
         process_info = '{}'.format(os.getpid())
     machine_name = platform.node()

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>bosdyn.client.log_status &mdash; Spot 5.0.1.2 documentation</title>
+  <title>bosdyn.client.log_status &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -35,7 +35,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -71,6 +71,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -84,13 +85,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/concepts/choreography/README.html">Choreography</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_service.html">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../docs/concepts/choreography/choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -259,6 +262,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -275,12 +279,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -325,6 +331,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -377,6 +384,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -411,7 +419,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
@@ -524,11 +531,13 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">time</span>
 
 <span class="kn">import</span> <span class="nn">bosdyn.util</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.log_status</span> <span class="kn">import</span> <span class="n">log_status_pb2</span> <span class="k">as</span> <span class="n">log_status</span>
 <span class="kn">from</span> <span class="nn">bosdyn.api.log_status</span> <span class="kn">import</span> <span class="n">log_status_service_pb2_grpc</span> <span class="k">as</span> <span class="n">log_status_service</span>
-<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">common_header_errors</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">error_pair</span><span class="p">,</span>
+<span class="kn">from</span> <span class="nn">bosdyn.client.common</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BaseClient</span><span class="p">,</span> <span class="n">error_factory</span><span class="p">,</span> <span class="n">error_pair</span><span class="p">,</span>
                                   <span class="n">handle_common_header_errors</span><span class="p">,</span> <span class="n">handle_unset_status_error</span><span class="p">)</span>
 <span class="kn">from</span> <span class="nn">bosdyn.client.exceptions</span> <span class="kn">import</span> <span class="n">ResponseError</span>
 
@@ -551,6 +560,10 @@
 
 <div class="viewcode-block" id="ConcurrencyLimitReachedError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.ConcurrencyLimitReachedError">[docs]</a><span class="k">class</span> <span class="nc">ConcurrencyLimitReachedError</span><span class="p">(</span><span class="n">LogStatusResponseError</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The limit of concurrent retro logs has be reached, a new log cannot be started.&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="NoDataForEventError"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.NoDataForEventError">[docs]</a><span class="k">class</span> <span class="nc">NoDataForEventError</span><span class="p">(</span><span class="n">LogStatusResponseError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;No data is available for the provided event, so a log cannot be started.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="LogStatusClient"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient">[docs]</a><span class="k">class</span> <span class="nc">LogStatusClient</span><span class="p">(</span><span class="n">BaseClient</span><span class="p">):</span>
@@ -600,7 +613,7 @@
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">get_active_log_statuses_error</span><span class="p">,</span>
                                <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LogStatusClient.start_experiment_log"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_experiment_log">[docs]</a>    <span class="k">def</span> <span class="nf">start_experiment_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="LogStatusClient.start_experiment_log"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_experiment_log">[docs]</a>    <span class="k">def</span> <span class="nf">start_experiment_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">past_textlog_duration</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Start an experiment log, to run for a specified duration.</span>
 
 <span class="sd">        Args:</span>
@@ -611,14 +624,16 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">StartExperimentLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">keep_alive</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">past_textlog_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">past_textlog_duration</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartExperimentLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                          <span class="n">error_from_response</span><span class="o">=</span><span class="n">start_experiment_log_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                          <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="LogStatusClient.start_experiment_log_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_experiment_log_async">[docs]</a>    <span class="k">def</span> <span class="nf">start_experiment_log_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="LogStatusClient.start_experiment_log_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_experiment_log_async">[docs]</a>    <span class="k">def</span> <span class="nf">start_experiment_log_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="n">past_textlog_duration</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Start an experiment log, to run for a specified duration.&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">StartExperimentLogRequest</span><span class="p">()</span>
         <span class="n">req</span><span class="o">.</span><span class="n">keep_alive</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">past_textlog_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">past_textlog_duration</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartExperimentLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">start_experiment_log_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
@@ -645,6 +660,31 @@
         <span class="n">req</span><span class="o">.</span><span class="n">past_duration</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="o">-</span><span class="n">seconds</span><span class="p">))</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartRetroLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
                                <span class="n">error_from_response</span><span class="o">=</span><span class="n">start_retro_log_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LogStatusClient.start_concurrent_log"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_concurrent_log">[docs]</a>    <span class="k">def</span> <span class="nf">start_concurrent_log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="p">,</span> <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start an experiment log that allows concurrency, to run based on a particular data_set, as derived from the recipe corresponding to the provided event. An event must be provided!&quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">StartConcurrentLogRequest</span><span class="p">()</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">keep_alive</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">duration_seconds</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+            <span class="n">req</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartConcurrentLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
+                         <span class="n">error_from_response</span><span class="o">=</span><span class="n">start_concurrent_log_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="LogStatusClient.start_concurrent_log_async"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.start_concurrent_log_async">[docs]</a>    <span class="k">def</span> <span class="nf">start_concurrent_log_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="p">,</span> <span class="n">data_set_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">properties</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">event</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start an experiment log that allows concurrency, to run based on a particular data_set, as derived from the recipe corresponding to the provided event. An event must be provided!&quot;&quot;&quot;</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">log_status</span><span class="o">.</span><span class="n">StartConcurrentLogRequest</span><span class="p">()</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">keep_alive</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">bosdyn</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">seconds_to_duration</span><span class="p">(</span><span class="n">duration_seconds</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="p">:</span>
+            <span class="n">req</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">CopyFrom</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">call_async</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stub</span><span class="o">.</span><span class="n">StartConcurrentLog</span><span class="p">,</span> <span class="n">req</span><span class="p">,</span>
+                               <span class="n">error_from_response</span><span class="o">=</span><span class="n">start_concurrent_log_error</span><span class="p">,</span> <span class="n">copy_request</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="LogStatusClient.update_experiment"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.LogStatusClient.update_experiment">[docs]</a>    <span class="k">def</span> <span class="nf">update_experiment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">seconds</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
@@ -729,6 +769,18 @@
         <span class="n">error_pair</span><span class="p">(</span><span class="n">ConcurrencyLimitReachedError</span><span class="p">),</span>
 <span class="p">})</span>
 
+<span class="n">_START_CONCURRENT_LOG_STATUS_TO_ERROR</span> <span class="o">=</span> \
+    <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">LogStatusResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+<span class="n">_START_CONCURRENT_LOG_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+    <span class="n">log_status</span><span class="o">.</span><span class="n">StartConcurrentLogResponse</span><span class="o">.</span><span class="n">STATUS_OK</span><span class="p">:</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+    <span class="n">log_status</span><span class="o">.</span><span class="n">StartConcurrentLogResponse</span><span class="o">.</span><span class="n">STATUS_EXPERIMENT_LOG_RUNNING</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">ExperimentAlreadyRunningError</span><span class="p">),</span>
+    <span class="n">log_status</span><span class="o">.</span><span class="n">StartConcurrentLogResponse</span><span class="o">.</span><span class="n">STATUS_CONCURRENCY_LIMIT_REACHED</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">ConcurrencyLimitReachedError</span><span class="p">),</span>
+    <span class="n">log_status</span><span class="o">.</span><span class="n">StartConcurrentLogResponse</span><span class="o">.</span><span class="n">STATUS_NO_DATA_FOR_EVENT</span><span class="p">:</span>
+        <span class="n">error_pair</span><span class="p">(</span><span class="n">NoDataForEventError</span><span class="p">),</span>
+<span class="p">})</span>
+
 <span class="n">_UPDATE_EXPERIMENT_LOG_STATUS_TO_ERROR</span> <span class="o">=</span> \
     <span class="n">collections</span><span class="o">.</span><span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="p">(</span><span class="n">LogStatusResponseError</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
 <span class="n">_UPDATE_EXPERIMENT_LOG_STATUS_TO_ERROR</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
@@ -782,6 +834,15 @@
     <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
                          <span class="n">status_to_string</span><span class="o">=</span><span class="n">log_status</span><span class="o">.</span><span class="n">StartRetroLogResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
                          <span class="n">status_to_error</span><span class="o">=</span><span class="n">_START_RETRO_LOG_STATUS_TO_ERROR</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="start_concurrent_log_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.start_concurrent_log_error">[docs]</a><span class="nd">@handle_common_header_errors</span>
+<span class="nd">@handle_unset_status_error</span><span class="p">(</span><span class="n">unset</span><span class="o">=</span><span class="s1">&#39;STATUS_UNKNOWN&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">start_concurrent_log_error</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a custom exception based on the StartConcurrentLog response, None if no error.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">error_factory</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                         <span class="n">status_to_string</span><span class="o">=</span><span class="n">log_status</span><span class="o">.</span><span class="n">StartConcurrentLogResponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span>
+                         <span class="n">status_to_error</span><span class="o">=</span><span class="n">_START_CONCURRENT_LOG_STATUS_TO_ERROR</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="update_experiment_log_error"><a class="viewcode-back" href="../../../python/bosdyn-client/src/bosdyn/client/log_status.html#bosdyn.client.log_status.update_experiment_log_error">[docs]</a><span class="nd">@handle_common_header_errors</span>

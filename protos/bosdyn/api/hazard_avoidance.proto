@@ -1,0 +1,147 @@
+// Copyright (c) 2023 Boston Dynamics, Inc.  All rights reserved.
+//
+// Downloading, reproducing, distributing or otherwise using the SDK Software
+// is subject to the terms and conditions of the Boston Dynamics Software
+// Development Kit License (20191101-BDSDK-SL).
+
+syntax = "proto3";
+
+package bosdyn.api;
+option go_package = "bosdyn/api/hazard_avoidance";
+
+option java_outer_classname = "HazardAvoidanceProto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+import "bosdyn/api/geometry.proto";
+import "bosdyn/api/header.proto";
+import "bosdyn/api/image.proto";
+import "bosdyn/api/point_cloud.proto";
+
+// Hazard data to add for tracking.
+message HazardObservation {
+    // Proto to wrap a list of circles.
+    message CircleList {
+        repeated Circle circles = 1;
+    }
+
+    // The time at which the hazard was observed.
+    google.protobuf.Timestamp acquisition_time = 1;
+
+    oneof observation_data {
+        // A point cloud associated with this hazard.
+        PointCloud point_cloud = 2;
+
+        // A segmented depth image; all positive pixels will be associated to this hazard.
+        // segmented_depth.shot.image must be type PIXEL_FORMAT_DEPTH_U16.
+        ImageCaptureAndSource segmented_depth = 3;
+
+        // An oriented box to describe the footprint of the hazard. Must be in the vision frame.
+        Box2WithFrame box = 8;
+
+        // A circle in the vision frame's XY plane to describe the footprint of the hazard.
+        Circle circle = 9;
+
+        // Multiple circles in the vision frame's XY plane that describe the hazard.
+        CircleList circle_list = 10;
+    }
+
+    enum HazardType {
+        // Not specified - not a valid value.
+        TYPE_UNKNOWN = 0;
+
+        // Robot should avoid stepping on, with low penalty for doing so.
+        TYPE_PREFER_AVOID_WEAK = 1;
+
+        // Robot should avoid stepping on, with high penalty for doing so.
+        TYPE_PREFER_AVOID_STRONG = 2;
+
+        // Robot should never step on, but it can move over.
+        TYPE_NEVER_STEP_ON = 3;
+
+        // Robot should never step on or move over.
+        TYPE_NEVER_STEP_ACROSS = 4;
+
+        // Safe terrain - the robot should prefer stepping here.
+        TYPE_PREFER_STEP_ON = 5;
+
+        // Robot should never step on, but it can move over.
+        // Positive margin will be treated as TYPE_PREFER_AVOID_WEAK.
+        // Negative margin will be unaffected.
+        TYPE_NEVER_STEP_ON_AVOID_MARGIN = 6;
+
+        // Robot should never step on or move over.
+        // Positive margin will be treated as TYPE_PREFER_AVOID_STRONG.
+        // Negative margin will be unaffected.
+        TYPE_NEVER_STEP_ACROSS_AVOID_MARGIN = 7;
+    }
+
+    // The type of hazard.
+    HazardType type = 4;
+
+    // Confidence in the observation.
+    float likelihood = 5;
+
+    // A label associated with the observation.
+    string semantic_label = 6;
+
+    // Margin to expand (or contract if negative) the hazard by in meters.
+    float margin = 7;
+}
+
+// Request to add multiple hazard observations.
+message AddHazardsRequest {
+    RequestHeader header = 1;
+    repeated HazardObservation hazards = 2;
+
+    // Body pose in VO at the time of the request.
+    // If not provided, will attempt to extract from the observation data.
+    SE3Pose vision_tform_body = 3;
+
+    // If true, will write directly into the published map and not to the internally tracked map.
+    bool skip_aggregation = 4;
+
+    // If skip_aggregation is true, max seconds for the observations to be kept around.
+    google.protobuf.Duration max_unaggregated_update_age = 5;
+
+    // Identifier for the source of the observations.
+    string hazard_source = 6;
+}
+
+// Result of adding a single hazard observation.
+message AddHazardResult {
+    enum Status {
+        STATUS_UNKNOWN = 0;          // Unset.
+        STATUS_HAZARDS_UPDATED = 1;  // Updated the hazard map.
+        STATUS_IGNORED = 2;          // No new hazard information was added.
+        STATUS_INVALID_DATA = 5;     // The HazardObservation contained errors.
+
+        reserved 3, 4;
+    }
+
+    // Status of the detection.
+    Status status = 1;
+}
+
+// Response for adding multiple hazard observations.
+message AddHazardsResponse {
+    ResponseHeader header = 1;
+    repeated AddHazardResult add_hazard_results = 2;
+
+    // Convenience value to check how many results returned STATUS_HAZARDS_UPDATED.
+    int32 num_hazards_updated = 3;
+}
+
+// Request to get the status of the service.
+message GetHazardServiceStatusRequest {
+    RequestHeader header = 1;
+}
+
+// Response for getting the status of the service.
+message GetHazardServiceStatusResponse {
+    ResponseHeader header = 1;
+
+    // Time since last observation. Can be used to check if the extension is running.
+    google.protobuf.Duration time_since_last_observation = 2;
+}

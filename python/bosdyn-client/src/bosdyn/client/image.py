@@ -231,12 +231,13 @@ def write_pgm_or_ppm(image_response, filename="", filepath=".", include_pixel_fo
                             a filename ("image-{SOURCENAME}-{PIXELFORMAT}.pgm").
     """
     # Determine the data type to decode the image.
+    remote_dtype = pixel_format_to_numpy_type(image_response.shot.image.pixel_format)
     if image_response.shot.image.pixel_format in (image_pb2.Image.PIXEL_FORMAT_DEPTH_U16,
                                                   image_pb2.Image.PIXEL_FORMAT_GREYSCALE_U16):
-        dtype = np.uint16
+        local_dtype = np.uint16
         max_val = np.iinfo(np.uint16).max
     else:
-        dtype = np.uint8
+        local_dtype = np.uint8
         max_val = np.iinfo(np.uint8).max
 
     num_channels = 1
@@ -259,11 +260,11 @@ def write_pgm_or_ppm(image_response, filename="", filepath=".", include_pixel_fo
               image_pb2.Image.PixelFormat.Name(image_response.shot.image.pixel_format))
         return
 
-    img = np.frombuffer(image_response.shot.image.data, dtype=dtype)
+    img = np.frombuffer(image_response.shot.image.data, dtype=remote_dtype)
     height = image_response.shot.image.rows
     width = image_response.shot.image.cols
     try:
-        img = img.reshape((height, width, num_channels))
+        img = img.astype(local_dtype).reshape((height, width, num_channels))
     except ValueError as err:
         print(
             "Cannot convert raw image into expected shape (rows %d, cols %d, color channels %d)." %

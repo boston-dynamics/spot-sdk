@@ -44,6 +44,7 @@ message DataAcquisitionCapability {
 
     // Capability has live data available via GetLiveData RPC.
     bool has_live_data = 6;
+
 }
 
 // Description of an image acquisition capability. The image acquisition capabilities will be
@@ -77,6 +78,7 @@ message NetworkComputeCapability {
     AvailableModels models = 3;
 }
 
+
 // A list of all capabilities (data and images) that a specific data acquisition plugin service can
 // successfully acquire and save the data specified in each capability.
 message AcquisitionCapabilityList {
@@ -88,6 +90,7 @@ message AcquisitionCapabilityList {
 
     // List of network compute capabilities.
     repeated NetworkComputeCapability network_compute_sources = 5;
+
 }
 
 // The CaptureActionId describes the entire capture action for an AcquireData request and will be
@@ -167,6 +170,13 @@ message AssociatedAlertData {
     AlertData alert_data = 2;
 }
 
+// An order for a given capture. This is used to determine the order in which captures are
+// processed and saved.
+message CaptureOrdering {
+    // The order value. Lower values indicate higher priority and will be executed first.
+    int32 value = 1;
+}
+
 // An individual capture which can be specified in the AcquireData request to identify a piece of
 // image data to be collected.
 message ImageSourceCapture {
@@ -184,6 +194,9 @@ message ImageSourceCapture {
     // DEPRECATED as of 3.2.0.  Use image_request instead.
     // Specific pixel format to capture reported by the ImageAcquisitionCapability message.
     Image.PixelFormat pixel_format = 3 [deprecated = true];
+
+    // The order in which this capture should be performed relative to the other captures.
+    CaptureOrdering order = 5;
 }
 
 // An individual capture which can be specified in the AcquireData or LiveData request to identify
@@ -196,6 +209,9 @@ message DataCapture {
     // Values passed to the service at capture time.
     // See the DictParam.Spec in DataAcquisitionCapability.
     DictParam custom_params = 9;
+
+    // The order in which this capture should be performed relative to the other captures.
+    CaptureOrdering order = 10;
 }
 
 message NetworkComputeCapture {
@@ -208,6 +224,9 @@ message NetworkComputeCapture {
 
     // Which service to use.
     NetworkComputeServerConfiguration server_config = 2;
+
+    // The order in which this capture should be performed relative to the other captures.
+    CaptureOrdering order = 4;
 }
 
 
@@ -502,3 +521,4 @@ message LiveDataResponse {
 
     reserved 2;
 }
+

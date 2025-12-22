@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Choreography service &mdash; Spot 5.0.1.2 documentation</title>
+  <title>Choreography service &mdash; Spot 5.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -21,7 +21,7 @@
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="Choreography moves reference" href="move_reference.html" />
+    <link rel="next" title="Install Choreographer" href="choreographer_setup.html" />
     <link rel="prev" title="Spot Choreography SDK" href="README.html" /> 
 </head>
 
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.0.1.2
+                5.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -74,6 +74,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_service.html">GraphNav service</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_map_structure.html">GraphNav map structure</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_area_callbacks.html">GraphNav area callbacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../autonomy/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/initialization.html">Initialization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/localization.html">Localization</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../autonomy/graphnav_and_robot_locomotion.html">GraphNav and robot locomotion</a></li>
@@ -87,13 +88,15 @@
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="README.html">Choreography</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Choreography Service</a></li>
-<li class="toctree-l3"><a class="reference internal" href="move_reference.html">Move Reference Guide</a></li>
-<li class="toctree-l3"><a class="reference internal" href="custom_gait.html">CustomGait Reference</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer_setup.html">Choreographer Setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreographer.html">Choreographer Overview</a></li>
-<li class="toctree-l3"><a class="reference internal" href="robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
-<li class="toctree-l3"><a class="reference internal" href="animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="move_reference.html">Move Reference Guide</a></li>
 <li class="toctree-l3"><a class="reference internal" href="animation_file_specification.html">Animation File Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="animations_in_choreographer.html">Animations in Choreography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_gait.html">CustomGait Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="robot_controls_in_choreographer.html">Robot Connections in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dance_previews.html">3D/2D Visualization in Choreographer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timecode_reference.html">Timecode in Choreographer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography_in_tablet.html">Tablet Choreography Mode</a></li>
 <li class="toctree-l3"><a class="reference internal" href="choreography_in_autowalk.html">Choreography Actions in Autowalk</a></li>
 </ul>
@@ -262,6 +265,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/network_request_callback/README.html#id1">Network Request Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/remote_mission_service/spot_check/README.html">SpotCheck Mission Service</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/access_controlled_doors/README.html">Access Controlled Doors Test Scripts</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/examples/docs/joint_control_examples.html">Joint Control API Examples</a></li>
@@ -278,12 +282,14 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/backups/README.html">Backups</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html">Webhook Integrations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/webhook_integration/README.html#example-overview">Example Overview</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/orbit/work_orders/README.html">Work Orders Integration</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../python/README.html">Python Reference Guide</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/README.html">Client</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/access_controlled_door_util.html">Access Controlled Door Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback.html">Area Callback</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_region_handler_base.html">Area Callback Region Handler</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/area_callback_service_runner.html">Area Callback Service Runner</a></li>
@@ -328,6 +334,7 @@
 <li class="toctree-l5"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/gps/registration_client.html">Registration Client</a></li>
 </ul>
 </li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/hazard_avoidance.html">Hazard Avoidance</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image.html">Image</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/image_service_helpers.html">Image Service Helpers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/inverse_kinematics.html">Inverse Kinematics</a></li>
@@ -380,6 +387,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_cache.html">Token Cache</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/token_manager.html">Token Manager</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/units_helpers.html">Units Helpers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/url_validation_util.html">URL Validation Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/util.html">Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-client/src/bosdyn/client/world_object.html">World Object</a></li>
 </ul>
@@ -414,7 +422,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/README.html">Mission</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/client.html">Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/constants.html">Constants</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/exceptions.html">Exceptions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/remote_client.html">Remote Client</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/server_util.html">Server Util</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/bosdyn-mission/src/bosdyn/mission/util.html">Util</a></li>
@@ -558,11 +565,13 @@ Development Kit License (20191101-BDSDK-SL).
 </ul>
 <p>In addition to the base motion, there are also tracks for:</p>
 <ul class="simple">
-<li><p>Lights: Control the robot’s front two sets of LEDs.</p></li>
+<li><p>Status Lights: Control the robot’s front two sets of LEDs.</p></li>
+<li><p>AV Lights: Control the robot’s AudioVisual lights. (Only applies to Spots with the AV hardware).</p></li>
+<li><p>AV Buzzer: Control the robot’s AudioVisual buzzer. (Only applies to Spots with the AV hardware).</p></li>
 <li><p>Annotations: Enable dance annotations that are separate from any specific move.</p></li>
 <li><p>Music (Choreographer only): Control the audio played from the Choreographer application when dancing.</p></li>
 </ul>
-<p>Each dance move requires one or more of these tracks. Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view. Example: the following script combines moves in three of the four tracks:</p>
+<p>Each dance move requires one or more of these tracks. Moves that use different tracks can be run simultaneously in any combination. In Choreographer, a track is represented as a horizontal section in the timeline view. Example: the following script combines moves in three of the four tracks that control robot motion:</p>
 <p><img alt="Tracks" src="../../../_images/tracks_labeled.png" /></p>
 <p>The resulting behavior looks like this:</p>
 <p><img alt="Dancing Behavior Gif" src="../../../_images/main_image3.gif" /></p>
@@ -582,6 +591,8 @@ Development Kit License (20191101-BDSDK-SL).
 <p>The first leg-track move can have any entry state. The robot automatically transitions to an acceptable entry state for that move before starting the choreography sequence. If the robot is not already in the correct starting pose, it may delay the start of the choreography sequence beyond the requested start time.</p>
 <p>All subsequent legs-track moves must have an entry state that corresponds to the exit state of a previous legs-track move. Scripts that violate this requirement are rejected by the API and return warnings indicating which moves violate this rule. Routines made in Choreographer highlight moves red when the entry state does not match the previous exit state, as in this example:</p>
 <p><img alt="Transitions Error" src="../../../_images/transition_error.png" /></p>
+<p>Some moves have multiple accepted entrance states. When no option is set Spot will favor the entrance state that doesn’t require transitioning into a different state. To force a dances that start with moves that have multiple entrance states to always transition into a certain state before starting, select an Entry state option in the “Entrance State Selector” above the timeline. The Entrance State Selector can be displayed by going to “Settings”-&gt;”Show Entrance State Selector”.</p>
+<p><img alt="Entrance State Options" src="../../../_images/entrance_states.gif" /></p>
 </section>
 </section>
 <section id="apis">
@@ -599,7 +610,7 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Example: A move parameter could specify positions for the body. Each parameter may have specific limits/bounds that are described by the <code class="docutils literal notranslate"><span class="pre">MoveInfo</span></code> proto. This information can be found using the <code class="docutils literal notranslate"><span class="pre">ListAllMoves</span></code> RPC.</p>
 <p>Once a choreography sequence is created, the <code class="docutils literal notranslate"><span class="pre">UploadChoreography</span></code> RPC sends the routine to the robot. The choreography service validates and checks the structure of the routine to ensure it is feasible and within bounds.</p>
 <p>The service returns a list of warnings and failures related to the uploaded choreography sequence. A failure is something the choreography service could not automatically correct and must be fixed before the routine can be executed. Warnings are automatically corrected and do not block the execution of the routine in certain scenarios. If the boolean <code class="docutils literal notranslate"><span class="pre">non_strict_parsing</span></code> is set to true in the <code class="docutils literal notranslate"><span class="pre">UploadChoreography</span></code> RPC, the service fixes any correctable errors within the routine (for example, by limiting parameters to the acceptable range) and allows a choreography sequence with warnings to be completed.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC runs the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Starting time (in robot’s time) and starting slice specifies when the robot when starts the choreography sequence and at which move. Named sequences can be returned using the <code class="docutils literal notranslate"><span class="pre">ListAllSequences</span></code> RPC.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC runs the choreography sequence to completion on the robot. A choreography sequence is identified by the unique name of the sequence that was uploaded to the robot. Starting time (in robot’s time) and starting slice specifies when the robot starts the choreography sequence and at which move. Named sequences can be returned using the <code class="docutils literal notranslate"><span class="pre">ListAllSequences</span></code> RPC.</p>
 </section>
 <section id="interacting-with-a-sequence-during-execution">
 <h3>Interacting With a Sequence During Execution<a class="headerlink" href="#interacting-with-a-sequence-during-execution" title="Permalink to this heading"></a></h3>
@@ -608,7 +619,7 @@ Development Kit License (20191101-BDSDK-SL).
 </section>
 <section id="saving-choreography-sequences-to-your-spot">
 <h3>Saving Choreography Sequences to your Spot<a class="headerlink" href="#saving-choreography-sequences-to-your-spot" title="Permalink to this heading"></a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">SaveSequence</span></code> RPC will save a sequence and all information required to play that sequence to a library of permanently retained choreography sequences stored on the robot. These sequences load automatically when Spot boots up, and are playable through the Tablet Choreography screen or with an <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC. Sequences can be saved with additional information called labels, which are used to categorize and group retained sequences in the tablet UI. The labels associated wih a sequence can be added or removed with the <code class="docutils literal notranslate"><span class="pre">ModifyChoreographyInfo</span></code> RPC. Sequences saved to the robot can be removed using the <code class="docutils literal notranslate"><span class="pre">DeleteSequence</span></code> RPC, which deletes a single sequence, or by using the <code class="docutils literal notranslate"><span class="pre">ClearAllSequenceFiles</span></code> RPC, which deletes every saved choreography file from Spot. The <code class="docutils literal notranslate"><span class="pre">GetChoreographySequence</span></code> RPC can be used to request the full sequence proto with a given name from Spot, along with all the <code class="docutils literal notranslate"><span class="pre">Animation</span></code> moves required to play the sequence (if any).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">SaveSequence</span></code> RPC will save a sequence and all information required to play that sequence to a library of permanently retained choreography sequences stored on the robot. These sequences load automatically when Spot boots up, and are playable through the Tablet Choreography screen or with an <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC. Sequences can be saved with additional information called labels, which are used to categorize and group retained sequences in the tablet UI. The labels associated with a sequence can be added or removed with the <code class="docutils literal notranslate"><span class="pre">ModifyChoreographyInfo</span></code> RPC. Sequences saved to the robot can be removed using the <code class="docutils literal notranslate"><span class="pre">DeleteSequence</span></code> RPC, which deletes a single sequence, or by using the <code class="docutils literal notranslate"><span class="pre">ClearAllSequenceFiles</span></code> RPC, which deletes every saved choreography file from Spot. The <code class="docutils literal notranslate"><span class="pre">GetChoreographySequence</span></code> RPC can be used to request the full sequence proto with a given name from Spot, along with a list of animation names it depends on. The <code class="docutils literal notranslate"><span class="pre">GetAnimation</span></code> RPC can be used to request an animation proto with a given name from Spot.</p>
 </section>
 <section id="animation-api">
 <h3>Animation API<a class="headerlink" href="#animation-api" title="Permalink to this heading"></a></h3>
@@ -648,15 +659,16 @@ Development Kit License (20191101-BDSDK-SL).
 <p>Choreography logs can be used to review how the robot actually executed a choreography or animated dance move. For example (specifically for animations): If the move is not completely feasible, the robot attempts to get as close to what was asked as possible, but may not succeed. The choreography log can be used to understand and update the animated move to make it more likely to succeed.</p>
 <p>Use the <code class="docutils literal notranslate"><span class="pre">DownloadRobotStateLog</span></code> RPC to download choreography logs. The request specifies which type of log should be downloaded. The response is streamed over grpc and recombined by the choreography client to create a full log message. The robot keeps only one auto log and one manual log in its buffer (2 total logs) at a time. The log must be downloaded immediately after completing the move on the robot.</p>
 </section>
-<section id="time-adjust-api">
-<h3>Time Adjust API<a class="headerlink" href="#time-adjust-api" title="Permalink to this heading"></a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> RPC can be used to slightly modify the start time of the next <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC request that will be received by the robot in the future. If the new start time is within the right thresholds to be valid, the <code class="docutils literal notranslate"><span class="pre">start_time</span></code> of the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> request will be ignored, and the <code class="docutils literal notranslate"><span class="pre">override_start_time</span></code> from the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> request will be used instead. Values for <code class="docutils literal notranslate"><span class="pre">override_start_time</span></code> are limited to at most 5 minutes in the future from the time when the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> request is sent, and can have a maximum of 2 minutes difference from the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> request’s original <code class="docutils literal notranslate"><span class="pre">start_time</span></code> value. Within those constraints, those thresholds are configurable by the user, but default to a <code class="docutils literal notranslate"><span class="pre">validity_time</span></code> threshold of 1 minute and an <code class="docutils literal notranslate"><span class="pre">acceptable_time_difference</span></code> threshold of 20 seconds.</p>
-<p>In nearly all cases the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> RPC will not be necessary. The purpose of this RPC is the rare case where one isolated system will be sending the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC, and using a separate system the user would like to make a small adjustment to the start time of that request. If it’s possible to set the desired start time using the system that sends the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC the user should just set that <code class="docutils literal notranslate"><span class="pre">start_time</span></code> in the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC and avoid using the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> RPC.</p>
-</section>
 <section id="leg-size-configuration-api">
 <h3>Leg Size Configuration API<a class="headerlink" href="#leg-size-configuration-api" title="Permalink to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">LegSizeConfiguration</span></code> RPC can be used to modify Spot’s internal model of its leg size to help avoid self-collision when its legs have non-standard dimensions. This is typically used for Spot’s wearing costumes that cover the all or part of the leg, but it could also be used to specify that the leg has been modified to have a smaller area. Default values for Spot’s foot dimensions are estimated at 4 centimeters in width and 7 centimeters length, (measured around the widest point of the foot). The requested configuration is permanently stored (persisting through reboot) until cleared by sending an empty request, and affects all Spot behaviors.</p>
 <p>Leg size configuration for individual robots can be adjusted through <a class="reference internal" href="choreographer.html"><span class="doc">Choreographer</span></a> by selecting the “Spot Leg Size Configuration” option in the “Settings” menu.</p>
+<p><img alt="Entrance State Options" src="../../../_images/leg_size_configuration.gif" /></p>
+</section>
+<section id="time-adjust-api">
+<h3>Time Adjust API<a class="headerlink" href="#time-adjust-api" title="Permalink to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> RPC can be used to slightly modify the start time of the next <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC request that will be received by the robot in the future. If the new start time is within the right thresholds to be valid, the <code class="docutils literal notranslate"><span class="pre">start_time</span></code> of the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> request will be ignored, and the <code class="docutils literal notranslate"><span class="pre">override_start_time</span></code> from the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> request will be used instead. Values for <code class="docutils literal notranslate"><span class="pre">override_start_time</span></code> are limited to at most 5 minutes in the future from the time when the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> request is sent, and can have a maximum of 2 minutes difference from the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> request’s original <code class="docutils literal notranslate"><span class="pre">start_time</span></code> value. Within those constraints, those thresholds are configurable by the user, but default to a <code class="docutils literal notranslate"><span class="pre">validity_time</span></code> threshold of 1 minute and an <code class="docutils literal notranslate"><span class="pre">acceptable_time_difference</span></code> threshold of 20 seconds.</p>
+<p>In nearly all cases the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> RPC will not be necessary. The purpose of this RPC is the rare case where one isolated system will be sending the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC, and using a separate system the user would like to make a small adjustment to the start time of that request. If it’s possible to set the desired start time using the system that sends the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC the user should just set that <code class="docutils literal notranslate"><span class="pre">start_time</span></code> in the <code class="docutils literal notranslate"><span class="pre">ExecuteChoreography</span></code> RPC and avoid using the <code class="docutils literal notranslate"><span class="pre">ChoreographyTimeAdjust</span></code> RPC.</p>
 </section>
 <section id="choreography-client">
 <h3>Choreography client<a class="headerlink" href="#choreography-client" title="Permalink to this heading"></a></h3>

@@ -13,6 +13,7 @@ option java_outer_classname = "WalksProto";
 
 
 import "google/protobuf/duration.proto";
+import "google/protobuf/wrappers.proto";
 import "bosdyn/api/mission/nodes.proto";
 import "bosdyn/api/mission/util.proto";
 import "bosdyn/api/data_acquisition.proto";
@@ -58,6 +59,16 @@ message Walk {
     // Choreography related dependencies (any sequences and animations a robot needs to play this
     // walk).
     ChoreographyItems choreography_items = 9;
+
+    // Interrupts can be used to interrupt the normal flow of an autowalk.
+    // This could be useful for:
+    //    - Getting the robot to power off when an onboard sensor determines an
+    //      unsafe condition.
+    //    - Having an external system that's internet connected inform the robot
+    //      it's going to rain, so that the robot can return to the dock early.
+    //    - Temporarily pausing the mission to get a closer look at a detected
+    //      anomaly.
+    WalkInterrupt interrupts = 10;
 
 }
 
@@ -313,6 +324,10 @@ message Target {
         TARGET_STOW_BEHAVIOR_ALWAYS = 3;
     }
     TargetStowBehavior target_stow_behavior = 5;
+
+    // If true, the robot is allowed to continue to perform the action
+    // Before it comes to a complete stop.
+    bool success_when_goal_area_reached = 6;
 }
 
 // An Action is what the robot should do at a location. For example, the user
@@ -333,6 +348,8 @@ message Action {
         // element name.
         AcquireDataRequest acquire_data_request = 1;
         bosdyn.api.mission.DataAcquisition.CompletionBehavior completion_behavior = 2;
+
+
         // Last known Data Acquisition capabilities.
         AcquisitionCapabilityList last_known_capabilities = 3;
 
@@ -390,6 +407,18 @@ message Action {
     message ExecuteChoreography {
         // The name of the sequence to play.
         string sequence_name = 1;
+
+        message PromptParams {
+            // Should the dance start time be determined before the dance plays
+            // at runtime from user input
+            bool prompt_for_start_time = 1;
+
+            // How long will the prompt run before timing out. If unset,
+            // the default value of 10 minutes will be used.
+            google.protobuf.DoubleValue prompt_timeout = 2;
+        }
+
+        PromptParams prompt_params = 2;
     }
 
     oneof action {
@@ -488,6 +517,7 @@ message ActionWrapper {
     message ArmSensorPointing {
         // Arm Joint Move Command
         // The joint trajectory to execute in the initial rough pointing joint move.
+        // Can be unset - if it is, robot will skip this step.
         bosdyn.api.ArmJointTrajectory joint_trajectory = 2;
 
         // Arm Cartesian Command
@@ -497,6 +527,7 @@ message ActionWrapper {
         bosdyn.api.SE3Pose wrist_tform_tool = 3;
 
         // A 3D pose trajectory for the tool expressed in target frame,
+        // Can be unset - if it is, robot will skip this step.
         bosdyn.api.SE3Trajectory pose_trajectory_rt_target = 4;
 
         // Robot desired stance relative to waypoint
@@ -602,6 +633,49 @@ message FailureBehavior {
         ReturnToStartAndTryAgainLater return_to_start_and_try_again_later = 5;
         ReturnToStartAndTerminate return_to_start_and_terminate = 6;
     }
+}
+
+// How are multiple interruptions handled?
+//  - SafePowerOff can never be overridden, and can override everything.
+//  - ReturnToStartAndTerminate can only be overridden by SafePowerOff,
+//    and can override everything else.
+//  - Node can't override anything except an actively running element.
+//    If multiple interrupts with "Node" as the condition_behavior are
+//    triggered, the first one triggered will run.  When that behavior
+//    completes, all signals will be revaluated, and if the other
+//    interrupt is still high then that behavior will be triggered.
+message WalkInterrupt {
+    message DaqPluginSignal {
+        reserved 1;
+        DataAcquisitionCapability capability = 4;
+        DataCapture data_capture = 2;
+
+        // The DataCapture will be sent as part of a LiveDataRequest
+        // to the data acquisition plugin service.  The service will return
+        // a CapabilityLiveData for that data_capture, which will be embedded
+        // in the mission blackboard at the following name, for use
+        // in the condition node.
+        string blackboard_name = 3;
+    }
+
+    message ConditionAndBehavior {
+        // Only used for things like the autowalk report.
+        string name = 1;
+
+        // Should evaluate to true when this interrupt should occur.
+        oneof condition {
+            bosdyn.api.mission.Condition condition_node = 2;
+        }
+
+        oneof behavior {
+            FailureBehavior.SafePowerOff safe_power_off = 3;
+            FailureBehavior.ReturnToStartAndTerminate return_to_start_and_terminate = 4;
+            bosdyn.api.mission.Node behavior_node = 5;
+        }
+    }
+
+    repeated DaqPluginSignal signals = 1;
+    repeated ConditionAndBehavior conditions_and_behaviors = 2;
 }
 
 // If your mission has docks, autowalk can pause the mission to return

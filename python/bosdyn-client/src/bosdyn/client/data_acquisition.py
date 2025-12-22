@@ -8,15 +8,13 @@
 
 import collections
 
-from google.protobuf import json_format
-
 from bosdyn.api import data_acquisition_pb2 as data_acquisition
 from bosdyn.api import data_acquisition_service_pb2_grpc as data_acquisition_service
 from bosdyn.client.common import (BaseClient, common_header_errors, custom_params_error,
                                   error_factory, error_pair, handle_common_header_errors,
-                                  handle_custom_params_errors, handle_unset_status_error)
-from bosdyn.client.exceptions import Error, InternalServerError, ResponseError
-from bosdyn.util import now_nsec, now_sec, now_timestamp, seconds_to_duration
+                                  handle_unset_status_error)
+from bosdyn.client.exceptions import InternalServerError, ResponseError
+from bosdyn.util import now_sec, now_timestamp, seconds_to_duration
 
 
 class DataAcquisitionResponseError(ResponseError):

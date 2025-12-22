@@ -6,10 +6,8 @@
 
 """For clients to use the Gps Aggregator service."""
 
-from bosdyn.api.gps import aggregator_pb2, aggregator_service_pb2_grpc, gps_pb2
-from bosdyn.client.common import (BaseClient, common_header_errors, error_factory, error_pair,
-                                  handle_common_header_errors, handle_unset_status_error)
-from bosdyn.client.exceptions import ResponseError
+from bosdyn.api.gps import aggregator_pb2, aggregator_service_pb2_grpc
+from bosdyn.client.common import BaseClient, handle_common_header_errors
 
 
 class AggregatorClient(BaseClient):

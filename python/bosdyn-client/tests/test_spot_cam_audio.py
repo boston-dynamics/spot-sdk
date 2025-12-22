@@ -8,9 +8,6 @@
 import sys
 import time
 
-import grpc
-import pytest
-
 import bosdyn.client.spot_cam.audio
 from bosdyn.api import header_pb2
 from bosdyn.api.spot_cam import audio_pb2, service_pb2_grpc
@@ -137,7 +134,7 @@ def test_get_volume():
     assert volume == 50
 
 
-def test_set_volume_async():
+def test_get_volume_async():
     client, service, server = _setup()
     volume = client.get_volume_async().result()
     assert volume == 50

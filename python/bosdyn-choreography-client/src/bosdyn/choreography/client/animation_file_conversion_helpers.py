@@ -586,8 +586,12 @@ def arm_playback_option(file_line_split, animation):
 
 
 def display_rgb_option(file_line_split, animation):
-    for i in range(1, 3):
-        animation.rgb[i - 1] = int(file_line_split[i])
+    if len(file_line_split) == 4:
+        rgb_option_values = file_line_split[1:4]
+        for i in range(3):
+            animation.rgb[i] = int(rgb_option_values[i])
+    else:
+        print(f"Misformed display_rgb option: Format must follow 'display_rgb [R] [G] [B]'")
     return animation
 
 

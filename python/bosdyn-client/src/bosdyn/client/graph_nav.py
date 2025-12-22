@@ -13,14 +13,14 @@ import time
 from deprecated.sphinx import deprecated
 
 from bosdyn.api import data_chunk_pb2, lease_pb2
-from bosdyn.api.graph_nav import (graph_nav_pb2, graph_nav_service_pb2, graph_nav_service_pb2_grpc,
-                                  map_pb2, nav_pb2)
+from bosdyn.api.graph_nav import graph_nav_pb2, graph_nav_service_pb2_grpc, map_pb2, nav_pb2
 from bosdyn.client.common import (BaseClient, common_header_errors, common_lease_errors,
                                   error_factory, error_pair, handle_common_header_errors,
                                   handle_lease_use_result_errors, handle_license_errors_if_present,
                                   handle_unset_status_error)
-from bosdyn.client.exceptions import Error, InvalidRequestError, ResponseError, UnimplementedError
+from bosdyn.client.exceptions import ResponseError, UnimplementedError
 from bosdyn.client.lease import add_lease_wallet_processors
+from bosdyn.util import now_sec
 
 
 class GraphNavClient(BaseClient):
@@ -476,13 +476,15 @@ class GraphNavClient(BaseClient):
                                error_from_response=handle_common_header_errors(common_lease_errors),
                                copy_request=False, **kwargs)
 
-    def upload_graph(self, lease=None, graph=None, generate_new_anchoring=False, **kwargs):
+    def upload_graph(self, lease=None, graph=None, generate_new_anchoring=False,
+                     replace_graph=False, **kwargs):
         """Uploads a graph to the server and appends to the existing graph.
 
         Args:
             lease: Leases to show ownership of necessary resources. Will use the client's leases by default.
             graph: Graph protobuf that represents the map with waypoints and edges.
             generate_new_anchoring: Whether to generate an (overwrite the) anchoring on upload.
+            replace_graph: If true, replaces the existing graph with the new one rather than adding to it.
         Returns:
             The response, which includes waypoint and edge id's sorted by whether it was cached.
         Raises:
@@ -493,7 +495,8 @@ class GraphNavClient(BaseClient):
             LeaseUseError: Error using provided lease.
             LicenseError: The robot's license is not valid.
         """
-        request = self._build_upload_graph_request(lease, graph, generate_new_anchoring)
+        request = self._build_upload_graph_request(lease, graph, generate_new_anchoring,
+                                                   replace_graph)
         # Use streaming to upload the graph, if applicable.
         if self._use_streaming_graph_upload:
             # Need to manually apply request processors since this will be serialized and chunked.
@@ -509,14 +512,17 @@ class GraphNavClient(BaseClient):
             except UnimplementedError:
                 print('UploadGraphStreaming unimplemented. Old robot release?')
                 # Recreate the request so that we clear any state that might have happened during our attempt to stream.
-                request = self._build_upload_graph_request(lease, graph, generate_new_anchoring)
+                request = self._build_upload_graph_request(lease, graph, generate_new_anchoring,
+                                                           replace_graph)
                 # Continue to regular UploadGraph.
         return self.call(self._stub.UploadGraph, request, value_from_response=_get_response,
                          error_from_response=_upload_graph_error, copy_request=False, **kwargs)
 
-    def upload_graph_async(self, lease=None, graph=None, generate_new_anchoring=False, **kwargs):
+    def upload_graph_async(self, lease=None, graph=None, generate_new_anchoring=False,
+                           replace_graph=False, **kwargs):
         """Async version of upload_graph()."""
-        request = self._build_upload_graph_request(lease, graph, generate_new_anchoring)
+        request = self._build_upload_graph_request(lease, graph, generate_new_anchoring,
+                                                   replace_graph)
         return self.call_async(self._stub.UploadGraph, request, value_from_response=_get_response,
                                error_from_response=_upload_graph_error, copy_request=False,
                                **kwargs)
@@ -559,6 +565,32 @@ class GraphNavClient(BaseClient):
             self._stub.UploadEdgeSnapshot,
             GraphNavClient._data_chunk_iterator_upload_edge_snapshot(serialized, lease,
                                                                      self._data_chunk_size),
+            value_from_response=None,
+            error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
+
+    def upload_snapshots(self, snapshots, lease=None, **kwargs):
+        """Uploads multiple snapshots as a stream.
+
+        graph_nav only processes complete Snapshots so large protos are discouraged;
+        any network interruption would require the data to be resent.  Clients are
+        encouraged to send data in batches on the order of a few MB to strike a
+        balance between eliminating per-RPC overhead and recovering from errors.
+
+        Args:
+            lease: Leases to show ownership of necessary resources. Will use the client's leases by default.
+            snapshots: UploadSnapshotsRequest.Snapshots protobuf that will be stream-uploaded to the robot.
+        Returns:
+            The status of the upload request.
+        Raises:
+            RpcError: Problem communicating with the robot.
+            LeaseUseError: Error using provided leases.
+        """
+        lease = lease or lease_pb2.Lease()
+        serialized = snapshots.SerializeToString()
+        self.call(
+            self._stub.UploadSnapshots,
+            GraphNavClient._data_chunk_iterator_upload_snapshots(serialized, lease,
+                                                                 self._data_chunk_size),
             value_from_response=None,
             error_from_response=handle_common_header_errors(common_lease_errors), **kwargs)
 
@@ -724,7 +756,7 @@ class GraphNavClient(BaseClient):
         if travel_params is not None:
             request.travel_params.CopyFrom(travel_params)
         request.end_time.CopyFrom(
-            converter.robot_timestamp_from_local_secs(time.time() + end_time_secs))
+            converter.robot_timestamp_from_local_secs(now_sec() + end_time_secs))
         if command_id is not None:
             request.command_id = command_id
         return request
@@ -739,7 +771,7 @@ class GraphNavClient(BaseClient):
             destination_waypoint_tform_body_goal=destination_waypoint_tform_body_goal,
             clock_identifier=timesync_endpoint.clock_identifier)
         request.end_time.CopyFrom(
-            converter.robot_timestamp_from_local_secs(time.time() + end_time_secs))
+            converter.robot_timestamp_from_local_secs(now_sec() + end_time_secs))
         if travel_params is not None:
             request.travel_params.CopyFrom(travel_params)
         if route_params is not None:
@@ -764,7 +796,7 @@ class GraphNavClient(BaseClient):
         if gps_navigation_params:
             request.gps_navigation_params.CopyFrom(gps_navigation_params)
         request.end_time.CopyFrom(
-            converter.robot_timestamp_from_local_secs(time.time() + end_time_secs))
+            converter.robot_timestamp_from_local_secs(now_sec() + end_time_secs))
         if travel_params is not None:
             request.travel_params.CopyFrom(travel_params)
         if route_params is not None:
@@ -783,10 +815,11 @@ class GraphNavClient(BaseClient):
         return graph_nav_pb2.NavigationFeedbackRequest(command_id=command_id)
 
     @staticmethod
-    def _build_upload_graph_request(lease, graph, generate_new_anchoring):
+    def _build_upload_graph_request(lease, graph, generate_new_anchoring, replace_graph):
         lease = lease or lease_pb2.Lease()
         return graph_nav_pb2.UploadGraphRequest(lease=lease, graph=graph,
-                                                generate_new_anchoring=generate_new_anchoring)
+                                                generate_new_anchoring=generate_new_anchoring,
+                                                replace_graph=replace_graph)
 
     @staticmethod
     def _data_chunk_iterator_upload_graph(serialized_upload_graph, data_chunk_byte_size):
@@ -834,6 +867,27 @@ class GraphNavClient(BaseClient):
             else:
                 chunk.data = serialized_edge_snapshot[start_index:end_index]
             req = graph_nav_pb2.UploadEdgeSnapshotRequest(lease=lease, chunk=chunk)
+            yield req
+
+    @staticmethod
+    def _data_chunk_iterator_upload_snapshots(serialized_snapshots, lease, data_chunk_byte_size):
+        total_bytes_size = len(serialized_snapshots)
+        # If the snapshots are empty, still send one empty request.
+        # This is used to probe if the RPC is implemented.
+        if 0 == total_bytes_size:
+            req = graph_nav_pb2.UploadSnapshotsRequest(lease=lease)
+            yield req
+
+        num_chunks = math.ceil(total_bytes_size / data_chunk_byte_size)
+        for i in range(num_chunks):
+            start_index = i * data_chunk_byte_size
+            end_index = (i + 1) * data_chunk_byte_size
+            chunk = data_chunk_pb2.DataChunk(total_size=total_bytes_size)
+            if (end_index > total_bytes_size):
+                chunk.data = serialized_snapshots[start_index:total_bytes_size]
+            else:
+                chunk.data = serialized_snapshots[start_index:end_index]
+            req = graph_nav_pb2.UploadSnapshotsRequest(lease=lease, chunk=chunk)
             yield req
 
     @staticmethod

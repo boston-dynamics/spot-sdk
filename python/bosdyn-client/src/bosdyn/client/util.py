@@ -16,7 +16,6 @@ from concurrent import futures
 from secrets import token_urlsafe
 from uuid import uuid4
 
-import google.protobuf.descriptor
 import grpc
 from deprecated.sphinx import deprecated
 
@@ -185,9 +184,8 @@ def does_dedup_filter_exist(logger, always_print_logger_levels):
         Boolean indicating if the DedupLoggingMessages filter already exists and matches the new parameters.
     """
     for filt in logger.filters:
-        if type(
-                filt
-        ) == DedupLoggingMessages and filt.always_print_logger_levels == always_print_logger_levels:
+        if (type(filt) is DedupLoggingMessages and
+                filt.always_print_logger_levels == always_print_logger_levels):
             return True
     return False
 

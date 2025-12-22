@@ -45,7 +45,7 @@ Use the Choreography Action screen to select a choreography sequence to add to t
 
 1. Select the name of the sequence to add.
 
-   note: Sequences must be loaded to the robot before they will be available during the autowalk recording process. To see details on playing choreography sequences through the tablet, see the [Choreography in Tablet](../choreography/choreography_in_tablet.md) documentation.
+   Note: Sequences must be loaded to the robot before they will be available during the autowalk recording process. To see details on playing choreography sequences through the tablet, see the [Choreography in Tablet](../choreography/choreography_in_tablet.md) documentation.
 
 2. The **Preview** button will play the selected choreography sequence, without adding it to the mission as an action.
 

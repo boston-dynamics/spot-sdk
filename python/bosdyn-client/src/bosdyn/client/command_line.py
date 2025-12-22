@@ -12,6 +12,7 @@ from __future__ import division
 
 import abc
 import argparse
+import copy
 import datetime
 import os
 import signal
@@ -19,17 +20,19 @@ import socket
 import sys
 import threading
 import time
+import uuid
 
-from deprecated.sphinx import deprecated
+import google.protobuf.timestamp_pb2
 from google.protobuf import json_format
 
 import bosdyn.client
 from bosdyn.api import data_acquisition_pb2, image_pb2
 from bosdyn.api.data_buffer_pb2 import Event, TextMessage
 from bosdyn.api.data_index_pb2 import EventsCommentsSpec
+from bosdyn.api.header_pb2 import CommonError
 from bosdyn.api.keepalive import keepalive_pb2
 from bosdyn.api.robot_state_pb2 import BehaviorFault
-from bosdyn.util import duration_str, timestamp_to_datetime
+from bosdyn.util import duration_str, now_sec, timestamp_to_datetime
 
 from .auth import InvalidLoginError, InvalidTokenError
 from .data_acquisition import DataAcquisitionClient
@@ -715,6 +718,7 @@ class LogStatusCommands(Subcommands):
                 GetActiveLogStatusesCommand,
                 ExperimentLogCommand,
                 StartRetroLogCommand,
+                StartConcurrentLogCommand,
                 TerminateLogCommand,
             ])
 
@@ -920,6 +924,53 @@ class StartRetroLogCommand(Command):
         return True
 
 
+class StartConcurrentLogCommand(Command):
+    """Start a concurrent experiment log, with event-derived data."""
+
+    NAME = 'concurrent'
+
+    def __init__(self, subparsers, command_dict):
+        """Start data log
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(StartConcurrentLogCommand, self).__init__(subparsers, command_dict)
+        self._parser.add_argument('seconds', type=float, help='how long should the experiment run?')
+        self._parser.add_argument('event_type',
+                                  help='name of the event type we want to match a recipe against')
+
+    def _run(self, robot, options):
+        """Implementation of the command.
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+        Returns:
+            True
+        """
+
+        client = robot.ensure_client(LogStatusClient.default_service_name)
+        time_sync_endpoint = TimeSyncEndpoint(
+            robot.ensure_client(TimeSyncClient.default_service_name))
+        if not time_sync_endpoint.establish_timesync():
+            print("Failed to establish time sync with the robot.")
+            return False
+
+        robot_now = time_sync_endpoint.robot_timestamp_from_local_secs(now_sec())
+
+        event = Event()
+        event.type = options.event_type
+        event.description = 'Triggering a recipe data log'
+        event.source = 'LogStatus CLI'
+        event.id = uuid.uuid4().hex
+        event.start_time.CopyFrom(robot_now)
+        event.end_time.CopyFrom(robot_now)
+
+        response = client.start_concurrent_log(options.seconds, event)
+        print(response.log_status)
+        return True
+
+
 class TerminateLogCommand(Command):
     """Terminate log gathering process."""
 
@@ -1054,7 +1105,7 @@ class TextMsgCommand(Command):
         if options.timestamp:
             try:
                 robot_timestamp = robot.time_sync.robot_timestamp_from_local_secs(
-                    time.time(), timesync_timeout_sec=1.0)
+                    now_sec(), timesync_timeout_sec=1.0)
             except TimeSyncError as err:
                 print("Failed to send message with timestamp: {}.".format(err))
                 return False
@@ -1107,7 +1158,7 @@ class OperatorCommentCommand(Command):
         """
         client_timestamp = None
         if options.timestamp:
-            client_timestamp = time.time()
+            client_timestamp = now_sec()
             try:
                 robot.time_sync.wait_for_sync(timeout_sec=1.0)
             except TimeSyncError as err:
@@ -2648,6 +2699,10 @@ class PowerWifiRadioCommand(Command):
 
 
 
+
+
+
+
 def main(args=None):
     """Command-line interface for interacting with robot services."""
     parser = argparse.ArgumentParser(prog='bosdyn.client', description=main.__doc__)
@@ -2675,8 +2730,10 @@ def main(args=None):
     LocalGridCommands(subparsers, command_dict)
     DataAcquisitionCommand(subparsers, command_dict)
     HostComputerIPCommand(subparsers, command_dict)
+    VideoRecordingCommands(subparsers, command_dict)
     PowerCommand(subparsers, command_dict)
     KeepaliveCommand(subparsers, command_dict)
+
 
     options = parser.parse_args(args=args)
 

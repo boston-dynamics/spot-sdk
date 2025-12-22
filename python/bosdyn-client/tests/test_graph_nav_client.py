@@ -35,6 +35,7 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
             status=graph_nav_pb2.NavigateRouteResponse.STATUS_OK)
         self.upload_waypoint_resp = graph_nav_pb2.UploadWaypointSnapshotResponse()
         self.upload_edge_resp = graph_nav_pb2.UploadEdgeSnapshotResponse()
+        self.upload_snapshots_resp = graph_nav_pb2.UploadSnapshotsResponse()
         self.set_loc_resp = graph_nav_pb2.SetLocalizationResponse(
             status=graph_nav_pb2.SetLocalizationResponse.STATUS_OK)
         self.upload_graph_resp = graph_nav_pb2.UploadGraphResponse(
@@ -93,6 +94,13 @@ class MockGraphNavServicer(graph_nav_service_pb2_grpc.GraphNavServiceServicer):
 
     def UploadEdgeSnapshot(self, request_iterator, context):
         resp = graph_nav_pb2.UploadEdgeSnapshotResponse()
+        resp.header.error.code = self.common_header_code
+        if self.lease_use_result:
+            resp.lease_use_result.CopyFrom(self.lease_use_result)
+        return resp
+
+    def UploadSnapshots(self, request_iterator, context):
+        resp = graph_nav_pb2.UploadSnapshotsResponse()
         resp.header.error.code = self.common_header_code
         if self.lease_use_result:
             resp.lease_use_result.CopyFrom(self.lease_use_result)

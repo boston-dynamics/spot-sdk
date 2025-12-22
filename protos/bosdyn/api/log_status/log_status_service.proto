@@ -37,6 +37,12 @@ service LogStatusService {
     // Only one experiment log can be run at a time.
     rpc StartExperimentLog(StartExperimentLogRequest) returns (StartExperimentLogResponse);
 
+    // Given a duration T and an event E, starts an experiment log that will include any data
+    // the robot associates with E, with a keepalive/watchdog timer of T. However, unlike an
+    // experiment log it allows for concurrency, so E must be provided to constrain the data
+    // included in the log.
+    rpc StartConcurrentLog(StartConcurrentLogRequest) returns (StartConcurrentLogResponse);
+
     // UpdateExperimentLog(id, T) will update the keepalive/watchdog timer of
     // the log with the provided id if the log is active. The updated duration
     // of the log will be [t_rpc, t_rpc + T] where t_rpc = time of RPC reception.

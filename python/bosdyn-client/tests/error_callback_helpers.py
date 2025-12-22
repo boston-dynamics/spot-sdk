@@ -4,10 +4,12 @@
 # is subject to the terms and conditions of the Boston Dynamics Software
 # Development Kit License (20191101-BDSDK-SL).
 
+import contextlib
 import datetime
 import threading
 import time
 
+import bosdyn.util
 from bosdyn.client.error_callback_result import ErrorCallbackResult
 
 
@@ -158,3 +160,14 @@ class MockTime:
         """
         self.max_time = test_duration_seconds
         self._unblock_start.set()
+
+
+@contextlib.contextmanager
+def mock_time_context(mock_time):
+    """Context manager to use a mock time source for the duration of a test."""
+    if isinstance(mock_time, MockTime):
+        mock_time = mock_time.time
+    old_source = bosdyn.util._clock_source_fn
+    bosdyn.util.set_clock_source(mock_time)
+    yield
+    bosdyn.util.set_clock_source(old_source)

@@ -14,17 +14,16 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from bosdyn.api import (header_pb2, image_pb2, image_service_pb2, image_service_pb2_grpc,
-                        service_customization_pb2, service_fault_pb2)
+from bosdyn.api import (image_pb2, image_service_pb2_grpc, service_customization_pb2,
+                        service_fault_pb2)
 from bosdyn.client.data_buffer import DataBufferClient
 from bosdyn.client.exceptions import RpcError
 from bosdyn.client.fault import (FaultClient, ServiceFaultAlreadyExistsError,
                                  ServiceFaultDoesNotExistError)
-from bosdyn.client.image import UnsupportedPixelFormatRequestedError
 from bosdyn.client.server_util import ResponseContext, populate_response_header
-from bosdyn.client.service_customization_helpers import create_value_validator, validate_dict_spec
+from bosdyn.client.service_customization_helpers import create_value_validator
 from bosdyn.client.util import setup_logging
-from bosdyn.util import sec_to_nsec, seconds_to_duration
+from bosdyn.util import now_sec, seconds_to_duration
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -577,13 +576,13 @@ class ImageCaptureThread():
         """Main loop for the image capture thread, which requests and saves images."""
         while not self.stop_capturing_event.is_set():
             # Get the image by calling the blocking capture function.
-            start_time = time.time()
+            start_time = now_sec()
             capture, capture_time = self.capture_function()
             self.set_last_captured_image(capture, capture_time)
 
             # Wait for the total capture period (where the wait time is adjusted based on how
             # long the capture took).
-            wait_time = self.capture_period_secs - (time.time() - start_time)
+            wait_time = self.capture_period_secs - (now_sec() - start_time)
             if self.stop_capturing_event.wait(wait_time):
                 # If stop_capturing_event is set, then break from the capture loop now.
                 break
