@@ -206,6 +206,8 @@ class GraphNavInterface(object):
                       'rb') as snapshot_file:
                 waypoint_snapshot = map_pb2.WaypointSnapshot()
                 waypoint_snapshot.ParseFromString(snapshot_file.read())
+                time.sleep(.1) # Sleep for a millisecond to allow for parsing snapshot.
+                # The pb2 failed to parse the string when the resource is busy.
                 self._current_waypoint_snapshots[waypoint_snapshot.id] = waypoint_snapshot
         for edge in self._current_graph.edges:
             if len(edge.snapshot_id) == 0:
@@ -215,6 +217,8 @@ class GraphNavInterface(object):
                       'rb') as snapshot_file:
                 edge_snapshot = map_pb2.EdgeSnapshot()
                 edge_snapshot.ParseFromString(snapshot_file.read())
+                time.sleep(.1) # Sleep for a millisecond to allow for parsing snapshot.
+                # The pb2 failed to parse the string when the resource is busy.
                 self._current_edge_snapshots[edge_snapshot.id] = edge_snapshot
         # Upload the graph to the robot.
         print('Uploading the graph and snapshots to the robot...')
