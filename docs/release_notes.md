@@ -12,6 +12,14 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## Release 5.1.1
+
+### Spot Sample Code
+
+#### Updated
+
+- Fixed a breakage in the [bosdyn.client command-line utility](../python/bosdyn-client/src/bosdyn/client/command_line.py).
+
 ## Release 5.1.0
 
 ### Breaking Changes

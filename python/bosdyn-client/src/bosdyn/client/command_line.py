@@ -697,14 +697,14 @@ class FaultWatchCommand(Command):
 
 
 class LogStatusCommands(Subcommands):
-    """Start, update and terminate experiment logs, start and terminate retro logs and check status of
-    active logs for robot."""
+    """Start, update and terminate experiment logs, start and terminate retro logs and check status
+    of active logs for robot."""
 
     NAME = 'log-status'
     NEED_AUTHENTICATION = True
 
     def __init__(self, subparsers, command_dict):
-        """Interact with logs for robot
+        """Interact with logs for robot.
 
         Args:
             subparsers: List of argument parsers.
@@ -729,7 +729,7 @@ class GetLogCommand(Command):
     NAME = 'get'
 
     def __init__(self, subparsers, command_dict):
-        """Get log status from robot
+        """Get log status from robot.
 
         Args:
             subparsers: List of argument parsers.
@@ -809,7 +809,7 @@ class StartTimedExperimentLogCommand(Command):
     NAME = 'timed'
 
     def __init__(self, subparsers, command_dict):
-        """Start timed experiment log
+        """Start timed experiment log.
 
         Args:
             subparsers: List of argument parsers.
@@ -841,7 +841,8 @@ class StartContinuousExperimentLogCommand(Command):
     NAME = 'continuous'
 
     def __init__(self, subparsers, command_dict):
-        """Start continuous experiment log, defaulted to update keep alive time by 10 seconds every 5 seconds.
+        """Start continuous experiment log, defaulted to update keep alive time by 10 seconds every
+        5 seconds.
 
         Args:
             subparsers: List of argument parsers.
@@ -898,7 +899,7 @@ class StartRetroLogCommand(Command):
     NAME = 'retro'
 
     def __init__(self, subparsers, command_dict):
-        """Start a retro log
+        """Start a retro log.
 
         Args:
             subparsers: List of argument parsers.
@@ -942,6 +943,7 @@ class StartConcurrentLogCommand(Command):
 
     def _run(self, robot, options):
         """Implementation of the command.
+
         Args:
             robot: Robot object on which to run the command.
             options: Parsed command-line arguments.
@@ -977,7 +979,7 @@ class TerminateLogCommand(Command):
     NAME = 'terminate'
 
     def __init__(self, subparsers, command_dict):
-        """Terminate log on robot
+        """Terminate log on robot.
 
         Args:
             subparsers: List of argument parsers.
@@ -1174,7 +1176,7 @@ class DataServiceCommands(Subcommands):
     NAME = 'data'
 
     def __init__(self, subparsers, command_dict):
-        """Commands for querying the data-service
+        """Commands for querying the data-service.
 
         Args:
             subparsers: List of argument parsers.
@@ -1346,7 +1348,7 @@ class GetDataBufferStatusCommand(Command):
     NAME = 'status'
 
     def __init__(self, subparsers, command_dict):
-        """Get status of data-buffer on robot
+        """Get status of data-buffer on robot.
 
         Args:
             subparsers: List of argument parsers.
@@ -1589,7 +1591,6 @@ class MetricsCommand(Command):
 
         Returns:
              Timestamp string in ISO 8601 format
-
         """
         # The json format of a timestamp is a string that looks like '"2022-01-12T21:56:05Z"',
         # so we strip off the outer quotes and return that.
@@ -2730,7 +2731,6 @@ def main(args=None):
     LocalGridCommands(subparsers, command_dict)
     DataAcquisitionCommand(subparsers, command_dict)
     HostComputerIPCommand(subparsers, command_dict)
-    VideoRecordingCommands(subparsers, command_dict)
     PowerCommand(subparsers, command_dict)
     KeepaliveCommand(subparsers, command_dict)
 
