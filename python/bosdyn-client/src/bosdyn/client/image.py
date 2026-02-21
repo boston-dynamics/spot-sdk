@@ -160,9 +160,40 @@ class ImageClient(BaseClient):
         return self.call_async(self._stub.GetImage, req, _get_image_value, _error_from_response,
                                copy_request=False, **kwargs)
 
+    def get_image_stream(self, image_requests, **kwargs):
+        """Obtain the set of images from the robot.
+
+        Args:
+            image_requests (list of ImageRequest): A list of the ImageRequest protobuf messages which
+                                                   specify which images to collect.
+
+        Returns:
+            A list of image responses for each of the requested sources.
+
+        Raises:
+            RpcError: Problem communicating with the robot.
+            UnknownImageSourceError: Provided image source was invalid or not found
+            image.SourceDataError: Failed to fill out ImageSource. All other fields are not filled
+            UnsetStatusError: An internal ImageService issue has happened
+            ImageDataError: Problem with the image data. Only ImageSource is filled
+        """
+        req = self._get_image_stream_request(image_requests)
+        return self.call(self._stub.GetImageStream, req, _get_image_value, _error_from_response,
+                         copy_request=False, **kwargs)
+
+    def get_image_stream_async(self, image_requests, **kwargs):
+        """Async version of get_image()"""
+        req = self._get_image_stream_request(image_requests)
+        return self.call_async(self._stub.GetImageStream, req, _get_image_value, _error_from_response,
+                               copy_request=False, **kwargs)
+
     @staticmethod
     def _get_image_request(image_requests):
         return image_pb2.GetImageRequest(image_requests=image_requests)
+
+    @staticmethod
+    def _get_image_stream_request(image_requests):
+        return image_pb2.GetImageStreamRequest(image_requests=image_requests)
 
     @staticmethod
     def _get_list_image_source_request():
