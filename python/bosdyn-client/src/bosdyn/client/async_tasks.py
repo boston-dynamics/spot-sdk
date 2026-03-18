@@ -80,7 +80,7 @@ class AsyncGRPCTask(object, metaclass=abc.ABCMeta):
 
     def update(self):
         """Call this periodically to manage execution of task represented by this object."""
-        now_sec = now_sec()
+        now_sec_ = now_sec()
         if self._future is not None:
             if self._future.original_future.done():
                 try:
@@ -88,8 +88,8 @@ class AsyncGRPCTask(object, metaclass=abc.ABCMeta):
                 except (RpcError, ResponseError) as err:
                     self._handle_error(err)
                 self._future = None
-        elif self._should_query(now_sec):
-            self._last_call = now_sec
+        elif self._should_query(now_sec_):
+            self._last_call = now_sec_
             self._future = self._start_query()
 
 

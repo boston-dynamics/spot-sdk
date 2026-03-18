@@ -167,7 +167,7 @@ class AsyncImageCapture(AsyncGRPCTask):
         source_name = 'frontright_fisheye_image'
         return self._image_client.get_image_from_sources_async([source_name])
 
-    def _should_query(self, now_sec):  # pylint: disable=unused-argument
+    def _should_query(self, now_sec_):  # pylint: disable=unused-argument
         return self._video_mode or self._should_take_image
 
     def _handle_result(self, result):
