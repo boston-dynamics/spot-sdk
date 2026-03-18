@@ -12,6 +12,28 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## Release 5.1.4
+
+### Bug Fixes and Improvements
+
+#### Robot Commands
+
+- Added a `Mode` enum to [FreezeCommand](../protos/bosdyn/api/basic_command.proto#freezecommand) to support configurable freeze behavior. The new `MODE_STIFF` mode freezes the robot with higher joint gains to minimize deformation under external loads. Added `freeze_request` and `freeze_feedback` fields to the [MobilityCommand](../protos/bosdyn/api/mobility_command.proto#mobilitycommand), enabling clients to freeze only the lower body while leaving the arm free to move.
+
+#### Power
+
+- Added the [GetFanInformation](../protos/bosdyn/api/power_service.proto) RPC to the Power Service, which enables clients to query fan speed information from the robot. The response includes a map of fan names to [FanInformation](../protos/bosdyn/api/power.proto#faninformation), reporting frequency data for each fan. The [PowerClient](../python/bosdyn-client/src/bosdyn/client/power.py) has been updated with `get_fan_info` and `get_fan_info_async` methods.
+
+#### Robot State
+
+- Added the `communications_loss_percent` field to the [BatteryState](../protos/bosdyn/api/robot_state.proto#batterystate) message, reporting the measured battery communications loss percentage as a value from 0.0 (no loss) to 100.0 (complete loss). If there is no battery in the robot, this value may be 0.0 or left unset.
+
+### Spot Sample Code
+
+#### Updated
+
+- A new `fan` subcommand has been added to the [bosdyn.client command-line utility](../python/bosdyn-client/src/bosdyn/client/command_line.py) to display fan information.
+
 ## Release 5.1.1
 
 ### Spot Sample Code

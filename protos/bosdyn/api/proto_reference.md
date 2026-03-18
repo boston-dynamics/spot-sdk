@@ -260,6 +260,7 @@
     - [ConstrainedManipulationCommand.Feedback.Status](#bosdyn-api-ConstrainedManipulationCommand-Feedback-Status)
     - [ConstrainedManipulationCommand.Request.ControlMode](#bosdyn-api-ConstrainedManipulationCommand-Request-ControlMode)
     - [ConstrainedManipulationCommand.Request.TaskType](#bosdyn-api-ConstrainedManipulationCommand-Request-TaskType)
+    - [FreezeCommand.Request.Mode](#bosdyn-api-FreezeCommand-Request-Mode)
     - [JointCommand.ContactAdvice.Advice](#bosdyn-api-JointCommand-ContactAdvice-Advice)
     - [JointCommand.Feedback.Status](#bosdyn-api-JointCommand-Feedback-Status)
     - [RobotCommandFeedbackStatus.Status](#bosdyn-api-RobotCommandFeedbackStatus-Status)
@@ -1374,10 +1375,14 @@
     - [PointCloudService](#bosdyn-api-PointCloudService)
   
 - [bosdyn/api/power.proto](#bosdyn_api_power-proto)
+    - [FanInformation](#bosdyn-api-FanInformation)
     - [FanPowerCommandFeedbackRequest](#bosdyn-api-FanPowerCommandFeedbackRequest)
     - [FanPowerCommandFeedbackResponse](#bosdyn-api-FanPowerCommandFeedbackResponse)
     - [FanPowerCommandRequest](#bosdyn-api-FanPowerCommandRequest)
     - [FanPowerCommandResponse](#bosdyn-api-FanPowerCommandResponse)
+    - [GetFanInformationRequest](#bosdyn-api-GetFanInformationRequest)
+    - [GetFanInformationResponse](#bosdyn-api-GetFanInformationResponse)
+    - [GetFanInformationResponse.FanInformationEntry](#bosdyn-api-GetFanInformationResponse-FanInformationEntry)
     - [PowerCommandFeedbackRequest](#bosdyn-api-PowerCommandFeedbackRequest)
     - [PowerCommandFeedbackResponse](#bosdyn-api-PowerCommandFeedbackResponse)
     - [PowerCommandRequest](#bosdyn-api-PowerCommandRequest)
@@ -5299,7 +5304,12 @@ Freeze command provides no feedback.
 <a name="bosdyn-api-FreezeCommand-Request"></a>
 
 ### FreezeCommand.Request
-Freeze command request takes no additional arguments.
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| mode | [FreezeCommand.Request.Mode](#bosdyn-api-FreezeCommand-Request-Mode) |  |  |
 
 
 
@@ -5838,6 +5848,19 @@ to lever type objects.
 | TASK_TYPE_R3_CIRCLE_FORCE | 4 | This task type corresponds to circular tasks where<br>the end-effector position and orientation rotate about a circle<br>but the orientation does always strictly follow the circle due to slips.<br>The constrained manipulation logic will generate translational forces in this case.<br>Example tasks are: manipulating a cabinet where the grasp on handle is not very rigid<br>or can often slip.<br>This task type will require an initial force vector specified<br>in init_wrench_direction_in_frame_name. |
 | TASK_TYPE_R3_LINEAR_FORCE | 5 | This task type corresponds to linear tasks where<br>the end-effector position moves in a line<br>but the orientation does not need to change.<br>The constrained manipulation logic will generate a force in this case.<br>Example tasks are: A crank that has a loose handle, or manipulating<br>a cabinet where the grasp of the handle is loose and the end-effector is free<br>to rotate about the handle in one direction.<br>This task type will require an initial force vector specified<br>in init_wrench_direction_in_frame_name. |
 | TASK_TYPE_HOLD_POSE | 6 | This option simply holds the hand in place with stiff impedance control.<br>You can use this mode at the beginning of a constrained manipulation task or to<br>hold position while transitioning between two different constrained manipulation<br>tasks. The target pose to hold will be the measured hand pose upon transitioning to<br>constrained manipulation or upon switching to this task type. This mode should only<br>be used during constrained manipulation tasks, since it uses impedance control to<br>hold the hand in place. This is not intended to stop the arm during position control<br>moves. |
+
+
+
+<a name="bosdyn-api-FreezeCommand-Request-Mode"></a>
+
+### FreezeCommand.Request.Mode
+Optional mode for freeze behavior.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| MODE_UNKNOWN | 0 |  |
+| MODE_DEFAULT | 1 |  |
+| MODE_STIFF | 2 | Freeze with higher joint gains to minimize deformation under external loads. |
 
 
 
@@ -21225,6 +21248,7 @@ of the robot command.
 | stance_feedback | [StanceCommand.Feedback](#bosdyn-api-StanceCommand-Feedback) |  |  |
 | stop_feedback | [StopCommand.Feedback](#bosdyn-api-StopCommand-Feedback) |  |  |
 | follow_arm_feedback | [FollowArmCommand.Feedback](#bosdyn-api-FollowArmCommand-Feedback) |  |  |
+| freeze_feedback | [FreezeCommand.Feedback](#bosdyn-api-FreezeCommand-Feedback) |  |  |
 | status | [RobotCommandFeedbackStatus.Status](#bosdyn-api-RobotCommandFeedbackStatus-Status) |  |  |
 
 
@@ -21247,6 +21271,7 @@ The mobility request must be one of the basic command primitives.
 | stance_request | [StanceCommand.Request](#bosdyn-api-StanceCommand-Request) |  |  |
 | stop_request | [StopCommand.Request](#bosdyn-api-StopCommand-Request) |  |  |
 | follow_arm_request | [FollowArmCommand.Request](#bosdyn-api-FollowArmCommand-Request) |  |  |
+| freeze_request | [FreezeCommand.Request](#bosdyn-api-FreezeCommand-Request) |  | Mobility freeze for cases where the user wants to freeze only the lower body, leaving<br>the arm free to move. |
 | params | [google.protobuf.Any](#google-protobuf-Any) |  | Robot specific command parameters. |
 
 
@@ -22951,6 +22976,21 @@ and it supports requesting the latest point cloud data for each source by name.
 
 
 
+<a name="bosdyn-api-FanInformation"></a>
+
+### FanInformation
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| frequency | [float](#float) |  | Fan frequency in hertz. |
+
+
+
+
+
+
 <a name="bosdyn-api-FanPowerCommandFeedbackRequest"></a>
 
 ### FanPowerCommandFeedbackRequest
@@ -23017,6 +23057,53 @@ The PowerCommandFeedback response message, which contains the progress of the po
 | status | [FanPowerCommandResponse.Status](#bosdyn-api-FanPowerCommandResponse-Status) |  | Current feedback of specified command. |
 | desired_end_time | [google.protobuf.Timestamp](#google-protobuf-Timestamp) |  | Based on received duration, the time when this command will stop being in effect |
 | command_id | [uint32](#uint32) |  | Unique identifier for the command, If empty, was not accepted. |
+
+
+
+
+
+
+<a name="bosdyn-api-GetFanInformationRequest"></a>
+
+### GetFanInformationRequest
+Request fan information from the robot.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [RequestHeader](#bosdyn-api-RequestHeader) |  | Common request header. |
+
+
+
+
+
+
+<a name="bosdyn-api-GetFanInformationResponse"></a>
+
+### GetFanInformationResponse
+Response with fan information from various robot components.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| header | [ResponseHeader](#bosdyn-api-ResponseHeader) |  | Common response header. |
+| fan_information | [GetFanInformationResponse.FanInformationEntry](#bosdyn-api-GetFanInformationResponse-FanInformationEntry) | repeated | Map of fan name to fan information. Each robot might have a different set of fans to report.<br>For example, Spot will report information for the fans "body_fan_0, body_fan_1, hips_fan_0,<br>hips_fan_1". |
+
+
+
+
+
+
+<a name="bosdyn-api-GetFanInformationResponse-FanInformationEntry"></a>
+
+### GetFanInformationResponse.FanInformationEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [FanInformation](#bosdyn-api-FanInformation) |  |  |
 
 
 
@@ -23265,6 +23352,7 @@ The power service for the robot that can power on/off the robot's motors.
 | PowerCommandFeedback | [PowerCommandFeedbackRequest](#bosdyn-api-PowerCommandFeedbackRequest) | [PowerCommandFeedbackResponse](#bosdyn-api-PowerCommandFeedbackResponse) | Check the status of a power command. |
 | FanPowerCommand | [FanPowerCommandRequest](#bosdyn-api-FanPowerCommandRequest) | [FanPowerCommandResponse](#bosdyn-api-FanPowerCommandResponse) | Separate RPC for toggling fan power due to need for time/percent power parameters |
 | FanPowerCommandFeedback | [FanPowerCommandFeedbackRequest](#bosdyn-api-FanPowerCommandFeedbackRequest) | [FanPowerCommandFeedbackResponse](#bosdyn-api-FanPowerCommandFeedbackResponse) | Check the status of a fan power command. |
+| GetFanInformation | [GetFanInformationRequest](#bosdyn-api-GetFanInformationRequest) | [GetFanInformationResponse](#bosdyn-api-GetFanInformationResponse) | Get fan information. |
 | ResetSafetyStop | [ResetSafetyStopRequest](#bosdyn-api-ResetSafetyStopRequest) | [ResetSafetyStopResponse](#bosdyn-api-ResetSafetyStopResponse) | Reset the safety stop bit on SRSF-configured robots. |
 
  <!-- end services -->
@@ -23841,6 +23929,7 @@ battery temperature.
 | current | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Measured current into (charging, positive) or out of (discharging, negative) the battery in<br>Amps. |
 | voltage | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Measured voltage of the entire battery in Volts. |
 | temperatures | [double](#double) | repeated | Measured temperature measurements of battery, in Celsius.<br>Temperatures may be measured in many locations across the battery. |
+| communications_loss_percent | [google.protobuf.DoubleValue](#google-protobuf-DoubleValue) |  | Measured battery communications loss percentage. Measured value from 0.0 to 100.0, where 0.0<br>means no communication loss and 100.0 means complete communication loss with the battery. If<br>there is no battery in the robot, this value may be 0.0 or left unset. |
 | status | [BatteryState.Status](#bosdyn-api-BatteryState-Status) |  | Current state of the battery. |
 
 

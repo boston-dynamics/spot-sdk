@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Protocol Documentation &mdash; Spot 5.1.1 documentation</title>
+  <title>Protocol Documentation &mdash; Spot 5.1.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.1
+                5.1.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -800,6 +800,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-ConstrainedManipulationCommand-Feedback-Status">ConstrainedManipulationCommand.Feedback.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-ConstrainedManipulationCommand-Request-ControlMode">ConstrainedManipulationCommand.Request.ControlMode</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-ConstrainedManipulationCommand-Request-TaskType">ConstrainedManipulationCommand.Request.TaskType</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-FreezeCommand-Request-Mode">FreezeCommand.Request.Mode</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-JointCommand-ContactAdvice-Advice">JointCommand.ContactAdvice.Advice</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-JointCommand-Feedback-Status">JointCommand.Feedback.Status</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-RobotCommandFeedbackStatus-Status">RobotCommandFeedbackStatus.Status</a></p></li>
@@ -2058,10 +2059,14 @@
 </li>
 <li><p><a class="reference external" href="#bosdyn_api_power-proto">bosdyn/api/power.proto</a></p>
 <ul>
+<li><p><a class="reference external" href="#bosdyn-api-FanInformation">FanInformation</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-FanPowerCommandFeedbackRequest">FanPowerCommandFeedbackRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-FanPowerCommandFeedbackResponse">FanPowerCommandFeedbackResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-FanPowerCommandRequest">FanPowerCommandRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-FanPowerCommandResponse">FanPowerCommandResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GetFanInformationRequest">GetFanInformationRequest</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GetFanInformationResponse">GetFanInformationResponse</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-GetFanInformationResponse-FanInformationEntry">GetFanInformationResponse.FanInformationEntry</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-PowerCommandFeedbackRequest">PowerCommandFeedbackRequest</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-PowerCommandFeedbackResponse">PowerCommandFeedbackResponse</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-PowerCommandRequest">PowerCommandRequest</a></p></li>
@@ -8872,8 +8877,24 @@ forward to keep the base at the desired offset from the hand.</p>
 </section>
 <section id="freezecommand-request">
 <h3>FreezeCommand.Request<a class="headerlink" href="#freezecommand-request" title="Permalink to this heading"></a></h3>
-<p>Freeze command request takes no additional arguments.</p>
-<p><a name="bosdyn-api-JointCommand"></a></p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mode</td>
+<td><a href="#bosdyn-api-FreezeCommand-Request-Mode">FreezeCommand.Request.Mode</a></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-JointCommand"></a></p>
 </section>
 <section id="jointcommand">
 <h3>JointCommand<a class="headerlink" href="#jointcommand" title="Permalink to this heading"></a></h3>
@@ -9667,6 +9688,36 @@ to lever type objects.</p>
 <td>TASK_TYPE_HOLD_POSE</td>
 <td>6</td>
 <td>This option simply holds the hand in place with stiff impedance control.<br>You can use this mode at the beginning of a constrained manipulation task or to<br>hold position while transitioning between two different constrained manipulation<br>tasks. The target pose to hold will be the measured hand pose upon transitioning to<br>constrained manipulation or upon switching to this task type. This mode should only<br>be used during constrained manipulation tasks, since it uses impedance control to<br>hold the hand in place. This is not intended to stop the arm during position control<br>moves.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-FreezeCommand-Request-Mode"></a></p>
+</section>
+<section id="freezecommand-request-mode">
+<h3>FreezeCommand.Request.Mode<a class="headerlink" href="#freezecommand-request-mode" title="Permalink to this heading"></a></h3>
+<p>Optional mode for freeze behavior.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MODE_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>MODE_DEFAULT</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>MODE_STIFF</td>
+<td>2</td>
+<td>Freeze with higher joint gains to minimize deformation under external loads.</td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-JointCommand-ContactAdvice-Advice"></a></p>
@@ -40787,6 +40838,12 @@ of the robot command.</p>
 <td></td>
 </tr>
 <tr>
+<td>freeze_feedback</td>
+<td><a href="#bosdyn-api-FreezeCommand-Feedback">FreezeCommand.Feedback</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
 <td>status</td>
 <td><a href="#bosdyn-api-RobotCommandFeedbackStatus-Status">RobotCommandFeedbackStatus.Status</a></td>
 <td></td>
@@ -40849,6 +40906,12 @@ of the robot command.</p>
 <td><a href="#bosdyn-api-FollowArmCommand-Request">FollowArmCommand.Request</a></td>
 <td></td>
 <td></td>
+</tr>
+<tr>
+<td>freeze_request</td>
+<td><a href="#bosdyn-api-FreezeCommand-Request">FreezeCommand.Request</a></td>
+<td></td>
+<td>Mobility freeze for cases where the user wants to freeze only the lower body, leaving<br>the arm free to move.</td>
 </tr>
 <tr>
 <td>params</td>
@@ -43983,7 +44046,28 @@ and it supports requesting the latest point cloud data for each source by name.<
 </section>
 <section id="bosdyn-api-power-proto">
 <h2>bosdyn/api/power.proto<a class="headerlink" href="#bosdyn-api-power-proto" title="Permalink to this heading"></a></h2>
-<p><a name="bosdyn-api-FanPowerCommandFeedbackRequest"></a></p>
+<p><a name="bosdyn-api-FanInformation"></a></p>
+<section id="faninformation">
+<h3>FanInformation<a class="headerlink" href="#faninformation" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>frequency</td>
+<td><a href="#float">float</a></td>
+<td></td>
+<td>Fan frequency in hertz.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-FanPowerCommandFeedbackRequest"></a></p>
+</section>
 <section id="fanpowercommandfeedbackrequest">
 <h3>FanPowerCommandFeedbackRequest<a class="headerlink" href="#fanpowercommandfeedbackrequest" title="Permalink to this heading"></a></h3>
 <p>The PowerCommandFeedback request message, which can get the feedback for a specific
@@ -44133,6 +44217,83 @@ power command id number.</p>
 <td><a href="#uint32">uint32</a></td>
 <td></td>
 <td>Unique identifier for the command, If empty, was not accepted.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GetFanInformationRequest"></a></p>
+</section>
+<section id="getfaninformationrequest">
+<h3>GetFanInformationRequest<a class="headerlink" href="#getfaninformationrequest" title="Permalink to this heading"></a></h3>
+<p>Request fan information from the robot.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-RequestHeader">RequestHeader</a></td>
+<td></td>
+<td>Common request header.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GetFanInformationResponse"></a></p>
+</section>
+<section id="getfaninformationresponse">
+<h3>GetFanInformationResponse<a class="headerlink" href="#getfaninformationresponse" title="Permalink to this heading"></a></h3>
+<p>Response with fan information from various robot components.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>header</td>
+<td><a href="#bosdyn-api-ResponseHeader">ResponseHeader</a></td>
+<td></td>
+<td>Common response header.</td>
+</tr>
+<tr>
+<td>fan_information</td>
+<td><a href="#bosdyn-api-GetFanInformationResponse-FanInformationEntry">GetFanInformationResponse.FanInformationEntry</a></td>
+<td>repeated</td>
+<td>Map of fan name to fan information. Each robot might have a different set of fans to report.<br>For example, Spot will report information for the fans "body_fan_0, body_fan_1, hips_fan_0,<br>hips_fan_1".</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-GetFanInformationResponse-FanInformationEntry"></a></p>
+</section>
+<section id="getfaninformationresponse-faninformationentry">
+<h3>GetFanInformationResponse.FanInformationEntry<a class="headerlink" href="#getfaninformationresponse-faninformationentry" title="Permalink to this heading"></a></h3>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>key</td>
+<td><a href="#string">string</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>value</td>
+<td><a href="#bosdyn-api-FanInformation">FanInformation</a></td>
+<td></td>
+<td></td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-PowerCommandFeedbackRequest"></a></p>
@@ -44690,6 +44851,12 @@ HardwareConfiguration in bosdyn.api.robot_state.</p>
 <td><a href="#bosdyn-api-FanPowerCommandFeedbackRequest">FanPowerCommandFeedbackRequest</a></td>
 <td><a href="#bosdyn-api-FanPowerCommandFeedbackResponse">FanPowerCommandFeedbackResponse</a></td>
 <td>Check the status of a fan power command.</td>
+</tr>
+<tr>
+<td>GetFanInformation</td>
+<td><a href="#bosdyn-api-GetFanInformationRequest">GetFanInformationRequest</a></td>
+<td><a href="#bosdyn-api-GetFanInformationResponse">GetFanInformationResponse</a></td>
+<td>Get fan information.</td>
 </tr>
 <tr>
 <td>ResetSafetyStop</td>
@@ -45797,6 +45964,12 @@ battery temperature.</p>
 <td><a href="#double">double</a></td>
 <td>repeated</td>
 <td>Measured temperature measurements of battery, in Celsius.<br>Temperatures may be measured in many locations across the battery.</td>
+</tr>
+<tr>
+<td>communications_loss_percent</td>
+<td><a href="#google-protobuf-DoubleValue">google.protobuf.DoubleValue</a></td>
+<td></td>
+<td>Measured battery communications loss percentage. Measured value from 0.0 to 100.0, where 0.0<br>means no communication loss and 100.0 means complete communication loss with the battery. If<br>there is no battery in the robot, this value may be 0.0 or left unset.</td>
 </tr>
 <tr>
 <td>status</td>

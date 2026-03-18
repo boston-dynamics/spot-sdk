@@ -60,6 +60,8 @@ from .robot_state import RobotStateClient
 from .time_sync import TimeSyncClient, TimeSyncEndpoint, TimeSyncError, timespec_to_robot_timespan
 from .util import add_common_arguments, authenticate, setup_logging
 
+from bosdyn.api import power_pb2  # isort:skip
+
 
 
 # pylint: disable=too-few-public-methods
@@ -2419,6 +2421,7 @@ class PowerCommand(Subcommands):
                 PowerRobotCommand,
                 PowerPayloadsCommand,
                 PowerWifiRadioCommand,
+                PowerFanCommand,
             ])
 
 
@@ -2696,6 +2699,45 @@ class PowerWifiRadioCommand(Command):
                 power_on_wifi_radio(power_client)
             elif options.on_off == 'off':
                 power_off_wifi_radio(power_client)
+
+
+class PowerFanCommand(Command):
+    """Get power fan information."""
+
+    NAME = 'fan'
+
+    def __init__(self, subparsers, command_dict):
+        """Get fan information.
+
+        Note that this is only compatible with certain robots. Check HardwareConfiguration for details.
+
+        Args:
+            subparsers: List of argument parsers.
+            command_dict: Dictionary of command names which take parsed options.
+        """
+        super(PowerFanCommand, self).__init__(subparsers, command_dict)
+
+    def _run(self, robot, options):
+        """Get and display fan information.
+
+        Args:
+            robot: Robot object on which to run the command.
+            options: Parsed command-line arguments.
+
+        Returns:
+            True
+        """
+        power_client = robot.ensure_client(PowerClient.default_service_name)
+
+        response = power_client.get_fan_info(timeout=10)
+
+        # Print fan information
+        print("Fan Information:")
+        print("-" * 70)
+        for fan_name, fan_info in response.fan_information.items():
+            print(f"{fan_name}: {fan_info.frequency}")
+
+        return True
 
 
 

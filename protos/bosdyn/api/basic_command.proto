@@ -101,7 +101,14 @@ message StopCommand {
 // Freeze all joints at their current positions (no balancing control).
 message FreezeCommand {
     message Request {
-        // Freeze command request takes no additional arguments.
+        // Optional mode for freeze behavior.
+        enum Mode {
+            MODE_UNKNOWN = 0;
+            MODE_DEFAULT = 1;
+            // Freeze with higher joint gains to minimize deformation under external loads.
+            MODE_STIFF = 2;
+        }
+        Mode mode = 1;
     }
 
     message Feedback {

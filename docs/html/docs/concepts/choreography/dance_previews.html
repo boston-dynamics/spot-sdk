@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dance Previews &mdash; Spot 5.1.1 documentation</title>
+  <title>Dance Previews &mdash; Spot 5.1.4 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.1
+                5.1.4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -528,7 +528,7 @@ is subject to the terms and conditions of the Boston Dynamics Software
 Development Kit License (20191101-BDSDK-SL).
 --><section id="dance-previews">
 <h1>Dance Previews<a class="headerlink" href="#dance-previews" title="Permalink to this heading"></a></h1>
-<p>Dance Previews is Choreographer’s built in 3D and 2D tool for sequence visualization.</p>
+<p>Dance Previews is Choreographer’s built-in 3D and 2D tool for sequence visualization.</p>
 <img src="../../../_images/agt2_excerpt.gif" style="max-width:600px;"><section id="accuracy-and-validity-of-playback">
 <h2>Accuracy and Validity of Playback<a class="headerlink" href="#accuracy-and-validity-of-playback" title="Permalink to this heading"></a></h2>
 <p>Previews uses the unique characteristics and parameter values of moves to approximate sequence motion. However, while Choreographer aims to provide an accurate representation of sequences, Dance Previews is not a physically accurate simulation of real robot behavior or ability. Previewed sequence(s) shown may not match real world robot playback, and are not a prediction of sequence success or failure. Always make sure to observe proper <a class="reference external" href="choreographer.html#choreography-safety">safety precautions</a> when testing choreography behaviors on real robots.</p>
@@ -542,8 +542,8 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p><strong>Model View/Graph View</strong> - Toggle between the model view (3D), and the graph view (2D).</p></li>
 <li><p><strong>3D Model</strong> - 3D models of Spot.</p></li>
 <li><p><strong>Only Display Current Tab</strong> - When selected, only the currently selected sequence tab will be displayed in the playback view. When unselected, all sequences will be displayed.</p></li>
-<li><p><strong>Hide Arm</strong> - When selected hide all 3D models’ arms.</p></li>
-<li><p><strong>Preview Button</strong> - Start 2D and 3D visualization. Music in the timeline will also play</p></li>
+<li><p><strong>Hide Arm</strong> - When selected, hide all 3D models’ arms.</p></li>
+<li><p><strong>Preview Button</strong> - Start 2D and 3D visualization. Music in the timeline will also play.</p></li>
 <li><p><strong>2D Model</strong> - 2D model representation of the sequences position (x, y, yaw) in space.</p></li>
 <li><p><strong>2D Model Label</strong> - Label for a 2D model with the represented sequence and current position.</p></li>
 <li><p><strong>Frame Calculator</strong> - Quick-access tool for converting a position in the world frame to the current open tab’s dance frame.</p></li>
@@ -560,7 +560,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="start-position-data">
 <h3>Start position data<a class="headerlink" href="#start-position-data" title="Permalink to this heading"></a></h3>
 <p>When Spot starts a choreography sequence it will assume that its starting position is x=0 meters and y=0 meters, and its orientation is yaw=0 degrees. This starting position defines the “dance frame”.</p>
-<p>When using multiple robots this does not provide enough information for the overall behavior of the group. You’re going to want to place the robots in a formation where each robot is some distance apart from the others, and certain robots are oriented in non-zero directions.</p>
+<p>When using multiple robots, this does not provide enough information for the overall behavior of the group. You’re going to want to place the robots in a formation where each robot is some distance apart from the others and possibly oriented in different directions.</p>
 <p>To support this each choreography sequence can be given a start position, which can be set in the <a class="reference external" href="choreographer.html#user-interface-overview">Timeline Toolbar</a>. (Right-click the yaw entry field to switch between radians and degrees).</p>
 <img src="../../../_images/start_position_widget.png" style="max-width:300px;"><p><em>Start Position data does not affect a sequence’s behavior when executed on Spot, but it is a useful documentation tool to help the user remember where to place each robot before it starts a sequence.</em></p>
 </section>
@@ -568,7 +568,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h3>Frame Calculator tool<a class="headerlink" href="#frame-calculator-tool" title="Permalink to this heading"></a></h3>
 <section id="when-to-use-the-frame-calculator-tool">
 <h4>When to use the Frame Calculator tool:<a class="headerlink" href="#when-to-use-the-frame-calculator-tool" title="Permalink to this heading"></a></h4>
-<p>The frame calculator tool is useful for multi-robot dances when different sequences have non-zero start position values (i.e. cases where the dance frame and world frame are different), and where moves with “absolute” options are being used.</p>
+<p>The frame calculator tool is useful for multi-robot dances when different sequences have non-zero start position values (i.e., cases where the dance frame and world frame are different), and where moves with “absolute” options are being used.</p>
 <p>Moves that have absolute parameter options include <strong>pace2step</strong>, <strong>turn2step</strong>, <strong>jump</strong> and <strong>goto</strong>. These moves also all have alternative, “relative” motion options which the below information does not apply to. <strong>Using absolute motion is an advanced concept/technique</strong> that is hidden when using Beginner mode.</p>
 <p><strong><em>Why use absolute motion?</em></strong> : Specifying motion with absolute parameters is useful when creating complex formation changes that require highly accurate or symmetrical positioning. Instead of trying to repeatedly calculate the required relative change to achieve a position, absolute moves make it possible to simply type in the desired end position.</p>
 </section>
@@ -587,7 +587,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="when-to-use-the-replace-start-position-tool">
 <h4>When to use the replace start position tool:<a class="headerlink" href="#when-to-use-the-replace-start-position-tool" title="Permalink to this heading"></a></h4>
 <p>The replace start position tool seeks to cover the specific case where a sequence for a multi-robot dance, containing absolute moves, should now start from a new location in the world but still maintain the same spacing to other robots in the group once the dance starts.</p>
-<p>Ex. Imagine you’ve created a sequence you like that’s part of a set, but now one robot should actually start with a 90 degree rotation instead of facing forwards. If you simply change the start position alone, the sequence will no longer maintain the same spacing with the others sequences whose start positions were not modified.</p>
+<p>Ex. Imagine you’ve created a sequence you like that’s part of a set, but now one robot should actually start with a 90-degree rotation instead of facing forwards. If you simply change the start position alone, the sequence will no longer maintain the same spacing with the other sequences whose start positions were not modified.</p>
 <p>The replace start position tool addresses this issue by automatically updating your sequence to the new start position, and going through your sequence to adjust each absolute parameter to a new value that maintains the original world position in the new dance frame. When everything works correctly, it will look like your sequence has a new start position, but nothing else has changed after the first translation.</p>
 <p><em>Since the Replace Start Position tool only modifies absolute moves, it only works to address the above case when absolute moves are used for at least one large position change at the beginning of the sequence, and has no affect on sequences that don’t use absolute parameters.</em></p>
 <p>Note: If you just want to change a sequence’s start position without changing anything about the sequence, you do not need to use the replace start position tool, you can simply enter the new start position into the Timeline Toolbar.</p>
@@ -616,7 +616,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h3>Unsupported Moves<a class="headerlink" href="#unsupported-moves" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p>workspace arm move</p></li>
-<li><p>random generated moves, such as random rotate.</p></li>
+<li><p>randomly generated moves, such as random rotate.</p></li>
 <li><p>Annotation category moves, including frame snapshot.</p></li>
 <li><p>Lights and A/V buzzer moves.</p></li>
 </ul>
@@ -638,7 +638,7 @@ Development Kit License (20191101-BDSDK-SL).
 <h3>Leg motion/moves<a class="headerlink" href="#leg-motion-moves" title="Permalink to this heading"></a></h3>
 <ul class="simple">
 <li><p>Step velocity parameter values for leg moves will not be considered.</p></li>
-<li><p>Looping gait-like moves, such as goto and crawl may snap to the end position of the move if a swing is unfinished.</p></li>
+<li><p>Looping gait-like moves, such as goto and crawl, may snap to the end position of the move if a swing is unfinished.</p></li>
 <li><p>“Linking” between moves that support it, such as bourree and goto, is not represented.</p></li>
 <li><p>The leg pose move, where balancing is not enabled, may not fully represent the accurate motion/position resulting from different leg positions and quick changes in leg joint position.</p></li>
 <li><p>The Kneel Clap move will not take direction parameters or the speed parameter into account.</p></li>
@@ -654,7 +654,7 @@ Development Kit License (20191101-BDSDK-SL).
 <section id="arm-motion-moves">
 <h3>Arm motion/moves<a class="headerlink" href="#arm-motion-moves" title="Permalink to this heading"></a></h3>
 <ul class="simple">
-<li><p>Chicken Head and Figure8 Move, which use inverse kinematic arm and gripper positioning are have limited accuracy and support, especially in non-ideal positions that are not achievable by the robot. These moves are best tested/developed on a real robot.</p></li>
+<li><p>Chicken Head and Figure8 Move, which use inverse kinematic arm and gripper positioning, have limited accuracy and support, especially in non-ideal positions that are not achievable by the robot. These moves are best tested/developed on a real robot.</p></li>
 <li><p>Arm move easing will always be represented as linear.</p></li>
 </ul>
 </section>
@@ -666,7 +666,7 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Animations using joint angles for leg position will not consider the starting position of the foot before the move starts, and instead default to the initial start position specified in the animation.</p></li>
 <li><p>Parameters and options that affect stability/tracking, such as body_tracking_stiffness, track_swing_trajectories, and timing_adjustability will not be considered.</p></li>
 <li><p>Only the “joint_space” (default, joint values) arm_playback option for the arm track is supported.</p></li>
-<li><p>Lower FPS cha files will not blend smoothly between frames. If the motion of your .cha looks choppy in the Dance Previews viewer and has fewer keyframes please be assured that the robot will attempt to smoothly transition between these values during real playback.</p></li>
+<li><p>Lower FPS cha files will not blend smoothly between frames. If the motion of your .cha looks choppy in the Dance Previews viewer and has fewer keyframes, please be assured that the robot will attempt to smoothly transition between these values during real playback.</p></li>
 </ul>
 </section>
 <section id="custom-gait-limitations">
@@ -678,7 +678,7 @@ Development Kit License (20191101-BDSDK-SL).
 <li><p>Arm moves will not blend properly within a custom gait looping region.</p></li>
 <li><p>When using animation options for Custom gait:</p>
 <ul>
-<li><p>Swing trajectories will be incorrectly calculated when if 4 feet start in swing.</p></li>
+<li><p>Swing trajectories will be incorrectly calculated when four feet start in swing.</p></li>
 <li><p>Using stance parameters set through Choreographer in combination with the animation’s x-y swing motion may produce inaccurate motion.</p></li>
 <li><p>The underlying body offset of an animation, if used, may not be fully accurate or correctly separated from the effect of body motion.</p></li>
 </ul>

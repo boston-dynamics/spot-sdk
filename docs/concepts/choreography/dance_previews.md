@@ -8,7 +8,7 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Dance Previews
 
-Dance Previews is Choreographer's built in 3D and 2D tool for sequence visualization.
+Dance Previews is Choreographer's built-in 3D and 2D tool for sequence visualization.
 
 <img src="previews_images/agt2_excerpt.gif" style="max-width:600px;">
 
@@ -28,8 +28,8 @@ The Dance Previews interface consists of the following components:
 1. **Model View/Graph View** - Toggle between the model view (3D), and the graph view (2D).
 2. **3D Model** - 3D models of Spot.
 3. **Only Display Current Tab** - When selected, only the currently selected sequence tab will be displayed in the playback view. When unselected, all sequences will be displayed.
-4. **Hide Arm** - When selected hide all 3D models' arms.
-5. **Preview Button** - Start 2D and 3D visualization. Music in the timeline will also play
+4. **Hide Arm** - When selected, hide all 3D models' arms.
+5. **Preview Button** - Start 2D and 3D visualization. Music in the timeline will also play.
 6. **2D Model** - 2D model representation of the sequences position (x, y, yaw) in space.
 7. **2D Model Label** - Label for a 2D model with the represented sequence and current position.
 8. **Frame Calculator** - Quick-access tool for converting a position in the world frame to the current open tab's dance frame.
@@ -50,7 +50,7 @@ _Note: Make sure to remember that when executing sequences on connected robots, 
 
 When Spot starts a choreography sequence it will assume that its starting position is x=0 meters and y=0 meters, and its orientation is yaw=0 degrees. This starting position defines the "dance frame".
 
-When using multiple robots this does not provide enough information for the overall behavior of the group. You're going to want to place the robots in a formation where each robot is some distance apart from the others, and certain robots are oriented in non-zero directions.
+When using multiple robots, this does not provide enough information for the overall behavior of the group. You're going to want to place the robots in a formation where each robot is some distance apart from the others and possibly oriented in different directions.
 
 To support this each choreography sequence can be given a start position, which can be set in the [Timeline Toolbar](choreographer.md#user-interface-overview). (Right-click the yaw entry field to switch between radians and degrees).
 
@@ -62,7 +62,7 @@ _Start Position data does not affect a sequence's behavior when executed on Spot
 
 #### When to use the Frame Calculator tool:
 
-The frame calculator tool is useful for multi-robot dances when different sequences have non-zero start position values (i.e. cases where the dance frame and world frame are different), and where moves with "absolute" options are being used.
+The frame calculator tool is useful for multi-robot dances when different sequences have non-zero start position values (i.e., cases where the dance frame and world frame are different), and where moves with "absolute" options are being used.
 
 Moves that have absolute parameter options include **pace2step**, **turn2step**, **jump** and **goto**. These moves also all have alternative, "relative" motion options which the below information does not apply to. **Using absolute motion is an advanced concept/technique** that is hidden when using Beginner mode.
 
@@ -83,7 +83,7 @@ Moves that have absolute parameter options include **pace2step**, **turn2step**,
 
 The replace start position tool seeks to cover the specific case where a sequence for a multi-robot dance, containing absolute moves, should now start from a new location in the world but still maintain the same spacing to other robots in the group once the dance starts.
 
-Ex. Imagine you've created a sequence you like that's part of a set, but now one robot should actually start with a 90 degree rotation instead of facing forwards. If you simply change the start position alone, the sequence will no longer maintain the same spacing with the others sequences whose start positions were not modified.
+Ex. Imagine you've created a sequence you like that's part of a set, but now one robot should actually start with a 90-degree rotation instead of facing forwards. If you simply change the start position alone, the sequence will no longer maintain the same spacing with the other sequences whose start positions were not modified.
 
 The replace start position tool addresses this issue by automatically updating your sequence to the new start position, and going through your sequence to adjust each absolute parameter to a new value that maintains the original world position in the new dance frame. When everything works correctly, it will look like your sequence has a new start position, but nothing else has changed after the first translation.
 
@@ -116,7 +116,7 @@ _See the [Move Reference Guide](move_reference.md) to correlate limitations with
 #### Unsupported Moves
 
 - workspace arm move
-- random generated moves, such as random rotate.
+- randomly generated moves, such as random rotate.
 - Annotation category moves, including frame snapshot.
 - Lights and A/V buzzer moves.
 
@@ -132,7 +132,7 @@ _See the [Move Reference Guide](move_reference.md) to correlate limitations with
 #### Leg motion/moves
 
 - Step velocity parameter values for leg moves will not be considered.
-- Looping gait-like moves, such as goto and crawl may snap to the end position of the move if a swing is unfinished.
+- Looping gait-like moves, such as goto and crawl, may snap to the end position of the move if a swing is unfinished.
 - "Linking" between moves that support it, such as bourree and goto, is not represented.
 - The leg pose move, where balancing is not enabled, may not fully represent the accurate motion/position resulting from different leg positions and quick changes in leg joint position.
 - The Kneel Clap move will not take direction parameters or the speed parameter into account.
@@ -144,7 +144,7 @@ _See the [Move Reference Guide](move_reference.md) to correlate limitations with
 
 #### Arm motion/moves
 
-- Chicken Head and Figure8 Move, which use inverse kinematic arm and gripper positioning are have limited accuracy and support, especially in non-ideal positions that are not achievable by the robot. These moves are best tested/developed on a real robot.
+- Chicken Head and Figure8 Move, which use inverse kinematic arm and gripper positioning, have limited accuracy and support, especially in non-ideal positions that are not achievable by the robot. These moves are best tested/developed on a real robot.
 - Arm move easing will always be represented as linear.
 
 #### Animation Limitations
@@ -154,7 +154,7 @@ _See the [Move Reference Guide](move_reference.md) to correlate limitations with
 - Animations using joint angles for leg position will not consider the starting position of the foot before the move starts, and instead default to the initial start position specified in the animation.
 - Parameters and options that affect stability/tracking, such as body_tracking_stiffness, track_swing_trajectories, and timing_adjustability will not be considered.
 - Only the "joint_space" (default, joint values) arm_playback option for the arm track is supported.
-- Lower FPS cha files will not blend smoothly between frames. If the motion of your .cha looks choppy in the Dance Previews viewer and has fewer keyframes please be assured that the robot will attempt to smoothly transition between these values during real playback.
+- Lower FPS cha files will not blend smoothly between frames. If the motion of your .cha looks choppy in the Dance Previews viewer and has fewer keyframes, please be assured that the robot will attempt to smoothly transition between these values during real playback.
 
 #### Custom Gait limitations
 
@@ -163,6 +163,6 @@ _See the [Move Reference Guide](move_reference.md) to correlate limitations with
 - Speed fraction options will not be considered.
 - Arm moves will not blend properly within a custom gait looping region.
 - When using animation options for Custom gait:
-  - Swing trajectories will be incorrectly calculated when if 4 feet start in swing.
+  - Swing trajectories will be incorrectly calculated when four feet start in swing.
   - Using stance parameters set through Choreographer in combination with the animation's x-y swing motion may produce inaccurate motion.
   - The underlying body offset of an animation, if used, may not be fully accurate or correctly separated from the effect of body motion.

@@ -15,9 +15,9 @@ from google.protobuf.duration_pb2 import Duration
 
 from bosdyn.api import (basic_command_pb2, full_body_command_pb2, power_pb2, power_service_pb2_grpc,
                         robot_command_pb2, robot_state_pb2)
-from bosdyn.client.common import (BaseClient, common_license_errors, error_factory,
-                                  handle_common_header_errors, handle_lease_use_result_errors,
-                                  handle_unset_status_error)
+from bosdyn.client.common import (BaseClient, common_header_errors, common_license_errors,
+                                  error_factory, handle_common_header_errors,
+                                  handle_lease_use_result_errors, handle_unset_status_error)
 from bosdyn.client.exceptions import (Error, InternalServerError, LicenseError, ResponseError,
                                       TimedOutError)
 from bosdyn.util import now_sec
@@ -134,6 +134,17 @@ class PowerClient(BaseClient):
         req = self._fan_power_command_request(lease, percent_power, duration)
         return self.call_async(self._stub.FanPowerCommand, req, None,
                                _fan_power_command_error_from_response, **kwargs)
+
+    def get_fan_info(self, **kwargs):
+        """Get fan information."""
+        req = power_pb2.GetFanInformationRequest()
+        return self.call(self._stub.GetFanInformation, req, None, common_header_errors, **kwargs)
+
+    def get_fan_info_async(self, **kwargs):
+        """Async version of get_fan_info()"""
+        req = power_pb2.GetFanInformationRequest()
+        return self.call_async(self._stub.GetFanInformation, req, None, common_header_errors,
+                               **kwargs)
 
     def fan_power_command_feedback(self, command_id, **kwargs):
         """Check the status of a previously issued fan command."""

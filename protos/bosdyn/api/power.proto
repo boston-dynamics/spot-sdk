@@ -272,3 +272,25 @@ message ResetSafetyStopResponse {
     // Current feedback of specified command.
     Status status = 3;
 }
+
+// Request fan information from the robot.
+message GetFanInformationRequest {
+    // Common request header.
+    RequestHeader header = 1;
+}
+
+message FanInformation {
+    // Fan frequency in hertz.
+    float frequency = 1;
+}
+
+// Response with fan information from various robot components.
+message GetFanInformationResponse {
+    // Common response header.
+    ResponseHeader header = 1;
+
+    // Map of fan name to fan information. Each robot might have a different set of fans to report.
+    // For example, Spot will report information for the fans "body_fan_0, body_fan_1, hips_fan_0,
+    // hips_fan_1".
+    map<string, FanInformation> fan_information = 2;
+}

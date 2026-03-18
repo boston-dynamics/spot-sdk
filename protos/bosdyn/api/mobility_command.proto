@@ -35,6 +35,9 @@ message MobilityCommand {
             StanceCommand.Request stance_request = 5;
             StopCommand.Request stop_request = 6;
             FollowArmCommand.Request follow_arm_request = 7;
+            // Mobility freeze for cases where the user wants to freeze only the lower body, leaving
+            // the arm free to move.
+            FreezeCommand.Request freeze_request = 8;
 
         }
 
@@ -62,7 +65,7 @@ message MobilityCommand {
             StanceCommand.Feedback stance_feedback = 5;
             StopCommand.Feedback stop_feedback = 6;
             FollowArmCommand.Feedback follow_arm_feedback = 7;
-
+            FreezeCommand.Feedback freeze_feedback = 8;
         }
 
         RobotCommandFeedbackStatus.Status status = 100;
