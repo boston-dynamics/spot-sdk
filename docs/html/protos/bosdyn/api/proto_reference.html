@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Protocol Documentation &mdash; Spot 5.1.4 documentation</title>
+  <title>Protocol Documentation &mdash; Spot 5.1.9 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/style.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/bd-favicon.png"/>
@@ -38,7 +38,7 @@
               <img src="../../../_static/bd-official-white.png" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                5.1.4
+                5.1.9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -205,8 +205,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/world_object_mutations/README.html">World Object Mutations</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/visualizer/README.html">Visualizer</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/gripper_camera_params/README.html">Gripper Camera Parameters</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM Services</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html#spot-cam-video-core-io-extension-example">Spot Cam Video Core IO Extension Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../python/examples/spot_cam/README.html">Spot CAM</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/stitch_front_images/README.html">Stitch Front Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/get_depth_plus_visual_image/README.html">Project Depth Data on Visual Images</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../../../python/examples/service_customization/custom_parameter_image_server/README.html">Custom Parameter Image Server</a></li>
@@ -1387,6 +1386,7 @@
 <li><p><a class="reference external" href="#bosdyn-api-graph_nav-Edge-Annotations-StairData-DescentPreference">Edge.Annotations.StairData.DescentPreference</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-graph_nav-Edge-EdgeSource">Edge.EdgeSource</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-graph_nav-Region-DataFilter">Region.DataFilter</a></p></li>
+<li><p><a class="reference external" href="#bosdyn-api-graph_nav-Waypoint-Annotations-IRParam">Waypoint.Annotations.IRParam</a></p></li>
 <li><p><a class="reference external" href="#bosdyn-api-graph_nav-Waypoint-WaypointSource">Waypoint.WaypointSource</a></p></li>
 </ul>
 </li>
@@ -26084,6 +26084,12 @@ a unique ID, annotations, and sensor data.</p>
 <td></td>
 <td>Strictness of the lost detector to use while traversing this waypoint. If unset, the<br>default strictness will be used.</td>
 </tr>
+<tr>
+<td>ir_param</td>
+<td><a href="#bosdyn-api-graph_nav-Waypoint-Annotations-IRParam">Waypoint.Annotations.IRParam</a></td>
+<td></td>
+<td></td>
+</tr>
 </tbody>
 </table><p><a name="bosdyn-api-graph_nav-Waypoint-Annotations-GPSSettings"></a></p>
 </section>
@@ -26588,6 +26594,38 @@ matching is: (A <em>u</em> B) ~ C (that is, union(A, B) excluding C).</p>
 <td>DATA_FILTER_INCLUDE_ONLY</td>
 <td>3</td>
 <td>Only data from within this region will be used.</td>
+</tr>
+</tbody>
+</table><p><a name="bosdyn-api-graph_nav-Waypoint-Annotations-IRParam"></a></p>
+</section>
+<section id="waypoint-annotations-irparam">
+<h3>Waypoint.Annotations.IRParam<a class="headerlink" href="#waypoint-annotations-irparam" title="Permalink to this heading"></a></h3>
+<p>Some sites have IR-sensitive equipment.
+The IREnableDisable command can be used to disable IR near those waypoints.
+This degrades perception so limit the areas where it is applied.</p>
+<table border="1" class="docutils">
+<thead>
+<tr>
+<th>Name</th>
+<th>Number</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IR_PARAM_UNKNOWN</td>
+<td>0</td>
+<td></td>
+</tr>
+<tr>
+<td>IR_PARAM_ENABLE</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>IR_PARAM_DISABLE</td>
+<td>2</td>
+<td></td>
 </tr>
 </tbody>
 </table><p><a name="bosdyn-api-graph_nav-Waypoint-WaypointSource"></a></p>

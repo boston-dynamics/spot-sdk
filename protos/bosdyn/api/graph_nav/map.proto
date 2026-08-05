@@ -155,6 +155,16 @@ message Waypoint {
         // Strictness of the lost detector to use while traversing this waypoint. If unset, the
         // default strictness will be used.
         LostDetectorStrictness lost_detector_strictness = 10;
+
+        // Some sites have IR-sensitive equipment.
+        // The IREnableDisable command can be used to disable IR near those waypoints.
+        // This degrades perception so limit the areas where it is applied.
+        enum IRParam {
+            IR_PARAM_UNKNOWN = 0;
+            IR_PARAM_ENABLE = 1;
+            IR_PARAM_DISABLE = 2;
+        }
+        IRParam ir_param = 11;
     }
     // Annotations specific to the current waypoint.
     Annotations annotations = 4;

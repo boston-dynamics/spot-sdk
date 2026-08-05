@@ -12,6 +12,18 @@ Development Kit License (20191101-BDSDK-SL).
 
 # Spot Release Notes
 
+## Release 5.1.9
+
+### Deprecations
+
+- The [Spot Cam Video Core IO Extension Example](../python/examples/spot_cam/README.md#spotcamvideocoreioextensionexample) will be deleted in the 5.2.0 release. Please use the SpotCAM 2's video recording plugin, which is officially supported.
+
+### Bug Fixes and Improvements
+
+#### GraphNav
+
+- Added the `ir_param` field to the [Waypoint.Annotations](../protos/bosdyn/api/graph_nav/map.proto#annotations) message, which allows clients to disable or enable infrared (IR) illumination at specific waypoints. This is useful for sites with IR-sensitive equipment. When `IR_PARAM_DISABLE` is set, the robot will turn off IR illumination near those waypoints. Because disabling IR degrades perception, this setting should be applied only to the specific areas where it is needed.
+
 ## Release 5.1.4
 
 ### Bug Fixes and Improvements

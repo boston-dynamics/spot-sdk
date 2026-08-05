@@ -97,34 +97,3 @@ python3 -m command_line $ROBOT_IP webrtc record --time 10
 # Save 10 seconds of audio
 python3 -m command_line $ROBOT_IP webrtc record audio --time 10
 ```
-
-# Spot Cam Video Core IO Extension Example
-
-This example creates a coreio extension to pull video and audio data from the webrtc stream.
-
-## Running Spot Cam Video Example
-
-To build this extension use the extension builder located `../extensions` then run the command:
-
-```sh
-python3 build_extension.py \
-    --dockerfile-paths ../spot_cam/Dockerfile.l4t \
-    --build-image-tags spotcam_video:latest \
-    --image-archive spotcam_video.tgz \
-    --icon ../spot_cam/video.jpg \
-    --package-dir ../spot_cam \
-    --spx ~/Downloads/spotcam_video.spx
-```
-
-Then add the .spx file to the core io extension page.
-
-### Set up the action on the tablet
-
-1. Go to actions
-2. Select empty inspection
-3. Add a data aquision plugin
-4. Select "Data Acquision Save Video - Data".
-5. Add an image for sensor pointing
-6. Select "Spot CAM - Ptz".
-7. Set the request time out to 120 seconds
-8. Set Robot Body Control to "Spot Cam Scene Alignment"

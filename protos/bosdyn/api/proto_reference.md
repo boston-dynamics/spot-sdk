@@ -789,6 +789,7 @@
     - [Edge.Annotations.StairData.DescentPreference](#bosdyn-api-graph_nav-Edge-Annotations-StairData-DescentPreference)
     - [Edge.EdgeSource](#bosdyn-api-graph_nav-Edge-EdgeSource)
     - [Region.DataFilter](#bosdyn-api-graph_nav-Region-DataFilter)
+    - [Waypoint.Annotations.IRParam](#bosdyn-api-graph_nav-Waypoint-Annotations-IRParam)
     - [Waypoint.WaypointSource](#bosdyn-api-graph_nav-Waypoint-WaypointSource)
   
 - [bosdyn/api/graph_nav/map_processing.proto](#bosdyn_api_graph_nav_map_processing-proto)
@@ -13933,6 +13934,7 @@ Annotations understood by BostonDynamics systems.
 | gps_settings | [Waypoint.Annotations.GPSSettings](#bosdyn-api-graph_nav-Waypoint-Annotations-GPSSettings) |  | Optional GPS navigation settings for this waypoint. |
 | regions | [RegionWithFrame](#bosdyn-api-graph_nav-RegionWithFrame) | repeated | Regions may be defined around the waypoint which affect how scan matching or other<br>parameters work. |
 | lost_detector_strictness | [LostDetectorStrictness](#bosdyn-api-graph_nav-LostDetectorStrictness) |  | Strictness of the lost detector to use while traversing this waypoint. If unset, the<br>default strictness will be used. |
+| ir_param | [Waypoint.Annotations.IRParam](#bosdyn-api-graph_nav-Waypoint-Annotations-IRParam) |  |  |
 
 
 
@@ -14170,6 +14172,21 @@ matching is: (A _u_ B) ~ C (that is, union(A, B) excluding C).
 | DATA_FILTER_NONE | 1 | No special considerations for scan matching in this region. |
 | DATA_FILTER_IGNORE | 2 | No scan match data falling within this region will be used. |
 | DATA_FILTER_INCLUDE_ONLY | 3 | Only data from within this region will be used. |
+
+
+
+<a name="bosdyn-api-graph_nav-Waypoint-Annotations-IRParam"></a>
+
+### Waypoint.Annotations.IRParam
+Some sites have IR-sensitive equipment.
+The IREnableDisable command can be used to disable IR near those waypoints.
+This degrades perception so limit the areas where it is applied.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| IR_PARAM_UNKNOWN | 0 |  |
+| IR_PARAM_ENABLE | 1 |  |
+| IR_PARAM_DISABLE | 2 |  |
 
 
 
