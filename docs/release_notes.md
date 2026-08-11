@@ -18,6 +18,8 @@ Development Kit License (20191101-BDSDK-SL).
 
 - The [Spot Cam Video Core IO Extension Example](../python/examples/spot_cam/README.md#spotcamvideocoreioextensionexample) will be deleted in the 5.2.0 release. Please use the SpotCAM 2's video recording plugin, which is officially supported.
 
+- To improve the SV600's reliability, the services, `acoustic-imaging-image`, `acoustic-imaging-video`, and `acoustic-imaging-LeakQ-with-email`, will be blocklisted in 5.2.0. Any inspections recorded with the default leak and mechanical inspections in the tablet and SiteView should not be affected.
+
 ### Bug Fixes and Improvements
 
 #### GraphNav
