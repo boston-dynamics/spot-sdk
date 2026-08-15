@@ -1009,7 +1009,7 @@ class Quat(object):
             theta_0 = math.acos(dot)  # theta_0 = angle between input vectors
             theta = theta_0 * fraction  # theta = angle between v0 and result
             sin_theta = math.sin(theta)  # compute this value only once
-            sin_theta_0 = math.sin(theta_0)  # compute this value only once
+            sin_theta_0 = math.sqrt(1.0 - dot*dot)  # compute this value only once
 
             s0 = math.cos(
                 theta) - dot * sin_theta / sin_theta_0  # == sin(theta_0 - theta) / sin(theta_0)
