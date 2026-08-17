@@ -10,11 +10,11 @@ import grpc
 
 from .exceptions import (ClientCancelledOperationError, InvalidClientCertificateError,
                          NonexistentAuthorityError, NotFoundError, PermissionDeniedError,
-                         ProxyConnectionError, ResponseTooLargeError, RetryableUnavailableError,
-                         RpcError, ServiceFailedDuringExecutionError, ServiceUnavailableError,
-                         TimedOutError, TooManyRequestsError, TransientFailureError,
-                         UnableToConnectToRobotError, UnauthenticatedError, UnimplementedError,
-                         UnknownDnsNameError)
+                         ProxyConnectionError, ProtobufDecodeError, ResponseTooLargeError,
+                         RetryableUnavailableError, RpcError, ServiceFailedDuringExecutionError,
+                         ServiceUnavailableError, TimedOutError, TooManyRequestsError,
+                         TransientFailureError, UnableToConnectToRobotError, UnauthenticatedError,
+                         UnimplementedError, UnknownDnsNameError)
 
 TransportError = grpc.RpcError
 
@@ -143,6 +143,10 @@ def translate_exception(rpc_error):
             return ResponseTooLargeError(rpc_error, ResponseTooLargeError.__doc__)
     elif code is grpc.StatusCode.UNAUTHENTICATED:
         return UnauthenticatedError(rpc_error, UnauthenticatedError.__doc__)
+
+    if code is grpc.StatusCode.INTERNAL:
+        if "deserializing" in details:
+            return ProtobufDecodeError(rpc_error, ProtobufDecodeError.__doc__)
 
     debug = rpc_error.debug_error_string()
     if debug is not None:

@@ -121,6 +121,10 @@ class UnableToConnectToRobotError(RetryableRpcError):
     """The robot may be offline or otherwise unreachable."""
 
 
+class ProtobufDecodeError(RetryableRpcError):
+    """The message cannot be deserialized when the resource is busy"""
+
+
 class RetryableUnavailableError(UnableToConnectToRobotError):
     """Service unavailable or channel reset. Likely transient and can be resolved by retrying."""
 
